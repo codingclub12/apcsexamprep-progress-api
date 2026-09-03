@@ -73,10 +73,18 @@ keeps arriving through `score_events` against its authored denominators, and
 adding graded manifest rows for cyber would be what puts it on System A. That is
 a separate decision and this is not it.
 
-Did move: lesson completion. `lib/admin-exec.js` denominates that from manifest
-visit rows, and cyber had none, so every cyber student counted zero lessons
-assigned. They are now assigned 24 and their visits count. Live `manifest_items`
-went 908 to 932.
+Did move, in the code: lesson completion. `lib/admin-exec.js` denominates that
+from manifest visit rows, and cyber had none, so every cyber student counted zero
+lessons assigned. Once the rows exist they are assigned 24 and their visits
+count.
+
+**Has NOT moved in production yet, as of 2026-09-03.** The merge deployed
+(`/api/health` reports the commit, the railway-deploy check is green) and the
+live `manifest_items` stayed at 908 instead of reaching 932, so the boot seed
+either threw or wrote nothing and the reason is only visible inside the
+container. Board 191, with `lib/boot-seed.js` shipped to answer it. Until that
+number reads 932, cyber lesson completion is unchanged in production whatever
+this file says about the code.
 
 ## 3. The validator: seven rules, and a sheet that breaks one is refused
 
