@@ -141,6 +141,9 @@ function jsonNewlines(body) {
 
 function repair(body, corpus) {
   const problems = [];
+  //  A body Cloudflare rewrote at render time must never be written back.
+  const cf = sf.cloudflareRewritten(body);
+  if (cf) return { problems: [cf] };
   const cands = candidates(body, corpus);
   const fix = [];
   const skip = [];
