@@ -1,0 +1,77 @@
+{
+  "change": "board 183: wire the ap-csa slide-gate pipe (Unit 1 pilot), mirroring the live ap-csp/ap-cybersecurity mechanism. No real deck content; every lesson resolves zero decks on purpose.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "new: csa slide gate (API)",
+      "command": "node smoke/csa-slide-gate.js",
+      "expect": "28 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "regression: csp slide gate (API)",
+      "command": "npm run --silent smoke:cspslides",
+      "expect": "26 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "regression: cyber slide gate (API)",
+      "command": "npm run --silent smoke:cyberslides",
+      "expect": "39 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "regression: csp slide embeds (API)",
+      "command": "npm run --silent smoke:cspembeds",
+      "expect": "49 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "regression: cyber slide embeds (API)",
+      "command": "npm run --silent smoke:cyberembeds",
+      "expect": "33 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "new: csa course-copy and self-mount (theme)",
+      "command": "cd /home/user/APCSExamPrep-theme && PLAYWRIGHT_CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node content/csa-teacher-slides-gate/course-copy-test.js",
+      "expect": "20 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "regression: csp course-copy (theme)",
+      "command": "cd /home/user/APCSExamPrep-theme && PLAYWRIGHT_CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node content/csp-teacher-slides-gate/course-copy-test.js",
+      "expect": "29 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "regression: csp deck-shape (theme)",
+      "command": "cd /home/user/APCSExamPrep-theme && PLAYWRIGHT_CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node content/csp-teacher-slides-gate/deck-shape-test.js",
+      "expect": "15 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "scope agrees with the raw artifact (lib/csa-nav.js), not with the manifest's own code",
+      "command": "node scripts/verify-csa-slide-pilot-scope.js",
+      "expect": "16 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "the ap-csa manifest registration is load-bearing",
+      "file": "config/slide-manifests.js",
+      "find": "  'ap-csa': require('./csa-slide-manifest'),",
+      "replace": "  // 'ap-csa': require('./csa-slide-manifest'), // MUTATED: prove the registration guard is real",
+      "command": "node smoke/csa-slide-gate.js",
+      "expect_failure": "[FAIL]   anonymous: 200"
+    },
+    {
+      "kind": "mutation",
+      "name": "the theme's Unit 1 self-mount boundary is load-bearing",
+      "file": "/home/user/APCSExamPrep-theme/assets/apcs-slides-gate.js",
+      "find": "    if (unit !== '1') return null; // Unit 1 pilot only; see the note above.",
+      "replace": "    if (false) return null; // MUTATED: prove the Unit 1 boundary guard is real",
+      "command": "cd /home/user/APCSExamPrep-theme && PLAYWRIGHT_CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node content/csa-teacher-slides-gate/course-copy-test.js",
+      "expect_failure": "[FAIL]   no panel mounts for a lesson outside Unit 1"
+    }
+  ]
+}

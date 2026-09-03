@@ -94,7 +94,16 @@ const grant = (teacherId, course) => db.prepare(
 
   console.log('1. Unknown course and unknown lesson both 404, never a leak');
   {
-    const r1 = await slides('ap-csa', '1-1', paidTeacherTok);
+    // Was 'ap-csa' until board task 183 gave it a real manifest
+    // (config/csa-slide-manifest.js, Unit 1 pilot). That is the exact "a
+    // course difference does not announce itself" trap this repo already
+    // learned once porting cyber (docs/runs/2026-08-25-claude-code-cyber-slide-gate.md):
+    // a course string baked into a test as "the unsupported one" goes stale
+    // the moment that course gets a manifest, and a stale example silently
+    // stops testing what it claims to. 'ap-networking' is a real course
+    // elsewhere in this repo (lib/entitlements.js) but has no slide manifest
+    // at all, so it is a genuine 404 rather than a coincidence of naming.
+    const r1 = await slides('ap-networking', '1-1', paidTeacherTok);
     ok('  unsupported course -> 404', r1.status === 404, r1);
     ok('  unsupported course response has no CDN url', !r1.text.includes(CDN_HOST), r1.text);
 
