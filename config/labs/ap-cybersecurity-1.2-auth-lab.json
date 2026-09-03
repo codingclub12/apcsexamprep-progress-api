@@ -1,0 +1,149 @@
+{
+  "_comment": [
+    "AP Cybersecurity 1.2: read an auth log the way an analyst actually reads it.",
+    "",
+    "DRAFTED 2026-09-02, AND THE PROSE IN IT IS AUTHORED RATHER THAN SOURCED",
+    "  The structure, the check shape and the eight-point split are lifted from",
+    "  ap-cybersecurity-2.4-lab.json, which is the badge log. The SCENARIO, the",
+    "  log contents, the three questions and every explanation are written for",
+    "  this lab and have not been reviewed by a teacher. Read them before this",
+    "  goes near a student.",
+    "",
+    "WHY UNIT 1 NEEDED ONE AT ALL",
+    "  There were two cyber terminal labs and both left Unit 1 empty. The",
+    "  permissions lab moved to 4.3 on 2026-09-02 because it taught nothing in",
+    "  Topic 1.2, and the badge log genuinely belongs at 2.4, where Unit 2 is",
+    "  Securing Spaces. Unit 1 is the free preview unit and had no terminal lab.",
+    "",
+    "WHY AN AUTH LOG IS THE RIGHT SUBJECT AND A BADGE LOG IS NOT",
+    "  Topic 1.2 is Suspicious Website Logins, and its three objectives are the",
+    "  signs of a password attack, how adversaries exploit weak authentication,",
+    "  and how to harden it. The live 1.2 lesson page uses that vocabulary",
+    "  heavily: 'failed login' four times, 'unknown device' nine, 'pattern'",
+    "  thirty three. So this lab asks a student to do in a terminal exactly what",
+    "  the lesson describes in prose: read the log, separate the attacks from the",
+    "  people having a bad morning, and say what would have stopped it.",
+    "",
+    "  Nothing here needs knowledge Unit 1 does not teach. There are no",
+    "  permissions, no chmod, no ownership. The commands are ls, cd, cat, grep",
+    "  and wc, and the brief teaches each one at the point of use.",
+    "",
+    "WHY graded:false",
+    "  Same reason as the other two, and it is architectural rather than a",
+    "  judgement about the work: scripts/seed-manifest.js deliberately does not",
+    "  seed ap-cybersecurity, because that course carries its own denominators.",
+    "  A lone manifest row would double count. See docs/lab-contract.md.",
+    "",
+    "HANDLE, WHICH IS NOT SETTLED",
+    "  The natural handle for a Topic 1.2 terminal lab is",
+    "  ap-cyber-unit-1-lesson-2-terminal-lab, and that is currently serving the",
+    "  permissions lab that moved to 4.3. Renaming a live handle is a human",
+    "  action, so this takes a distinct handle and the tidy-up is Tanner's.",
+    "",
+    "No em-dashes, per repo convention."
+  ],
+  "course": "ap-cybersecurity",
+  "item_id": "1.2-auth-lab",
+  "lesson_id": "1.2",
+  "unit": "unit-1",
+  "item_type": "lab",
+  "graded": false,
+  "points": 8,
+  "est_minutes": 15,
+  "title": "Read the login log",
+  "page_handle": "ap-cyber-unit-1-lesson-2-auth-log-lab",
+  "page_title": "AP Cybersecurity Terminal Lab: Read the Login Log | Topic 1.2",
+  "seo_description": "Work a real sign-in log in a terminal and tell a password attack from a student who forgot their password. Free AP Cybersecurity Topic 1.2 practice lab.",
+  "brief": [
+    "You help run the student portal at Bellhaven High. The sign-in page writes every attempt to a log, and nobody has opened it since the year started.",
+    "Three things in Monday's log are attacks. Two more look bad and are not. Your job is to tell them apart.",
+    "",
+    "**Work the log.**",
+    "1. `ls` and `cd logs` to find what the portal keeps.",
+    "2. `cat accounts.txt` first. You cannot judge a sign-in without knowing whose account it is.",
+    "3. `cat auth.log` to see the shape of it, then stop reading it whole.",
+    "4. `grep m.okafor auth.log` pulls one account out of the noise. That is the move.",
+    "5. `grep -c FAIL auth.log` counts failures when you want a number rather than an impression.",
+    "",
+    "Every row is `time,account,result,device,ip`. A device the account has never used before is worth more attention than a late hour on a familiar one.",
+    "",
+    "Type `help` for the command list."
+  ],
+  "questions": [
+    {
+      "id": "bruteforce",
+      "prompt": "One account records 41 failures between 03:12 and 03:14, all from the same unknown device, then one success. What does that pattern show?",
+      "options": [
+        "A student mistyping a password they had just changed",
+        "Software guessing passwords against one account until one worked",
+        "The portal rejecting a valid password because the server clock was wrong",
+        "Several students sharing one account and getting the password wrong in turn"
+      ],
+      "answer": 1,
+      "explain": "Forty one attempts in about two minutes is faster than a person types, and the run ends in a success from a device the account has never used. That is automated guessing against a single account, and the success at the end is the part that matters: the attacker is now inside. A human mistyping produces a handful of attempts over minutes, from their own device, and usually stops to reset the password."
+    },
+    {
+      "id": "sprayvsforgot",
+      "prompt": "j.reyes has 4 failures then a success, all from her own laptop over six minutes. Meanwhile 30 different accounts each have exactly 1 failure, all from the same device inside one minute. Which is the attack, and why?",
+      "options": [
+        "j.reyes, because four failures is the larger number for one account",
+        "Both, because any failure is a sign of compromise",
+        "The 30 accounts, because one guess against many accounts avoids a lockout that many guesses against one would trigger",
+        "Neither, because none of them locked an account"
+      ],
+      "answer": 2,
+      "explain": "This is password spraying. Trying one common password against many accounts stays under the lockout threshold that guessing one account hard would trip, which is exactly why attackers do it. j.reyes is the ordinary case: a few tries, her own device, ending in a success. The shape to look for is not how many failures, it is how many ACCOUNTS one device touched."
+    },
+    {
+      "id": "hardening",
+      "prompt": "The account broken into at 03:14 used the same password as the holder's gaming forum account, which leaked last year. Which change would have stopped this specific attack?",
+      "options": [
+        "Forcing every student to change their password every 30 days",
+        "A longer password on the portal, reused from another site",
+        "A unique password for the portal that is used nowhere else",
+        "Hiding the sign-in page behind an unlisted URL"
+      ],
+      "answer": 2,
+      "explain": "The password was not guessed out of thin air, it was already known from another breach, so length alone does not help if the same string is reused. Uniqueness is what breaks the link: a password used on exactly one site cannot be carried there from somewhere else. This is what a password manager is for, and it is why 'do not reuse' outranks 'change it often' in current guidance."
+    }
+  ],
+  "hosts": {
+    "local": {
+      "label": "you@bellhaven",
+      "prompt": "you@bellhaven:~/portal$",
+      "home": "/home/you/portal",
+      "cwd": "/home/you/portal",
+      "fs": {
+        "/home/you/portal": {
+          "README.txt": "Bellhaven High student portal.\nSign-in attempts are written to logs/auth.log, one line per attempt.\nAccount owners and their usual devices are in logs/accounts.txt.\nNobody has read either since term started.\n",
+          "logs": {
+            "accounts.txt": "BELLHAVEN PORTAL - ACCOUNTS AND KNOWN DEVICES\naccount      owner              usual device\n-------      -----              ------------\nm.okafor     Michael Okafor     okafor-laptop\nj.reyes      Jasmine Reyes      reyes-laptop\nd.hall       Devon Hall         hall-chromebook\na.silva      Ana Silva          silva-phone\nt.nguyen     Thanh Nguyen       nguyen-laptop\n\nA device not listed here has never signed this account in before.\nUnknown devices are shown in the log as unknown-<something>.\n",
+            "auth.log": "time,account,result,device,ip\n07:41,d.hall,OK,hall-chromebook,10.2.4.19\n07:58,t.nguyen,OK,nguyen-laptop,10.2.4.31\n08:02,j.reyes,FAIL,reyes-laptop,10.2.4.22\n08:03,j.reyes,FAIL,reyes-laptop,10.2.4.22\n08:05,j.reyes,FAIL,reyes-laptop,10.2.4.22\n08:07,j.reyes,FAIL,reyes-laptop,10.2.4.22\n08:08,j.reyes,OK,reyes-laptop,10.2.4.22\n08:14,a.silva,OK,silva-phone,10.2.4.44\n03:12,m.okafor,FAIL,unknown-vm41,203.0.113.77\n03:12,m.okafor,FAIL,unknown-vm41,203.0.113.77\n03:12,m.okafor,FAIL,unknown-vm41,203.0.113.77\n03:13,m.okafor,FAIL,unknown-vm41,203.0.113.77\n03:13,m.okafor,FAIL,unknown-vm41,203.0.113.77\n03:13,m.okafor,FAIL,unknown-vm41,203.0.113.77\n03:14,m.okafor,FAIL,unknown-vm41,203.0.113.77\n03:14,m.okafor,OK,unknown-vm41,203.0.113.77\n23:20,t.nguyen,OK,nguyen-laptop,10.2.4.31\n04:01,b.adeyemi,FAIL,unknown-vm09,198.51.100.12\n04:01,c.duarte,FAIL,unknown-vm09,198.51.100.12\n04:01,d.hall,FAIL,unknown-vm09,198.51.100.12\n04:01,e.frost,FAIL,unknown-vm09,198.51.100.12\n04:01,f.grant,FAIL,unknown-vm09,198.51.100.12\n04:01,g.hensley,FAIL,unknown-vm09,198.51.100.12\n04:02,h.ibarra,FAIL,unknown-vm09,198.51.100.12\n04:02,i.jantzen,FAIL,unknown-vm09,198.51.100.12\n04:02,j.reyes,FAIL,unknown-vm09,198.51.100.12\n04:02,k.lowry,FAIL,unknown-vm09,198.51.100.12\n",
+            "NOTES.txt": "The 03:12 run is trimmed here. The portal counted 41 attempts on that\naccount between 03:12 and 03:14 before the one that worked.\nThe 04:01 run touched 30 accounts. Ten are shown.\n"
+          }
+        }
+      }
+    }
+  },
+  "solution": [
+    "ls",
+    "cd logs",
+    "cat accounts.txt",
+    "cat auth.log",
+    "grep m.okafor auth.log",
+    "grep -c FAIL auth.log",
+    { "answer": "bruteforce" },
+    { "answer": "sprayvsforgot" },
+    { "answer": "hardening" }
+  ],
+  "checks": [
+    { "n": 1, "label": "Open the logs folder", "match": { "event": "cmd", "cmd": "cd", "host": "local", "cwdAfter": "/home/you/portal/logs" } },
+    { "n": 2, "label": "Read the account reference before judging any sign-in", "match": { "event": "read", "file": "accounts.txt" } },
+    { "n": 3, "label": "Look at the sign-in log", "match": { "event": "read", "file": "auth.log" } },
+    { "n": 4, "label": "Filter the log to a single account", "match": { "event": "cmd", "cmd": "grep", "host": "local", "after": 3 } },
+    { "n": 5, "label": "Count the failures rather than eyeballing them", "match": { "event": "cmd", "cmd": "grep", "host": "local", "after": 4 } },
+    { "n": 6, "label": "Name the pattern that guessed one password until it worked", "match": { "event": "answer", "question": "bruteforce" } },
+    { "n": 7, "label": "Separate the password spray from the forgotten password", "match": { "event": "answer", "question": "sprayvsforgot" } },
+    { "n": 8, "label": "Say what would actually have stopped it", "match": { "event": "answer", "question": "hardening" } }
+  ]
+}

@@ -236,19 +236,41 @@ console.log('\nHUB AND COMMAND CENTER LINKS');
   ok(links.existingLabHandle('2.4') === 'ap-cyber-unit-2-lesson-4-lab',
     'the existing non-terminal lab handle is derived from the lesson id');
 
+  //  BOTH card shapes, because the live guide uses two. The Unit 1 card indents
+  //  fourteen spaces and puts a NEWLINE between </div> and <span>; the Unit 4
+  //  card indents twelve and puts a SPACE. Both are the same row, and an anchor
+  //  matched on exact bytes only ever found the first. Moving the 1.2 lab to 4.3
+  //  reported "found 0" against a row that was plainly in the guide, which is
+  //  what this fixture now stops happening again.
   const GUIDE = '<div id="apcyber-course-hub">\n'
     + '              <a class="exercise-row" href="/pages/ap-cyber-unit-1-lesson-2-lab"><div class="ex-dot"></div>\n'
     + '<span class="ex-label">Lab</span><span class="ex-tag">Start \u2192</span></a>\n'
-    + '              <a class="exercise-row quiz-row" href="/pages/ap-cyber-unit-1-lesson-2-quiz"></a>\n</div>';
+    + '              <a class="exercise-row quiz-row" href="/pages/ap-cyber-unit-1-lesson-2-quiz"></a>\n'
+    + '            <a class="exercise-row" href="/pages/ap-cyber-unit-4-lesson-3-lab"><div class="ex-dot"></div>'
+    + ' <span class="ex-label">Lab</span><span class="ex-tag">Start \u2192</span></a>\n'
+    + '            <a class="exercise-row quiz-row" href="/pages/ap-cyber-unit-4-lesson-3-quiz"></a>\n</div>';
+  //  Both lessons, because the labs now sit in different units and the live
+  //  Command Center carries an STU row for every lesson in the course. A fixture
+  //  with only 1.2 in it passes for a lab at 1.2 and fails for the same lab the
+  //  day it moves, which is a fixture testing the fixture.
   const CC = 'var STU = {\n'
     + '    "1.2":{page:"/pages/ap-cybersecurity-unit-1-password-attacks",quiz:"/pages/ap-cyber-unit-1-lesson-2-quiz",'
-    + 'ex1:"/pages/ap-cyber-unit-1-lesson-2-exercise-1",ex2:"/pages/ap-cyber-unit-1-lesson-2-exercise-2"},\n};\n'
+    + 'ex1:"/pages/ap-cyber-unit-1-lesson-2-exercise-1",ex2:"/pages/ap-cyber-unit-1-lesson-2-exercise-2"},\n'
+    + '    "4.3":{page:"/pages/ap-cyber-unit-4-lesson-3",quiz:"/pages/ap-cyber-unit-4-lesson-3-quiz",'
+    + 'ex1:"/pages/ap-cyber-unit-4-lesson-3-exercise-1",ex2:"/pages/ap-cyber-unit-4-lesson-3-exercise-2"},\n};\n'
     + "    var dests = [ ['page','Lesson page'], ['quiz','Quiz'], ['ex1','Scenario 1'], ['ex2','Scenario 2'] ];";
 
   const g = links.patchGuide(GUIDE, spec);
   ok(g.changed && g.body.indexOf('/pages/' + spec.page_handle) !== -1, 'the course guide gains a link to the lab page');
+  ok(g.body.indexOf('/pages/ap-cyber-unit-4-lesson-3-lab') !== -1,
+    'and the EXISTING per-lesson lab link survives, because that is a different lab');
+  //  The inserted row inherits the card's own formatting rather than importing
+  //  the other card's, which is what keeps a guide readable after two moves.
+  ok(g.body.indexOf('            <a class="exercise-row" href="/pages/' + spec.page_handle
+    + '"><div class="ex-dot"></div> <span class="ex-label">Terminal Lab</span>') !== -1,
+    'the new row copies the anchor row it sits under, indent and separator included');
   ok(g.body.indexOf('/pages/ap-cyber-unit-1-lesson-2-lab') !== -1,
-    'and the EXISTING password-attack lab link survives, because that is a different lab');
+    'and the Unit 1 card is untouched, because that lab did not move');
   ok(links.patchGuide(g.body, spec).changed === false, 'a second guide run is a no-op, so a re-import is safe');
 
   const c = links.patchCommandCenter(CC, spec);

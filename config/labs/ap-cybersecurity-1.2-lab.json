@@ -1,6 +1,26 @@
 {
   "_comment": [
-    "AP Cybersecurity 1.2: find what a filesystem is willing to tell you.",
+    "AP Cybersecurity 4.3: find what a filesystem is willing to tell you.",
+    "",
+    "MOVED FROM TOPIC 1.2 ON 2026-09-02, REPORTED BY A TEACHER",
+    "  Jukka Rauhala said the lab claimed a connection to 1.2 he could not see.",
+    "  He was right. This lab teaches file permissions: who can read what, and who",
+    "  left it that way. CED 1.2 is Suspicious Website Logins, which is password",
+    "  attack signs, weak authentication and password hygiene. No overlap.",
+    "",
+    "  It is filed at 4.3 Protecting Devices because that is the closest home in",
+    "  Unit 4, NOT because 4.3 teaches permissions. Measured on the live pages:",
+    "  none of 4.1, 4.3, 4.4 or 4.5 mentions permissions, chmod, access control or",
+    "  file mode at all, and 4.2 says \"access control\" once. So permissions are",
+    "  graded on the exam (free response Part C writes a chmod command, see",
+    "  docs/cyber-exam-format.md) and taught in no lesson in the course. This lab",
+    "  is the only asset that teaches them. Moving it fixes a wrong label; it does",
+    "  not close that gap.",
+    "",
+    "  item_id stays \"1.2-lab\" deliberately. It is an opaque key, referenced by the",
+    "  live page mount, scripts/lab-pages-csv.js, scripts/page-availability.js and",
+    "  two smoke suites. Renaming it buys a student nothing and breaks four things.",
+    "  page_handle also stays: renaming a live handle is a human action.",
     "",
     "WHY THIS ONE IS graded:false",
     "  scripts/seed-manifest.js deliberately does not seed ap-cybersecurity: that",
@@ -15,20 +35,18 @@
     "",
     "No em-dashes, per repo convention."
   ],
-
   "course": "ap-cybersecurity",
   "item_id": "1.2-lab",
-  "lesson_id": "1.2",
-  "unit": "unit-1",
+  "lesson_id": "4.3",
+  "unit": "unit-4",
   "item_type": "lab",
   "graded": false,
   "points": 6,
   "est_minutes": 10,
   "title": "Find the tournament code",
   "page_handle": "ap-cyber-unit-1-lesson-2-terminal-lab",
-  "page_title": "AP Cybersecurity Terminal Lab: Find the Tournament Code | Topic 1.2",
-  "seo_description": "Hunt a file through a shared machine with nothing but a terminal, then work out who else could read it. Free AP Cybersecurity Topic 1.2 practice lab.",
-
+  "page_title": "AP Cybersecurity Terminal Lab: Find the Tournament Code | Topic 4.3",
+  "seo_description": "Hunt a file through a shared machine with nothing but a terminal, then work out who else could read it. Free AP Cybersecurity Topic 4.3 practice lab.",
   "brief": [
     "The esports club is running a tournament after school and the join code is written down somewhere in the club's folders on the shared machine. Nobody remembers where.",
     "You have a terminal and no file browser. That is the whole exercise: a filesystem will tell you what it holds if you ask it correctly.",
@@ -44,12 +62,16 @@
     "",
     "Type `help` for the command list."
   ],
-
   "questions": [
     {
       "id": "code",
       "prompt": "What is the tournament join code?",
-      "options": ["MC-4417", "MC-1174", "ESPORTS-2026", "JOIN-8890"],
+      "options": [
+        "MC-4417",
+        "MC-1174",
+        "ESPORTS-2026",
+        "JOIN-8890"
+      ],
       "answer": 0,
       "explain": "It is in clubs/esports/tournament/tournament_info.txt. The other three appear elsewhere on the machine, which is the point: a filesystem full of readable leftovers is a filesystem that leaks."
     },
@@ -66,7 +88,6 @@
       "explain": "Naming a file private does nothing. Confidentiality comes from permissions and placement, not from the filename, and 'anyone who can open the folder can read it' is the default a lot of shared machines are left in."
     }
   ],
-
   "hosts": {
     "local": {
       "label": "student@shared",
@@ -87,32 +108,86 @@
                 "tournament_info.txt": "MINECRAFT TOURNAMENT  Friday 3:30pm  lab 2\n\njoin code: MC-4417\n\nbring your own headset. server opens at 3:15.\n",
                 "bracket_draft.txt": "round 1: Dee vs Marcus\nround 1: Priya vs bye\n"
               },
-              "old": { "signup_2025.txt": "last year's signup sheet. code JOIN-8890, dead.\n" }
+              "old": {
+                "signup_2025.txt": "last year's signup sheet. code JOIN-8890, dead.\n"
+              }
             },
-            "robotics": { "parts_order.txt": "2x servo, 1x battery, promo code ESPORTS-2026 (unrelated, ignore)\n" }
+            "robotics": {
+              "parts_order.txt": "2x servo, 1x battery, promo code ESPORTS-2026 (unrelated, ignore)\n"
+            }
           },
-          ".club_backup": { "notes.txt": "hidden folder. ls -a finds it. nothing secret in here, which is the lesson.\n" }
+          ".club_backup": {
+            "notes.txt": "hidden folder. ls -a finds it. nothing secret in here, which is the lesson.\n"
+          }
         }
       }
     }
   },
-
   "solution": [
     "pwd",
     "ls",
     "find . -name tournament_info.txt",
     "cd clubs/esports",
     "cat tournament/tournament_info.txt",
-    { "answer": "code" },
-    { "answer": "exposure" }
+    {
+      "answer": "code"
+    },
+    {
+      "answer": "exposure"
+    }
   ],
-
   "checks": [
-    { "n": 1, "label": "Confirm where you are", "match": { "event": "cmd", "cmd": "pwd", "host": "local" } },
-    { "n": 2, "label": "List what is available", "match": { "event": "cmd", "cmd": "ls", "host": "local" } },
-    { "n": 3, "label": "Navigate into the esports folder", "match": { "event": "cmd", "cmd": "cd", "host": "local", "cwdAfter": "/home/student/project/clubs/esports" } },
-    { "n": 4, "label": "Read tournament_info.txt", "match": { "event": "read", "file": "tournament_info.txt" } },
-    { "n": 5, "label": "Report the join code", "match": { "event": "answer", "question": "code" } },
-    { "n": 6, "label": "Say what the readable roster means", "match": { "event": "answer", "question": "exposure" } }
+    {
+      "n": 1,
+      "label": "Confirm where you are",
+      "match": {
+        "event": "cmd",
+        "cmd": "pwd",
+        "host": "local"
+      }
+    },
+    {
+      "n": 2,
+      "label": "List what is available",
+      "match": {
+        "event": "cmd",
+        "cmd": "ls",
+        "host": "local"
+      }
+    },
+    {
+      "n": 3,
+      "label": "Navigate into the esports folder",
+      "match": {
+        "event": "cmd",
+        "cmd": "cd",
+        "host": "local",
+        "cwdAfter": "/home/student/project/clubs/esports"
+      }
+    },
+    {
+      "n": 4,
+      "label": "Read tournament_info.txt",
+      "match": {
+        "event": "read",
+        "file": "tournament_info.txt"
+      }
+    },
+    {
+      "n": 5,
+      "label": "Report the join code",
+      "match": {
+        "event": "answer",
+        "question": "code"
+      }
+    },
+    {
+      "n": 6,
+      "label": "Say what the readable roster means",
+      "match": {
+        "event": "answer",
+        "question": "exposure"
+      }
+    }
   ]
 }

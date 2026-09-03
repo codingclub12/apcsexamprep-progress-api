@@ -69,20 +69,35 @@ const LABEL = 'Terminal Lab';
 //  The 1.2 card lists its rows in teaching order and ends with the quiz. The
 //  terminal lab goes after the existing Lab row and before the quiz, which is
 //  where a student would actually reach for it.
+//  The anchor is matched on its HREF and its label, not on its whitespace.
+//  It used to be an exact string built to the Unit 1 card's shape, and that is
+//  a trap the moment a lab moves units: the Unit 4 card indents twelve spaces
+//  and puts a space between </div> and <span>, where the Unit 1 card indents
+//  fourteen and puts a newline. Both are the same row. Matching the bytes meant
+//  moving the 1.2 lab to 4.3 reported "found 0" against a row that was plainly
+//  there. Exactly-one is still required, and the matched text is reused verbatim
+//  so the inserted row inherits the card's own formatting rather than imposing
+//  the other card's.
 function patchGuide(body, spec) {
   const existing = existingLabHandle(spec.lesson_id);
-  const anchor = '              <a class="exercise-row" href="/pages/' + existing + '"><div class="ex-dot"></div>\n'
-    + '<span class="ex-label">Lab</span><span class="ex-tag">Start ' + '\u2192' + '</span></a>\n';
   if (!body.includes('id="apcyber-course-hub"')) throw new Error('this is not the cyber course guide body');
   if (body.includes('/pages/' + spec.page_handle)) return { body, changed: false };
 
-  const hits = body.split(anchor).length - 1;
-  if (hits !== 1) {
-    throw new Error(`expected exactly 1 Topic ${spec.lesson_id} Lab row to anchor to, found ${hits}. `
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp('[ \\t]*<a class="exercise-row" href="/pages/' + esc(existing)
+    + '">\\s*<div class="ex-dot"></div>\\s*<span class="ex-label">Lab</span>'
+    + '\\s*<span class="ex-tag">[^<]*</span>\\s*</a>[ \\t]*\\n?', 'g');
+  const found = body.match(re) || [];
+  if (found.length !== 1) {
+    throw new Error(`expected exactly 1 Topic ${spec.lesson_id} Lab row to anchor to, found ${found.length}. `
       + 'The card was edited; re-read it before running this again.');
   }
-  const row = '              <a class="exercise-row" href="/pages/' + spec.page_handle + '"><div class="ex-dot"></div>\n'
-    + '<span class="ex-label">' + LABEL + '</span><span class="ex-tag">Start ' + '\u2192' + '</span></a>\n';
+  const anchor = found[0];
+  //  Built from the anchor itself, so indentation and the </div> separator match
+  //  whatever this card uses.
+  const row = anchor
+    .replace('/pages/' + existing, '/pages/' + spec.page_handle)
+    .replace('<span class="ex-label">Lab</span>', '<span class="ex-label">' + LABEL + '</span>');
   return { body: body.replace(anchor, anchor + row), changed: true };
 }
 

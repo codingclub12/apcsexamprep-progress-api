@@ -167,3 +167,47 @@ jobs:
           echo "\`railway up\` succeeded but /api/health still reports the old commit." >> "$GITHUB_STEP_SUMMARY"
           echo "Check the Railway build log; this is the shape of the task 119 stall." >> "$GITHUB_STEP_SUMMARY"
           exit 1
+
+      # ── TELL THE BOARD, BUT NEVER FOR A RUN THAT DID NOTHING ────────────────
+      #  Board task 166. This is the one reporter in this pass that needs a
+      #  guard the other six do not: this job has 70 green runs in which the
+      #  Install/Deploy/Confirm steps all SKIPPED, because RAILWAY_TOKEN is
+      #  unset, and the job still exits 0. A naive `job.status == success ->
+      #  pass` here would post 70 green checks for a workflow that deployed
+      #  nothing, which is the exact failure this task exists to fix,
+      #  manufactured on purpose instead of by accident.
+      #
+      #  `steps.gate.outputs.ready == 'true'` is the fix: this step only runs
+      #  when RAILWAY_TOKEN was actually configured, i.e. when Deploy and
+      #  Confirm actually ran. When the token is absent this step does not run
+      #  at all - not skip-reported as pass, not reported as fail (nothing
+      #  happened, so neither is true), simply silent, same as the job it is
+      #  describing. The command center schema only has pass/fail (see
+      #  lib/command-checks.js STATES); there is no honest third state to post,
+      #  so the honest move is to post nothing.
+      #
+      #  `if: always()` so a Deploy or Confirm failure (job.status: failure)
+      #  still gets reported and does not silently drop out the way a bare
+      #  `if: steps.gate.outputs.ready == 'true'` would (that condition alone
+      #  carries an implicit success() and would skip this step on the exact
+      #  runs most worth reporting). continue-on-error so the observer cannot
+      #  turn the deploy red by itself; never on a cancelled run.
+      - name: Report to the command center
+        if: always() && steps.gate.outputs.ready == 'true' && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="commit ${GITHUB_SHA:0:7}, run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"health\",\"check_id\":\"railway-deploy\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"

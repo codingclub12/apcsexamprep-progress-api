@@ -1,0 +1,1538 @@
+﻿"Handle","Command","Body HTML"
+"ap-csa-lesson-1-9-method-signatures","MERGE","<style>
+/* =============================================================
+   SCOPED RESET --- nukes Shopify Dawn theme overrides
+   all:initial applies to wrapper ONLY (proven pattern from live
+   AP Cyber pages). Applying it to all descendants kills nested
+   element display values (table cells, buttons, inline-block badges).
+   ============================================================= */
+#apcsa-lesson {
+  all: initial !important;
+  display: block !important;
+  font-family: -apple-system, BlinkMacSystemFont, ""Segoe UI"", Roboto, ""Helvetica Neue"", Arial, sans-serif !important;
+  max-width: 1080px !important;
+  margin: 0 auto !important;
+  padding: 32px 20px 80px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  line-height: 1.65 !important;
+  font-size: 17px !important;
+  background: #ffffff !important;
+}
+#apcsa-lesson * {
+  box-sizing: border-box !important;
+}
+#apcsa-lesson p, #apcsa-lesson li, #apcsa-lesson td, #apcsa-lesson th,
+#apcsa-lesson dt, #apcsa-lesson dd, #apcsa-lesson span, #apcsa-lesson em, #apcsa-lesson strong {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  font-size: 17px !important;
+  line-height: 1.65 !important;
+}
+#apcsa-lesson em { font-style: italic !important; }
+#apcsa-lesson strong { font-weight: 700 !important; }
+#apcsa-lesson p { margin: 0 0 16px 0 !important; }
+#apcsa-lesson ul, #apcsa-lesson ol { display: block !important; margin: 0 0 16px 24px !important; padding: 0 !important; }
+#apcsa-lesson ul li { display: list-item !important; list-style: disc outside !important; margin: 0 0 6px 0 !important; }
+#apcsa-lesson ol li { display: list-item !important; list-style: decimal outside !important; margin: 0 0 6px 0 !important; }
+
+/* Headings */
+#apcsa-lesson h1, #apcsa-lesson h2, #apcsa-lesson h3, #apcsa-lesson h4 {
+  display: block !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  line-height: 1.25 !important;
+}
+#apcsa-lesson h1 { font-size: 36px !important; margin: 8px 0 12px 0 !important; letter-spacing: -0.02em !important; }
+#apcsa-lesson h2 { font-size: 26px !important; margin: 40px 0 14px 0 !important; padding-bottom: 8px !important; border-bottom: 2px solid #e5e7eb !important; }
+#apcsa-lesson h3 { font-size: 20px !important; margin: 24px 0 10px 0 !important; color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson h4 { font-size: 17px !important; margin: 16px 0 8px 0 !important; }
+
+/* Links */
+#apcsa-lesson a:link, #apcsa-lesson a:visited {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+#apcsa-lesson a:hover, #apcsa-lesson a:active {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* Code (used sparingly in conceptual lessons --- only for syntax mentions) */
+#apcsa-lesson code {
+  font-family: ""SF Mono"", Menlo, Consolas, Monaco, monospace !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson pre {
+  display: block !important;
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 18px 20px !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin: 16px 0 !important;
+  font-family: ""SF Mono"", Menlo, Consolas, Monaco, monospace !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  white-space: pre !important;
+}
+#apcsa-lesson pre code {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+}
+
+/* BREADCRUMB */
+#apcsa-lesson .apcsa-breadcrumb {
+  display: block !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin-bottom: 16px !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:link, #apcsa-lesson .apcsa-breadcrumb a:visited {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  text-decoration: none !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:hover { text-decoration: underline !important; }
+#apcsa-lesson .apcsa-breadcrumb span.sep { margin: 0 8px !important; color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important; }
+
+/* HEADER */
+#apcsa-lesson .apcsa-header { display: block !important; margin-bottom: 28px !important; }
+#apcsa-lesson .apcsa-eyebrow {
+  display: inline-block !important;
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+}
+#apcsa-lesson .apcsa-meta-row {
+  display: flex !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+  margin-top: 12px !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+#apcsa-lesson .apcsa-meta-row span { color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
+
+/* ""WHAT YOU'LL LEARN"" BOX */
+#apcsa-lesson .apcsa-learn-box {
+  display: block !important;
+  background: #eff6ff !important;
+  border-left: 4px solid #2563eb !important;
+  padding: 20px 24px !important;
+  margin: 24px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#apcsa-lesson .apcsa-learn-box h3 {
+  margin-top: 0 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  font-size: 18px !important;
+}
+#apcsa-lesson .apcsa-learn-box ul li { margin-bottom: 8px !important; }
+
+/* SLOTS */
+#apcsa-lesson .apcsa-slot {
+  display: block !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  padding: 18px 24px !important;
+  margin: 24px 0 !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  font-size: 14px !important;
+}
+#apcsa-lesson .apcsa-slot strong { color: #475569 !important; -webkit-text-fill-color: #475569 !important; }
+
+/* CALLOUTS */
+#apcsa-lesson .apcsa-callout {
+  display: block !important;
+  padding: 18px 22px !important;
+  margin: 20px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+  border-left: 4px solid #94a3b8 !important;
+  background: #f8fafc !important;
+}
+#apcsa-lesson .apcsa-callout h4 {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  font-size: 16px !important;
+  letter-spacing: 0.02em !important;
+}
+#apcsa-lesson .apcsa-callout.concept { background: #eff6ff !important; border-left-color: #2563eb !important; }
+#apcsa-lesson .apcsa-callout.concept h4 { color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson .apcsa-callout.example { background: #f0fdf4 !important; border-left-color: #16a34a !important; }
+#apcsa-lesson .apcsa-callout.example h4 { color: #166534 !important; -webkit-text-fill-color: #166534 !important; }
+#apcsa-lesson .apcsa-callout.warning { background: #fef2f2 !important; border-left-color: #dc2626 !important; }
+#apcsa-lesson .apcsa-callout.warning h4 { color: #991b1b !important; -webkit-text-fill-color: #991b1b !important; }
+#apcsa-lesson .apcsa-callout.key-insight { background: #fefce8 !important; border-left-color: #ca8a04 !important; }
+#apcsa-lesson .apcsa-callout.key-insight h4 { color: #713f12 !important; -webkit-text-fill-color: #713f12 !important; }
+
+/* VOCAB TABLE */
+#apcsa-lesson .apcsa-vocab {
+  display: table !important;
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcsa-vocab thead, #apcsa-lesson .apcsa-vocab tbody { display: table-row-group !important; }
+#apcsa-lesson .apcsa-vocab tr { display: table-row !important; }
+#apcsa-lesson .apcsa-vocab th, #apcsa-lesson .apcsa-vocab td {
+  display: table-cell !important;
+  padding: 12px 14px !important;
+  border: 1px solid #e5e7eb !important;
+  vertical-align: top !important;
+}
+#apcsa-lesson .apcsa-vocab th {
+  background: #f3f4f6 !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  text-align: left !important;
+}
+
+/* TIER 2 PRACTICE */
+#apcsa-lesson .apcsa-practice-tier {
+  display: block !important;
+  background: #fafafa !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier h2 {
+  margin-top: 0 !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier .tier-label {
+  display: inline-block !important;
+  background: #1e40af !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-right: 10px !important;
+}
+
+#apcsa-lesson .apcs-ex {
+  display: block !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 20px 22px !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcs-ex-label {
+  display: inline-block !important;
+  background: #ede9fe !important;
+  color: #5b21b6 !important;
+  -webkit-text-fill-color: #5b21b6 !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+}
+#apcsa-lesson .apcs-ex-stem { margin-bottom: 12px !important; }
+#apcsa-lesson .apcs-ex-stem strong { color: #0f172a !important; -webkit-text-fill-color: #0f172a !important; }
+
+/* MCQ option list */
+#apcsa-lesson .apcs-ex-options { display: block !important; margin: 12px 0 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt {
+  display: block !important;
+  padding: 10px 14px !important;
+  margin: 6px 0 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: all 0.15s !important;
+}
+#apcsa-lesson .apcs-ex-options .apcs-opt:hover { border-color: #93c5fd !important; background: #eff6ff !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.selected { border-color: #2563eb !important; background: #dbeafe !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.correct { border-color: #16a34a !important; background: #dcfce7 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.incorrect { border-color: #dc2626 !important; background: #fee2e2 !important; }
+#apcsa-lesson .apcs-opt-letter {
+  display: inline-block !important;
+  font-weight: 700 !important;
+  margin-right: 10px !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-opt-letter { color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; }
+#apcsa-lesson .apcsa-mastery .apcs-opt { color: #1f2937 !important; -webkit-text-fill-color: #1f2937 !important; }
+
+/* Matching */
+#apcsa-lesson .apcs-matching {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+  margin: 12px 0 !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-col {
+  display: block !important;
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-item {
+  display: block !important;
+  padding: 8px 12px !important;
+  margin: 4px 0 !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-item.selected { border-color: #2563eb !important; background: #dbeafe !important; }
+#apcsa-lesson .apcs-matching .apcs-match-item.matched { border-color: #16a34a !important; background: #dcfce7 !important; cursor: default !important; }
+
+/* Scenario-sort */
+#apcsa-lesson .apcs-sort-bank {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 14px !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 6px !important;
+  margin: 10px 0 !important;
+}
+#apcsa-lesson .apcs-sort-item {
+  display: inline-block !important;
+  padding: 6px 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+}
+#apcsa-lesson .apcs-sort-buckets {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin-top: 12px !important;
+}
+#apcsa-lesson .apcs-sort-bucket {
+  display: block !important;
+  min-height: 80px !important;
+  padding: 12px !important;
+  background: #ffffff !important;
+  border: 2px dashed #cbd5e1 !important;
+  border-radius: 6px !important;
+}
+#apcsa-lesson .apcs-sort-bucket h5 {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  margin: 0 0 8px 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Cloze */
+#apcsa-lesson .apcs-cloze-text { display: block !important; line-height: 2 !important; font-size: 16px !important; }
+#apcsa-lesson .apcs-cloze-blank {
+  display: inline-block !important;
+  min-width: 90px !important;
+  padding: 4px 10px !important;
+  margin: 0 4px !important;
+  background: #fef9c3 !important;
+  border: 1px dashed #ca8a04 !important;
+  border-radius: 4px !important;
+  text-align: center !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-cloze-blank.filled { background: #dbeafe !important; border-style: solid !important; border-color: #2563eb !important; }
+#apcsa-lesson .apcs-cloze-blank.correct { background: #dcfce7 !important; border-color: #16a34a !important; }
+#apcsa-lesson .apcs-cloze-blank.incorrect { background: #fee2e2 !important; border-color: #dc2626 !important; }
+#apcsa-lesson .apcs-cloze-chips { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; margin-top: 12px !important; }
+
+/* Predict gate */
+#apcsa-lesson .apcs-predict-gate {
+  display: block !important;
+  background: #fffbeb !important;
+  border-left: 3px solid #f59e0b !important;
+  padding: 10px 14px !important;
+  margin: 10px 0 !important;
+  font-size: 14px !important;
+  color: #78350f !important;
+  -webkit-text-fill-color: #78350f !important;
+  font-style: italic !important;
+}
+
+/* Buttons */
+#apcsa-lesson .apcs-btn,
+#apcsa-lesson .apcs-btn:link,
+#apcsa-lesson .apcs-btn:visited {
+  display: inline-block !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 10px 20px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  margin: 4px 4px 4px 0 !important;
+}
+#apcsa-lesson .apcs-btn:hover, #apcsa-lesson .apcs-btn:active {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#apcsa-lesson .apcs-btn-secondary,
+#apcsa-lesson .apcs-btn-secondary:link,
+#apcsa-lesson .apcs-btn-secondary:visited {
+  background: #ffffff !important;
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  border: 2px solid #2563eb !important;
+  padding: 8px 18px !important;
+}
+#apcsa-lesson .apcs-btn-secondary:hover, #apcsa-lesson .apcs-btn-secondary:active {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* Feedback */
+#apcsa-lesson .apcs-ex-feedback {
+  display: none !important;
+  margin-top: 12px !important;
+  padding: 14px 16px !important;
+  border-radius: 6px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-ex-feedback.show { display: block !important; }
+#apcsa-lesson .apcs-ex-feedback.fb-correct {
+  background: #dcfce7 !important;
+  border-left: 4px solid #16a34a !important;
+  color: #14532d !important;
+  -webkit-text-fill-color: #14532d !important;
+}
+#apcsa-lesson .apcs-ex-feedback.fb-incorrect {
+  background: #fee2e2 !important;
+  border-left: 4px solid #dc2626 !important;
+  color: #7f1d1d !important;
+  -webkit-text-fill-color: #7f1d1d !important;
+}
+
+/* TIER 3 MASTERY */
+#apcsa-lesson .apcsa-mastery {
+  display: block !important;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  border-radius: 12px !important;
+  padding: 32px 32px 28px !important;
+  margin: 40px 0 !important;
+}
+#apcsa-lesson .apcsa-mastery,
+#apcsa-lesson .apcsa-mastery p,
+#apcsa-lesson .apcsa-mastery span,
+#apcsa-lesson .apcsa-mastery li,
+#apcsa-lesson .apcsa-mastery strong,
+#apcsa-lesson .apcsa-mastery em { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery code { background: rgba(255,255,255,0.10) !important; color: #fde68a !important; -webkit-text-fill-color: #fde68a !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 14px !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct strong { color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct code { background: rgba(20,83,45,0.12) !important; color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect strong { color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect code { background: rgba(127,29,29,0.12) !important; color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .mastery-badge {
+  display: inline-block !important;
+  background: #f59e0b !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 14px !important;
+}
+#apcsa-lesson .apcsa-mastery h2 { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; border-bottom: none !important; padding-bottom: 0 !important; margin-top: 0 !important; }
+#apcsa-lesson .apcsa-mastery h3 { color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem,
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem strong { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt:hover { border-color: #60a5fa !important; background: #1e293b !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt.selected { border-color: #60a5fa !important; background: #1e3a8a !important; }
+#apcsa-lesson .apcsa-mastery .apcs-predict-gate {
+  background: #1e293b !important;
+  border-left-color: #f59e0b !important;
+  color: #fde68a !important;
+  -webkit-text-fill-color: #fde68a !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric {
+  display: block !important;
+  margin-top: 18px !important;
+  padding: 16px 18px !important;
+  background: #1e293b !important;
+  border-radius: 8px !important;
+  border: 1px solid #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric h4 {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+  margin-top: 0 !important;
+  margin-bottom: 10px !important;
+  font-size: 15px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #334155 !important;
+  gap: 12px !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row:last-child { border-bottom: none !important; }
+#apcsa-lesson .apcsa-mastery .rubric-score {
+  display: inline-block !important;
+  background: #16a34a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-score.partial { background: #ca8a04 !important; }
+#apcsa-lesson .apcsa-mastery .rubric-score.zero { background: #dc2626 !important; }
+
+/* TRAPS GRID */
+#apcsa-lesson .apcsa-traps {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 14px !important;
+  margin: 24px 0 !important;
+}
+#apcsa-lesson .apcsa-trap-card {
+  display: block !important;
+  background: #fef2f2 !important;
+  border-left: 4px solid #dc2626 !important;
+  padding: 16px 18px !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#apcsa-lesson .apcsa-trap-card h4 {
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcsa-trap-card p { font-size: 15px !important; margin-bottom: 0 !important; }
+
+/* EXTENSION */
+#apcsa-lesson .apcsa-extension {
+  display: block !important;
+  background: #faf5ff !important;
+  border: 1px solid #e9d5ff !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-extension h3 {
+  color: #6b21a8 !important;
+  -webkit-text-fill-color: #6b21a8 !important;
+  margin-top: 8px !important;
+}
+#apcsa-lesson .apcsa-extension .ext-badge {
+  display: inline-block !important;
+  background: #6b21a8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* RESOURCE GRID */
+#apcsa-lesson .apcsa-resources {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcsa-resource-card,
+#apcsa-lesson .apcsa-resource-card:link,
+#apcsa-lesson .apcsa-resource-card:visited {
+  display: block !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 16px 18px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: all 0.15s !important;
+}
+#apcsa-lesson .apcsa-resource-card:hover {
+  border-color: #2563eb !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08) !important;
+}
+#apcsa-lesson .apcsa-resource-card h4 {
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcsa-resource-card p {
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin: 0 !important;
+}
+
+/* CTA BANNER */
+#apcsa-lesson .apcsa-cta-banner {
+  display: block !important;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 28px 32px !important;
+  margin: 40px 0 !important;
+  text-align: center !important;
+}
+#apcsa-lesson .apcsa-cta-banner,
+#apcsa-lesson .apcsa-cta-banner p,
+#apcsa-lesson .apcsa-cta-banner span,
+#apcsa-lesson .apcsa-cta-banner strong { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+#apcsa-lesson .apcsa-cta-banner h3 {
+  font-size: 22px !important;
+  margin: 0 0 10px 0 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#apcsa-lesson .apcsa-cta-banner p { font-size: 16px !important; margin-bottom: 16px !important; }
+#apcsa-lesson .apcsa-cta-banner .apcs-btn,
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:link,
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:visited {
+  background: #ffffff !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:hover, #apcsa-lesson .apcsa-cta-banner .apcs-btn:active {
+  background: #f1f5f9 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+
+/* NAV */
+#apcsa-lesson .apcsa-nav {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  margin: 40px 0 24px 0 !important;
+  padding-top: 24px !important;
+  border-top: 2px solid #e5e7eb !important;
+}
+#apcsa-lesson .apcsa-nav a:link, #apcsa-lesson .apcsa-nav a:visited {
+  display: block !important;
+  flex: 1 1 0 !important;
+  padding: 14px 18px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+#apcsa-lesson .apcsa-nav a:hover { border-color: #2563eb !important; background: #eff6ff !important; }
+#apcsa-lesson .apcsa-nav .nav-direction {
+  display: block !important;
+  font-size: 12px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 4px !important;
+}
+#apcsa-lesson .apcsa-nav .nav-title {
+  display: block !important;
+  font-weight: 600 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+#apcsa-lesson .apcsa-nav .nav-next { text-align: right !important; }
+#apcsa-lesson .apcsa-nav .nav-prev.disabled,
+#apcsa-lesson .apcsa-nav .nav-prev.disabled:link,
+#apcsa-lesson .apcsa-nav .nav-prev.disabled:visited {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+#apcsa-lesson .apcsa-hub-links {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+}
+#apcsa-lesson .apcsa-hub-links a:link, #apcsa-lesson .apcsa-hub-links a:visited {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+
+@media (max-width: 720px) {
+  #apcsa-lesson { padding: 20px 16px 60px !important; font-size: 16px !important; }
+  #apcsa-lesson h1 { font-size: 28px !important; }
+  #apcsa-lesson h2 { font-size: 22px !important; }
+  #apcsa-lesson .apcsa-traps { grid-template-columns: 1fr !important; }
+  #apcsa-lesson .apcsa-matching { grid-template-columns: 1fr !important; }
+  #apcsa-lesson .apcsa-nav { flex-direction: column !important; }
+  #apcsa-lesson .apcsa-nav .nav-next { text-align: left !important; }
+  #apcsa-lesson .apcsa-mastery { padding: 24px 20px !important; }
+  #apcsa-lesson .apcsa-mastery .rubric-row { flex-direction: column !important; align-items: flex-start !important; }
+  #apcsa-lesson .apcsa-resources { grid-template-columns: 1fr !important; }
+}
+</style>
+<!-- CSANAV-START --><style>
+#csanav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;top:0!important;}
+#csanav *{box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;-webkit-font-smoothing:antialiased!important;}
+#csanav .csn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#csanav .csn-rail::-webkit-scrollbar{display:none!important;}
+#csanav .csn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#csanav .csn-hub:link,#csanav .csn-hub:visited,#csanav a.csn-hub,#csanav a.csn-hub:link,#csanav a.csn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#csanav .csn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#csanav .csn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#csanav .csn-lesson:link,#csanav .csn-lesson:visited,#csanav .csn-lesson:hover,#csanav .csn-lesson:active,#csanav a.csn-lesson,#csanav a.csn-lesson:link,#csanav a.csn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#csanav .csn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#csanav .csn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#csanav .csn-lesson.open:link,#csanav .csn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#csanav .csn-lesson.open .csn-chevron{transform:rotate(180deg)!important;}
+#csanav .csn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#csanav .csn-steps.open{display:inline-flex!important;}
+#csanav .csn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#csanav .csn-step:link,#csanav .csn-step:visited,#csanav a.csn-step,#csanav a.csn-step:link,#csanav a.csn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#csanav .csn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#csanav .csn-step.current:link,#csanav .csn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#csanav .csn-badge{display:none!important;}}
+</style>
+<div id=""csanav"">
+<div class=""csn-rail"" id=""csn-rail"">
+<a href=""/pages/ap-csa-course"" class=""csn-hub"">AP CSA Hub</a> <span class=""csn-badge"">Unit 1</span> <a href=""/pages/ap-csa-lesson-1-1-intro-algorithms"" class=""csn-lesson"" id=""csn-l1-1"" title=""Introduction to Algorithms, Programming, and Compilers"">1.1 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-1""> <a href=""/pages/ap-csa-lesson-1-1-intro-algorithms"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-1-intro-algorithms-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-2-variables-data-types"" class=""csn-lesson"" id=""csn-l1-2"" title=""Variables and Data Types"">1.2 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-2""> <a href=""/pages/ap-csa-lesson-1-2-variables-data-types"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-3-expressions-assignment"" class=""csn-lesson"" id=""csn-l1-3"" title=""Expressions and Output"">1.3 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-3""> <a href=""/pages/ap-csa-lesson-1-3-expressions-assignment"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-3-expressions-assignment-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-4-assignment-statements-input"" class=""csn-lesson"" id=""csn-l1-4"" title=""Assignment Statements and Input"">1.4 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-4""> <a href=""/pages/ap-csa-lesson-1-4-assignment-statements-input"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-4-assignment-statements-input-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-5-casting-range"" class=""csn-lesson"" id=""csn-l1-5"" title=""Casting and Range of Variables"">1.5 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-5""> <a href=""/pages/ap-csa-lesson-1-5-casting-range"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-5-casting-range-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-6-compound-assignment"" class=""csn-lesson"" id=""csn-l1-6"" title=""Compound Assignment Operators"">1.6 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-6""> <a href=""/pages/ap-csa-lesson-1-6-compound-assignment"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-6-compound-assignment-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-7-api-libraries"" class=""csn-lesson"" id=""csn-l1-7"" title=""Application Program Interface (API) and Libraries"">1.7 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-7""> <a href=""/pages/ap-csa-lesson-1-7-api-libraries"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-7-api-libraries-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-8-documentation-comments"" class=""csn-lesson"" id=""csn-l1-8"" title=""Documentation with Comments"">1.8 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-8""> <a href=""/pages/ap-csa-lesson-1-8-documentation-comments"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-8-documentation-comments-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-9-method-signatures"" class=""csn-lesson open"" id=""csn-l1-9"" title=""Method Signatures"">1.9 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps open"" id=""csn-s1-9""> <span class=""csn-step current"">Lesson</span> <a href=""/pages/ap-csa-lesson-1-9-method-signatures-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-10-calling-class-methods"" class=""csn-lesson"" id=""csn-l1-10"" title=""Calling Class Methods"">1.10 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-10""> <a href=""/pages/ap-csa-lesson-1-10-calling-class-methods"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-10-calling-class-methods-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-11-math-class"" class=""csn-lesson"" id=""csn-l1-11"" title=""Math Class"">1.11 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-11""> <a href=""/pages/ap-csa-lesson-1-11-math-class"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-11-math-class-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-12-objects-instances"" class=""csn-lesson"" id=""csn-l1-12"" title=""Objects: Instances of Classes"">1.12 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-12""> <a href=""/pages/ap-csa-lesson-1-12-objects-instances"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-12-objects-instances-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-13-object-creation"" class=""csn-lesson"" id=""csn-l1-13"" title=""Object Creation and Storage (Instantiation)"">1.13 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-13""> <a href=""/pages/ap-csa-lesson-1-13-object-creation"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-13-object-creation-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-14-calling-instance-methods"" class=""csn-lesson"" id=""csn-l1-14"" title=""Calling Instance Methods"">1.14 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-14""> <a href=""/pages/ap-csa-lesson-1-14-calling-instance-methods"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-14-calling-instance-methods-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span> <a href=""/pages/ap-csa-lesson-1-15-string-manipulation"" class=""csn-lesson"" id=""csn-l1-15"" title=""String Manipulation"">1.15 <span class=""csn-chevron"">▼</span></a> <span class=""csn-steps"" id=""csn-s1-15""> <a href=""/pages/ap-csa-lesson-1-15-string-manipulation"" class=""csn-step"">Lesson</a> <a href=""/pages/ap-csa-lesson-1-15-string-manipulation-exercise-1"" class=""csn-step"">Ex 1</a> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Ex 2</span> <span class=""csn-step"" style=""opacity:0.4!important;cursor:not-allowed!important;"">Quiz</span> </span>
+</div>
+</div>
+<p> </p>
+<script>
+(function(){
+  document.querySelectorAll('#csanav .csn-lesson').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      var stepsId='csn-s'+btn.id.replace('csn-l','');
+      var steps=document.getElementById(stepsId);
+      var isOpen=btn.classList.contains('open');
+      if(!isOpen)e.preventDefault();
+      document.querySelectorAll('#csanav .csn-lesson').forEach(function(b){b.classList.remove('open');});
+      document.querySelectorAll('#csanav .csn-steps').forEach(function(s){s.classList.remove('open');});
+      if(!isOpen&&steps){btn.classList.add('open');steps.classList.add('open');}
+    });
+  });
+})();
+</script><!-- CSANAV-END -->
+
+<div id=""apcsa-lesson"" data-course=""ap-csa"" data-lesson-id=""1.9"">
+<nav class=""apcsa-breadcrumb"" aria-label=""Breadcrumb"">
+  <a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a><span class=""sep"">›</span>
+  <a href=""/pages/ap-csa-course"">Course</a><span class=""sep"">›</span>
+  <a href=""/pages/ap-csa-unit-1-course"">Unit 1: Using Objects and Methods</a><span class=""sep"">›</span>
+  <span>Lesson 1.9</span>
+</nav>
+<header class=""apcsa-header"">
+  <span class=""apcsa-eyebrow"">Unit 1 · Lesson 1.9 · Conceptual</span>
+  <h1>Lesson 1.9: Method Signatures</h1>
+  <div class=""apcsa-meta-row"">
+<span>Reading time: 7–9 min</span><span>·</span><span>Practice: 6 exercises</span><span>·</span><span>Mastery: applied scenario</span>
+</div>
+</header>
+<div class=""apcsa-learn-box"">
+  <h3>What you'll learn in this lesson</h3>
+  <ul>
+    <li>
+<strong>1.9.A.</strong> Identify the correct method to call based on a method signature, explain what parameters and arguments are, and describe how call-by-value works.</li>
+    <li>
+<strong>1.9.B.</strong> Distinguish between <code>void</code> and non-void methods, explain how method calls interrupt execution flow, and identify overloaded methods.</li>
+  </ul>
+  <p style=""margin-top: 8px !important; margin-bottom: 4px !important; font-size: 14px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important;"">This lesson is part of the <a href=""https://apcentral.collegeboard.org/courses/ap-computer-science-a"" target=""_blank"" rel=""noopener noreferrer"" style=""color:#2563eb !important; -webkit-text-fill-color:#2563eb !important;"">AP CSA Course and Exam Description</a> (effective May 2027).</p>
+  <p style=""margin-top: 12px !important; margin-bottom: 0 !important; font-size: 15px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important;""><strong>AP exam weight:</strong> Method signatures appear constantly — every time you call <code>Math.abs</code>, <code>String.substring</code>, or a class constructor, you are reading a signature. Expect 3–5 MCQs per exam that require you to match a call to its signature or trace through a call-by-value argument.</p>
+</div>
+
+<div class=""apcsa-vocab-block"" style=""margin:28px 0!important;"">
+  <h3 style=""font-size:17px!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin:0 0 10px!important;"">Key Vocabulary</h3>
+  <table style=""width:100%!important;border-collapse:collapse!important;font-size:14px!important;"">
+    <thead><tr style=""background:#1e1b4b!important;"">
+      <th style=""padding:8px 12px!important;border:1px solid #334155!important;text-align:left!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px!important;width:22%!important;"">Term</th>
+      <th style=""padding:8px 12px!important;border:1px solid #334155!important;text-align:left!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px!important;"">Definition</th>
+    </tr></thead>
+    <tbody>
+<tr>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;"">method</td>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">A named block of code that only runs when called.
+</td>
+</tr>
+<tr>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;"">method signature</td>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">The method name plus the ordered list of parameter types; identifies a method uniquely within its class.</td>
+</tr>
+<tr>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;"">parameter</td>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">A variable declared in a method header; receives a copy of the argument when the method is called.</td>
+</tr>
+<tr>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;"">argument</td>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">The actual value passed to a method when it is called; must be compatible in number, order, and type with the parameter list.</td>
+</tr>
+<tr>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;"">call-by-value</td>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">Parameters receive copies of argument values; changes to parameters inside a method do not affect the caller's variables.</td>
+</tr>
+<tr>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;"">void method</td>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">A method with no return value; called as a standalone statement.</td>
+</tr>
+<tr>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;"">non-void method</td>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">A method that returns a value of the declared return type; the return value must be stored or used in an expression.</td>
+</tr>
+<tr>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;"">overloading</td>
+<td style=""padding:8px 12px!important;border:1px solid #e5e7eb!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">When a class has multiple methods with the same name but different signatures.</td>
+</tr>
+</tbody>
+  </table>
+</div>
+
+<h2>What is a method?</h2>
+<p>A <strong>method</strong> is a named block of code that only runs when it is called (see the <a href=""https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4"" target=""_blank"" rel=""noopener noreferrer"">Java Language Specification §8.4</a> for full method declaration syntax). Procedural abstraction lets a programmer use a method by knowing what it does — from the signature and documentation — without needing to know how it was implemented internally.</p>
+
+<h2>Method signatures</h2>
+<p>A <strong>method signature</strong> identifies a method uniquely within a class. It consists of the method name plus the ordered list of parameter types. Return type is NOT part of the signature.</p>
+<div class=""apcsa-callout concept"">
+  <h4>Anatomy of a Method Header</h4>
+  <pre>public static double average(int a, int b)</pre>
+  <p><code>public static</code> — access and type modifiers<br>
+  <code>double</code> — return type (what the method gives back)<br>
+  <code>average</code> — method name<br>
+  <code>(int a, int b)</code> — parameter list (names + types of inputs)<br>
+  <strong>Signature:</strong> <code>average(int, int)</code> — name + ordered parameter types only</p>
+</div>
+
+<h3>Parameters vs Arguments</h3>
+<div class=""apcsa-callout concept"">
+  <h4>The Distinction</h4>
+  <p>A <strong>parameter</strong> is a variable declared in the method header. It exists inside the method body.<br>
+  An <strong>argument</strong> is the actual value passed when the method is called. Arguments must match parameters in number, order, and compatible type.</p>
+  <pre>// Declaration: a and b are parameters
+public static double average(int a, int b) { ... }
+
+// Call: 10 and 6 are arguments
+double result = average(10, 6);</pre>
+</div>
+
+<h3>Call-by-value</h3>
+<div class=""apcsa-callout concept"">
+  <h4>Call-by-Value Rule</h4>
+  <p>When arguments are passed to a method, the parameters are initialized with <em>copies</em> of the argument values. Changing a parameter inside the method does NOT change the original variable in the calling code.</p>
+</div>
+<div class=""apcsa-callout example"">
+  <h4>Example</h4>
+  <pre>public static void doubleIt(int n) {
+    n = n * 2;   // changes the local copy only
+}
+int x = 5;
+doubleIt(x);
+System.out.println(x);  // still prints 5</pre>
+</div>
+<div class=""apcsa-callout trap"">
+  <h4>AP Trap: call-by-value for primitives</h4>
+  <p>This is one of the most-tested traps in Unit 1. Students assume the original variable changes. It does not — <code>x</code> is still 5 after the call. The primitive value was copied; the method only modified its own local copy.</p>
+</div>
+
+<h2>void vs non-void methods</h2>
+<div class=""apcsa-callout concept"">
+  <h4>The Distinction</h4>
+  <p>A <strong>void</strong> method performs an action but returns no value. It is called as a standalone statement: <code>System.out.println(""hi"");</code><br><br>
+  A <strong>non-void</strong> method returns a value of the declared return type. The return value must be stored in a variable or used in an expression: <code>double avg = average(10, 6);</code></p>
+</div>
+<div class=""apcsa-callout trap"">
+  <h4>AP Trap</h4>
+  <p>Calling a non-void method and discarding the return value (e.g., <code>average(10, 6);</code> without storing it) compiles in Java but is almost always a logic error on the exam. Calling a void method as part of an expression is a compile error.</p>
+</div>
+
+<h2>Execution flow: method calls interrupt sequencing</h2>
+<p>When a method is called, execution jumps into the method body. The calling code pauses. Once the method finishes (reaches <code>return</code> or the closing brace), control returns to the line immediately after the call.</p>
+
+<h2>Overloaded methods</h2>
+<p>Methods are <strong>overloaded</strong> when a class has multiple methods with the same name but different signatures. <code>Math.abs(int x)</code> and <code>Math.abs(double x)</code> are overloaded. Java picks the correct version based on the argument type at the call site.</p>
+
+
+
+<!-- in-lesson code editor -->
+<link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css"">
+
+<style>
+#csa-ce-wrap{font-family:""DM Sans"",-apple-system,sans-serif!important;background:#0f172a!important;border-radius:14px!important;padding:28px!important;margin:40px 0!important;box-sizing:border-box!important;}
+#csa-ce-wrap *{box-sizing:border-box!important
+;}
+#csa-ce-wrap .csa-ce-badge{display:inline-block!important;background:rgba(232,160,32,.15)!important;border:1px solid rgba(232,160,32,.4)!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:100px!important;margin-bottom:10px!important;}
+#csa-ce-wrap .csa-ce-title{font-family:""DM Serif Display"",Georgia,serif!important;font-size:22px!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;margin:0 0 4px 0!important;}
+#csa-ce-wrap .csa-ce-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:0 0 20px 0!important;line-height:1.6!important;}
+#csa-ce-wrap .csa-ce-problem{background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:10px!important;padding:18px 20px!important;margin-bottom:16px!important;}
+#csa-ce-wrap .csa-ce-num{font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;margin:0 0 8px 0!important;}
+#csa-ce-wrap .csa-ce-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.65!important;margin:0 0 12px 0!important;}
+#csa-ce-wrap .csa-ce-prompt code{background:rgba(255,255,255,.1)!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;padding:1px 6px!important;border-radius:4px!important;font-family:Menlo,Consolas,monospace!important;font-size:13px!important;}
+#csa-ce-wrap .csa-ce-editor{border:2px solid rgba(255,255,255,.12)!important;border-radius:8px!important;overflow:hidden!important;margin-bottom:10px!important;}
+#csa-ce-wrap .CodeMirror{height:auto!important;min-height:240px!important;background:#020617!important;color:#e2e8f0!important;font-family:Menlo,Consolas,monospace!important;font-size:13.5px!important;line-height:1.7!important;padding:6px 0!important;}
+#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{padding-left:8px!important;border:0!important;border-radius:0!important;background:transparent!important;margin:0!important;}
+#csa-ce-wrap .CodeMirror-lines{padding:8px 0!important;}
+#csa-ce-wrap .CodeMirror-gutters{background:#020617!important;border-right:1px solid rgba(255,255,255,.08)!important;width:40px!important;}
+#csa-ce-wrap .CodeMirror-sizer{margin-left:40px!important;}
+#csa-ce-wrap .CodeMirror-linenumber{color:#475569!important;-webkit-text-fill-color:#475569!important;padding:0 7px 0 0!important;text-align:right!important;}
+#csa-ce-wrap .CodeMirror-cursor{border-left:2px solid #fbbf24!important;}
+#csa-ce-wrap .cm-keyword{color:#c4b5fd!important;}
+#csa-ce-wrap .cm-def{color:#93c5fd!important;}
+#csa-ce-wrap .cm-variable{color:#e2e8f0!important;}
+#csa-ce-wrap .cm-variable-2{color:#e2e8f0!important;}
+#csa-ce-wrap .cm-type{color:#5eead4!important;}
+#csa-ce-wrap .cm-string{color:#86efac!important;}
+#csa-ce-wrap .cm-number{color:#fbbf24!important;}
+#csa-ce-wrap .cm-comment{color:#64748b!important;font-style:italic!important;}
+#csa-ce-wrap .cm-operator{color:#f8fafc!important;}
+#csa-ce-wrap .csa-ce-btnrow{display:flex!important;gap:8px!important;flex-wrap:wrap!important;align-items:center!important;margin:0!important;}
+#csa-ce-wrap .csa-ce-run{padding:9px 22px!important;background:#16a34a!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;letter-spacing:.02em!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-run:hover{background:#15803d!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csa-ce-wrap .csa-ce-run:disabled{background:#475569!important;cursor:wait!important;}
+#csa-ce-wrap .csa-ce-hintbtn,#csa-ce-wrap .csa-ce-resetbtn{padding:9px 16px!important;background:rgba(255,255,255,.1)!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-hintbtn:hover,#csa-ce-wrap .csa-ce-resetbtn:hover,#csa-ce-wrap .csa-ce-wrapbtn:hover{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:rgba(255,255,255,.5)!important;background:rgba(255,255,255,.16)!important;}
+#csa-ce-wrap .csa-ce-wrapbtn{padding:9px 16px!important;background:rgba(255,255,255,.1)!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-wrapbtn.on{background:rgba(232,160,32,.18)!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;border-color:rgba(232,160,32,.55)!important;}
+#csa-ce-wrap .csa-ce-status{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic!important;}
+#csa-ce-wrap .csa-ce-output{margin-top:10px!important;background:#020617!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;padding:12px 16px!important;font-family:Menlo,Consolas,monospace!important;font-size:13px!important;line-height:1.7!important;display:none!important;white-space:pre-wrap!important;word-break:break-word!important;min-height:80px!important;}
+#csa-ce-wrap .csa-ce-output.show{display:block!important;}
+#csa-ce-wrap .csa-ce-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-color:rgba(74,222,128,.35)!important;}
+#csa-ce-wrap .csa-ce-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;border-color:rgba(248,113,113,.35)!important;}
+#csa-ce-wrap .csa-ce-output.plain{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .csa-ce-hint{margin-top:8px!important;background:rgba(147,197,253,.06)!important;border:1px solid rgba(147,197,253,.2)!important;border-radius:8px!important;padding:10px 14px!important;font-size:13px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none!important;line-height:1.6!important;}
+#csa-ce-wrap .csa-ce-hint.show{display:block!important;}
+#csa-ce-wrap .csa-ce-hint code{background:rgba(255,255,255,.1)!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;padding:1px 5px!important;border-radius:4px!important;font-family:Menlo,Consolas,monospace!important;}
+@media(max-width:600px){
+#csa-ce-wrap{padding:18px!important;}
+#csa-ce-wrap .CodeMirror{font-size:12.5px!important;min-height:260px!important;}
+}
+#csa-ce-wrap .CodeMirror-code,#csa-ce-wrap .CodeMirror-code>div,#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{line-height:1.55!important;min-height:0!important;height:auto!important;margin:0!important;padding-top:0!important;padding-bottom:0!important;}
+#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{padding-left:8px!important;}
+#csa-ce-wrap .CodeMirror,#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like,#csa-ce-wrap .CodeMirror-line span:not([class]){color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .cm-keyword{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#csa-ce-wrap .cm-def{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+#csa-ce-wrap .cm-variable,#csa-ce-wrap .cm-variable-2,#csa-ce-wrap .cm-property,#csa-ce-wrap .cm-meta,#csa-ce-wrap .cm-tag{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .cm-type,#csa-ce-wrap .cm-variable-3{color:#5eead4!important;-webkit-text-fill-color:#5eead4!important;}
+#csa-ce-wrap .cm-string{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+#csa-ce-wrap .cm-number{color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;}
+#csa-ce-wrap .cm-comment{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+#csa-ce-wrap .cm-operator,#csa-ce-wrap .cm-bracket,#csa-ce-wrap .cm-punctuation{color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;}
+#csa-ce-wrap .CodeMirror{height:auto!important;min-height:140px!important;}
+#csa-ce-wrap .CodeMirror-
+scroll{max-height:55vh!important;}
+@media(max-width:600px){#csa-ce-wrap .CodeMirror{font-size:11px!important;}}
+</style>
+
+<div id=""csa-ce-wrap"" data-lesson-id=""1.9"" data-item-id=""1.9-code-1"">
+  <div class=""csa-ce-badge"">▶ Java Code Editor</div>
+  <div class=""csa-ce-title"">Try It Yourself</div>
+  <div class=""csa-ce-sub"">Write real Java, hit Run, and your code executes on a live compiler. Output is checked automatically.</div>
+  <div id=""csa-ce-problems""></div>
+</div>
+
+<script src=""https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js""></script>
+<script src=""https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js""></script>
+<script>
+(function(){
+  'use strict';
+
+  var nativeFetch = window.__nativeFetch || window.fetch.bind(window);
+  var PROXY_URL = 'https://progress.apcsexamprep.com/api/judge0/run';
+  var CSACE_RUNS = 0, CSACE_RUN_CAP = 60, CSACE_COOLDOWN_MS = 3000;
+
+  var CSACE_PROBLEMS = [
+  {
+    id: 'p1',
+    title: 'Problem 1 of 3 — write from spec',
+    prompt: 'The provided <code>Tools</code> class has a method <code>triple(int)</code>. Call it with <code>7</code> and print the result (<code>21</code>).',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        // call Tools.triple with 7 and print what it returns
+
+    }
+}
+
+class Tools
+{
+    public static int triple(int n)
+    {
+        return n * 3;
+    }
+}`,
+    expected: `21`,
+    hint: 'The method hands a value back. Calling it and printing it are two different things: what needs to wrap around the call?'
+  },
+  {
+    id: 'p2',
+    title: 'Problem 2 of 3 — spot the compile error',
+    prompt: 'This calls <code>triple</code> with the wrong number of arguments and will not compile. Fix the call so it prints <code>21</code>.',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        System.out.println(Tools.triple(7, 2));
+    }
+}
+
+class Tools
+{
+    public static int triple(int n)
+    {
+        return n * 3;
+    }
+}`,
+    expected: `21`,
+    hint: 'Look at the parameter list on <code>triple</code>. How many values does it accept, and of what type?'
+  },
+  {
+    id: 'p3',
+    title: 'Problem 3 of 3 — fix the bug',
+    prompt: 'This should print <code>15</code>, but it prints <code>5</code>. The return value of <code>triple</code> is being thrown away. Fix it.',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        int n = 5;
+        Tools.triple(n);
+        System.out.println(n);
+    }
+}
+
+class Tools
+{
+    public static int triple(int n)
+    {
+        return n * 3;
+    }
+}`,
+    expected: `15`,
+    hint: 'Does calling <code>triple</code> change the variable you passed in? What does it hand back, and are you doing anything with what comes back?'
+  }
+];
+
+  var editors = {};
+
+  function normalize(s) {
+    if (!s) {
+      return '';
+    }
+    return s.replace(/\r\n/g, '\n').split('\n').map(function(line){
+      return line.replace(/\s+$/, '');
+    }).join('\n').replace(/\n+$/, '');
+  }
+
+  function el(tag, cls, html) {
+    var node = document.createElement(tag);
+    if (cls) {
+      node.className = cls;
+    }
+    if (html !== undefined) {
+      node.innerHTML = html;
+    }
+    return node;
+  }
+
+  function buildProblem(p, idx) {
+    var card = el('div', 'csa-ce-problem');
+    card.appendChild(el('div', 'csa-ce-num', p.title));
+    card.appendChild(el('div', 'csa-ce-prompt', p.prompt));
+
+    var edWrap = el('div', 'csa-ce-editor');
+    var ta = document.createElement('textarea');
+    ta.value = p.starter;
+    edWrap.appendChild(ta);
+    card.appendChild(edWrap);
+
+    var row = el('div', 'csa-ce-btnrow');
+    var runBtn = el('button', 'csa-ce-run', 'Run ▶');
+    var hintBtn = el('button', 'csa-ce-hintbtn', 'Hint');
+    var resetBtn = el('button', 'csa-ce-resetbtn', 'Reset');
+    var wrapBtn = el('button', 'csa-ce-wrapbtn', 'Wrap lines');
+    var status = el('span', 'csa-ce-status', '');
+    row.appendChild(runBtn);
+    row.appendChild(hintBtn);
+    row.appendChild(resetBtn);
+    row.appendChild(wrapBtn);
+    row.appendChild(status);
+    card.appendChild(row);
+
+    var out = el('div', 'csa-ce-output');
+    card.appendChild(out);
+
+    var hint = el('div', 'csa-ce-hint', '💡 ' + p.hint);
+    card.appendChild(hint);
+
+    document.getElementById('csa-ce-problems').appendChild(card);
+
+    var cm = CodeMirror.fromTextArea(ta, {
+      mode: 'text/x-java',
+      lineNumbers: true,
+      indentUnit: 4,
+      tabSize: 4,
+      indentWithTabs: false,
+      viewportMargin: Infinity,
+      lineWrapping: (window.innerWidth <= 600)
+    });
+    editors[p.id] = cm;
+    setTimeout(function(){ cm.refresh(); }, 0);
+    setTimeout(function(){ cm.refresh(); }, 350);
+
+    hintBtn.onclick = function() {
+      hint.classList.toggle('show');
+    };
+
+    if (cm.getOption('lineWrapping')) { wrapBtn.className = 'csa-ce-wrapbtn on'; wrapBtn.innerHTML = 'Wrap: on'; }
+    wrapBtn.onclick = function() {
+      var on = !cm.getOption('lineWrapping');
+      cm.setOption('lineWrapping', on);
+      wrapBtn.className = on ? 'csa-ce-wrapbtn on' : 'csa-ce-wrapbtn';
+      wrapBtn.innerHTML = on ? 'Wrap: on' : 'Wrap lines';
+      cm.refresh();
+    };
+
+    resetBtn.onclick = function() {
+      cm.setValue(p.starter);
+      out.className = 'csa-ce-output';
+      out.textContent = '';
+    };
+
+    runBtn.onclick = function() {
+      var code = cm.getValue();
+      var wrap = document.getElementById('csa-ce-wrap');
+      var lessonId = wrap ? (wrap.getAttribute('data-lesson-id') || '') : '';
+      if (CSACE_RUNS >= CSACE_RUN_CAP) {
+        out.className = 'csa-ce-output show err';
+        out.textContent = 'Run limit reached for this page. Refresh to keep practicing.';
+        return;
+      }
+      CSACE_RUNS++;
+   
+   runBtn.disabled = true;
+      status.textContent = 'Compiling and running...';
+      out.className = 'csa-ce-output';
+      out.textContent = '';
+
+      nativeFetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, lessonId: lessonId, problemId: p.id })
+      })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          return { ok: res.ok, status: res.status, data: data };
+        });
+      })
+      .then(function(result) {
+        setTimeout(function(){ runBtn.disabled = false; }, CSACE_COOLDOWN_MS);
+        status.textContent = '';
+        var data = result.data;
+
+        if (!result.ok) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = data.message || 'Run failed. Try again.';
+          return;
+        }
+
+        if (data.compile_output) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = 'Compile error:\n' + data.compile_output;
+          return;
+        }
+
+        if (data.stderr) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = 'Runtime error:\n' + data.stderr;
+          return;
+        }
+
+        var stdout = data.stdout || '';
+
+        if (p.expected === null || p.expected === undefined) {
+          out.className = 'csa-ce-output show plain';
+          out.textContent = 'Output:\n' + (stdout || '(no output)');
+          return;
+        }
+
+        if (normalize(stdout) === normalize(p.expected)) {
+          out.className = 'csa-ce-output show ok';
+          if (window.APCS_reportAttempt) { APCS_reportAttempt({ item_id: lessonId + '-code-1', item_type: 'cfu', score: 1, max_score: 1, detail: [{ q: idx + 1, sel: null, ok: true }] }); }
+          out.textContent = '✓ Correct!\nOutput: ' + stdout.replace(/\n$/, '');
+        } else {
+          out.className = 'csa-ce-output show err';
+          out.textContent = '✗ Not quite.\nYour output: ' + (stdout.replace(/\n$/, '') || '(none)') + '\nExpected: ' + p.expected;
+        }
+      })
+      .catch(function(err) {
+        setTimeout(function(){ runBtn.disabled = false; }, CSACE_COOLDOWN_MS);
+        status.textContent = '';
+        out.className = 'csa-ce-output show err';
+        out.textContent = 'Could not reach the code runner. Check your connection and try again.';
+      });
+    };
+  }
+
+  function init() {
+    for (var i = 0; i < CSACE_PROBLEMS.length; i++) {
+      buildProblem(CSACE_PROBLEMS[i], i);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<section class=""apcsa-practice-tier"">
+  <span class=""tier-badge"">Tier 2 · AP Practice</span>
+  <h2>Practice Questions</h2>
+
+  <!-- Q1: void vs non-void call — answer C -->
+  <div class=""apcs-ex"" data-type=""mcq"" data-answer=""
+C"" data-item-id=""1.9-cfu-1"">
+    <div class=""apcs-ex-stem"">Which of the following statements about <code>void</code> methods is <strong>NOT</strong> true?</div>
+    <div class=""apcs-ex-options"">
+      <div class=""apcs-opt"" data-letter=""A"">
+<span class=""apcs-opt-letter"">A.</span> A <code>void</code> method does not have a return value.</div>
+      <div class=""apcs-opt"" data-letter=""B"">
+<span class=""apcs-opt-letter"">B.</span> A <code>void</code> method is called as a standalone statement, not as part of an expression.</div>
+      <div class=""apcs-opt"" data-letter=""C"">
+<span class=""apcs-opt-letter"">C.</span> A <code>void</code> method cannot take any parameters.</div>
+      <div class=""apcs-opt"" data-letter=""D"">
+<span class=""apcs-opt-letter"">D.</span> <code>System.out.println()</code> is an example of a <code>void</code> method call.</div>
+    </div>
+    <button class=""apcs-btn apcs-ex-check"">Check answer</button>
+    <div class=""apcs-ex-feedback"">
+<strong>C.</strong> A void method can take any number of parameters. The <code>void</code> keyword only affects the return type. A, B, and D are all accurate statements about void methods.</div>
+  </div>
+
+  <!-- Q2: call-by-value trap — answer A -->
+  <div class=""apcs-ex"" data-type=""mcq"" data-answer=""A"" data-item-id=""1.9-cfu-2"">
+    <div class=""apcs-ex-stem"">Consider the following method and code segment.<br><br>
+      <pre>public static void addTen(int n) {
+    n += 10;
+}
+int score = 50;
+addTen(score);
+System.out.println(score);</pre>
+<br>
+      What is printed?</div>
+    <div class=""apcs-predict-gate"">Trace what happens to <code>score</code> after the method call before reading the options.</div>
+    <div class=""apcs-ex-options"">
+      <div class=""apcs-opt"" data-letter=""A"">
+<span class=""apcs-opt-letter"">A.</span> 50</div>
+      <div class=""apcs-opt"" data-letter=""B"">
+<span class=""apcs-opt-letter"">B.</span> 60</div>
+      <div class=""apcs-opt"" data-letter=""C"">
+<span class=""apcs-opt-letter"">C.</span> A compile error because the return value is discarded.</div>
+      <div class=""apcs-opt"" data-letter=""D"">
+<span class=""apcs-opt-letter"">D.</span> A run-time error because <code>n</code> is modified inside the method.</div>
+    </div>
+    <button class=""apcs-btn apcs-ex-check"">Check answer</button>
+    <div class=""apcs-ex-feedback"">
+<strong>A.</strong> Call-by-value means <code>n</code> is initialized with a copy of <code>score</code> (50). <code>n += 10</code> changes the local copy to 60, but <code>score</code> in the calling code is never touched. Prints 50.</div>
+  </div>
+
+  <!-- Q3: signature identification — answer D -->
+  <div class=""apcs-ex"" data-type=""mcq"" data-answer=""D"" data-item-id=""1.9-cfu-3"">
+    <div class=""apcs-ex-stem"">Which of the following correctly identifies the <strong>signature</strong> of this method?<br><br>
+      <pre>public double computeTax(double 
+income, int dependents)</pre>
+    </div>
+    <div class=""apcs-ex-options"">
+      <div class=""apcs-opt"" data-letter=""A"">
+<span class=""apcs-opt-letter"">A.</span> <code>public double computeTax(double income, int dependents)</code>
+</div>
+      <div class=""apcs-opt"" data-letter=""B"">
+<span class=""apcs-opt-letter"">B.</span> <code>double computeTax</code>
+</div>
+      <div class=""apcs-opt"" data-letter=""C"">
+<span class=""apcs-opt-letter"">C.</span> <code>computeTax(double, int) : double</code>
+</div>
+      <div class=""apcs-opt"" data-letter=""D"">
+<span class=""apcs-opt-letter"">D.</span> <code>computeTax(double, int)</code>
+</div>
+    </div>
+    <button class=""apcs-btn apcs-ex-check"">Check answer</button>
+    <div class=""apcs-ex-feedback"">
+<strong>D.</strong> A method signature consists of the method name and the ordered list of parameter types only. Return type and access modifiers are not part of the signature. A includes everything. B omits parameters. C includes the return type, which is not part of the signature.</div>
+  </div>
+
+  <!-- Q4: I/II/III overloading — answer B -->
+  <div class=""apcs-ex"" data-type=""mcq"" data-answer=""B"" data-item-id=""1.9-cfu-4"">
+    <div class=""apcs-ex-stem"">A class contains these three methods:<br><br>
+      <strong>I.</strong>   <code>public int process(int x)</code><br>
+      <strong>II.</strong>  <code>public double process(double x)</code><br>
+      <strong>III.</strong> <code>public int process(int x, int y)</code><br><br>
+      Which of the following is true about these methods?</div>
+    <div class=""apcs-ex-options"">
+      <div class=""apcs-opt"" data-letter=""A"">
+<span class=""apcs-opt-letter"">A.</span> This is a compile error because two methods cannot have the same name.</div>
+      <div class=""apcs-opt"" data-letter=""B"">
+<span class=""apcs-opt-letter"">B.</span> All three are valid because they are overloaded — they share the same name but have different signatures.</div>
+      <div class=""apcs-opt"" data-letter=""C"">
+<span class=""apcs-opt-letter"">C.</span> Only I and II are valid overloads; III is a compile error because its return type matches I.</div>
+      <div class=""apcs-opt"" data-letter=""D"">
+<span class=""apcs-opt-letter"">D.</span> I and III are a compile error because they have the same return type.</div>
+    </div>
+    <button class=""apcs-btn apcs-ex-check"">Check answer</button>
+    <div class=""apcs-ex-feedback"">
+<strong>B.</strong> Overloading is legal as long as each method has a different signature (name + parameter types). All three have different parameter lists: <code>(int)</code>, <code>(double)</code>, and <code>(int, int)</code>. Return type does not determine whether overloading is allowed.</div>
+  </div>
+
+  <!-- Q5: execution flow — answer C -->
+  <div class=""apcs-ex"" data-type=""mcq"" data-answer=""C"" data-item-id=""1.9-cfu-5"">
+    <div class=""apcs-ex-stem"">Consider the following code.<br><br>
+      <pre>public static int triple(int n) {
+    return n * 3;
+}
+System.out.println(""A"");
+int result = triple(4);
+System.out.println(""B"");
+System.out.println(result);</pre>
+<br>
+      What is the output?</div>
+    <div class=""apcs-ex-options"">
+      <div class=""apcs-opt"" data-letter=""A"">
+<span class=""apcs-opt-letter"">A.</span> A<br>B<br>4</div>
+      <div class=""apcs-opt"" data-letter=""B"">
+<span class=""apcs-opt-letter"">B.</span> A<br>12<br>B</div>
+      <div class=""apcs-opt"" data-letter=""C"">
+<span class=""apcs-opt-letter"">C.</span> A<br>B<br>12</div>
+      <div class=""apcs-opt"" data-letter=""D"">
+<span class=""apcs-opt-letter"">D.</span> 12<br>A<br>B</div>
+    </div>
+    <button class=""apcs-btn apcs-ex-check"">Check answer</button>
+    <div class=""apcs-ex-feedback"">
+<strong>C.</strong> Execution: prints A, calls <code>triple(4)</code> which returns 12 and stores it in <code>result</code>, prints B, then prints 12. The method call happens silently between the two println statements. Result is A, B, 12 on separate lines.</div>
+  </div>
+
+  <!-- Q6: argument compatibility — answer A -->
+  <div class=""apcs-ex"" data-type=""mcq"" data-answer=""A"" data-item-id=""1.9-cfu-6"">
+    <div class=""apcs-ex-stem"">A method has the signature <code>scale(double factor, int count)</code>. Which of the following calls will cause a <strong>compile error</strong>?<br><br>
+      <strong>I.</strong>   <code>scale(2.0, 3)</code><br>
+      <strong>II.</strong>  <code>scale(2, 3)</code><br>
+      <strong>III.</strong> <code>scale(3, 2.0)</code>
+</div>
+    <div class=""apcs-ex-options"">
+      <div class=""apcs-opt"" data-letter=""A"">
+<span class=""apcs-opt-letter"">A.</span> III only</div>
+      <div class=""apcs-opt"" data-letter=""B"">
+<span class=""apcs-opt-letter"">B.</span> II and III only</div>
+      <div class=""apcs-opt"" data-letter=""C"">
+<span class=""apcs-opt-letter"">C.</span> I only</div>
+      <div class=""apcs-opt"" data-letter=""D"">
+<span class=""apcs-opt-letter"">D.</span> None — all three compile.</div>
+    </div>
+    <button class=""apcs-btn apcs-ex-check"">Check answer</button>
+    <div class=""apcs-ex-feedback"">
+<strong>A.</strong> I: <code>scale(2.0, 3)</code> — double and int match exactly. Valid. II: <code>scale(2, 3)</code> — int 2 widens to double 2.0. Valid. III: <code>scale(3, 2.0)</code> — first argument is fine (int widens to double), but second argument 2.0 is double and the parameter is int — narrowing without cast. Compile error.</div>
+  </div>
+</section>
+
+<section class=""apcsa-mastery"" data-item-id=""1.9-quiz"">
+  <span class=""mastery-badge"">Tier 3 · AP Mastery Challenge</span>
+  <h2>The Temperature Converter</h2>
+  <p>A student writes two overloaded methods to convert temperatures.</p>
+  <pre>public static double toCelsius(double fahrenheit) {
+    return (fahrenheit - 32) * 5.0 / 9.0;
+}
+public static double toCelsius(int 
+fahrenheit) {
+    return (fahrenheit - 32) * 5.0 / 9.0;
+}
+double a = toCelsius(212.0);
+double b = toCelsius(212);
+double c = toCelsius(98.6);</pre>
+
+  <h3>Part A</h3>
+  <div class=""apcs-ex"" data-type=""mcq"" data-answer=""D"">
+    <div class=""apcs-ex-stem"">Which method version is called for <code>toCelsius(98.6)</code>?</div>
+    <div class=""apcs-ex-options"">
+      <div class=""apcs-opt"" data-letter=""A"">
+<span class=""apcs-opt-letter"">A.</span> The <code>int</code> version, because 98.6 rounds to 99.</div>
+      <div class=""apcs-opt"" data-letter=""B"">
+<span class=""apcs-opt-letter"">B.</span> Both versions are called and the results averaged.</div>
+      <div class=""apcs-opt"" data-letter=""C"">
+<span class=""apcs-opt-letter"">C.</span> A compile error because the argument is ambiguous.</div>
+      <div class=""apcs-opt"" data-letter=""D"">
+<span class=""apcs-opt-letter"">D.</span> The <code>double</code> version, because 98.6 is a double literal and matches that parameter type exactly.</div>
+    </div>
+    <button class=""apcs-btn apcs-ex-check"">Check answer</button>
+    <div class=""apcs-ex-feedback"">
+<strong>D.</strong> Java selects the overloaded method whose parameter type best matches the argument. 98.6 is a double literal, so the <code>double</code> version is the exact match. The <code>int</code> version would require a narrowing conversion, which Java does not do automatically.</div>
+  </div>
+
+  <h3>Part B</h3>
+  <div class=""apcs-ex"" data-type=""mcq"" data-answer=""B"">
+    <div class=""apcs-ex-stem"">If the student adds a third version <code>public static double toCelsius(double f, String unit)</code>, and calls <code>toCelsius(100.0, ""F"")</code>, which version is called?</div>
+    <div class=""apcs-ex-options"">
+      <div class=""apcs-opt"" data-letter=""A"">
+<span class=""apcs-opt-letter"">A.</span> The original double version, because the second argument is ignored.</div>
+      <div class=""apcs-opt"" data-letter=""B"">
+<span class=""apcs-opt-letter"">B.</span> The new two-parameter version, because the signature matches exactly.</div>
+      <div class=""apcs-opt"" data-letter=""C"">
+<span class=""apcs-opt-letter"">C.</span> A compile error because three overloads of the same method are not allowed.</div>
+      <div class=""apcs-opt"" data-letter=""D"">
+<span class=""apcs-opt-letter"">D.</span> A run-time error because the String argument is unexpected.</div>
+    </div>
+    <button class=""apcs-btn apcs-ex-check"">Check answer</button>
+    <div class=""apcs-ex-feedback"">
+<strong>B.</strong> Java matches the call to the overloaded version whose signature fits the arguments. <code>toCelsius(100.0, ""F"")</code> has a double and a String, matching <code>toCelsius(double, String)</code> exactly. Any number of overloads is legal as long as signatures differ.</div>
+  </div>
+
+  <h3>Part C: Structured response</h3>
+  <p>Explain in three to five sentences what “call-by-value’
+’ means in Java, why it prevents a method from changing the caller’s variable, and give a concrete example showing a variable’s value before and after a method call that attempts to modify it.</p>
+  <button class=""apcs-btn apcs-mastery-reveal"">Show rubric</button>
+  <div class=""apcs-mastery-rubric"" style=""display:none;"">
+    <h4>Scoring Rubric (4 points)</h4>
+    <ul>
+      <li>
+<strong>+1:</strong> Defines call-by-value: the parameter is initialized with a copy of the argument value, not the variable itself.</li>
+      <li>
+<strong>+1:</strong> Explains why the original does not change: modifying the parameter changes only the local copy inside the method; the original variable in the calling code is unaffected.</li>
+      <li>
+<strong>+1:</strong> Provides a valid code example with a method that modifies its parameter.</li>
+      <li>
+<strong>+1:</strong> Shows the variable value is unchanged after the call (e.g., declares <code>int x = 5</code>, calls a method that does <code>x *= 2</code> on the parameter, then shows <code>x</code> is still 5).</li>
+    </ul>
+  </div>
+</section>
+
+<section class=""apcsa-extension"">
+  <span class=""ext-badge"">Extension · Beyond the Exam</span>
+  <h2>Call-by-reference for objects</h2>
+  <p>Call-by-value applies to primitive types. When an object is passed to a method, the parameter receives a copy of the <em>reference</em> (memory address), not a copy of the object itself. This means the method can change the object’s internal state by calling methods on it — but it cannot make the caller’s variable point to a different object. This distinction matters in Unit 3 when you write your own classes.</p>
+</section>
+
+<nav class=""apcsa-lesson-nav"">
+  <a class=""apcsa-nav-btn prev"" href=""/pages/ap-csa-lesson-1-8-documentation-comments"">← Lesson 1.8: Documentation with Comments</a>
+  <a class=""apcsa-nav-btn next"" href=""/pages/ap-csa-lesson-1-10-calling-class-methods"">Lesson 1.10: Calling Class Methods →</a>
+</nav>
+
+<script>
+(function() {
+  document.querySelectorAll('#apcsa-lesson .apcs-ex').forEach(function(ex) {
+    if (ex.dataset.mcqInit) return;
+    ex.dataset.mcqInit = '1';
+    var correct = ex.getAttribute('data-answer');
+    var opts = ex.querySelectorAll('.apcs-opt');
+    var btn = ex.querySelector('.apcs-ex-check');
+    var feedback = ex.querySelector('.apcs-ex-feedback');
+    var chosen = null;
+
+    opts.forEach(function(opt) {
+      opt.style.cursor = 'pointer';
+      opt.addEventListener('click', function() {
+        if (ex.dataset.answered) return;
+        opts.forEach(function(o) { o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        chosen = opt.getAttribute('data-letter');
+      });
+    });
+
+    if (btn) btn.addEventListener('click', function() {
+      if (!chosen || ex.dataset.answered) return;
+      ex.dataset.answered = '1';
+      opts.forEach(function(opt) {
+        var letter = opt.getAttribute('data-letter');
+        if (letter === correct) opt.classList.add('correct');
+        else if (letter === chosen) opt.classList.add('incorrect');
+        opt.classList.remove('selected');
+      });
+      if (feedback) {
+        feedback.classList.add('show');
+        feedback.classList.add(chosen === correct ? 'fb-correct' : 'fb-incorrect');
+      }
+      btn.disabled = true;
+    });
+  });
+})();
+</script>
+</div>
+<script>(function(){document.querySelectorAll('.apcs-mastery-reveal').forEach(function(btn){if(btn.dataset.revInit)return;btn.dataset.revInit='1';btn.addEventListener('click',function(){var r=btn.nextElementSibling;if(!r)return;if(r.style.display==='none'||r.style.display===''){r.style.display='block';btn.textContent='Hide rubric';}else{r.style.display='none';btn.textContent='Show rubric';}});});})();</script>
+<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""Article"",""headline"":""Lesson 1.9: Method Signatures"",""description"":""AP CSA Lesson 1.9 covers method signatures, parameters, arguments, call-by-value, void vs non-void methods, execution flow, and overloading. Aligned to 2025-2026 CED topics 1.9.A and 1.9.B."",""url"":""https://apcsexamprep.com/pages/ap-csa-lesson-1-9-method-signatures"",""datePublished"":""2026-05-21"",""dateModified"":""2026-05-21"",""author"":{""@type"":""Person"",""name"":""Tanner Crow""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""},""wordCount"":950}</script>
+<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA Course"",""item"":""https://apcsexamprep.com/pages/ap-csa-course""},{""@type"":""ListItem"",""position"":3,""name"":""Lesson 1.9: Method Signatures"",""item"":""https://apcsexamprep.com/pages/ap-csa-lesson-1-9-method-signatures""}]}</script>
+<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""LearningResource"",""name"":""Lesson 1.9: Method Signatures"",""description"":""AP CSA Lesson 1.9 covers method signatures, parameters, arguments, call-by-value, void vs non-void methods, execution flow, and overloading."",""url"":""https://apcsexamprep.com/pages/ap-csa-lesson-1-9-method-signatures"",""provider"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""},""educationalLevel"":""High School AP"",""learningResourceType"":""Lesson""}</script>
+<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""FAQPage"",""mainEntity"":[{""@type"":""Question"",""name"":""What is a method signature in Java?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""A method signature consists of the method name and the ordered list of parameter types. Return type and access modifiers are not part of the signature. For example, the signature of public double average(int a, int b) is average(int, int).""}},{""@type"":""Question"",""name"":""What is call-by-value in Java?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Call-by-value means that when a method is called, the parameters are initialized with copies of the argument values. Changing a parameter inside the method does not affect the original variable in the calling code.""}},{""@type"":""Question"",""name"":""What is the difference between a void and non-void method?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""A void method performs an action but returns no value and is called as a standalone statement. A non-void method returns a value of the declared return type; the return value must be stored or used in an expression.""}},{""@type"":""Question"",""name"":""What does method overloading mean?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Methods are overloaded when a class has multiple methods with the same name but different signatures (different parameter types or counts). Java selects the correct version based on the argument types at the call site.""}}]}</script>
+<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""Course"",""name"":""AP Computer Science A (2025-2026 Curriculum)"",""description"":""Full year-long AP CSA course aligned to the 2025-2026 4-Unit CED."",""provider"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://apcsexamprep.com""},""hasCourseInstance"":{""@type"":""CourseInstance"",""courseMode"":""online""}}</script>"
