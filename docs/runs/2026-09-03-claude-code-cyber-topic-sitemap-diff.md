@@ -100,3 +100,81 @@ it has no record of.
 
 T-1.4, T-1.5, and T-1.9 (independent of the #81 slug-scheme question) do not depend on
 either open item above and are safe to execute now.
+
+## 2026-09-03, later: sample verification, and two live blockers found
+
+Tanner's reply confirmed the reframe (T-1.3 becomes reconciliation, T-1.1 is the
+arbiter, Session C gates any shipped sheet) and asked for a 3-page sample check before
+trusting "these 39 pages match the spec" as anything more than a look-alike claim. Two
+things surfaced while doing that.
+
+### T-1.1 (#181) and T-1.2 (#182, this is Session C) are already claimed
+
+Both show `in_progress`, both were claimed by `claude_code` within the last 15-25
+minutes when checked, both routed the way this file's own routing table would route
+them (T-1.1 sonnet, T-1.2 opus). `apcs claim 181 --lock api:data/cyber-topics.json`
+returned a 409 naming `claude_code` as holder on claim #66. A probe claim on #182 with
+a different lock path succeeded (its 4 existing locks are on other files), so it was
+released immediately rather than compounding a partial claim on a task someone else is
+mid-flight on. **Not duplicating this work.** If this sibling session has stalled by the
+time anyone reads this, `apcs release` and re-claim is the way in, not `--force` while
+it might still be running.
+
+### Sample verification: 3 pages, checked against the actual T-1.3 content contract
+
+Fetched raw HTML (not summarized) for `ap-cybersecurity-mfa`, `ap-cybersecurity-firewalls`,
+`ap-cybersecurity-sql-injection` and checked each element of T-1.3's spec directly:
+
+| Page | Self-labeled topic | Worked scenarios | Explicit "skill category" label | Resolving practice-set link | EK code in visible text |
+|---|---|---|---|---|---|
+| ap-cybersecurity-mfa | Topic 1.2 | yes (`cyc-scn` blocks) | no | no (can't - T-1.4 doesn't exist) | **yes: "(EK 1.1.C.2)" inline in a `<p>`** |
+| ap-cybersecurity-firewalls | Topic 3.4 | yes | no | no (can't - T-1.4 doesn't exist) | no |
+| ap-cybersecurity-sql-injection | Topic 5.1 | yes | no | no (can't - T-1.4 doesn't exist) | no |
+
+The EK-code hit was confirmed with the canonical tool, not a hand grep:
+`lib/cyber-ek-density.js`'s `summary()` against the fetched body reports
+`{"total":1,"kept":0,"cut":1}` for the mfa page (one citation, zero protected by any of
+the three allowed structural exceptions) and `{"total":0}` for the other two. So this is
+a real, live violation of the CLAUDE.md rule, not a false positive: "(EK 1.1.C.2)" sits in
+plain body prose, not inside the coverage table, a not-assessed claim, or an answer key.
+
+Net: **"matches the spec" was too generous.** None of the 3 sampled pages carries an
+explicit skill-category mapping (may be a real gap or may be implicit in a way a human
+should judge, not something a script should decide). None can satisfy the practice-link
+leg of the spec today regardless of content quality, because the target doesn't exist
+yet - which argues for building T-1.4 before finishing any ADOPT/RETITLE decision, so
+that leg of the check is even assessable. And at least one of 39 has a genuine,
+CED-rule-violating leak that has nothing to do with taxonomy alignment.
+
+### The bigger complication: the underlying lesson content is not stable ground either
+
+`docs/ap-cyber-units-2-5-ced-audit.md` and `docs/cyber-unit-1-ced-alignment.md` (both
+dated 2026-08-27, already in this repo, not previously connected to Session D) found,
+independent of any topic-index work:
+
+- Unit 3's numbered lessons 3.3 and 3.4 are swapped against the CED (site 3.4 teaches
+  Segmentation, CED 3.4 is Firewalls) - and the standalone `ap-cybersecurity-firewalls`
+  page sampled above self-labels "Topic 3.4" and is *actually* about firewalls, meaning
+  the standalone topic page and the numbered lesson page that nominally share a topic
+  number teach different content.
+- Three site lessons (2.5, 3.6, 4.5) are taught as full graded lessons with no CED
+  counterpart at all.
+- Unit 2 carries five orphaned legacy pages that write to the same `lesson_id` as their
+  CED-aligned replacements.
+- Board #99 and #98 were filed against a stale reading of the CED and should be closed
+  or re-read, not worked as filed.
+
+None of this blocks the reconciliation audit once T-1.1 lands (the audit can and should
+use the true CED topic numbers regardless of what the numbered lesson pages currently
+claim). But it does mean T-1.9's "resolve the legacy handles" step and any hub link that
+points at a numbered lesson page by number are picking a side in an unresolved,
+already-documented, tanner-owned fix list (the audit's own "Suggested order," items 1
+and 5) - not a clean redirect decision. Flagging this so it isn't rediscovered as a
+surprise mid-sheet.
+
+### Still needed from Tanner
+
+- The Session A document/brief (the corrected CLAUDE.md mojibake-pattern fix). No board
+  task or file under that name exists in either repo; nothing to run without it.
+- Whether to proceed drafting T-1.5 and the practice-block half of T-1.9 now (unblocked,
+  hold-for-Session-C on shipping) while T-1.1/T-1.2 finish elsewhere.
