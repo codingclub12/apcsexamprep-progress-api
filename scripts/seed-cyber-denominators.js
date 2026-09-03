@@ -202,10 +202,22 @@ const POINTS = {
   '4.4|exercise-2': 4,        // score readout reads 0 / 4
   '4.4|quiz': 5,              // score readout reads 0 / 5
 
-  // ── 4.5 ────────────────────────────────────────────
-  '4.5|exercise-1': 5,        // score readout reads 0 / 5
-  '4.5|exercise-2': 4,        // score readout reads 0 / 4
-  '4.5|quiz': 5,              // score readout reads 0 / 5
+  // ── 4.5 IS DELIBERATELY ABSENT ──────────────────
+  //  It held three keys until 2026-09-03, read off the live pages the same way
+  //  as everything else here and correct as measurements:
+  //
+  //      '4.5|exercise-1': 5   '4.5|exercise-2': 4   '4.5|quiz': 5
+  //
+  //  The CED's Unit 4 stops at 4.4, so utils.js no longer maps
+  //  ap-cyber-unit-4-lesson-5 to a lesson at all (board 188). A denominator for
+  //  a lesson the course config does not list is unreachable: the gradebook
+  //  builds no column for it, so the value can never be displayed, and section
+  //  1 of smoke/cyber-denominators.js fails on exactly that orphan. Retired 3.6
+  //  came out for the same reason when Unit 3 was renumbered.
+  //
+  //  Kept as a comment rather than deleted, because the measurement is still
+  //  good. If the page is renumbered as a second half of 4.1, these three values
+  //  move back in under the new ids rather than being read off the pages again.
 
   // ── 5.1 ────────────────────────────────────────────
   '5.1|exercise-1': 8,        // score readout reads 0 / 8

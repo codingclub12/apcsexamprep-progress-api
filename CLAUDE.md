@@ -384,7 +384,17 @@ per-category band, by contrast, is CED-verbatim and may be printed as fact.
 
 **The CED has 24 topics: 1.1-1.5, 2.1-2.4, 3.1-3.5, 4.1-4.4, 5.1-5.6.** There is no
 2.5, no 3.6 and no 4.5, and the site teaches all three of those as full lessons with
-their own exercises, labs and quizzes. The authority for topic numbers and titles is
+their own exercises, labs and quizzes.
+
+None of the three has a gradebook column any more. 3.6 went when Unit 3 was
+renumbered; 4.5 went on 2026-09-03, board 188, and its removal is the one worth
+reading before you touch cyber tracking, because the server half is not the fix.
+`POST /api/student/score` lets an explicit lesson win over the handle, so the
+number that reaches the gradebook is chosen by the STOREFRONT, in
+`snippets/apcs-cyber-lesson-map.liquid`. Untracking a page means fencing its unit
+in that map as well as in `utils.js`, and `smoke:cyberunit3` now fails if one side
+refuses a handle the other still resolves. The pages stay up in all three cases:
+this is about what gets a column, never about what students can read. The authority for topic numbers and titles is
 the CED text extracted under `tools/ap-cyber-ced/`: `CED-UNIT1-EXTRACT.txt` and
 `CED-UNITS-2-5-EXTRACT.txt`, both greppable by `TOPIC N.N`. The enumeration, and
 every place the site disagrees with it, is recorded in

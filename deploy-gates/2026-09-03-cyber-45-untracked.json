@@ -1,0 +1,87 @@
+{
+  "change": "stop tracking cyber lesson 4.5. The CED's Unit 4 is 4.1 through 4.4, and ap-cyber-unit-4-lesson-5 was filing student work under a topic the exam does not have. Board 188.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the handle maps agree on both sides, and 4.5 is refused by both",
+      "command": "npm run --silent smoke:cyberunit3",
+      "expect": "all Unit 3 handle mappings correct"
+    },
+    {
+      "kind": "suite",
+      "name": "no denominator prices a lesson the course config does not list",
+      "command": "npm run --silent smoke:cyberdenoms",
+      "expect": "62 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "every gradebook column matches a CED lesson id, both directions",
+      "command": "npm run --silent smoke:cybertopics",
+      "expect": "OK - the taxonomy verifies, and a second implementation agrees with it"
+    },
+    {
+      "kind": "mutation",
+      "name": "re-adding the 4.5 column is caught",
+      "file": "utils.js",
+      "find": "//  up and untracked, which is the same trade the unmapped slugs make.\n        lessons: ['4.1', '4.2', '4.3', '4.4'],",
+      "replace": "//  up and untracked, which is the same trade the unmapped slugs make.\n        lessons: ['4.1', '4.2', '4.3', '4.4', '4.5'],",
+      "command": "npm run --silent smoke:cybertopics",
+      "expect_failure": "utils.js COURSES declares [\"4.5\"], which the CED has no topic for",
+      "_why": "This is the defect itself, restored. It is the shape that got here honestly: somebody saw a real live page with real content and gave it a column. Nothing throws, no request fails, and the only thing that can see it is a rule that compares the config against the CED."
+    },
+    {
+      "kind": "mutation",
+      "name": "a denominator for a lesson with no column is caught",
+      "file": "scripts/seed-cyber-denominators.js",
+      "find": "  // ── 4.5 IS DELIBERATELY ABSENT ──────────────────\n",
+      "replace": "  '4.5|quiz': 5,\n  // ── 4.5 IS DELIBERATELY ABSENT ──────────────────\n",
+      "command": "npm run --silent smoke:cyberdenoms",
+      "expect_failure": "4.5 is NOT authored, because the CED has no 4.5",
+      "_why": "Two assertions go red here, not one: the ban above and the older orphan check that compares authored lessons against the course config. That is not the aggregate failure the convention warns about. They are two independent readings of the same defect, from the denominator side and from the config side, and expect_failure pins the one this mutation is aimed at. Removing the orphan check to make this cleaner would delete a guard that predates the change."
+    },
+    {
+      "kind": "mutation",
+      "name": "the server refusing the 4.5 handles is proven, not assumed",
+      "file": "utils.js",
+      "find": "  const CYBER_NOT_IN_COURSE = new Set(['2.5', '4.5']);",
+      "replace": "  const CYBER_NOT_IN_COURSE = new Set(['2.5']);",
+      "command": "npm run --silent smoke:cyberunit3",
+      "expect_failure": "ap-cyber-unit-4-lesson-5 -> 4.5, expected null",
+      "_why": "The numbered rule derives 4.5 from the handle arithmetic on its own, so removing the id from the set is enough to bring the whole lesson back. Five handles go red, which is the right count: the landing page and its four activities."
+    },
+    {
+      "kind": "mutation",
+      "name": "a storefront still resolving 4.5 is caught, even though the server refuses it",
+      "file": "smoke/cyber-unit3-lessons.js",
+      "find": "  'unit-4': { 1: '4.1', 2: '4.2', 3: '4.3', 4: '4.4' },\n",
+      "replace": "",
+      "command": "npm run --silent smoke:cyberunit3",
+      "expect_failure": "the server leaves these untracked but the storefront still resolves them",
+      "_why": "The half of this change that actually stops the writing. POST /api/student/score takes an explicit lesson over the handle, deliberately, so a theme that still resolves ap-cyber-unit-4-lesson-5 keeps posting 4.5 whatever pageFromHandle says. The older drift loop cannot see this: it compares only handles the server maps, and skips exactly the ones this change is about."
+    },
+    {
+      "kind": "mutation",
+      "name": "the cross-side check reads bare landing handles, not just activity handles",
+      "file": "smoke/cyber-unit3-lessons.js",
+      "find": "  'unit-2': { 1: '2.1', 2: '2.2', 3: '2.3', 4: '2.4' },\n",
+      "replace": "",
+      "command": "npm run --silent smoke:cyberunit3",
+      "expect_failure": "still resolves them, so work posted from them lands on a lesson with no column: ap-cyber-unit-2-lesson-5",
+      "_why": "This is the hole the new check found while it was being written, which is why it is pinned separately. The theme's RETIRED regex is /^ap-cyber-unit-2-lesson-5-/ with a trailing hyphen, so it fences the four 2.5 activity pages and would miss a bare landing page at that handle. None is live today. A guard that only holds while a page happens not to exist is not a guard."
+    },
+    {
+      "kind": "rederive",
+      "name": "Unit 4 has four topics, read from the CED text rather than the taxonomy JSON",
+      "command": "node -e \"const fs=require('fs');const {COURSES}=require('./utils');const ced=fs.readFileSync('tools/ap-cyber-ced/CED-UNITS-2-5-EXTRACT.txt','utf8');const topics=[...ced.matchAll(/^TOPIC (4\\\\.\\\\d)\\\\s*$/gm)].map(m=>m[1]);if(topics.length!==4)throw new Error('the CED extract yields '+topics.length+' Unit 4 topics: '+topics);const cfg=COURSES['ap-cybersecurity'].units['unit-4'].lessons;const extra=cfg.filter(l=>!topics.includes(l));if(extra.length)throw new Error('the gradebook declares '+JSON.stringify(extra)+', absent from the CED');const missing=topics.filter(t=>!cfg.includes(t));if(missing.length)throw new Error('the CED has '+JSON.stringify(missing)+' and the gradebook builds no column');console.log('UNIT 4 IS '+topics.join(' ')+', AND THE GRADEBOOK AGREES')\"",
+      "expect": "UNIT 4 IS 4.1 4.2 4.3 4.4, AND THE GRADEBOOK AGREES",
+      "_why": "The suite check compares the config against config/cyber-topics.json, which is generated. This goes back to the CED extract that JSON was built from and counts the topic headers itself, so a taxonomy that was rebuilt wrong cannot make both agree."
+    },
+    {
+      "kind": "live",
+      "name": "the container is pricing 95 cyber columns, not 98",
+      "command": "sh -c 'curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health | node -e \"let s=\\\"\\\";process.stdin.on(\\\"data\\\",d=>s+=d).on(\\\"end\\\",()=>{const j=JSON.parse(s);const d=j.seed&&j.seed.seeds&&j.seed.seeds.cyber_denominators;if(!d)throw new Error(\\\"no cyber_denominators seed report\\\");if(!d.ok)throw new Error(\\\"the cyber denominator seed failed: \\\"+d.error);if(d.total!==95)throw new Error(\\\"the container is pricing \\\"+d.total+\\\" cyber columns, expected 95\\\");console.log(\\\"LIVE CYBER COLUMNS PRICED total=\\\"+d.total)})\"'",
+      "expect": "LIVE CYBER COLUMNS PRICED total=95",
+      "_why": "False before this deploy and not true by accident: /api/health reported cyber_denominators total 98 on commit 7d21df3, the three removed keys being 4.5 exercise-1, exercise-2 and quiz. A count that moves is what proves the running container is on the new build, where an ok status would have been true yesterday too. The rows already in course_denominators are not deleted by this and the seed is insert-or-ignore, so the number the seed REPORTS is the honest observable, not the table's height."
+    }
+  ]
+}

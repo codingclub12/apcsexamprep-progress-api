@@ -106,8 +106,20 @@ const COURSES = {
       },
       'unit-4': {
         label: 'Unit 4: Securing Devices',
-        // 4.4 and 4.5 likewise: real content, no columns.
-        lessons: ['4.1', '4.2', '4.3', '4.4', '4.5'],
+        //  Unit 4 is 4.1 through 4.4, which is the whole of the CED's Unit 4.
+        //  4.4 was added here in August because its pages were real content the
+        //  config did not list. 4.5 arrived in the same pass and did not belong:
+        //  the CED has no topic 4.5, so the column was a lesson no AP teacher
+        //  could map to a topic. Removed 2026-09-03, board 188.
+        //
+        //  The page is still live and still teaches: it is titled "4.5 Securing
+        //  IoT and Embedded Devices", and that content IS on the syllabus, under
+        //  4.1.A.4 and 4.1.A.5 inside topic 4.1. So this is not a leftover the
+        //  way cyber 2.5 is. Whether it should be renumbered as a second half of
+        //  4.1, the way CED 3.1 is taught over 3.1a and 3.1b, is a content
+        //  decision and not this change. Until somebody makes it, the page stays
+        //  up and untracked, which is the same trade the unmapped slugs make.
+        lessons: ['4.1', '4.2', '4.3', '4.4'],
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
@@ -613,7 +625,18 @@ function pageFromHandle(raw) {
   // gradebook column: recorded forever, displayed never. Cyber 2.5 is exactly
   // that, a leftover page set from an earlier cut of Unit 2. Listing it here
   // keeps it untracked, which is the same choice the unmapped slugs above make.
-  const CYBER_NOT_IN_COURSE = new Set(['2.5']);
+  //
+  // 4.5 joined it on 2026-09-03 for a related but not identical reason, and the
+  // difference is worth keeping. 2.5 is content that left the course. 4.5 is
+  // content that never had a topic number: ap-cyber-unit-4-lesson-5 is live and
+  // teaches IoT and embedded devices, which the CED covers inside topic 4.1, and
+  // the CED's Unit 4 stops at 4.4. Recording it as 4.5 gave a teacher a
+  // gradebook column for a topic the exam does not have.
+  //
+  // Untracked is the honest state, not the finished one. Nothing stored is
+  // touched by this and re-adding the id restores the column exactly, so the
+  // renumbering question stays open rather than being closed by a deletion.
+  const CYBER_NOT_IN_COURSE = new Set(['2.5', '4.5']);
 
   //  UNIT 3 IS NOT unit.handleNumber, AND CANNOT BE.
   //

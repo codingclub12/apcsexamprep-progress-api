@@ -51,12 +51,21 @@ console.log('1. Per-lesson values, as the pages state them');
   ok('  1.1 exercise-2 is out of 8', POINTS['1.1|exercise-2'] === 8, POINTS['1.1|exercise-2']);
   ok('  1.5 exercise-1 is out of 4', POINTS['1.5|exercise-1'] === 4, POINTS['1.5|exercise-1']);
 
-  // Units 4 and 5 are covered by the full scan, and lessons the course config
-  // was missing entirely (4.4, 4.5) are authored too.
-  ok('  4.5 quiz is authored', POINTS['4.5|quiz'] > 0, POINTS['4.5|quiz']);
+  // Units 4 and 5 are covered by the full scan, and 4.4, a lesson the course
+  // config was missing entirely, is authored too.
   ok('  5.6 exercise-2 is authored', POINTS['5.6|exercise-2'] > 0, POINTS['5.6|exercise-2']);
-  ok('  4.4 and 4.5 carry values',
-    ['4.4|quiz', '4.5|quiz'].every((k) => POINTS[k] > 0));
+  ok('  4.4 carries values', POINTS['4.4|quiz'] > 0, POINTS['4.4|quiz']);
+
+  //  4.5 came out on 2026-09-03 with the column it priced. This block used to
+  //  assert the opposite, that '4.5|quiz' carried a value, which was right while
+  //  the config listed a 4.5 lesson and wrong the moment it stopped: the CED's
+  //  Unit 4 is 4.1 through 4.4, so a 4.5 denominator prices a column no
+  //  gradebook builds. Same shape as the 3.6 assertion below, and it is worth
+  //  having both, because the mistake they guard against is the one where a
+  //  measurement outlives the lesson it measured.
+  ok('  4.5 is NOT authored, because the CED has no 4.5',
+    !Object.keys(POINTS).some((k) => k.startsWith('4.5|')),
+    Object.keys(POINTS).filter((k) => k.startsWith('4.5|')));
 
   //  Unit 3 was renumbered to the CED on 2026-08-27 and 3.6 is gone: it was
   //  never a CED topic, and its content is now 3.2. This used to assert
@@ -174,7 +183,11 @@ console.log('1. Per-lesson values, as the pages state them');
 
   // Every authored lesson must exist in the course config, or the gradebook
   // builds no column for it and the value is unreachable. 2.5, 3.6, 4.4 and 4.5
-  // were exactly that case: real content the config did not list.
+  // were exactly that case: real content the config did not list. Note that it
+  // cuts both ways, and 4.5 went the other way in the end: the config grew a
+  // 4.5 column to match the denominator, then lost both when the CED settled
+  // the question. This check does not say which side is right, only that the
+  // two agree.
   {
     const { COURSES } = require('../utils');
     const cfg = new Set();
@@ -239,6 +252,21 @@ console.log('\n1b. Canonical Unit 1 pages are tracked');
     && at('ap-cyber-unit-2-lesson-5-exercise-1') === null,
     at('ap-cyber-unit-2-lesson-5-quiz'));
   ok('    but 2.4 next door still is', at('ap-cyber-unit-2-lesson-4-quiz').lesson === '2.4');
+
+  //  Cyber 4.5 is the same outcome for a different reason, and the reason is why
+  //  it is pinned separately rather than folded into the line above. 2.5 is
+  //  content that left the course. ap-cyber-unit-4-lesson-5 is live and teaches
+  //  IoT and embedded devices, which the CED does cover, inside topic 4.1. What
+  //  it has never had is a topic number of its own: the CED's Unit 4 stops at
+  //  4.4. Board 188.
+  ok('  cyber 4.5 stays untracked, because the CED has no topic 4.5',
+    at('ap-cyber-unit-4-lesson-5') === null
+    && at('ap-cyber-unit-4-lesson-5-quiz') === null
+    && at('ap-cyber-unit-4-lesson-5-lab') === null
+    && at('ap-cyber-unit-4-lesson-5-exercise-1') === null
+    && at('ap-cyber-unit-4-lesson-5-exercise-2') === null,
+    at('ap-cyber-unit-4-lesson-5-quiz'));
+  ok('    but 4.4 next door still is', at('ap-cyber-unit-4-lesson-4-quiz').lesson === '4.4');
 
   // Other courses must not be captured by the new rule.
   ok('  other courses are untouched',
