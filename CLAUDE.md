@@ -450,5 +450,37 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   said until 2026-09-02: it has no EK check at all and is shaped for AP
   Cybersecurity page structure. Naming the wrong tool here is worse than naming
   none, because the check comes back clean.
+  The sheet validator DOES count them, as rule 1, and it routes through
+  `lib/cyber-ek-density.js` rather than holding a second opinion. See the next
+  two bullets.
+- **AP Cybersecurity topics come from `data/cyber-topics.json`**, read through
+  `lib/cyber-topics.js`, and from nowhere else. 24 CED topics with their official
+  titles, handles, skill categories, and the one `course_manifest` row each topic
+  gets. Cyber page sheets are built by `tools/ap-cyber-ced/generate-sheet.js` and
+  refused by `tools/ap-cyber-ced/validator.js` on any of seven rules, every one
+  of them mutation tested per rule. Read
+  `docs/ap-cyber-taxonomy-and-validator.md` before generating a cyber page,
+  adding a topic, or adding a rule.
+  The 1.3 versus 1.4 swap is what both files exist for: the site calls topic 1.3
+  "Wireless Security" and the CED calls it "Best Practices for Public Networks",
+  because the mapping used to live in page bodies. Titles come from the CED text,
+  never from a page.
+- **Mojibake has a rule here now, and it did not before 2026-09-03.** A handoff
+  that day said "per the rule in CLAUDE.md" and there was no such rule in this
+  file to read, which is worse than having none: the session reconstructed it
+  from a list of example patterns and would have shipped a check blind to the
+  corruption that is on live pages. So, written down.
+  Mojibake is text whose UTF-8 bytes were decoded with a single-byte codec and
+  re-encoded. It is still valid UTF-8, so it parses, lints and serves; the only
+  thing wrong with it is that it means the wrong character. Detect it
+  STRUCTURALLY, through `tools/ap-cyber-ced/mojibake.js`, and never with a list
+  of example patterns. Corruption comes at DEPTHS (one pass leads with U+00E2,
+  two passes with U+00C3) and through two codecs (latin-1 and cp1252), and a
+  pattern list is always blind to whichever half it was not written from.
+  `smoke/encoding-guard.js` scans the repo for the latin-1 family and
+  `scripts/matrixify-preflight.js` screens sheets for three latin-1 byte pairs.
+  Both are blind to the cp1252 forms that `lib/command-hazards.js` names as the
+  ones that actually happen, and both are open board items rather than quietly
+  trusted.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.

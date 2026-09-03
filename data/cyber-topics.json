@@ -1,0 +1,570 @@
+{
+  "_source": {
+    "generated_by": "tools/ap-cyber-ced/build-topics.js",
+    "course": "ap-cybersecurity",
+    "ced": "ap-cybersecurity-course-and-exam-description, effective Fall 2026, (c) 2026 College Board",
+    "ced_extracts": [
+      {
+        "file": "tools/ap-cyber-ced/CED-UNIT1-EXTRACT.txt",
+        "sha256": "92701eac418efa9854e0ca22b681099e04d8c25b871a8638f581ae44f80f9a54"
+      },
+      {
+        "file": "tools/ap-cyber-ced/CED-UNITS-2-5-EXTRACT.txt",
+        "sha256": "0eed89e0e3f58cbabf7e11fdbee0e5d25c7c89791b678321009f2bc87706ca64"
+      }
+    ],
+    "handle_inventory": {
+      "file": "smoke/fixtures/live-page-handles.txt",
+      "sha256": "80a85597bdd4ab8ab67313064871ce2962a1c16e5f5b06dfa29a8995fb460df7",
+      "note": "a snapshot of live page handles; handles are resolved through utils.pageFromHandle"
+    },
+    "known_limits": [
+      "Topic 1.1 lists skill category 1 only. Its SUGGESTED SKILLS block ends at a page break in the CED text, and topics 1.2 through 1.4 list categories 1 and 2, so 1.1 may list a second category on a page this dump does not carry. Recorded as the text states rather than filled in by inference; smoke/cyber-topics.js pins the set so a re-extraction that disagrees shows up as a diff.",
+      "The site teaches CED 3.1 as two lesson pages (3.1a, 3.1b), so 24 topics map to 25 lesson pages in Units 1 to 5. The manifest row for 3.1 is filed under lesson 3.1a.",
+      "Units 1 and 2 use topic-slug handles, Units 3 to 5 use numbered handles. Board task 81. The slug field here is a name, not a rename instruction."
+    ]
+  },
+  "course": "ap-cybersecurity",
+  "skill_categories": {
+    "1": "Analyze Risk",
+    "2": "Mitigate Risk",
+    "3": "Detect Attacks"
+  },
+  "topics": [
+    {
+      "unit": "unit-1",
+      "unit_no": 1,
+      "topic": "1.1",
+      "title": "Understanding Social Engineering",
+      "slug": "understanding-social-engineering",
+      "skill_categories": [
+        1
+      ],
+      "lesson_ids": [
+        "1.1"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-1-social-engineering"
+      ],
+      "manifest": {
+        "lesson_id": "1.1",
+        "item_id": "1.1-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-1",
+      "unit_no": 1,
+      "topic": "1.2",
+      "title": "Suspicious Website Logins",
+      "slug": "suspicious-website-logins",
+      "skill_categories": [
+        1,
+        2
+      ],
+      "lesson_ids": [
+        "1.2"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-1-password-attacks"
+      ],
+      "manifest": {
+        "lesson_id": "1.2",
+        "item_id": "1.2-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-1",
+      "unit_no": 1,
+      "topic": "1.3",
+      "title": "Best Practices for Public Networks",
+      "slug": "best-practices-for-public-networks",
+      "skill_categories": [
+        1,
+        2
+      ],
+      "lesson_ids": [
+        "1.3"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-1-wireless-security"
+      ],
+      "manifest": {
+        "lesson_id": "1.3",
+        "item_id": "1.3-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-1",
+      "unit_no": 1,
+      "topic": "1.4",
+      "title": "AI-Based Cybersecurity Attacks",
+      "slug": "ai-based-cybersecurity-attacks",
+      "skill_categories": [
+        1,
+        2
+      ],
+      "lesson_ids": [
+        "1.4"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-1-ai-driven-threats"
+      ],
+      "manifest": {
+        "lesson_id": "1.4",
+        "item_id": "1.4-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-1",
+      "unit_no": 1,
+      "topic": "1.5",
+      "title": "Leveraging AI in Cyber Defense",
+      "slug": "leveraging-ai-in-cyber-defense",
+      "skill_categories": [
+        2,
+        3
+      ],
+      "lesson_ids": [
+        "1.5"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-1-ai-cyber-defense"
+      ],
+      "manifest": {
+        "lesson_id": "1.5",
+        "item_id": "1.5-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-2",
+      "unit_no": 2,
+      "topic": "2.1",
+      "title": "Cyber Foundations",
+      "slug": "cyber-foundations",
+      "skill_categories": [
+        1,
+        2
+      ],
+      "lesson_ids": [
+        "2.1"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-2-cyber-foundations"
+      ],
+      "manifest": {
+        "lesson_id": "2.1",
+        "item_id": "2.1-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-2",
+      "unit_no": 2,
+      "topic": "2.2",
+      "title": "Physical Vulnerabilities and Attacks",
+      "slug": "physical-vulnerabilities-and-attacks",
+      "skill_categories": [
+        1
+      ],
+      "lesson_ids": [
+        "2.2"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-2-physical-vulnerabilities"
+      ],
+      "manifest": {
+        "lesson_id": "2.2",
+        "item_id": "2.2-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-2",
+      "unit_no": 2,
+      "topic": "2.3",
+      "title": "Protecting Physical Spaces",
+      "slug": "protecting-physical-spaces",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "2.3"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-2-protecting-physical-spaces"
+      ],
+      "manifest": {
+        "lesson_id": "2.3",
+        "item_id": "2.3-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-2",
+      "unit_no": 2,
+      "topic": "2.4",
+      "title": "Detecting Physical Attacks",
+      "slug": "detecting-physical-attacks",
+      "skill_categories": [
+        3
+      ],
+      "lesson_ids": [
+        "2.4"
+      ],
+      "handles": [
+        "ap-cybersecurity-unit-2-detecting-physical-attacks"
+      ],
+      "manifest": {
+        "lesson_id": "2.4",
+        "item_id": "2.4-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-3",
+      "unit_no": 3,
+      "topic": "3.1",
+      "title": "Network Vulnerabilities and Attacks",
+      "slug": "network-vulnerabilities-and-attacks",
+      "skill_categories": [
+        1
+      ],
+      "lesson_ids": [
+        "3.1a",
+        "3.1b"
+      ],
+      "handles": [
+        "ap-cyber-unit-3-lesson-1",
+        "ap-cyber-unit-3-lesson-2"
+      ],
+      "manifest": {
+        "lesson_id": "3.1a",
+        "item_id": "3.1-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-3",
+      "unit_no": 3,
+      "topic": "3.2",
+      "title": "Protecting Networks: Managerial Controls and Wireless Security",
+      "slug": "protecting-networks-managerial-controls-and-wireless-security",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "3.2"
+      ],
+      "handles": [
+        "ap-cyber-unit-3-lesson-3"
+      ],
+      "manifest": {
+        "lesson_id": "3.2",
+        "item_id": "3.2-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-3",
+      "unit_no": 3,
+      "topic": "3.3",
+      "title": "Protecting Networks: Segmentation",
+      "slug": "protecting-networks-segmentation",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "3.3"
+      ],
+      "handles": [
+        "ap-cyber-unit-3-lesson-4"
+      ],
+      "manifest": {
+        "lesson_id": "3.3",
+        "item_id": "3.3-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-3",
+      "unit_no": 3,
+      "topic": "3.4",
+      "title": "Protecting Networks: Firewalls",
+      "slug": "protecting-networks-firewalls",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "3.4"
+      ],
+      "handles": [
+        "ap-cyber-unit-3-lesson-5"
+      ],
+      "manifest": {
+        "lesson_id": "3.4",
+        "item_id": "3.4-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-3",
+      "unit_no": 3,
+      "topic": "3.5",
+      "title": "Detecting Network Attacks",
+      "slug": "detecting-network-attacks",
+      "skill_categories": [
+        3
+      ],
+      "lesson_ids": [
+        "3.5"
+      ],
+      "handles": [
+        "ap-cyber-unit-3-lesson-6"
+      ],
+      "manifest": {
+        "lesson_id": "3.5",
+        "item_id": "3.5-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-4",
+      "unit_no": 4,
+      "topic": "4.1",
+      "title": "Device Vulnerabilities and Attacks",
+      "slug": "device-vulnerabilities-and-attacks",
+      "skill_categories": [
+        1
+      ],
+      "lesson_ids": [
+        "4.1"
+      ],
+      "handles": [
+        "ap-cyber-unit-4-lesson-1"
+      ],
+      "manifest": {
+        "lesson_id": "4.1",
+        "item_id": "4.1-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-4",
+      "unit_no": 4,
+      "topic": "4.2",
+      "title": "Authentication",
+      "slug": "authentication",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "4.2"
+      ],
+      "handles": [
+        "ap-cyber-unit-4-lesson-2"
+      ],
+      "manifest": {
+        "lesson_id": "4.2",
+        "item_id": "4.2-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-4",
+      "unit_no": 4,
+      "topic": "4.3",
+      "title": "Protecting Devices",
+      "slug": "protecting-devices",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "4.3"
+      ],
+      "handles": [
+        "ap-cyber-unit-4-lesson-3"
+      ],
+      "manifest": {
+        "lesson_id": "4.3",
+        "item_id": "4.3-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-4",
+      "unit_no": 4,
+      "topic": "4.4",
+      "title": "Detecting Attacks on Devices",
+      "slug": "detecting-attacks-on-devices",
+      "skill_categories": [
+        3
+      ],
+      "lesson_ids": [
+        "4.4"
+      ],
+      "handles": [
+        "ap-cyber-unit-4-lesson-4"
+      ],
+      "manifest": {
+        "lesson_id": "4.4",
+        "item_id": "4.4-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-5",
+      "unit_no": 5,
+      "topic": "5.1",
+      "title": "Application and Data Vulnerabilities and Attacks",
+      "slug": "application-and-data-vulnerabilities-and-attacks",
+      "skill_categories": [
+        1
+      ],
+      "lesson_ids": [
+        "5.1"
+      ],
+      "handles": [
+        "ap-cyber-unit-5-lesson-1"
+      ],
+      "manifest": {
+        "lesson_id": "5.1",
+        "item_id": "5.1-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-5",
+      "unit_no": 5,
+      "topic": "5.2",
+      "title": "Protecting Applications and Data: Managerial Controls and Access Controls",
+      "slug": "protecting-applications-and-data-managerial-controls-and-access-controls",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "5.2"
+      ],
+      "handles": [
+        "ap-cyber-unit-5-lesson-2"
+      ],
+      "manifest": {
+        "lesson_id": "5.2",
+        "item_id": "5.2-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-5",
+      "unit_no": 5,
+      "topic": "5.3",
+      "title": "Protecting Stored Data with Cryptography",
+      "slug": "protecting-stored-data-with-cryptography",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "5.3"
+      ],
+      "handles": [
+        "ap-cyber-unit-5-lesson-3"
+      ],
+      "manifest": {
+        "lesson_id": "5.3",
+        "item_id": "5.3-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-5",
+      "unit_no": 5,
+      "topic": "5.4",
+      "title": "Asymmetric Cryptography",
+      "slug": "asymmetric-cryptography",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "5.4"
+      ],
+      "handles": [
+        "ap-cyber-unit-5-lesson-4"
+      ],
+      "manifest": {
+        "lesson_id": "5.4",
+        "item_id": "5.4-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-5",
+      "unit_no": 5,
+      "topic": "5.5",
+      "title": "Protecting Applications",
+      "slug": "protecting-applications",
+      "skill_categories": [
+        2
+      ],
+      "lesson_ids": [
+        "5.5"
+      ],
+      "handles": [
+        "ap-cyber-unit-5-lesson-5"
+      ],
+      "manifest": {
+        "lesson_id": "5.5",
+        "item_id": "5.5-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    },
+    {
+      "unit": "unit-5",
+      "unit_no": 5,
+      "topic": "5.6",
+      "title": "Detecting Attacks on Data and Applications",
+      "slug": "detecting-attacks-on-data-and-applications",
+      "skill_categories": [
+        3
+      ],
+      "lesson_ids": [
+        "5.6"
+      ],
+      "handles": [
+        "ap-cyber-unit-5-lesson-6"
+      ],
+      "manifest": {
+        "lesson_id": "5.6",
+        "item_id": "5.6-visit",
+        "item_type": "visit",
+        "points": 1
+      }
+    }
+  ]
+}
