@@ -1,0 +1,51 @@
+{
+  "change": "move config/cyber-topics.json out of data/, where the Railway volume was mounting over it and hiding it from the container",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "nothing the server reads is hidden by the volume",
+      "command": "npm run --silent smoke:volumepaths",
+      "expect": "OK - nothing the server reads is hidden by the volume"
+    },
+    {
+      "kind": "suite",
+      "name": "the taxonomy still verifies from its new home",
+      "command": "npm run --silent smoke:cybertopics",
+      "expect": "OK - the taxonomy verifies, and a second implementation agrees with it"
+    },
+    {
+      "kind": "mutation",
+      "name": "a runtime module reading from data/ again is caught",
+      "file": "lib/cyber-topics.js",
+      "find": "const FILE = path.join(__dirname, '..', 'config', 'cyber-topics.json');",
+      "replace": "const FILE = path.join(__dirname, '..', 'data', 'cyber-topics.json');",
+      "command": "npm run --silent smoke:volumepaths",
+      "expect_failure": "FAIL  no runtime module resolves a path into a shadowed directory",
+      "_why": "This is the defect itself, restored. It passes every repository-side check: the path is valid, the file would be tracked, nothing is gitignored. Only a rule about the MOUNT can see it, so that rule has to be provably able to fire."
+    },
+    {
+      "kind": "mutation",
+      "name": "the guard noticing a tracked file under data/ is proven, not assumed",
+      "file": "smoke/volume-shadowed-paths.js",
+      "find": "const SHADOWED = ['data'];",
+      "replace": "const SHADOWED = ['no-such-directory'];",
+      "command": "npm run --silent smoke:volumepaths",
+      "expect_failure": "FAIL  the file detector flags a file under the mount, and clears one outside it",
+      "_why": "A guard with an empty target list passes everything. Pointing it at a directory that does not exist proves the list is what the checks actually read."
+    },
+    {
+      "kind": "rederive",
+      "name": "the loader resolves outside the mount, asked rather than read",
+      "command": "node -e \"const t=require('./lib/cyber-topics'); const p=t.FILE; if(/[\\\\\\\\/]data[\\\\\\\\/]/.test(p)) throw new Error('the taxonomy is back under the mount: '+p); if(t.topics().length!==24) throw new Error('not 24 topics'); console.log('LOADER RESOLVES OUTSIDE THE MOUNT: '+p.split('/').slice(-2).join('/'));\"",
+      "expect": "LOADER RESOLVES OUTSIDE THE MOUNT: config/cyber-topics.json",
+      "_why": "The suite scans source text. This asks the loader where it actually points, so a change that satisfies the scan without moving the file is still caught."
+    },
+    {
+      "kind": "live",
+      "name": "the boot seed reports ok and the 24 cyber rows are finally in production",
+      "command": "sh -c 'curl -sS https://progress.apcsexamprep.com/api/health | node -e \"let s=\\\"\\\";process.stdin.on(\\\"data\\\",d=>s+=d).on(\\\"end\\\",()=>{const j=JSON.parse(s);const m=j.seed&&j.seed.seeds&&j.seed.seeds.course_manifest;if(!m)throw new Error(\\\"no course_manifest seed report\\\");if(!m.ok)throw new Error(\\\"the seed still fails: \\\"+m.error);if(m.total!==932)throw new Error(\\\"seeded \\\"+m.total+\\\" rows, expected 932\\\");console.log(\\\"LIVE SEED OK total=\\\"+m.total+\\\" changed=\\\"+m.changed)})\"'",
+      "expect": "LIVE SEED OK total=932",
+      "_why": "False before this deploy in two independent ways: the seed reports ok:false with an ENOENT today, and the 24 rows are absent. The first deploy of this taxonomy asserted a count and could not say why it was wrong; this asserts the seed's own report AND the count, so a pass means the rows landed and the seed agrees that they did."
+    }
+  ]
+}

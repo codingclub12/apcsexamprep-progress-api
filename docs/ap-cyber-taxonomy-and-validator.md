@@ -10,7 +10,7 @@ is the difference between eight weeks being enough and eight weeks not being
 enough. Everything below is in service of the sheet being trustworthy enough that
 nobody re-reviews it by hand.
 
-## 1. `data/cyber-topics.json` is the taxonomy, and nothing else is
+## 1. `config/cyber-topics.json` is the taxonomy, and nothing else is
 
 24 topics: 1.1-1.5, 2.1-2.4, 3.1-3.5, 4.1-4.4, 5.1-5.6. There is no 2.5, no 3.6
 and no 4.5, and `lib/cyber-topics.js` refuses a file that says otherwise.
@@ -73,10 +73,27 @@ keeps arriving through `score_events` against its authored denominators, and
 adding graded manifest rows for cyber would be what puts it on System A. That is
 a separate decision and this is not it.
 
-Did move: lesson completion. `lib/admin-exec.js` denominates that from manifest
-visit rows, and cyber had none, so every cyber student counted zero lessons
-assigned. They are now assigned 24 and their visits count. Live `manifest_items`
-went 908 to 932.
+Did move, in the code: lesson completion. `lib/admin-exec.js` denominates that
+from manifest visit rows, and cyber had none, so every cyber student counted zero
+lessons assigned. Once the rows exist they are assigned 24 and their visits
+count.
+
+**It did not move on the first deploy, and the reason is worth keeping.** The
+merge deployed cleanly and `manifest_items` stayed at 908. `lib/boot-seed.js`
+shipped to make the boot seed's outcome visible on `/api/health`, and it answered
+in one line:
+
+```
+cannot read /app/data/cyber-topics.json: ENOENT: no such file or directory
+```
+
+The taxonomy was in `data/`, and the Railway volume mounts at `/app/data`. A
+mount replaces the directory, so a file that is tracked, not gitignored, and
+uploaded in the deploy tarball is still not there at runtime. Every check that
+said it shipped was looking at the repository rather than at the container.
+
+The file lives in `config/` now, and `npm run smoke:volumepaths` refuses any
+tracked file under `data/` or any runtime module that reads from it. Board 191.
 
 ## 3. The validator: seven rules, and a sheet that breaks one is refused
 
