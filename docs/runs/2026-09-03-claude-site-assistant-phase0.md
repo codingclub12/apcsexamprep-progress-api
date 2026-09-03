@@ -80,10 +80,18 @@ before anyone debugs it against a branch.
 
 ## Still open
 
-- ~~`RESEND_API_KEY` is unset~~ **Resolved during this session.** Tanner tested a
-  real password reset and received it, and production answers
-  `mail_configured: true`. The Phase 0 prerequisite is done and the
-  password-reset cluster is retired.
+- ~~`RESEND_API_KEY` is unset~~ **Resolved during this session, end to end.**
+  Tanner ran the whole loop in production: requested a reset, received the mail,
+  opened the link, set a new password, signed in with it. That is stronger than a
+  send confirmation, because delivery, `mintResetLink` and the single-use consume
+  in `reset-password` each fail in their own way and this exercised all three.
+  Production also answers `mail_configured: true`.
+
+  Board task 127 ("Forgot password link on teacher sign-in, plus honest mailer
+  status") is `done` with `verified: false` and sits in `needs_verification`.
+  This run is its evidence. Per CLAUDE.md rule 4 the flag is cookie-auth only, so
+  it is Tanner's to set, which is the right way round here since he is the one
+  who ran the test: https://progress.apcsexamprep.com/admin/command#t127
 
   That moved the risk rather than removing it: mail sending and having a
   recipient are different facts, and either alone means an escalation is stored,

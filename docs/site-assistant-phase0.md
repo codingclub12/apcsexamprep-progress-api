@@ -104,12 +104,19 @@ board either way. Mail is the part that needs config.
 | `RESEND_API_KEY` | `lib/mailer.js` logs the mail instead of sending it |
 | `ASSISTANT_ALERT_EMAIL` | falls back to `COMMAND_OWNER_EMAIL`; with neither, no mail |
 
-**`RESEND_API_KEY` is set.** Confirmed 2026-09-03 two ways: Tanner received a real
-password reset, and production answers `mail_configured: true` on
-`POST /api/teacher/forgot-password`. That was the Phase 0 prerequisite from the
-spec, and it also retired the password-reset support cluster, which was three
-manual resets in three days caused by reset links reaching the Railway log
-instead of an inbox.
+**`RESEND_API_KEY` is set, and the whole reset path works.** Verified in
+production on 2026-09-03 by Tanner, end to end and not just at the send: request
+a reset, receive the email, open the link, set a new password, sign in with it.
+That exercises every part that could have been broken independently, since
+`mintResetLink`, the delivery, and the single-use consume in
+`POST /api/teacher/reset-password` each fail in their own way. Separately,
+production answers `mail_configured: true`, which is readable any time without
+mailing a real person by probing an address that has no account.
+
+This was the Phase 0 prerequisite from the spec, and it retires the
+password-reset support cluster: three manual resets in three days, caused by
+reset links reaching the Railway log instead of an inbox. Board task 127 covers
+that work and is the item this evidence closes.
 
 What remains is the **recipient**. Mail sending and having somewhere to send are
 two different facts, and either one alone means an escalation is recorded and
