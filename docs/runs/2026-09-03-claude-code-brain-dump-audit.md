@@ -164,6 +164,37 @@ encoding. It is ordinary string concatenation and the browser runs it. Parsing
 each payload with `vm.Script` instead of pattern matching moved the count of
 executing payloads from 1 to 4.
 
+### The scan was re-derived, and the two agree exactly
+
+The finding above rests on one instrument, so it was reached a second time by a
+different one. Two implementations, different languages, different mechanisms:
+
+    tools/scan-inline-scripts.py   Python, one `node --check` SUBPROCESS per
+                                   block, plus a regex for the ASI signature
+    the cross-check                one Node process, `new vm.Script()` in
+                                   process, no subprocess and no regex
+
+Same 7 pages, same 13 faults, block for block:
+
+    ap-csa-lesson-1-9-method-signatures      2   1 SYNTAX + 1 ASI
+    ap-csp-filtering-sorting-practice        1
+    ap-cyber-unit-5-lesson-4                 1
+    ap-cyber-unit-5-lesson-5                 1
+    ap-cyber-unit-5-lesson-5-exercise-1      1
+    ap-cyber-unit-5-lesson-6                 5
+    ap-cybersecurity-xss                     2
+                                            13
+
+The first full Python run reported 11 across 666 pages and the Node run reported
+13 across 730. That is not a disagreement: the Python run was launched while the
+crawl was still going and never saw `ap-cybersecurity-xss`, which carries exactly
+2. 11 + 2 = 13. Reconciled by arithmetic rather than by assuming.
+
+Worth stating because the in-process check is roughly 400 times faster: the
+Python run took about forty minutes over 666 pages, the Node run seconds over
+730. If this becomes a nightly sweep it should be the Node one, with the Python
+one kept as the thing that proves it.
+
 ## What no measurement settles, and why I stopped
 
 Four of these are product decisions and I did not pick one:
