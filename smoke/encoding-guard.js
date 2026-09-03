@@ -202,6 +202,46 @@ for (const [label, text] of CLEAN) {
     hits.map((h) => h.chunk + ' -> ' + h.fixed + ' via ' + h.codec));
 }
 
+// -- 4b. Real text that ARITHMETICALLY reverses, and still is not mojibake ----
+//  These three strings are copied from Shopify's own locale files in the theme
+//  repo, where this detector reported them as corrupt on 2026-09-03. A capital
+//  O-diaeresis is inside the lead class, cp1252 maps an en dash into the
+//  continuation range, and the pair is valid UTF-8 for a Hebrew combining
+//  accent. The reversal is perfect and the conclusion is nonsense: a Finnish
+//  sort-order label did not lose a Hebrew accent.
+//
+//  What rejects them is the run rule, not a character blocklist. Section 4c
+//  proves the same rule still resolves a genuine run all the way through.
+console.log('\nReal text that reverses arithmetically but is not mojibake');
+const NORDIC = [
+  ['finnish sort label, O-diaeresis then en dash',
+    'Aakkosj' + cps(0x00E4) + 'rjestyksess' + cps(0x00E4) + ' ' + cps(0x00D6, 0x2013) + 'A'],
+  ['norwegian sort label, A-ring then en dash',
+    'Alfabetisk, ' + cps(0x00C5, 0x2013) + 'A'],
+  ['swedish sort label', 'Alfabetiskt, ' + cps(0x00D6, 0x2013) + 'A'],
+  ['german range with an en dash', cps(0x00DC) + cps(0x2013) + 'Z und ' + cps(0x00C4) + cps(0x2013) + 'B'],
+];
+for (const [label, text] of NORDIC) {
+  ok('no false positive on ' + label, mojibake.analyze(text).length === 0,
+    mojibake.analyze(text).map((h) => h.chunk + ' -> ' + h.fixed));
+}
+
+// -- 4c. and the run rule must not weaken a real run --------------------------
+//  Depth 2 corruption of an emoji is four 2 byte pairs, and the two middle ones
+//  have exactly the exotic leads section 4b rejects when they stand alone. They
+//  must all still be caught here, because they abut. This is the check that
+//  stops the run rule being "fixed" into a lead blocklist, which was measured
+//  and would cost 12 of the 120 generated cases.
+console.log('\nA genuine run still resolves completely');
+for (const cp of [0x1F3AF, 0x1F512, 0x1F680, 0x2605, 0x2713]) {
+  const original = String.fromCodePoint(cp);
+  const damaged = corrupt(original, 'cp1252', 2);
+  const exoticLeads = mojibake.analyze(damaged).filter((h) => mojibake.isExotic(h)).length;
+  ok('depth 2 U+' + cp.toString(16).toUpperCase() + ' resolves, including its exotic-lead pairs',
+    mojibake.repair(damaged).text === original && exoticLeads > 0,
+    { recovered: mojibake.repair(damaged).text, exoticLeads });
+}
+
 // -- 5. The property that makes an U+00C3 anchor wrong ------------------------
 //  The obvious general rule, and the one a handoff proposed, is "an U+00C3
 //  followed by a continuation character". It is the same inversion one level

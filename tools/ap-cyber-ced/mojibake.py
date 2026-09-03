@@ -115,7 +115,44 @@ def analyze(text, cap=None):
             i += w
         else:
             i += 1
-    return hits
+    return _accept_runs(hits)
+
+
+SAFE_LEAD_MIN = 0xC2
+SAFE_LEAD_MAX = 0xC3
+
+
+def _is_exotic(h):
+    if h['width'] != 2:
+        return False
+    lead = ord(h['chunk'][0])
+    return lead < SAFE_LEAD_MIN or lead > SAFE_LEAD_MAX
+
+
+def _accept_runs(hits):
+    """Drop 2 byte candidates with an exotic lead that stand alone.
+
+    Part of the definition rather than a technique, so lib/mojibake.js carries
+    the identical rule and smoke/mojibake-parity.js fails if they diverge. A
+    capital O-diaeresis followed by an en dash is valid UTF-8 for a Hebrew
+    accent, and it is also just ordinary Finnish. What separates real mojibake
+    is that it corrupts everything it touches, so it arrives in runs.
+    """
+    keep = [not _is_exotic(h) for h in hits]
+    changed = True
+    while changed:
+        changed = False
+        for i, h in enumerate(hits):
+            if keep[i]:
+                continue
+            prev_ok = (i > 0 and keep[i - 1]
+                       and hits[i - 1]['index'] + hits[i - 1]['width'] == h['index'])
+            next_ok = (i + 1 < len(hits) and keep[i + 1]
+                       and h['index'] + h['width'] == hits[i + 1]['index'])
+            if prev_ok or next_ok:
+                keep[i] = True
+                changed = True
+    return [h for i, h in enumerate(hits) if keep[i]]
 
 
 def repair_once(text):

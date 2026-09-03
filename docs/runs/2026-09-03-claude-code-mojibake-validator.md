@@ -71,20 +71,21 @@ reporting the thing it watches for, while reporting the page clean.
 
 ## Evidence
 
-    npm run smoke:encoding          45 passed, 0 failed
+    npm run smoke:encoding          54 passed, 0 failed
     npm run smoke:mojibakeparity     6 passed, 0 failed
     npm run smoke:sitecrawl        131 passed
     node scripts/mojibake-rederive.js   agrees, 120 generated cases + 1470 files
     node scripts/deploy-gate.js deploy-gates/2026-09-03-mojibake-validator.json --pre
                                     suite, mutation, rederive all pass
 
-Six mutations, each killed, each on the assertion that names the guard it
+Seven mutations, each killed, each on the assertion that names the guard it
 targets rather than on any assertion that happens to trip:
 
     drop cp1252            the live-page flavour goes invisible
     drop latin-1           the 2026-08-07 incident goes invisible instead
     anchor on U+00C3       THE PROPOSED FIX, proved insufficient
     no 4 byte width        every emoji goes invisible
+    accept isolated leads  Shopify's Finnish locale reads as corrupt
     crawler stops firing   proves the live-site check, not just the repo scan
     python drops cp1252    proves the port cannot drift unnoticed
 
@@ -105,6 +106,43 @@ tables were the same codec, the latin-1 runs broke at every C1 control, and 40
 three-byte sequences went missing. Node's `Buffer.toString('latin1')` is true
 ISO-8859-1. The script now asserts the two tables differ in both directions and
 says what it means if they do not.
+
+## The third thing I got wrong: it flagged healthy text
+
+Running the finished detector over the theme repo reported three of Shopify's
+own locale files as corrupt. They are not. The Finnish sort-order label
+"Aakkosjarjestyksessa O-A" has a capital O-diaeresis followed by an en dash.
+O-diaeresis is U+00D6, inside the lead class; cp1252 maps an en dash to 0xB6, a
+continuation byte; the pair is byte D6 96, which is valid UTF-8 for U+0596, a
+Hebrew combining accent. The reversal is arithmetically perfect and the
+conclusion is nonsense.
+
+This matters more than the count. CLAUDE.md's own reasoning is that a guard
+which flags healthy text gets switched off within a day, and a detector that
+reports Shopify's shipped locale files as corrupt would have earned it.
+
+Two fixes were measured and rejected:
+
+- **Restrict 2 byte leads to U+00C2 and U+00C3**, which is what the old detector
+  effectively did. It kills these three, and it also kills 12 of the 120
+  generated cases: depth 2 corruption of an emoji is four 2 byte pairs and the
+  two middle ones have exotic leads. Losing depth 2 emoji recovery to fix a
+  locale file is the same trade that caused this whole change.
+- **Reject a dash or curly quote as a continuation**, which kills real
+  corruption of N-tilde, O-acute, O-diaeresis and their neighbours, because
+  those encode with exactly those second bytes.
+
+What separates them is not the character, it is the company it keeps. Mojibake
+is a whole-text transformation: it corrupts every non-ASCII character it
+touches, so an exotic lead appears INSIDE a run of other corrupted characters,
+never alone in a sentence that is otherwise fine. So a 2 byte candidate whose
+lead is outside U+00C2-U+00C3 is accepted only if it abuts another accepted
+candidate, propagated to a fixpoint so runs still resolve end to end. Widths 3
+and 4 are never restricted.
+
+The three real locale strings are now false-positive fixtures, five depth 2
+runs assert that genuine runs still resolve completely, and a mutation proves
+the rule is load bearing.
 
 ## Two guards deleted for being unkillable
 
@@ -135,7 +173,8 @@ mutation, conclude the guard is hollow, and delete a speedup.
   actually answer this; before today it could not have.
 - The theme repo has legitimate non-ASCII in `assets` and `snippets` (star,
   em dash, box drawing, triangles, curly quotes) against its own pure-ASCII
-  convention. Not mojibake, not touched, not mine to widen into.
+  convention. Not mojibake, not touched, not mine to widen into. Its 467
+  scanned files are clean under the corrected detector.
 - `verify_import.py` uses literal U+E000 and U+E001 private-use characters as
   entity sentinels. Not mojibake and it works, but literal PUA characters in a
   source file are the next thing of this shape. Left alone.

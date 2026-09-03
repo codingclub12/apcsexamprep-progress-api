@@ -16,7 +16,7 @@
       "kind": "suite",
       "name": "the detector is exercised over GENERATED corruption, not pasted strings",
       "command": "npm run --silent smoke:encoding",
-      "expect": "45 passed, 0 failed"
+      "expect": "54 passed, 0 failed"
     },
     {
       "kind": "suite",
@@ -89,6 +89,16 @@
       "replace": "CODECS = ('latin1',)",
       "command": "npm run --silent smoke:mojibakeparity",
       "expect_failure": "every case agrees on index, character, codec and width"
+    },
+    {
+      "kind": "mutation",
+      "name": "the run rule is real: without it, Shopify's Finnish locale reads as corrupt",
+      "_why": "Found by running this detector over the theme repo. A capital O-diaeresis followed by an en dash is valid UTF-8 for a Hebrew accent, so it reverses perfectly and means nothing. Accepting an isolated exotic lead brings the false positive back, which is how a guard gets switched off.",
+      "file": "lib/mojibake.js",
+      "find": "  const accepted = hits.map((h) => !isExotic(h));",
+      "replace": "  const accepted = hits.map(() => true);",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "no false positive on finnish sort label"
     },
     {
       "kind": "rederive",

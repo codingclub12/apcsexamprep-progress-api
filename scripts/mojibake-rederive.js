@@ -152,10 +152,29 @@ function rederive(text) {
   for (const at of Array.from(merged.keys()).sort((a, b) => a - b)) {
     if (at <= guard) continue;
     const h = merged.get(at);
-    out.push({ index: at, fixed: h.fixed });
+    out.push({ index: at, fixed: h.fixed, width: h.width, lead: chars[at].codePointAt(0) });
     guard = at + h.width - 1;
   }
-  return out;
+
+  // The run rule, which is part of the DEFINITION of mojibake here rather than
+  // a detection technique, so both implementations carry it. A 2 byte candidate
+  // with a lead outside U+00C2-U+00C3 is real text unless it abuts another
+  // accepted candidate: mojibake corrupts every non-ASCII character it touches,
+  // so it arrives in runs. Without this, Shopify's Finnish locale file reads as
+  // corrupt because a capital O-diaeresis followed by an en dash is valid UTF-8
+  // for a Hebrew accent. See lib/mojibake.js for the two rejected alternatives.
+  const exotic = (h) => h.width === 2 && (h.lead < 0xC2 || h.lead > 0xC3);
+  const keep = out.map((h) => !exotic(h));
+  for (let changed = true; changed;) {
+    changed = false;
+    for (let i = 0; i < out.length; i++) {
+      if (keep[i]) continue;
+      const touchesPrev = i > 0 && keep[i - 1] && out[i - 1].index + out[i - 1].width === out[i].index;
+      const touchesNext = i + 1 < out.length && keep[i + 1] && out[i].index + out[i].width === out[i + 1].index;
+      if (touchesPrev || touchesNext) { keep[i] = true; changed = true; }
+    }
+  }
+  return out.filter((h, i) => keep[i]).map((h) => ({ index: h.index, fixed: h.fixed }));
 }
 
 // -- Agree about corruption, not just about silence ---------------------------
