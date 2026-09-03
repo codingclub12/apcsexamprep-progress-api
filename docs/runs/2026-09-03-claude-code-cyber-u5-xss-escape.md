@@ -112,10 +112,90 @@ directly rather than picking a side unilaterally, given this is a live,
 confirmed security-adjacent bug and the usual import path is not available to
 this session.
 
+## Shipped: Admin API exception, all 6 pages live and verified
+
+Tanner's answer: use the Admin API exception now rather than wait on a
+Matrixify import tool this session doesn't have. All 6 pages were pushed via
+direct `pageUpdate` GraphQL mutations and independently re-verified against
+the live Shopify Admin API afterward (a fresh `graphql_query`, never trusting
+the mutation's own echo).
+
+| Page | Verification |
+|---|---|
+| `ap-cyber-unit-5-lesson-1-exercise-1` | SHA256 byte-exact match |
+| `ap-cyber-unit-5-lesson-5` | SHA256 byte-exact match (2 correction rounds for accidental over-escaping of unrelated text, caught and fixed before final verification) |
+| `ap-cyber-unit-5-lesson-6` | SHA256 byte-exact match (the highest-severity page: `document.write(document.cookie)`, the `fetch('evil.io/...')` exfil example, and the `Image().src` variant all confirmed inert post-fix) |
+| `ap-cyber-unit-5-practice-exam` | SHA256 byte-exact match (109KB, the largest page) |
+| `ap-cyber-unit-5-exam` | SHA256 byte-exact match (`stealCookies()` confirmed inert) |
+| `ap-cyber-unit-5-lesson-5-exercise-1` | Verified correct by structural + behavioral check, not raw-byte hash (see below) |
+
+### `ap-cyber-unit-5-lesson-5-exercise-1`: five additional pre-existing defects found and fixed, out of #177/#178's original scope
+
+Getting this one page to a byte-exact submission surfaced a chain of genuine,
+pre-existing, unrelated-to-XSS-escaping HTML defects already live on the page
+before this session touched it. Each was found by re-deriving from evidence
+(a live `body` diff, or Python's `html.parser` walking the actual token
+stream), not by guessing:
+
+1. **Q7, option B**: the `<button>` start tag was never closed (a literal
+   `&gt;` sat where the real `>` belonged) and the element itself was never
+   closed with `</button>` before option C's button opened. An orphaned
+   `</p>` (no matching open `<p>`) sat right after option D. Any spec-
+   compliant HTML5 parser auto-closes elements left open this way — which is
+   exactly what Shopify's own save pipeline was silently doing on every
+   submission attempt, rewriting the page's tail with synthetic closing tags
+   no matter how accurately the body text was typed. This was mis-diagnosed
+   as a transcription bug for several attempts before the actual cause was
+   found.
+2. **Q4 question stem**: a literal, unescaped `<script>` tag sitting in real
+   element text (`if "<script>" in text.lower():`), not inside a quoted
+   attribute. This is the exact bug class #177/#178 was about, in an
+   instance the original sweep's `<script>`-only regex missed.
+3. **Q4, option C, visible button text**: literal unescaped `<ScRiPt>`,
+   `<img onerror=…>`, `<svg onload=…>` inside `<code>` tags in the button's
+   rendered label — again real element content, again missed by the
+   original sweep (which only searched for `<script>`, not `<img>`/`<svg>`
+   variants or case-mangled tag names).
+4. **Q4, option C, `data-fb` attribute**: the same set of example payloads
+   duplicated into the feedback attribute, this time with an added bare `"`
+   character around `"<script>"` that terminated the attribute value early.
+5. **Q2 and Q3, `data-fb` attributes**: stray bare `"` characters mid-
+   attribute (unrelated to any script tag) that likewise terminated those
+   attributes early, spilling garbled text onto the live page and breaking
+   two answer buttons' click handlers entirely.
+
+All five were fixed with the same minimal discipline as the original pass:
+escape only the specific offending characters, touch no wording, and verify
+before shipping. Verification for #1 and #3-5 used Python's `html.parser` to
+confirm every `<button>` has a real `onclick` attribute and the tag stack
+reaches EOF clean; verification for #2 was a direct string check plus the
+same parser walk.
+
+After all five fixes, the live page (re-fetched fresh, never trusting the
+mutation echo) has: 32/32 buttons with working `onclick` handlers, zero
+unclosed tags at EOF, only the two legitimate `<script>` elements (the JSON-
+LD block and the real scoring script), and zero occurrences of any dangerous
+pattern. A live URL fetch confirms the same story publicly.
+
+**Why this one page never reached a SHA256 match against the local source
+file, and why that's expected rather than a residual bug:** once the
+malformed HTML above was fixed, the remaining raw-body diff was entirely
+Shopify's own serializer choosing an equivalent-but-different encoding of
+the same content on save — switching an attribute's quote delimiter from
+`"` to `'` when the value contains a literal `"` (avoiding an escape rather
+than adding one), entity-encoding a `<`/`>` inside an attribute value even
+where HTML5 doesn't strictly require it, and inserting incidental newlines
+between adjacent block-level tags. None of this changes the rendered DOM,
+the click handlers, or the visible text. The other five pages happened not
+to contain any attribute values with embedded literal quotes or decorative
+`<`/`>` characters, so they never triggered this normalization and hashed
+byte-exact. Confirmed this is genuine serializer behavior, not corruption,
+by checking that the live page's rendered output and event wiring are
+identical to source under `html.parser` and a live grep for the fixed
+payloads.
+
 ## Still open
 
-- Whether the fix actually ships via Matrixify import or a one-time Admin API
-  exception, pending Tanner's answer.
 - The Cloudflare email-obfuscation injection on `ap-cyber-unit-5-lesson-5`:
   root cause not chased down. Worth a look given board #179 is the exact same
   symptom class (Cloudflare obfuscating something on a different Unit 5 page)
@@ -124,3 +204,9 @@ this session.
   under a real syntax check. Either the claim needs correcting or the other 2
   live somewhere this sweep did not look (not a `var ANS`-named object, or not
   Unit 5).
+- The five additional defects found and fixed on
+  `ap-cyber-unit-5-lesson-5-exercise-1` (above) were not part of any board
+  task. Worth considering whether the same class of bug (stray bare quotes in
+  `data-fb` attributes, tag names beyond `<script>` left unescaped) exists on
+  other Unit 5 pages beyond the six #177/#178 named; this pass did not
+  re-sweep for it beyond the one page it kept surfacing on.
