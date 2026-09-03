@@ -69,7 +69,7 @@ const COURSES = {
       'unit-1': {
         label: 'Unit 1: Introduction to Security',
         lessons: ['1.1', '1.2', '1.3', '1.4', '1.5'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz', 'lab'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
       },
@@ -80,7 +80,7 @@ const COURSES = {
         // "Topic 2.5") but the lesson does not exist in the course, so it must
         // not render a column. Confirmed with the course owner.
         lessons: ['2.1', '2.2', '2.3', '2.4'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz', 'lab'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
       },
@@ -100,7 +100,7 @@ const COURSES = {
         //  utils.js pageFromHandle and scripts/seed-cyber-denominators.js must
         //  agree with this list, and smoke/cyber-unit3-lessons.js pins that.
         lessons: ['3.1a', '3.1b', '3.2', '3.3', '3.4', '3.5'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz', 'lab'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
       },
@@ -108,14 +108,14 @@ const COURSES = {
         label: 'Unit 4: Securing Devices',
         // 4.4 and 4.5 likewise: real content, no columns.
         lessons: ['4.1', '4.2', '4.3', '4.4', '4.5'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz', 'lab'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
       },
       'unit-5': {
         label: 'Unit 5: Securing Applications and Data',
         lessons: ['5.1', '5.2', '5.3', '5.4', '5.5', '5.6'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz', 'lab'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
       },

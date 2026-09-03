@@ -1,6 +1,7 @@
-<!-- apcs-ccx cross-link bar (managed) --><div id="apcs-ccx">
-<style>#apcs-ccx{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;}#apcs-ccx *{box-sizing:border-box!important;}#apcs-ccx .ccx-bar{display:flex!important;gap:8px!important;align-items:center!important;background:#0f1f3d!important;padding:10px 14px!important;border-radius:10px!important;margin:0 0 18px!important;flex-wrap:wrap!important;}#apcs-ccx .ccx-lbl{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-right:2px!important;}#apcs-ccx a.ccx-link{display:inline-block!important;padding:7px 13px!important;border-radius:7px!important;font-size:14px!important;font-weight:600!important;line-height:1.2!important;text-decoration:none!important;color:#e5edff!important;-webkit-text-fill-color:#e5edff!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-link:hover{background:rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-active{background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:#2563eb!important;cursor:default!important;}#apcs-ccx .ccx-soon{font-size:12px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;padding:0 4px!important;}#apcs-ccx .ccx-sep{width:1px!important;height:20px!important;background:rgba(255,255,255,.2)!important;margin:0 4px!important;}</style>
-<nav class="ccx-bar" aria-label="Teacher hubs"><span class="ccx-lbl">Hubs</span><a class="ccx-link" href="/pages/cyber-command-center">Cyber</a><a class="ccx-link" href="/pages/csp-command-center">CSP</a><a class="ccx-link" href="/pages/csa-command-center">CSA</a><a class="ccx-link" href="/pages/ap-networking-command-center">Networking</a><span class="ccx-sep"></span><a class="ccx-link ccx-active" href="/pages/cyber-dashboard" aria-current="page">Gradebook</a></nav>
+﻿Handle,Command,Title,Body HTML
+"cyber-dashboard","UPDATE","Teacher Dashboard","<!-- apcs-ccx cross-link bar (managed) --><div id=""apcs-ccx"">
+<style>#apcs-ccx{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;}#apcs-ccx *{box-sizing:border-box!important;}#apcs-ccx .ccx-bar{display:flex!important;gap:8px!important;align-items:center!important;background:#0f1f3d!important;padding:10px 14px!important;border-radius:10px!important;margin:0 0 18px!important;flex-wrap:wrap!important;}#apcs-ccx .ccx-lbl{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-right:2px!important;}#apcs-ccx a.ccx-link{display:inline-block!important;padding:7px 13px!important;border-radius:7px!important;font-size:14px!important;font-weight:600!important;line-height:1.2!important;text-decoration:none!important;color:#e5edff!important;-webkit-text-fill-color:#e5edff!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-link:hover{background:rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-active{background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:#2563eb!important;cursor:default!important;}#apcs-ccx .ccx-soon{font-size:12px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;padding:0 4px!important;}#apcs-ccx .ccx-sep{width:1px!important;height:20px!important;background:rgba(255,255,255,.2)!important;margin:0 4px!important;}</style>
+<nav class=""ccx-bar"" aria-label=""Teacher hubs""><span class=""ccx-lbl"">Hubs</span><a class=""ccx-link"" href=""/pages/cyber-command-center"">Cyber</a><a class=""ccx-link"" href=""/pages/csp-command-center"">CSP</a><a class=""ccx-link"" href=""/pages/csa-command-center"">CSA</a><a class=""ccx-link"" href=""/pages/ap-networking-command-center"">Networking</a><span class=""ccx-sep""></span><a class=""ccx-link ccx-active"" href=""/pages/cyber-dashboard"" aria-current=""page"">Gradebook</a></nav>
 </div>
 <!-- APCSExamPrep Teacher Dashboard - /pages/cyber-dashboard -->
 <!-- Redesign: clean tabbed gradebook. Keeps auth, ?code= loading, /progress fetch, exports, roster tools, delete. -->
@@ -170,7 +171,7 @@
 #tcdash-wrap .switch{position:relative!important;width:44px!important;height:26px!important;flex-shrink:0!important;display:inline-block!important;}
 #tcdash-wrap .switch input{opacity:0!important;width:0!important;height:0!important;position:absolute!important;}
 #tcdash-wrap .slider{position:absolute!important;inset:0!important;background:#cbd5e1!important;border-radius:999px!important;cursor:pointer!important;}
-#tcdash-wrap .slider:before{content:""!important;position:absolute!important;width:20px!important;height:20px!important;left:3px!important;top:3px!important;background:#fff!important;border-radius:50%!important;transition:.15s!important;}
+#tcdash-wrap .slider:before{content:""""!important;position:absolute!important;width:20px!important;height:20px!important;left:3px!important;top:3px!important;background:#fff!important;border-radius:50%!important;transition:.15s!important;}
 #tcdash-wrap .switch input:checked + .slider{background:#1e3a5f!important;}
 #tcdash-wrap .switch input:checked + .slider:before{transform:translateX(18px)!important;}
 #tcdash-wrap .retrytypes{display:flex!important;flex-direction:column!important;gap:9px!important;min-width:190px!important;}
@@ -218,214 +219,214 @@
 @media(max-width:820px){#tcdash-wrap .gb-stats,#tcdash-wrap .rep-grid{grid-template-columns:repeat(2,1fr)!important;}}
 </style>
 
-<div id="tcdash-wrap">
-<div class="gb-page">
-  <div class="gb-wrap">
+<div id=""tcdash-wrap"">
+<div class=""gb-page"">
+  <div class=""gb-wrap"">
 
-    <div id="tcdash-not-auth" class="gb-hidden" style="text-align:center;padding:60px 20px;">
-      <div style="font-size:20px;font-weight:700;color:#1e3a5f;-webkit-text-fill-color:#1e3a5f;margin-bottom:12px;">Sign in to view your dashboard</div>
-      <a class="gb-btn primary" href="/pages/cyber-class">Go to Teacher Portal</a>
+    <div id=""tcdash-not-auth"" class=""gb-hidden"" style=""text-align:center;padding:60px 20px;"">
+      <div style=""font-size:20px;font-weight:700;color:#1e3a5f;-webkit-text-fill-color:#1e3a5f;margin-bottom:12px;"">Sign in to view your dashboard</div>
+      <a class=""gb-btn primary"" href=""/pages/cyber-class"">Go to Teacher Portal</a>
     </div>
 
-    <div id="tcdash-main" class="gb-hidden">
+    <div id=""tcdash-main"" class=""gb-hidden"">
 
-      <div class="gb-topbar">
-        <div class="gb-cid">
-          <div class="gb-av" id="gb-av">C</div>
+      <div class=""gb-topbar"">
+        <div class=""gb-cid"">
+          <div class=""gb-av"" id=""gb-av"">C</div>
           <div>
-            <h1 class="gb-cname" id="gb-cname">Class</h1>
-            <div class="gb-sub">
-              <span class="gb-tag" id="gb-course">Course</span>
-              <span class="gb-chip" onclick="TCDash.copyCode()">Join code: <span class="cc" id="gb-code"></span> <span class="cp" id="gb-copy">copy</span></span>
-              <span id="gb-count"></span>
+            <h1 class=""gb-cname"" id=""gb-cname"">Class</h1>
+            <div class=""gb-sub"">
+              <span class=""gb-tag"" id=""gb-course"">Course</span>
+              <span class=""gb-chip"" onclick=""TCDash.copyCode()"">Join code: <span class=""cc"" id=""gb-code""></span> <span class=""cp"" id=""gb-copy"">copy</span></span>
+              <span id=""gb-count""></span>
             </div>
           </div>
         </div>
-        <div class="gb-actions">
-          <a class="gb-btn" href="/pages/cyber-class">All classes</a>
-          <span class="gb-export-menu" id="gb-export-menu">
-            <button class="gb-btn primary" onclick="TCDash.toggleExportMenu(event)">Export &#9662;</button>
-            <div class="gb-export-list" id="gb-export-list">
-              <button onclick="TCDash.pickExport('gradebook')"><b>Gradebook spreadsheet</b><span>Every activity, for Excel or Sheets</span></button>
-              <button onclick="TCDash.pickExport('canvas')"><b>Canvas CSV by unit</b><span>Five Canvas assignments, a unit grade in each</span></button>
-              <button onclick="TCDash.pickExport('canvas-activity')"><b>Canvas CSV by activity</b><span>Every lesson, quiz, case file and exam as its own assignment</span></button>
-              <button onclick="TCDash.pickExport('schoology')"><b>Schoology CSV</b><span>Points earned out of points possible, one column per assignment</span></button>
-              <button onclick="TCDash.pickExport('full')"><b>Full data CSV</b><span>Raw scores and completion from the server</span></button>
+        <div class=""gb-actions"">
+          <a class=""gb-btn"" href=""/pages/cyber-class"">All classes</a>
+          <span class=""gb-export-menu"" id=""gb-export-menu"">
+            <button class=""gb-btn primary"" onclick=""TCDash.toggleExportMenu(event)"">Export &#9662;</button>
+            <div class=""gb-export-list"" id=""gb-export-list"">
+              <button onclick=""TCDash.pickExport('gradebook')""><b>Gradebook spreadsheet</b><span>Every activity, for Excel or Sheets</span></button>
+              <button onclick=""TCDash.pickExport('canvas')""><b>Canvas CSV by unit</b><span>Five Canvas assignments, a unit grade in each</span></button>
+              <button onclick=""TCDash.pickExport('canvas-activity')""><b>Canvas CSV by activity</b><span>Every lesson, quiz, case file and exam as its own assignment</span></button>
+              <button onclick=""TCDash.pickExport('schoology')""><b>Schoology CSV</b><span>Points earned out of points possible, one column per assignment</span></button>
+              <button onclick=""TCDash.pickExport('full')""><b>Full data CSV</b><span>Raw scores and completion from the server</span></button>
             </div>
           </span>
         </div>
       </div>
 
-      <div class="gb-tabs" id="gb-tabs">
-        <button class="gb-tab on" data-tab="overview">Overview</button>
-        <button class="gb-tab" data-tab="student">By Student</button>
-        <button class="gb-tab" data-tab="assignment">By Assignment</button>
-        <button class="gb-tab" data-tab="settings">Settings</button>
+      <div class=""gb-tabs"" id=""gb-tabs"">
+        <button class=""gb-tab on"" data-tab=""overview"">Overview</button>
+        <button class=""gb-tab"" data-tab=""student"">By Student</button>
+        <button class=""gb-tab"" data-tab=""assignment"">By Assignment</button>
+        <button class=""gb-tab"" data-tab=""settings"">Settings</button>
       </div>
 
-      <div class="gb-promo" id="gb-promo">
-        <div class="pi"><i></i></div>
-        <p id="gb-promo-text"><b>Teaching this course?</b> The teacher pack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.</p>
-        <a class="gb-btn primary" id="gb-promo-link" href="/collections/bundles">View course bundles</a>
-        <button class="x" onclick="document.getElementById('gb-promo').remove()">×</button>
+      <div class=""gb-promo"" id=""gb-promo"">
+        <div class=""pi""><i></i></div>
+        <p id=""gb-promo-text""><b>Teaching this course?</b> The teacher pack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.</p>
+        <a class=""gb-btn primary"" id=""gb-promo-link"" href=""/collections/bundles"">View course bundles</a>
+        <button class=""x"" onclick=""document.getElementById('gb-promo').remove()"">×</button>
       </div>
 
-      <div class="gb-share">
+      <div class=""gb-share"">
         <div>
-          <div class="sl">Share with students</div>
-          <div class="su">apcsexamprep.com/pages/join?code=<b id="gb-share-code"></b>
+          <div class=""sl"">Share with students</div>
+          <div class=""su"">apcsexamprep.com/pages/join?code=<b id=""gb-share-code""></b>
 </div>
         </div>
-        <button class="gb-btn primary" style="margin-left:auto" onclick="TCDash.copyJoinLink()">Copy join link</button>
+        <button class=""gb-btn primary"" style=""margin-left:auto"" onclick=""TCDash.copyJoinLink()"">Copy join link</button>
       </div>
 
-      <div id="gb-loading" class="gb-loading">Loading class progress...</div>
+      <div id=""gb-loading"" class=""gb-loading"">Loading class progress...</div>
 
-      <div id="overview" class="gb-hidden">
-        <div class="gb-stats" id="gb-statcards"></div>
-        <div class="gb-toolbar">
-          <div class="gb-dd" id="gb-unitdd">
-<button class="gb-btn sm gb-dd-btn" id="gb-unitbtn" onclick="TCDash.toggleUnitDD(event)">All units <span class="ck">▾</span></button><div class="gb-dd-panel gb-hidden" id="gb-unitpanel"></div>
+      <div id=""overview"" class=""gb-hidden"">
+        <div class=""gb-stats"" id=""gb-statcards""></div>
+        <div class=""gb-toolbar"">
+          <div class=""gb-dd"" id=""gb-unitdd"">
+<button class=""gb-btn sm gb-dd-btn"" id=""gb-unitbtn"" onclick=""TCDash.toggleUnitDD(event)"">All units <span class=""ck"">▾</span></button><div class=""gb-dd-panel gb-hidden"" id=""gb-unitpanel""></div>
 </div>
-          <div class="gb-seg" id="gb-viewseg">
-<button class="on" data-view="points">Points</button><button data-view="mastery">Mastery</button>
+          <div class=""gb-seg"" id=""gb-viewseg"">
+<button class=""on"" data-view=""points"">Points</button><button data-view=""mastery"">Mastery</button>
 </div>
-          <div class="gb-dens" title="Drag left to fit more columns with smaller text, right for bigger text">
-<span class="gb-dens-a sm">A</span><input type="range" id="gb-densrange" min="0" max="100" value="50"><span class="gb-dens-a lg">A</span>
+          <div class=""gb-dens"" title=""Drag left to fit more columns with smaller text, right for bigger text"">
+<span class=""gb-dens-a sm"">A</span><input type=""range"" id=""gb-densrange"" min=""0"" max=""100"" value=""50""><span class=""gb-dens-a lg"">A</span>
 </div>
-          <input class="gb-input" type="search" id="gb-search" placeholder="Search students">
-          <span class="gb-note" id="gb-calcnote"></span>
+          <input class=""gb-input"" type=""search"" id=""gb-search"" placeholder=""Search students"">
+          <span class=""gb-note"" id=""gb-calcnote""></span>
         </div>
-        <div class="gb-card"><div class="gb-scroll"><table class="gb-grid" id="gb-table"></table></div></div>
-        <div class="gb-legend">
-          <span class="k"><span class="sw g"></span> 80 and up</span>
-          <span class="k"><span class="sw a"></span> 60 to 79</span>
-          <span class="k"><span class="sw r"></span> below 60</span>
-          <span class="k"><span class="sw n"></span> not started</span>
-          <span class="k"><span class="mb ov"></span> override</span>
-          <span class="k"><span class="mb open"></span> retry open</span>
-          <span class="k" style="margin-left:auto;color:#94a3b8;-webkit-text-fill-color:#94a3b8;">Click a name or a score cell to drill in.</span>
+        <div class=""gb-card""><div class=""gb-scroll""><table class=""gb-grid"" id=""gb-table""></table></div></div>
+        <div class=""gb-legend"">
+          <span class=""k""><span class=""sw g""></span> 80 and up</span>
+          <span class=""k""><span class=""sw a""></span> 60 to 79</span>
+          <span class=""k""><span class=""sw r""></span> below 60</span>
+          <span class=""k""><span class=""sw n""></span> not started</span>
+          <span class=""k""><span class=""mb ov""></span> override</span>
+          <span class=""k""><span class=""mb open""></span> retry open</span>
+          <span class=""k"" style=""margin-left:auto;color:#94a3b8;-webkit-text-fill-color:#94a3b8;"">Click a name or a score cell to drill in.</span>
         </div>
       </div>
 
-      <div id="student" class="gb-hidden">
-        <div class="gb-panel">
-          <div class="rep-head">
-            <div class="ini" id="rep-ini">--</div>
+      <div id=""student"" class=""gb-hidden"">
+        <div class=""gb-panel"">
+          <div class=""rep-head"">
+            <div class=""ini"" id=""rep-ini"">--</div>
             <div>
-<h2 id="rep-name">Student</h2>
-<div class="thin" id="rep-meta"></div>
+<h2 id=""rep-name"">Student</h2>
+<div class=""thin"" id=""rep-meta""></div>
 </div>
-            <select class="gb-select picker" id="rep-picker"></select>
+            <select class=""gb-select picker"" id=""rep-picker""></select>
           </div>
-          <div class="stu-tools" id="rep-tools"></div>
-          <div class="rep-grid" id="rep-mini"></div>
-          <div id="rep-retry"></div>
-          <table class="rep-table" id="rep-table"></table>
+          <div class=""stu-tools"" id=""rep-tools""></div>
+          <div class=""rep-grid"" id=""rep-mini""></div>
+          <div id=""rep-retry""></div>
+          <table class=""rep-table"" id=""rep-table""></table>
         </div>
       </div>
 
-      <div id="assignment" class="gb-hidden">
-        <div class="gb-panel">
-          <div class="ba-head">
-<h2 id="ba-name">Assignment</h2>
-<select class="gb-select picker" id="ba-picker" style="margin-left:auto"></select>
+      <div id=""assignment"" class=""gb-hidden"">
+        <div class=""gb-panel"">
+          <div class=""ba-head"">
+<h2 id=""ba-name"">Assignment</h2>
+<select class=""gb-select picker"" id=""ba-picker"" style=""margin-left:auto""></select>
 </div>
-          <div class="thin" id="ba-meta"></div>
-          <div class="rep-grid" id="ba-mini"></div>
-          <table class="rep-table" id="ba-table"></table>
+          <div class=""thin"" id=""ba-meta""></div>
+          <div class=""rep-grid"" id=""ba-mini""></div>
+          <table class=""rep-table"" id=""ba-table""></table>
         </div>
       </div>
 
-      <div id="settings" class="gb-hidden">
-        <div class="gb-panel">
-          <h3 class="sec">Grade calculation</h3>
-          <div class="set-row">
-            <div class="txt">
+      <div id=""settings"" class=""gb-hidden"">
+        <div class=""gb-panel"">
+          <h3 class=""sec"">Grade calculation</h3>
+          <div class=""set-row"">
+            <div class=""txt"">
 <h4>Calculation method</h4>
 <p>Earned over graded counts only work a student has attempted. Earned over possible counts everything assigned, so untouched work pulls the average down.</p>
 </div>
-            <div class="gb-seg" id="gb-calcseg">
-<button class="on" data-calc="graded">Earned / graded</button><button data-calc="possible">Earned / possible</button>
+            <div class=""gb-seg"" id=""gb-calcseg"">
+<button class=""on"" data-calc=""graded"">Earned / graded</button><button data-calc=""possible"">Earned / possible</button>
 </div>
           </div>
-          <div class="set-row">
-            <div class="txt">
+          <div class=""set-row"">
+            <div class=""txt"">
 <h4>Mastery threshold</h4>
 <p>The percent that counts as passed. Cells at or above this show green.</p>
 </div>
-            <div style="text-align:right">
-<input type="range" id="gb-thr" min="50" max="95" step="5" value="80"><span id="gb-thrv" style="font-weight:700;margin-left:8px">80%</span>
+            <div style=""text-align:right"">
+<input type=""range"" id=""gb-thr"" min=""50"" max=""95"" step=""5"" value=""80""><span id=""gb-thrv"" style=""font-weight:700;margin-left:8px"">80%</span>
 </div>
           </div>
-          <div class="set-row">
-            <div class="txt">
-<h4>Retry until mastery, by assignment type<span class="free-tag">FREE</span><span class="soon-tag">SAVING SOON</span>
+          <div class=""set-row"">
+            <div class=""txt"">
+<h4>Retry until mastery, by assignment type<span class=""free-tag"">FREE</span><span class=""soon-tag"">SAVING SOON</span>
 </h4>
 <p>Choose which activity types students may re-attempt until they reach the mastery threshold. Formative work fits; exams usually stay one attempt. Per-student overrides live on the By Student tab.</p>
 </div>
-            <div class="retrytypes">
-              <label>Lesson CFUs <span class="switch"><input type="checkbox" id="rt-lesson" checked><span class="slider"></span></span></label>
-              <label>Exercises <span class="switch"><input type="checkbox" id="rt-ex" checked><span class="slider"></span></span></label>
-              <label>Quizzes <span class="switch"><input type="checkbox" id="rt-quiz" checked><span class="slider"></span></span></label>
-              <label>Unit tests <span class="switch"><input type="checkbox" id="rt-exam"><span class="slider"></span></span></label>
+            <div class=""retrytypes"">
+              <label>Lesson CFUs <span class=""switch""><input type=""checkbox"" id=""rt-lesson"" checked><span class=""slider""></span></span></label>
+              <label>Exercises <span class=""switch""><input type=""checkbox"" id=""rt-ex"" checked><span class=""slider""></span></span></label>
+              <label>Quizzes <span class=""switch""><input type=""checkbox"" id=""rt-quiz"" checked><span class=""slider""></span></span></label>
+              <label>Unit tests <span class=""switch""><input type=""checkbox"" id=""rt-exam""><span class=""slider""></span></span></label>
             </div>
           </div>
-          <div class="set-row">
-            <div class="txt">
+          <div class=""set-row"">
+            <div class=""txt"">
 <h4>Show letter grades</h4>
 <p>Display an A to F letter next to each student percent.</p>
 </div>
-            <label class="switch"><input type="checkbox" id="gb-letters" checked><span class="slider"></span></label>
+            <label class=""switch""><input type=""checkbox"" id=""gb-letters"" checked><span class=""slider""></span></label>
           </div>
-          <h3 class="sec" style="margin-top:18px">Count toward the grade</h3>
-          <div class="set-row">
-<div class="txt">
+          <h3 class=""sec"" style=""margin-top:18px"">Count toward the grade</h3>
+          <div class=""set-row"">
+<div class=""txt"">
 <h4>Lesson checks (CFUs)</h4>
 <p>Off by default so daily practice does not flood the gradebook.</p>
 </div>
-<label class="switch"><input type="checkbox" id="inc-lesson"><span class="slider"></span></label>
+<label class=""switch""><input type=""checkbox"" id=""inc-lesson""><span class=""slider""></span></label>
 </div>
-          <div class="set-row">
-<div class="txt"><h4>Exercises</h4></div>
-<label class="switch"><input type="checkbox" id="inc-ex" checked><span class="slider"></span></label>
+          <div class=""set-row"">
+<div class=""txt""><h4>Exercises</h4></div>
+<label class=""switch""><input type=""checkbox"" id=""inc-ex"" checked><span class=""slider""></span></label>
 </div>
-          <div class="set-row">
-<div class="txt"><h4>Quizzes</h4></div>
-<label class="switch"><input type="checkbox" id="inc-quiz" checked><span class="slider"></span></label>
+          <div class=""set-row"">
+<div class=""txt""><h4>Quizzes</h4></div>
+<label class=""switch""><input type=""checkbox"" id=""inc-quiz"" checked><span class=""slider""></span></label>
 </div>
-          <div class="set-row">
-<div class="txt"><h4>Unit tests</h4></div>
-<label class="switch"><input type="checkbox" id="inc-exam" checked><span class="slider"></span></label>
+          <div class=""set-row"">
+<div class=""txt""><h4>Unit tests</h4></div>
+<label class=""switch""><input type=""checkbox"" id=""inc-exam"" checked><span class=""slider""></span></label>
 </div>
-          <h3 class="sec" style="margin-top:18px">Removed students</h3>
-          <div class="set-row">
-<div class="txt">
+          <h3 class=""sec"" style=""margin-top:18px"">Removed students</h3>
+          <div class=""set-row"">
+<div class=""txt"">
 <p>Removing a student stops them signing in and takes them out of the gradebook, the grid and every export. Their scores are kept, so restoring a student puts everything back exactly as it was.</p>
 </div>
 </div>
-          <div id="gb-removed"></div>
-          <h3 class="sec" style="margin-top:18px">Class data</h3>
-          <div class="set-row">
-<div class="txt">
+          <div id=""gb-removed""></div>
+          <h3 class=""sec"" style=""margin-top:18px"">Class data</h3>
+          <div class=""set-row"">
+<div class=""txt"">
 <h4>Full data CSV</h4>
 <p>Every score and completion for this class.</p>
 </div>
-<button class="gb-btn" onclick="TCDash.exportCSV()">Download full data CSV</button>
+<button class=""gb-btn"" onclick=""TCDash.exportCSV()"">Download full data CSV</button>
 </div>
-          <div class="set-row">
-<div class="txt">
+          <div class=""set-row"">
+<div class=""txt"">
 <h4>Canvas gradebook CSV</h4>
 <p>One assignment per unit, formatted to import straight into Canvas. Set each student's Student Ref to their Canvas SIS User ID first.</p>
 </div>
-<button class="gb-btn" onclick="TCDash.exportCanvasCSV('unit')">Download Canvas CSV</button>
+<button class=""gb-btn"" onclick=""TCDash.exportCanvasCSV('unit')"">Download Canvas CSV</button>
 </div>
-          <div class="set-row">
-<div class="txt">
+          <div class=""set-row"">
+<div class=""txt"">
 <h4>Delete class</h4>
 <p>Permanently removes the class and all student progress. Cannot be undone.</p>
 </div>
-<button class="gb-btn danger" onclick="TCDash.deleteClass()">Delete class</button>
+<button class=""gb-btn danger"" onclick=""TCDash.deleteClass()"">Delete class</button>
 </div>
         </div>
       </div>
@@ -433,8 +434,8 @@
     </div>
   </div>
 </div>
-<div class="overlay gb-hidden" id="gb-overlay" onclick="TCDash.closePop()"></div>
-<div class="pop gb-hidden" id="gb-pop"></div>
+<div class=""overlay gb-hidden"" id=""gb-overlay"" onclick=""TCDash.closePop()""></div>
+<div class=""pop gb-hidden"" id=""gb-pop""></div>
 </div>
 
 <script>
@@ -581,7 +582,7 @@ window.TCDash = {
   clsFor(p){ if(p===null)return'n'; if(p>=this.state.threshold)return'g'; if(p>=60)return'a'; return'r'; },
   num(n){ return (Math.round(n*100)/100).toString(); },
   // How a column is named to a teacher. An exam or a case file carries its own
-  // label ("Big Idea 3 Unit Test Part A"); everything else is lesson plus
+  // label (""Big Idea 3 Unit Test Part A""); everything else is lesson plus
   // activity. Keyed on the activity, not on the lesson id, because CSP sits its
   // exams at lesson 'unit-test' and Cyber sits them at lesson 'exam'.
   colLabel(c){ return (c.activity==='exam'||c.activity==='case_file')?c.lessonName:(c.lesson+' '+c.type); },
@@ -591,7 +592,7 @@ window.TCDash = {
   // not, the percent alone, marked with a star.
   cellText(cd,plain){ if(!cd.started) return '–';
     if(cd.priced) return this.num(cd.earned)+'/'+this.num(cd.possible);
-    return this.num(cd.pct)+'%'+(plain?'*':"<span class='pv' title='Points have not been assigned to this activity yet'>*</span>"); },
+    return this.num(cd.pct)+'%'+(plain?'*':""<span class='pv' title='Points have not been assigned to this activity yet'>*</span>""); },
   letterFor(p){ if(p==null)return''; if(p>=90)return'A'; if(p>=80)return'B'; if(p>=70)return'C'; if(p>=60)return'D'; return'F'; },
   // A grade with no priced work behind it prints as a dash, never as 0%.
   pctText(p){ return p==null?'–':(p+'%'); },
@@ -654,7 +655,7 @@ window.TCDash = {
     const comp=Math.round(arr.reduce((a,b)=>a+(b.total?b.done/b.total:0),0)/n*100);
     const active=this.model.students.filter(s=>/Today|Yesterday/.test(s.lastActive||'')).length;
     const graded=arr.reduce((a,b)=>a+b.done,0);
-    const card=(l,v,f)=>'<div class="gb-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div><div class="f">'+f+'</div></div>';
+    const card=(l,v,f)=>'<div class=""gb-stat""><div class=""l"">'+l+'</div><div class=""v"">'+v+'</div><div class=""f"">'+f+'</div></div>';
     document.getElementById('gb-statcards').innerHTML=
       card('Class average',avg==null?'&ndash;':(avg+'<small>%</small>'),avg==null?'no graded work yet':(this.letterFor(avg)+' average'))+
       card('Completion',comp+'<small>%</small>','of assigned work')+
@@ -667,44 +668,44 @@ window.TCDash = {
     const showU=u=>(!sel||sel.length===0||sel.indexOf(u)>-1);
     const vcols=this.model.cols.map((c,i)=>({c:c,oi:i})).filter(o=>showU(o.c.unit));
     const vgroups=this.model.groups.filter(g=>showU(g.unit));
-    let h="<thead><tr class='grp'><th class='c-stick c-name'></th><th class='c-stick c-grade'></th><th class='c-stick c-pts'></th>";
-    vgroups.forEach(g=>{ h+="<th colspan='"+g.span+"'>"+S.esc(g.title)+"</th>"; });
-    h+="</tr><tr class='sub'><th class='c-stick c-name' style='cursor:pointer' onclick=\"TCDash.setSort('name')\">Student</th><th class='c-stick c-grade' style='cursor:pointer' onclick=\"TCDash.setSort('grade')\">Grade</th><th class='c-stick c-pts'>Points</th>";
-    vcols.forEach(o=>{ const c=o.c; h+="<th style='cursor:pointer' onclick=\"TCDash.gotoAssign("+o.oi+")\" title='"+S.esc(c.lessonName+' '+c.type)+"'>"+S.esc(c.type)+((S.counts(c.activity)&&c.authored)?"<span class='mx'>/"+c.possible+"</span>":"")+"</th>"; });
-    h+="</tr></thead><tbody>";
+    let h=""<thead><tr class='grp'><th class='c-stick c-name'></th><th class='c-stick c-grade'></th><th class='c-stick c-pts'></th>"";
+    vgroups.forEach(g=>{ h+=""<th colspan='""+g.span+""'>""+S.esc(g.title)+""</th>""; });
+    h+=""</tr><tr class='sub'><th class='c-stick c-name' style='cursor:pointer' onclick=\""TCDash.setSort('name')\"">Student</th><th class='c-stick c-grade' style='cursor:pointer' onclick=\""TCDash.setSort('grade')\"">Grade</th><th class='c-stick c-pts'>Points</th>"";
+    vcols.forEach(o=>{ const c=o.c; h+=""<th style='cursor:pointer' onclick=\""TCDash.gotoAssign(""+o.oi+"")\"" title='""+S.esc(c.lessonName+' '+c.type)+""'>""+S.esc(c.type)+((S.counts(c.activity)&&c.authored)?""<span class='mx'>/""+c.possible+""</span>"":"""")+""</th>""; });
+    h+=""</tr></thead><tbody>"";
     let rows=this.model.students.map((s,idx)=>({s:s,idx:idx,t:this.totals(s)}))
       .filter(r=>r.s.name.toLowerCase().indexOf(this.state.search.toLowerCase())>-1);
     rows.sort((a,b)=>{ const gv=x=>x.t.pct==null?-1:x.t.pct;
       const d=this.state.sortKey==='grade'?(gv(a)-gv(b)):a.s.name.localeCompare(b.s.name); return d*this.state.sortDir; });
     rows.forEach(r=>{
       const s=r.s,t=r.t,lt=this.letterFor(t.pct);
-      h+="<tr><td class='c-stick c-name'><div class='stu' onclick='TCDash.gotoStudent("+r.idx+")'><div class='ini'>"+s.initials+"</div><div><div class='nm'>"+S.esc(s.name)+"</div><div class='la'>"+S.esc(s.lastActive||'')+"</div></div></div></td>";
-      h+="<td class='c-stick c-grade'><div class='gcell'>"+((this.state.letters&&lt)?"<span class='letter l-"+lt+"'>"+lt+"</span>":"")+"<span class='pct'>"+this.pctText(t.pct)+"</span></div></td>";
-      h+="<td class='c-stick c-pts'><div class='ptsb'>"+t.earned+"</div><div class='ptss'>/ "+t.poss+"</div></td>";
+      h+=""<tr><td class='c-stick c-name'><div class='stu' onclick='TCDash.gotoStudent(""+r.idx+"")'><div class='ini'>""+s.initials+""</div><div><div class='nm'>""+S.esc(s.name)+""</div><div class='la'>""+S.esc(s.lastActive||'')+""</div></div></div></td>"";
+      h+=""<td class='c-stick c-grade'><div class='gcell'>""+((this.state.letters&&lt)?""<span class='letter l-""+lt+""'>""+lt+""</span>"":"""")+""<span class='pct'>""+this.pctText(t.pct)+""</span></div></td>"";
+      h+=""<td class='c-stick c-pts'><div class='ptsb'>""+t.earned+""</div><div class='ptss'>/ ""+t.poss+""</div></td>"";
       vcols.forEach(o=>{ const c=o.c;
-        const cd=this.cellData(s,c), off=!this.counts(c.activity), dim=off?" style='opacity:.45'":"";
-        const rOn=this.retryOn(c.activity,s); let mk="";
-        if(cd.locked) mk="<span class='mk ov' title='Submitted as final. Grant attempt reopens it.'>●</span>";
-        else if(rOn && cd.started && cd.pct<this.state.threshold) mk="<span class='mk open'>↻</span>";
+        const cd=this.cellData(s,c), off=!this.counts(c.activity), dim=off?"" style='opacity:.45'"":"""";
+        const rOn=this.retryOn(c.activity,s); let mk="""";
+        if(cd.locked) mk=""<span class='mk ov' title='Submitted as final. Grant attempt reopens it.'>●</span>"";
+        else if(rOn && cd.started && cd.pct<this.state.threshold) mk=""<span class='mk open'>↻</span>"";
         let inner;
-        if(!cd.started) inner="–";
+        if(!cd.started) inner=""–"";
         else if(this.state.view==='points') inner=this.cellText(cd);
-        else { const lab=cd.pct>=this.state.threshold?"Mastered":(cd.pct>=60?"Approaching":"Not yet"); inner="<span class='ptxt'><span class='dot "+this.clsFor(cd.pct)+"'></span>"+lab+"</span>"; }
+        else { const lab=cd.pct>=this.state.threshold?""Mastered"":(cd.pct>=60?""Approaching"":""Not yet""); inner=""<span class='ptxt'><span class='dot ""+this.clsFor(cd.pct)+""'></span>""+lab+""</span>""; }
         const cl=cd.started?(cd.earned===0?'r':this.clsFor(cd.pct)):'n';
-        const ttl=cd.started?(' title="'+cd.pct+'%"'):'';
-        h+="<td"+dim+"><button class='cellbtn "+cl+"'"+ttl+" onclick='TCDash.openPop(event,"+r.idx+","+o.oi+")'>"+inner+mk+"</button></td>";
+        const ttl=cd.started?(' title=""'+cd.pct+'%""'):'';
+        h+=""<td""+dim+""><button class='cellbtn ""+cl+""'""+ttl+"" onclick='TCDash.openPop(event,""+r.idx+"",""+o.oi+"")'>""+inner+mk+""</button></td>"";
       });
-      h+="</tr>";
+      h+=""</tr>"";
     });
-    h+="</tbody><tfoot><tr><td class='c-stick c-name'>Class average</td><td class='c-stick c-grade'></td><td class='c-stick c-pts'></td>";
+    h+=""</tbody><tfoot><tr><td class='c-stick c-name'>Class average</td><td class='c-stick c-grade'></td><td class='c-stick c-pts'></td>"";
     vcols.forEach(o=>{ const c=o.c; const vals=this.model.students.map(s=>this.cellData(s,c)).filter(x=>x.started);
-      if(!vals.length){ h+="<td>–</td>"; return; } h+="<td>"+Math.round(vals.reduce((a,b)=>a+b.pct,0)/vals.length)+"%</td>"; });
-    h+="</tr></tfoot>";
+      if(!vals.length){ h+=""<td>–</td>""; return; } h+=""<td>""+Math.round(vals.reduce((a,b)=>a+b.pct,0)/vals.length)+""%</td>""; });
+    h+=""</tr></tfoot>"";
     document.getElementById('gb-table').innerHTML=h;
     const rL={lesson:'CFU',exercise:'Ex',quiz:'Quiz',exam:'Exam'};
     const rOn=['lesson','exercise','quiz','exam'].filter(k=>this.state.retryTypes[k]).map(k=>rL[k]);
     // Name the unpriced columns rather than letting a star go unexplained. A
-    // teacher seeing "83%*" next to "6/7" is owed the reason: nobody has said
+    // teacher seeing ""83%*"" next to ""6/7"" is owed the reason: nobody has said
     // what that activity is out of, so it shows its percent and sits out of the
     // points total instead of being weighted at a made up number.
     const nop=this.model.cols.filter(c=>c.possible==null&&S.counts(c.activity)
@@ -718,12 +719,12 @@ window.TCDash = {
     const termAll=course==='ap-csp'?'All Big Ideas':'All units', termN=course==='ap-csp'?' Big Ideas':' units';
     const isAll=!sel||sel.length===0||sel.length===units.length;
     const checked=id=>isAll||sel.indexOf(id)>-1;
-    let h="<label><input type='checkbox' "+(isAll?'checked':'')+" onchange=\"TCDash.setUnitSel('all',this.checked)\"><b>"+termAll+"</b></label><div class='dd-div'></div>";
-    units.forEach(u=>{ h+="<label><input type='checkbox' "+(checked(u.id)?'checked':'')+" onchange=\"TCDash.setUnitSel('"+u.id+"',this.checked)\">"+this.esc(u.label)+"</label>"; });
+    let h=""<label><input type='checkbox' ""+(isAll?'checked':'')+"" onchange=\""TCDash.setUnitSel('all',this.checked)\""><b>""+termAll+""</b></label><div class='dd-div'></div>"";
+    units.forEach(u=>{ h+=""<label><input type='checkbox' ""+(checked(u.id)?'checked':'')+"" onchange=\""TCDash.setUnitSel('""+u.id+""',this.checked)\"">""+this.esc(u.label)+""</label>""; });
     document.getElementById('gb-unitpanel').innerHTML=h;
     let lbl=termAll;
     if(!isAll){ if(sel.length===1){ const u=units.find(x=>x.id===sel[0]); lbl=u?u.label:('1'+termN); } else lbl=sel.length+termN; }
-    document.getElementById('gb-unitbtn').innerHTML=this.esc(lbl)+" <span class='ck'>▾</span>";
+    document.getElementById('gb-unitbtn').innerHTML=this.esc(lbl)+"" <span class='ck'>▾</span>"";
   },
   setUnitSel(id,on){
     const all=(this.model.units||[]).map(u=>u.id);
@@ -745,10 +746,10 @@ window.TCDash = {
     // column with no authored total has none, and inventing one here would put
     // the fabricated denominator straight back on screen through the edit box.
     const priced=(c.possible!=null);
-    const outOf=priced?(" · out of "+c.possible):" · points not assigned yet";
-    const cur=cd.started?(cd.priced?(this.num(cd.earned)+"</b> <span class='thin'>/ "+this.num(cd.possible)+"  ("+cd.pct+"%)")
-                                   :("&ndash;</b> <span class='thin'>"+cd.pct+"% (points not assigned yet)"))
-                        :"–</b> <span class='thin'>not started";
+    const outOf=priced?("" · out of ""+c.possible):"" · points not assigned yet"";
+    const cur=cd.started?(cd.priced?(this.num(cd.earned)+""</b> <span class='thin'>/ ""+this.num(cd.possible)+""  (""+cd.pct+""%)"")
+                                   :(""&ndash;</b> <span class='thin'>""+cd.pct+""% (points not assigned yet)""))
+                        :""–</b> <span class='thin'>not started"";
     // ── WHAT THIS POPOVER MAY OFFER ────────────────────────────────────────
     //  Only what has a server path that persists. Every button here used to be
     //  drawn unconditionally and none of them saved; a teacher set a score,
@@ -761,22 +762,22 @@ window.TCDash = {
     //  Typing a score by hand has no server path on this course at all. It is
     //  stated as unavailable rather than drawn and quietly dropped.
     const canReset=!!cd.progress_id, canGrant=!!cd.progress_id&&!!cd.locked;
-    let acts="";
+    let acts="""";
     if(canGrant||canReset){
-      acts="<div class='row2'>"+
-        (canGrant?"<button class='gb-btn sm' onclick='TCDash.applyGrant()'>Grant attempt</button>":"")+
-        (canReset?"<button class='gb-btn sm danger' onclick='TCDash.applyReset()'>Reset</button>":"")+
-      "</div>";
-      if(canReset&&!canGrant) acts+="<div class='fld thin'>Reset clears this score and gives the student one fresh attempt. Their earlier work stays in the history.</div>";
+      acts=""<div class='row2'>""+
+        (canGrant?""<button class='gb-btn sm' onclick='TCDash.applyGrant()'>Grant attempt</button>"":"""")+
+        (canReset?""<button class='gb-btn sm danger' onclick='TCDash.applyReset()'>Reset</button>"":"""")+
+      ""</div>"";
+      if(canReset&&!canGrant) acts+=""<div class='fld thin'>Reset clears this score and gives the student one fresh attempt. Their earlier work stays in the history.</div>"";
     } else {
-      acts="<div class='fld thin'>Nothing is recorded here yet, so there is nothing to reset or reopen.</div>";
+      acts=""<div class='fld thin'>Nothing is recorded here yet, so there is nothing to reset or reopen.</div>"";
     }
     pop.innerHTML=
-      "<button class='pc' onclick='TCDash.closePop()'>×</button>"+
-      "<h5>"+this.esc(s.name)+"</h5><div class='s'>"+this.esc(this.colLabel(c))+outOf+"</div>"+
-      "<div class='cur'>Current: <b>"+cur+"</span>"+(cd.locked?" <span class='flag'>final</span>":"")+"</div>"+
+      ""<button class='pc' onclick='TCDash.closePop()'>×</button>""+
+      ""<h5>""+this.esc(s.name)+""</h5><div class='s'>""+this.esc(this.colLabel(c))+outOf+""</div>""+
+      ""<div class='cur'>Current: <b>""+cur+""</span>""+(cd.locked?"" <span class='flag'>final</span>"":"""")+""</div>""+
       acts+
-      "<div class='soon'>Typing a score in by hand is not available on this course. Its grades are a ledger of what the pages reported, and there is no teacher write path into that ledger yet. Reset is the way to let a student re-earn the mark.</div>";
+      ""<div class='soon'>Typing a score in by hand is not available on this course. Its grades are a ledger of what the pages reported, and there is no teacher write path into that ledger yet. Reset is the way to let a student re-earn the mark.</div>"";
     pop.classList.remove('gb-hidden'); document.getElementById('gb-overlay').classList.remove('gb-hidden');
     const rect=ev.currentTarget.getBoundingClientRect();
     let top=window.scrollY+rect.bottom+8, left=window.scrollX+rect.left-100;
@@ -802,7 +803,7 @@ window.TCDash = {
   // deleted, they stay in the ledger and in the student's history, but the
   // grade the teacher is looking at goes away, so it is confirmed first.
   applyReset(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx];
-    if(!confirm('Clear '+s.name+"'s score for "+this.colLabel(c)+'?\n\nThey get one fresh attempt. Their earlier work stays in the history.')) return;
+    if(!confirm('Clear '+s.name+""'s score for ""+this.colLabel(c)+'?\n\nThey get one fresh attempt. Their earlier work stays in the history.')) return;
     return this._cellAction({reset:true},'reset that score'); },
   applyGrant(){ return this._cellAction({reset:false},'reopen that quiz'); },
 
@@ -812,41 +813,41 @@ window.TCDash = {
     document.getElementById('rep-name').textContent=s.name;
     document.getElementById('rep-meta').textContent=((this.data.class&&this.data.class.class_name)||'')+'  |  last active '+(s.lastActive||'n/a')+(s.ref?('  |  '+s.ref):'');
     document.getElementById('rep-tools').innerHTML=
-      "<button class='gb-btn sm' onclick=\"TCDash.renameStudent('"+s.id+"')\">Rename</button>"+
-      "<button class='gb-btn sm' onclick=\"TCDash.resetPin('"+s.id+"')\">Reset PIN</button>"+
-      "<button class='gb-btn sm' onclick=\"TCDash.setStudentRef('"+s.id+"')\">Canvas ref</button>"+
-      "<button class='gb-btn sm danger' onclick=\"TCDash.removeStudent('"+s.id+"')\">Remove</button>";
+      ""<button class='gb-btn sm' onclick=\""TCDash.renameStudent('""+s.id+""')\"">Rename</button>""+
+      ""<button class='gb-btn sm' onclick=\""TCDash.resetPin('""+s.id+""')\"">Reset PIN</button>""+
+      ""<button class='gb-btn sm' onclick=\""TCDash.setStudentRef('""+s.id+""')\"">Canvas ref</button>""+
+      ""<button class='gb-btn sm danger' onclick=\""TCDash.removeStudent('""+s.id+""')\"">Remove</button>"";
     let miss=0,low=0; this.model.cols.forEach(c=>{ if(!S.counts(c.activity))return; const cd=S.cellData(s,c); if(!cd.started)miss++; else if(cd.pct<S.state.threshold)low++; });
-    const mini=(l,v)=>"<div class='mini'><div class='l'>"+l+"</div><div class='v'>"+v+"</div></div>";
-    document.getElementById('rep-mini').innerHTML=mini('Overall',(lt?("<span class='letter l-"+lt+"' style='vertical-align:-5px'>"+lt+"</span> "):'')+this.pctText(t.pct))+mini('Points',t.earned+' / '+t.poss)+mini('Below mastery',low)+mini('Not started',miss);
+    const mini=(l,v)=>""<div class='mini'><div class='l'>""+l+""</div><div class='v'>""+v+""</div></div>"";
+    document.getElementById('rep-mini').innerHTML=mini('Overall',(lt?(""<span class='letter l-""+lt+""' style='vertical-align:-5px'>""+lt+""</span> ""):'')+this.pctText(t.pct))+mini('Points',t.earned+' / '+t.poss)+mini('Below mastery',low)+mini('Not started',miss);
     document.getElementById('rep-retry').innerHTML=this.retryCard(idx,s);
-    let rows="<tr><th>Lesson</th><th>Activity</th><th>Score</th><th>Percent</th><th>Status</th></tr>";
+    let rows=""<tr><th>Lesson</th><th>Activity</th><th>Score</th><th>Percent</th><th>Status</th></tr>"";
     this.model.cols.forEach(c=>{ const cd=S.cellData(s,c); let st,sc,pc;
-      if(cd.ungraded){ st="<span class='flag'>Done, not graded</span>"; sc="–"; pc="–"; }
-      else if(!cd.started){ st="<span class='flag miss'>Not started</span>"; sc="–"; pc="–"; }
-      else{ pc=cd.pct+'%'; sc=cd.priced?(S.num(cd.earned)+' / '+S.num(cd.possible)):('&ndash; <span class="thin">points not assigned</span>');
-        if(cd.pct>=S.state.threshold) st="<span class='flag ok'>Mastered</span>";
-        else if(S.retryOn(c.activity,s)) st="<span class='flag open'>Retry open</span>";
-        else st="<span class='flag low'>"+(cd.earned===0?'Missing':'Below '+S.state.threshold)+"</span>";
-        if(cd.locked) st+=" <span class='flag'>final</span>"; }
-      rows+="<tr><td>"+S.esc((c.activity==='exam'||c.activity==='case_file')?c.lessonName:c.lesson)+"</td><td>"+S.esc(c.type)+"</td><td>"+sc+"</td><td>"+pc+"</td><td>"+st+(S.counts(c.activity)?"":" <span class='thin'>(not counted)</span>")+"</td></tr>"; });
+      if(cd.ungraded){ st=""<span class='flag'>Done, not graded</span>""; sc=""–""; pc=""–""; }
+      else if(!cd.started){ st=""<span class='flag miss'>Not started</span>""; sc=""–""; pc=""–""; }
+      else{ pc=cd.pct+'%'; sc=cd.priced?(S.num(cd.earned)+' / '+S.num(cd.possible)):('&ndash; <span class=""thin"">points not assigned</span>');
+        if(cd.pct>=S.state.threshold) st=""<span class='flag ok'>Mastered</span>"";
+        else if(S.retryOn(c.activity,s)) st=""<span class='flag open'>Retry open</span>"";
+        else st=""<span class='flag low'>""+(cd.earned===0?'Missing':'Below '+S.state.threshold)+""</span>"";
+        if(cd.locked) st+="" <span class='flag'>final</span>""; }
+      rows+=""<tr><td>""+S.esc((c.activity==='exam'||c.activity==='case_file')?c.lessonName:c.lesson)+""</td><td>""+S.esc(c.type)+""</td><td>""+sc+""</td><td>""+pc+""</td><td>""+st+(S.counts(c.activity)?"""":"" <span class='thin'>(not counted)</span>"")+""</td></tr>""; });
     document.getElementById('rep-table').innerHTML=rows;
   },
   retryCard(idx,s){
     const S=this; const types=[['lesson','Lesson CFUs'],['exercise','Exercises'],['quiz','Quizzes'],['exam','Unit tests']];
     const rows=types.map(t=>{ const g=t[0], eff=S.retryEff(s,g), def=S.state.retryTypes[g]?'on':'off';
-      const b=(val,lab)=>"<button class='"+(eff===val?'on':'')+"' onclick=\"TCDash.setStuRetry("+idx+",'"+g+"','"+val+"')\">"+lab+"</button>";
-      return "<div class='sr-item'><span class='nmw'>"+t[1]+"</span><span class='sr-seg'>"+b('default','Default ('+def+')')+b('on','On')+b('off','Off')+"</span></div>";
+      const b=(val,lab)=>""<button class='""+(eff===val?'on':'')+""' onclick=\""TCDash.setStuRetry(""+idx+"",'""+g+""','""+val+""')\"">""+lab+""</button>"";
+      return ""<div class='sr-item'><span class='nmw'>""+t[1]+""</span><span class='sr-seg'>""+b('default','Default ('+def+')')+b('on','On')+b('off','Off')+""</span></div>"";
     }).join('');
     // These four toggles have never saved. The cell popover at least SAID so;
     // this panel did not, which is the worse of the two failures: a teacher
     // opens retry for a struggling student, the row updates, and nothing tells
     // them it was forgotten on reload. Writing it is one call, but reading it
     // back is not: the teacher progress payload does not carry retry_override,
-    // so a wired toggle would show "Default" on the next load while an override
+    // so a wired toggle would show ""Default"" on the next load while an override
     // was live. Saying so is honest today; the fix is a field on that payload.
-    return "<div class='stu-retry'><div class='sr-head'>Retry until mastery for "+S.esc(s.name)+" <span class='thin'>overrides the class policy for this student</span></div><div class='sr-rows'>"+rows+"</div>"+
-      "<div class='soon'>Preview only in this session. These four do not save yet.</div></div>";
+    return ""<div class='stu-retry'><div class='sr-head'>Retry until mastery for ""+S.esc(s.name)+"" <span class='thin'>overrides the class policy for this student</span></div><div class='sr-rows'>""+rows+""</div>""+
+      ""<div class='soon'>Preview only in this session. These four do not save yet.</div></div>"";
   },
   setStuRetry(idx,g,val){ const s=this.model.students[idx]; this.STUDENT_RETRY[s.id]=this.STUDENT_RETRY[s.id]||{}; if(val==='default') delete this.STUDENT_RETRY[s.id][g]; else this.STUDENT_RETRY[s.id][g]=val; /* TODO PATCH .../students/:id retry_modes */ this.renderAll(); },
 
@@ -858,14 +859,14 @@ window.TCDash = {
     const avg=done.length?Math.round(done.reduce((a,b)=>a+b.cd.pct,0)/done.length):0;
     const mastered=done.filter(o=>o.cd.pct>=S.state.threshold).length;
     document.getElementById('ba-meta').textContent=(c.possible!=null?('Out of '+c.possible+' points'):'Points not assigned to this activity yet')+'  |  '+(S.counts(c.activity)?'counts toward grade':'display only, not counted');
-    const mini=(l,v)=>"<div class='mini'><div class='l'>"+l+"</div><div class='v'>"+v+"</div></div>";
+    const mini=(l,v)=>""<div class='mini'><div class='l'>""+l+""</div><div class='v'>""+v+""</div></div>"";
     document.getElementById('ba-mini').innerHTML=mini('Class average',avg+'%')+mini('Completed',done.length+' / '+cells.length)+mini('Mastered',mastered+' / '+cells.length)+mini('Missing',(cells.length-done.length));
     cells.sort((a,b)=>{ const av=a.cd.started?a.cd.pct:-1, bv=b.cd.started?b.cd.pct:-1; return bv-av; });
-    let rows="<tr><th>Student</th><th>Score</th><th>Percent</th><th style='width:180px'>Distribution</th><th>Status</th></tr>";
+    let rows=""<tr><th>Student</th><th>Score</th><th>Percent</th><th style='width:180px'>Distribution</th><th>Status</th></tr>"";
     cells.forEach(o=>{ const cd=o.cd; let cell,pc,bar,st;
-      if(!cd.started){ cell="–"; pc="–"; bar=0; st="<span class='flag miss'>Not started</span>"; }
-      else{ cell=cd.priced?(S.num(cd.earned)+' / '+S.num(cd.possible)):(S.num(cd.pct)+'%*'); pc=cd.pct+'%'; bar=cd.pct; st=cd.pct>=S.state.threshold?"<span class='flag ok'>Mastered</span>":(S.retryOn(c.activity,o.s)?"<span class='flag open'>Retry open</span>":"<span class='flag low'>"+(cd.earned===0?'Missing':'Retry')+"</span>"); }
-      rows+="<tr><td>"+S.esc(o.s.name)+"</td><td>"+cell+"</td><td>"+pc+"</td><td><div class='bar'><i style='width:"+bar+"%'></i></div></td><td>"+st+"</td></tr>"; });
+      if(!cd.started){ cell=""–""; pc=""–""; bar=0; st=""<span class='flag miss'>Not started</span>""; }
+      else{ cell=cd.priced?(S.num(cd.earned)+' / '+S.num(cd.possible)):(S.num(cd.pct)+'%*'); pc=cd.pct+'%'; bar=cd.pct; st=cd.pct>=S.state.threshold?""<span class='flag ok'>Mastered</span>"":(S.retryOn(c.activity,o.s)?""<span class='flag open'>Retry open</span>"":""<span class='flag low'>""+(cd.earned===0?'Missing':'Retry')+""</span>""); }
+      rows+=""<tr><td>""+S.esc(o.s.name)+""</td><td>""+cell+""</td><td>""+pc+""</td><td><div class='bar'><i style='width:""+bar+""%'></i></div></td><td>""+st+""</td></tr>""; });
     document.getElementById('ba-table').innerHTML=rows;
   },
 
@@ -913,7 +914,7 @@ window.TCDash = {
   // The spreadsheet a teacher opens in Excel says the same thing the screen
   // says: points earned over points possible, one column per activity, built
   // from the SAME model and the same cellText() the grid renders from. It used
-  // to write a bare percent per cell and label a completion count "Overall %",
+  // to write a bare percent per cell and label a completion count ""Overall %"",
   // so a teacher reconciling the file against the dashboard found two different
   // numbers with no way to tell which was the grade.
   buildGradebookCSV(){
@@ -929,13 +930,13 @@ window.TCDash = {
       const row=[stu.name||'',stu.ref||'',stu.lastActive||'Never',(t.pct==null?'':t.pct+'%'),S.num(t.earned),S.num(t.poss),(tot>0?Math.round(100*comp/tot):0)+'%'];
       m.cols.forEach(c=>{ const cd=S.cellData(stu,c);
         // Not started, completed but never graded, and scored are three
-        // different facts. Blank, "Complete" and a score, never all zero.
+        // different facts. Blank, ""Complete"" and a score, never all zero.
         if(cd.ungraded){ row.push('Complete'); return; }
         if(!cd.started){ row.push(''); return; }
         row.push(S.cellText(cd,true)); });
       lines.push(row);
     });
-    return lines.map(r=>r.map(f=>{ const x=(f==null)?'':String(f); return /[",\r\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x; }).join(',')).join('\r\n');
+    return lines.map(r=>r.map(f=>{ const x=(f==null)?'':String(f); return /["",\r\n]/.test(x)?'""'+x.replace(/""/g,'""""')+'""':x; }).join(',')).join('\r\n');
   },
   exportGradebook(){ if(!this.data||!this.data.summary){ alert('No data loaded yet.'); return; }
     try{ const csv=this.buildGradebookCSV(); const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-gradebook.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500); }catch(e){ alert('Could not build the gradebook file.'); } },
@@ -976,7 +977,7 @@ window.TCDash = {
     else alert(r.error||'Could not set the Canvas ref.'); },
   // The export follows the dashboard: the four include toggles and the unit
   // selection go with it, so a teacher gets the gradebook on their screen
-  // rather than the whole course every time. Omitting a param means "all", so
+  // rather than the whole course every time. Omitting a param means ""all"", so
   // an unfiltered dashboard still exports everything.
   exportFilterQuery(){
     const inc=this.state.include||{};
@@ -999,7 +1000,7 @@ window.TCDash = {
 
   // Schoology imports by mapping columns onto assignments that already exist,
   // and a Schoology assignment has its own max points, so this file states
-  // MARKS: "7" into an assignment created out of 8. An activity nobody has
+  // MARKS: ""7"" into an assignment created out of 8. An activity nobody has
   // assigned points to has no max, so it cannot become an assignment at all;
   // the preflight names those columns before the download rather than letting
   // them go missing from the file silently.
@@ -1036,12 +1037,12 @@ window.TCDash = {
   async renameStudent(id){ const stu=this._findStudent(id); if(!stu)return; const next=prompt('New name for '+stu.name+':',stu.name); if(next==null)return; const name=next.trim(); if(name.length<1){ alert('Name cannot be empty.'); return; } if(name===stu.name)return;
     const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{display_name:name}); if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); } else alert(r.error||'Could not rename student.'); },
   async resetPin(id){ const stu=this._findStudent(id); if(!stu)return; const suggested=String(Math.floor(1000+Math.random()*9000)); const pin=prompt('Set a new 4-digit PIN for '+stu.name+'.',suggested); if(pin==null)return; const clean=pin.trim(); if(!/^\d{4}$/.test(clean)){ alert('PIN must be exactly 4 digits.'); return; }
-    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{pin:clean}); if(r.ok) alert(stu.name+"'s new PIN is "+clean+'.'); else alert(r.error||'Could not reset PIN.'); },
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{pin:clean}); if(r.ok) alert(stu.name+""'s new PIN is ""+clean+'.'); else alert(r.error||'Could not reset PIN.'); },
   // The server deactivates and keeps every score. This dialog used to promise a
   // permanent delete instead, so a teacher who read it, clicked OK and then saw
   // the student still on the roster had every reason to call the button broken.
   // The words now match what the server actually does, and they name the way
-  // back, because "cannot be undone" was the part that made people hesitate.
+  // back, because ""cannot be undone"" was the part that made people hesitate.
   async removeStudent(id){ const stu=this._findStudent(id); if(!stu)return;
     if(!confirm('Remove '+stu.name+' from this class?\n\nThey can no longer sign in, and they come off the gradebook, the grid and every export. Their scores are kept, and you can restore them from Settings.'))return;
     const r=await this._api('DELETE','/api/teacher/classes/'+this.classCode+'/students/'+id);
@@ -1063,13 +1064,13 @@ window.TCDash = {
   renderRemoved(){
     const el=document.getElementById('gb-removed'); if(!el)return;
     const S=this, list=(this.model&&this.model.removed)||[];
-    if(!list.length){ el.innerHTML='<div class="set-row"><div class="txt"><p class="thin">Nobody has been removed from this class.</p></div></div>'; return; }
-    el.innerHTML=list.map(s=>'<div class="set-row"><div class="txt"><h4>'+S.esc(s.name||'')+'</h4>'
+    if(!list.length){ el.innerHTML='<div class=""set-row""><div class=""txt""><p class=""thin"">Nobody has been removed from this class.</p></div></div>'; return; }
+    el.innerHTML=list.map(s=>'<div class=""set-row""><div class=""txt""><h4>'+S.esc(s.name||'')+'</h4>'
       +'<p>Removed. Last active '+S.esc(s.lastActive||'Never')+'. Scores kept.</p></div>'
-      +"<button class='gb-btn sm' onclick=\"TCDash.restoreStudent('"+s.id+"')\">Restore</button></div>").join('');
+      +""<button class='gb-btn sm' onclick=\""TCDash.restoreStudent('""+s.id+""')\"">Restore</button></div>"").join('');
   },
   async deleteClass(){ const name=(this.data&&this.data.class&&this.data.class.class_name)||this.classCode; const count=((this.data&&this.data.summary)||[]).length;
-    const typed=prompt('This permanently deletes "'+name+'" and all '+count+' student(s). This CANNOT be undone.\n\nType the class code ('+this.classCode+') to confirm:'); if(typed==null)return;
+    const typed=prompt('This permanently deletes ""'+name+'"" and all '+count+' student(s). This CANNOT be undone.\n\nType the class code ('+this.classCode+') to confirm:'); if(typed==null)return;
     if(typed.trim().toUpperCase()!==this.classCode.toUpperCase()){ alert('Class code did not match. Nothing was deleted.'); return; }
     const r=await this._api('DELETE','/api/teacher/classes/'+this.classCode); if(r.ok){ alert('Class deleted.'); location.href='/pages/cyber-class'; } else alert(r.error||'Could not delete class.'); },
 
@@ -1092,7 +1093,7 @@ window.TCDash = {
       .split(A).join(A + 'amp;')
       .split('<').join(A + 'lt;')
       .split('>').join(A + 'gt;')
-      .split('"').join(A + 'quot;');
+      .split('""').join(A + 'quot;');
   }
 };
 // Close the export menu on any outside click, so it cannot be left hanging
@@ -1103,4 +1104,4 @@ document.addEventListener('click', function(ev){
 });
 document.addEventListener('DOMContentLoaded',()=>TCDash.init());
 })();
-</script>
+</script>"
