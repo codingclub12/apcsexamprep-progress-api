@@ -1,0 +1,108 @@
+{
+  "change": "the mojibake guard caught the second-order form of the bug and not the bug",
+  "_context": [
+    "smoke/encoding-guard.js gates every pull request and reported this repository",
+    "clean while four tracked files were corrupted, including the CED Unit 1 extract",
+    "(65 characters) and the hazard note that teaches agents what mojibake looks like.",
+    "It reversed through latin-1 only and tried sequence widths 3 and 2 only, so it saw",
+    "the DOUBLE corrupted cp1252 form and was blind to the single corrupted form, which",
+    "is the one reported on the live page, and blind to every 4 byte character, which is",
+    "every emoji. Measured against 12 known cases before the change: 5 caught.",
+    "lib/site-crawl.js had independently found and fixed HALF of this (it had cp1252)",
+    "and the finding never travelled; it still missed 6 of 16, all of them emoji."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the detector is exercised over GENERATED corruption, not pasted strings",
+      "command": "npm run --silent smoke:encoding",
+      "expect": "45 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the python port and the javascript agree character for character",
+      "command": "npm run --silent smoke:mojibakeparity",
+      "expect": "6 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the live-site crawler still finds mojibake in a rendered body",
+      "command": "npm run --silent smoke:sitecrawl",
+      "expect": "OK - all 131 checks passed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: drop cp1252 and the live-page flavour goes invisible",
+      "_why": "This is the exact state the guard was in before this change. It must go red.",
+      "file": "lib/mojibake.js",
+      "find": "const CODECS = ['latin1', 'cp1252'];",
+      "replace": "const CODECS = ['latin1'];",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "the cp1252 flavour is attributed to cp1252"
+    },
+    {
+      "kind": "mutation",
+      "name": "drop latin-1 and the 2026-08-07 incident goes invisible instead",
+      "_why": "Neither codec subsumes the other; each reverses 27 code points the other cannot. Dropping either one goes blind to a whole flavour, so both directions are proved.",
+      "file": "lib/mojibake.js",
+      "find": "const CODECS = ['latin1', 'cp1252'];",
+      "replace": "const CODECS = ['cp1252'];",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "the latin-1 flavour is attributed to latin-1"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE PROPOSED FIX, PROVED INSUFFICIENT: anchor on U+00C3 alone",
+      "_why": "The obvious general rule is 'an U+00C3 followed by a continuation character'. It is the same inversion one level up: single-pass cp1252 corruption of a bullet is U+00E2 U+20AC U+00A2 and contains no U+00C3 at all. This mutation is that rule, and it must go red, including on the original 2026-08-07 latin-1 incident.",
+      "file": "lib/mojibake.js",
+      "find": "if (lead < LEAD_MIN || lead > LEAD_MAX) continue;",
+      "replace": "if (lead !== 0xC3) continue;",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "catches single pass latin-1 up triangle (2026-08-07)"
+    },
+    {
+      "kind": "mutation",
+      "name": "take away the 4 byte width and every emoji goes invisible",
+      "_why": "The old detector tried widths 3 and 2 only. Every emoji is 4 bytes, and the live page had a corrupted emoji on it.",
+      "file": "lib/mojibake.js",
+      "find": "  if (lead <= 0xEF) return 3;\n  return 4;",
+      "replace": "  if (lead <= 0xEF) return 3;\n  return 3;",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "a 4 byte lead declares width 4, which is every emoji"
+    },
+    {
+      "kind": "mutation",
+      "name": "the CRAWLER's mojibake finding is real, not just the repository scan",
+      "_why": "Different suite, different subject: this proves the live-site check fires, which is the one that was supposed to catch the reported page and could not.",
+      "file": "lib/site-crawl.js",
+      "find": "return mojibake.analyze(text, { cap })",
+      "replace": "return [].slice(0, cap).map((h) => h) || mojibake.analyze(text, { cap })",
+      "command": "npm run --silent smoke:sitecrawl",
+      "expect_failure": "a double-encoded EMOJI is detected, which needs a 4 byte sequence width"
+    },
+    {
+      "kind": "mutation",
+      "name": "the PYTHON port cannot drift from the javascript unnoticed",
+      "_why": "validate_csv.py gates CED sheets into the live store. Its old pattern list could not match a corrupted emoji at all, and nothing tested it.",
+      "file": "tools/ap-cyber-ced/mojibake.py",
+      "find": "CODECS = ('latin1', 'cp1252')",
+      "replace": "CODECS = ('latin1',)",
+      "command": "npm run --silent smoke:mojibakeparity",
+      "expect_failure": "every case agrees on index, character, codec and width"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation, ICU-derived tables and a byte regex, agrees",
+      "_why": "It disagreed on first run, 25 hits against 65 on the real corrupted CED file, and the rederive was the one that was wrong: TextDecoder('iso-8859-1') is a WHATWG alias for windows-1252, so both its tables were the same codec. That is the class of bug a rederive exists to surface.",
+      "command": "node scripts/mojibake-rederive.js",
+      "expect": "REDERIVE AGREES"
+    },
+    {
+      "kind": "live",
+      "name": "production serves what this tree is",
+      "_why": "Deferred by --pre. Before the deploy production serves a different commit, so this assertion is false beforehand and true only afterwards.",
+      "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const got=JSON.parse(cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'})).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
+      "expect": "PRODUCTION SERVES THIS TREE"
+    }
+  ]
+}

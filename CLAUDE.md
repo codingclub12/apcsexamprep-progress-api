@@ -450,5 +450,33 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   said until 2026-09-02: it has no EK check at all and is shaped for AP
   Cybersecurity page structure. Naming the wrong tool here is worse than naming
   none, because the check comes back clean.
+- Mojibake is detected with `lib/mojibake.js`, never with a pasted pattern. Go
+  through the module the same way EK codes go through `lib/cyber-ek-density.js`.
+  A handoff on 2026-09-03 told a future session to reject two literal strings,
+  and both were the DOUBLE corrupted form: the reported live failure is the
+  single corrupted form and contains neither. The same inversion was already
+  live in `smoke/encoding-guard.js`, which gates every pull request and reported
+  this repo clean while four tracked files were corrupted.
+  Two facts a pattern list keeps getting wrong. First, there are two flavours,
+  latin-1 and cp1252, and NEITHER subsumes the other: each reverses 27 code
+  points the other cannot, so a detector with one of them is blind to a whole
+  flavour. Second, the sequence width comes from the lead byte, and a 4 byte
+  lead means an emoji; a detector that only tries widths 3 and 2 cannot see a
+  corrupted emoji at all. Anchoring on U+00C3 is not the general rule either.
+  It is the natural next guess and it reproduces the original defect exactly,
+  because U+00C3 first appears at depth 2. `npm run smoke:encoding` generates
+  its cases rather than listing them, and the deploy gate has a mutation that
+  proves the U+00C3 rule insufficient.
+- A `.pdf` extension is not evidence of a PDF. Check for the `%PDF` header
+  before reaching for `pdftotext` or `pdfplumber`, because a CED file that is
+  really extracted text will make the parser fail and make a session conclude
+  the CED is unavailable when it is sitting right there. The extracts in
+  `tools/ap-cyber-ced/` are correctly named `.txt`; the mis-extensioned copy
+  reported on 2026-09-03 is in the Claude project, not in this repo, so this is
+  a check to run rather than a fact about a path.
+  `CED-UNIT1-EXTRACT.txt` had 65 mojibake characters repaired on 2026-09-03.
+  Its em-dashes and curly quotes are College Board's verbatim wording, so the
+  no-em-dash convention above does not apply to it: that rule governs text we
+  author, and re-flattening a quoted source is a corruption, not a fix.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
