@@ -151,3 +151,33 @@ spending a pass proving its own bug.
   a human action.
 - The new Unit 1 lab's prose, questions and explanations are AUTHORED, not
   sourced. Nobody has taught from them. The spec header says so.
+
+## The blocker this run ended on
+
+The work is committed and pushed to `claude/ceo-agent-setup-sv4e61` at `07ee4f3`.
+It is NOT merged and NOT deployed, because GitHub is unreachable from this
+session:
+
+    git ls-remote origin              works, the branch is pushed
+    GET /repos/... with GH_TOKEN      403 "GitHub access is not enabled for
+                                      this session. An org admin must connect
+                                      the Claude GitHub App for this
+                                      organization."
+    the GitHub MCP tools              not present in this session at all
+
+Earlier in the same session seven pull requests were opened and merged through
+the MCP tools, so this changed mid-session rather than being how it started. A
+run note on 2026-09-02 records a subagent claiming GitHub was impossible and my
+correcting it; that correction was right at the time and is wrong now. Both
+states are real and the tooling has to be checked rather than remembered.
+
+Consequences, stated plainly rather than worked around:
+
+- The `live` half of the gate CANNOT run. Nothing has deployed, so there is
+  nothing new to observe. `--pre` passed; the gate is not satisfied.
+- The Unit 1 lab page stays a socket with no appliance until this merges. The
+  page is live and correct and its mount id is `apcs-lab-1-2-auth-lab`;
+  `/api/labs/ap-cybersecurity/1.2-auth-lab` still answers 404.
+- Pushing this to `main` directly would skip the ruleset that requires the
+  offline suites, and that ruleset exists because a convention did not survive a
+  busy afternoon. Not done.
