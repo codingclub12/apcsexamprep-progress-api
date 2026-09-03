@@ -492,7 +492,7 @@ function buildRows() {
   //  from the config would produce 25 denominators for a 24-topic course and
   //  file one of them under a topic number the CED does not have.
   //
-  //  So the rows come from data/cyber-topics.json, which is built from the CED
+  //  So the rows come from config/cyber-topics.json, which is built from the CED
   //  text itself, and the count is the CED's: 24. Adding a topic is a rebuild
   //  of that file, not an edit here.
   //

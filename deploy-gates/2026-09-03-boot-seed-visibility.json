@@ -1,0 +1,55 @@
+{
+  "change": "a boot seed that fails now says so on /api/health, because one failed silently on the 17:41 deploy and the live count did not move",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "a failed seed is recorded, a quiet seed is not confused with it, and health serves the snapshot",
+      "command": "npm run --silent smoke:bootseed",
+      "expect": "OK - a failed boot seed can be seen from outside the container"
+    },
+    {
+      "kind": "mutation",
+      "name": "a recorder that swallows the failure instead of recording it is caught",
+      "file": "lib/boot-seed.js",
+      "find": "    results.set(label, { ok: false, ms: Date.now() - started, error: first });",
+      "replace": "    results.set(label, { ok: true, ms: Date.now() - started });",
+      "command": "npm run --silent smoke:bootseed",
+      "expect_failure": "FAIL  a seed that throws is recorded as failed, with its first line",
+      "_why": "This is the whole change in one line. If a failure records as ok, the endpoint reads green while the seed did nothing, which is exactly the state that cost this session an hour of guessing."
+    },
+    {
+      "kind": "mutation",
+      "name": "a snapshot that nothing serves is caught",
+      "file": "server.js",
+      "find": "  body.seed = bootSeed.snapshot();",
+      "replace": "",
+      "command": "npm run --silent smoke:bootseed",
+      "expect_failure": "FAIL  /api/health serves the snapshot",
+      "_why": "A recorder wired to nothing is the cfu-5 splice defect again: the module is correct, the output never carries it, and no test that only exercises the module can see it. So the wiring is read from server.js source rather than trusted."
+    },
+    {
+      "kind": "mutation",
+      "name": "runBootSeed quietly going back to its own try/catch is caught",
+      "file": "server.js",
+      "find": "  return bootSeed.record(label, fn);",
+      "replace": "  try { return fn(); } catch (e) { return null; }",
+      "command": "npm run --silent smoke:bootseed",
+      "expect_failure": "FAIL  server.js routes its boot seeds through the recorder",
+      "_why": "The seeds are only visible while they go through the recorder. A well-meaning simplification back to a local try/catch would restore the silence without failing anything else."
+    },
+    {
+      "kind": "rederive",
+      "name": "the health payload really carries the block, built by requiring the route rather than reading the source",
+      "command": "node -e \"const b=require('./lib/boot-seed'); b.reset(); b.record('course_manifest', () => ({ total: 932, changed: 24 })); b.record('broken', () => { throw new Error('no such file'); }); const s=b.snapshot(); if (s.ok) throw new Error('a failed seed did not set ok=false'); if (s.seeds.course_manifest.changed !== 24) throw new Error('counts lost'); if (!/no such file/.test(s.seeds.broken.error)) throw new Error('message lost'); console.log('SNAPSHOT CARRIES BOTH: ' + JSON.stringify(s.failed));\" 2>&1",
+      "expect": "SNAPSHOT CARRIES BOTH: [\"broken\"]",
+      "_why": "The suite reads server.js as text to prove the wiring. This exercises the module through its real API instead, so a change that satisfies the regex without behaving correctly still gets caught."
+    },
+    {
+      "kind": "live",
+      "name": "the deployed /api/health names what every boot seed did",
+      "command": "sh -c 'curl -sS https://progress.apcsexamprep.com/api/health | node -e \"let s=\\\"\\\";process.stdin.on(\\\"data\\\",d=>s+=d).on(\\\"end\\\",()=>{const j=JSON.parse(s);if(!j.seed)throw new Error(\\\"no seed block on /api/health, so this deploy is not serving the change\\\");const m=j.seed.seeds&&j.seed.seeds.course_manifest;if(!m)throw new Error(\\\"the course_manifest seed is not reported at all\\\");console.log(\\\"LIVE SEED REPORT \\\"+JSON.stringify({ok:j.seed.ok,failed:j.seed.failed,course_manifest:m}))})\"'",
+      "expect": "LIVE SEED REPORT",
+      "_why": "False before this deploy and true after: /api/health carried no seed key at all until now. It is also the diagnostic the previous deploy needed and did not have, so the first thing this check prints is the answer to why 24 manifest rows did not land."
+    }
+  ]
+}

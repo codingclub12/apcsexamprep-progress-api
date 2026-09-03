@@ -157,10 +157,73 @@ Not moved: any cyber score, column, denominator or percentage. Visit rows are
 skipped by `denominatorMap` and by `lib/attempt-rollup.js`, and cyber's graded
 work still arrives through `score_events` against authored denominators.
 
-Moved: lesson completion. `lib/admin-exec.js` denominates that from manifest
-visit rows and cyber had none, so every cyber student counted zero lessons
-assigned; they are now assigned 24. `manifest_items` on the live digest goes 908
-to 932, which is the post-deploy live check.
+Moved, in the code: lesson completion. `lib/admin-exec.js` denominates that from
+manifest visit rows and cyber had none, so every cyber student counted zero
+lessons assigned; once the rows exist they are assigned 24. `manifest_items` on
+the live digest going 908 to 932 is the post-deploy live check.
+
+**That check FAILED, and the correction belongs here rather than in a later
+note.** The merge deployed at 17:41Z, `/api/health` reports `d059208`, the
+railway-deploy check went green, and `manifest_items` is still 908. The 24 rows
+are not in production. Ruled out by measuring: a cached digest (other counters
+moved between the same two reads), a different database, the prune path (an
+orphan is a row absent from `buildRows()` and these are in it), the incremental
+seed (it adds exactly 24 against a populated manifest locally), a missing file in
+the artifact (tracked, not gitignored, full checkout uploaded, volume mounts at
+`/data`), and an item_id collision (all 24 ids are reused by another course, so a
+legacy `UNIQUE(item_id)` would explain it perfectly, except production already
+holds 179 such shared ids among its 908 rows, so no such constraint exists).
+
+What is left is two cases only the container can tell apart: the seed threw, or
+it ran and wrote nothing. Board 191, and PR #489 ships the instrument that says
+which.
+
+**RESOLVED, same session.** The instrument answered on its first boot:
+
+```
+course_manifest: {"ok": false, "error":
+  "cannot read /app/data/cyber-topics.json: ENOENT: no such file or directory"}
+```
+
+The Railway volume mounts at `/app/data`. A mount REPLACES the directory, so a
+file that is tracked, not gitignored, and uploaded in the deploy tarball is
+still not there at runtime. My own elimination list had ruled this out by
+reading `.gitignore`, the deploy workflow and the README's mount path: all true
+about the repository, and the question was about the container. The CLAUDE.md
+rule another session added the same afternoon says it exactly, and I had read it
+that hour: verify what a check covers by RUNNING it against the case.
+
+PR #493 moved the file to `config/` and added `smoke:volumepaths`, which refuses
+a tracked file under `data/` or any runtime module reading from it. The deploy
+gate then caught THAT guard being hollow: with its target list pointed at a
+directory that does not exist, every check still passed, each vacuously true
+against a clean tree. The detectors are fed the exact defect now.
+
+Live, after the deploy:
+
+```
+/api/health   commit 7736294
+              course_manifest {"ok":true,"ms":9,"total":932,"changed":24}
+              seed.ok true, failed []
+digest        manifest_items 932, up from 908
+```
+
+Both deploy gates pass on four independent kinds: suite, mutation, rederive,
+live.
+
+PR #500 then closed the loop that made this take three PRs to notice.
+`deploy-drift.yml` polls `/api/health` every 30 minutes and now posts a
+`boot-seed` check beside the drift one, so the next silently failed seed is a
+red check in the digest within half an hour rather than a number somebody
+happens to compare. Its verdict script is tested by being executed against three
+payloads, including this incident.
+
+**What the day is actually about.** Three checks reported success while 24 rows
+were missing, and every one of them was telling the truth: CI said the code was
+fine, railway-deploy said it deployed, deploy-drift said the right commit was
+serving. None of them asked whether the deploy did what it was FOR. A live check
+that asserts what the change made true is the only one that could have, which is
+what the deploy gate has been saying since it was written.
 
 ## What changed after the merge, and what it proved
 

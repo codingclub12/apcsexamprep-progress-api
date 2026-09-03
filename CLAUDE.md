@@ -13,14 +13,42 @@ could not reach the board it says so loudly instead of injecting nothing; a
 session that starts with no state banner has state, and one that starts with a
 NO LIVE STATE block must not assume the board is empty or unclaimed.
 
-Set `COMMAND_READ_TOKEN` on the Claude Code environment, not `TODO_KEY`. The
-read token is read-only and PII-stripped, and environment configuration is not
-a secrets store: anyone who can use the environment can read it, and a session
-can echo a variable into its own transcript at any time. That has already
-happened once. `TODO_KEY` still works as a fallback and can WRITE to the ledger,
-so it belongs in Railway and the Actions secret and nowhere else. Get the read
-token from `GET /api/command/read-token` while signed in, rotate it with
-`POST /api/command/read-token/rotate`.
+**`TODO_KEY` BELONGS ON THE CLAUDE CODE ENVIRONMENT. This is deliberate, it is
+Tanner's decision, and it is not a defect to report or repair.** Set it there
+alongside `COMMAND_READ_TOKEN`.
+
+Until 2026-09-03 this file said the opposite: read token on the environment,
+write token in Railway and the Actions secret and nowhere else. That rule was
+written for a real exposure, and it had a cost nobody priced. Claiming a lock is
+a WRITE, so a session holding only the read token cannot claim, which means rule
+2 below is unenforceable by the sessions it governs. On 2026-09-03 three sessions
+built the same mojibake detector at the same time and two implementations were
+thrown away. Not one of them could have claimed the file.
+
+So the trade was put to Tanner explicitly, with the exposure stated: environment
+configuration is not a secrets store, anyone who can use the environment can read
+it, a session can echo a variable into its own transcript at any moment, and both
+tokens had already leaked that way that same day. He decided, in those terms,
+that agents having write access to the ledger is worth more than the containment,
+and asked for the decision to be permanent. It is his business, his token and his
+risk, and this paragraph exists so that no future session re-derives the old rule
+from the leak history and quietly removes the key.
+
+What does NOT follow from it, so the concession stays as small as it is:
+
+- A session still must not PRINT the token. Presence is intended; a credential in
+  a transcript is still a bug, and the shell footgun below is still how it
+  happens.
+- An agent still cannot set `verified=1`, and still cannot rotate either token.
+  Those remain cookie-only, and the reason is unchanged: the agent that did the
+  work is never the one that says it is true.
+- `TODO_KEY` still carries `scope: 'limited'` unless `TODO_KEY_SCOPE=full`, so no
+  person and no email, ever.
+- Railway and the Actions secret still need it too. All copies must match
+  character for character or every agent request 401s.
+
+Get the read token from `GET /api/command/read-token` while signed in, rotate it
+with `POST /api/command/read-token/rotate`.
 
 **This repository is PUBLIC**, and until 2026-09-03 that was written down nowhere.
 Confirmed against the GitHub API that day: `codingclub12/apcsexamprep-progress-api`
@@ -47,9 +75,14 @@ Rotation of the read token is deliberately NOT available to an agent:
 `POST /api/command/read-token/rotate` answers
 `403 {"error":"This action requires the browser session. An agent credential cannot
 perform it."}` to a bearer credential. So a session that leaks the read token cannot
-clean up after itself and must say so loudly instead of quietly moving on. `TODO_KEY`
-is the same, in Railway and the Actions secret. Both rotations are Tanner's, at a
-browser.
+clean up after itself and must say so loudly instead of quietly moving on. `TODO_KEY` has no
+rotation path AT ALL: it is a plain environment variable read through
+`process.env.TODO_KEY` and compared in `lib/command-auth.js`, with nothing stored
+server-side to rotate. Rotating it means choosing a new secret and updating every
+copy by hand, in Railway, in the `TODO_KEY` Actions secret consumed by nine
+workflows, and on the Claude Code environment. Both rotations are Tanner's, at a
+browser, and an agent asked to do one should say plainly that it cannot rather
+than appearing to.
 
 The session's container must also be able to REACH the board:
 `progress.apcsexamprep.com` has to be in the environment's Custom allowed
@@ -298,7 +331,7 @@ the class to Network Segmentation. `lib/cyber-unit3-renumber.js` carries the
 correction and the reason the fix has to be one single-pass callback rather than a
 sequence of replaces.
 
-**`data/cyber-topics.json` EXISTS as of 2026-09-03**, and this paragraph used to say
+**`config/cyber-topics.json` EXISTS as of 2026-09-03**, and this paragraph used to say
 the opposite for the right reason: a draft named it as the authority for the 24
 titles before anything created it, and naming an authority that does not exist is
 worse than naming none, for exactly the reason `validate_csv.py` was worse than
@@ -724,7 +757,7 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   other, which is the same failure as the handoff draft one directory over. It
   calls the module now. When a module lands, the MIGRATION is the change: grep for
   the retired pattern across every consumer before calling a consolidation done.
-- **AP Cybersecurity topics come from `data/cyber-topics.json`**, read through
+- **AP Cybersecurity topics come from `config/cyber-topics.json`**, read through
   `lib/cyber-topics.js`, and from nowhere else. It exists as of 2026-09-03: 24 CED
   topics with their official titles (parsed from the CED text, never retyped),
   slugs, skill categories, gradebook lesson ids, live handles, and the one
@@ -739,6 +772,21 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   The 1.3 versus 1.4 swap is what these exist for: the site calls topic 1.3
   "Wireless Security" and the CED calls it "Best Practices for Public Networks",
   because the mapping used to live in page bodies.
+- **NOTHING THE SERVER READS MAY LIVE IN `data/`.** The Railway volume mounts
+  there, at `/app/data`, and a mount REPLACES the directory: a file that is
+  tracked in git, not gitignored, and uploaded in the deploy tarball is still
+  invisible to the running container. That is not a hypothesis. The taxonomy
+  shipped as `data/cyber-topics.json` on 2026-09-03 and production answered
+  `cannot read /app/data/cyber-topics.json: ENOENT` while every repository-side
+  check said the file was there, because every one of them was looking at the
+  repo rather than at the container. 24 manifest rows silently did not land, and
+  the boot seed's own failure went to a log an agent cannot read.
+  Runtime config belongs in `config/`, beside `ced-sources.json` and `labs/`. The
+  volume is for state the container WRITES, which is the SQLite database, and for
+  nothing the repo ships. `npm run smoke:volumepaths` refuses a tracked file
+  under `data/` and any runtime module that resolves a path into it.
+  The README says the mount path is `/data`. The runtime says `/app/data`. The
+  runtime wins.
 - Mojibake is detected with `lib/mojibake.js`, never with a pasted pattern. Go
   through the module the same way EK codes go through `lib/cyber-ek-density.js`.
   The section above has the method and what shipped; the reason it is a rule is
@@ -763,8 +811,10 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   and topic number in it is a recollection rather than a reading, and it arrives
   with the same confidence either way. Open each one before landing it.
   The CLAUDE.md additions of 2026-09-03 carried four wrong claims and three were
-  exactly this: a `data/cyber-topics.json` that has never existed, named as "the
-  only authority" for the 24 topic titles; a topic swap attributed to 1.3 and 1.4
+  exactly this: a `data/cyber-topics.json` that had never existed, named as "the
+  only authority" for the 24 topic titles (the file exists now, as
+  `config/cyber-topics.json`, built by PR #483; it was moved out of `data/`
+  because the volume mounts there and hid it from the container); a topic swap attributed to 1.3 and 1.4
   when the audit records it at 3.3 and 3.4; and a CED PDF described as being in
   this repo when only its sha256 is. None of the three was careless. All are
   structural, and the structure does not improve with more care on that side.

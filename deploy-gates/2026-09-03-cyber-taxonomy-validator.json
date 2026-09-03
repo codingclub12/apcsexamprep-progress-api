@@ -82,7 +82,7 @@
     {
       "kind": "mutation",
       "name": "filing topic 3.1 under a lesson the site does not teach is caught",
-      "file": "data/cyber-topics.json",
+      "file": "config/cyber-topics.json",
       "find": "\"lesson_id\": \"3.1a\"",
       "replace": "\"lesson_id\": \"3.1\"",
       "command": "npm run --silent smoke:cybertopics",
@@ -92,7 +92,7 @@
     {
       "kind": "rederive",
       "name": "count the CED topics with a different tool (shell, not the JS parser)",
-      "command": "sh -c 'n=$(grep -hcE \"^TOPIC [1-5]\\\\.[0-9] *$\" tools/ap-cyber-ced/CED-UNIT1-EXTRACT.txt tools/ap-cyber-ced/CED-UNITS-2-5-EXTRACT.txt | paste -sd+ | bc); j=$(node -e \"console.log(require(\\\"./data/cyber-topics.json\\\").topics.length)\"); test \"$n\" = \"$j\" && test \"$n\" = 24 && echo \"SHELL AND JSON AGREE: $n topics\"'",
+      "command": "sh -c 'n=$(grep -hcE \"^TOPIC [1-5]\\\\.[0-9] *$\" tools/ap-cyber-ced/CED-UNIT1-EXTRACT.txt tools/ap-cyber-ced/CED-UNITS-2-5-EXTRACT.txt | paste -sd+ | bc); j=$(node -e \"console.log(require(\\\"./config/cyber-topics.json\\\").topics.length)\"); test \"$n\" = \"$j\" && test \"$n\" = 24 && echo \"SHELL AND JSON AGREE: $n topics\"'",
       "expect": "SHELL AND JSON AGREE: 24 topics",
       "_why": "grep counting headers in the raw dumps shares no code with tools/ap-cyber-ced/topics-parse.js. If the JS parser gained or lost a topic, this disagrees."
     },

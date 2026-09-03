@@ -76,6 +76,12 @@ app.use('/api/sandbox', require('./routes/sandbox'));
 app.use('/api/intro-java', require('./routes/intro-java'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/gate', require('./routes/gate'));
+// Site assistant, Phase 0: structured problem reports. No model, no chat, no
+// transcripts. Public with an optional bearer, so it sits with the other
+// role-agnostic routes rather than behind teacher or student auth. Root mounted
+// because it owns /api/assistant/* and the /apcs-report.js the storefront
+// loads. See docs/site-assistant-spec.md.
+app.use(require('./routes/assistant'));
 app.use('/api/files', require('./routes/files'));
 app.use('/api/slides', require('./routes/slides'));
 // Command center (Phase 1). Dual auth inside each router (browser cookie OR
@@ -107,13 +113,18 @@ app.use(require('./routes/practice'));
 // insert-or-ignore and idempotent, so a skipped seed just leaves existing rows
 // in place and can be re-run later with the script's --update flag. The API must
 // always come up and serve /api/health, even with a bad seed.
+//
+// WHAT CHANGED 2026-09-03, AND WHY IT IS NOT A CHANGE IN BEHAVIOUR. The catch
+// stays; a bad seed still never blocks boot. What was missing is that the log
+// line naming the failure went to the Railway console and nowhere else, so from
+// outside the container a seed that THREW looked exactly like a seed that ran
+// and had nothing to do. That is not hypothetical: a deploy that added 24
+// manifest rows left the live count unmoved at 908, with the deploy check green
+// and no way to ask why. The outcome is now recorded and served on /api/health.
+// See lib/boot-seed.js.
+const bootSeed = require('./lib/boot-seed');
 function runBootSeed(label, fn) {
-  try {
-    return fn();
-  } catch (err) {
-    console.error(`[boot-seed] ${label} failed, continuing without it:`, err);
-    return null;
-  }
+  return bootSeed.record(label, fn);
 }
 
 // Manifest seed on boot: insert-or-ignore only, so a fresh deploy is never
@@ -320,6 +331,17 @@ app.get('/api/health', (req, res) => {
   // and counts only, no student or class, so the zero-PII posture holds.
   const reporters = healthIntegrity.reporterIntegrity();
   if (reporters) body.reporters = reporters;
+  // What every boot seed did on this container: ran, wrote how many rows, or
+  // threw and what it said. Author-content counts only, same terms as the two
+  // blocks above. A seed that fails is silent by construction otherwise, and a
+  // silent seed reads exactly like a seed with nothing to do. See
+  // lib/boot-seed.js for the deploy that paid for this.
+  body.seed = bootSeed.snapshot();
+  // Whether a site-assistant escalation can actually reach a person. Same class
+  // of problem as the three blocks above: a report with no recipient configured
+  // is stored and filed and then silently never mailed. Booleans only, no
+  // addresses. See lib/assistant/report.js notifyStatus.
+  try { body.assistant = require('./lib/assistant/report').notifyStatus(); } catch (e) { /* never fail health */ }
   res.json(body);
 });
 

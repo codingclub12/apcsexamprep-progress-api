@@ -4,7 +4,7 @@
 //  SMOKE: the canonical AP Cybersecurity taxonomy, and a SECOND opinion on it.
 //
 //  ── WHAT IS BEING GUARDED ───────────────────────────────────────────────────
-//  data/cyber-topics.json is now the single authority for what each of the 24
+//  config/cyber-topics.json is now the single authority for what each of the 24
 //  CED topics is called, where it lives, and which manifest row denominates it.
 //  Every generator and every sheet downstream reads it, which is exactly why a
 //  quiet error in it would be worse than no file at all: 24 pages would be
@@ -233,7 +233,7 @@ check('the committed file is exactly what a rebuild produces', () => {
   const rebuilt = serialize(build());
   const committed = fs.readFileSync(cyberTopics.FILE, 'utf8');
   assert.strictEqual(committed, rebuilt,
-    'data/cyber-topics.json is hand-edited or stale; run node tools/ap-cyber-ced/build-topics.js');
+    'config/cyber-topics.json is hand-edited or stale; run node tools/ap-cyber-ced/build-topics.js');
 });
 
 // ── 2. The re-derive ─────────────────────────────────────────────────────────

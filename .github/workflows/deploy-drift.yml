@@ -242,3 +242,99 @@ jobs:
             -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
             --data-binary @payload.json \
             || echo "report failed, ignoring"
+
+      # ── DID THE BOOT SEEDS ACTUALLY DO ANYTHING ─────────────────────────────
+      #  Drift answers "is the right commit serving". It cannot answer "did the
+      #  deploy do what it was for", and on 2026-09-03 those two came apart: the
+      #  right commit was serving, this check was green, and 24 course_manifest
+      #  rows were silently absent because a boot seed threw on a file the
+      #  Railway volume was mounting over. Every seed runs inside a catch so a
+      #  bad one cannot stop the API serving, and the reason went to a log
+      #  nobody reads. It took a human noticing a number that had not moved.
+      #
+      #  /api/health now carries lib/boot-seed.js's report, so the alarm exists.
+      #  This is the half that makes it reach the board on its own.
+      #
+      #  ITS OWN FETCH, on purpose. The compare step exits 1 on drift, and a
+      #  drift failure must not be able to hide a seed failure: they are
+      #  different questions about the same deploy and each gets its own answer.
+      #
+      #  SILENCE WHEN THE CONTAINER CANNOT ANSWER. A container older than the
+      #  seed block has no `seed` key, and reporting `pass` for that would
+      #  manufacture coverage of a question nothing asked. Reporting `fail`
+      #  would be a lie in the other direction. Neither: say so in the log and
+      #  post nothing, the same rule this file already applies to a cancelled
+      #  run.
+      - name: Report the boot-seed verdict to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+          HEALTH_URL: ${{ vars.PROGRESS_HEALTH_URL || 'https://progress.apcsexamprep.com/api/health' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping boot-seed report."
+            exit 0
+          fi
+
+          body=""
+          for attempt in 1 2 3; do
+            body=$(curl -sS --max-time 20 "$HEALTH_URL" || true)
+            [ -n "$body" ] && break
+            sleep 10
+          done
+
+          if [ -z "$body" ]; then
+            echo "/api/health did not answer; the drift step above already reports that."
+            exit 0
+          fi
+
+          verdict=$(printf '%s' "$body" | node -e '
+            let s = "";
+            process.stdin.on("data", (d) => { s += d; }).on("end", () => {
+              let j;
+              try { j = JSON.parse(s); } catch (e) { console.log("unknown\thealth did not parse as JSON"); return; }
+              const seed = j.seed;
+              // No seed block: an older container. Not pass, not fail.
+              if (!seed || !seed.seeds) { console.log("unknown\tthis container predates the boot-seed report"); return; }
+              const failed = seed.failed || [];
+              if (!failed.length) {
+                const names = Object.keys(seed.seeds).length;
+                console.log("pass\tall " + names + " boot seeds ran on " + (j.commit || "an unnamed build"));
+                return;
+              }
+              const first = seed.seeds[failed[0]] || {};
+              const why = String(first.error || "no message").slice(0, 160);
+              console.log("fail\t" + failed.length + " boot seed(s) failed on " + (j.commit || "an unnamed build")
+                + ": " + failed.join(", ") + ". First: " + why);
+            });
+          ')
+
+          state=$(printf '%s' "$verdict" | cut -f1)
+          detail=$(printf '%s' "$verdict" | cut -f2-)
+
+          if [ "$state" = "unknown" ]; then
+            echo "Not reporting: $detail"
+            exit 0
+          fi
+
+          detail="$detail (run ${{ github.run_id }})"
+          printf 'reporting state=%s detail=%s\n' "$state" "$detail"
+
+          node -e '
+            const body = JSON.stringify({
+              source: "health",
+              check_id: "boot-seed",
+              state: process.argv[1],
+              detail: process.argv[2],
+            });
+            process.stdout.write(body);
+          ' "$state" "$detail" > seed-payload.json
+
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            --data-binary @seed-payload.json \
+            || echo "report failed, ignoring"
