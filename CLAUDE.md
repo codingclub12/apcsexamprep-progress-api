@@ -155,17 +155,20 @@ survive.
    because nothing else announces it. `POST /api/todo` takes a title and returns
    an id you can claim in the next call.
 
-   **KNOWN GAP, and it is Tanner's to close.** This file tells every Claude Code
-   environment to set `COMMAND_READ_TOKEN` and not `TODO_KEY`. Claiming requires
-   `TODO_KEY`: `POST /api/command/task/:id/claim` answers
-   `401 {"error":"Authentication required..."}` to the read token, as a bearer and
-   bare, measured 2026-09-03. So a session configured exactly as instructed can
-   SEE every lock and TAKE none, and the rule it is told to follow is one it
-   cannot perform. The honest fix is a third credential scoped to the claim
-   protocol alone, weak on purpose the way the read token is: leaking it would let
-   somebody take and release locks, which is a nuisance rather than a breach.
-   Until then a session that cannot claim should say so rather than editing as
-   though the file were free.
+   **The credential that makes this possible is a decision Tanner already made.**
+   Claiming is a WRITE and needs `TODO_KEY`; the read token answers 401 to the
+   claim endpoint, as a bearer and bare. This guard was built on 2026-09-03 while
+   the rule above still said the read token alone belonged on a Claude Code
+   environment, which made rule 2 unenforceable by the very sessions it governs.
+   That is now settled at the top of this file: both tokens belong on the
+   environment, deliberately and permanently. So a session can both SEE a lock and
+   TAKE one, and there is nothing left here to route around.
+
+   Detection still reads the digest rather than the claim API, which the read
+   token alone can reach. That is not a workaround left over from the old rule; it
+   is what keeps the guard working for a surface that is given less, and it costs
+   nothing to keep.
+
 3. **Close with an artifact.** A PR URL, a live curl result, a Shopify
    `updatedAt` delta, an md5. `apcs done` refuses without one, locally, before it
    writes anything. Agent reports are not evidence.

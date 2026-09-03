@@ -64,29 +64,33 @@ between a session that chose to proceed and one that never knew.
 It also warns once per file when a file is unclaimed by anyone. It does not block
 there. Refusing every scratch edit is how a guard gets switched off within a day.
 
-## The gap this uncovered, which is Tanner's
+## The gap this uncovered, and the decision that closed it
 
-CLAUDE.md tells every Claude Code environment to set `COMMAND_READ_TOKEN` and NOT
-`TODO_KEY`, for a good reason that was proved right twice today. Claiming
-requires `TODO_KEY`.
+This guard was built while CLAUDE.md still said to set `COMMAND_READ_TOKEN` and
+NOT `TODO_KEY` on a Claude Code environment. Claiming is a write:
 
     POST /api/command/task/85/claim, read token as bearer   401
     POST /api/command/task/85/claim, read token bare        401
 
 `lib/command-auth.js` resolves an identity from a cookie or a `TODO_KEY` bearer
 and nothing else; the read token is not an identity at all, it authorizes one
-GET. So a session configured exactly as instructed can SEE every lock and TAKE
-none. It is told to follow a rule it cannot perform.
+GET. So a session configured exactly as instructed could SEE every lock and TAKE
+none, and was told to follow a rule it could not perform. This run wrote that up
+as a gap for Tanner and proposed a third credential scoped to the claim protocol.
 
-The honest fix is a third credential scoped to the claim protocol alone, weak on
-purpose the way the read token is: with it you can take and release locks and do
-nothing else, so leaking it is a nuisance rather than a breach. That is a
-decision about the auth model, not a patch, so it is written down rather than
-built.
+**He settled it the other way while this branch was in CI, and better.** PR #491
+puts `TODO_KEY` on the Claude Code environment, deliberately and permanently,
+with the exposure stated in full and the same three-way collision cited as the
+cost of the old rule. So there is no gap to route around and no third credential
+to build: a session can now take a lock as well as see one.
 
-Nothing about this blocks the guard: detection works for every session today.
-What it blocks is the other half, a session that sees the warning and wants to
-claim.
+Two things follow for this branch. The `KNOWN GAP` paragraph it added to rule 2
+was rewritten before merge, because CLAUDE.md now warns in its own words that
+"no future session re-derives the old rule from the leak history and quietly
+removes the key", and a paragraph proposing a replacement credential is most of
+the way to doing exactly that. And detection stays on the digest rather than the
+claim API, which is worth keeping on its own merits: it is what lets the guard
+protect a surface that has been given less.
 
 ## Evidence
 
