@@ -29,12 +29,14 @@ const m = require('./csa-daily-practice-code-repair');
 
 const BLOG = 'ap-csa-daily-practice';
 const DIR = path.join(__dirname, '..', 'smoke', 'fixtures', 'csa-daily-practice-code');
-const UA = 'Mozilla/5.0 (compatible; apcse-link-graph/1.0) Chrome/120';
+//  Fetched through lib/storefront-fetch.js, which sends NO browser User-Agent
+//  and refuses a body that is not a rendered storefront page. This script used
+//  to spoof a browser, and on 2026-09-03 that started drawing a 403 bot
+//  challenge whose body contains none of the strings checked below. See the
+//  header of that module for what it cost.
+const sf = require('../lib/storefront-fetch');
 
-const fetchArticle = (handle) => cp.execSync(
-  'curl -sSL --max-time 45 --compressed -H ' + JSON.stringify('User-Agent: ' + UA)
-  + ' ' + JSON.stringify('https://www.apcsexamprep.com/blogs/' + BLOG + '/' + handle),
-  { encoding: 'utf8', maxBuffer: 1 << 26 });
+const fetchArticle = (handle) => sf.page('/blogs/' + BLOG + '/' + handle).body;
 
 const handles = fs.readdirSync(DIR)
   .filter((f) => f.endsWith('.html') && !f.startsWith('CONTROL-'))

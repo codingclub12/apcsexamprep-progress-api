@@ -192,3 +192,36 @@ jobs:
             echo "::warning title=Execute not implemented::DISPATCH_EXECUTE is set, but the execute half has not been built. This workflow still only reads."
           fi
           echo "Read-only run complete. No task was claimed, executed, or merged."
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  Board task 166: this workflow had run since it was written and never
+      #  told the board anything, the same gap deploy-drift.yml closed on
+      #  2026-09-01 for itself alone. `checks: {total: 2, failing: 0}` on the
+      #  live digest was never a count of every check in this repo; it was a
+      #  count of the two workflows able to speak. This is the third of seven
+      #  that could not.
+      #
+      #  Same shape as deploy-drift.yml's reporter, on purpose: continue-on-error
+      #  so the observer cannot turn this job red by itself, never on a cancelled
+      #  run (job.status is `cancelled` there, and neither pass nor fail is true
+      #  of a run that compared nothing), and a missing TODO_KEY skips rather
+      #  than fails.
+      - name: Report to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"health\",\"check_id\":\"auto-dispatch\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"

@@ -74,6 +74,7 @@ reporting the thing it watches for, while reporting the page clean.
     npm run smoke:encoding          54 passed, 0 failed
     npm run smoke:mojibakeparity     6 passed, 0 failed
     npm run smoke:sitecrawl        131 passed
+    165 offline smoke suites        all pass after merging main (27 commits)
     node scripts/mojibake-rederive.js   agrees, 120 generated cases + 1470 files
     node scripts/deploy-gate.js deploy-gates/2026-09-03-mojibake-validator.json --pre
                                     suite, mutation, rederive all pass
@@ -165,11 +166,21 @@ mutation, conclude the guard is hollow, and delete a speedup.
 
 ## What is still open
 
-- **I could not reproduce the reported live-page corruption.** `/pages/ap-cybersecurity`
-  and `/pages/ap-cybersecurity-practice-exam` both scan clean under the new
-  detector, 0 hits in 37,990 and 101,186 characters of visible text. The
-  reported page may have been repaired already, may be one I did not fetch, or
-  the sighting may not have been the storefront. The nightly crawl can now
+- **I could not reproduce the reported live-page corruption.** Five pages scan
+  clean: ap-cybersecurity, ap-cybersecurity-practice-exam, ap-csa, ap-csp and
+  the home page, 0 hits across 249,633 characters of visible text.
+  This was re-run after merging main, and the re-run mattered. My first pass
+  fetched with a browser User-Agent, and main landed `lib/storefront-fetch.js`
+  the same day recording that storefront bot management INVERTED on 2026-09-03:
+  a spoofed browser UA now gets a 4.5KB challenge page and bare curl gets 200.
+  "No mojibake found" is a negative assertion, which is exactly the shape that
+  passes vacuously on a challenge body, so the first pass could have been
+  meaningless without looking wrong. Re-fetched through `page()`, which refuses
+  any body it cannot prove is the real page: all five came back real, and the
+  visible-character counts match the first pass exactly, so those fetches were
+  genuine too. The conclusion is unchanged and now rests on something.
+  The reported page may have been repaired already, may be one I did not fetch,
+  or the sighting may not have been the storefront. The nightly crawl can now
   actually answer this; before today it could not have.
 - The theme repo has legitimate non-ASCII in `assets` and `snippets` (star,
   em dash, box drawing, triangles, curly quotes) against its own pure-ASCII
