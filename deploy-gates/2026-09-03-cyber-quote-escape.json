@@ -1,0 +1,48 @@
+{
+  "change": "escape stray double quotes inside var FS_QUESTIONS / var EX on ap-csp-filtering-sorting-practice (board 174) and AP Cyber Unit 5 lessons 4, 5, 6, and additionally escape lesson-5's board-177 example <script> tags now that lib/storefront-fetch.js's pageBody() reaches the body without the Cloudflare rewrite that held it back. lesson-6 is held: it carries pre-existing, unrelated broken script blocks the house preflight refuses.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the escaper, its byte-level proof, and lesson-5's combined repair",
+      "command": "npm run --silent smoke:cyberquoteescape",
+      "expect": "27 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "tools/scan-inline-scripts.py, reading the shipped CSV back with its own CSV reader, against the CURRENT live bodies",
+      "command": "node scripts/verify-quote-escape-rederive.js imports/2026-09-03/unescaped-quote-repair-pages.csv --before",
+      "expect": "REDERIVE CONFIRMED: 0 syntax faults in every shipped row, found by a script that never imported the fix"
+    },
+    {
+      "kind": "mutation",
+      "name": "a quote is stray unless closing there leaves valid JSON structure; without that rule nothing is ever escaped",
+      "file": "scripts/cyber-quote-escape-pages.js",
+      "find": "  const isCloser = (ch) => ch === ',' || ch === '}' || ch === ']' || ch === ':';",
+      "replace": "  const isCloser = (ch) => true;",
+      "command": "npm run --silent smoke:cyberquoteescape",
+      "expect_failure": "[FAIL] 1.2 after the escape, the block parses",
+      "_why": "If every quote counts as a valid closer, escapeStrayQuotes escapes nothing: mode flips back to 'none' on the very first quote it meets inside a broken option string, and the SyntaxError board 174 found survives untouched."
+    },
+    {
+      "kind": "mutation",
+      "name": "the byte-level proof must actually be able to say NO",
+      "file": "scripts/cyber-quote-escape-pages.js",
+      "find": "    return { ok: false, at: i, escaped: n, why: 'mismatch' };",
+      "replace": "    return { ok: true, at: i, escaped: n, why: 'mismatch' };",
+      "command": "npm run --silent smoke:cyberquoteescape",
+      "expect_failure": "[FAIL] 3.2 the same proof REJECTS a body where something else also changed",
+      "_why": "onlyQuotesChanged exists so a body that drifted somewhere other than a declared quote is caught rather than trusted. A version that always answers ok is the same shape as the two hollow guards board 158 found: green either way, because nothing it claims to check can ever fail."
+    },
+    {
+      "kind": "mutation",
+      "name": "a block that still does not parse after the escape must be held, not shipped believing itself fixed",
+      "file": "scripts/cyber-quote-escape-pages.js",
+      "find": "  if (!parses) return { problems: ['still does not parse after the escape: ' + err] };",
+      "replace": "  if (false) return { problems: ['still does not parse after the escape: ' + err] };",
+      "command": "npm run --silent smoke:cyberquoteescape",
+      "expect_failure": "[FAIL] 8.1 the quote is fixed but the block is still held for its own separate fault",
+      "_why": "This is lesson-6's own shape in miniature: fixing the named quote is not the same claim as the block now working. ap-cyber-unit-5-lesson-6 is held from this sheet for exactly this reason, on a live page rather than a fixture, and this mutation proves the fixture-level guard is not decorative."
+    }
+  ],
+  "_held": "ap-cyber-unit-5-lesson-6 carries x6q4's own quote defect (fixed and byte-proven in isolation) but the page also carries 5 OTHER unparseable script blocks scripts/matrixify-preflight.js's scriptsCompile() finds independent of this fix (board 177's still-unescaped example tags on this page corrupt <script> block boundaries elsewhere: 'Unexpected token ...' x3, \"Unexpected token '+'\", \"Unexpected identifier 'content'\"), unchanged before and after x6q4 is fixed. Confirmed with node scripts/matrixify-preflight.js on the single-row sheet. Held rather than shipped improved, per this repo's own established rule from the 2026-09-03 cyber-xss-example-escape run: a page that does not work is not shipped because it works better than before."
+}
