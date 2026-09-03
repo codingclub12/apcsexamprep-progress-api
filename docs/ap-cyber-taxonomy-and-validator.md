@@ -277,7 +277,15 @@ pages it found misaligned).
   to 5 use numbered slugs (board task 81). Both are recorded; neither is blessed.
   Renaming a live handle is on the `NEVER_AUTO` list.
 - **Whether a lesson reads well.** No check settles that.
-- **The 25 lesson pages against 24 topics question**, and the live
-  `ap-cyber-unit-4-lesson-5` page, which tracks as lesson 4.5 and is not a CED
-  topic at all. Filed on the board as 188.
+- **Where the 25th lesson page belongs.** It no longer tracks anywhere, which is
+  the part board 188 settled on 2026-09-03: `ap-cyber-unit-4-lesson-5` was filing
+  work under a lesson 4.5, and the CED's Unit 4 stops at 4.4. The page is live and
+  stays live. Its content is on the syllabus, under 4.1.A.4 and 4.1.A.5 inside
+  topic 4.1, so this is not the 2.5 case of content that left the course.
+
+  What is open is whether it should come back as the second half of 4.1, the way
+  CED 3.1 is taught over 3.1a and 3.1b. That would give the page a column again
+  without inventing a topic, and it is the shape Unit 3 already uses. It is a
+  content decision, and it is the reason the fix removes a column rather than
+  deleting anything: re-adding a lesson id restores the old behaviour exactly.
 - **Every sheet in the repo that is not a cyber sheet**, for mojibake. Board 186.

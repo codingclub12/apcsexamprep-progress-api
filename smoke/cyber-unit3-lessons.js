@@ -108,6 +108,31 @@ const orphan = pageFromHandle('ap-cyber-unit-2-lesson-5');
 if (orphan) fail(`ap-cyber-unit-2-lesson-5 -> ${orphan.lesson}, expected null`);
 else pass('ap-cyber-unit-2-lesson-5 stays untracked');
 
+//  5b. Cyber 4.5 stays untracked, on BOTH sides.
+//
+//     The server half alone is not the fix, and that is the whole reason this
+//     check exists rather than being folded into 5. POST /api/student/score
+//     lets an explicit lesson win over the handle, deliberately, so a theme that
+//     still resolves ap-cyber-unit-4-lesson-5 to '4.5' keeps writing that lesson
+//     no matter what pageFromHandle says. Untracking has to happen where the
+//     number is chosen, which is the storefront.
+//
+//     The page is live and on-syllabus: it teaches IoT and embedded devices,
+//     which the CED covers under 4.1.A.4 and 4.1.A.5 inside topic 4.1. What it
+//     has never had is a topic number of its own. Board 188.
+const UNTRACKED_45 = [
+  'ap-cyber-unit-4-lesson-5',
+  'ap-cyber-unit-4-lesson-5-exercise-1',
+  'ap-cyber-unit-4-lesson-5-exercise-2',
+  'ap-cyber-unit-4-lesson-5-lab',
+  'ap-cyber-unit-4-lesson-5-quiz',
+];
+for (const handle of UNTRACKED_45) {
+  const got = pageFromHandle(handle);
+  if (got) fail(`${handle} -> ${got.lesson}, expected null (the CED has no topic 4.5)`);
+  else pass(`${handle} stays untracked on the server`);
+}
+
 //  6. THE THEME USES THE SAME MAP. FIXED 2026-09-02, PINNED HERE.
 //
 //  Everything above pins the SERVER. The number that reaches the gradebook is
@@ -134,8 +159,21 @@ else pass('ap-cyber-unit-2-lesson-5 stays untracked');
 //  A transcription is only as fresh as the last person who looked. The live
 //  check belongs in a scheduled job with network access, not in an offline
 //  suite, and that is worth building rather than pretending this covers it.
+//  Unit 4 joined the table on 2026-09-03, board 188, and it is there for the
+//  opposite reason to Unit 3. Unit 3's handles LIE about their topic, so the
+//  table corrects them. Unit 4's handles are honest as far as they go, but the
+//  unit has five lesson pages and the CED has four topics, so the theme's
+//  fall-through was minting a lesson 4.5 the gradebook has no column for.
+//  Listing 1 through 4 makes ordinal 5 return null on both sides.
+//  Unit 2 is fenced for the same reason as Unit 4, and check 6b below is what
+//  found it: the callers' RETIRED regex is /^ap-cyber-unit-2-lesson-5-/ with a
+//  trailing hyphen, so it catches the four 2.5 activity pages and would miss a
+//  bare ap-cyber-unit-2-lesson-5 landing page. None is live today. The fence
+//  does not depend on that staying true.
 const THEME_OVERRIDE = {
+  'unit-2': { 1: '2.1', 2: '2.2', 3: '2.3', 4: '2.4' },
   'unit-3': { 1: '3.1a', 2: '3.1b', 3: '3.2', 4: '3.3', 5: '3.4', 6: '3.5' },
+  'unit-4': { 1: '4.1', 2: '4.2', 3: '4.3', 4: '4.4' },
 };
 const themeLesson = (unitOrdinal, lessonOrdinal) => {
   const map = THEME_OVERRIDE[`unit-${unitOrdinal}`];
@@ -166,6 +204,53 @@ for (const h of allHandles) {
   const t = themeLesson(Number(m[1]), Number(m[2]));
   if (t === null) { refused.push(h); continue; }
   if (t !== sv.lesson) drift.push(`${h}: theme ${t}, server ${sv.lesson}`);
+}
+
+//  6b. A handle the SERVER refuses must be refused by the STOREFRONT too.
+//
+//     The drift loop above compares only handles the server maps, so it goes
+//     quiet on exactly the handles this change is about: pageFromHandle returns
+//     null for cyber 2.5 and 4.5, the loop skips them, and a theme still
+//     resolving them to a lesson id sails through. That is not hypothetical.
+//     POST /api/student/score takes an explicit lesson over the handle, so the
+//     storefront's number is the one that reaches the gradebook.
+//
+//     The theme refuses a page two ways, and both are transcribed, because
+//     modelling only the map would report cyber 2.5 as drift when it is
+//     correctly fenced by the regex instead:
+//       - RETIRED, a literal regex in quiz-tracker-wiring.liquid and
+//         apcs-grade-reporter.liquid, which returns before anything else runs
+//       - APCS_CYBER_LESSON returning null, which leaves window.APCS_PAGE unset
+const THEME_RETIRED = /^ap-cyber-unit-2-lesson-5-/;
+const themeRefuses = (handle) => {
+  if (THEME_RETIRED.test(handle)) return true;
+  const m = handle.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)(?:-|$)/);
+  if (!m) return false;
+  return themeLesson(Number(m[1]), Number(m[2])) === null;
+};
+
+const leaked = [];
+for (const handle of [...UNTRACKED_45, 'ap-cyber-unit-2-lesson-5',
+  'ap-cyber-unit-2-lesson-5-quiz', 'ap-cyber-unit-2-lesson-5-lab']) {
+  if (!themeRefuses(handle)) leaked.push(handle);
+}
+if (leaked.length) {
+  fail('the server leaves these untracked but the storefront still resolves them, so work '
+    + `posted from them lands on a lesson with no column: ${leaked.join(', ')}`);
+} else {
+  pass('every handle the server refuses is refused by the storefront rule as well');
+}
+
+//  A fence is only a fence if the pages next door still get through.
+for (const [handle, lesson] of [
+  ['ap-cyber-unit-4-lesson-4-quiz', '4.4'],
+  ['ap-cyber-unit-4-lesson-1', '4.1'],
+]) {
+  const m = handle.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)(?:-|$)/);
+  const t = themeLesson(Number(m[1]), Number(m[2]));
+  const sv = pageFromHandle(handle);
+  if (t === lesson && sv && sv.lesson === lesson) pass(`${handle} still maps to ${lesson} on both sides`);
+  else fail(`${handle} -> theme ${t}, server ${sv && sv.lesson}, expected ${lesson} on both`);
 }
 
 if (drift.length) {

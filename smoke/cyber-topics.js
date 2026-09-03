@@ -183,6 +183,41 @@ check('there is no topic 2.5, 3.6 or 4.5', () => {
   }
 });
 
+//  The gradebook's columns and the CED's topics are two lists that have drifted
+//  apart before, in both directions, and neither list can catch it alone.
+//
+//  Before 2026-09-03 the config declared a Unit 4 lesson 4.5, because the
+//  ap-cyber-unit-4-lesson-5 page is real and somebody reasonably concluded that
+//  real content deserves a column. The CED's Unit 4 stops at 4.4, so every
+//  student who did that page filed work under a topic no AP teacher can map, and
+//  nothing anywhere said so. Board 188.
+//
+//  Asserted both directions on purpose. A missing column silently drops work,
+//  which is the failure the 4.4 addition fixed; an extra column silently invents
+//  a topic, which is the failure removing 4.5 fixes. Only one of the two is
+//  visible from either end.
+//
+//  The a/b pair is not an exception to this. CED 3.1 is taught over two pages,
+//  so the taxonomy itself carries 3.1a and 3.1b as that topic's lesson_ids, and
+//  this compares lesson ids rather than topic numbers precisely so a legitimate
+//  split stays legible while a made-up lesson does not.
+check('every cyber lesson column matches a CED lesson id, and every lesson id has a column', () => {
+  const { COURSES } = require('../utils');
+  const configured = [];
+  for (const u of Object.values(COURSES['ap-cybersecurity'].units)) {
+    configured.push(...(u.lessons || []));
+  }
+  const canonical = [];
+  for (const t of doc.topics) canonical.push(...t.lesson_ids);
+
+  const invented = configured.filter((l) => !canonical.includes(l));
+  const uncolumned = canonical.filter((l) => !configured.includes(l));
+  assert.deepStrictEqual(invented, [],
+    `utils.js COURSES declares ${JSON.stringify(invented)}, which the CED has no topic for`);
+  assert.deepStrictEqual(uncolumned, [],
+    `the CED has ${JSON.stringify(uncolumned)} and the gradebook builds no column for it`);
+});
+
 check('every title is plain ASCII and free of mojibake', () => {
   for (const t of doc.topics) {
     assert.ok(!/[^\x20-\x7e]/.test(t.title), `${t.topic} title is not plain ASCII: ${JSON.stringify(t.title)}`);
