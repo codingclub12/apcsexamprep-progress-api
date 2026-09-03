@@ -205,7 +205,9 @@
     "smoke:unitcourse": "node smoke/csa-unit-course-repair.js",
     "smoke:denompanel": "node smoke/denominator-panel.js",
     "smoke:practiceexamformat": "node smoke/cyber-practice-exam-format.js",
-    "verify:practiceexamformat": "node scripts/verify-practice-exam-format-live.js"
+    "verify:practiceexamformat": "node scripts/verify-practice-exam-format-live.js",
+    "smoke:examformatced": "node smoke/cyber-exam-format-ced.js",
+    "verify:examformatced": "node scripts/verify-exam-format-ced-live.js"
   },
   "keywords": [],
   "author": "",

@@ -21,13 +21,17 @@
     "GENERATOR mutations below edit the generator and expect its refusal, and the",
     "SHEET mutations corrupt the committed CSV directly and expect the smoke's own",
     "assertion, which is the only way to show the smoke would catch a bad sheet no",
-    "matter how it was produced."
+    "matter how it was produced.",
+    "",
+    "The suite check REGENERATES before asserting, because a generator mutation",
+    "rewrites the CSV as a side effect and the gate restores only the file it",
+    "mutated. Without this the committed sheet is left mutated after a gate run."
   ],
   "checks": [
     {
       "kind": "suite",
       "name": "the sheet is parsed BACK and diffed against the source, not just generated",
-      "command": "npm run --silent smoke:practiceexamformat",
+      "command": "node scripts/cyber-practice-exam-format-csv.js && npm run --silent smoke:practiceexamformat",
       "expect": "OK - all 18 checks passed"
     },
     {
