@@ -116,6 +116,19 @@ const COPY = {
     ],
     signin: false,
   },
+  'ap-cybersecurity|1.2-auth-lab': {
+    lede: 'A morning of sign-in attempts from a school portal nobody has been reading. Three of '
+      + 'them are attacks. Two look worse than they are, and telling them apart is the lab.',
+    body: [
+      'Everything runs in this page. The log and the account list are simulated, so read them in '
+      + 'any order and as many times as you need.',
+      'Counting failures is the easy half. Four failures from a girl on her own laptop and one '
+      + 'failure each across thirty accounts from a machine nobody recognises are not the same '
+      + 'event, and the larger number is the innocent one. Work out what actually separates them '
+      + 'before you decide which rows to flag.',
+    ],
+    signin: false,
+  },
   'ap-cybersecurity|2.4-lab': {
     lede: 'A week of badge swipes from a building nobody has audited since March. Three of the '
       + 'oddities in it are attacks. Two are not, and telling them apart is the lab.',

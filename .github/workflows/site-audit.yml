@@ -230,3 +230,43 @@ jobs:
         with:
           path: previous-crawl.json
           key: site-crawl-${{ github.run_id }}
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  Board task 166. This audit has exited 1 since 2026-08-28 and the board
+      #  read `checks: {total: 2, failing: 0}` the whole time, because nothing
+      #  here posted to /api/command/checks. This step does NOT change why the
+      #  crawl exits 1 (the crawler's own comment above explains three different
+      #  reasons collapse into one red X, and a red run finding real problems is
+      #  this job working, not broken) - it only wires the existing verdict
+      #  through, same as deploy-drift.yml already does for its own three-way
+      #  exit code. Fixing what site-audit finds is explicitly out of scope here;
+      #  making its redness visible is the whole point.
+      #
+      #  source=linkcheck: this crawls the live Shopify storefront, which is
+      #  exactly SURFACE_BY_SOURCE's linkcheck -> shopify mapping in
+      #  lib/command-checks.js, and it is a "scheduled ... check on known-
+      #  critical URLs" in the sense command-checks.js's SOURCES comment means.
+      #
+      #  `if: always()` so it reports even though the crawl step above can exit
+      #  1 with no continue-on-error; `job.status != 'cancelled'` for a run that
+      #  crawled nothing; continue-on-error so the observer cannot make this
+      #  audit look more broken than it is; a missing TODO_KEY skips.
+      - name: Report to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"linkcheck\",\"check_id\":\"site-audit\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"

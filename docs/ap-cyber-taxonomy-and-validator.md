@@ -196,7 +196,28 @@ over a rule that cannot fire at all.
 
 A green mutation run is a failed check. The exit code says so.
 
-## 7. What this does NOT settle
+## 7. Before Session D generates anything, read the sitemap diff
+
+`docs/runs/2026-09-03-claude-code-cyber-topic-sitemap-diff.md` (another session,
+same day) found that `/pages/ap-cybersecurity-topics` already indexes about 39
+live topic-overview pages, and concluded that generating 24 "new" topic pages
+without reconciling against them risks the duplicate-page mistake.
+
+Nothing here contradicts that, and the generator is built the same way round.
+Those 39 are concept-level pages (`-man-in-the-middle`, `-firewalls`, `-mfa`);
+the `handles` field in the taxonomy comes from `utils.pageFromHandle`, which maps
+only the canonical LESSON pages, so the two sets are different things. More to
+the point, `specErrors` refuses a non-fixture spec whose handle is not the one
+the taxonomy says that topic already lives at. A generator run cannot quietly
+create a second page for a topic that has one; it stops and says where the
+existing page is. Deciding whether an existing page should be rewritten, and at
+which handle, stays a human call (board 81).
+
+Where `docs/ap-cyber-units-2-5-ced-audit.md` names a topic title, this taxonomy
+agrees with it verbatim (6 of the 24; that audit enumerates only the topics whose
+pages it found misaligned).
+
+## 8. What this does NOT settle
 
 - **Which handle a new page should use.** Units 1 and 2 use topic slugs, Units 3
   to 5 use numbered slugs (board task 81). Both are recorded; neither is blessed.
