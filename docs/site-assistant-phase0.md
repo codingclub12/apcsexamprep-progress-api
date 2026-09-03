@@ -97,17 +97,33 @@ this one.
 ## Deploying it
 
 The endpoint works with nothing configured: reports are stored and filed on the
-board either way. Two env values improve it.
+board either way. Mail is the part that needs config.
 
 | Env | Effect if unset |
 | --- | --- |
 | `RESEND_API_KEY` | `lib/mailer.js` logs the mail instead of sending it |
 | `ASSISTANT_ALERT_EMAIL` | falls back to `COMMAND_OWNER_EMAIL`; with neither, no mail |
 
-Setting `RESEND_API_KEY` is the Phase 0 prerequisite from the spec, and it also
-retires the password-reset support cluster, since
-`POST /api/teacher/forgot-password` has been minting real reset links into the
-server log rather than into anyone's inbox.
+**`RESEND_API_KEY` is set.** Confirmed 2026-09-03 two ways: Tanner received a real
+password reset, and production answers `mail_configured: true` on
+`POST /api/teacher/forgot-password`. That was the Phase 0 prerequisite from the
+spec, and it also retired the password-reset support cluster, which was three
+manual resets in three days caused by reset links reaching the Railway log
+instead of an inbox.
+
+What remains is the **recipient**. Mail sending and having somewhere to send are
+two different facts, and either one alone means an escalation is recorded and
+never seen. So `/api/health` reports both:
+
+```json
+"assistant": { "mail_configured": true, "recipient_set": true, "can_notify": true }
+```
+
+Booleans only, no addresses. This block exists for the same reason `integrity`,
+`reporters` and `seed` do: without it the failure is silent by construction. A
+report with no recipient is stored, filed on the board, and then quietly never
+mailed, with nothing anywhere saying so. Check `can_notify` after deploying; if
+it is false, set `ASSISTANT_ALERT_EMAIL`.
 
 ## The theme side
 
@@ -139,7 +155,7 @@ Per `CLAUDE.md`, the theme's published branch is
 
 ## Tests
 
-`npm run smoke:assistantreport`, 86 assertions, offline and secret-free. It pins
+`npm run smoke:assistantreport`, 92 assertions, offline and secret-free. It pins
 the privacy rule from three directions (as a student, as an anonymous caller on a
 lesson page, and as a client that lies about its role), plus the closed category
 set, truncation, dedupe, the per-IP brake, and that the served widget is pure

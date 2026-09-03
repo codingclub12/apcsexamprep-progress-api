@@ -354,6 +354,27 @@ const SECRET_PROSE = 'my name is REDACTEDCHILD and my email is kid@example.com';
   ok('the second reports itself as deduped, which is what silences the email',
     f2.todoId === f1.todoId && f2.deduped === true, f2);
 
+  // ── 14d) "Will an escalation reach anyone" is answerable from outside ─────
+  // The suite runs with no mail config at all, so this must say so rather than
+  // report a cheerful default. A report that is stored, filed, and then silently
+  // never mailed is the failure mode /api/health exists to prevent.
+  const notify = reportLib.notifyStatus();
+  ok('unconfigured: mail_configured is false', notify.mail_configured === false, notify);
+  ok('unconfigured: recipient_set is false', notify.recipient_set === false, notify);
+  ok('unconfigured: can_notify is false', notify.can_notify === false, notify);
+  ok('notifyStatus leaks no address',
+    !JSON.stringify(notify).includes('@'), notify);
+
+  process.env.COMMAND_OWNER_EMAIL = 'owner@example.invalid';
+  const withOwner = reportLib.notifyStatus();
+  ok('a recipient alone is not enough to deliver',
+    withOwner.recipient_set === true && withOwner.can_notify === false, withOwner);
+  process.env.RESEND_API_KEY = 'test-key';
+  const withBoth = reportLib.notifyStatus();
+  ok('both together is the only combination that delivers', withBoth.can_notify === true, withBoth);
+  delete process.env.RESEND_API_KEY;
+  delete process.env.COMMAND_OWNER_EMAIL;
+
   // ── 15) The daily ceiling is a real guard, not a comment ──────────────────
   ok('daily cap is defined and finite',
     Number.isFinite(reportLib.MAX_REPORTS_PER_DAY) && reportLib.MAX_REPORTS_PER_DAY > 0, reportLib.MAX_REPORTS_PER_DAY);

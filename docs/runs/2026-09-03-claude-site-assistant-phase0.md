@@ -37,7 +37,7 @@ typed by a child.
 
 ## Evidence
 
-Offline suite: 86 assertions, 0 failed. It pins the privacy rule from three
+Offline suite: 92 assertions, 0 failed. It pins the privacy rule from three
 directions, including a payload that lies about its role, scope, retention flag,
 user id, contact email and user agent. All six lies are ignored.
 
@@ -80,10 +80,17 @@ before anyone debugs it against a branch.
 
 ## Still open
 
-- **`RESEND_API_KEY` is unset.** Reports store and file without it; only the mail
-  is skipped. Setting it is the Phase 0 prerequisite and it also retires the
-  password-reset cluster, since `forgot-password` has been minting real reset
-  links into the server log rather than anyone's inbox.
+- ~~`RESEND_API_KEY` is unset~~ **Resolved during this session.** Tanner tested a
+  real password reset and received it, and production answers
+  `mail_configured: true`. The Phase 0 prerequisite is done and the
+  password-reset cluster is retired.
+
+  That moved the risk rather than removing it: mail sending and having a
+  recipient are different facts, and either alone means an escalation is stored,
+  filed, and never seen. `/api/health` now carries an `assistant` block with
+  `mail_configured`, `recipient_set` and `can_notify`, booleans only, for the
+  same reason `integrity`, `reporters` and `seed` are there. **Check `can_notify`
+  after deploy**; if it is false, set `ASSISTANT_ALERT_EMAIL`.
 - **The theme tag is not placed.** One script tag, plus the optional error stub.
   Not on quiz, exam or practice-test templates. The theme's published branch is
   `claude/site-linking-audit-yhufjk`, not `main`.

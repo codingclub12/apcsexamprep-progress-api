@@ -337,6 +337,11 @@ app.get('/api/health', (req, res) => {
   // silent seed reads exactly like a seed with nothing to do. See
   // lib/boot-seed.js for the deploy that paid for this.
   body.seed = bootSeed.snapshot();
+  // Whether a site-assistant escalation can actually reach a person. Same class
+  // of problem as the three blocks above: a report with no recipient configured
+  // is stored and filed and then silently never mailed. Booleans only, no
+  // addresses. See lib/assistant/report.js notifyStatus.
+  try { body.assistant = require('./lib/assistant/report').notifyStatus(); } catch (e) { /* never fail health */ }
   res.json(body);
 });
 
