@@ -13,14 +13,42 @@ could not reach the board it says so loudly instead of injecting nothing; a
 session that starts with no state banner has state, and one that starts with a
 NO LIVE STATE block must not assume the board is empty or unclaimed.
 
-Set `COMMAND_READ_TOKEN` on the Claude Code environment, not `TODO_KEY`. The
-read token is read-only and PII-stripped, and environment configuration is not
-a secrets store: anyone who can use the environment can read it, and a session
-can echo a variable into its own transcript at any time. That has already
-happened once. `TODO_KEY` still works as a fallback and can WRITE to the ledger,
-so it belongs in Railway and the Actions secret and nowhere else. Get the read
-token from `GET /api/command/read-token` while signed in, rotate it with
-`POST /api/command/read-token/rotate`.
+**`TODO_KEY` BELONGS ON THE CLAUDE CODE ENVIRONMENT. This is deliberate, it is
+Tanner's decision, and it is not a defect to report or repair.** Set it there
+alongside `COMMAND_READ_TOKEN`.
+
+Until 2026-09-03 this file said the opposite: read token on the environment,
+write token in Railway and the Actions secret and nowhere else. That rule was
+written for a real exposure, and it had a cost nobody priced. Claiming a lock is
+a WRITE, so a session holding only the read token cannot claim, which means rule
+2 below is unenforceable by the sessions it governs. On 2026-09-03 three sessions
+built the same mojibake detector at the same time and two implementations were
+thrown away. Not one of them could have claimed the file.
+
+So the trade was put to Tanner explicitly, with the exposure stated: environment
+configuration is not a secrets store, anyone who can use the environment can read
+it, a session can echo a variable into its own transcript at any moment, and both
+tokens had already leaked that way that same day. He decided, in those terms,
+that agents having write access to the ledger is worth more than the containment,
+and asked for the decision to be permanent. It is his business, his token and his
+risk, and this paragraph exists so that no future session re-derives the old rule
+from the leak history and quietly removes the key.
+
+What does NOT follow from it, so the concession stays as small as it is:
+
+- A session still must not PRINT the token. Presence is intended; a credential in
+  a transcript is still a bug, and the shell footgun below is still how it
+  happens.
+- An agent still cannot set `verified=1`, and still cannot rotate either token.
+  Those remain cookie-only, and the reason is unchanged: the agent that did the
+  work is never the one that says it is true.
+- `TODO_KEY` still carries `scope: 'limited'` unless `TODO_KEY_SCOPE=full`, so no
+  person and no email, ever.
+- Railway and the Actions secret still need it too. All copies must match
+  character for character or every agent request 401s.
+
+Get the read token from `GET /api/command/read-token` while signed in, rotate it
+with `POST /api/command/read-token/rotate`.
 
 **This repository is PUBLIC**, and until 2026-09-03 that was written down nowhere.
 Confirmed against the GitHub API that day: `codingclub12/apcsexamprep-progress-api`
@@ -47,9 +75,14 @@ Rotation of the read token is deliberately NOT available to an agent:
 `POST /api/command/read-token/rotate` answers
 `403 {"error":"This action requires the browser session. An agent credential cannot
 perform it."}` to a bearer credential. So a session that leaks the read token cannot
-clean up after itself and must say so loudly instead of quietly moving on. `TODO_KEY`
-is the same, in Railway and the Actions secret. Both rotations are Tanner's, at a
-browser.
+clean up after itself and must say so loudly instead of quietly moving on. `TODO_KEY` has no
+rotation path AT ALL: it is a plain environment variable read through
+`process.env.TODO_KEY` and compared in `lib/command-auth.js`, with nothing stored
+server-side to rotate. Rotating it means choosing a new secret and updating every
+copy by hand, in Railway, in the `TODO_KEY` Actions secret consumed by nine
+workflows, and on the Claude Code environment. Both rotations are Tanner's, at a
+browser, and an agent asked to do one should say plainly that it cannot rather
+than appearing to.
 
 The session's container must also be able to REACH the board:
 `progress.apcsexamprep.com` has to be in the environment's Custom allowed
