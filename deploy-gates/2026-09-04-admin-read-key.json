@@ -1,0 +1,74 @@
+{
+  "change": "ADMIN_READ_KEY: a read-only admin credential an agent can hold without gaining the verify bit",
+  "_context": "lib/admin-session.js signs the dashboard cookie with ADMIN_KEY itself, so any holder of ADMIN_KEY can mint a valid session offline without calling /admin/login. That cookie is what lib/command-auth.js requireCookieAuth accepts, and it gates POST /api/todo/:id/verify. Handing ADMIN_KEY to an agent therefore hands it the verify bit and retires rule 4 of CLAUDE.md. The first design for this marked sessions as agent-minted at /admin/login and refused the verify bit for those; it was discarded because an ADMIN_KEY holder simply skips /admin/login and signs its own token with browser:true. The boundary has to be a secret the agent does not hold.",
+  "_expect_failure_note": "Every expect_failure carries the literal [FAIL] prefix, because an assertion NAME also appears on the pass line, so naming it alone would prove only that the assertion ran.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the read key suite",
+      "command": "npm run --silent smoke:adminreadkey",
+      "expect": "20 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the admin API's own suites are unchanged by this",
+      "command": "npm run --silent smoke:contract",
+      "expect": "49 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT MATTERS: the read key must not mint a session",
+      "_why": "If the read key could pass the /admin/login check it would become the full key, because the cookie it receives is signed with ADMIN_KEY and carries every cookie-gated power including the verify bit.",
+      "file": "lib/admin-session.js",
+      "find": "function checkKey(provided) {\n  if (!keyConfigured()) return false;",
+      "replace": "function checkKey(provided) {\n  if (String(provided).length >= MIN_KEY_LEN) return true;\n  if (!keyConfigured()) return false;",
+      "command": "npm run --silent smoke:adminreadkey",
+      "expect_failure": "[FAIL]   POST /admin/login with the read key is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "the read key must not be able to write",
+      "file": "routes/admin.js",
+      "find": "      if (req.method !== 'GET' && req.method !== 'HEAD') {",
+      "replace": "      if (false) {",
+      "command": "npm run --silent smoke:adminreadkey",
+      "expect_failure": "[FAIL]   POST is refused 403"
+    },
+    {
+      "kind": "mutation",
+      "name": "the read key must not see a student's name",
+      "file": "routes/admin.js",
+      "find": "      if (req.query && req.query.reveal === '1') {",
+      "replace": "      if (false) {",
+      "command": "npm run --silent smoke:adminreadkey",
+      "expect_failure": "[FAIL]   reveal=1 is refused 403"
+    },
+    {
+      "kind": "mutation",
+      "name": "a weak or unset read key must fail closed",
+      "file": "routes/admin.js",
+      "find": "  if (read.length < MIN_KEY_LEN) return false;",
+      "replace": "  if (read.length < 1) return false;",
+      "command": "npm run --silent smoke:adminreadkey",
+      "expect_failure": "[FAIL]   a weak read key is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "the forged-token test must not be hollow",
+      "_why": "The first draft of that assertion read `adminSession.sign ? ... : null` and sign() is not exported, so it passed without ever forging a token. Breaking verify() must now make it go red, which proves it is really forging and really checking.",
+      "file": "lib/admin-session.js",
+      "find": "  if (got.length !== expect.length || !crypto.timingSafeEqual(got, expect)) return null;",
+      "replace": "  if (false) return null;",
+      "command": "npm run --silent smoke:adminreadkey",
+      "expect_failure": "[FAIL]   a token signed with the read key does not verify"
+    },
+    {
+      "kind": "live",
+      "name": "production serves this tree",
+      "_why": "Derived from the tree rather than pinned, so it is false before the deploy and false if the deploy never runs.",
+      "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const got=JSON.parse(cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'})).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
+      "expect": "PRODUCTION SERVES THIS TREE"
+    }
+  ],
+  "_removed_check_note": "A mutation for a `read === full` refusal was written and then REMOVED, with the code it targeted. The gate reported that breaking the line left the suite green, which was correct: when the two keys are equal the full-key branch matches first and returns, so the read-only branch is unreachable and the refusal has no observable effect. Keeping a guard no mutation can prove is the hollow-guard failure this repo keeps paying for, so the hazard is documented in routes/admin.js instead of pretended at."
+}
