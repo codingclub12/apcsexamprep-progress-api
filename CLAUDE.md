@@ -683,6 +683,16 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   is structural, not a slow day. A gate before the merge is the only place that
   beats the race, because it is the only point that happens before the deploy
   starts.
+  **That 4.5 minutes is now over 10, so the window has more than doubled.** The
+  suite outgrew its own 10 minute job timeout on 2026-09-03 and run 33814700195
+  was CANCELLED mid-suite, which reads as "not passed" rather than as a failure:
+  the pull request was simply unmergeable with nothing red anywhere to say why.
+  The timeout is 20 minutes now, which buys time and fixes nothing. Timed one
+  suite at a time, the 179 offline suites are 397 seconds and two of them are 42%
+  of that: smoke:csadebug at 98.6s and smoke:ijverify at 65.7s, both compiling
+  Java with a real javac. Splitting those into their own parallel job is board
+  #204. Until that lands, every merge leaves production running unjudged code for
+  longer than this paragraph's numbers suggest.
   To land an emergency fix, flip the ruleset's Enforcement to Disabled, merge, and
   turn it back on. There is deliberately no standing bypass, so that skipping the
   suite is always a visible act rather than a quiet one.

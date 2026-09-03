@@ -38,7 +38,31 @@ jobs:
   offline-smoke:
     name: Offline smoke suites
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # ── WHY 20 AND NOT 10 ──────────────────────────────────────────────────────
+    #  The suite outgrew a 10 minute budget, and the way that surfaced is worth
+    #  keeping: run 33814700195 was CANCELLED at 10m14s, mid-way through
+    #  smoke:csadebug, and a cancelled required check reads as "not passed"
+    #  rather than as a failure, so the PR was simply unmergeable with no red
+    #  test anywhere to explain it.
+    #
+    #  Measured rather than guessed. All 179 offline suites, timed one at a time
+    #  in a container: 397 seconds of suite time, and two suites are 42% of it.
+    #
+    #      csadebug    98.6s     ijverify    65.7s     csapublish  30.6s
+    #      sessionhook 21.5s     ijrun       14.4s     csax1       13.4s
+    #      the other 173 suites, together, 153s
+    #
+    #  A hosted runner is slower than that and the job also pays for checkout,
+    #  setup-node, setup-java and npm ci before the first suite runs, which is
+    #  why 397s of work did not fit in a 600s job. 20 minutes is roughly double
+    #  the measured figure with the setup included.
+    #
+    #  This weakens no gate: a timeout decides how long a check may take, never
+    #  whether it passed. What it does not fix is the trend. The first CI verdict
+    #  was about 4.5 minutes when the race in CLAUDE.md was measured and is over
+    #  10 now, and the two Java-compiling suites above are the reason. Splitting
+    #  those into their own parallel job is the real answer and is board #204.
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
