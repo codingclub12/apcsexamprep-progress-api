@@ -15,7 +15,10 @@ const { execFileSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '..');
 const POOL_PATH = path.join(ROOT, 'config/cyber-qotd-pool.json');
-const SHEET = path.join(ROOT, 'matrixify/cyber-qotd-crawlable.csv');
+const SHEETS = [
+  path.join(ROOT, 'matrixify/cyber-qotd-unit-pages.csv'),
+  path.join(ROOT, 'matrixify/cyber-qotd-links-pages.csv'),
+];
 const GEN = path.join(ROOT, 'scripts/cyber-qotd-page-csv.js');
 const CHECK = path.join(ROOT, 'scripts/cyber-qotd-sheet-check.js');
 
@@ -83,7 +86,8 @@ const GENERATOR_MUTANTS = [
 
 function run() {
   const original = fs.readFileSync(POOL_PATH, 'utf8');
-  const sheetBefore = fs.existsSync(SHEET) ? fs.readFileSync(SHEET) : null;
+  const sheetsBefore = Object.fromEntries(SHEETS.map((f) =>
+    [f, fs.existsSync(f) ? fs.readFileSync(f) : null]));
   let misses = 0;
 
   try {
@@ -135,12 +139,28 @@ function run() {
       console.log(`  ${verdict.padEnd(46)} ${m.name}`);
     }
   } finally {
+    // RESTORE, THEN PROVE IT. This battery edits a TRACKED file, so a restore
+    // that quietly failed would leave mutated canonical data in the working
+    // tree and, worse, in someone's next commit. deploy-gate.js takes the same
+    // precaution for the same reason: it is not enough to write the original
+    // back, the bytes have to be checked.
     fs.writeFileSync(POOL_PATH, original);
     execFileSync('node', [GEN], { stdio: 'ignore' });
-    if (sheetBefore) {
-      const now = fs.readFileSync(SHEET);
-      if (!now.equals(sheetBefore)) {
-        console.log('\n  NOTE: regenerated sheet differs from the pre-mutation file');
+
+    const poolBack = fs.readFileSync(POOL_PATH, 'utf8');
+    if (poolBack !== original) {
+      console.error('\nFAILED TO RESTORE ' + path.relative(ROOT, POOL_PATH)
+        + '. The working tree holds mutated canonical data. Restore it from git '
+        + 'before committing anything.');
+      process.exitCode = 1;
+    }
+    for (const [file, before] of Object.entries(sheetsBefore)) {
+      if (before === null) continue;
+      const now = fs.readFileSync(file);
+      if (!now.equals(before)) {
+        console.error(`\nFAILED TO RESTORE ${path.relative(ROOT, file)}: it differs from the `
+          + 'pre-mutation file. Regenerate and inspect before committing.');
+        process.exitCode = 1;
       }
     }
   }
