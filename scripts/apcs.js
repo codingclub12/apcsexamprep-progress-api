@@ -298,6 +298,21 @@ cmds.prompt = async (argv) => {
   console.log(typeof out === 'string' ? out : (out.prompt || JSON.stringify(out, null, 2)));
 };
 
+//  Session identity, best effort, in descending order of how much it actually
+//  identifies THIS session. Returns null rather than inventing one: a made-up
+//  label is worse than none, because it would make one session's locks look
+//  like another's.
+function sessionLabel() {
+  if (process.env.APCS_SESSION_LABEL) return process.env.APCS_SESSION_LABEL;
+  try {
+    const os = require('os');
+    const p = require('path').join(os.tmpdir(), 'apcs-session-label');
+    const v = require('fs').readFileSync(p, 'utf8').trim();
+    if (v) return v;
+  } catch (_) { /* no session-start hook ran, or a different tmpdir */ }
+  return process.env.CLAUDE_CODE_CONTAINER_ID || null;
+}
+
 cmds.claim = async (argv) => {
   const id = need(argv[0], 'claim <id> [--lock repo:path] [--surface claude_code]');
   const surface = flag(argv, '--surface') || 'claude_code';
@@ -306,8 +321,18 @@ cmds.claim = async (argv) => {
   const ttl = flag(argv, '--ttl');
   const force = argv.includes('--force');
 
+  //  A CLAIM WITHOUT A LABEL CANNOT BE RECOGNISED AS YOURS LATER.
+  //  .claude/hooks/claim-guard.js decides "mine or somebody else's" by matching
+  //  session_label, and treats an unlabeled claim as somebody else's on purpose:
+  //  a guard that goes quiet when it cannot tell is the failure mode this repo
+  //  keeps paying for. So the label defaults rather than being optional, and an
+  //  unlabeled claim now means the session genuinely had no identity to give.
+  //  Order matters: an explicit --label wins, then the file session-start.sh
+  //  writes (the only source that knows the Claude Code session id, which the
+  //  environment does not export), then the container.
   const body = { surface, locks };
-  if (label) body.session_label = label;
+  const autoLabel = label || sessionLabel();
+  if (autoLabel) body.session_label = autoLabel;
   if (ttl) body.ttl_minutes = Number(ttl);
 
   const r = await raw('POST', `/api/command/task/${id}/claim${force ? '?force=true' : ''}`, body);

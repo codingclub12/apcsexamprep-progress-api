@@ -88,6 +88,51 @@ survive.
 2. **Claim before you touch a file.** Locks are `(repo, file)` pairs and a
    conflict is a 409 naming the holder. `apcs claim 70 --lock theme:assets/x.js`.
    A claim with no `--lock` protects nothing.
+
+   **This is now ENFORCED, not remembered, and that is new as of 2026-09-03.**
+   `.claude/hooks/claim-guard.js` runs before every Edit and Write, resolves the
+   target to its `repo:path` lock, and REFUSES the edit when another session
+   holds it. It is the same 409 the claim endpoint would return, surfaced at the
+   moment it can still save the work instead of after the collision. Detection
+   reads `in_flight` from the digest, which the read token can fetch, so it
+   protects every session regardless of credential.
+
+   It cannot make you TAKE a lock, so it also says once per file when a file is
+   unclaimed. Two things it deliberately does NOT do: it fails OPEN when the
+   board is unreachable, loudly, because a board outage must not brick every
+   session; and it never blocks an unclaimed file, because refusing every scratch
+   edit is how a guard gets switched off within a day.
+
+   An UNLABELED claim counts as somebody else's. `apcs claim` now sends a
+   `session_label` by default, read from the session id that `session-start.sh`
+   writes to the temp dir, because the environment does not export it. A guard
+   that goes quiet when it cannot tell whose lock it is would be silent exactly
+   when the board is busiest.
+
+   **The reason this had to become mechanical.** On 2026-09-03 three sessions
+   rebuilt the same mojibake detector in one afternoon, two of the three rebuilds
+   were discarded, and none of the three had claimed anything. The protocol
+   worked perfectly the whole time, the digest carried the live locks, and all
+   three had the digest in context. Rule 1 was mechanical and rule 2 was advice.
+   That was the entire difference.
+
+   **A session doing work with no board item must CREATE one and claim it.** The
+   claim step is not inapplicable just because the work arrived as an upload, a
+   chat paste, or a direct instruction; that is precisely the work that collides,
+   because nothing else announces it. `POST /api/todo` takes a title and returns
+   an id you can claim in the next call.
+
+   **KNOWN GAP, and it is Tanner's to close.** This file tells every Claude Code
+   environment to set `COMMAND_READ_TOKEN` and not `TODO_KEY`. Claiming requires
+   `TODO_KEY`: `POST /api/command/task/:id/claim` answers
+   `401 {"error":"Authentication required..."}` to the read token, as a bearer and
+   bare, measured 2026-09-03. So a session configured exactly as instructed can
+   SEE every lock and TAKE none, and the rule it is told to follow is one it
+   cannot perform. The honest fix is a third credential scoped to the claim
+   protocol alone, weak on purpose the way the read token is: leaking it would let
+   somebody take and release locks, which is a nuisance rather than a breach.
+   Until then a session that cannot claim should say so rather than editing as
+   though the file were free.
 3. **Close with an artifact.** A PR URL, a live curl result, a Shopify
    `updatedAt` delta, an md5. `apcs done` refuses without one, locally, before it
    writes anything. Agent reports are not evidence.
