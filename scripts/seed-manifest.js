@@ -23,9 +23,13 @@
 const db = require('../db');
 const { COURSES } = require('../utils');
 const labSpecs = require('../lib/lab-spec');
+const cyberTopics = require('../lib/cyber-topics');
 
-// Courses whose visit items come from the COURSES config. Cyber keeps its
-// existing grade-reporting path and is intentionally not seeded here.
+// Courses whose visit items come from the COURSES config. Cyber is absent on
+// purpose: its visit rows come from the canonical CED taxonomy instead, one per
+// TOPIC rather than one per lesson page, because the site teaches CED 3.1 as two
+// pages. See the cyber block in buildRows(). Its graded work still arrives
+// through the existing score_events path, which this does not touch.
 const VISIT_COURSES = ['ap-csa', 'ap-csp', 'ap-networking', 'intro-java'];
 
 // CSA Unit 1 pilot: graded items per lesson, counted from the 2026-07-07
@@ -480,6 +484,33 @@ function buildRows() {
       }
     }
   }
+
+  // ── AP CYBERSECURITY: one visit item per CED TOPIC ────────────────────────
+  //  Cyber is not in VISIT_COURSES above, and this is why: its lesson set is
+  //  not the config's lesson list. The CED has 24 topics and the site teaches
+  //  25 lesson pages, because CED 3.1 runs over two of them. Generating rows
+  //  from the config would produce 25 denominators for a 24-topic course and
+  //  file one of them under a topic number the CED does not have.
+  //
+  //  So the rows come from data/cyber-topics.json, which is built from the CED
+  //  text itself, and the count is the CED's: 24. Adding a topic is a rebuild
+  //  of that file, not an edit here.
+  //
+  //  WHAT THIS DOES AND DOES NOT MOVE. These are `visit` rows, and visit rows
+  //  are skipped by lib/gradebook-contract.js denominatorMap and by
+  //  lib/attempt-rollup.js, so no cyber score, column or percentage changes:
+  //  cyber's graded work keeps arriving through score_events and its authored
+  //  denominators. What DOES change is lesson completion: lib/admin-exec.js
+  //  denominates that from manifest visit rows, and cyber had none, so every
+  //  cyber student counted zero lessons assigned. After this they are assigned
+  //  24 and their visits count, which is the number a teacher already believes
+  //  they are looking at.
+  //
+  //  Filed under the lesson id the topic's manifest row names (3.1 -> 3.1a),
+  //  because gradebook-contract builds its lesson grid from the manifest as
+  //  well as from the config, so a row naming a lesson the config does not list
+  //  would add a phantom column to every cyber gradebook.
+  rows.push(...cyberTopics.manifestRows());
 
   // CSA Unit 1 cfu/quiz items (the pilot). A lesson declares either `cfus` (the
   // widgets are 1..N, the ordinary case) or `cfu_items` (an explicit list, for a

@@ -298,11 +298,17 @@ the class to Network Segmentation. `lib/cyber-unit3-renumber.js` carries the
 correction and the reason the fix has to be one single-pass callback rather than a
 sequence of replaces.
 
-**There is no `data/cyber-topics.json`.** A draft of this section named that file as
-the only authority for the 24 titles, and no such file has ever existed in this
-repo. Naming an authority that does not exist is worse than naming none, for exactly
-the reason `validate_csv.py` was worse than nothing under the EK convention: the
-check comes back clean.
+**`data/cyber-topics.json` EXISTS as of 2026-09-03**, and this paragraph used to say
+the opposite for the right reason: a draft named it as the authority for the 24
+titles before anything created it, and naming an authority that does not exist is
+worse than naming none, for exactly the reason `validate_csv.py` was worse than
+nothing under the EK convention. The check comes back clean.
+It is now built from the two CED text extracts above by
+`tools/ap-cyber-ced/build-topics.js`, read through `lib/cyber-topics.js`, and
+verified by `npm run smoke:cybertopics`, which re-derives all 24 topics a second
+way (objective codes for the numbers, the UNIT AT A GLANCE tables for the titles)
+and diffs to zero. The extracts remain the source; the JSON is what a generator
+reads so that nobody retypes a title.
 
 ### Where the CED actually lives in this repo
 
@@ -593,6 +599,8 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   said until 2026-09-02: it has no EK check at all and is shaped for AP
   Cybersecurity page structure. Naming the wrong tool here is worse than naming
   none, because the check comes back clean.
+  The sheet validator DOES count them, as rule 1, and it routes through
+  `lib/cyber-ek-density.js` rather than holding a second opinion.
 - **Fetch the storefront through `lib/storefront-fetch.js`, and send no
   User-Agent.** The bot management inverted on 2026-09-03: a request claiming to
   be a browser gets 403, and bare curl gets 200. That is the opposite of what it
@@ -716,6 +724,21 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   other, which is the same failure as the handoff draft one directory over. It
   calls the module now. When a module lands, the MIGRATION is the change: grep for
   the retired pattern across every consumer before calling a consolidation done.
+- **AP Cybersecurity topics come from `data/cyber-topics.json`**, read through
+  `lib/cyber-topics.js`, and from nowhere else. It exists as of 2026-09-03: 24 CED
+  topics with their official titles (parsed from the CED text, never retyped),
+  slugs, skill categories, gradebook lesson ids, live handles, and the one
+  `course_manifest` row each topic gets. `npm run cyber:topics` rebuilds it and
+  `--check` refuses a hand-edit. Cyber page sheets are built by
+  `tools/ap-cyber-ced/generate-sheet.js` and refused by
+  `tools/ap-cyber-ced/validator.js` on the seven rules named above, every one of
+  them mutation tested per rule; its rule 7 goes through `lib/mojibake.js` for the
+  same reason its rule 1 goes through `lib/cyber-ek-density.js`. Read
+  `docs/ap-cyber-taxonomy-and-validator.md` before generating a cyber page,
+  adding a topic, or adding a rule.
+  The 1.3 versus 1.4 swap is what these exist for: the site calls topic 1.3
+  "Wireless Security" and the CED calls it "Best Practices for Public Networks",
+  because the mapping used to live in page bodies.
 - Mojibake is detected with `lib/mojibake.js`, never with a pasted pattern. Go
   through the module the same way EK codes go through `lib/cyber-ek-density.js`.
   The section above has the method and what shipped; the reason it is a rule is

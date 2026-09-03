@@ -1,0 +1,113 @@
+{
+  "change": "the canonical AP Cyber taxonomy (24 CED topics, seeded into course_manifest) plus the mutation-tested seven-rule sheet validator",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the taxonomy verifies and a second implementation agrees with it",
+      "command": "npm run --silent smoke:cybertopics",
+      "expect": "OK - the taxonomy verifies, and a second implementation agrees with it"
+    },
+    {
+      "kind": "suite",
+      "name": "a correct sheet passes all seven rules with zero byte drift",
+      "command": "npm run --silent smoke:cybersheet",
+      "expect": "OK - a correct sheet passes, a bad spec is refused, and rule 7 is not hollow"
+    },
+    {
+      "kind": "suite",
+      "name": "the mutation battery itself runs green (every rule caught by its own rule)",
+      "command": "npm run --silent smoke:cybersheetmutation",
+      "expect": "all 7 rules independently proven red"
+    },
+    {
+      "kind": "mutation",
+      "name": "rule 7 reduced to the prescribed narrow form is caught as hollow",
+      "file": "lib/mojibake.js",
+      "find": "const LEAD_MIN = 0xC2;  // 0xC0 and 0xC1 are never legal UTF-8 lead bytes\nconst LEAD_MAX = 0xF4;  // 0xF5 and above are never legal either",
+      "replace": "const LEAD_MIN = 0xC3;\nconst LEAD_MAX = 0xC3;",
+      "command": "npm run --silent smoke:cybersheet",
+      "expect_failure": "FAIL  rule 7 fires on SINGLE-pass corruption, the depth on live pages",
+      "_why": "Narrowing the shared detector to the U+00C3 lead is EXACTLY what the handoff prescribed for rule 7, and it still catches double-pass corruption, so a battery that only asserted that depth would report rule 7 proven. The single-pass form is what lives on real pages, so this pins the single-pass assertion by name. Detection lives in lib/mojibake.js (shipped on main the same afternoon); this mutation proves the sheet validator NOTICES when that module is narrowed, which is a different claim from smoke:encoding proving the module itself."
+    },
+    {
+      "kind": "mutation",
+      "name": "rule 7 blind to cp1252 (latin-1 only) is caught",
+      "file": "lib/mojibake.js",
+      "find": "const CODECS = ['latin1', 'cp1252'];",
+      "replace": "const CODECS = ['latin1'];",
+      "command": "npm run --silent smoke:cybersheet",
+      "expect_failure": "FAIL  rule 7 fires on SINGLE-pass corruption, the depth on live pages",
+      "_why": "latin-1 alone cannot see the corruption the hazard docs name, because the euro sign has no latin-1 byte to encode back to. That was the shipped state of smoke/encoding-guard.js until 2026-09-03. Dropping cp1252 from the shared codec list reproduces the blind spot, and rule 7 has to go red on it."
+    },
+    {
+      "kind": "mutation",
+      "name": "rule 3 blind to the entity form of an em-dash is caught",
+      "file": "tools/ap-cyber-ced/validator.js",
+      "find": "const EMDASH = /\\u2014|&mdash;|&#8212;|&#x2014;/gi;",
+      "replace": "const EMDASH = /\\u2014/gi;",
+      "command": "npm run --silent smoke:cybersheetmutation",
+      "expect_failure": "MISSED [R3]",
+      "_why": "&mdash; renders as an em-dash, so a rule that only looks for the literal character passes the encoded form of the same defect. Pinned to MISSED by R3 rather than to the word MISSED, so another rule failing cannot stand in for this one."
+    },
+    {
+      "kind": "mutation",
+      "name": "rule 2 losing its nearest-anchor logic rejects the CED's own sentence",
+      "file": "tools/ap-cyber-ced/validator.js",
+      "find": "    const anchor = nearestAnchor(text, m.index, m[0].length, { unit: UNIT_WORDS, skill: SKILL_WORDS });",
+      "replace": "    const anchor = UNIT_WORDS.exec(window) ? { kind: 'unit', distance: 0, text: UNIT_WORDS.exec(window)[0] } : nearestAnchor(text, m.index, m[0].length, { skill: SKILL_WORDS });",
+      "command": "npm run --silent smoke:cybersheet",
+      "expect_failure": "FAIL  a correct band sentence under a topic heading still passes rule 2",
+      "_why": "This is the way rule 2 was written first, and it rejected the CED's real 25 to 40 percent band on the first page it saw, because every page carries its own topic number in its heading and the heading was inside the window. A rule that rejects correct pages gets switched off, so the case is pinned."
+    },
+    {
+      "kind": "mutation",
+      "name": "rule 1 reading its own opinion of EK protection instead of the shared module",
+      "file": "tools/ap-cyber-ced/validator.js",
+      "find": "  for (const u of unbalanced) {",
+      "replace": "  for (const u of []) {",
+      "command": "npm run --silent smoke:cybersheetmutation",
+      "expect_failure": "MISSED [R1]",
+      "_why": "An unbalanced block means the EK protection map is unreliable, and an unreliable map reports codes as protected that are not. Silence there reads exactly like a clean page, which is the failure mode the density module was rewritten to make visible."
+    },
+    {
+      "kind": "mutation",
+      "name": "the glance-table re-derive losing its objective-code cut stops agreeing",
+      "file": "smoke/cyber-topics.js",
+      "find": "    return (m ? s.slice(0, m.index) : s).trim();",
+      "replace": "    return s.trim();",
+      "command": "npm run --silent smoke:cybertopics",
+      "expect_failure": "FAIL  B2: 19 Units 2-5 titles re-derived from the glance tables diff to zero",
+      "_why": "Topic 4.2 puts its title and its first learning objective on one line in the glance table, so without the cut the re-derive returns 'Authentication' plus half a sentence about hashes. A re-derive that agrees for the wrong reason is worse than none, so the disagreement has to be visible."
+    },
+    {
+      "kind": "mutation",
+      "name": "filing topic 3.1 under a lesson the site does not teach is caught",
+      "file": "data/cyber-topics.json",
+      "find": "\"lesson_id\": \"3.1a\"",
+      "replace": "\"lesson_id\": \"3.1\"",
+      "command": "npm run --silent smoke:cybertopics",
+      "expect_failure": "FAIL  every manifest row is filed under a lesson the course config lists",
+      "_why": "lib/gradebook-contract.js builds its lesson grid from the manifest as well as from the course config, so a manifest row naming lesson '3.1' would add a phantom column to every cyber gradebook. Nothing throws when that happens; a teacher just sees a column that is always blank. The mutation edits the COMMITTED taxonomy rather than the builder, because the phantom-column check reads the committed file: patching the builder only turns the rebuild-match check red, which is a different assertion and would have left this one unproven."
+    },
+    {
+      "kind": "rederive",
+      "name": "count the CED topics with a different tool (shell, not the JS parser)",
+      "command": "sh -c 'n=$(grep -hcE \"^TOPIC [1-5]\\\\.[0-9] *$\" tools/ap-cyber-ced/CED-UNIT1-EXTRACT.txt tools/ap-cyber-ced/CED-UNITS-2-5-EXTRACT.txt | paste -sd+ | bc); j=$(node -e \"console.log(require(\\\"./data/cyber-topics.json\\\").topics.length)\"); test \"$n\" = \"$j\" && test \"$n\" = 24 && echo \"SHELL AND JSON AGREE: $n topics\"'",
+      "expect": "SHELL AND JSON AGREE: 24 topics",
+      "_why": "grep counting headers in the raw dumps shares no code with tools/ap-cyber-ced/topics-parse.js. If the JS parser gained or lost a topic, this disagrees."
+    },
+    {
+      "kind": "rederive",
+      "name": "the committed taxonomy is exactly what a rebuild from the CED produces",
+      "command": "node tools/ap-cyber-ced/build-topics.js --check",
+      "expect": "matches a fresh rebuild (24 topics)"
+    },
+    {
+      "kind": "live",
+      "name": "the deployed manifest carries the 24 cyber rows it did not carry before",
+      "command": "sh -c 'curl -sS -H \"Authorization: Bearer $TODO_KEY\" https://progress.apcsexamprep.com/api/command/digest | node -e \"let s=\\\"\\\";process.stdin.on(\\\"data\\\",d=>s+=d).on(\\\"end\\\",()=>{const n=JSON.parse(s).health.manifest_items;if(n!==932)throw new Error(\\\"manifest_items is \\\"+n+\\\", expected 932 (908 before this deploy, plus the 24 cyber topic rows)\\\");console.log(\\\"LIVE MANIFEST AT \\\"+n)})\"'",
+      "expect": "LIVE MANIFEST AT 932",
+      "_why": "Measured at 908 on the live digest before this change, at 2026-09-03T15:40Z, and the boot seed adds exactly 24 cyber topic rows. 932 is false before the deploy, true after, and false if the deploy did not happen, which is the whole requirement for a live check. If another session lands manifest rows in the same window this reports a mismatch to investigate rather than passing quietly, which is the correct behaviour: the number is the claim."
+    }
+  ]
+}
