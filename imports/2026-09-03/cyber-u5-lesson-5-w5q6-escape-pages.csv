@@ -1,0 +1,661 @@
+﻿"Handle","Command","Body HTML"
+"ap-cyber-unit-5-lesson-5","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+#apcyber-wrapper{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;background:#fff!important;line-height:1.6!important;-webkit-font-smoothing:antialiased!important;max-width:860px!important;margin:0 auto!important;padding:0 20px 60px!important;}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper h1{font-size:2em!important;font-weight:700!important;color:#1E1B4B!important;margin:0 0 8px!important;line-height:1.25!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper h2{font-size:1.35em!important;font-weight:700!important;color:#1E1B4B!important;margin:32px 0 10px!important;font-family:'Georgia',serif!important;border-bottom:2px solid #DDD6FE!important;padding-bottom:6px!important;}
+#apcyber-wrapper h3{font-size:1.1em!important;font-weight:700!important;color:#6B21A8!important;margin:20px 0 8px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper p{margin:0 0 14px!important;font-family:'Georgia',serif!important;color:#374151!important;}
+#apcyber-wrapper ul,#apcyber-wrapper ol{margin:0 0 14px 20px!important;color:#374151!important;}
+#apcyber-wrapper li{margin-bottom:6px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper code{background:#F3F4F6!important;border:1px solid #E5E7EB!important;padding:1px 5px!important;border-radius:3px!important;font-family:Consolas,Monaco,monospace!important;font-size:.88em!important;color:#1E1B4B!important;}
+#apcyber-wrapper pre{background:#1E293B!important;color:#E2E8F0!important;padding:18px!important;border-radius:8px!important;overflow-x:auto!important;font-family:Consolas,Monaco,monospace!important;font-size:.875em!important;line-height:1.6!important;margin:0 0 16px!important;white-space:pre!important;}
+#apcyber-wrapper .lesson-hero{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#4C1D95 100%)!important;color:#fff!important;padding:36px 28px 28px!important;border-radius:12px!important;margin-bottom:28px!important;}
+#apcyber-wrapper .lesson-hero .eyebrow{font-size:.75em!important;font-weight:700!important;letter-spacing:1.5px!important;text-transform:uppercase!important;color:#C4B5FD!important;margin-bottom:8px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .lesson-hero h1{color:#fff!important;font-size:1.75em!important;margin-bottom:10px!important;}
+#apcyber-wrapper .lesson-hero .sub{color:#DDD6FE!important;font-size:.95em!important;margin:0!important;}
+#apcyber-wrapper .obj-box{background:#F5F0FF!important;border-left:4px solid #7C3AED!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin-bottom:24px!important;}
+#apcyber-wrapper .obj-box strong{color:#6B21A8!important;display:block!important;margin-bottom:6px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .concept-box{background:#EFF6FF!important;border-left:4px solid #2563EB!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:16px 0!important;}
+#apcyber-wrapper .concept-box strong{color:#1D4ED8!important;display:block!important;margin-bottom:4px!important;}
+#apcyber-wrapper .warn-box{background:#FEF2F2!important;border-left:4px solid #EF4444!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:16px 0!important;}
+#apcyber-wrapper .warn-box strong{color:#B91C1C!important;display:block!important;margin-bottom:4px!important;}
+#apcyber-wrapper .tip-box{background:#F0FDF4!important;border-left:4px solid #16A34A!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:16px 0!important;}
+#apcyber-wrapper .tip-box strong{color:#15803D!important;display:block!important;margin-bottom:4px!important;}
+#apcyber-wrapper .key-terms{background:#FFFBEB!important;border:1px solid #FCD34D!important;border-radius:8px!important;padding:16px 20px!important;margin:20px 0!important;}
+#apcyber-wrapper .key-terms strong{color:#92400E!important;display:block!important;margin-bottom:8px!important;}
+#apcyber-wrapper .key-terms dl{margin:0!important;}
+#apcyber-wrapper .key-terms dt{font-weight:700!important;color:#1E1B4B!important;margin-top:6px!important;}
+#apcyber-wrapper .key-terms dd{margin:2px 0 0 16px!important;color:#374151!important;}
+#apcyber-wrapper table{width:100%!important;border-collapse:collapse!important;margin:16px 0!important;font-size:.9em!important;}
+#apcyber-wrapper th{background:#1E1B4B!important;color:#fff!important;padding:10px 12px!important;text-align:left!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper td{padding:9px 12px!important;border-bottom:1px solid #E5E7EB!important;color:#374151!important;vertical-align:top!important;}
+#apcyber-wrapper tr:nth-child(even) td{background:#F9FAFB!important;}
+#apcyber-wrapper .cfu-section{background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:24px!important;margin:28px 0!important;}
+#apcyber-wrapper .cfu-section h2{margin-top:0!important;border-color:#E5E7EB!important;}
+#apcyber-wrapper .cfu-q{background:#fff!important;border:1px solid #E5E7EB!important;border-radius:8px!important;padding:16px 18px!important;margin:14px 0!important;}
+#apcyber-wrapper .cfu-q p.stem{font-weight:700!important;color:#1E1B4B!important;margin-bottom:10px!important;}
+#apcyber-wrapper .cfu-opt{display:flex!important;align-items:flex-start!important;gap:10px!important;padding:8px 10px!important;border-radius:6px!important;cursor:pointer!important;margin:4px 0!important;border:1px solid transparent!important;transition:background .15s!important;}
+#apcyber-wrapper .cfu-opt:hover{background:#EDE9FE!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .cfu-opt input{margin-top:3px!important;flex-shrink:0!important;accent-color:#7C3AED!important;}
+#apcyber-wrapper .cfu-opt label{cursor:pointer!important;color:#374151!important;font-family:'Georgia',serif!important;font-size:.95em!important;}
+#apcyber-wrapper .cfu-opt.correct{background:#F0FDF4!important;border-color:#86EFAC!important;}
+#apcyber-wrapper .cfu-opt.wrong{background:#FEF2F2!important;border-color:#FCA5A5!important;}
+#apcyber-wrapper .cfu-feedback{margin-top:10px!important;padding:10px 14px!important;border-radius:6px!important;font-size:.9em!important;display:none!important;}
+#apcyber-wrapper .cfu-feedback.show{display:block!important;}
+#apcyber-wrapper .cfu-feedback.ok{background:#F0FDF4!important;color:#15803D!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .cfu-feedback.no{background:#FEF2F2!important;color:#B91C1C!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .btn-check{background:#6B21A8!important;color:#fff!important;border:none!important;padding:10px 22px!important;border-radius:6px!important;cursor:pointer!important;font-family:'Georgia',serif!important;font-weight:700!important;font-size:.95em!important;margin-top:12px!important;}
+#apcyber-wrapper .btn-check:link,#apcyber-wrapper .btn-check:visited{color:#fff!important;}
+#apcyber-wrapper .score-panel{background:#1E1B4B!important;color:#fff!important;border-radius:10px!important;padding:20px 24px!important;margin-top:20px!important;display:none!important;}
+#apcyber-wrapper .score-panel.show{display:block!important;}
+#apcyber-wrapper .score-panel .score-num{font-size:2em!important;font-weight:700!important;color:#A78BFA!important;}
+#apcyber-wrapper .nav-row{display:flex!important;justify-content:space-between!important;align-items:center!important;margin-top:36px!important;padding-top:20px!important;border-top:1px solid #E5E7EB!important;}
+#apcyber-wrapper .nav-btn{display:inline-block!important;padding:10px 20px!important;border-radius:6px!important;font-family:'Georgia',serif!important;font-weight:700!important;font-size:.9em!important;text-decoration:none!important;background:#6B21A8!important;color:#fff!important;}
+#apcyber-wrapper .nav-btn:link,#apcyber-wrapper .nav-btn:visited{color:#fff!important;text-decoration:none!important;}
+#apcyber-wrapper .nav-btn:hover{background:#7C3AED!important;}
+#apcyber-wrapper .nav-btn.secondary{background:#F5F0FF!important;color:#6B21A8!important;}
+#apcyber-wrapper .nav-btn.secondary:link,#apcyber-wrapper .nav-btn.secondary:visited{color:#6B21A8!important;}
+#apcyber-wrapper .extension{background:#FDF4FF!important;border:1px solid #E9D5FF!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcyber-wrapper .extension strong{color:#7C3AED!important;display:block!important;margin-bottom:6px!important;}
+#apcyber-wrapper .matching-pair{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin:8px 0!important;align-items:center!important;}
+#apcyber-wrapper select.match-sel{padding:7px 10px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;font-family:'Georgia',serif!important;font-size:.9em!important;color:#1E1B4B!important;background:#fff!important;width:100%!important;}
+#apcyber-wrapper .cloze-blank{border:none!important;border-bottom:2px solid #7C3AED!important;background:transparent!important;font-family:'Georgia',serif!important;font-size:.95em!important;color:#1E1B4B!important;width:130px!important;padding:2px 4px!important;outline:none!important;}
+</style>
+<style>
+/* ===== CANONICAL LESSON ADDITIONS ===== */
+#apcyber-wrapper .ch-header{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#4C1D95 100%)!important;color:#fff!important;padding:36px 28px 24px!important;border-radius:12px!important;margin-bottom:24px!important;}
+#apcyber-wrapper .ch-eyebrow{font-size:.75em!important;font-weight:700!important;letter-spacing:1.5px!important;text-transform:uppercase!important;color:#C4B5FD!important;margin-bottom:8px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .ch-header h1{color:#fff!important;font-size:1.75em!important;margin-bottom:8px!important;}
+#apcyber-wrapper .ch-header .ch-sub{color:#DDD6FE!important;font-size:.95em!important;margin:0 0 12px!important;}
+#apcyber-wrapper .ch-meta{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-top:12px!important;}
+#apcyber-wrapper .ch-badge{background:rgba(255,255,255,.12)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:.75em!important;font-weight:600!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .info-box{padding:16px 20px!important;border-radius:8px!important;margin:16px 0!important;}
+#apcyber-wrapper .info-box.exam{background:#FFFBEB!important;border-left:4px solid #D97706!important;}
+#apcyber-wrapper .info-box.exam .box-label{font-size:.75em!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#D97706!important;display:block!important;margin-bottom:6px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .info-box.exam p{margin:0 0 6px!important;color:#374151!important;font-size:.95em!important;}
+#apcyber-wrapper .ek-toggle{background:#FDF4FF!important;border:1px solid #E9D5FF!important;border-radius:8px!important;padding:14px 18px!important;margin:16px 0!important;cursor:pointer!important;display:flex!important;justify-content:space-between!important;align-items:center!important;}
+#apcyber-wrapper .ek-toggle .ek-label{font-size:.7em!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#D97706!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .ek-toggle h3{margin:4px 0 0!important;font-size:1em!important;font-weight:700!important;color:#1E1B4B!important;}
+#apcyber-wrapper .ek-chev{font-size:18px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;transition:transform .2s!important;}
+#apcyber-wrapper .ek-body{display:none!important;margin-top:14px!important;}
+#apcyber-wrapper .bell-card{border:1px solid #D1FAE5!important;border-top:3px solid #059669!important;border-radius:8px!important;padding:16px 20px!important;margin:16px 0!important;background:#F0FDF4!important;}
+#apcyber-wrapper .bell-card .bell-label{font-size:.7em!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#059669!important;display:block!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .bell-card .bell-sub{font-size:.85em!important;color:#6B7280!important;margin-bottom:10px!important;}
+#apcyber-wrapper .bell-card ol{font-size:.95em!important;line-height:2!important;padding-left:20px!important;color:#374151!important;}
+#apcyber-wrapper .bell-answers{background:#fff!important;border:1px solid #BBF7D0!important;border-radius:6px!important;padding:12px 16px!important;margin-top:10px!important;display:none!important;}
+#apcyber-wrapper .bell-answers.show{display:block!important;}
+#apcyber-wrapper .btn-toggle{background:#059669!important;color:#fff!important;border:none!important;padding:8px 16px!important;border-radius:6px!important;cursor:pointer!important;font-size:.85em!important;font-weight:700!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .btn-toggle:link,#apcyber-wrapper .btn-toggle:visited{color:#fff!important;}
+#apcyber-wrapper .toc-card{background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:8px!important;padding:16px 20px!important;margin:16px 0!important;}
+#apcyber-wrapper .toc-card h3{font-size:1em!important;font-weight:700!important;color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .toc-card ol{margin:0!important;padding-left:20px!important;font-size:.9em!important;}
+#apcyber-wrapper .toc-card li{margin-bottom:4px!important;color:#374151!important;}
+#apcyber-wrapper .toc-card a:link,.toc-card a:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .obj-list{list-style:none!important;padding:0!important;margin:0!important;}
+#apcyber-wrapper .obj-list li{display:flex!important;gap:8px!important;align-items:flex-start!important;margin-bottom:6px!important;font-size:.95em!important;color:#374151!important;}
+#apcyber-wrapper .obj-check::before{content:""☐""!important;font-size:1em!important;flex-shrink:0!important;}
+#apcyber-wrapper .mistakes-table{width:100%!important;border-collapse:collapse!important;margin:16px 0!important;font-size:.88em!important;}
+#apcyber-wrapper .mistakes-table th{background:#1E1B4B!important;color:#fff!important;padding:10px 12px!important;text-align:left!important;}
+#apcyber-wrapper .mistakes-table td{padding:9px 12px!important;border-bottom:1px solid #E5E7EB!important;color:#374151!important;vertical-align:top!important;}
+#apcyber-wrapper .mistakes-table tr:nth-child(even) td{background:#F9FAFB!important;}
+#apcyber-wrapper .exit-card{border:1px solid #FECACA!important;border-top:3px solid #DC2626!important;border-radius:8px!important;padding:16px 20px!important;margin:16px 0!important;background:#FEF2F2!important;}
+#apcyber-wrapper .exit-card .exit-label{font-size:.7em!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#DC2626!important;display:block!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .exit-card .exit-sub{font-size:.85em!important;color:#6B7280!important;margin-bottom:10px!important;}
+#apcyber-wrapper .exit-card ol{font-size:.95em!important;line-height:2!important;padding-left:20px!important;color:#374151!important;}
+#apcyber-wrapper .exit-answers{background:#fff!important;border:1px solid #FECACA!important;border-radius:6px!important;padding:12px 16px!important;margin-top:10px!important;display:none!important;}
+#apcyber-wrapper .exit-answers.show{display:block!important;}
+#apcyber-wrapper .btn-exit-toggle{background:#DC2626!important;color:#fff!important;border:none!important;padding:8px 16px!important;border-radius:6px!important;cursor:pointer!important;font-size:.85em!important;font-weight:700!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .btn-exit-toggle:link,#apcyber-wrapper .btn-exit-toggle:visited{color:#fff!important;}
+#apcyber-wrapper .tutor-cta{background:linear-gradient(135deg,#1E0D40 0%,#2E1065 60%,#1E3A5F 100%)!important;border-radius:12px!important;padding:28px 32px!important;margin:28px 0 20px!important;display:flex!important;align-items:center!important;gap:24px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .tutor-cta-text{flex:1!important;min-width:200px!important;}
+#apcyber-wrapper .tutor-cta-text strong{display:block!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:1.05em!important;margin-bottom:6px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .tutor-cta-text p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:.88em!important;margin:0!important;}
+#apcyber-wrapper .tutor-cta-btn{display:inline-block!important;background:#7C3AED!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 22px!important;border-radius:6px!important;font-weight:700!important;font-family:Georgia,serif!important;font-size:.9em!important;text-decoration:none!important;white-space:nowrap!important;}
+#apcyber-wrapper .tutor-cta-btn:link,#apcyber-wrapper .tutor-cta-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+#apcyber-wrapper .author-box{border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:20px 0!important;display:flex!important;gap:18px!important;align-items:flex-start!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .author-info{flex:1!important;min-width:200px!important;}
+#apcyber-wrapper .author-name{font-size:1.05em!important;font-weight:700!important;color:#1E1B4B!important;margin:0 0 4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .author-title{font-size:.85em!important;color:#6B7280!important;margin:0 0 8px!important;}
+#apcyber-wrapper .author-stats{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-top:8px!important;}
+#apcyber-wrapper .author-stat{background:#F5F0FF!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:.8em!important;font-weight:600!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .related-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))!important;gap:12px!important;margin-top:12px!important;}
+#apcyber-wrapper .related-card{display:block!important;padding:12px 16px!important;border:1px solid #DDD6FE!important;border-radius:8px!important;text-decoration:none!important;transition:border-color .15s,background .15s!important;}
+#apcyber-wrapper .related-card:hover{background:#F5F0FF!important;border-color:#A78BFA!important;}
+#apcyber-wrapper .related-card:link,.related-card:visited{color:#1E1B4B!important;text-decoration:none!important;}
+#apcyber-wrapper .related-card .rc-label{font-size:.7em!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:#7C3AED!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .related-card .rc-title{font-size:.9em!important;font-weight:700!important;color:#1E1B4B!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .section-num{background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:.75em!important;font-weight:700!important;padding:2px 8px!important;border-radius:4px!important;margin-right:8px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .atk-scenario{background:#F8F4FF!important;border:1px solid #DDD6FE!important;border-radius:8px!important;padding:14px 18px!important;margin:12px 0!important;}
+#apcyber-wrapper .atk-scenario strong{color:#6B21A8!important;}
+</style><div id=""apcyber-wrapper"" data-lesson-id=""5.5"">
+<div class=""ch-header"">
+  <div class=""ch-eyebrow"">Unit 5 — Securing Applications and Data  |  Topic 5.5</div>
+  <h1>Protecting Applications</h1>
+  <p class=""ch-sub"">Secure by design, secure by default, input sanitization, control characters, and defense against injection attacks.</p>
+  <div class=""ch-meta"">
+    <span class=""ch-badge"">Lesson 5 of 6</span>
+    <span class=""ch-badge"">~30 min</span>
+    <span class=""ch-badge"">LO 5.5.A – 5.5.B</span>
+    <span class=""ch-badge"">Skills: Mitigate Risk</span>
+  </div>
+</div>
+
+<div class=""info-box exam"">
+  <span class=""box-label"">★ AP Exam Focus — Topic 5.5</span>
+  <p>• Secure by design: three principles — (1) take ownership of customer security outcomes, (2) embrace radical transparency, (3) build organizational leadership for security</p>
+  <p>• Secure by default: security features enabled out of the box; devices/software secure without user configuration</p>
+  <p>• Control characters: the characters that applications use to process input — single quote (<code>'</code>), double quote (<code>""</code>), and semicolon (<code>;</code>)</p>
+  <p>• Input sanitization: removing or rejecting control characters from user input before processing — defends against SQL injection, XSS, and directory traversal simultaneously</p>
+  <p>• Sanitization vs. validation: validation checks if input meets criteria; sanitization removes/rejects dangerous characters</p>
+</div>
+<div class=""ek-toggle"" onclick=""var b=document.getElementById('ek55-body');var c=document.getElementById('ek55-chev');b.style.display=b.style.display==='none'?'block':'none';c.style.transform=c.style.transform?'':'rotate(180deg)';"">
+<div>
+<span class=""ek-label"">College Board Essential Knowledge Coverage</span><h3>Topic 5.5 — What Is Testable</h3>
+</div>
+<span class=""ek-chev"" id=""ek55-chev"">▼</span>
+</div>
+<div id=""ek55-body"" class=""ek-body""><table class=""vocab-table"">
+<thead><tr>
+<th>CED Ref</th>
+<th>Essential Knowledge</th>
+<th>Covered In</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style=""font-weight:700!important;white-space:nowrap!important;"">5.5.A.1</td>
+<td>Secure by design: initiative encouraging companies to include security in all phases of product development including design; security is a design principle, not just a technical feature</td>
+<td style=""color:#6B7280!important;font-size:.88em!important;"">Section 2 — Secure by Design</td>
+</tr>
+<tr>
+<td style=""font-weight:700!important;white-space:nowrap!important;"">5.5.A.2</td>
+<td>Three secure by design principles: (1) take ownership of customer security outcomes, (2) embrace radical transparency and accountability, (3) build organizational structure and leadership focused on security</td>
+<td style=""color:#6B7280!important;font-size:.88em!important;"">Section 2 — Three Principles</td>
+</tr>
+<tr>
+<td style=""font-weight:700!important;white-space:nowrap!important;"">5.5.A.3</td>
+<td>Secure by default: security features enabled by default out of the box; software and devices should be secure to use without user configuration</td>
+<td style=""color:#6B7280!important;font-size:.88em!important;"">Section 2 — Secure by Default</td>
+</tr>
+<tr>
+<td style=""font-weight:700!important;white-space:nowrap!important;"">5.5.B.1</td>
+<td>Control characters: single quote, double quote, and semicolon. Applications use these to process user input; adversaries exploit them to inject commands.</td>
+<td style=""color:#6B7280!important;font-size:.88em!important;"">Section 3 — Control Characters</td>
+</tr>
+<tr>
+<td style=""font-weight:700!important;white-space:nowrap!important;"">5.5.B.2</td>
+<td>Input sanitization: verification function removes/rejects control characters and validates input; protects against SQL injection, XSS, and directory traversal attacks</td>
+<td style=""color:#6B7280!important;font-size:.88em!important;"">Section 3 — Sanitization</td>
+</tr>
+</tbody>
+</table></div>
+<div class=""bell-card"">
+<span class=""bell-label"">♡ Bellringer — 3 Questions, 5 Minutes</span><p class=""bell-sub"">Answer independently. No notes.</p>
+<ol>
+<li>A router is sold with all security features disabled by default, requiring users to manually enable the firewall, change the default password, and turn on WPA3. Does this router follow ""secure by default"" principles? What should the manufacturer do differently?</li>
+<li>A developer writes a search function. A user enters: <code>apple' OR '1'='1</code>. The apostrophe in the input is a control character. What attack does this enable, and what should the developer have done to prevent it?</li>
+<li>Name the three characters the CED identifies as control characters that applications use to process input. For each, give one example of how an adversary could use it in an attack.</li>
+</ol>
+<button class=""btn-toggle"" onclick=""var el=document.getElementById('bell-ans');el.classList.toggle('show');this.textContent=el.classList.contains('show')?'Hide Answer Key':'Show Answer Key'"">Show Answer Key</button><div class=""bell-answers"" id=""bell-ans"">
+<p style=""margin:4px 0!important;font-size:.9em!important;color:#374151!important;font-family:Georgia,serif!important;""><strong>Q1:</strong> No. Secure by default means security features must be ENABLED out of the box. The router should ship with: firewall enabled, WPA3 on, and no default password (require setup before use). Users should not need to opt into security.</p>
+<p style=""margin:4px 0!important;font-size:.9em!important;color:#374151!important;font-family:Georgia,serif!important;""><strong>Q2:</strong> SQL injection. The single quote terminates the string in the SQL query; the rest alters query logic. Prevention: sanitize input by removing/rejecting single quotes and other control characters before building the query (or use parameterized queries).</p>
+<p style=""margin:4px 0!important;font-size:.9em!important;color:#374151!important;font-family:Georgia,serif!important;""><strong>Q3:</strong> Single quote ('): terminates SQL string fields, enabling injection. Double quote (""): terminates HTML attribute values, enabling XSS. Semicolon (;): terminates SQL statements, enabling a second injected command (e.g., DROP TABLE).</p>
+</div>
+</div>
+<div class=""toc-card"">
+<h3>In This Lesson</h3>
+<ol>
+<li><a href=""#lo55"">5.5.1 — Learning Objectives</a></li>
+<li><a href=""#sbd"">5.5.2 — Secure by Design and Secure by Default (5.5.A)</a></li>
+<li><a href=""#sanitize"">5.5.3 — Input Sanitization and Control Characters (5.5.B)</a></li>
+<li><a href=""#cfu55"">5.5.4 — Check for Understanding (10 Questions)</a></li>
+<li><a href=""#mistakes55"">5.5.5 — Common AP Exam Mistakes</a></li>
+<li><a href=""#faq55"">5.5.6 — Key Terms &amp; FAQ</a></li>
+</ol>
+</div>
+
+<div id=""lo55"">
+<h2>
+<span class=""section-num"">1</span> 5.5.1 — Learning Objectives</h2>
+<ul class=""obj-list"">
+<li>
+<span class=""obj-check""></span>Identify the three principles of secure by design and the concept of secure by default (5.5.A)</li>
+<li>
+<span class=""obj-check""></span>Explain what control characters are and how input sanitization protects applications against SQL injection, XSS, and directory traversal (5.5.B)</li>
+<li>
+<span class=""obj-check""></span>Distinguish input sanitization from input validation (5.5.B)</li>
+</ul>
+</div>
+
+<div class=""key-terms"">
+<strong>Key Terms</strong><dl>
+<dt>Secure by design</dt>
+<dd>An initiative requiring that security be built into all phases of product development, not added after the fact.</dd>
+<dt>Secure by default</dt>
+<dd>Security features are enabled by default; products are safe to use immediately out of the box without user configuration.</dd>
+<dt>Control characters</dt>
+<dd>Characters that applications use to process user input: single quote (<code>'</code>), double quote (<code>""</code>), semicolon (<code>;</code>).</dd>
+<dt>Input sanitization</dt>
+<dd>A verification function that removes or rejects control characters and potentially malicious input before processing.</dd>
+<dt>Input validation</dt>
+<dd>Checking whether user input meets expected criteria (type, format, length) before processing. Related to but distinct from sanitization.</dd>
+</dl>
+</div>
+
+<div id=""sbd"">
+<h2>
+<span class=""section-num"">2</span> 5.5.2 — Secure by Design and Secure by Default (5.5.A)</h2>
+<p>The AP exam includes two related but distinct principles for application security: secure by design addresses how products are built; secure by default addresses how they behave when first deployed.</p>
+
+<h3>Secure by Design (5.5.A.1–2)</h3>
+<p>Secure by design is an initiative that encourages companies to treat security as a foundational design principle — not a feature bolted on after development. It has three specific principles tested on the AP exam:</p>
+
+<table>
+<tr>
+<th>#</th>
+<th>Principle</th>
+<th>What It Means</th>
+</tr>
+<tr>
+<td>1</td>
+<td><strong>Take ownership of customer security outcomes</strong></td>
+<td>Companies are responsible for building products that meet their customers' security needs. Security is not the user's problem.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Embrace radical transparency and accountability</strong></td>
+<td>Share security-related product news and updates quickly. Public disclosure of vulnerabilities improves security for everyone.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Build organizational structure and leadership for security</strong></td>
+<td>Companies need leaders who are focused on security and maintain a security-first posture at the executive level.</td>
+</tr>
+</table>
+
+<h3>Secure by Default (5.5.A.3)</h3>
+<p>Secure by default is a component of secure by design. It means that security features are <em>enabled by default</em> when a product is deployed. Users should not need to configure or enable security — the product should be safe to use immediately out of the box.</p>
+
+<div class=""concept-box"">
+<strong>Secure by Default Examples</strong>
+<ul>
+<li>A router ships with its firewall enabled and requires the user to set a custom password before first use (no default <code>admin/admin</code>).</li>
+<li>A web framework automatically escapes user input in database queries, preventing SQL injection by default.</li>
+<li>An operating system ships with automatic security updates enabled, not requiring the user to turn them on.</li>
+<li>A phone encrypts its storage by default, not requiring the user to enable encryption manually.</li>
+</ul>
+</div>
+
+<div class=""tip-box"">
+<strong>AP Exam Tip</strong>
+<p>If an exam question describes a product where security features must be manually enabled by the user, that product does NOT follow secure by default. If it asks about whether a company's security responsibility extends to the design phase, that's secure by design. Know which of the three principles applies to each scenario.</p>
+</div>
+</div>
+
+<div id=""sanitize"">
+<h2>
+<span class=""section-num"">3</span> 5.5.3 — Input Sanitization and Control Characters (5.5.B)</h2>
+<p>Most application attacks in Unit 5 — SQL injection, XSS, and directory traversal — share a common enabler: the application processes user input without checking it for dangerous content. Input sanitization is the defensive measure that addresses all three simultaneously.</p>
+
+<h3>Control Characters (5.5.B.1)</h3>
+<p>Applications use special characters to parse and process user input. These <strong>control characters</strong> define the structure of queries, HTML attributes, and file paths. When an adversary includes these characters in their input, they can break out of the intended data context and inject commands.</p>
+
+<table>
+<tr>
+<th>Control Character</th>
+<th>How Applications Use It</th>
+<th>How Attackers Exploit It</th>
+</tr>
+<tr>
+<td>Single quote <code>'</code>
+</td>
+<td>Terminates string values in SQL queries</td>
+<td>Breaks out of the string context to inject SQL commands</td>
+</tr>
+<tr>
+<td>Double quote <code>""</code>
+</td>
+<td>Terminates HTML attribute values</td>
+<td>Breaks out of an HTML attribute to inject JavaScript (XSS)</td>
+</tr>
+<tr>
+<td>Semicolon <code>;</code>
+</td>
+<td>Terminates SQL statements; used in other query languages</td>
+<td>Ends the first statement and starts a second injected statement</td>
+</tr>
+</table>
+
+<h3>Input Sanitization (5.5.B.2)</h3>
+<p>When programmers write applications that accept user input, they should include a sanitization function that either:</p>
+<ul>
+<li>
+<strong>Removes</strong> potentially malicious characters from the input before processing, or</li>
+<li>
+<strong>Rejects</strong> the input entirely and returns an error, forcing the user to provide valid input.</li>
+</ul>
+
+<div class=""concept-box"">
+<strong>What Sanitization Protects Against (5.5.B.2 — CED Exact)</strong>
+<ul>
+<li>SQL injection attacks</li>
+<li>XSS attacks</li>
+<li>Directory traversal attacks</li>
+</ul>
+<p>By removing or rejecting control characters like <code>'</code>, <code>""</code>, and <code>;</code>, plus path manipulation characters like <code>../</code>, sanitization removes the adversary's ability to break out of the intended data context. A sanitized input becomes just data — it cannot be interpreted as a command.</p>
+</div>
+
+<div class=""warn-box"">
+<strong>Sanitization vs. Validation — Know the Difference</strong>
+<p><strong>Validation</strong> checks whether input meets expected criteria: is it the right type? The right length? Does it match an expected pattern (e.g., is it a valid email address)?</p>
+<p><strong>Sanitization</strong> removes or escapes dangerous characters from input that passes validation — or rejects input that contains them.</p>
+<p>Both are needed. Validation alone does not remove dangerous characters; sanitization alone may not catch semantically invalid input.</p>
+</div>
+</div>
+
+<div class=""cfu-section"" id=""cfu55"">
+<h2>Check for Understanding — Topic 5.5</h2>
+<div class=""cfu-q"" id=""w5q1"">
+<p class=""stem"">1. A smart home thermostat ships with all security features disabled. The user must manually log into an admin console and enable the firewall, change the default password, and activate encrypted communications. Which principle does this thermostat FAIL to follow?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q1','A')"">
+<input type=""radio"" name=""w5q1"" id=""w5q1A""><label for=""w5q1A"">(A) Secure by design — the product was designed without considering customer security outcomes</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q1','B')"">
+<input type=""radio"" name=""w5q1"" id=""w5q1B""><label for=""w5q1B"">(B) Secure by default — security features are not enabled out of the box; users must manually configure them</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q1','C')"">
+<input type=""radio"" name=""w5q1"" id=""w5q1C""><label for=""w5q1C"">(C) Input sanitization — the thermostat does not validate user input on the admin console</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q1','D')"">
+<input type=""radio"" name=""w5q1"" id=""w5q1D""><label for=""w5q1D"">(D) Radical transparency — the thermostat manufacturer did not disclose the default security settings publicly</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q1-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q2"">
+<p class=""stem"">2. Which of the following BEST describes the ""take ownership of customer security outcomes"" principle of secure by design?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q2','A')"">
+<input type=""radio"" name=""w5q2"" id=""w5q2A""><label for=""w5q2A"">(A) Companies should build products that meet the security needs of their customers, treating security as a design responsibility rather than the user's problem</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q2','B')"">
+<input type=""radio"" name=""w5q2"" id=""w5q2B""><label for=""w5q2B"">(B) Companies should require users to configure their own security settings to ensure ownership</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q2','C')"">
+<input type=""radio"" name=""w5q2"" id=""w5q2C""><label for=""w5q2C"">(C) Companies should disclose all security vulnerabilities publicly within 24 hours of discovery</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q2','D')"">
+<input type=""radio"" name=""w5q2"" id=""w5q2D""><label for=""w5q2D"">(D) Companies should allow security researchers to test their products freely in exchange for responsible disclosure</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q2-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q3"">
+<p class=""stem"">3. A developer writes code that checks whether a submitted phone number contains only digits before storing it. An adversary submits a phone number containing a single quote character. The validation function accepts it because it only checks for digit count, not content. What attack might this enable, and what additional defense should the developer add?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q3','A')"">
+<input type=""radio"" name=""w5q3"" id=""w5q3A""><label for=""w5q3A"">(A) Buffer overflow; the developer should add server-side length restrictions</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q3','B')"">
+<input type=""radio"" name=""w5q3"" id=""w5q3B""><label for=""w5q3B"">(B) Directory traversal; the developer should strip any path characters from the phone number field</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q3','C')"">
+<input type=""radio"" name=""w5q3"" id=""w5q3C""><label for=""w5q3C"">(C) SQL injection; the developer should add sanitization to remove or reject the single quote before the value is used in a database query</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q3','D')"">
+<input type=""radio"" name=""w5q3"" id=""w5q3D""><label for=""w5q3D"">(D) XSS; the developer should validate that the phone number is rendered in a separate HTML attribute</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q3-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q4"">
+<p class=""stem"">4. Which of the following inputs MOST clearly demonstrates an adversary attempting to exploit a control character?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q4','A')"">
+<input type=""radio"" name=""w5q4"" id=""w5q4A""><label for=""w5q4A"">(A) <code>JohnSmith</code></label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q4','B')"">
+<input type=""radio"" name=""w5q4"" id=""w5q4B""><label for=""w5q4B"">(B) <code>password123</code></label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q4','C')"">
+<input type=""radio"" name=""w5q4"" id=""w5q4C""><label for=""w5q4C"">(C) <code>alice@example.com</code></label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q4','D')"">
+<input type=""radio"" name=""w5q4"" id=""w5q4D""><label for=""w5q4D"">(D) <code>Robert'); DROP TABLE students; --</code></label>
+</div>
+<div class=""cfu-feedback"" id=""w5q4-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q5"">
+<p class=""stem"">5. According to the CED, input sanitization protects against which of the following attack types? Select the MOST complete answer.</p>
+<div class=""cfu-opt"" onclick=""pick('w5q5','A')"">
+<input type=""radio"" name=""w5q5"" id=""w5q5A""><label for=""w5q5A"">(A) SQL injection only, because sanitization specifically targets SQL control characters</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q5','B')"">
+<input type=""radio"" name=""w5q5"" id=""w5q5B""><label for=""w5q5B"">(B) SQL injection and XSS only, because sanitization removes HTML and SQL special characters</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q5','C')"">
+<input type=""radio"" name=""w5q5"" id=""w5q5C""><label for=""w5q5C"">(C) SQL injection, XSS, and directory traversal attacks</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q5','D')"">
+<input type=""radio"" name=""w5q5"" id=""w5q5D""><label for=""w5q5D"">(D) SQL injection, XSS, directory traversal, and buffer overflow attacks</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q5-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q6"">
+<p class=""stem"">6. A web application receives the following input in a comment field: <code>&lt;script&gt;document.cookie&lt;/script&gt;</code>. A sanitization function removes the <code>&lt;</code> and <code>&gt;</code> angle brackets before storing the comment. Which attack does this sanitization defend against?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q6','A')"">
+<input type=""radio"" name=""w5q6"" id=""w5q6A""><label for=""w5q6A"">(A) SQL injection, because removing angle brackets prevents SQL commands from executing</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q6','B')"">
+<input type=""radio"" name=""w5q6"" id=""w5q6B""><label for=""w5q6B"">(B) XSS, because removing the tag delimiters prevents the browser from interpreting the input as executable JavaScript</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q6','C')"">
+<input type=""radio"" name=""w5q6"" id=""w5q6C""><label for=""w5q6C"">(C) Directory traversal, because the angle brackets could be used to navigate file paths</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q6','D')"">
+<input type=""radio"" name=""w5q6"" id=""w5q6D""><label for=""w5q6D"">(D) Buffer overflow, because removing characters reduces the total input length</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q6-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q7"">
+<p class=""stem"">7. A company's CISO mandates that all security researchers who discover vulnerabilities in the company's products must be given a 90-day window before they publicly disclose. During that time, the company commits to releasing a patch and notifying affected customers. Which secure by design principle does this policy reflect?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q7','A')"">
+<input type=""radio"" name=""w5q7"" id=""w5q7A""><label for=""w5q7A"">(A) Take ownership of customer security outcomes</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q7','B')"">
+<input type=""radio"" name=""w5q7"" id=""w5q7B""><label for=""w5q7B"">(B) Build organizational structure and leadership for security</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q7','C')"">
+<input type=""radio"" name=""w5q7"" id=""w5q7C""><label for=""w5q7C"">(C) Embrace radical transparency and accountability</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q7','D')"">
+<input type=""radio"" name=""w5q7"" id=""w5q7D""><label for=""w5q7D"">(D) Secure by default</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q7-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q8"">
+<p class=""stem"">8. Which of the following BEST explains why removing the semicolon character from user input is a useful security control in applications that interact with a database?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q8','A')"">
+<input type=""radio"" name=""w5q8"" id=""w5q8A""><label for=""w5q8A"">(A) The semicolon is used in HTML to terminate attributes, so removing it prevents XSS attacks on database-connected pages</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q8','B')"">
+<input type=""radio"" name=""w5q8"" id=""w5q8B""><label for=""w5q8B"">(B) Semicolons terminate SQL statements; removing them from user input prevents adversaries from appending a second injected SQL command after the legitimate query</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q8','C')"">
+<input type=""radio"" name=""w5q8"" id=""w5q8C""><label for=""w5q8C"">(C) Semicolons are used in file paths to navigate directories, so removing them prevents directory traversal</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q8','D')"">
+<input type=""radio"" name=""w5q8"" id=""w5q8D""><label for=""w5q8D"">(D) Semicolons exceed the maximum character length for database fields and would cause a buffer overflow if not removed</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q8-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q9"">
+<p class=""stem"">9. A developer uses a sanitization function that removes the single quote, double quote, and semicolon from all form submissions before processing. An adversary submits: <code>../../../etc/passwd</code>. Does the sanitization function prevent this attack?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q9','A')"">
+<input type=""radio"" name=""w5q9"" id=""w5q9A""><label for=""w5q9A"">(A) No; the directory traversal sequence <code>../</code> does not use single quotes, double quotes, or semicolons — the sanitization function must also handle path-manipulation characters like <code>../</code></label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q9','B')"">
+<input type=""radio"" name=""w5q9"" id=""w5q9B""><label for=""w5q9B"">(B) Yes; removing single quotes and semicolons also removes the ability to construct path traversal sequences</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q9','C')"">
+<input type=""radio"" name=""w5q9"" id=""w5q9C""><label for=""w5q9C"">(C) Yes; the function removes enough characters to break the file path before it reaches the file system</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q9','D')"">
+<input type=""radio"" name=""w5q9"" id=""w5q9D""><label for=""w5q9D"">(D) No; directory traversal only affects SQL databases, which the sanitization function does protect</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q9-fb""></div>
+</div>
+<div class=""cfu-q"" id=""w5q10"">
+<p class=""stem"">10. Which of the following CORRECTLY pairs a control character with the attack type it most directly enables?</p>
+<div class=""cfu-opt"" onclick=""pick('w5q10','A')"">
+<input type=""radio"" name=""w5q10"" id=""w5q10A""><label for=""w5q10A"">(A) Single quote (') — buffer overflow</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q10','B')"">
+<input type=""radio"" name=""w5q10"" id=""w5q10B""><label for=""w5q10B"">(B) Semicolon (;) — XSS via JavaScript execution in browser</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q10','C')"">
+<input type=""radio"" name=""w5q10"" id=""w5q10C""><label for=""w5q10C"">(C) Double quote ("") — directory traversal via file path manipulation</label>
+</div>
+<div class=""cfu-opt"" onclick=""pick('w5q10','D')"">
+<input type=""radio"" name=""w5q10"" id=""w5q10D""><label for=""w5q10D"">(D) Single quote (') — SQL injection via string context escape</label>
+</div>
+<div class=""cfu-feedback"" id=""w5q10-fb""></div>
+</div>
+<button class=""btn-check"" onclick=""gradeAll()"">Check Answers</button><div class=""score-panel"" id=""score-panel"">
+<div>Score: <span class=""score-num"" id=""score-num""></span>
+</div>
+<p id=""score-msg"" style=""margin:8px 0 0;color:#DDD6FE!important;font-family:Georgia,serif!important;""></p>
+</div>
+</div>
+<h2>⚠ Common AP Exam Mistakes — Topic 5.5</h2>
+<table class=""mistakes-table"">
+<thead><tr>
+<th>Common Mistake</th>
+<th>Why It's Wrong</th>
+<th>Correct Thinking</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Confusing secure by default with secure by design</strong></td>
+<td>Secure by design is the broader initiative (security in all development phases). Secure by default is a specific component of it (security features ON out of the box). Students treat them as identical.</td>
+<td style=""color:#15803D!important;"">Secure by design = the philosophy. Secure by default = one of its specific implementations. A product can follow secure by design principles broadly but still fail secure by default on specific settings.</td>
+</tr>
+<tr>
+<td><strong>Thinking sanitization makes validation unnecessary</strong></td>
+<td>Sanitization removes dangerous characters; validation checks whether input is correct. A sanitized string might still be logically invalid (wrong format, wrong length). Both are needed.</td>
+<td style=""color:#15803D!important;"">Validation checks correctness. Sanitization removes danger. Run both: validate first (reject wrong-type input), then sanitize (remove dangerous characters from what passes validation).</td>
+</tr>
+<tr>
+<td><strong>Missing that semicolons are SQL statement terminators</strong></td>
+<td>Students know the single quote breaks SQL strings but miss that the semicolon ends statements, allowing a second command. The combination '... ; DROP TABLE ...' uses both.</td>
+<td style=""color:#15803D!important;"">Single quote = breaks out of string. Semicolon = ends the first statement and starts a new one. Both are control characters the CED identifies explicitly.</td>
+</tr>
+<tr>
+<td><strong>Saying input sanitization only protects against SQL injection</strong></td>
+<td>5.5.B.2 explicitly lists three attack types sanitization addresses: SQL injection, XSS, and directory traversal. Students often associate sanitization only with SQL.</td>
+<td style=""color:#15803D!important;"">Sanitization protects against all three injection/traversal attack types by removing the control characters each attack relies on.</td>
+</tr>
+<tr>
+<td><strong>Confusing ""secure by default"" with ""no default password""</strong></td>
+<td>Secure by default covers all security features, not just passwords. Firmware updates, encryption, firewalls, and access controls that are disabled by default all violate secure by default.</td>
+<td style=""color:#15803D!important;"">Secure by default: every security feature ships enabled. Users should not need to ""turn on"" security. This includes passwords, but also encryption, update settings, firewalls, and any other security control.</td>
+</tr>
+</tbody>
+</table>
+<div id=""faq55"">
+<h2>
+<span class=""section-num"">6</span> 5.5.6 — Key Terms &amp; FAQ</h2>
+<div class=""concept-box"">
+<strong>Frequently Asked Questions</strong>
+<p><strong>Q: Does input sanitization replace parameterized queries (prepared statements)?</strong><br>
+A: The CED focuses on sanitization as the defense. In professional practice, parameterized queries are the gold standard for SQL injection prevention because they never concatenate user input into SQL syntax at all. Sanitization removes dangerous characters; parameterized queries separate data from code entirely. Both achieve protection; the CED tests sanitization.</p>
+<p><strong>Q: Is the semicolon a control character in contexts other than SQL?</strong><br>
+A: Yes. In many query languages, scripting contexts, and command-line shells, the semicolon separates statements. The CED identifies it as a control character in the context of application input processing.</p>
+<p><strong>Q: What is the difference between ""removing"" and ""escaping"" a control character?</strong><br>
+A: Removing means deleting the character from the input entirely. Escaping means replacing it with a safe representation (e.g., replacing <code>'</code> with <code>\'</code> so the database treats it as literal data, not syntax). Both are forms of sanitization; the CED uses the term ""sanitize"" without specifying which technique.</p>
+<p><strong>Q: Does secure by design apply to hardware, or just software?</strong><br>
+A: The CED applies it to ""products"" broadly, including hardware devices. A router, a smart thermostat, or an IoT device that ships insecure-by-default violates secure by default. The principle applies to any product with security-relevant features.</p>
+</div>
+</div>
+<div class=""exit-card"">
+<span class=""exit-label"">📋 Exit Ticket — Topic 5.5 | 5 Questions | Ready for Canvas / Google Classroom</span><p class=""exit-sub"">Students submit before leaving.</p>
+<ol>
+<li>Name the three principles of secure by design from the CED. For each, write one sentence explaining what it requires companies to do. <em>(AP Skill: Identify Principles)</em>
+</li>
+<li>Explain the difference between secure by design and secure by default, and give one concrete example of a product that violates secure by default. <em>(AP Skill: Distinguish Concepts)</em>
+</li>
+<li>List the three control characters identified in the CED. For each, identify one attack type it enables and explain how input sanitization removes that attack vector. <em>(AP Skill: Explain Mechanisms)</em>
+</li>
+<li>A developer builds a form that accepts a username. A user submits: <code>admin""; DELETE FROM users WHERE ""1""=""1</code>. Identify the attack type, which control character enables it, and what the developer should do to prevent it. <em>(AP Skill: Identify and Mitigate)</em>
+</li>
+<li>According to 5.5.B.2, input sanitization protects against SQL injection, XSS, and directory traversal. Explain why a single sanitization approach addresses all three of these fundamentally different attack types. <em>(AP Skill: Analyze Controls)</em>
+</li>
+</ol>
+<button class=""btn-exit-toggle"" onclick=""var el=document.getElementById('exit-ans');el.classList.toggle('show');this.textContent=el.classList.contains('show')?'Hide Answer Key':'Show Answer Key'"">Show Answer Key</button><div class=""exit-answers"" id=""exit-ans"">
+<p style=""margin:4px 0!important;font-size:.9em!important;color:#374151!important;font-family:Georgia,serif!important;""><strong>Q1:</strong> (1) Take ownership of customer security outcomes: build products that meet customers' security needs. (2) Embrace radical transparency and accountability: share security news and vulnerabilities quickly. (3) Build organizational structure and leadership: have security-focused leaders with a security-first posture.</p>
+<p style=""margin:4px 0!important;font-size:.9em!important;color:#374151!important;font-family:Georgia,serif!important;""><strong>Q2:</strong> Secure by design is the broad initiative requiring security in all development phases. Secure by default is a specific outcome: security features must be enabled out of the box. Example violation: a router that ships with its firewall disabled and a default password of ""admin"" requires user action to be secure.</p>
+<p style=""margin:4px 0!important;font-size:.9em!important;color:#374151!important;font-family:Georgia,serif!important;""><strong>Q3:</strong> Single quote ('): enables SQL injection (breaks string context in SQL); sanitization removes/rejects it. Double quote (""): enables XSS (breaks HTML attribute context); sanitization removes/rejects it. Semicolon (;): enables second SQL statements; sanitization removes/rejects it.</p>
+<p style=""margin:4px 0!important;font-size:.9em!important;color:#374151!important;font-family:Georgia,serif!important;""><strong>Q4:</strong> SQL injection or XSS (likely SQL injection based on DELETE statement). The double quote ("") breaks out of the string context. Prevention: sanitization function that removes/rejects double quotes and semicolons before the input is processed.</p>
+<p style=""margin:4px 0!important;font-size:.9em!important;color:#374151!important;font-family:Georgia,serif!important;""><strong>Q5:</strong> All three attacks exploit the application's failure to distinguish between user-supplied data and command syntax. Control characters are what allow attackers to break out of the ""data"" context and be interpreted as commands. By removing those control characters, sanitization prevents any of the three attacks — they all require the same class of dangerous characters to work.</p>
+</div>
+</div>
+<div class=""tutor-cta"">
+<div class=""tutor-cta-text"">
+<strong>Struggling with AP Cybersecurity application security principles?</strong><p>Tanner Crow — AP CS teacher, 5.0 Wyzant rating, 2,067+ tutoring hours. Book a session and nail the exam.</p>
+</div>
+<a href=""/pages/ap-computer-science-a-tutor"" class=""tutor-cta-btn"">Book a Session →</a>
+</div>
+<div class=""author-box""><div class=""author-info"">
+<p class=""author-name"">Tanner Crow</p>
+<p class=""author-title"">AP Computer Science Teacher — Blue Valley North High School, Overland Park KS</p>
+<p style=""font-size:.88em!important;color:#374151!important;margin:0!important;"">11+ years teaching AP CS. 5.0 Wyzant rating, 2,067+ tutoring hours, 499+ reviews.</p>
+<div class=""author-stats"">
+<span class=""author-stat"">11+ Years Teaching</span><span class=""author-stat"">2,067+ Tutoring Hours</span><span class=""author-stat"">499+ Five-Star Reviews</span>
+</div>
+</div></div>
+<h2>Continue Learning</h2>
+<div class=""related-grid"">
+<a href=""/pages/ap-cyber-unit-5-lesson-6"" class=""related-card""><div class=""rc-label"">Next →</div>
+<div class=""rc-title"">5.6: Detecting Attacks on Data and Applications</div></a><a href=""/pages/ap-cyber-unit-5-lesson-1"" class=""related-card""><div class=""rc-label"">Review</div>
+<div class=""rc-title"">5.1: Application Attack Types</div></a><a href=""/pages/ap-cybersecurity-practice-exam"" class=""related-card""><div class=""rc-label"">Practice</div>
+<div class=""rc-title"">AP Cybersecurity Practice Exam</div></a>
+</div>
+<div class=""nav-row"">
+<a href=""/pages/ap-cyber-unit-5-lesson-4-quiz"" class=""nav-btn secondary"">← Lesson 5.4 Quiz</a><a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"" class=""nav-btn"">Exercise 1 →</a>
+</div>
+</div>
+<script>var ANS={w5q1:""B"",w5q2:""A"",w5q3:""C"",w5q4:""D"",w5q5:""C"",w5q6:""B"",w5q7:""C"",w5q8:""B"",w5q9:""A"",w5q10:""D""};var EX={w5q1:""Secure by default means security features are enabled out of the box without user configuration (5.5.A.3). This thermostat requires manual configuration of every security feature — it is the opposite of secure by default."",w5q2:""CED 5.5.A.2 principle 1: \""Companies should build products that meet the security needs of their customers.\"" This means security is a company responsibility, not delegated to users."",w5q3:""The single quote is a SQL control character. When the validation only checks digit count and passes the apostrophe-containing input to a database query, it enables SQL injection. Sanitization would remove or reject the single quote before the value reaches the query."",w5q4:""The sequence <code>Robert'); DROP TABLE students; --</code> contains a closing parenthesis and single quote (breaks out of the SQL string), a semicolon (ends the first statement), a DROP TABLE command (destructive SQL), and <code>--</code> (comments out the rest). This is the textbook SQL injection control character pattern."",w5q5:""CED 5.5.B.2 explicitly lists all three: SQL injection, XSS, and directory traversal. Buffer overflow is not in this list — it is addressed differently (server-side length enforcement on buffers, not character sanitization)."",w5q6:""XSS requires the browser to interpret <code><script></code> as an HTML tag, which triggers JavaScript execution. Removing <code><</code> and <code>></code> means the browser sees literal text rather than markup, preventing the script from being parsed and executed."",w5q7:""CED 5.5.A.2 principle 2: \""Companies should embrace radical transparency and accountability. Sharing relevant security-related product news and updates quickly increases security for everyone.\"" The coordinated disclosure window + patch commitment + customer notification is radical transparency."",w5q8:""The semicolon terminates SQL statements (5.5.B.1). An adversary appends <code>; DROP TABLE orders; --</code> to turn one statement into two — the first legitimate, the second destructive. Removing semicolons from input prevents this statement-chaining technique."",w5q9:""The <code>../</code> sequence used in directory traversal does not contain single quotes, double quotes, or semicolons. The sanitization function as described would not remove it. Directory traversal requires additional sanitization that removes <code>../</code> and similar path-manipulation sequences."",w5q10:""The single quote is the primary SQL control character. It terminates string values in SQL queries, allowing an adversary to break out of the string context and inject SQL commands. Options A, B, and C misassign characters to the wrong attack types.""};</script><script>function pick(q,l){document.getElementById(q+l).checked=true;}function gradeAll(){var sc=0,tot=Object.keys(ANS).length;for(var q in ANS){var s=document.querySelector('input[name=""'+q+'""]:checked'),fb=document.getElementById(q+'-fb');document.querySelectorAll('#'+q+' .cfu-opt').forEach(function(o){o.classList.remove('correct','wrong');});if(s){var p=s.id.replace(q,''),c=ANS[q];document.getElementById(q+c).closest('.cfu-opt').classList.add('correct');if(p===c){sc++;fb.className='cfu-feedback ok show';fb.innerHTML='✓ '+EX[q];}else{document.getElementById(q+p).closest('.cfu-opt').classList.add('wrong');fb.className='cfu-feedback no show';fb.innerHTML='✗ Correct: <strong>'+c+'</strong>. '+EX[q];}}else{fb.className='cfu-feedback no show';fb.innerHTML='✗ No answer selected.';}}var el=document.getElementById('score-panel');el.classList.add('show');document.getElementById('score-num').textContent=sc+'/'+tot;var pct=sc/tot,m=pct===1?'Perfect — exam-ready.':pct>=0.8?'Strong — review any misses.':pct>=0.6?'Good — revisit the lesson.':'Review the lesson before moving on.';document.getElementById('score-msg').innerHTML=m;}</script>
+<!--APCYBER-LESSON-NAV-START--><style>
+#apcyber-lesson-nav, #apcyber-lesson-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-lesson-nav{display:block!important;margin:48px auto 8px!important;max-width:880px!important;
+ padding:0 16px!important}
+#apcyber-lesson-nav .aln-card{display:block!important;background:#FFFFFF!important;
+ border:1px solid #E5E1F2!important;border-top:4px solid #6B21A8!important;border-radius:14px!important;
+ padding:22px 22px 18px!important;box-shadow:0 6px 22px rgba(30,27,75,.07)!important}
+#apcyber-lesson-nav .aln-eyebrow{display:block!important;font-size:12px!important;font-weight:700!important;
+ letter-spacing:.09em!important;text-transform:uppercase!important;color:#6B21A8!important;
+ -webkit-text-fill-color:#6B21A8!important;margin:0 0 14px!important}
+#apcyber-lesson-nav .aln-pn{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin:0 0 16px!important}
+#apcyber-lesson-nav .aln-step{flex:1 1 0!important;min-width:200px!important;display:block!important;
+ text-decoration:none!important;border:1px solid #E5E1F2!important;border-radius:11px!important;
+ padding:13px 15px!important;background:#FAF8FF!important}
+#apcyber-lesson-nav .aln-step:link,#apcyber-lesson-nav .aln-step:visited{color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcyber-lesson-nav .aln-step.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-lesson-nav .aln-step.next:link,#apcyber-lesson-nav .aln-step.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-lesson-nav .aln-dir{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.06em!important;text-transform:uppercase!important;color:#8A7FB0!important;
+ -webkit-text-fill-color:#8A7FB0!important;margin:0 0 4px!important}
+#apcyber-lesson-nav .aln-step.next .aln-dir{color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;text-align:right!important}
+#apcyber-lesson-nav .aln-ttl{display:block!important;font-size:15px!important;font-weight:600!important;line-height:1.3!important}
+#apcyber-lesson-nav .aln-step.next .aln-ttl{text-align:right!important}
+#apcyber-lesson-nav .aln-links{display:flex!important;flex-wrap:wrap!important;align-items:center!important;
+ gap:8px 18px!important;padding-top:15px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-lesson-nav .aln-lbl{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-lesson-nav .aln-links a:link,#apcyber-lesson-nav .aln-links a:visited{font-size:14px!important;
+ font-weight:500!important;color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;
+ text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important;padding-bottom:1px!important}
+@media(max-width:560px){#apcyber-lesson-nav .aln-step{flex:1 1 100%!important}}
+</style><div id=""apcyber-lesson-nav""><div class=""aln-card"">
+<span class=""aln-eyebrow"">AP Cybersecurity · Unit 5 · Lesson 5.5</span><div class=""aln-pn"">
+<a class=""aln-step prev"" href=""/pages/ap-cyber-unit-5-lesson-4""><span class=""aln-dir"">← Previous</span><span class=""aln-ttl"">5.4 Asymmetric Cryptography</span></a><a class=""aln-step next"" href=""/pages/ap-cyber-unit-5-lesson-6""><span class=""aln-dir"">Next →</span><span class=""aln-ttl"">5.6 Detecting Attacks on Data and Applications</span></a>
+</div>
+<div class=""aln-links"">
+<span class=""aln-lbl"">Keep going:</span><a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Unit 5 Study Guide</a><a href=""/pages/ap-cyber-unit-5-exam"">Unit 5 Exam</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a><a href=""/pages/ap-cybersecurity-study-guide"">All Study Guides</a><a href=""/pages/ap-cybersecurity-practice-questions"">Practice Questions</a><a href=""/pages/ap-cybersecurity-score-calculator"">Score Calculator</a>
+</div>
+</div></div><!--APCYBER-LESSON-NAV-END-->"
