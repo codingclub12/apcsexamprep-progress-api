@@ -471,5 +471,94 @@ ok('silent when the commit date cannot be read',
 ok('the kind is registered and is P1', C.KINDS['api-stale-deploy'].tier === 'P1');
 ok('the kind explains why it is not P0', /P1 rather than P0/.test(C.KINDS['api-stale-deploy'].why));
 
+
+// ── A CSS CUSTOM PROPERTY NOTHING DEFINES ────────────────────────────────────
+//  Board #203, and the defect it was written from is the AP Cyber 1.1 lab of
+//  2026-09-03: ten properties read, none declared, five invisible buttons, a
+//  class of 32 with 27 blank lab scores and nothing anywhere throwing.
+//
+//  The FIRING direction is easy to write and proves little on its own. The four
+//  silent directions below are the ones that decide whether this can run nightly,
+//  and the fallback case is the one that would have made it unusable: the theme
+//  uses var(--x, default) and a check that counts every reference would report
+//  most of the site every morning.
+const CV = require('../lib/css-vars');
+const styled = (css, body) => page({ body: '<style>' + css + '</style>' + (body || '') });
+
+// The 1.1 lab in miniature, byte-shaped like the real rule that shipped.
+const LAB11 = '#w{}\n'
+  + '#w .lab-section{background:#ffffff!important;}\n'
+  + '#w .check-btn{background:var(--purple)!important;color:#ffffff!important;'
+  + '-webkit-text-fill-color:#ffffff!important;}\n';
+
+ok('the undefined property is found',
+  CV.unresolvable(styled(LAB11)).join(',') === '--purple');
+ok('white text over a dropped background is the invisible-text finding',
+  CV.invisibleText(styled(LAB11)).length === 1);
+ok('the finding names the selector that will be invisible',
+  CV.invisibleText(styled(LAB11))[0].selector === '#w .check-btn',
+  CV.invisibleText(styled(LAB11))[0].selector);
+ok('checkPage raises it as P0 through the crawl',
+  C.checkPage(url('ap-cyber-unit-1-lesson-1-lab'), res(styled(LAB11)))
+    .some((f) => f.kind === 'css-var-invisible-text' && f.tier === 'P0'));
+ok('and raises the broad undefined finding alongside it at P2',
+  C.checkPage(url('ap-cyber-unit-1-lesson-1-lab'), res(styled(LAB11)))
+    .some((f) => f.kind === 'css-var-undefined' && f.tier === 'P2'));
+
+// Silent direction 1: THE FALLBACK. var(--x, #fff) resolves whether or not --x
+// exists, so it is not a finding and never was one.
+ok('silent on a reference that carries a fallback',
+  CV.unresolvable(styled('#w .b{background:var(--purple, #6B21A8);color:#ffffff;}')).length === 0);
+
+// Silent direction 2: the property IS defined, which is every correct page.
+ok('silent when the palette is declared',
+  CV.unresolvable(styled('#w{--purple:#6B21A8;}\n#w .b{background:var(--purple);color:#ffffff;}')).length === 0);
+ok('and the invisible-text rule is silent too',
+  CV.invisibleText(styled('#w{--purple:#6B21A8;}\n#w .b{background:var(--purple);color:#ffffff;}')).length === 0);
+
+// Silent direction 3: DARK text. An unresolvable background under dark text is
+// still drift, but it does not hide anything, so it must not be P0.
+{
+  const dark = styled('#w .b{background:var(--tint);color:#1E1B4B;}');
+  ok('dark text over a dropped background is not the P0', CV.invisibleText(dark).length === 0);
+  ok('but it is still reported as undefined drift', CV.unresolvable(dark).join(',') === '--tint');
+}
+
+// Silent direction 4: a page with no <style> block at all cannot have this
+// defect, and must not cost a parse or a finding.
+ok('silent on a page with no style block', CV.unresolvable(page({ body: '<p>hi</p>' })).length === 0);
+
+// Silent direction 5: the text colour is ITSELF a var. Brightness is then
+// unknown, and a check that guesses here would fire on correct pages.
+ok('declines when the text colour is itself a variable',
+  CV.invisibleText(styled('#w .b{background:var(--a);color:var(--b);}')).length === 0);
+
+// The report has to be readable: one line per page for the broad finding, not
+// one per property. A missing palette block is ten names and would otherwise be
+// ten lines every night for a single defect.
+{
+  const many = styled('#w .b{background:var(--a);border-color:var(--b);outline-color:var(--c);}');
+  const found = C.checkPage(url('x'), res(many)).filter((f) => f.kind === 'css-var-undefined');
+  ok('the broad finding is reported once per page, not once per property', found.length === 1, found.length);
+  ok('and its evidence lists every missing name', found[0].evidence === '--a --b --c', found[0].evidence);
+}
+
+// A comment banner sits directly above the rule it labels. The first cut of the
+// parser captured it as part of the selector and every finding read as two
+// lines of noise.
+ok('a comment above a rule does not leak into the selector',
+  CV.invisibleText(styled('/* ===== BUTTONS ===== */\n#w .b{background:var(--p);color:#fff;}'))[0].selector === '#w .b',
+  CV.invisibleText(styled('/* ===== BUTTONS ===== */\n#w .b{background:var(--p);color:#fff;}'))[0].selector);
+
+// The cascade detail that makes this correct rather than nearly correct: a
+// declaration invalid at computed-value time is applied as UNSET, so an earlier
+// good background does not survive a later broken one.
+ok('a later broken background beats an earlier good one',
+  CV.invisibleText(styled('#w .b{background:#6B21A8;background:var(--p);color:#ffffff;}')).length === 1);
+
+ok('both kinds are registered', !!C.KINDS['css-var-invisible-text'] && !!C.KINDS['css-var-undefined']);
+ok('the P0 explains why it is not cosmetic', /P0 rather than cosmetic/.test(C.KINDS['css-var-invisible-text'].why));
+
+
 console.log('\n' + (fail ? ('  ' + fail + ' FAILED, ' + pass + ' passed') : ('  OK - all ' + pass + ' checks passed')) + '\n');
 process.exit(fail ? 1 : 0);
