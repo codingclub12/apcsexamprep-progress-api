@@ -155,24 +155,41 @@ thing.
 ## What I could NOT confirm, and it matters
 
 **The reported live page.** The premise was that this corruption was seen on a
-live page. I scanned **200 of the 1362 pages in the storefront sitemap** (14.7%,
-visible text only, streamed so nothing hit the disk allowance) with the corrected
-detector AND with the retired one:
+live page. I could not reproduce that.
+
+The first attempt at this measurement was worthless and it is worth saying why,
+because it is the same failure shape as everything else in this note. It scanned
+200 pages with a browser-ish User-Agent and reported 0 runs. Then merging `main`
+brought in a convention added the same day: the storefront's bot management
+INVERTED on 2026-09-03, a request claiming to be a browser now gets a 403
+"Verifying your connection" body, and `looksLikeChallenge` in
+`lib/site-crawl.js` does not match that string. "No mojibake found" is a NEGATIVE
+assertion, and a negative assertion passes on an empty challenge page. So the
+number was unfalsifiable until it was re-run through `lib/storefront-fetch.js`,
+which refuses any body that does not carry both storefront markers:
 
 ```
-  fetched 200 OK       200
-  CORRECTED detector   0 page(s), 0 run(s)
-  OLD rule would see   0 page(s), 0 run(s)
+  bodies PROVEN to be rendered pages   60
+  refused (not provably the page)      0
+  total body characters read           23,947,084
+  pages carrying ANY non-ASCII         55   <- positive control
+  CORRECTED detector flags             0 page(s), 0 run(s)
+  OLD rule would have flagged          0 page(s), 0 run(s)
 ```
 
-So I have no measurement showing mojibake live on the storefront right now. That
-is not a contradiction of the report: 14.7% is a sample, the page may have been
-repaired already, and the corruption may have been seen in a sheet or a draft
-rather than on a served page. But the fix does not rest on it. What it rests on
-is that the guards were provably blind, measured above, and that real corruption
-was sitting in a curriculum authority in this repo.
+The positive control is the part that makes this a measurement rather than a
+shrug: 55 of the 60 pages carry non-ASCII characters, so there was material on
+them that COULD have been corrupted and was not. A clean verdict over pages with
+nothing but ASCII would have proved nothing at all.
 
-Anyone can re-run the live scan; nothing about it needs credentials.
+So the storefront is clean across this sample. That is not a contradiction of the
+report: 60 pages is 4.4% of 1362, the page may have been repaired already, and
+the corruption may have been seen in a sheet or a draft rather than on a served
+page. But the fix does not rest on it. It rests on the guards being provably
+blind, measured above, and on real corruption sitting in a curriculum authority
+in this repo.
+
+Both scans are re-runnable and neither needs credentials.
 
 **Incidentally, the sitemap is retrievable from a session container.** A plain
 `curl -sSL https://apcsexamprep.com/sitemap.xml` returns the index, and
