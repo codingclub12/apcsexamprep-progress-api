@@ -169,6 +169,16 @@ to 0xC3, and cp1252 dropped from CODECS) and requires the single-pass assertion
 in this side's suite to go red by name. A module can be correct and a rule can
 still fail to call it.
 
+**The EK convention now has the same shape as the mojibake one**, and it is worth
+noticing why, because it is the reason `validate_csv.py` used to be worse than
+nothing. That script gained a real mojibake check in the same PR, through
+`tools/ap-cyber-ced/mojibake.py`, a port of `lib/mojibake.js`; a port is a copy
+and copies drift, so `smoke/mojibake-parity.js` runs both over one generated
+corpus and requires identical hits, recovered characters and codec attribution.
+Rule 7 here needs no port because it is JavaScript and calls the module
+directly. If a Python-side EK check is ever wanted, that parity suite is the
+pattern to copy rather than a second reading of the convention.
+
 `scripts/matrixify-preflight.js` still screens sheets against three latin-1 byte
 pairs and still carries the blind spot. Board 186. Cyber sheets go through this
 validator, so they are covered; every other sheet in the repo is not.
