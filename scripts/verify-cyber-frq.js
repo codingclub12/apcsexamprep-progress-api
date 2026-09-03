@@ -36,6 +36,17 @@
 //     is a question a self-scoring student cannot mark, which is the whole
 //     promise of the page.
 //
+//  ---------------------------------------------------------------------------
+//  DELIBERATELY NOT AN `npm run smoke:*` SCRIPT, and do not make it one.
+//
+//  .github/workflows/tests.yml DERIVES the "Offline smoke suites" gate from
+//  every `smoke:*` key in package.json, with a short EXCLUDE list for the ones
+//  that reach live systems. So naming this `smoke:cyberfrq` would silently add
+//  a network-dependent job to the check that gates every merge, and the gate
+//  would then go red whenever the storefront was slow or the API was mid
+//  deploy. The only thing keeping it out today is its name. Run it by hand, or
+//  from a workflow that is allowed to touch live systems.
+//
 //  Run with --json for machine output. Exit 1 on any failure.
 // ---------------------------------------------------------------------------
 
