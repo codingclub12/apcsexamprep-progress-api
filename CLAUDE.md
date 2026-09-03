@@ -673,17 +673,57 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   the guard does, and additionally misses double-pass e-acute and double-pass
   non-breaking space. Do not swap it in for the round trip.
 
-  Closing the gap means widening the lead set to every character a UTF-8 lead byte
-  C2 to F4 becomes, adding a cp1252 ENCODER beside latin-1, and trying chunk widths
-  up to 4 so a 4-byte emoji can be reversed. Checked against six characters at both
-  depths and seven legitimate samples including Portuguese and Vietnamese: recovers
-  all six, zero false positives. Not yet shipped; it is a guard change and wants its
-  own claim and its own mutation run.
+  **SHIPPED 2026-09-03 in PR #482.** The gap above is closed exactly as described:
+  the lead set is the whole class U+00C2 to U+00F4, there is a cp1252 encoder beside
+  latin-1, and the chunk width is DERIVED from the lead byte rather than guessed, so
+  a 4-byte emoji reverses. The detector moved to `lib/mojibake.js` and the guard,
+  `lib/site-crawl.js` and the two CED tools in `tools/ap-cyber-ced/` all call it.
+
+  Three things the measurement above did not predict, all found while shipping it:
+
+  - **The guard was not only incomplete, it was reporting this repo clean while
+    four tracked files were corrupted**: 65 characters in
+    `tools/ap-cyber-ced/CED-UNIT1-EXTRACT.txt`, a corrupted emoji in the hazard note
+    that teaches agents what mojibake is, and pasted fixtures and pattern lists in
+    `smoke/site-crawl.js` and `verify_import.py`. All repaired.
+  - **Neither codec subsumes the other.** Each reverses 27 code points the other
+    cannot: latin-1 alone reaches the C1 controls that the latin-1 flavour is made
+    of, cp1252 alone reaches the euro sign, curly quotes, dashes and bullet. Drop
+    either and a whole flavour goes invisible. Asserted in the suite as 27 and 27,
+    because the first draft of the module claimed superset in a comment and was
+    wrong.
+  - **A perfect reversal can still be nonsense.** A capital O-diaeresis followed by
+    an en dash is valid UTF-8 for a Hebrew combining accent, so the finished
+    detector called three of Shopify's own locale files corrupt. Mojibake corrupts
+    everything it touches, so it arrives in RUNS; a 2-byte candidate whose lead is
+    outside U+00C2-U+00C3 is now accepted only if it abuts another accepted
+    candidate. Restricting the lead set instead was measured and rejected: it costs
+    depth-2 emoji recovery.
 
   **A mutation test for this rule must inject SINGLE-pass mojibake.** A mutation
   built from the double-pass form goes red against a guard that is blind to the bug
   actually seen on live pages, and that green report is worse than no report at all.
-  Assert both depths independently.
+  Assert both depths independently. `deploy-gates/2026-09-03-mojibake-validator.json`
+  carries seven that do, including one proving the U+00C3 rule insufficient.
+
+  The suite GENERATES its cases from a damage simulator over a character corpus at
+  both depths in both flavours, rather than listing known-bad strings, so it catches
+  characters nobody has reported yet. `scripts/mojibake-rederive.js` is a second
+  implementation that must agree, and `npm run smoke:mojibakeparity` fails if the
+  Python port drifts from the JavaScript.
+
+  **One consumer was missed by that migration, and it was the one that mattered
+  most.** `scripts/matrixify-preflight.js` kept three hardcoded LATIN-1 lead pairs
+  of its own (U+00E2 U+0080, U+00C3 U+00A2, U+00F0 U+009F) until 2026-09-04. Every
+  Shopify page change ships as a Matrixify sheet, so that preflight is the gate
+  between authored content and a live page body, and a sheet out of Excel carries
+  the CP1252 flavour, where those leads read U+00E2 U+20AC and U+00F0 U+0178. None
+  of the three matched, so the corruption reported on a live page would have
+  imported without complaint. Its own smoke fixture was built in the latin-1
+  flavour too, so the guard and its test shared one blind spot and agreed with each
+  other, which is the same failure as the handoff draft one directory over. It
+  calls the module now. When a module lands, the MIGRATION is the change: grep for
+  the retired pattern across every consumer before calling a consolidation done.
 - **AP Cybersecurity topics come from `data/cyber-topics.json`**, read through
   `lib/cyber-topics.js`, and from nowhere else. It exists as of 2026-09-03: 24 CED
   topics with their official titles (parsed from the CED text, never retyped),
@@ -701,21 +741,12 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   because the mapping used to live in page bodies.
 - Mojibake is detected with `lib/mojibake.js`, never with a pasted pattern. Go
   through the module the same way EK codes go through `lib/cyber-ek-density.js`.
-  A handoff on 2026-09-03 told a future session to reject two literal strings,
-  and both were the DOUBLE corrupted form: the reported live failure is the
-  single corrupted form and contains neither. The same inversion was already
-  live in `smoke/encoding-guard.js`, which gates every pull request and reported
-  this repo clean while four tracked files were corrupted.
-  Two facts a pattern list keeps getting wrong. First, there are two flavours,
-  latin-1 and cp1252, and NEITHER subsumes the other: each reverses 27 code
-  points the other cannot, so a detector with one of them is blind to a whole
-  flavour. Second, the sequence width comes from the lead byte, and a 4 byte
-  lead means an emoji; a detector that only tries widths 3 and 2 cannot see a
-  corrupted emoji at all. Anchoring on U+00C3 is not the general rule either.
-  It is the natural next guess and it reproduces the original defect exactly,
-  because U+00C3 first appears at depth 2. `npm run smoke:encoding` generates
-  its cases rather than listing them, and the deploy gate has a mutation that
-  proves the U+00C3 rule insufficient.
+  The section above has the method and what shipped; the reason it is a rule is
+  that a handoff on 2026-09-03 told a future session to reject two literal
+  strings and both were the DOUBLE corrupted form, so the rule would have missed
+  the single corrupted form actually reported on a live page. A pattern list
+  cannot tell you it has stopped working.
+
 - A `.pdf` extension is not evidence of a PDF. Check for the `%PDF` header
   before reaching for `pdftotext` or `pdfplumber`, because a CED file that is
   really extracted text will make the parser fail and make a session conclude
@@ -727,6 +758,51 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   Its em-dashes and curly quotes are College Board's verbatim wording, so the
   no-em-dash convention above does not apply to it: that rule governs text we
   author, and re-flattening a quoted source is a corruption, not a fix.
+- **Content arriving from the Claude chat project is a PROPOSAL, not a source.**
+  That surface does not have this repo, so every file path, filename, identifier
+  and topic number in it is a recollection rather than a reading, and it arrives
+  with the same confidence either way. Open each one before landing it.
+  The CLAUDE.md additions of 2026-09-03 carried four wrong claims and three were
+  exactly this: a `data/cyber-topics.json` that has never existed, named as "the
+  only authority" for the 24 topic titles; a topic swap attributed to 1.3 and 1.4
+  when the audit records it at 3.3 and 3.4; and a CED PDF described as being in
+  this repo when only its sha256 is. None of the three was careless. All are
+  structural, and the structure does not improve with more care on that side.
+  The fourth kind is worse, because it survives review: a claim about what a
+  CHECK covers. Verify that by RUNNING the check against the case, never by
+  reading its comment or its rule list. Both mojibake validators in this repo
+  read as complete and both have holes.
+  This cuts the same way against a session's own output, and twice on 2026-09-03
+  alone. The exercise-design section below was written here, confidently, hours
+  after `docs/exercise-design-proposal.md` had already refuted it. And a session
+  spent an afternoon rebuilding the mojibake detector that another session had
+  already rebuilt better, on this same branch, because it read the code and not
+  the log. Whoever wrote it is not the variable; whether it was opened is.
+- **Nothing shipped may read as machine-written.** This is an acceptance
+  criterion on every page, email, blog post and lesson, stated by Tanner on
+  2026-09-03 alongside "as long as it does not come up as an error". A teacher
+  who thinks a lesson was generated stops trusting the course, and that judgement
+  happens in the first paragraph and is not recoverable by being correct
+  underneath.
+  The em-dash rule below is one instance of this and the most famous tell, not
+  the whole of it. The others, in rough order of how much they give away:
+  - The three-part list used as a rhythm rather than because there are three
+    things. Two is usually the honest count and one is often enough.
+  - "It is not just X, it is Y." Also "more than a Z", "at its core",
+    "fundamentally", "the reality is".
+  - Signposting a paragraph before writing it: "Let us look at three reasons."
+    Write the reasons.
+  - Reflexive hedging on a fact that is known. Say it or check it.
+  - Vocabulary a teacher would not use out loud: delve, leverage as a verb,
+    seamless, robust, holistic, unlock, elevate, navigate a challenge, in today's
+    fast-paced world.
+  - A closing paragraph that restates the opening in different words.
+  - Every section the same length, every bullet the same shape. Real writing is
+    lumpy because some points need more room than others.
+  The test is to read it aloud. If it sounds like a brochure rather than a person
+  who teaches this for a living, it fails, and no amount of technical accuracy
+  fixes it. This applies to a run note and a commit message too, just with a
+  lower bar: those are read by people who work here.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
 

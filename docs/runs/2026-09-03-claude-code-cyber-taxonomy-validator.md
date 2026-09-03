@@ -114,10 +114,15 @@ Confirmed by running them, not by reading them:
 "dart"    corrupted once -> matrixify-preflight sees: false   detector: true
 ```
 
-- **186** `scripts/matrixify-preflight.js` screens every sheet against three
+- **186** `scripts/matrixify-preflight.js` screened every sheet against three
   latin-1 byte pairs, so the cp1252 forms that `lib/command-hazards.js` names as
-  the ones that actually happen pass its mojibake screen. Still open, and
-  re-confirmed after the merge.
+  the ones that actually happen passed its mojibake screen. **Closed by PR #484**,
+  about an hour after it was filed. Re-verified here by running the preflight over
+  a sheet carrying single-pass damage rather than by reading the diff: it now
+  reports `mojibake sequence present in a body`, where before it reported nothing.
+  That one mattered more than it looked: every Shopify page change ships as a
+  Matrixify sheet, so that preflight is the gate between authored content and a
+  live page body.
 - **187** `smoke/encoding-guard.js` tried latin-1 only and its lead set omitted
   U+00F0. The euro sign has no latin-1 byte, so the reversal was lossy, the
   character was skipped, and the file reported clean. **Closed by PR #482 while
@@ -126,9 +131,11 @@ Confirmed by running them, not by reading them:
 
 Both were left alone here deliberately, on the reasoning that a repo-wide
 detector getting stricter can turn CI red on real existing damage, which is the
-right outcome and the wrong thing to discover inside somebody else's change. 187
-then landed as its own change with its own suite, which is exactly the shape that
-reasoning was arguing for.
+right outcome and the wrong thing to discover inside somebody else's change. Both
+then landed as their own changes with their own suites, within the hour, which is
+exactly the shape that reasoning was arguing for. Filing them cost nothing and
+routed them to sessions that could give each one its own claim and its own
+mutation run.
 
 ## Also found
 

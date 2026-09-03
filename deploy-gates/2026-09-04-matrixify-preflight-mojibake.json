@@ -1,0 +1,69 @@
+{
+  "change": "the Matrixify preflight asks lib/mojibake.js, instead of holding the last private copy of the wrong rule",
+  "_context": "lib/mojibake.js landed on 2026-09-03 (PR #482) and smoke/encoding-guard.js, lib/site-crawl.js and the CED importer were all moved onto it. scripts/matrixify-preflight.js was missed, and it is the consumer that matters most: every Shopify page change ships as a Matrixify sheet, so this preflight is the gate between authored content and a live page body. It still carried three hardcoded LATIN-1 byte pairs, and its own smoke fixture was built in the latin-1 flavour too, so the guard and its test shared one blind spot and agreed with each other while the cp1252 form a spreadsheet produces walked straight through.",
+  "_expect_failure_note": "Every expect_failure carries the literal [FAIL] prefix. The gate only checks that the string appears in the mutated run's output, and an assertion NAME appears on the pass line as well, so naming the assertion alone would prove it ran rather than that it went red.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the preflight, now with the cp1252 and 4-byte cases it could not see",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "59 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the encoding guard, unchanged by this and still green",
+      "command": "npm run --silent smoke:encoding",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WAS GETTING THROUGH: the preflight must refuse, not count",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "    if (moji.length) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "[FAIL]   a cp1252 mojibaked body is refused, the form a spreadsheet produces"
+    },
+    {
+      "kind": "mutation",
+      "name": "the refusal has to name the character, or nobody can act on it",
+      "_why": "A sheet is refused hours before anyone reads why. 'mojibake sequence present' sends somebody hunting through a 270K character body; naming U+2022 and the flavour says what to reverse and which pipeline did it. NOTE: the first cut of this mutation left unbalanced parentheses, so the whole preflight threw and an EARLIER assertion went red instead. The gate refused it as guard subsumption, correctly: a mutation that breaks the file proves nothing about the guard it was aimed at. This one keeps the refusal intact and removes only the naming.",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "        + ' run(s), ' + flavours + ' flavour, meaning ' + means",
+      "replace": "        + ' run(s)'",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "[FAIL]   and the refusal names the character it means and the flavour"
+    },
+    {
+      "kind": "mutation",
+      "name": "a Nordic sort label must stay ACCEPTED, or a real import gets blocked",
+      "_why": "The cost of a detector this broad is the false positive it can create. If analyze() stops dropping isolated exotic leads, this preflight starts refusing legitimate sheets, and a gate that blocks real work is a gate somebody switches off. Mutating the module rather than the preflight, because that is where the protection lives.",
+      "file": "lib/mojibake.js",
+      "find": "  if (h.width !== 2) return false;",
+      "replace": "  if (h.width !== 2) return false; if (true) return false;",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "[FAIL]   a Nordic sort label is NOT refused as mojibake"
+    },
+    {
+      "kind": "rederive",
+      "name": "the detector this preflight now trusts, re-derived independently",
+      "_why": "The preflight no longer has an opinion of its own, so its correctness is now entirely lib/mojibake.js's correctness. scripts/mojibake-rederive.js (from PR #482) reaches the same verdict from a second implementation over generated cases, which is what makes delegating to the module an improvement rather than a transfer of trust.",
+      "command": "node scripts/mojibake-rederive.js",
+      "expect": "REDERIVE AGREES"
+    },
+    {
+      "kind": "rederive",
+      "name": "the JavaScript and Python detectors still agree",
+      "_why": "The CED importer checks live bodies from Python. A preflight that refuses a sheet the Python side would accept, or vice versa, is two gates disagreeing about the same corruption.",
+      "command": "npm run --silent smoke:mojibakeparity",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "production serves what this tree is",
+      "_why": "Derived from the tree rather than pinned, so it is false before the deploy, false if the deploy never runs, and true only once production serves this code.",
+      "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const got=JSON.parse(cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'})).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
+      "expect": "PRODUCTION SERVES THIS TREE"
+    }
+  ]
+}

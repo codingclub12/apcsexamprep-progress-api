@@ -199,3 +199,77 @@ things that do not exist. The one that took work to find, the mojibake rule, was
 in the direction that is hardest to catch: it read as more rigorous than what it
 replaced, and it was written by someone who had just corrected the same paragraph once
 and therefore had reason to feel done.
+
+---
+
+## Postscript: the merge, and three collisions
+
+PR #480 merged as `f3226c6`. Production reported `fc19ce1` before and `f3226c6`
+after, which is an assertion that was false beforehand, so the deploy is
+confirmed rather than assumed. `status: ok`, `integrity.ok: true`.
+
+Two claims in this note were wrong when written, and then most of the work that
+followed was done twice.
+
+**The exercise-design section was wrong.** It said bigger exercises need the
+sandbox, that Judge0 therefore closes the area, and that a second PII exception
+was in the way. `docs/exercise-design-proposal.md`, authored hours earlier and
+landed via PR #478, establishes the opposite on each count. Rewritten as a fork
+of SHAPE rather than a blocker.
+
+**The mojibake work was done three times over, by three sessions, on the same
+afternoon.** Recording the sequence because the pattern matters more than any of
+the fixes:
+
+    this session   measured the gap in smoke/encoding-guard.js, built a fix
+    PR #482, #486  had already landed lib/mojibake.js, a rederive, a Python
+                   port, a parity suite, a deploy gate, and repair of 65 real
+                   corrupted characters in CED-UNIT1-EXTRACT.txt
+    this session   discarded its detector work, kept the one caller #482 missed
+    PR #484        had already fixed that caller too, and merged first
+
+So this session shipped almost nothing of what it spent the afternoon on, and
+the discarding was correct both times. Its widened lead set would have
+reintroduced a false positive #482 had already solved: an isolated exotic lead
+is real text, because the Finnish sort label "Aakkosjarjestyksessa O-A" is a
+capital O-diaeresis followed by an en dash, bytes D6 96, valid UTF-8 for a
+Hebrew combining accent. Arithmetically perfect, completely wrong.
+
+**The root cause is not the duplicated reasoning, it is that nothing was
+claimed.** Rule 2 of this file exists for exactly this and says so: claim before
+you touch a file, locks are `(repo, file)` pairs, a conflict is a 409 naming the
+holder. There was no board task for "land the CLAUDE.md additions", so no claim
+was made, so three sessions rediscovered the same bug in parallel and two of
+them wrote the same module. A claim on `api:smoke/encoding-guard.js` would have
+returned a 409 and saved most of an afternoon.
+
+The lesson is narrower than "read before writing", which this note already says
+twice. It is that a session doing work with no board item should CREATE one and
+claim it, rather than treating the claim step as inapplicable because the work
+arrived from somewhere other than the board.
+
+## What actually shipped from this branch
+
+Two conventions, which is all that was left once `main` had the rest.
+
+**Content from the Claude chat project is a proposal, not a source**, because
+that surface does not have the repo and states a recollection as confidently as
+a reading. Three of the four errors corrected earlier in this note are that
+shape, and it cuts the same way against a session's own output, twice today.
+
+**Nothing shipped may read as machine-written.** An acceptance criterion that was
+written down nowhere, alongside "as long as it does not come up as an error". The
+em-dash rule was one instance of it, not the whole. The tells are listed under
+Conventions and the test is reading it aloud.
+
+Plus one two-line deletion: `scripts/matrixify-preflight.js` still declared the
+old three-pair signature list after PR #484 moved it onto `lib/mojibake.js`.
+Unused, but it is exactly the thing a future session would copy, and the rule
+directly above it now says never to.
+
+## Still open
+
+- Rotate `COMMAND_READ_TOKEN` and `TODO_KEY`. Browser only, agents are refused.
+- Task 85 needs a live gradebook response from a session with the admin key.
+- Teacher visibility into sandbox work, and whether public visibility is
+  intentional. Both are decisions.

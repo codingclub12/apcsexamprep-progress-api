@@ -179,9 +179,16 @@ Rule 7 here needs no port because it is JavaScript and calls the module
 directly. If a Python-side EK check is ever wanted, that parity suite is the
 pattern to copy rather than a second reading of the convention.
 
-`scripts/matrixify-preflight.js` still screens sheets against three latin-1 byte
-pairs and still carries the blind spot. Board 186. Cyber sheets go through this
-validator, so they are covered; every other sheet in the repo is not.
+`scripts/matrixify-preflight.js` was the last consumer holding its own opinion,
+three hardcoded latin-1 lead pairs, so every non-cyber sheet was unguarded
+against the flavour a sheet out of Excel actually carries. Board 186, closed the
+same day by PR #484: it calls the module now, and a corrupted body is refused by
+the preflight as well as by rule 7 here. Verified by running it rather than by
+reading it, on a sheet built from the damage simulator.
+
+The lesson that outlives both: when a module lands, the MIGRATION is the change.
+Grep for the retired pattern across every consumer before calling a
+consolidation done.
 
 ## 5. Generating a sheet
 
