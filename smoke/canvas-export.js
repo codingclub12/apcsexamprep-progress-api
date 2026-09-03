@@ -37,7 +37,7 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 
 const express = require('express');
 const db = require('../db');
-const { CANVAS_CELL_RE } = require('../lib/export-format');
+const { CANVAS_CELL_RE, ACTIVITY_BUCKETS } = require('../lib/export-format');
 const app = express();
 app.use(express.json());
 app.use('/api/teacher', require('../routes/teacher'));
@@ -52,6 +52,22 @@ const SUMMARY = ['Letter Grade', '%', 'Total Earned', 'Total Graded', 'Total Pos
 const IDENT = 5;                 // Student + 3 Canvas id columns + Section
 const FIRST_COL = IDENT + SUMMARY.length;   // where the graded columns start
 const colOf = (header, name) => header.indexOf(name);
+
+//  Activities with no include toggle always count, exactly as the dashboard's
+//  own counts() does by falling through to true. That set was once just the
+//  case file; labs joined it when the cyber units started declaring 'lab'
+//  (board #198 follow-up). Read it from the module's own bucket table so a new
+//  untoggled activity does not silently fail this suite, while a TOGGLED one
+//  leaking past the filter still does, which is what these two checks are for.
+const ALWAYS_ON = ['Case File', 'Lab'];
+const alwaysOn = (c) => ALWAYS_ON.some((w) => new RegExp(w + '$').test(c));
+//  Guard the guard: every label above must be an activity the module leaves
+//  unmapped. If one gains a bucket, this list is stale and must shrink.
+for (const a of ['case_file', 'lab']) {
+  if (ACTIVITY_BUCKETS && ACTIVITY_BUCKETS[a]) {
+    throw new Error('ALWAYS_ON lists ' + a + ' but export-format now buckets it');
+  }
+}
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -475,15 +491,15 @@ async function getCsv(url, opts) {
     const all = await head('?format=canvas&scope=activity');
     const quizOnly = await head('?format=canvas&scope=activity&include=quiz');
     ok('  include=quiz drops every non-quiz column',
-      quizOnly.cols.slice(FIRST_COL).every((c) => / Quiz$/.test(c) || /Case File$/.test(c)),
-      quizOnly.cols.slice(FIRST_COL).filter((c) => !/ Quiz$|Case File$/.test(c)).slice(0, 4));
+      quizOnly.cols.slice(FIRST_COL).every((c) => / Quiz$/.test(c) || alwaysOn(c)),
+      quizOnly.cols.slice(FIRST_COL).filter((c) => !/ Quiz$/.test(c) && !alwaysOn(c)).slice(0, 4));
     ok('  and is genuinely smaller than the unfiltered export',
       quizOnly.cols.length < all.cols.length, { filtered: quizOnly.cols.length, all: all.cols.length });
 
     // A case file has no toggle and always counts, exactly as the dashboard's
     // own counts() does by falling through to true.
     ok('  a case file survives even when nothing is included',
-      (await head('?format=canvas&scope=activity&include=')).cols.slice(FIRST_COL).every((c) => /Case File$/.test(c)));
+      (await head('?format=canvas&scope=activity&include=')).cols.slice(FIRST_COL).every(alwaysOn));
 
     const u1 = await head('?format=canvas&scope=activity&units=unit-1');
     ok('  units=unit-1 exports that unit only',
