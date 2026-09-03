@@ -60,7 +60,7 @@ const { pageFromHandle } = require('../../utils');
 const mojibake = require('../../lib/mojibake');
 
 const ROOT = path.join(__dirname, '..', '..');
-const OUT = path.join(ROOT, 'data', 'cyber-topics.json');
+const OUT = path.join(ROOT, 'config', 'cyber-topics.json');
 const COURSE = 'ap-cybersecurity';
 
 const EXTRACTS = [
