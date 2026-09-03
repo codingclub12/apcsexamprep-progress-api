@@ -85,9 +85,14 @@ rather than grepping for the name and taking the first hit.
   read like a hollow guard when it was a hollow mutation.
 - **rederive**: the body was pulled two ways, from the Admin API and by
   `scripts/extract-live-body.js` off the rendered page, and diffed. See below.
-- **live**: pending the import. The assertion is that
-  `/pages/ap-cyber-unit-1-lesson-1-lab` serves `#cyber-lab-11{--purple:#6B21A8`,
-  which is false today.
+- **live**: imported 2026-09-03T22:11:58Z, and
+  `scripts/verify-cyber-lab11-palette-live.js` went from 13 of 16 red to 16 of
+  16 green across that import. The three that passed either side are the
+  content-integrity ones, which is the point of having them.
+  The stored body came back byte-identical to the generated sheet cell, all
+  eight specimen addresses intact and no `__cf_email__` anywhere, so the
+  Cloudflare hazard below was avoided rather than merely noticed. The page grew
+  434,420 to 435,043 bytes, which is exactly the 623 characters inserted.
 - Chromium, headless, on the exact cell the sheet will import:
   `button.background` `rgba(0, 0, 0, 0)` before and `rgb(107, 33, 168)` after;
   `textarea.border` `0px none` before and `1px solid rgb(221, 214, 254)` after.
@@ -127,10 +132,13 @@ whole page and assumes nothing about wrappers.
 
 ## Still open
 
-- The sheet is generated and preflighted. It has not been imported, and the live
-  check cannot run until it has.
+- **The 27 blanks in CYBER-T5KR do not fill themselves in.** The fix lets a
+  student complete the lab; it does not create an attempt for one who never
+  could. Michelle's class has to redo 1.1 Lab, or she accepts the blanks. Worth
+  saying to her explicitly, because "we fixed it" will otherwise read as "the
+  grades will appear".
 - Nothing in CI or the sweeps looks for an unresolvable custom property, so this
-  class of defect would come back silently. Filed as a board task; the check is
-  about fifteen lines and the survey script is the prototype.
+  class of defect would come back silently. Board #203; the check is about
+  fifteen lines and `scripts/survey-undefined-css-vars.js` is the prototype.
 - A teacher filtering the gradebook to Quizzes still sees Lab columns. Both
   surfaces agree with each other, so it is a UI decision rather than a bug.
