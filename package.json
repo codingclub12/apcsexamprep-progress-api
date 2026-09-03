@@ -203,7 +203,9 @@
     "smoke:deadlinks": "node smoke/dead-internal-link-repair.js",
     "smoke:emptyredirects": "node smoke/empty-page-redirects.js",
     "smoke:unitcourse": "node smoke/csa-unit-course-repair.js",
-    "smoke:denompanel": "node smoke/denominator-panel.js"
+    "smoke:denompanel": "node smoke/denominator-panel.js",
+    "smoke:practiceexamformat": "node smoke/cyber-practice-exam-format.js",
+    "verify:practiceexamformat": "node scripts/verify-practice-exam-format-live.js"
   },
   "keywords": [],
   "author": "",
