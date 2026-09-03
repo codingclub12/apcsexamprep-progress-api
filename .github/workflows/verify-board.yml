@@ -132,3 +132,36 @@ jobs:
             echo "the board and click verify: that path is cookie-auth only, which is the"
             echo "whole reason the number means anything."
           } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  Board task 166: this workflow reads the board and never told the board
+      #  about itself. Same reporting gap as deploy-drift.yml before
+      #  2026-09-01, seventh of seven instances.
+      #
+      #  `if: always()` so a failed reconcile still reports; `job.status !=
+      #  'cancelled'` for a run that verified nothing; continue-on-error so the
+      #  observer cannot turn this red by itself; a missing TODO_KEY skips
+      #  rather than fails. This step writes only to /api/command/checks, which
+      #  is a distinct write path from the verify-board.js script above it -
+      #  that script still makes GETs only (smoke/verify-board.js asserts
+      #  every request it issues is one), so the "cookie-auth only closes a
+      #  claim" boundary the step above states is unchanged.
+      - name: Report to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"health\",\"check_id\":\"verify-board\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"
