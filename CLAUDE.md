@@ -703,6 +703,19 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   characters nobody has reported yet. `scripts/mojibake-rederive.js` is a second
   implementation that must agree, and `npm run smoke:mojibakeparity` fails if the
   Python port drifts from the JavaScript.
+
+  **One consumer was missed by that migration, and it was the one that mattered
+  most.** `scripts/matrixify-preflight.js` kept three hardcoded LATIN-1 lead pairs
+  of its own (U+00E2 U+0080, U+00C3 U+00A2, U+00F0 U+009F) until 2026-09-04. Every
+  Shopify page change ships as a Matrixify sheet, so that preflight is the gate
+  between authored content and a live page body, and a sheet out of Excel carries
+  the CP1252 flavour, where those leads read U+00E2 U+20AC and U+00F0 U+0178. None
+  of the three matched, so the corruption reported on a live page would have
+  imported without complaint. Its own smoke fixture was built in the latin-1
+  flavour too, so the guard and its test shared one blind spot and agreed with each
+  other, which is the same failure as the handoff draft one directory over. It
+  calls the module now. When a module lands, the MIGRATION is the change: grep for
+  the retired pattern across every consumer before calling a consolidation done.
 - Mojibake is detected with `lib/mojibake.js`, never with a pasted pattern. Go
   through the module the same way EK codes go through `lib/cyber-ek-density.js`.
   The section above has the method and what shipped; the reason it is a rule is

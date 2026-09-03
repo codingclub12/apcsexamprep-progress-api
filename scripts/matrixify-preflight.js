@@ -61,6 +61,30 @@ const publishedAtOk = (v) => {
   //  <date> then a time, and nothing else.
   return new RegExp('^' + PUBLISHED_AT_DATE + '[ T]\\d{2}:\\d{2}(:\\d{2})?Z?$').test(t);
 };
+//  MOJIBAKE IS NOT A PATTERN MATCH ANY MORE, and the three byte pairs that used
+//  to live here are why. They were the LATIN-1 lead sequences for a bullet, a
+//  doubly corrupted bullet and an emoji:
+//
+//    U+00E2 U+0080    a 3-byte character, latin-1
+//    U+00C3 U+00A2    the same, corrupted a second time
+//    U+00F0 U+009F    a 4-byte character, latin-1
+//
+//  A Matrixify sheet comes out of Excel or a CSV pipeline, so the flavour it
+//  actually carries is CP1252, where those leads read U+00E2 U+20AC and
+//  U+00F0 U+0178 instead. Neither is in that list, so a sheet carrying the
+//  bullet reported on a live page passed this gate. smoke/matrixify-preflight.js
+//  passed too, because its fixture was built in the latin-1 flavour as well: the
+//  guard and its test shared one blind spot and agreed with each other.
+//
+//  THIS WAS THE LAST CONSUMER STILL HOLDING ITS OWN OPINION. lib/mojibake.js
+//  landed on 2026-09-03 and smoke/encoding-guard.js, lib/site-crawl.js and the
+//  CED importer were all moved onto it; this file was missed, and it is the one
+//  that matters most, because every Shopify page change ships as a sheet and
+//  this preflight is the gate between authored content and a live page body.
+const mojibake = require('../lib/mojibake.js');
+
+//  Kept only for the comment above; nothing reads it. Left as a marker so a
+//  future session grepping for the old rule lands on the explanation.
 //  Built from code points so this file stays pure ASCII. These are the byte
 //  sequences a UTF-8 bullet, dash or emoji turns into when read as Latin-1.
 const MOJIBAKE = [[0xE2, 0x80], [0xC3, 0xA2], [0xF0, 0x9F]]
@@ -212,8 +236,18 @@ function preflight(path, opts) {
   let nonAscii = 0, scriptsChecked = 0, carriedEmoji = 0;
   for (const r of body) {
     const cellText = bi === -1 ? '' : String(r[bi] || '');
-    for (const sig of MOJIBAKE) {
-      if (cellText.indexOf(sig) !== -1) { problems.push('mojibake sequence present in a body'); break; }
+    //  cap 5: a body runs to 270K characters and one hit is enough to refuse the
+    //  sheet, so there is no reason to walk a corrupted megabyte to the end.
+    //  analyze() has already dropped isolated exotic leads, which are real text,
+    //  so everything it returns is worth refusing over.
+    const moji = mojibake.analyze(cellText, { cap: 5 });
+    if (moji.length) {
+      const means = [...new Set(moji.map((h) => 'U+'
+        + h.fixed.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')))].join(', ');
+      const flavours = [...new Set(moji.map((h) => h.codec))].join(' and ');
+      problems.push('mojibake sequence present in a body: ' + moji.length
+        + ' run(s), ' + flavours + ' flavour, meaning ' + means
+        + '. Reverse it with lib/mojibake.js repair, do not retype the body.');
     }
     //  CARRIED vs INTRODUCED, the same distinction the non-ASCII note makes.
     //  The handoff says emoji are not used in this store's page content, and the
