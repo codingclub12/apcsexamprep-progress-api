@@ -191,12 +191,15 @@ in this repo.
 
 Both scans are re-runnable and neither needs credentials.
 
-**Incidentally, the sitemap is retrievable from a session container.** A plain
-`curl -sSL https://apcsexamprep.com/sitemap.xml` returns the index, and
-`sitemap_pages_1.xml` returns all 1362 page URLs (567 ap-csa, 338 ap-csp, 95
-ap-cybersecurity). If a prior audit concluded the sitemap could not be fetched and
-fell back to inferring inventory from nav and search, that conclusion is worth
-re-testing before anything is scheduled around it.
+**The sitemap point was already settled, by somebody else, earlier today.**
+I reached it independently and it is not news:
+`docs/runs/2026-09-03-claude-code-cyber-topic-sitemap-diff.md` landed on `main` at
+10:45 with the same figure (1362 page URLs from `sitemap_pages_1.xml`), the same
+conclusion that the prior audit's inability to retrieve it does not reproduce, and
+answers to the Unit 4 and 5 Cyber exam question that this note does not have. Read
+that one. The only thing worth adding from here is operational: fetch it with NO
+User-Agent, per the `lib/storefront-fetch.js` convention that landed the same day,
+or you get the challenge body and a silently empty result.
 
 ## Still open
 
