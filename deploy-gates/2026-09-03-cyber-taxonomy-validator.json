@@ -82,7 +82,7 @@
     {
       "kind": "mutation",
       "name": "filing topic 3.1 under a lesson the site does not teach is caught",
-      "file": "data/cyber-topics.json",
+      "file": "config/cyber-topics.json",
       "find": "\"lesson_id\": \"3.1a\"",
       "replace": "\"lesson_id\": \"3.1\"",
       "command": "npm run --silent smoke:cybertopics",

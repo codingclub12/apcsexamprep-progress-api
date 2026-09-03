@@ -331,7 +331,7 @@ the class to Network Segmentation. `lib/cyber-unit3-renumber.js` carries the
 correction and the reason the fix has to be one single-pass callback rather than a
 sequence of replaces.
 
-**`data/cyber-topics.json` EXISTS as of 2026-09-03**, and this paragraph used to say
+**`config/cyber-topics.json` EXISTS as of 2026-09-03**, and this paragraph used to say
 the opposite for the right reason: a draft named it as the authority for the 24
 titles before anything created it, and naming an authority that does not exist is
 worse than naming none, for exactly the reason `validate_csv.py` was worse than
@@ -757,7 +757,7 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   other, which is the same failure as the handoff draft one directory over. It
   calls the module now. When a module lands, the MIGRATION is the change: grep for
   the retired pattern across every consumer before calling a consolidation done.
-- **AP Cybersecurity topics come from `data/cyber-topics.json`**, read through
+- **AP Cybersecurity topics come from `config/cyber-topics.json`**, read through
   `lib/cyber-topics.js`, and from nowhere else. It exists as of 2026-09-03: 24 CED
   topics with their official titles (parsed from the CED text, never retyped),
   slugs, skill categories, gradebook lesson ids, live handles, and the one
@@ -772,6 +772,21 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   The 1.3 versus 1.4 swap is what these exist for: the site calls topic 1.3
   "Wireless Security" and the CED calls it "Best Practices for Public Networks",
   because the mapping used to live in page bodies.
+- **NOTHING THE SERVER READS MAY LIVE IN `data/`.** The Railway volume mounts
+  there, at `/app/data`, and a mount REPLACES the directory: a file that is
+  tracked in git, not gitignored, and uploaded in the deploy tarball is still
+  invisible to the running container. That is not a hypothesis. The taxonomy
+  shipped as `data/cyber-topics.json` on 2026-09-03 and production answered
+  `cannot read /app/data/cyber-topics.json: ENOENT` while every repository-side
+  check said the file was there, because every one of them was looking at the
+  repo rather than at the container. 24 manifest rows silently did not land, and
+  the boot seed's own failure went to a log an agent cannot read.
+  Runtime config belongs in `config/`, beside `ced-sources.json` and `labs/`. The
+  volume is for state the container WRITES, which is the SQLite database, and for
+  nothing the repo ships. `npm run smoke:volumepaths` refuses a tracked file
+  under `data/` and any runtime module that resolves a path into it.
+  The README says the mount path is `/data`. The runtime says `/app/data`. The
+  runtime wins.
 - Mojibake is detected with `lib/mojibake.js`, never with a pasted pattern. Go
   through the module the same way EK codes go through `lib/cyber-ek-density.js`.
   The section above has the method and what shipped; the reason it is a rule is
@@ -796,8 +811,10 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   and topic number in it is a recollection rather than a reading, and it arrives
   with the same confidence either way. Open each one before landing it.
   The CLAUDE.md additions of 2026-09-03 carried four wrong claims and three were
-  exactly this: a `data/cyber-topics.json` that has never existed, named as "the
-  only authority" for the 24 topic titles; a topic swap attributed to 1.3 and 1.4
+  exactly this: a `data/cyber-topics.json` that had never existed, named as "the
+  only authority" for the 24 topic titles (the file exists now, as
+  `config/cyber-topics.json`, built by PR #483; it was moved out of `data/`
+  because the volume mounts there and hid it from the container); a topic swap attributed to 1.3 and 1.4
   when the audit records it at 3.3 and 3.4; and a CED PDF described as being in
   this repo when only its sha256 is. None of the three was careless. All are
   structural, and the structure does not improve with more care on that side.
