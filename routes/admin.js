@@ -43,6 +43,48 @@ const router = express.Router();
 const MIN_KEY_LEN = 20;
 
 // ── AUTH (fail closed) ────────────────────────────────────────────────────────
+//
+//  TWO KEYS, AND THE SECOND ONE EXISTS FOR A STRUCTURAL REASON.
+//
+//    ADMIN_KEY       full read and write. Also the HMAC secret that signs the
+//                    dashboard session cookie (lib/admin-session.js).
+//    ADMIN_READ_KEY  GET and HEAD only, never PII, and it can do nothing else.
+//
+//  WHY NOT JUST SHARE ADMIN_KEY WITH AN AGENT. Because the session cookie is
+//  signed with ADMIN_KEY itself, anyone holding that key can MINT a valid cookie
+//  offline, without ever calling /admin/login. That cookie is what
+//  lib/command-auth.js requireCookieAuth accepts, and it gates
+//  POST /api/todo/:id/verify. So handing ADMIN_KEY to an agent hands it the
+//  verify bit, and rule 4 of CLAUDE.md, that the agent which did the work is
+//  never the one that says it is true, stops being enforced by anything.
+//
+//  That is also why this is a SEPARATE SECRET rather than a flag on the session.
+//  A first design marked sessions as agent-minted at /admin/login and refused the
+//  verify bit for those. It would not have held for one minute: an agent holding
+//  ADMIN_KEY skips /admin/login and signs its own token with browser:true. A
+//  guard that the credential it guards against can forge is theatre, and this
+//  repository has spent enough days on hollow guards already.
+//
+//  The boundary here is not a marking. It is that the holder of ADMIN_READ_KEY
+//  does not possess the HMAC secret, so it cannot produce a cookie at all, and
+//  the only thing it can do is read.
+function readKeyConfigured() {
+  const read = process.env.ADMIN_READ_KEY || '';
+  // Unset or weak means OFF, exactly like the full key.
+  if (read.length < MIN_KEY_LEN) return false;
+  //  A NOTE ON SETTING THE TWO KEYS EQUAL, and why there is no check for it.
+  //  If ADMIN_READ_KEY is given the same string as ADMIN_KEY, a request bearing
+  //  it matches the FULL branch above and returns before this function is ever
+  //  consulted, so the holder has full access and no test here can observe the
+  //  difference. An earlier draft carried `if (read === full) return false;`
+  //  and a mutation test for it; the gate correctly reported that breaking the
+  //  line changed nothing, because the branch order already decided the outcome.
+  //  Rather than keep a guard no mutation can prove, the hazard is written down:
+  //  these must be DIFFERENT secrets, and equality is a configuration error the
+  //  API cannot detect on your behalf.
+  return true;
+}
+
 function requireAdmin(req, res, next) {
   const configured = process.env.ADMIN_KEY || '';
 
@@ -64,6 +106,27 @@ function requireAdmin(req, res, next) {
     // leak key length. timingSafeEqual throws on length mismatch otherwise.
     const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
     if (crypto.timingSafeEqual(digest(provided), digest(configured))) return next();
+
+    // The read-only key. Checked AFTER the full key so that if someone sets both
+    // to the same value the full-key branch wins and readKeyConfigured() has
+    // already refused the equal case anyway.
+    if (readKeyConfigured()
+        && crypto.timingSafeEqual(digest(provided), digest(process.env.ADMIN_READ_KEY))) {
+      if (req.method !== 'GET' && req.method !== 'HEAD') {
+        return res.status(403).json({
+          error: 'This credential is read-only. Mutations require the full admin key.',
+        });
+      }
+      // No names, ever. The zero-PII posture is not suspended for an agent, and
+      // nothing an agent needs from these endpoints requires a student's name.
+      if (req.query && req.query.reveal === '1') {
+        return res.status(403).json({
+          error: 'This credential is read-only and PII-stripped. reveal=1 requires the full admin key.',
+        });
+      }
+      req.adminReadOnly = true;
+      return next();
+    }
     return res.status(403).json({ error: 'Invalid or missing admin key.' });
   }
 

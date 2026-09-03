@@ -178,6 +178,53 @@ What is left is two cases only the container can tell apart: the seed threw, or
 it ran and wrote nothing. Board 191, and PR #489 ships the instrument that says
 which.
 
+**RESOLVED, same session.** The instrument answered on its first boot:
+
+```
+course_manifest: {"ok": false, "error":
+  "cannot read /app/data/cyber-topics.json: ENOENT: no such file or directory"}
+```
+
+The Railway volume mounts at `/app/data`. A mount REPLACES the directory, so a
+file that is tracked, not gitignored, and uploaded in the deploy tarball is
+still not there at runtime. My own elimination list had ruled this out by
+reading `.gitignore`, the deploy workflow and the README's mount path: all true
+about the repository, and the question was about the container. The CLAUDE.md
+rule another session added the same afternoon says it exactly, and I had read it
+that hour: verify what a check covers by RUNNING it against the case.
+
+PR #493 moved the file to `config/` and added `smoke:volumepaths`, which refuses
+a tracked file under `data/` or any runtime module reading from it. The deploy
+gate then caught THAT guard being hollow: with its target list pointed at a
+directory that does not exist, every check still passed, each vacuously true
+against a clean tree. The detectors are fed the exact defect now.
+
+Live, after the deploy:
+
+```
+/api/health   commit 7736294
+              course_manifest {"ok":true,"ms":9,"total":932,"changed":24}
+              seed.ok true, failed []
+digest        manifest_items 932, up from 908
+```
+
+Both deploy gates pass on four independent kinds: suite, mutation, rederive,
+live.
+
+PR #500 then closed the loop that made this take three PRs to notice.
+`deploy-drift.yml` polls `/api/health` every 30 minutes and now posts a
+`boot-seed` check beside the drift one, so the next silently failed seed is a
+red check in the digest within half an hour rather than a number somebody
+happens to compare. Its verdict script is tested by being executed against three
+payloads, including this incident.
+
+**What the day is actually about.** Three checks reported success while 24 rows
+were missing, and every one of them was telling the truth: CI said the code was
+fine, railway-deploy said it deployed, deploy-drift said the right commit was
+serving. None of them asked whether the deploy did what it was FOR. A live check
+that asserts what the change made true is the only one that could have, which is
+what the deploy gate has been saying since it was written.
+
 ## What changed after the merge, and what it proved
 
 `main` moved four times while this was in flight, and twice in ways that bear

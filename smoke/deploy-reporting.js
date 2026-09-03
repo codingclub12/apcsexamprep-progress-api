@@ -207,5 +207,82 @@ ok('8.6 continue-on-error, so the reporter cannot break the deploy job',
 ok('8.7 a missing TODO_KEY still skips rather than fails',
   /TODO_KEY not configured; skipping/.test(rdReportBlock));
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  9. The boot-seed reporter, run rather than read
+//
+//  Sections 1 to 8 assert WIRING by reading workflow text, which is the right
+//  test for "does the alarm reach the board". It is the wrong test for "does
+//  the alarm say the right thing", and this repo has now been bitten by that
+//  distinction twice in one day: a mojibake rule that read as complete and had
+//  holes, and a path check that read the repository to answer a question about
+//  the container.
+//
+//  So the verdict script is EXTRACTED from deploy-drift.yml and executed
+//  against three health payloads. It is the same text the runner executes; if
+//  somebody edits the workflow, this runs the edit.
+//
+//  The three cases are the three real states, and the third is the one worth
+//  protecting: a container older than lib/boot-seed.js has no seed block, and
+//  neither pass nor fail is honest about it.
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('\n9. The boot-seed verdict, executed against real payloads');
+
+const seedStep = drift.slice(drift.indexOf('Report the boot-seed verdict'));
+const scriptStart = seedStep.indexOf("node -e '");
+const verdictScript = seedStep.slice(scriptStart + "node -e '".length, seedStep.indexOf("')", scriptStart));
+
+ok('9.1 the verdict script was found in the workflow', verdictScript.length > 200, verdictScript.length);
+
+function verdict(payload) {
+  const { execFileSync } = require('child_process');
+  const out = execFileSync(process.execPath, ['-e', verdictScript], {
+    input: JSON.stringify(payload), encoding: 'utf8',
+  });
+  const [state, detail] = out.trim().split('\t');
+  return { state, detail: detail || '' };
+}
+
+const passing = verdict({
+  commit: 'abc1234',
+  seed: { ok: true, failed: [], seeds: { course_manifest: { ok: true, total: 932, changed: 24 } } },
+});
+ok('9.2 a healthy boot reports pass', passing.state === 'pass', passing);
+ok('9.3 and names the commit it saw', /abc1234/.test(passing.detail), passing.detail);
+
+//  The exact shape of the 2026-09-03 incident.
+const failing = verdict({
+  commit: 'd059208',
+  seed: {
+    ok: false,
+    failed: ['course_manifest', 'course_manifest prune'],
+    seeds: {
+      course_manifest: { ok: false, error: "cannot read /app/data/cyber-topics.json: ENOENT" },
+      'course_manifest prune': { ok: false, error: "cannot read /app/data/cyber-topics.json: ENOENT" },
+    },
+  },
+});
+ok('9.4 the incident payload reports fail', failing.state === 'fail', failing);
+ok('9.5 and carries the reason, not just a count',
+  /ENOENT/.test(failing.detail) && /course_manifest/.test(failing.detail), failing.detail);
+ok('9.6 the state it posts is a legal STATE', STATES.includes(failing.state), failing.state);
+
+//  Neither pass nor fail: an older container cannot answer the question.
+const older = verdict({ commit: 'old1234', integrity: { ok: true } });
+ok('9.7 a container with no seed block is reported as unknown, not pass',
+  older.state === 'unknown', older);
+ok('9.8 and the workflow posts nothing at all in that case',
+  /if \[ "\$state" = "unknown" \]; then\n\s*echo "Not reporting/.test(drift), 'the unknown branch must exit before the curl');
+
+ok('9.9 the reporter posts source "health" and check_id "boot-seed"',
+  drift.includes('\\"source\\": \\"health\\"') || drift.includes('source: "health"'),
+  'source');
+ok('9.10 it fingerprints to one ageing task via a stable check_id',
+  /check_id: "boot-seed"/.test(drift), 'check_id');
+ok('9.11 it never reports from a cancelled run',
+  seedStep.slice(0, seedStep.indexOf('run:')).includes("job.status != 'cancelled'"), 'cancellation guard');
+ok('9.12 it fetches health itself, so a drift failure cannot hide a seed failure',
+  /HEALTH_URL/.test(seedStep) && seedStep.indexOf('curl -sS --max-time 20 "$HEALTH_URL"') > 0,
+  'independent fetch');
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail === 0 ? 0 : 1);

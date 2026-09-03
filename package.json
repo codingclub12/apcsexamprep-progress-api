@@ -25,6 +25,7 @@
     "smoke:quizgate": "node smoke/quiz-gate.js",
     "smoke:quiztogradebook": "node smoke/quiz-to-gradebook.js",
     "smoke:admingates": "node smoke/admin-gates.js",
+    "smoke:assistantreport": "node smoke/assistant-report.js",
     "smoke:quizauthoring": "node smoke/quiz-bank-authoring.js",
     "smoke:denomsafety": "node smoke/denominator-safety.js",
     "smoke:scoreeventsource": "node smoke/score-event-source.js",
@@ -206,7 +207,8 @@
     "smoke:deadlinks": "node smoke/dead-internal-link-repair.js",
     "smoke:emptyredirects": "node smoke/empty-page-redirects.js",
     "smoke:unitcourse": "node smoke/csa-unit-course-repair.js",
-    "smoke:denompanel": "node smoke/denominator-panel.js"
+    "smoke:denompanel": "node smoke/denominator-panel.js",
+    "smoke:adminreadkey": "node smoke/admin-read-key.js"
   },
   "keywords": [],
   "author": "",

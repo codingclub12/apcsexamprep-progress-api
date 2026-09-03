@@ -560,6 +560,53 @@ db.exec(`
     last_seen     TEXT DEFAULT (datetime('now')),
     PRIMARY KEY (course, unit, lesson, activity_type)
   );
+
+  -- ── SITE ASSISTANT: ESCALATIONS (Phase 0) ──────────────────────────────────
+  --  One row per thing a person could not resolve on their own. Phase 0 fills it
+  --  from POST /api/assistant/report only; later phases add chat-originated
+  --  rows, which is why the column names are the escalation names from
+  --  docs/site-assistant-spec.md rather than report-shaped ones.
+  --
+  --  session_id is NULLABLE, unlike the v1 sketch. A Phase 0 report has no chat
+  --  session because Phase 0 has no chat, and inventing a synthetic session to
+  --  satisfy a NOT NULL would put a fake row in the session log that every later
+  --  reader would have to learn to ignore.
+  --
+  --  PII: summary is the only free-text column and it is NULL for any report
+  --  whose caller could be a minor. bodies_retained records which of those two
+  --  happened, so the posture of a row is readable FROM the row rather than
+  --  re-derived from role and scope by whoever reads it next. See
+  --  lib/assistant/scope.js retainsBodies, and CLAUDE.md on the one approved
+  --  exception (sandbox_programs), which this table is deliberately not a
+  --  second instance of.
+  CREATE TABLE IF NOT EXISTS chat_escalations (
+    id              TEXT PRIMARY KEY,
+    session_id      TEXT,                -- NULL in Phase 0: no chat session exists
+    category        TEXT NOT NULL,       -- see lib/assistant/report.js CATEGORIES
+    severity        TEXT NOT NULL,       -- immediate | normal | low
+    role            TEXT NOT NULL,       -- teacher | student | anonymous, resolved server-side
+    user_ref        TEXT,                -- teacher or student id, NULL when anonymous
+    page_url        TEXT,
+    page_scope      TEXT,                -- derived server-side, never client-asserted
+    course          TEXT,
+    contact_email   TEXT,                -- teacher's own address only; students have none
+    contact_name    TEXT,
+    school          TEXT,
+    summary         TEXT,                -- NULL when bodies_retained = 0
+    detail_json     TEXT,                -- machine context: UA, console errors, counts
+    bodies_retained INTEGER NOT NULL DEFAULT 1,
+    ip_hash         TEXT,                -- daily-rotating hash, never a raw IP
+    todo_id         INTEGER,             -- tasks.id on the command board, when filed
+    status          TEXT NOT NULL DEFAULT 'open',
+    created_at      TEXT DEFAULT (datetime('now')),
+    resolved_at     TEXT
+  );
+  -- The escalation queue reads open rows newest first; the digest counts by day.
+  CREATE INDEX IF NOT EXISTS idx_chat_esc_status ON chat_escalations(status, created_at);
+  -- Deletion by student id, wired into the same path that deletes a student.
+  CREATE INDEX IF NOT EXISTS idx_chat_esc_user ON chat_escalations(user_ref);
+  -- The per-day volume cap counts today's rows on every public POST.
+  CREATE INDEX IF NOT EXISTS idx_chat_esc_created ON chat_escalations(created_at);
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
