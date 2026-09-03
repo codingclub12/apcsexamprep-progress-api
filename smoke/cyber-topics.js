@@ -322,13 +322,23 @@ check('topic 3.1 files under 3.1a, and no row names lesson "3.1"', () => {
   assert.ok(!rows.some((r) => r.lesson_id === '3.1'), 'lesson "3.1" is not a page the site teaches');
 });
 
-check('the seed builds those 24 rows and nothing else for cyber', () => {
+check('the seed builds the 24 topic-visit rows, plus any graded cyber lab, and nothing else', () => {
   const { buildRows } = require('../scripts/seed-manifest');
+  const labSpecs = require('../lib/lab-spec');
   const cyber = buildRows().filter((r) => r.course === 'ap-cybersecurity');
-  assert.strictEqual(cyber.length, 24, `the seed builds ${cyber.length} cyber rows`);
+  // A graded lab is a real, authored row, not phantom growth: it comes from
+  // labSpecs.graded(), the same source seed-manifest.js itself reads, so this
+  // stays a check against the real authority rather than a frozen count that
+  // breaks the moment cyber ships its first gradeable lab (board #198).
+  const expectedVisit = doc.topics.map((t) => `${t.topic}-visit`);
+  const expectedLabs = labSpecs.graded()
+    .filter((s) => s.course === 'ap-cybersecurity')
+    .map((s) => s.item_id);
+  const expected = [...expectedVisit, ...expectedLabs].sort();
   assert.deepStrictEqual(
     cyber.map((r) => r.item_id).sort(),
-    doc.topics.map((t) => `${t.topic}-visit`).sort()
+    expected,
+    `the seed builds ${cyber.length} cyber rows, expected ${expected.length}`
   );
 });
 
