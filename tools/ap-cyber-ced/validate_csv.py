@@ -65,14 +65,20 @@ stayed_hidden collects every id carrying display:none in the baseline body and
 fails if any of them lost it. It is cheap, it is general, and it is the check
 that would have caught a defect none of the others could see.
 """
-import csv, sys, re, json
+import csv, sys, re, json, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 csv.field_size_limit(sys.maxsize)
 OFF_CED = ['spear phishing','vishing','smishing','whaling','baiting','quid pro quo',
            'tailgating','shoulder surf','dumpster div','credential stuffing',
            'password spraying','brute force','rainbow table','deepfake',
            'man-in-the-middle','rogue access point','business email compromise']
-MOJIBAKE = ['\u00e2\u20ac','\u00c3\u00a2','\u00c3\u00b0','\u00e2\u0080\u00a2']
+# Structural detection, not a pattern list. The four patterns that used to be
+# here could not match a corrupted emoji at all: a 4 byte character mangled
+# through cp1252 begins with an eth and matches none of them. This gate stands
+# between a CED sheet and the live store, so that blindness was one import away
+# from corrupted text on a student page. See tools/ap-cyber-ced/mojibake.py.
+import mojibake as _mojibake
 
 def strip_comments(html):
     # A comment cannot contain markup, so tag counting must happen outside it.
@@ -117,7 +123,7 @@ def body_checks(b, h):
     c['style_balanced']     = len(re.findall(r'<style[ >]', nc)) == nc.count('</style>')
     c['script_balanced']    = len(re.findall(r'<script[ >]', nc)) == nc.count('</script>')
     c['div_balanced']       = nc.count('<div') == nc.count('</div>')
-    c['no_mojibake']        = not any(m in b for m in MOJIBAKE)
+    c['no_mojibake']        = not _mojibake.has_mojibake(b)
     c['ucnav_preserved']    = 'id="ucnav"' in b
     c['nav_strip_start']    = ('APCYBER-ACTIVITY-NAV-START' in b
                                or 'APCYBER-LESSON-NAV-START' in b

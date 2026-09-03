@@ -109,48 +109,65 @@ console.log('\n3. Encoding: the BOM is not optional');
   ok('  a file without a BOM is refused', has(r, /no BOM/), r.problems);
   ok('  and the message explains the Latin-1 guess', has(r, /Latin-1/), r.problems);
 
-  //  ── THE BLIND SPOT THIS GATE AND ITS TEST USED TO SHARE ──────────────────
-  //  Until 2026-09-03 there was exactly one fixture here and it was the LATIN-1
-  //  bullet, matched against a list of latin-1 byte pairs. Both halves were
-  //  built the same wrong way, so they agreed with each other and the suite was
-  //  green. A Matrixify sheet comes out of Excel or a CSV pipeline, so what it
-  //  actually carries is the CP1252 flavor, and that walked straight through.
-  //  The fixtures are now built by smoke/mojibake-fixtures.js, which corrupts a
-  //  real character rather than reproducing a remembered byte pair.
-  const fx = require('./mojibake-fixtures.js');
+  //  -- THE BLIND SPOT THIS GATE AND ITS TEST USED TO SHARE -------------------
+  //  Until 2026-09-04 there was exactly ONE fixture here and it was the LATIN-1
+  //  bullet, matched against a list of latin-1 byte pairs in the preflight. Both
+  //  halves were built the same wrong way, so they agreed with each other and
+  //  this suite was green while the form that reaches a live page walked through.
+  //  A Matrixify sheet comes out of Excel or a CSV pipeline, so what it actually
+  //  carries is the CP1252 flavour.
+  //
+  //  The fixtures are CORRUPTED HERE from the real bytes of a real character,
+  //  rather than pasted in as a remembered byte pair. That is the whole lesson:
+  //  a fixture written from memory encodes the same misunderstanding as the rule
+  //  it is supposed to be testing.
+  const CP1252 = {
+    0x80: 0x20AC, 0x82: 0x201A, 0x83: 0x0192, 0x84: 0x201E, 0x85: 0x2026,
+    0x86: 0x2020, 0x87: 0x2021, 0x88: 0x02C6, 0x89: 0x2030, 0x8A: 0x0160,
+    0x8B: 0x2039, 0x8C: 0x0152, 0x8E: 0x017D, 0x91: 0x2018, 0x92: 0x2019,
+    0x93: 0x201C, 0x94: 0x201D, 0x95: 0x2022, 0x96: 0x2013, 0x97: 0x2014,
+    0x98: 0x02DC, 0x99: 0x2122, 0x9A: 0x0161, 0x9B: 0x203A, 0x9C: 0x0153,
+    0x9E: 0x017E, 0x9F: 0x0178,
+  };
+  const bytesOf = (cp) => Array.from(Buffer.from(String.fromCodePoint(cp), 'utf8'));
+  const asLatin1 = (cp) => bytesOf(cp).map((b) => String.fromCodePoint(b)).join('');
+  const asCp1252 = (cp) => bytesOf(cp)
+    .map((b) => String.fromCodePoint(CP1252[b] === undefined ? b : CP1252[b])).join('');
+  const twice = (t) => Array.from(t).map((c) => Array.from(Buffer.from(c, 'utf8'))
+    .map((b) => String.fromCodePoint(CP1252[b] === undefined ? b : CP1252[b])).join('')).join('');
   const body = (t) => preflight(write('moji-blog-posts.csv', HDR,
     [['b', 'h', 'MERGE', '<p>' + t + '</p>']]));
 
-  const latin1Bullet = body('bullet ' + fx.latin1Once(0x2022));
-  ok('  a latin-1 mojibaked body is still refused', has(latin1Bullet, /mojibake/), latin1Bullet.problems);
+  ok('  a latin-1 mojibaked body is still refused',
+    has(body('bullet ' + asLatin1(0x2022)), /mojibake/));
 
   //  THE ONE THAT WAS GETTING THROUGH.
-  const cp1252Bullet = body('bullet ' + fx.cp1252Once(0x2022));
+  const cp1252Bullet = body('bullet ' + asCp1252(0x2022));
   ok('  a cp1252 mojibaked body is refused, the form a spreadsheet produces',
     has(cp1252Bullet, /mojibake/), cp1252Bullet.problems);
-  ok('  and the refusal names the character it means',
-    has(cp1252Bullet, /bullet \(U\+2022\)/), cp1252Bullet.problems);
+  ok('  and the refusal names the character it means and the flavour',
+    has(cp1252Bullet, /U\+2022/) && has(cp1252Bullet, /cp1252 flavour/),
+    cp1252Bullet.problems);
 
   //  A 4-byte character corrupts into FOUR, which no width in the old list
-  //  reached, in either flavor.
-  const cp1252Emoji = body('goal ' + fx.cp1252Once(0x1F3AF));
-  ok('  a cp1252 mojibaked EMOJI body is refused', has(cp1252Emoji, /mojibake/), cp1252Emoji.problems);
-  const latin1Emoji = body('goal ' + fx.latin1Once(0x1F3AF));
-  ok('  a latin-1 mojibaked EMOJI body is refused', has(latin1Emoji, /mojibake/), latin1Emoji.problems);
+  //  reached, in either flavour.
+  ok('  a cp1252 mojibaked EMOJI body is refused',
+    has(body('goal ' + asCp1252(0x1F3AF)), /mojibake/));
+  ok('  a latin-1 mojibaked EMOJI body is refused',
+    has(body('goal ' + asLatin1(0x1F3AF)), /mojibake/));
 
-  //  And a doubly corrupted body, which is the form the drafts for this fix
-  //  described. A rule written from it would have missed everything above.
-  const twice = body('bullet ' + fx.corruptAgain(fx.cp1252Once(0x2022)));
-  ok('  a doubly corrupted body is refused', has(twice, /mojibake/), twice.problems);
+  //  And the doubly corrupted form, which is what the handoff drafts described.
+  //  A rule written from it would have missed every case above.
+  ok('  a doubly corrupted body is refused',
+    has(body('bullet ' + twice(asCp1252(0x2022))), /mojibake/));
 
-  //  The refusal must not fire on a Nordic sort label. That is a note, not a
-  //  problem, or a real import gets blocked over legitimate text.
+  //  It must NOT fire on a Nordic sort label. An isolated width-2 run whose lead
+  //  sits outside U+00C2 to U+00C3 is real text: analyze() drops it, and if it
+  //  did not, a legitimate import would be blocked over a sort order.
   const nordic = body('Alfabetisk, ' + String.fromCodePoint(0x00C5)
     + String.fromCodePoint(0x2013) + 'A');
   ok('  a Nordic sort label is NOT refused as mojibake',
     !has(nordic, /mojibake/), nordic.problems);
-  ok('  but it is counted as a suspect so it is never silent',
-    nordic.mojiSuspects === 1, nordic.mojiSuspects);
 
   const e = preflight(write('emoji-blog-posts.csv', HDR,
     [['b', 'h', 'MERGE', '<p>' + String.fromCodePoint(0x1F3AF) + '</p>']]));

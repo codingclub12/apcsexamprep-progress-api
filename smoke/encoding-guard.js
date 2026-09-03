@@ -1,334 +1,404 @@
 'use strict';
 // -----------------------------------------------------------------------------
-//  SMOKE: text encoding guard.
+//  SMOKE: text encoding guard. Runs in CI on every pull request.
 //
 //  WHY THIS EXISTS: on 2026-08-07 every non-ASCII character in five admin pages
-//  was silently rewritten with its UTF-8 bytes read as a single-byte codec and
-//  re-encoded. 2202 characters became mojibake. The dashboard delta badges
-//  rendered a box and two digits instead of a triangle for hours, and nothing
-//  caught it, because re-encoded text is still perfectly valid UTF-8. It parses,
-//  it lints, it serves, every other suite passes. The only thing wrong with it
-//  is that it means the wrong character, which no other check looks at.
+//  was silently rewritten with its UTF-8 bytes read as latin-1 and re-encoded.
+//  2202 characters became mojibake. The dashboard delta badges rendered garbage
+//  instead of a triangle for hours and nothing caught it, because double
+//  encoded text is still perfectly valid UTF-8. It parses, it lints, it serves,
+//  every other suite passes.
 //
-//  WHAT CHANGED ON 2026-09-03, and why this suite grew a derivation section.
-//  It used to carry its own detector: leads {U+00C2, U+00C3, U+00E2}, widths 3
-//  and 2, reversed through latin-1 only. It was green, and it was blind to both
-//  halves of the corruption reported on a live page:
+//  WHY IT WAS REWRITTEN ON 2026-09-03: it was hollow, and it was hollow in the
+//  most expensive possible way, which is that it reported clean.
 //
-//    the cp1252 bullet   U+00E2 U+20AC U+00A2      MISSED. Two of those three
-//                                                  code points are above 0xFF,
-//                                                  so a latin-1 reversal cannot
-//                                                  produce them and the round
-//                                                  trip rejected the run.
-//    the cp1252 emoji    U+00F0 U+0178 U+017D      MISSED. A 4-byte character
-//                        U+00AF                    corrupts into FOUR, widths
-//                                                  stopped at 3, and U+00F0 was
-//                                                  not even in the lead set.
+//  The detector carried latin-1 only, on the recorded argument that latin-1
+//  "covers every byte value, which is the strictly broader case". That is true
+//  decoding and false encoding: going back from characters to bytes, latin-1
+//  cannot express the 27 cp1252 characters in 0x80-0x9F, which is what a
+//  corrupted bullet, dash, curly quote or emoji actually becomes. It also tried
+//  sequence widths 3 and 2 only, so no 4 byte character was visible to it in
+//  either flavour, and every emoji is 4 bytes.
 //
-//  Both are the first two assertions below. The detector moved to
-//  lib/mojibake.js, now the only place in this repo with an opinion about what
-//  mojibake looks like. There were three, and lib/site-crawl.js had already
-//  worked out the cp1252 half without it ever reaching this file.
+//  Measured against 12 known cases it caught 5. It caught the DOUBLE corrupted
+//  cp1252 form and missed the single corrupted form, which is the one on the
+//  live page. Its own self-test was seven hand-pasted latin-1 strings, so it
+//  was green either way, and a mutation run against it would also have been
+//  green: the mutation would inject the flavour the suite already tested.
 //
-//  HOW THE FIXTURES ARE BUILT, because it is the reason the mutation checks in
-//  deploy-gates/2026-09-03-mojibake-detector.json mean anything. Each corrupted
-//  sample is assembled HERE from the real UTF-8 bytes of the character it stands
-//  for, through a cp1252 table written in this file in the opposite direction
-//  from the module's. Nothing in a fixture comes from the code under test, so
-//  mutating the module's table cannot corrupt the fixture and the detector
-//  together and leave the suite green. Every non-ASCII character in this file is
-//  written as an escape, so the file cannot itself be mojibaked.
+//  WHAT REPLACES IT, AND WHY THAT IS NOT THE SAME TRICK AGAIN:
+//
+//    1. The detector moved to lib/mojibake.js and is structural. It anchors on
+//       the whole UTF-8 lead class U+00C2-U+00F4, derives the sequence width
+//       from the lead rather than guessing it, and reverses through cp1252 as
+//       well as latin-1. Read that file for why each of those is load bearing.
+//
+//    2. The fixtures below are GENERATED, by a damage simulator written here
+//       from the byte definitions rather than copied from the detector. A
+//       corpus of real characters is corrupted at depth 1 and depth 2, in both
+//       flavours, and every one must be both detected and exactly recovered.
+//       There is no list of known bad strings to fall behind reality.
+//
+//    3. Section 5 asserts the property that makes the U+00C3 anchor wrong, so
+//       the reasoning in lib/mojibake.js is a passing test rather than a claim
+//       in a comment.
+//
+//    4. This file and lib/mojibake.js are pure ASCII and are scanned by the
+//       check they implement. The old version had to exclude itself, which made
+//       a corruption introduced into the detector invisible to the detector.
 //
 //  Run: npm run smoke:encoding
 // -----------------------------------------------------------------------------
-const fs = require('fs');
 const path = require('path');
-const moji = require('../lib/mojibake.js');
+const mojibake = require('../lib/mojibake.js');
 
 const ROOT = path.join(__dirname, '..');
-const SKIP_DIRS = new Set(['node_modules', '.git', 'coverage', 'dist', 'build']);
-
-//  .txt and .py were added on 2026-09-03 and were not a formality: the first
-//  scan that included them found 65 corrupted runs in the AP Cybersecurity CED
-//  extract, the document docs/ap-cyber-unit1-ced-realignment.md names as the
-//  authority for Unit 1, and 3 more in the importer that checks it.
-const SCAN_EXT = new Set(['.html', '.js', '.md', '.json', '.css', '.yml', '.yaml',
-  '.txt', '.py', '.csv', '.liquid']);
 
 let pass = 0, fail = 0;
 const ok = (name, cond, extra) => {
   if (cond) { pass++; console.log('  [PASS] ' + name); }
   else { fail++; console.log('  [FAIL] ' + name + (extra !== undefined ? '  ' + JSON.stringify(extra) : '')); }
 };
-const cps = (s) => Array.from(s)
-  .map((c) => 'U+' + c.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')).join(' ');
-const ch = (cp) => String.fromCodePoint(cp);
 
-//  The corrupter lives in smoke/mojibake-fixtures.js, written in the opposite
-//  direction from lib/mojibake.js so a fixture never comes from the code under
-//  test. See that file for why there is exactly one copy of it.
-const fx = require('./mojibake-fixtures.js');
-const { CP1252_DECODE, utf8, cp1252Once, latin1Once, corruptAgain } = fx;
+// -- The damage simulator ------------------------------------------------------
+//  Written from the byte definitions, NOT from lib/mojibake.js, so a wrong
+//  table in the detector cannot make its own fixtures agree with it. This is
+//  the forward direction: take correct text, encode it UTF-8, then read those
+//  bytes back through a single byte codec. That is the whole bug, in 4 lines.
+const CP1252_DECODE_HIGH = {
+  0x80: 0x20AC, 0x81: 0x0081, 0x82: 0x201A, 0x83: 0x0192, 0x84: 0x201E,
+  0x85: 0x2026, 0x86: 0x2020, 0x87: 0x2021, 0x88: 0x02C6, 0x89: 0x2030,
+  0x8A: 0x0160, 0x8B: 0x2039, 0x8C: 0x0152, 0x8D: 0x008D, 0x8E: 0x017D,
+  0x8F: 0x008F, 0x90: 0x0090, 0x91: 0x2018, 0x92: 0x2019, 0x93: 0x201C,
+  0x94: 0x201D, 0x95: 0x2022, 0x96: 0x2013, 0x97: 0x2014, 0x98: 0x02DC,
+  0x99: 0x2122, 0x9A: 0x0161, 0x9B: 0x203A, 0x9C: 0x0153, 0x9D: 0x009D,
+  0x9E: 0x017E, 0x9F: 0x0178,
+};
 
-// -- 1. The rules are DERIVED, so assert the derivation ----------------------
-//  A detector built from a list of observed patterns is only ever as good as the
-//  samples somebody happened to see. The drafts for this work carried a rule
-//  built from a DOUBLY corrupted sample, which would have shipped a guard blind
-//  to the single-pass form actually reported. These assertions keep the range
-//  derived from UTF-8 rather than drifting back into a list of samples.
-console.log('\nDerivation: the lead range comes from UTF-8, not from samples');
-ok('the lead range is 0xC2 to 0xF4, the legal UTF-8 lead bytes',
-  moji.LEAD_MIN === 0xC2 && moji.LEAD_MAX === 0xF4, [moji.LEAD_MIN, moji.LEAD_MAX]);
-ok('a lead byte states the run length, and 2, 3 and 4 are all reachable',
-  moji.runLength(0xC3) === 2 && moji.runLength(0xDF) === 2
-  && moji.runLength(0xE0) === 3 && moji.runLength(0xEF) === 3
-  && moji.runLength(0xF0) === 4 && moji.runLength(0xF4) === 4);
-ok('width 4 is reachable, which is the entire emoji case', moji.runLength(0xF0) === 4);
-ok('cp1252 contributes exactly its 27 defined high positions',
-  Object.keys(moji.CP1252_HIGH).length === 27, Object.keys(moji.CP1252_HIGH).length);
-ok('this suite and the module agree on all 27, read in opposite directions',
-  Object.keys(CP1252_DECODE).length === 27
-  && Object.entries(CP1252_DECODE).every(([b, cp]) => moji.byteOf(cp) === Number(b)),
-  Object.entries(CP1252_DECODE).filter(([b, cp]) => moji.byteOf(cp) !== Number(b)));
-ok('every cp1252 high character sits above 0xFF, so it cannot collide with latin-1',
-  Object.values(CP1252_DECODE).every((cp) => cp > 0xFF));
-ok('the euro sign maps back to 0x80, which a latin-1 reversal cannot express',
-  moji.byteOf(0x20AC) === 0x80, moji.byteOf(0x20AC));
-ok('latin-1 identity still holds for the bytes cp1252 leaves alone',
-  moji.byteOf(0x00E2) === 0xE2 && moji.byteOf(0x00C3) === 0xC3 && moji.byteOf(0x00F0) === 0xF0);
-ok('a character neither codec can produce has no byte at all',
-  moji.byteOf(0x25B2) === -1 && moji.byteOf(0x1F3AF) === -1);
-ok('a cp1252 high character can never START a run, so a real bullet is safe',
-  moji.byteOf(0x2022) === 0x95 && moji.byteOf(0x2022) < moji.LEAD_MIN);
-
-// -- 2. The detector must fire on known-bad input ----------------------------
-//  A guard that cannot fail on a corrupted fixture is decoration. The first two
-//  are the forms reported on a live page, and the two the previous detector
-//  missed. Each fixture is built from the bytes of the character it stands for,
-//  so the derivation is executed rather than asserted in a comment.
-console.log('\nDetector self-test: the reported live failures first');
-const CASES = [
-  ['THE cp1252 BULLET, reported live',                  cp1252Once(0x2022), 0x2022],
-  ['THE cp1252 EMOJI, reported live',                   cp1252Once(0x1F3AF), 0x1F3AF],
-  ['the cp1252 right single quote',                     cp1252Once(0x2019), 0x2019],
-  ['the cp1252 em dash',                                cp1252Once(0x2014), 0x2014],
-  ['the cp1252 ellipsis',                               cp1252Once(0x2026), 0x2026],
-  ['the cp1252 left double quote',                      cp1252Once(0x201C), 0x201C],
-  ['the latin-1 bullet',                                latin1Once(0x2022), 0x2022],
-  ['the latin-1 emoji',                                 latin1Once(0x1F3AF), 0x1F3AF],
-  ['the latin-1 up triangle, the 2026-08-07 incident',  latin1Once(0x25B2), 0x25B2],
-  ['the latin-1 down triangle',                         latin1Once(0x25BC), 0x25BC],
-  ['the latin-1 right arrow',                           latin1Once(0x2192), 0x2192],
-  ['the latin-1 box drawing dash',                      latin1Once(0x2500), 0x2500],
-  ['the latin-1 check mark',                            latin1Once(0x2713), 0x2713],
-  ['the right quote, 10 of them in the CED extract',    latin1Once(0x2019), 0x2019],
-  ['the en space, 28 of them in the CED extract',       latin1Once(0x2002), 0x2002],
-  ['the section sign, 12 of them in the CED extract',   latin1Once(0x00A7), 0x00A7],
-  ['the middle dot, 13 of them in the CED extract',     latin1Once(0x00B7), 0x00B7],
-  ['the em dash, 2 of them in the CED extract',         latin1Once(0x2014), 0x2014],
-  ['the no-break space',                                latin1Once(0x00A0), 0x00A0],
-  ['an accented letter',                                latin1Once(0x00E9), 0x00E9],
-];
-for (const [label, corrupted, wantCp] of CASES) {
-  const hits = moji.detect('prefix ' + corrupted + ' suffix');
-  ok('detects ' + label, hits.length === 1 && hits[0].fixed === ch(wantCp),
-    { corrupted: cps(corrupted), got: hits.map((h) => cps(h.fixed)), want: cps(ch(wantCp)) });
-}
-
-//  The fixtures are only worth something if each really is a corrupted form of
-//  the character it claims. Three things to rule out: a fixture identical to its
-//  own answer proves nothing, a fixture whose byte round trip does not close was
-//  mistyped, and a fixture that did not GROW is not mojibake at all.
-console.log('\nEvery fixture really is a corrupted form of its own answer');
-for (const [label, corrupted, wantCp] of CASES) {
-  const bytes = Array.from(corrupted).map((c) => moji.byteOf(c.codePointAt(0)));
-  const closes = Buffer.from(bytes).toString('utf8') === ch(wantCp);
-  const differs = corrupted !== ch(wantCp);
-  const grew = Array.from(corrupted).length === utf8(wantCp).length;
-  ok('  ' + label, closes && differs && grew,
-    { corrupted: cps(corrupted), bytes: bytes.map((b) => b.toString(16)) });
-}
-
-// -- 3. Depth: a rule written from a doubly corrupted sample sees neither -----
-//  This is the finding that prompted the rewrite. The drafts for this work
-//  contained the DOUBLY corrupted bullet and emoji, and a rule matching those
-//  literally is blind to the single-pass form on the live page. Reversibility
-//  makes depth a non-question: both are detected, and repair says which is which.
-console.log('\nCorruption depth, both directions');
-{
-  const bullet1 = cp1252Once(0x2022);
-  const emoji1 = cp1252Once(0x1F3AF);
-  const bullet2 = corruptAgain(bullet1);
-  const emoji2 = corruptAgain(emoji1);
-  ok('the doubly corrupted bullet is 7 characters, not 3',
-    Array.from(bullet2).length === 7, cps(bullet2));
-  ok('the doubly corrupted emoji is 8 characters, not 4',
-    Array.from(emoji2).length === 8, cps(emoji2));
-  ok('the doubly corrupted bullet is detected', moji.detect(bullet2).length > 0);
-  ok('the doubly corrupted emoji is detected', moji.detect(emoji2).length > 0);
-  ok('repair reports the bullet as depth 2 and recovers it',
-    moji.repair(bullet2).passes === 2 && moji.repair(bullet2).text === ch(0x2022),
-    { passes: moji.repair(bullet2).passes, text: cps(moji.repair(bullet2).text) });
-  ok('repair reports the emoji as depth 2 and recovers it',
-    moji.repair(emoji2).passes === 2 && moji.repair(emoji2).text === ch(0x1F3AF),
-    { passes: moji.repair(emoji2).passes, text: cps(moji.repair(emoji2).text) });
-  ok('single-pass text reports depth 1, so the two are told apart',
-    moji.repair(bullet1).passes === 1);
-  ok('clean text reports depth 0', moji.repair('a clean line').passes === 0);
-  //  THE POINT OF THE WHOLE EXERCISE, stated as an assertion: the two depths do
-  //  not even share a first character, so a rule written from one cannot match
-  //  the other. That is what would have shipped.
-  ok('the two depths share no leading character, which is why a literal rule fails',
-    Array.from(bullet1)[0] !== Array.from(bullet2)[0]
-    && Array.from(emoji1)[0] !== Array.from(emoji2)[0],
-    { depth1: cps(bullet1).split(' ')[0], depth2: cps(bullet2).split(' ')[0] });
-}
-
-// -- 4. The detector must NOT fire on correct text ----------------------------
-//  Equally important: a guard that flags healthy text gets turned off within a
-//  day. The old suite checked four strings. This one checks the scripts a store
-//  selling into international schools can actually receive, because the lead
-//  range widened to every legal UTF-8 lead byte and that is where the cost of
-//  widening shows up.
-console.log('\nFalse-positive check');
-const CLEAN = [
-  ['plain ascii', 'the quick brown fox, 100% of it'],
-  ['ascii html with entities', '<p>a &amp; b &lt; c</p>'],
-  ['a java generic, because this store teaches java', 'Map<String, List<Integer>> m'],
-  ['the correct characters', '\u25B2 \u25BC \u2192 \u2190 \u2500 \u00B7 \u2026 \u2713 \u2022'],
-  ['correct quotes and dashes', '\u201C q \u201D \u2018 s \u2019 \u2013 \u2014'],
-  ['raw uncorrupted emoji', '\u{1F3AF} \u{1F512} \u{1F4CA}'],
-  ['french', 'caf\u00E9 na\u00EFve \u00E2me r\u00F4le \u00E0 l\u2019\u00E9cole o\u00F9'],
-  ['french guillemets around a hard space', '\u00AB mot \u00BB'],
-  ['spanish', '\u00BFQu\u00E9 a\u00F1o? \u00A1Ma\u00F1ana, se\u00F1or!'],
-  ['german', 'Stra\u00DFe Gr\u00F6\u00DFe \u00DCber \u00C4pfel'],
-  ['portuguese', 'S\u00E3o Paulo, cora\u00E7\u00E3o, \u00C1gua, Ol\u00E1'],
-  ['turkish', '\u0130stanbul, \u00F6zg\u00FCr, \u015Fey'],
-  ['icelandic', '\u00FEing, \u00F0a\u00F0, \u00C6gir, \u00D3lafur'],
-  ['vietnamese', '\u0110\u00E0 N\u1EB5ng, Vi\u1EC7t Nam, ph\u1EDF'],
-  ['currency and math', '\u00B15\u00B0, \u00A320, \u20AC30, \u00A9 2026, 3\u00D74'],
-  ['nordic words with accented capitals', '\u00C5rhus, \u00D8sterbro, \u00C4lvsj\u00F6'],
-];
-for (const [label, text] of CLEAN) {
-  const hits = moji.detect(text);
-  ok('no false positive on ' + label, hits.length === 0,
-    hits.map((h) => cps(h.run) + ' -> ' + cps(h.fixed)));
-}
-
-// -- 5. The second tier, and why detect and repair disagree on purpose -------
-//  Widening the lead range to every legal UTF-8 lead byte buys the emoji case
-//  and costs one class of false positive, found by scanning the theme repository
-//  rather than by reasoning about it: Shopify's own Nordic locale files carry the
-//  sort labels A-ring en-dash A and O-diaeresis en-dash A, which reverse cleanly
-//  to U+0156 and U+0596. They are real text, and nothing structural separates
-//  them from real mojibake, because structurally they ARE the same shape. So the
-//  discriminator is the character recovered, and a run recovering something this
-//  store's content cannot contain is a SUSPECT: reported, never fatal.
-console.log('\nThe suspect tier: reported, never fatal');
-{
-  const nordic = 'Alfabetisk, \u00C5\u2013A';
-  const swedish = 'Alfabetiskt, \u00D6\u2013A';
-  ok('the Norwegian sort label does not fail a build', moji.detect(nordic).length === 0);
-  ok('the Swedish sort label does not fail a build', moji.detect(swedish).length === 0);
-  ok('but it is reported as a suspect rather than silently dropped',
-    moji.scan(nordic).suspects.length === 1 && moji.scan(swedish).suspects.length === 1);
-  ok('the suspect names the character it would have recovered',
-    moji.scan(nordic).suspects[0].fixed === ch(0x0156),
-    cps(moji.scan(nordic).suspects[0].fixed));
-  ok('a plausible-only repair leaves the label intact',
-    moji.repair(nordic, { plausibleOnly: true }).text === nordic);
-  //  This asymmetry is the one thing in the module a reader is likely to call a
-  //  bug, so the suite states it as intent. repair is never automatic.
-  ok('an unrestricted repair WOULD damage it, which is why repair is never automatic',
-    moji.repair(nordic).text !== nordic);
-  ok('a bullet and an emoji are plausible, Latin Extended-A is not',
-    moji.plausible(ch(0x2022)) && moji.plausible(ch(0x1F3AF)) && !moji.plausible(ch(0x0156)));
-  //  And the tier must not have quietly swallowed the case this change is about.
-  ok('the tier does NOT downgrade the reported live emoji to a suspect',
-    moji.scan(cp1252Once(0x1F3AF)).hits.length === 1
-    && moji.scan(cp1252Once(0x1F3AF)).suspects.length === 0);
-}
-
-// -- 6. The repository itself must be clean ----------------------------------
-console.log('\nRepository scan');
-function walk(dir, out) {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      if (!SKIP_DIRS.has(entry.name)) walk(full, out);
-    } else if (SCAN_EXT.has(path.extname(entry.name))) {
-      out.push(full);
-    }
+function misread(text, codec) {
+  const bytes = Buffer.from(text, 'utf8');
+  let out = '';
+  for (const b of bytes) {
+    const cp = (codec === 'cp1252' && CP1252_DECODE_HIGH[b] !== undefined) ? CP1252_DECODE_HIGH[b] : b;
+    out += String.fromCodePoint(cp);
   }
   return out;
 }
 
-//  THERE IS NO SKIP LIST ANY MORE. The old one exempted this file, because its
-//  fixtures were literal corrupted characters. Building them from bytes instead
-//  costs nothing and lets the guard police the file that polices everything
-//  else. tools/ap-cyber-ced/verify_import.py carried the same exemption in a
-//  comment that was not true: its "escapes" were literal characters, and it went
-//  unflagged only because .py was not scanned.
-const files = walk(ROOT, []);
+function corrupt(text, codec, depth) {
+  let cur = text;
+  for (let n = 0; n < depth; n++) cur = misread(cur, codec);
+  return cur;
+}
+
+// -- The corpus ----------------------------------------------------------------
+//  Named by code point so this file stays pure ASCII and can be scanned by the
+//  guard it defines. Chosen to cover all three sequence widths, because width
+//  is exactly what the old detector got wrong: 2 byte accented Latin, 3 byte
+//  punctuation and box drawing that this repo's dashboards actually use, and 4
+//  byte emoji, which were wholly invisible before.
+const CORPUS = [
+  ['bullet',                0x2022], ['em dash',              0x2014],
+  ['en dash',               0x2013], ['ellipsis',             0x2026],
+  ['left double quote',     0x201C], ['right double quote',   0x201D],
+  ['left single quote',     0x2018], ['right single quote',   0x2019],
+  ['euro sign',             0x20AC], ['trade mark',           0x2122],
+  ['right arrow',           0x2192], ['left arrow',           0x2190],
+  ['up triangle',           0x25B2], ['down triangle',        0x25BC],
+  ['box drawing light',     0x2500], ['check mark',           0x2713],
+  ['black star',            0x2605], ['middle dot',           0x00B7],
+  ['e acute',               0x00E9], ['n tilde',              0x00F1],
+  ['u diaeresis',           0x00FC], ['sharp s',              0x00DF],
+  ['degree sign',           0x00B0], ['pound sign',           0x00A3],
+  ['copyright',             0x00A9], ['CJK ideograph shi',    0x4E16],
+  ['direct hit emoji',      0x1F3AF], ['locked emoji',        0x1F512],
+  ['rocket emoji',          0x1F680], ['blue book emoji',     0x1F4D8],
+];
+
+// -- 1. Every corpus character, both flavours, depth 1 and depth 2 ------------
+//  This is the check the old suite could not express. Depth 1 cp1252 is the
+//  reported live failure; the old detector caught NONE of it. Depth 2 is the
+//  form that a handoff doc mistook for the bug itself.
+console.log('\nGenerated corruption: detect and recover');
+let generated = 0, missed = [], wrong = [];
+for (const [label, cp] of CORPUS) {
+  const original = String.fromCodePoint(cp);
+  for (const codec of ['cp1252', 'latin1']) {
+    for (const depth of [1, 2]) {
+      const damaged = corrupt(original, codec, depth);
+      // A guard against a hollow fixture: if the simulator produced no change
+      // there is nothing to detect and a pass here would mean nothing.
+      if (damaged === original) { wrong.push(label + '/' + codec + '/d' + depth + ' simulator no-op'); continue; }
+      generated += 1;
+      const text = 'lead ' + damaged + ' trail';
+      const hits = mojibake.analyze(text);
+      if (!hits.length) { missed.push(label + '/' + codec + '/depth' + depth); continue; }
+      const fixed = mojibake.repair(text);
+      if (fixed.text !== 'lead ' + original + ' trail') {
+        wrong.push(label + '/' + codec + '/d' + depth + ' recovered ' + JSON.stringify(fixed.text));
+      }
+    }
+  }
+}
+ok('the simulator generated a meaningful number of corrupt fixtures', generated >= 100, generated);
+ok('every generated corruption is DETECTED', missed.length === 0, missed.slice(0, 12));
+ok('every generated corruption is EXACTLY RECOVERED', wrong.length === 0, wrong.slice(0, 12));
+
+// -- 2. The specific cases the previous detector let through -------------------
+//  Kept as named regressions, separate from the generated sweep, because these
+//  are the ones with a live page behind them. If the generated sweep is ever
+//  weakened these still have to fail on their own.
+console.log('\nNamed regressions: what shipped blind');
+const REGRESSIONS = [
+  ['single pass cp1252 bullet (the live page)',      0x2022,  'cp1252', 1],
+  ['single pass cp1252 direct hit emoji (the live page)', 0x1F3AF, 'cp1252', 1],
+  ['single pass latin-1 direct hit emoji (4 bytes)', 0x1F3AF, 'latin1', 1],
+  ['single pass cp1252 em dash',                     0x2014,  'cp1252', 1],
+  ['single pass latin-1 up triangle (2026-08-07)',   0x25B2,  'latin1', 1],
+  ['double pass cp1252 bullet (what the doc said)',  0x2022,  'cp1252', 2],
+];
+for (const [label, cp, codec, depth] of REGRESSIONS) {
+  const original = String.fromCodePoint(cp);
+  const text = 'x ' + corrupt(original, codec, depth) + ' y';
+  const hits = mojibake.analyze(text);
+  const fixed = mojibake.repair(text);
+  ok('catches ' + label, hits.length > 0 && fixed.text === 'x ' + original + ' y',
+    { hits: hits.length, recovered: fixed.text });
+}
+
+// -- 3. Depth is reported, so a report says which pipeline did it --------------
+console.log('\nDepth reporting');
+{
+  const bullet = String.fromCodePoint(0x2022);
+  const d1 = mojibake.repair(corrupt(bullet, 'cp1252', 1));
+  const d2 = mojibake.repair(corrupt(bullet, 'cp1252', 2));
+  ok('single corruption reports depth 1', d1.depth === 1, d1.depth);
+  ok('double corruption reports depth 2', d2.depth === 2, d2.depth);
+  ok('neither report is truncated', !d1.truncated && !d2.truncated);
+}
+
+// -- 4. It must NOT fire on correct text --------------------------------------
+//  A guard that flags healthy text gets switched off within a day, so this
+//  section is as load bearing as section 1. Real multilingual prose, and the
+//  correct versions of every character the dashboards use.
+console.log('\nFalse positive check');
+const cps = (...list) => list.map((c) => String.fromCodePoint(c)).join('');
+const CLEAN = [
+  ['plain ascii', 'the quick brown fox, 100% of it, 60 MCQ + 1 FRQ'],
+  ['the correct dashboard characters', cps(0x25B2, 0x20, 0x25BC, 0x20, 0x2192, 0x20, 0x2190, 0x20, 0x2500, 0x20, 0x00B7, 0x20, 0x2026, 0x20, 0x2713, 0x20, 0x2022)],
+  ['correct quotes and dashes', cps(0x2014, 0x20, 0x201C, 0x71, 0x201D, 0x20, 0x2018, 0x73, 0x2019)],
+  ['french', 'caf' + cps(0x00E9) + ' ' + cps(0x00E9) + 'l' + cps(0x00E8) + 've na' + cps(0x00EF) + 've ' + cps(0x00E2) + 'me r' + cps(0x00F4) + 'le'],
+  ['german', 'stra' + cps(0x00DF) + 'e Gr' + cps(0x00FC) + 'n ' + cps(0x00C4) + 'nderung sch' + cps(0x00F6) + 'n'],
+  ['spanish', cps(0x00BF) + 'Qu' + cps(0x00E9) + '? se' + cps(0x00F1) + 'or ni' + cps(0x00F1) + 'o a' + cps(0x00F1) + 'o'],
+  ['portuguese', 'a' + cps(0x00E7) + cps(0x00E3) + 'o cora' + cps(0x00E7) + cps(0x00E3) + 'o irm' + cps(0x00E3) + 'o'],
+  ['nordic', 'sm' + cps(0x00F6) + 'rg' + cps(0x00E5) + 'sbord ' + cps(0x00C5) + 'ngstr' + cps(0x00F6) + 'm ' + cps(0x00D8) + 'resund'],
+  ['emoji that are fine', cps(0x1F3AF, 0x20, 0x1F512, 0x20, 0x1F680, 0x20, 0x1F4D8)],
+  ['cjk', cps(0x4E16, 0x754C, 0x3001, 0x3053, 0x3093, 0x306B, 0x3061, 0x306F)],
+  ['accented text next to an emoji', 'caf' + cps(0x00E9) + ' ' + cps(0x1F680) + ' r' + cps(0x00F4) + 'le'],
+];
+for (const [label, text] of CLEAN) {
+  const hits = mojibake.analyze(text);
+  ok('no false positive on ' + label, hits.length === 0,
+    hits.map((h) => h.chunk + ' -> ' + h.fixed + ' via ' + h.codec));
+}
+
+// -- 4b. Real text that ARITHMETICALLY reverses, and still is not mojibake ----
+//  These three strings are copied from Shopify's own locale files in the theme
+//  repo, where this detector reported them as corrupt on 2026-09-03. A capital
+//  O-diaeresis is inside the lead class, cp1252 maps an en dash into the
+//  continuation range, and the pair is valid UTF-8 for a Hebrew combining
+//  accent. The reversal is perfect and the conclusion is nonsense: a Finnish
+//  sort-order label did not lose a Hebrew accent.
+//
+//  What rejects them is the run rule, not a character blocklist. Section 4c
+//  proves the same rule still resolves a genuine run all the way through.
+console.log('\nReal text that reverses arithmetically but is not mojibake');
+const NORDIC = [
+  ['finnish sort label, O-diaeresis then en dash',
+    'Aakkosj' + cps(0x00E4) + 'rjestyksess' + cps(0x00E4) + ' ' + cps(0x00D6, 0x2013) + 'A'],
+  ['norwegian sort label, A-ring then en dash',
+    'Alfabetisk, ' + cps(0x00C5, 0x2013) + 'A'],
+  ['swedish sort label', 'Alfabetiskt, ' + cps(0x00D6, 0x2013) + 'A'],
+  ['german range with an en dash', cps(0x00DC) + cps(0x2013) + 'Z und ' + cps(0x00C4) + cps(0x2013) + 'B'],
+];
+for (const [label, text] of NORDIC) {
+  ok('no false positive on ' + label, mojibake.analyze(text).length === 0,
+    mojibake.analyze(text).map((h) => h.chunk + ' -> ' + h.fixed));
+}
+
+// -- 4c. and the run rule must not weaken a real run --------------------------
+//  Depth 2 corruption of an emoji is four 2 byte pairs, and the two middle ones
+//  have exactly the exotic leads section 4b rejects when they stand alone. They
+//  must all still be caught here, because they abut. This is the check that
+//  stops the run rule being "fixed" into a lead blocklist, which was measured
+//  and would cost 12 of the 120 generated cases.
+console.log('\nA genuine run still resolves completely');
+for (const cp of [0x1F3AF, 0x1F512, 0x1F680, 0x2605, 0x2713]) {
+  const original = String.fromCodePoint(cp);
+  const damaged = corrupt(original, 'cp1252', 2);
+  const exoticLeads = mojibake.analyze(damaged).filter((h) => mojibake.isExotic(h)).length;
+  ok('depth 2 U+' + cp.toString(16).toUpperCase() + ' resolves, including its exotic-lead pairs',
+    mojibake.repair(damaged).text === original && exoticLeads > 0,
+    { recovered: mojibake.repair(damaged).text, exoticLeads });
+}
+
+// -- 5. The property that makes an U+00C3 anchor wrong ------------------------
+//  The obvious general rule, and the one a handoff proposed, is "an U+00C3
+//  followed by a continuation character". It is the same inversion one level
+//  up. Asserted here rather than argued in a comment, so it stays true.
+console.log('\nWhy the U+00C3 anchor is not the general rule');
+{
+  const C3 = String.fromCodePoint(0x00C3);
+  const bullet = corrupt(String.fromCodePoint(0x2022), 'cp1252', 1);
+  const emoji = corrupt(String.fromCodePoint(0x1F3AF), 'cp1252', 1);
+  const bulletD2 = corrupt(String.fromCodePoint(0x2022), 'cp1252', 2);
+  ok('depth 1 cp1252 bullet contains NO U+00C3', bullet.indexOf(C3) === -1,
+    Array.from(bullet).map((c) => 'U+' + c.codePointAt(0).toString(16).toUpperCase()));
+  ok('depth 1 cp1252 emoji contains NO U+00C3', emoji.indexOf(C3) === -1,
+    Array.from(emoji).map((c) => 'U+' + c.codePointAt(0).toString(16).toUpperCase()));
+  ok('depth 2 DOES contain U+00C3, which is why it looked like the rule', bulletD2.indexOf(C3) !== -1);
+  // And the lead class the detector actually uses covers both depths.
+  const leadOf = (s) => Array.from(s)[0].codePointAt(0);
+  ok('every depth 1 lead is inside U+00C2-U+00F4',
+    [bullet, emoji].every((s) => leadOf(s) >= mojibake.LEAD_MIN && leadOf(s) <= mojibake.LEAD_MAX),
+    [leadOf(bullet).toString(16), leadOf(emoji).toString(16)]);
+}
+
+// -- 6. Sequence width is derived from the lead byte --------------------------
+console.log('\nSequence width');
+ok('a 2 byte lead declares width 2', mojibake.widthForLead(0xC3) === 2);
+ok('a 3 byte lead declares width 3', mojibake.widthForLead(0xE2) === 3);
+ok('a 4 byte lead declares width 4, which is every emoji', mojibake.widthForLead(0xF0) === 4);
+
+// -- 7. Both codecs are reachable, and cp1252 is the one that was missing -----
+console.log('\nCodec attribution');
+{
+  const bullet = String.fromCodePoint(0x2022);
+  const viaCp = mojibake.analyze(corrupt(bullet, 'cp1252', 1));
+  const viaL1 = mojibake.analyze(corrupt(bullet, 'latin1', 1));
+  ok('the cp1252 flavour is attributed to cp1252', viaCp.length === 1 && viaCp[0].codec === 'cp1252',
+    viaCp.map((h) => h.codec));
+  ok('the latin-1 flavour is attributed to latin-1', viaL1.length === 1 && viaL1[0].codec === 'latin1',
+    viaL1.map((h) => h.codec));
+  ok('latin-1 alone CANNOT reverse the cp1252 flavour, which is the whole bug',
+    mojibake.toByte(String.fromCodePoint(0x20AC), 'latin1') === null
+    && mojibake.toByte(String.fromCodePoint(0x20AC), 'cp1252') === 0x80);
+
+  // Neither codec subsumes the other. Asserted, because the first draft of
+  // lib/mojibake.js claimed in a comment that cp1252 alone would do, and
+  // dropping latin-1 on that basis would have gone blind to every C1 control,
+  // which is what the entire latin-1 flavour is built out of.
+  const onlyL1 = [], onlyCp = [];
+  for (let cp = 0; cp <= 0x2200; cp++) {
+    const ch = String.fromCodePoint(cp);
+    const a = mojibake.toByte(ch, 'latin1');
+    const b = mojibake.toByte(ch, 'cp1252');
+    if (a !== null && b === null) onlyL1.push(cp);
+    if (a === null && b !== null) onlyCp.push(cp);
+  }
+  ok('27 code points are reversible under latin-1 ONLY', onlyL1.length === 27, onlyL1.length);
+  ok('27 code points are reversible under cp1252 ONLY', onlyCp.length === 27, onlyCp.length);
+  ok('so neither codec subsumes the other and both are required',
+    onlyL1.length > 0 && onlyCp.length > 0);
+}
+
+// -- 8. The properties lib/mojibake.js now DEPENDS ON -------------------------
+//  Two checks were deleted from the detector on 2026-09-03 because no mutation
+//  could kill them. Deleting unkillable code is right, but it converts a defence
+//  into a dependency, and an unstated dependency is just a slower version of the
+//  same problem. So both are asserted here, exhaustively rather than by example.
+console.log('\nProperties the detector depends on');
+{
+  const decode = (bytes) => Buffer.from(bytes).toString('utf8');
+  const REPL = String.fromCodePoint(0xFFFD);
+
+  // (a) The removed re-encode check rejected overlong forms and surrogates.
+  //     The decoder has to do that instead, or those become false positives.
+  ok('the decoder rejects an overlong 2 byte form', decode([0xC0, 0xAF]).indexOf(REPL) !== -1);
+  ok('the decoder rejects an overlong 3 byte form', decode([0xE0, 0x80, 0x80]).indexOf(REPL) !== -1);
+  ok('the decoder rejects an encoded surrogate', decode([0xED, 0xA0, 0x80]).indexOf(REPL) !== -1);
+
+  //     And exhaustively: over every sequence the detector can reach, the
+  //     removed check never changed the answer. If a future Node loosens the
+  //     decoder this goes red and the check comes back.
+  const verdict = (bytes, strict) => {
+    const buf = Buffer.from(bytes);
+    const d = buf.toString('utf8');
+    if (Array.from(d).length !== 1) return null;
+    if (d.indexOf(REPL) !== -1) return null;
+    if (strict && !Buffer.from(d, 'utf8').equals(buf)) return null;
+    return d;
+  };
+  let reencodeDiffs = 0, checked = 0;
+  for (let a = 0xC2; a <= 0xDF; a++) for (let b = 0; b <= 0xFF; b++) {
+    checked++; if (verdict([a, b], true) !== verdict([a, b], false)) reencodeDiffs++;
+  }
+  for (let a = 0xE0; a <= 0xEF; a++) for (let b = 0; b <= 0xFF; b++) for (let c = 0; c <= 0xFF; c++) {
+    checked++; if (verdict([a, b, c], true) !== verdict([a, b, c], false)) reencodeDiffs++;
+  }
+  ok('a meaningful number of sequences was checked', checked > 1000000, checked);
+  ok('the removed re-encode check changes NO verdict, over every 2 and 3 byte sequence',
+    reencodeDiffs === 0, reencodeDiffs);
+
+  // (b) The continuation-byte rule that remains is a fast path, not a guard.
+  //     Asserting that here is what stops a future session finding its mutation
+  //     survives, concluding the guard is hollow, and "fixing" a 3.2x speedup.
+  const verdictCont = (bytes, useCont) => {
+    if (useCont) for (let k = 1; k < bytes.length; k++) {
+      if (bytes[k] < 0x80 || bytes[k] > 0xBF) return null;
+    }
+    return verdict(bytes, false);
+  };
+  let contDiffs = 0;
+  for (let a = 0xC2; a <= 0xDF; a++) for (let b = 0; b <= 0xFF; b++) {
+    if (verdictCont([a, b], true) !== verdictCont([a, b], false)) contDiffs++;
+  }
+  for (let a = 0xE0; a <= 0xEF; a++) for (let b = 0; b <= 0xFF; b++) for (let c = 0; c <= 0xFF; c++) {
+    if (verdictCont([a, b, c], true) !== verdictCont([a, b, c], false)) contDiffs++;
+  }
+  ok('the continuation-byte rule changes NO verdict either, so it is a fast path '
+    + 'and its mutation survives by design', contDiffs === 0, contDiffs);
+}
+
+// -- 8. The repository itself must be clean -----------------------------------
+//  No file is exempt. This file and lib/mojibake.js are pure ASCII precisely so
+//  that they can be included here.
+console.log('\nRepository scan');
+const files = mojibake.walk(ROOT);
 const offenders = [];
-const suspected = [];
 let scanned = 0;
 for (const file of files) {
-  let text;
-  try {
-    const raw = fs.readFileSync(file);
-    //  Anything that is not valid UTF-8 is a different problem; skip it here
-    //  rather than report a misleading mojibake hit.
-    text = raw.toString('utf8');
-    if (Buffer.compare(Buffer.from(text, 'utf8'), raw) !== 0) continue;
-  } catch (e) {
-    continue;
-  }
+  const text = mojibake.readUtf8(file);
+  if (text === null) continue;
   scanned += 1;
-  const found = moji.scan(text);
-  const rel = path.relative(ROOT, file);
-  if (found.hits.length) {
-    offenders.push({ file: rel, hits: found.hits, depth: moji.repair(text).passes,
-      line: moji.lineOf(text, found.hits[0].index) });
-  }
-  if (found.suspects.length) {
-    suspected.push({ file: rel, suspects: found.suspects,
-      line: moji.lineOf(text, found.suspects[0].index) });
+  const hits = mojibake.analyze(text);
+  if (hits.length) {
+    const rel = path.relative(ROOT, file);
+    const byChar = {};
+    for (const h of hits) byChar[h.fixed] = (byChar[h.fixed] || 0) + 1;
+    const chars = Array.from(text);
+    const line = chars.slice(0, hits[0].index).join('').split('\n').length;
+    offenders.push({ file: rel, count: hits.length, first_line: line, chars: byChar, depth: mojibake.repair(text).depth });
   }
 }
 
 ok('scanned a meaningful number of files', scanned > 20, scanned);
-ok('this file is itself in the scan, so the guard polices its own source',
-  files.some((f) => path.basename(f) === 'encoding-guard.js'));
-ok('the CED extract is in the scan, which is how its 65 runs were found',
-  files.some((f) => f.endsWith('CED-UNIT1-EXTRACT.txt')));
+ok('this guard scans ITSELF and the detector it uses',
+  files.some((f) => f.endsWith(path.join('smoke', 'encoding-guard.js')))
+  && files.some((f) => f.endsWith(path.join('lib', 'mojibake.js'))));
 ok('no mojibake anywhere in the repository', offenders.length === 0);
 
 if (offenders.length) {
   console.log('\n  Mojibake found. These characters mean something other than what');
-  console.log('  they render as. Repair them rather than deleting them:\n');
+  console.log('  they render as. Repair them rather than retyping the file:\n');
   for (const o of offenders) {
-    console.log('    ' + o.file + ':' + o.line + '  ' + o.hits.length
-      + ' run(s), depth ' + o.depth + '  -> ' + moji.summarize(o.hits));
+    const chars = Object.entries(o.chars).map(([c, n]) => JSON.stringify(c) + ' x' + n).join(', ');
+    console.log('    ' + o.file + ':' + o.first_line + '  ' + o.count + ' occurrence(s), depth '
+      + o.depth + '  -> ' + chars);
   }
-  console.log('\n  Each is a character whose UTF-8 bytes were read as cp1252 or latin-1');
-  console.log('  and re-encoded. Reverse it with lib/mojibake.js repair. Do not');
-  console.log('  retype the file and do not delete the character.\n');
+  console.log('\n  node -e "const m=require(\'./lib/mojibake.js\');const fs=require(\'fs\');');
+  console.log('  const f=process.argv[1];fs.writeFileSync(f,m.repair(m.readUtf8(f)).text)" <file>\n');
 }
 
-//  Suspects print whether or not the suite passes. They are the runs the second
-//  tier declined to fail a build on, and reading them is the only way anyone
-//  finds out the tier is wrong.
-if (suspected.length) {
-  console.log('\n  NOTE, not a failure: ' + suspected.length + ' file(s) hold a run that');
-  console.log('  reverses cleanly but recovers a character this store should not have.');
-  console.log('  Legitimate Nordic sort labels look exactly like this. Widen PLAUSIBLE');
-  console.log('  in lib/mojibake.js if one of these turns out to be real corruption:\n');
-  for (const s of suspected.slice(0, 10)) {
-    console.log('    ' + s.file + ':' + s.line + '  ' + s.suspects.length
-      + ' run(s) -> ' + moji.summarize(s.suspects));
-  }
-}
-
-console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
+console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

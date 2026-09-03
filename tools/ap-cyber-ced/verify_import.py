@@ -45,8 +45,10 @@ exactly the way a sound page would. Parse it, do not count it.
 import csv
 import html
 import json
+import os
 import re
 import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import urllib.request
 from html.parser import HTMLParser
 
@@ -55,22 +57,13 @@ csv.field_size_limit(sys.maxsize)
 # The four that must survive as entities, or the markup changes meaning.
 STRUCTURAL = ('&amp;', '&lt;', '&gt;', '&quot;')
 
-# Mojibake lead sequences, as REAL escapes this time. This comment used to say
-# they were escapes and they were literal characters, and the file went unflagged
-# only because smoke/encoding-guard.js did not scan .py. It does now.
-#
-# lib/mojibake.js is the authority and finds these by REVERSING them, which needs
-# no pattern list at all. This list is the Python-side stopgap for the live-body
-# check below, and it now covers the single-pass emoji leads the old one missed:
-# a 4-byte character corrupts into four, and nothing here looked for that.
-MOJIBAKE = [
-    '\u00e2\u20ac',    # cp1252,  3-byte original: bullet, dash, curly quote
-    '\u00e2\u0080',    # latin-1, 3-byte original: the same characters
-    '\u00f0\u0178',    # cp1252,  4-byte original: an emoji. MISSED before.
-    '\u00f0\u009f',    # latin-1, 4-byte original: an emoji. MISSED before.
-    '\u00c3\u00a2',    # doubly corrupted, 3-byte original
-    '\u00c3\u00b0',    # doubly corrupted, 4-byte original
-]
+# Structural detection, not a pattern list. What was here was four literal
+# strings under a comment claiming they were written as escapes so the
+# repository encoding guard would not flag this file. They were literals, the
+# comment described an intention nobody implemented, and the corrected guard
+# flagged this file on its first run. None of the four could match a corrupted
+# emoji. See tools/ap-cyber-ced/mojibake.py.
+import mojibake as _mojibake
 
 VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link',
         'meta', 'source', 'track', 'wbr'}
@@ -181,10 +174,10 @@ def main():
                        '        sheet: %r\n        live : %r'
                        % (i, a[i - 80:i + 160], b[i - 80:i + 160]))
 
-        for m in MOJIBAKE:
-            if m in live:
-                bad.append('mojibake sequence in the live body')
-                break
+        hits = _mojibake.analyze(live, cap=3)
+        if hits:
+            bad.append('double-encoded sequence in the live body: '
+                       + ', '.join('%r should be %r' % (h['chunk'], h['fixed']) for h in hits))
 
         errors, unclosed = nesting_report(live)
         if errors or unclosed:

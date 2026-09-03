@@ -665,40 +665,60 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   the guard does, and additionally misses double-pass e-acute and double-pass
   non-breaking space. Do not swap it in for the round trip.
 
-  **That gap is closed, and `lib/mojibake.js` is now the ONE place allowed an
-  opinion about it.** The prescription above was right and is what shipped: lead
-  set widened to every character a UTF-8 lead byte C2 to F4 becomes, a cp1252
-  encoder beside latin-1, and widths to 4 so a 4-byte emoji can be reversed. The
-  module derives all three from UTF-8 rather than listing them, so the lead byte
-  states the width and no width is ever guessed. `npm run smoke:encoding` is the
-  gate; `python3 scripts/mojibake-rederive.py` is a second implementation on
-  Python's own codecs, which also scores the retired rule at 4 of 7 forms missed.
+  That gap is CLOSED: `lib/mojibake.js` shipped on 2026-09-03 and is the module the
+  bullet above points at. Lead set widened to every character a UTF-8 lead byte C2
+  to F4 becomes, both codecs, and the width taken from the lead byte so a 4-byte
+  emoji is reachable. Its answer to the false-positive cost is better than the one
+  sketched here: an isolated width-2 run whose lead sits outside U+00C2 to U+00C3
+  is real text, not mojibake, because mojibake is a WHOLE-TEXT transformation and
+  corrupts every non-ASCII character around it. `acceptRuns` keeps such a run only
+  when it touches another accepted one. That is structural, so it needs no list of
+  which characters this store is allowed to contain and does not have to be widened
+  the day the store ships a Nordic locale. It was found by running the detector
+  over the theme repo, where Shopify's own Nordic sort labels reverse cleanly to
+  U+0156 and U+0596 and are entirely legitimate.
 
-  There were THREE detectors, not one, and consolidating them was most of the
-  work: `smoke/encoding-guard.js`, `scripts/matrixify-preflight.js` (three
-  hardcoded latin-1 byte pairs, and its own smoke fixture built the same wrong
-  way, so guard and test shared one blind spot and agreed with each other) and
-  `lib/site-crawl.js`. The last one had already worked out the cp1252 half and
-  said so in a comment addressed by name to the first, committed 2026-08-26, and
-  both others were still wrong on 2026-09-03. Eight days, same repository, answer
-  written down, nothing propagated. Do not write a fourth opinion; ask the module.
-
-  **Correction to the "zero false positives" measurement above.** True of those
-  seven samples, and not true in general: widening the lead set to C2-F4 costs one
-  real false-positive class, found by scanning the THEME repo rather than by
-  reasoning. Shopify's own Nordic locale files carry the sort labels A-ring
-  en-dash A and O-diaeresis en-dash A, which reverse cleanly to U+0156 and
-  U+0596. They are legitimate text and structurally identical to real mojibake,
-  so no round trip can separate them. The module therefore has a second tier:
-  a run recovering a character this store's content cannot contain is a SUSPECT,
-  printed on every run and never fatal, because failing a build or refusing a
-  Matrixify sheet over a sort label is how a guard gets switched off. Widen
-  `PLAUSIBLE` the day this store ships a Nordic or Eastern European locale.
+  **`scripts/matrixify-preflight.js` was the LAST consumer still holding its own
+  opinion, and it was the one that mattered most.** Every Shopify page change ships
+  as a Matrixify sheet, so that preflight is the gate between authored content and a
+  live page body, and until 2026-09-04 it carried three hardcoded latin-1 byte pairs
+  of its own. Its smoke fixture was built in the same latin-1 flavour as the rule it
+  tested, so guard and test shared one blind spot and agreed with each other while
+  the cp1252 form walked through. It asks the module now. Four consumers, one
+  detector: do not write a fifth opinion.
 
   **A mutation test for this rule must inject SINGLE-pass mojibake.** A mutation
   built from the double-pass form goes red against a guard that is blind to the bug
   actually seen on live pages, and that green report is worse than no report at all.
   Assert both depths independently.
+- Mojibake is detected with `lib/mojibake.js`, never with a pasted pattern. Go
+  through the module the same way EK codes go through `lib/cyber-ek-density.js`.
+  A handoff on 2026-09-03 told a future session to reject two literal strings,
+  and both were the DOUBLE corrupted form: the reported live failure is the
+  single corrupted form and contains neither. The same inversion was already
+  live in `smoke/encoding-guard.js`, which gates every pull request and reported
+  this repo clean while four tracked files were corrupted.
+  Two facts a pattern list keeps getting wrong. First, there are two flavours,
+  latin-1 and cp1252, and NEITHER subsumes the other: each reverses 27 code
+  points the other cannot, so a detector with one of them is blind to a whole
+  flavour. Second, the sequence width comes from the lead byte, and a 4 byte
+  lead means an emoji; a detector that only tries widths 3 and 2 cannot see a
+  corrupted emoji at all. Anchoring on U+00C3 is not the general rule either.
+  It is the natural next guess and it reproduces the original defect exactly,
+  because U+00C3 first appears at depth 2. `npm run smoke:encoding` generates
+  its cases rather than listing them, and the deploy gate has a mutation that
+  proves the U+00C3 rule insufficient.
+- A `.pdf` extension is not evidence of a PDF. Check for the `%PDF` header
+  before reaching for `pdftotext` or `pdfplumber`, because a CED file that is
+  really extracted text will make the parser fail and make a session conclude
+  the CED is unavailable when it is sitting right there. The extracts in
+  `tools/ap-cyber-ced/` are correctly named `.txt`; the mis-extensioned copy
+  reported on 2026-09-03 is in the Claude project, not in this repo, so this is
+  a check to run rather than a fact about a path.
+  `CED-UNIT1-EXTRACT.txt` had 65 mojibake characters repaired on 2026-09-03.
+  Its em-dashes and curly quotes are College Board's verbatim wording, so the
+  no-em-dash convention above does not apply to it: that rule governs text we
+  author, and re-flattening a quoted source is a corruption, not a fix.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
 
