@@ -27,14 +27,17 @@ const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
 
-const UA = 'Mozilla/5.0 (compatible; apcse-link-graph/1.0) Chrome/120';
+//  Fetched through lib/storefront-fetch.js, which sends NO browser User-Agent
+//  and refuses a body that is not a rendered storefront page. This script used
+//  to spoof a browser, and on 2026-09-03 that started drawing a 403 bot
+//  challenge whose body contains none of the strings checked below. See the
+//  header of that module for what it cost.
+const sf = require('../lib/storefront-fetch');
+
 const HANDLES = path.join(__dirname, '..', 'imports', '2026-09-02',
   'csp-exercise-2-publish-17-handles.txt');
 
-const get = (h) => cp.execSync(
-  'curl -sSL --max-time 45 --compressed -H ' + JSON.stringify('User-Agent: ' + UA)
-  + ' ' + JSON.stringify('https://www.apcsexamprep.com/pages/' + h),
-  { encoding: 'utf8', maxBuffer: 1 << 26 });
+const get = (h) => sf.page('/pages/' + h).body;
 
 //  The exercise handle IS the lesson handle plus the suffix, so the lesson page
 //  to check is derived rather than listed twice.

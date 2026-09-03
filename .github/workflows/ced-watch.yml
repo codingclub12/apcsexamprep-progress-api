@@ -239,3 +239,35 @@ jobs:
             echo "Open it by hand if the report above matters: ${COMPARE}"
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  Board task 166: same reporting gap as deploy-drift.yml before
+      #  2026-09-01. This is a source==linkcheck check (a scheduled read of
+      #  known-critical external pages), which routes to bucket week / surface
+      #  shopify rather than now / api, same as any other link-check finding.
+      #
+      #  `if: always()` so it still runs after the "fail loudly if nothing was
+      #  read" step above exits 1; `job.status != 'cancelled'` so a cancelled
+      #  run, which compared nothing, reports neither pass nor fail;
+      #  continue-on-error so the observer cannot turn this red by itself; a
+      #  missing TODO_KEY skips rather than fails. Same shape as every other
+      #  reporter this task adds, and as deploy-drift.yml before it.
+      - name: Report to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"linkcheck\",\"check_id\":\"ced-watch\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"

@@ -593,6 +593,27 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   said until 2026-09-02: it has no EK check at all and is shaped for AP
   Cybersecurity page structure. Naming the wrong tool here is worse than naming
   none, because the check comes back clean.
+- **Fetch the storefront through `lib/storefront-fetch.js`, and send no
+  User-Agent.** The bot management inverted on 2026-09-03: a request claiming to
+  be a browser gets 403, and bare curl gets 200. That is the opposite of what it
+  used to do, and every live verifier in this repo was carrying a browser UA as
+  a workaround for the old behaviour.
+  The reason it needs a rule rather than a fix is the shape of the failure. The
+  403 body is a small "Verifying your connection" page containing none of the
+  strings a check looks for, so every assertion of the form "this string is gone
+  now" passes on it and every "this string is present now" fails. Three
+  verifiers reported a confident, plausible, entirely false regression:
+  `verify-cc-pacing-live` said 4 of 8 assertions failed, and
+  `verify-csp-applied-cards-live` said all 17 Applied Challenge pages served 0
+  of 6 questions. All of it was live and correct.
+  So the module refuses a body that is not provably a rendered page, on a
+  positive marker the challenge cannot fake. A negative assertion can never pass
+  because the fetch quietly failed. `smoke:storefront` scans every
+  `scripts/verify-*-live.js` and fails if one sends a User-Agent again.
+  Twenty eight other scripts still spoof one. The CSV generators go through
+  `scripts/extract-live-body.js`, which throws on the challenge body, so they
+  fail loudly rather than writing a sheet from it. The SWEEPS will report the
+  whole site as broken until they are moved over.
 - Any page set larger than about three ships as four things: canonical data, a
   generator, a validator, and a Matrixify sheet. Hand-authoring structurally
   identical pages is how drift enters, and the drift is never in the page you are
