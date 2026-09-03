@@ -1,0 +1,1104 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At"
+"ap-cybersecurity-question-of-the-day","MERGE","AP Cybersecurity Question of the Day","<!--
+  AP CYBER QOTD HUB - SKELETON (placeholder questions)
+  ----------------------------------------------------
+  Three modes, one tagged pool, no next-day lock:
+    1. Today's Question   - date-seeded, deterministic permutation, FEATURED items only, rotates daily
+    2. Practice           - random from a unit, or random from anywhere, ""draw another""
+    3. Browse by Unit/Topic - the teacher preview, with Preview/Retrieval label + prior-topic toggle
+
+  SEO note: this hub is the NAVIGATION layer. In production each question is also its own
+  server-rendered, indexable page at /blogs/ap-cyber-daily-practice/{slug}. Every pool item
+  carries a slug + permalink so that surface exists from day one; the per-question pages get
+  generated when the real bank lands (lesson-pipeline render target). The hub links to them.
+
+  ENCODING: this file is intentionally ASCII-only (no emoji, no curly quotes, no bullet glyphs)
+  so Shopify import cannot produce mojibake. Use HTML entities only if a glyph is ever needed.
+
+  COLOR LOCK: everything is scoped under #cyb-qotd, with !important + -webkit-text-fill-color on
+  all colored text and buttons, and :link/:visited fixes, so Shopify's theme cannot repaint it.
+-->
+<style>
+  #cyb-qotd {
+    --cy-navy: #0f2a43;
+    --cy-navy-2: #15395c;
+    --cy-accent: #2f6df6;
+    --cy-accent-d: #1f56d6;
+    --cy-teal: #0fb5a6;
+    --cy-amber: #c87f12;
+    --cy-red: #c0392b;
+    --cy-green: #1f9d57;
+    --cy-ink: #14202b;
+    --cy-slate: #4b5b69;
+    --cy-line: #dfe5ec;
+    --cy-bg: #f6f8fb;
+    --cy-card: #ffffff;
+    --cy-r: 12px;
+    --cy-r-sm: 8px;
+    --cy-sh: 0 4px 16px rgba(15,42,67,0.08);
+    --cy-sh-sm: 0 1px 3px rgba(15,42,67,0.10);
+
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--cy-ink) !important;
+    -webkit-text-fill-color: var(--cy-ink);
+    line-height: 1.6;
+  }
+  #cyb-qotd * { box-sizing: border-box; }
+
+  /* ---------- hero ---------- */
+  #cyb-qotd .cy-hero {
+    background: linear-gradient(135deg, var(--cy-navy) 0%, var(--cy-navy-2) 100%);
+    border-radius: var(--cy-r);
+    padding: 48px 32px;
+    text-align: center;
+    margin: 24px 0 28px;
+  }
+  #cyb-qotd .cy-hero h1,
+  #cyb-qotd .cy-hero p,
+  #cyb-qotd .cy-eyebrow {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff;
+  }
+  #cyb-qotd .cy-eyebrow {
+    display: inline-block;
+    background: rgba(255,255,255,0.16);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-bottom: 14px;
+  }
+  #cyb-qotd .cy-hero h1 { font-size: 38px; line-height: 1.15; font-weight: 800; margin: 0 0 12px; }
+  #cyb-qotd .cy-hero p { font-size: 17px; opacity: 0.92; max-width: 620px; margin: 0 auto; }
+
+  /* ---------- tabs ---------- */
+  #cyb-qotd .cy-tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--cy-bg);
+    border: 1px solid var(--cy-line);
+    border-radius: var(--cy-r);
+    padding: 6px;
+    margin-bottom: 24px;
+  }
+  #cyb-qotd .cy-tab {
+    flex: 1;
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--cy-slate) !important;
+    -webkit-text-fill-color: var(--cy-slate);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 10px;
+    border-radius: var(--cy-r-sm);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  #cyb-qotd .cy-tab:hover { background: rgba(47,109,246,0.08); }
+  #cyb-qotd .cy-tab.active {
+    background: var(--cy-accent) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff;
+    box-shadow: var(--cy-sh-sm);
+  }
+  #cyb-qotd .cy-tab:focus-visible { outline: 3px solid rgba(47,109,246,0.45); outline-offset: 2px; }
+
+  #cyb-qotd .cy-panel { display: none; }
+  #cyb-qotd .cy-panel.active { display: block; }
+
+  #cyb-qotd .cy-panel-head { margin-bottom: 16px; }
+  #cyb-qotd .cy-panel-head h2 {
+    font-size: 22px; font-weight: 800; margin: 0 0 4px;
+    color: var(--cy-ink) !important; -webkit-text-fill-color: var(--cy-ink);
+  }
+  #cyb-qotd .cy-panel-head p {
+    font-size: 14px; margin: 0;
+    color: var(--cy-slate) !important; -webkit-text-fill-color: var(--cy-slate);
+  }
+  #cyb-qotd .cy-datebadge {
+    display: inline-block; margin-top: 8px;
+    background: #e8f0ff; color: var(--cy-accent-d) !important; -webkit-text-fill-color: var(--cy-accent-d);
+    padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 700;
+  }
+
+  /* ---------- draw controls (Practice) ---------- */
+  #cyb-qotd .cy-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+  #cyb-qotd .cy-btn {
+    appearance: none; font-family: inherit; cursor: pointer;
+    border-radius: var(--cy-r-sm); font-size: 14px; font-weight: 700;
+    padding: 11px 16px; transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  }
+  #cyb-qotd .cy-btn:active { transform: translateY(1px); }
+  #cyb-qotd .cy-btn:focus-visible { outline: 3px solid rgba(47,109,246,0.45); outline-offset: 2px; }
+  #cyb-qotd .cy-btn-solid {
+    background: var(--cy-accent) !important; border: 1px solid var(--cy-accent) !important;
+    color: #ffffff !important; -webkit-text-fill-color: #ffffff;
+  }
+  #cyb-qotd .cy-btn-solid:hover { background: var(--cy-accent-d) !important; }
+  #cyb-qotd a.cy-btn-solid:link, #cyb-qotd a.cy-btn-solid:visited { color: #ffffff !important; -webkit-text-fill-color: #ffffff; text-decoration: none !important; }
+  #cyb-qotd .cy-btn-ghost {
+    background: var(--cy-card) !important; border: 1px solid var(--cy-line) !important;
+    color: var(--cy-navy) !important; -webkit-text-fill-color: var(--cy-navy);
+  }
+  #cyb-qotd .cy-btn-ghost:hover { border-color: var(--cy-accent) !important; color: var(--cy-accent-d) !important; -webkit-text-fill-color: var(--cy-accent-d); }
+  #cyb-qotd .cy-unitrow { display: flex; flex-wrap: wrap; gap: 8px; }
+  #cyb-qotd .cy-chip {
+    appearance: none; font-family: inherit; cursor: pointer;
+    background: var(--cy-card) !important; border: 1px solid var(--cy-line) !important;
+    color: var(--cy-navy) !important; -webkit-text-fill-color: var(--cy-navy);
+    border-radius: 999px; font-size: 13px; font-weight: 700; padding: 8px 14px;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+  #cyb-qotd .cy-chip:hover { border-color: var(--cy-accent) !important; }
+  #cyb-qotd .cy-chip.active {
+    background: var(--cy-navy) !important; border-color: var(--cy-navy) !important;
+    color: #ffffff !important; -webkit-text-fill-color: #ffffff;
+  }
+  #cyb-qotd .cy-chip:focus-visible { outline: 3px solid rgba(47,109,246,0.45); outline-offset: 2px; }
+
+  /* ---------- question card (shared by all modes) ---------- */
+  #cyb-qotd .cy-q {
+    background: var(--cy-card) !important;
+    border: 1px solid var(--cy-line) !important;
+    border-radius: var(--cy-r);
+    padding: 24px;
+    box-shadow: var(--cy-sh);
+  }
+  #cyb-qotd .cy-q + .cy-q { margin-top: 16px; }
+  #cyb-qotd .cy-modebanner {
+    font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: var(--cy-r-sm);
+    margin-bottom: 14px;
+  }
+  #cyb-qotd .cy-modebanner.preview { background: #fff5e6; color: var(--cy-amber) !important; -webkit-text-fill-color: var(--cy-amber); }
+  #cyb-qotd .cy-modebanner.retrieval { background: #e9f7ef; color: var(--cy-green) !important; -webkit-text-fill-color: var(--cy-green); }
+  #cyb-qotd .cy-qtags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  #cyb-qotd .cy-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 6px;
+    background: #eef2f7; color: var(--cy-slate) !important; -webkit-text-fill-color: var(--cy-slate);
+  }
+  #cyb-qotd .cy-tag.topic { background: #e8f0ff; color: var(--cy-accent-d) !important; -webkit-text-fill-color: var(--cy-accent-d); }
+  #cyb-qotd .cy-tag.d-easy { background: #e9f7ef; color: var(--cy-green) !important; -webkit-text-fill-color: var(--cy-green); }
+  #cyb-qotd .cy-tag.d-medium { background: #fff5e6; color: var(--cy-amber) !important; -webkit-text-fill-color: var(--cy-amber); }
+  #cyb-qotd .cy-tag.d-hard { background: #fdecea; color: var(--cy-red) !important; -webkit-text-fill-color: var(--cy-red); }
+  #cyb-qotd .cy-tag.d-expert { background: #fbe4e1; color: #a02417 !important; -webkit-text-fill-color: #a02417; }
+  #cyb-qotd .cy-stem { font-size: 17px; font-weight: 600; margin: 0 0 16px; color: var(--cy-ink) !important; -webkit-text-fill-color: var(--cy-ink); white-space: pre-line; }
+  #cyb-qotd .cy-code { background: #f4f6fb !important; border: 1px solid var(--cy-line) !important; border-radius: var(--cy-r-sm); padding: 12px 14px; margin: 0 0 14px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.55; color: #1f2d3d !important; -webkit-text-fill-color: #1f2d3d; white-space: pre; overflow-x: auto; }
+  #cyb-qotd .cy-multinote { font-size: 13px; color: var(--cy-slate) !important; -webkit-text-fill-color: var(--cy-slate); margin: 0 0 12px; font-style: italic; }
+  #cyb-qotd .cy-opts { list-style: none; margin: 0; padding: 0; }
+  #cyb-qotd .cy-opt {
+    display: flex; align-items: flex-start; gap: 10px;
+    border: 1px solid var(--cy-line) !important; border-radius: var(--cy-r-sm);
+    padding: 12px 14px; margin-bottom: 10px; cursor: pointer;
+    background: var(--cy-card) !important;
+    transition: border-color 0.12s ease, background 0.12s ease;
+  }
+  #cyb-qotd .cy-opt:hover { border-color: var(--cy-accent) !important; background: #f7faff !important; }
+  #cyb-qotd .cy-opt .cy-letter {
+    flex: 0 0 26px; height: 26px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+    background: #eef2f7; color: var(--cy-slate) !important; -webkit-text-fill-color: var(--cy-slate);
+  }
+  #cyb-qotd .cy-opt .cy-otext { font-size: 15px; color: var(--cy-ink) !important; -webkit-text-fill-color: var(--cy-ink); }
+  #cyb-qotd .cy-opt.sel { border-color: var(--cy-accent) !important; background: #f0f5ff !important; }
+  #cyb-qotd .cy-opt.sel .cy-letter { background: var(--cy-accent) !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff; }
+  #cyb-qotd .cy-opt.correct { border-color: var(--cy-green) !important; background: #effaf3 !important; }
+  #cyb-qotd .cy-opt.correct .cy-letter { background: var(--cy-green) !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff; }
+  #cyb-qotd .cy-opt.wrong { border-color: var(--cy-red) !important; background: #fdf0ee !important; }
+  #cyb-qotd .cy-opt.wrong .cy-letter { background: var(--cy-red) !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff; }
+  #cyb-qotd .cy-opt.locked { cursor: default; }
+  #cyb-qotd .cy-opt.locked:hover { background: var(--cy-card) !important; }
+  #cyb-qotd .cy-opt.locked.correct:hover { background: #effaf3 !important; }
+  #cyb-qotd .cy-opt.locked.wrong:hover { background: #fdf0ee !important; }
+
+  #cyb-qotd .cy-checkrow { margin-top: 6px; }
+  #cyb-qotd .cy-explain {
+    margin-top: 14px; padding: 14px 16px; border-radius: var(--cy-r-sm);
+    background: var(--cy-bg) !important; border-left: 4px solid var(--cy-accent) !important;
+    font-size: 15px; color: var(--cy-ink) !important; -webkit-text-fill-color: var(--cy-ink);
+    display: none;
+  }
+  #cyb-qotd .cy-explain.show { display: block; }
+  #cyb-qotd .cy-explain b { color: var(--cy-navy) !important; -webkit-text-fill-color: var(--cy-navy); }
+  #cyb-qotd .cy-permalink {
+    margin-top: 14px; font-size: 13px;
+    color: var(--cy-slate) !important; -webkit-text-fill-color: var(--cy-slate);
+  }
+  #cyb-qotd .cy-permalink a:link, #cyb-qotd .cy-permalink a:visited {
+    color: var(--cy-accent-d) !important; -webkit-text-fill-color: var(--cy-accent-d);
+    font-weight: 700; text-decoration: none !important;
+  }
+  #cyb-qotd .cy-permalink a:hover { text-decoration: underline !important; }
+
+  /* ---------- browse ---------- */
+  #cyb-qotd .cy-browse-units { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  #cyb-qotd .cy-topiclist { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  #cyb-qotd .cy-toggles {
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+    background: var(--cy-bg); border: 1px solid var(--cy-line); border-radius: var(--cy-r-sm);
+    padding: 12px 14px; margin-bottom: 16px;
+  }
+  #cyb-qotd .cy-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--cy-navy) !important; -webkit-text-fill-color: var(--cy-navy); cursor: pointer; }
+  #cyb-qotd .cy-toggle input { width: 16px; height: 16px; accent-color: var(--cy-accent); cursor: pointer; }
+  #cyb-qotd .cy-empty { font-size: 14px; color: var(--cy-slate) !important; -webkit-text-fill-color: var(--cy-slate); padding: 18px; background: var(--cy-bg); border-radius: var(--cy-r-sm); }
+  #cyb-qotd .cy-navlabel { font-size: 14px; font-weight: 700; color: var(--cy-navy) !important; -webkit-text-fill-color: var(--cy-navy); margin: 0 0 10px; }
+  #cyb-qotd .cy-qnums { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+  #cyb-qotd .cy-qnum { appearance: none; font-family: inherit; cursor: pointer; min-width: 42px; padding: 9px 10px; border-radius: var(--cy-r-sm); font-size: 14px; font-weight: 700; background: var(--cy-card) !important; border: 1px solid var(--cy-line) !important; color: var(--cy-navy) !important; -webkit-text-fill-color: var(--cy-navy); transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease; }
+  #cyb-qotd .cy-qnum:hover { border-color: var(--cy-accent) !important; }
+  #cyb-qotd .cy-qnum.active { background: var(--cy-accent) !important; border-color: var(--cy-accent) !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff; }
+  #cyb-qotd .cy-qnum:focus-visible { outline: 3px solid rgba(47,109,246,0.45); outline-offset: 2px; }
+  #cyb-qotd .cy-share { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--cy-line); }
+  #cyb-qotd .cy-share-inp { flex: 1; min-width: 220px; background: var(--cy-bg) !important; border: 1px solid var(--cy-line) !important; border-radius: var(--cy-r-sm); padding: 9px 11px; font-size: 12px; font-family: 'Courier New', monospace; color: var(--cy-slate) !important; -webkit-text-fill-color: var(--cy-slate); }
+  #cyb-qotd .cy-share-btn { white-space: nowrap; }
+
+  /* ---------- cta ---------- */
+  #cyb-qotd .cy-cta {
+    margin-top: 34px; background: linear-gradient(135deg, var(--cy-navy) 0%, var(--cy-navy-2) 100%);
+    border-radius: var(--cy-r); padding: 36px 28px; text-align: center;
+  }
+  #cyb-qotd .cy-cta h2, #cyb-qotd .cy-cta p { color: #ffffff !important; -webkit-text-fill-color: #ffffff; }
+  #cyb-qotd .cy-cta h2 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+  #cyb-qotd .cy-cta p { font-size: 15px; opacity: 0.92; margin: 0 0 18px; }
+  #cyb-qotd .cy-cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  #cyb-qotd a.cy-cta-primary:link, #cyb-qotd a.cy-cta-primary:visited {
+    background: #ffffff !important; color: var(--cy-navy) !important; -webkit-text-fill-color: var(--cy-navy);
+    padding: 12px 22px; border-radius: var(--cy-r-sm); font-weight: 800; font-size: 15px; text-decoration: none !important;
+  }
+  #cyb-qotd a.cy-cta-secondary:link, #cyb-qotd a.cy-cta-secondary:visited {
+    background: transparent !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff;
+    border: 2px solid rgba(255,255,255,0.55) !important; padding: 11px 21px; border-radius: var(--cy-r-sm);
+    font-weight: 800; font-size: 15px; text-decoration: none !important;
+  }
+
+  @media (max-width: 720px) {
+    #cyb-qotd .cy-hero { padding: 36px 20px; }
+    #cyb-qotd .cy-hero h1 { font-size: 28px; }
+    #cyb-qotd .cy-tabs { flex-direction: column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #cyb-qotd * { transition: none !important; }
+  }
+
+  /* --- crawlable question bank ------------------------------------------- */
+  #cyb-qotd .cy-bank { margin: 28px 0 0; padding: 22px 18px; background: #ffffff !important;
+    border: 1px solid var(--cy-line); border-radius: var(--cy-r); box-shadow: var(--cy-sh-sm); }
+  #cyb-qotd .cy-bank h2 { font-size: 22px; line-height: 1.25; margin: 0 0 6px;
+    color: #0f2a43 !important; -webkit-text-fill-color: #0f2a43 !important; font-weight: 700; }
+  #cyb-qotd .cy-bank-lede { margin: 0 0 18px; font-size: 15px; line-height: 1.55;
+    color: #40566d !important; -webkit-text-fill-color: #40566d !important; }
+  #cyb-qotd .cy-bank-unit { margin: 0 0 26px; }
+  #cyb-qotd .cy-bank-uh { font-size: 17px; margin: 22px 0 4px; padding: 0 0 6px;
+    border-bottom: 2px solid #2f6df6; color: #0f2a43 !important;
+    -webkit-text-fill-color: #0f2a43 !important; font-weight: 700; }
+  #cyb-qotd .cy-bank-count { float: right; font-size: 12px; font-weight: 600;
+    color: #64798f !important; -webkit-text-fill-color: #64798f !important; }
+  #cyb-qotd .cy-bank-th { font-size: 14px; margin: 16px 0 8px; text-transform: uppercase;
+    letter-spacing: .04em; color: #15395c !important;
+    -webkit-text-fill-color: #15395c !important; font-weight: 700; }
+  #cyb-qotd .cy-bank-q { margin: 0 0 14px; padding: 12px 14px; background: #f7f9fc !important;
+    border: 1px solid var(--cy-line); border-radius: var(--cy-r-sm); }
+  #cyb-qotd .cy-bank-stem { margin: 0 0 8px; font-size: 15px; line-height: 1.55;
+    color: #16273a !important; -webkit-text-fill-color: #16273a !important; }
+  #cyb-qotd .cy-bank-code { margin: 0 0 10px; padding: 10px 12px; overflow-x: auto;
+    background: #0f2a43 !important; border-radius: var(--cy-r-sm); font-size: 13px;
+    line-height: 1.5; color: #e8eef6 !important; -webkit-text-fill-color: #e8eef6 !important; }
+  #cyb-qotd .cy-bank-opts { margin: 0 0 8px; padding: 0; list-style: none; }
+  #cyb-qotd .cy-bank-opts li { margin: 0 0 4px; font-size: 14px; line-height: 1.5;
+    color: #2b3d52 !important; -webkit-text-fill-color: #2b3d52 !important; }
+  #cyb-qotd .cy-bank-let { display: inline-block; min-width: 20px; font-weight: 700;
+    color: #2f6df6 !important; -webkit-text-fill-color: #2f6df6 !important; }
+  #cyb-qotd .cy-bank-ans { margin: 6px 0 0; }
+  #cyb-qotd .cy-bank-ans summary { cursor: pointer; font-size: 13px; font-weight: 600;
+    color: #2f6df6 !important; -webkit-text-fill-color: #2f6df6 !important; }
+  #cyb-qotd .cy-bank-key { margin: 8px 0 6px; font-size: 14px; line-height: 1.5;
+    color: #1f9d57 !important; -webkit-text-fill-color: #1f9d57 !important; font-weight: 600; }
+  #cyb-qotd .cy-bank-exp { margin: 0; font-size: 14px; line-height: 1.6;
+    color: #40566d !important; -webkit-text-fill-color: #40566d !important; }
+  @media (max-width: 600px) {
+    #cyb-qotd .cy-bank { padding: 16px 12px; }
+    #cyb-qotd .cy-bank-count { float: none; display: block; }
+  }
+</style>
+
+<div id=""cyb-qotd"">
+  <div class=""cy-hero"">
+    <span class=""cy-eyebrow"">FREE DAILY PRACTICE</span>
+    <h1>AP Cybersecurity Question of the Day</h1>
+    <p>One question a day, plus on-demand practice and a full topic browser keyed to the course framework. No login, no streak to keep.</p>
+  </div>
+
+  <div class=""cy-tabs"" role=""tablist"">
+    <button class=""cy-tab active"" data-tab=""today"" role=""tab"">Today's Question</button>
+    <button class=""cy-tab"" data-tab=""practice"" role=""tab"">Practice</button>
+    <button class=""cy-tab"" data-tab=""browse"" role=""tab"">Browse by Unit</button>
+  </div>
+
+  <!-- TODAY -->
+  <div class=""cy-panel active"" data-panel=""today"">
+    <div class=""cy-panel-head"">
+      <h2>Today's Question</h2>
+      <p>The same question for everyone today. A new one rotates in tomorrow.</p>
+      <span class=""cy-datebadge"" id=""cy-datebadge"">Loading...</span>
+    </div>
+    <div id=""cy-today-mount""></div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div class=""cy-panel"" data-panel=""practice"">
+    <div class=""cy-panel-head"">
+      <h2>Practice</h2>
+      <p>Draw a question on demand. Pull from one unit or from anywhere, then draw another.</p>
+    </div>
+    <div class=""cy-controls"">
+      <button class=""cy-btn cy-btn-solid"" id=""cy-rand-any"">Random question</button>
+      <button class=""cy-btn cy-btn-ghost"" id=""cy-draw-another"" style=""display:none;"">Draw another</button>
+    </div>
+    <div class=""cy-unitrow"" id=""cy-unit-chips""></div>
+    <div id=""cy-practice-mount"" style=""margin-top:18px;""></div>
+  </div>
+
+  <!-- BROWSE -->
+  <div class=""cy-panel"" data-panel=""browse"">
+    <div class=""cy-panel-head"">
+      <h2>Browse by Unit and Topic</h2>
+      <p>Pick the topic your class is on. Use it as a day-one preview or as review.</p>
+    </div>
+    <div class=""cy-browse-units"" id=""cy-browse-units""></div>
+    <div class=""cy-topiclist"" id=""cy-browse-topics""></div>
+    <div class=""cy-toggles"" id=""cy-browse-toggles"" style=""display:none;"">
+      <label class=""cy-toggle""><input type=""checkbox"" id=""cy-mode-retrieval""> Review mode (already taught)</label>
+      <label class=""cy-toggle""><input type=""checkbox"" id=""cy-prior-topic""> Warm up with the prior topic instead</label>
+    </div>
+    <div id=""cy-browse-nav""></div>
+    <div id=""cy-browse-mount""></div>
+  </div>
+
+  <div class=""cy-cta"">
+    <h2>Teaching AP Cybersecurity?</h2>
+    <p>Founding Teacher curriculum bundles, full units, and ready-to-run resources.</p>
+    <div class=""cy-cta-btns"">
+      <a class=""cy-cta-primary"" href=""/pages/ap-cybersecurity"">Teacher Resources</a>
+      <a class=""cy-cta-secondary"" href=""/products/computer-science-tutoring-lesson"">1-on-1 Tutoring</a>
+    </div>
+  </div>
+  <section class=""cy-bank"" id=""cy-bank"" aria-labelledby=""cy-bank-h"">
+    <h2 id=""cy-bank-h"">Every question, by unit</h2>
+    <p class=""cy-bank-lede"">All 152 questions in the rotation are browsable in full, grouped by CED topic, with the answer and the reasoning on each one.</p>
+    <div class=""cy-bank-unit"">
+      <p class=""cy-bank-stem""><a href=""/pages/ap-cybersecurity-practice-questions-unit-1"">Unit 1: Introduction to Security</a> <span class=""cy-bank-count"">30 questions</span></p>
+      <p class=""cy-bank-stem""><a href=""/pages/ap-cybersecurity-practice-questions-unit-2"">Unit 2: Securing Spaces</a> <span class=""cy-bank-count"">27 questions</span></p>
+      <p class=""cy-bank-stem""><a href=""/pages/ap-cybersecurity-practice-questions-unit-3"">Unit 3: Securing Networks</a> <span class=""cy-bank-count"">28 questions</span></p>
+      <p class=""cy-bank-stem""><a href=""/pages/ap-cybersecurity-practice-questions-unit-4"">Unit 4: Securing Devices</a> <span class=""cy-bank-count"">26 questions</span></p>
+      <p class=""cy-bank-stem""><a href=""/pages/ap-cybersecurity-practice-questions-unit-5"">Unit 5: Securing Applications and Data</a> <span class=""cy-bank-count"">41 questions</span></p>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  ""use strict"";
+
+  /* =========================================================================
+     TAG SCHEMA  (THE CONTRACT)
+     Every QOTD item, whether placeholder or emitted by the lesson pipeline,
+     MUST carry these fields. All three modes read this shape and nothing else.
+
+       id          string   stable, globally unique, NEVER reused           e.g. ""cyb-3.1-001""
+       unit        number   1-5
+       topic       string   CED topic code, matches lesson pipeline         e.g. ""3.1""
+       lo          string   learning objective code (optional)              e.g. ""3.1.A""
+       ek          array    essential-knowledge codes, ""EK x.x.x.x"" form    e.g. [""EK 3.1.A.1""]
+       skill       string   ""Analyze Risk"" | ""Mitigate Risk"" | ""Detect Attacks""
+       difficulty  string   ""easy"" | ""medium"" | ""hard""
+       type        string   descriptive metadata only; multi-select contract = Array.isArray(answer)
+       featured    boolean  eligible to be Today's Question / email headline
+       slug        string   -> /blogs/ap-cyber-daily-practice/{slug}  (per-question SEO page)
+       stem        string   the question
+       options     array    answer choices (strings)
+       answer      number | array   0-indexed index for single; ARRAY iff genuinely select-all-that-apply
+       explanation string   shown after answering (the teaching hook)
+     ========================================================================= */
+
+  var BLOG_BASE = ""/blogs/ap-cyber-daily-practice/"";
+
+  var UNIT_TITLES = {
+    1: ""Introduction to Security"",
+    2: ""Securing Spaces"",
+    3: ""Securing Networks"",
+    4: ""Securing Devices"",
+    5: ""Securing Applications and Data""
+  };
+
+  // Question-type display labels (test-builder 'type' field is descriptive metadata).
+  var TYPE_LABELS = {
+    ""concept"": ""Concept"",
+    ""scenario"": ""Scenario"",
+    ""spot-flaw"": ""Spot the Flaw"",
+    ""multi-correct"": ""I / II / III"",
+    ""single"": ""Single answer"",
+    ""multi"": ""Select all""
+  };
+
+  // CED topic titles. Units 3-5 are from the CED topic list; Unit 1 and 2.1/2.2
+  // titles are best-fit from the lesson set and should be confirmed against the CED.
+  var TOPIC_TITLES = {
+    ""1.1"": ""Understanding Social Engineering"",
+    ""1.2"": ""Detecting Suspicious Account Activity"",
+    ""1.3"": ""Best Practices for Public Networks"",
+    ""1.4"": ""AI-Based Cybersecurity Attacks"",
+    ""1.5"": ""Leveraging AI in Cyber Defense"",
+    ""2.1"": ""Security Principles and Risk"",
+    ""2.2"": ""Physical Vulnerabilities and Attacks"",
+    ""2.3"": ""Protecting Physical Spaces"",
+    ""2.4"": ""Detecting Physical Attacks"",
+    ""3.1"": ""Network Vulnerabilities and Attacks"",
+    ""3.2"": ""Managerial Controls and Wireless Security"",
+    ""3.3"": ""Protecting Networks: Segmentation"",
+    ""3.4"": ""Protecting Networks: Firewalls"",
+    ""3.5"": ""Detecting Network Attacks"",
+    ""4.1"": ""Device Vulnerabilities and Attacks"",
+    ""4.2"": ""Authentication"",
+    ""4.3"": ""Protecting Devices"",
+    ""4.4"": ""Detecting Attacks on Devices"",
+    ""5.1"": ""Application and Data Vulnerabilities and Attacks"",
+    ""5.2"": ""Managerial Controls and Access Controls"",
+    ""5.3"": ""Protecting Stored Data with Cryptography"",
+    ""5.4"": ""Asymmetric Cryptography"",
+    ""5.5"": ""Protecting Applications"",
+    ""5.6"": ""Detecting Attacks on Data and Applications""
+  };
+
+  /* ----- PLACEHOLDER POOL (original sample items, not exam-secure) -----
+     8 items across all 5 units, mixed difficulty/skill, some featured,
+     including one multi-select to prove the schema handles question types. */
+  var POOL = [
+    {""id"": ""C1-101"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""social-engineering"", ""principles""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-caller-claims-to-be-from-the-it"", ""code"": """", ""stem"": ""A caller claims to be from the IT department, says a security patch must be installed in the next ten minutes or the employee's account will be locked, and asks for the employee's password to 'apply it remotely.' Which combination of psychological principles is the attacker MOST directly exploiting?"", ""options"": [""Authority and urgency"", ""Reciprocity and scarcity"", ""Social proof and liking"", ""Commitment and consistency""], ""answer"": 0, ""explanation"": ""Claiming to be IT invokes authority; the ten-minute lockout threat manufactures urgency. Reciprocity, social proof, liking, and commitment are real influence tactics but are not the ones used here.""},
+    {""id"": ""C1-102"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""phishing"", ""email-analysis""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-employee-receives-the-email-shown-which-single"", ""code"": ""From: IT-Support <it-support@micros0ft-secure.com>\nSubject: Re: Account Verification Required\n\nDear User,\nWe detected unusual activity. Verify within 24 hours\nor your account will be permanently deleted.\nClick: http://account-verify.micros0ft-secure.com/login"", ""stem"": ""An employee receives the email shown. Which single feature is the STRONGEST evidence that it is a phishing attempt rather than a legitimate message?"", ""options"": [""The greeting says 'Dear User' instead of a name"", ""The subject line begins with 'Re:'"", ""The message mentions unusual activity"", ""The sender domain uses a zero in place of the letter o""], ""answer"": 3, ""explanation"": ""A look-alike domain (micros0ft with a zero) is definitive technical evidence of spoofing. A generic greeting and a deadline are suspicious but individually can occur in real mail; legitimate services also report unusual activity. The domain forgery is the strongest single indicator.""},
+    {""id"": ""C1-103"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""vishing"", ""smishing""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""a-text-message-reads-usps-your-package-is"", ""code"": """", ""stem"": ""A text message reads: 'USPS: your package is held pending a $1.99 fee. Pay at usps-redelivery.info to release it.' This is BEST classified as which type of attack?"", ""options"": [""Tailgating"", ""Smishing"", ""Watering hole attack"", ""Whaling""], ""answer"": 1, ""explanation"": ""Smishing is phishing delivered by SMS text. Tailgating is physical, a watering hole attack compromises a site the target visits, and whaling targets high-level executives specifically.""},
+    {""id"": ""C1-104"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""phishing"", ""indicators""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-of-the-following-are-reliable-warning-signs"", ""code"": """", ""stem"": ""Which of the following are reliable warning signs that an email may be a phishing attempt?\n\nI.   The message creates pressure to act immediately\nII.  Hovering over a link reveals a destination different from the displayed text\nIII. The email is addressed to the recipient by their correct full name"", ""options"": [""II and III only"", ""I and III only"", ""I and II only"", ""I, II, and III""], ""answer"": 2, ""explanation"": ""Manufactured urgency (I) and a mismatched link target on hover (II) are classic phishing indicators. A correct full name (III) is not a warning sign; spear-phishing attacks deliberately use accurate personal details, so its presence does not signal danger.""},
+    {""id"": ""C1-105"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""spear-phishing"", ""whaling""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-attacker-researches-a-company-s-cfo-on"", ""code"": """", ""stem"": ""An attacker researches a company's CFO on social media, then sends that CFO a personalized email impersonating the CEO and requesting an urgent wire transfer. This attack is BEST described as:"", ""options"": [""Whaling"", ""Mass phishing"", ""Baiting"", ""Quid pro quo""], ""answer"": 0, ""explanation"": ""Targeting a specific high-value executive (the CFO) with a tailored message is whaling, a form of spear phishing aimed at 'big fish.' Mass phishing is untargeted, baiting offers a lure item, and quid pro quo offers a service in exchange for information.""},
+    {""id"": ""C1-106"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""pretexting"", ""response""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-worker-at-a-help-desk-gets-a"", ""code"": """", ""stem"": ""A worker at a help desk gets a call: 'Hi, this is Dana from the third-floor accounting team. I'm locked out before a big deadline and my manager said you could reset my password right now.' What is the MOST appropriate response?"", ""options"": [""Reset the password immediately since a manager authorized it"", ""Ask the caller to confirm the manager's name, then reset the password"", ""Email the new temporary password to the address the caller provides"", ""Verify the caller's identity through an independent, established channel before taking action""], ""answer"": 3, ""explanation"": ""The scenario is textbook pretexting. Identity must be confirmed through an independent verified channel (e.g., calling the employee back at a known number), not by trusting unverifiable claims the caller supplies. Confirming a manager's name or emailing a password the caller dictates still relies on attacker-supplied data.""},
+    {""id"": ""C1-107"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""baiting""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""an-attacker-leaves-usb-drives-labeled-q4-layoffs"", ""code"": """", ""stem"": ""An attacker leaves USB drives labeled 'Q4 Layoffs - Confidential' in an office parking lot, hoping employees will plug them into work computers. This technique is called:"", ""options"": [""Tailgating"", ""Vishing"", ""Baiting"", ""Shoulder surfing""], ""answer"": 2, ""explanation"": ""Baiting lures a victim with an enticing physical or digital item (here, a curiosity-provoking USB drive) that delivers malware when used. Tailgating is following someone through a door, vishing is voice phishing, and shoulder surfing is observing credentials directly.""},
+    {""id"": ""C1-108"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""social-engineering"", ""policy""], ""type"": ""spot-flaw"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-company-adopts-the-anti-social-engineering-rules-below-which"", ""code"": ""I.   Never share passwords over phone or email\nII.  Verify unexpected requests through a second channel\nIII. Trust any request that includes a manager's name\nIV.  Report suspicious messages to the security team"", ""stem"": ""A company adopts the anti-social-engineering rules below. Which rule is itself a SECURITY WEAKNESS rather than a protection?"", ""options"": [""Rule I"", ""Rule II"", ""Rule IV"", ""Rule III""], ""answer"": 3, ""explanation"": ""Rule III is the weakness: a manager's name is information an attacker can easily learn and supply, so treating its mere mention as proof of legitimacy enables pretexting. The other three are sound practices.""},
+    {""id"": ""C1-109"", ""unit"": 1, ""topic"": ""1.1"", ""tags"": [""quid-pro-quo""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-attacker-cold-calls-random-employees-offering-free-tech"", ""code"": """", ""stem"": ""An attacker cold-calls random employees offering 'free tech support' and walks each one through steps that quietly disable their antivirus. The exchange of a supposed service for access defines which technique?"", ""options"": [""Whaling"", ""Quid pro quo"", ""Pharming"", ""Tailgating""], ""answer"": 1, ""explanation"": ""Quid pro quo trades a benefit (free support) for access or information. Whaling targets executives, pharming redirects traffic via DNS/host manipulation, and tailgating is unauthorized physical entry.""},
+    {""id"": ""C1-110"", ""unit"": 1, ""topic"": ""1.2"", ""tags"": [""login-anomaly"", ""impossible-travel""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-user-s-account-login-history-is-shown"", ""code"": ""Entry  Date/Time          Device        IP Location\n1      Mon 08:14  Laptop (known)   Kansas City, US\n2      Mon 08:41  Phone (known)    Kansas City, US\n3      Mon 08:53  Unknown device   Bucharest, RO\n4      Mon 17:02  Laptop (known)   Kansas City, US"", ""stem"": ""A user's account login history is shown. Which entry is the STRONGEST indicator that the account has been compromised?"", ""options"": [""Entry 1"", ""Entry 3"", ""Entry 2"", ""Entry 4""], ""answer"": 1, ""explanation"": ""Entry 3 shows an unknown device signing in from another continent only 12 minutes after a local login - physically impossible travel plus an unrecognized device. The other entries are consistent with the user's normal location and known devices.""},
+    {""id"": ""C1-111"", ""unit"": 1, ""topic"": ""1.2"", ""tags"": [""credential-stuffing""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-attacker-takes-username-password-pairs-leaked-from"", ""code"": """", ""stem"": ""An attacker takes username/password pairs leaked from one breached website and automatically tries them on many other sites. This attack is called:"", ""options"": [""Credential stuffing"", ""Brute-force cracking"", ""Keylogging"", ""Session fixation""], ""answer"": 0, ""explanation"": ""Credential stuffing reuses known username/password pairs across multiple services, exploiting password reuse. Brute force guesses passwords from scratch, keylogging records keystrokes, and session fixation forces a known session ID on a victim.""},
+    {""id"": ""C1-112"", ""unit"": 1, ""topic"": ""1.2"", ""tags"": [""login-indicators""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""while-reviewing-a-login-log-which-of-the"", ""code"": """", ""stem"": ""While reviewing a login log, which of the following SHOULD raise suspicion of unauthorized access?\n\nI.   A successful login from a country the user has never visited\nII.  Dozens of failed logins followed by one success\nIII. A login from the user's usual device and location"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""A login from a never-visited country (I) and a burst of failures ending in success (II, the signature of a successful guessing or stuffing attack) are both suspicious. A login from the usual device and location (III) is expected normal behavior.""},
+    {""id"": ""C1-113"", ""unit"": 1, ""topic"": ""1.2"", ""tags"": [""mfa"", ""mitigation""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""which-control-most-directly-limits-the-damage-of"", ""code"": """", ""stem"": ""Which control most directly limits the damage of stolen passwords by requiring a second proof of identity at login?"", ""options"": [""A longer password expiration window"", ""Multi-factor authentication"", ""Disabling the account lockout policy"", ""Storing passwords in the browser""], ""answer"": 1, ""explanation"": ""Multi-factor authentication requires a second factor (something you have or are), so a stolen password alone is insufficient. Longer expiration and disabling lockout weaken security, and browser storage does not add an authentication factor.""},
+    {""id"": ""C1-114"", ""unit"": 1, ""topic"": ""1.2"", ""tags"": [""password-practices""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-user-follows-the-habits-below-to-manage"", ""code"": ""I.   Uses a unique password for each site\nII.  Reuses one strong password everywhere\nIII. Enables multi-factor authentication\nIV.  Reviews login alerts when they arrive"", ""stem"": ""A user follows the habits below to manage account logins. Which habit MOST increases the risk that one breach compromises many accounts?"", ""options"": [""Habit I"", ""Habit II"", ""Habit III"", ""Habit IV""], ""answer"": 1, ""explanation"": ""Reusing one password (II) means a single leak lets attackers into every account via credential stuffing - the password's strength does not matter once it is exposed. Unique passwords, MFA, and reviewing alerts all reduce risk.""},
+    {""id"": ""C1-115"", ""unit"": 1, ""topic"": ""1.2"", ""tags"": [""response"", ""account-compromise""], ""type"": ""scenario"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""a-user-receives-a-real-alert-that-their"", ""code"": """", ""stem"": ""A user receives a real alert that their email was accessed from an unrecognized device in another country. What should they do FIRST?"", ""options"": [""Delete the alert so it does not cause panic"", ""Reply to the alert email asking who logged in"", ""Wait to see whether any further alerts arrive"", ""Change the account password and sign out all active sessions""], ""answer"": 3, ""explanation"": ""Changing the password and terminating active sessions immediately revokes the intruder's access. Deleting or ignoring the alert leaves the attacker in, and replying to an alert email risks engaging an attacker if the alert itself is spoofed.""},
+    {""id"": ""C1-116"", ""unit"": 1, ""topic"": ""1.3"", ""tags"": [""evil-twin"", ""captive-portal""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""at-a-coffee-shop-a-laptop-shows-two"", ""code"": """", ""stem"": ""At a coffee shop, a laptop shows two networks: 'Sunshine Coffee' and 'Sunshine Coffee Free WiFi.' Connecting to the second opens a portal asking for an email and password to 'log in for free access.' What is the MOST likely threat?"", ""options"": [""A legitimate captive portal that is always safe to use"", ""An evil twin access point harvesting credentials through a fake portal"", ""A firewall blocking the real network"", ""A VPN automatically protecting the connection""], ""answer"": 1, ""explanation"": ""A second, similarly named network paired with a credential-harvesting portal is a classic evil twin: an attacker-run access point that mimics the real one to capture logins. A genuine portal would not need account credentials, and no VPN or firewall is implied.""},
+    {""id"": ""C1-117"", ""unit"": 1, ""topic"": ""1.3"", ""tags"": [""public-wifi"", ""vpn""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""why-does-using-a-vpn-on-public-wi-fi"", ""code"": """", ""stem"": ""Why does using a VPN on public Wi-Fi improve security even when the network itself is untrusted?"", ""options"": [""It hides the device from all other users on the network entirely and physically"", ""It encrypts the device's traffic so others on the network cannot read it"", ""It removes the need for any website to use HTTPS"", ""It guarantees the website being visited is legitimate""], ""answer"": 1, ""explanation"": ""A VPN encrypts traffic between the device and the VPN server, so eavesdroppers on the shared network see only ciphertext. It does not make the device invisible, replace HTTPS, or verify a destination site's legitimacy.""},
+    {""id"": ""C1-118"", ""unit"": 1, ""topic"": ""1.3"", ""tags"": [""public-network-practices""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-practices-reduce-risk-when-using-public-wi-fi"", ""code"": """", ""stem"": ""Which practices reduce risk when using public Wi-Fi?\n\nI.   Confirming the official network name with staff before connecting\nII.  Verifying that sites show HTTPS before entering credentials\nIII. Enabling file sharing so colleagues can reach your device"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""Confirming the legitimate network name (I) avoids evil twins, and requiring HTTPS (II) protects data in transit. Enabling file sharing on an untrusted network (III) exposes the device to other users and increases risk.""},
+    {""id"": ""C1-119"", ""unit"": 1, ""topic"": ""1.3"", ""tags"": [""public-network-habits""], ""type"": ""spot-flaw"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""a-traveler-does-the-following-on-airport-wi-fi"", ""code"": ""I.   Reads news on an HTTPS site\nII.  Logs into online banking over the open network\nIII. Uses a VPN before browsing\nIV.  Confirms the network name at the help desk"", ""stem"": ""A traveler does the following on airport Wi-Fi. Which action is the RISKIEST?"", ""options"": [""Action II"", ""Action I"", ""Action III"", ""Action IV""], ""answer"": 0, ""explanation"": ""Logging into banking over open Wi-Fi (II) exposes high-value credentials to potential eavesdropping or an evil twin, especially without a VPN. Reading HTTPS news, using a VPN, and verifying the network name are all comparatively safe.""},
+    {""id"": ""C1-120"", ""unit"": 1, ""topic"": ""1.3"", ""tags"": [""man-in-the-middle""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""on-an-open-wireless-network-with-no-encryption"", ""code"": """", ""stem"": ""On an open wireless network with no encryption, an attacker positions themselves between a user and the gateway to intercept and possibly alter traffic. This is BEST described as:"", ""options"": [""A denial-of-service attack"", ""A man-in-the-middle attack"", ""A SQL injection"", ""A brute-force attack""], ""answer"": 1, ""explanation"": ""Intercepting (and potentially modifying) traffic between two parties is a man-in-the-middle attack, which open networks make easy. Denial of service blocks availability, SQL injection targets databases, and brute force guesses credentials.""},
+    {""id"": ""C1-121"", ""unit"": 1, ""topic"": ""1.4"", ""tags"": [""ai-phishing"", ""scale""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""how-do-ai-tools-most-significantly-change-the"", ""code"": """", ""stem"": ""How do AI tools most significantly change the threat posed by phishing campaigns?"", ""options"": [""They let attackers generate large volumes of personalized, fluent messages quickly"", ""They make all phishing emails contain obvious spelling errors"", ""They eliminate the need for a victim to click anything"", ""They prevent email providers from filtering spam""], ""answer"": 0, ""explanation"": ""AI lets attackers produce many highly personalized, grammatically clean messages at scale, raising both volume and believability. It does not introduce errors, remove the need for victim interaction, or disable spam filters.""},
+    {""id"": ""C1-122"", ""unit"": 1, ""topic"": ""1.4"", ""tags"": [""deepfake"", ""voice-cloning""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-employee-receives-a-phone-call-that-sounds"", ""code"": """", ""stem"": ""An employee receives a phone call that sounds exactly like their manager's voice, urgently asking them to approve a payment. The 'manager' is later found to have made no such call. Which AI-enabled attack is MOST consistent with this?"", ""options"": [""A SQL injection"", ""A brute-force password attack"", ""AI-generated voice cloning (audio deepfake)"", ""A captive portal attack""], ""answer"": 2, ""explanation"": ""AI voice cloning can synthesize a convincing imitation of a known person's voice to authorize fraudulent actions. The other options describe database, password, and network attacks unrelated to synthetic audio.""},
+    {""id"": ""C1-123"", ""unit"": 1, ""topic"": ""1.4"", ""tags"": [""ai-attacks"", ""characteristics""], ""type"": ""multi-correct"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""which-statements-about-ai-based-cyberattacks-are-true-i"", ""code"": """", ""stem"": ""Which statements about AI-based cyberattacks are TRUE?\n\nI.   AI can generate deepfake audio and video to impersonate real people\nII.  AI lowers the skill and time needed to launch convincing attacks at scale\nIII. AI-generated phishing is always easy to detect because it sounds robotic"", ""options"": [""II and III only"", ""I and III only"", ""I, II, and III"", ""I and II only""], ""answer"": 3, ""explanation"": ""AI can fabricate realistic audio/video impersonations (I) and reduce the effort to scale convincing attacks (II). Statement III is false: modern AI text is fluent and natural, making AI phishing harder, not easier, to spot.""},
+    {""id"": ""C1-124"", ""unit"": 1, ""topic"": ""1.4"", ""tags"": [""deepfake"", ""verification""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""after-a-deepfake-voice-scam-a-team-proposes"", ""code"": ""I.   Confirm money transfers through a pre-agreed code word\nII.  Trust any request if the caller's voice sounds correct\nIII. Call the requester back on a known, official number\nIV.  Require a second approver for large transfers"", ""stem"": ""After a deepfake voice scam, a team proposes new verification rules. Which proposed rule would FAIL to defend against a convincing voice clone?"", ""options"": [""Rule I"", ""Rule III"", ""Rule II"", ""Rule IV""], ""answer"": 2, ""explanation"": ""Rule II fails because the entire danger of voice cloning is that the voice sounds correct, so it cannot be the test. Code words, call-backs to known numbers, and dual approval all verify identity by means a deepfake cannot fake.""},
+    {""id"": ""C1-125"", ""unit"": 1, ""topic"": ""1.5"", ""tags"": [""anomaly-detection""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-security-system-uses-ai-to-learn-each"", ""code"": """", ""stem"": ""A security system uses AI to learn each user's normal login times, locations, and devices, then flags logins that deviate sharply from that pattern. This defensive technique is BEST described as:"", ""options"": [""Anomaly (behavior-based) detection"", ""Signature-based filtering"", ""Password hashing"", ""Physical access control""], ""answer"": 0, ""explanation"": ""Learning a baseline of normal behavior and flagging deviations is anomaly/behavior-based detection. Signature-based filtering matches known patterns, hashing protects stored passwords, and physical access control governs entry to spaces.""},
+    {""id"": ""C1-126"", ""unit"": 1, ""topic"": ""1.5"", ""tags"": [""ai-defense"", ""uses""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-are-legitimate-ways-ai-helps-defenders-i"", ""code"": """", ""stem"": ""Which are legitimate ways AI helps defenders?\n\nI.   Detecting unusual account behavior faster than manual review\nII.  Triaging large volumes of alerts to surface likely threats\nIII. Guaranteeing zero false positives in threat detection"", ""options"": [""II and III only"", ""I and III only"", ""I and II only"", ""I, II, and III""], ""answer"": 2, ""explanation"": ""AI excels at rapidly spotting anomalies (I) and prioritizing high volumes of alerts (II). Statement III is false: AI systems still produce false positives and false negatives and cannot guarantee perfect accuracy.""},
+    {""id"": ""C1-127"", ""unit"": 1, ""topic"": ""1.5"", ""tags"": [""ai-defense"", ""limitations""], ""type"": ""concept"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""which-statement-best-describes-a-key-limitation-of"", ""code"": """", ""stem"": ""Which statement BEST describes a key limitation of relying on AI for cyber defense?"", ""options"": [""AI defenses make human oversight completely unnecessary"", ""AI defenses can produce false positives and may miss novel attacks not reflected in their training"", ""AI defenses can detect only attacks that have already been publicly reported"", ""AI defenses cannot process more data than a human analyst""], ""answer"": 1, ""explanation"": ""AI defenses can misclassify benign activity (false positives) and may fail on truly novel attacks outside their learned patterns, so human oversight remains important. They do process more data than humans and are not limited to publicly reported attacks.""},
+    {""id"": ""C1-128"", ""unit"": 1, ""topic"": ""1.5"", ""tags"": [""ai-defense"", ""false-positive""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-ai-monitoring-tool-flags-a-finance-employee"", ""code"": """", ""stem"": ""An AI monitoring tool flags a finance employee's first-ever late-night login from a new laptop as suspicious, but it turns out the employee simply bought a new computer and worked late. This outcome is an example of:"", ""options"": [""A false positive"", ""A false negative"", ""A zero-day exploit"", ""A denial-of-service event""], ""answer"": 0, ""explanation"": ""The system raised an alarm for legitimate activity, which is a false positive. A false negative would be missing a real attack; the other options are unrelated attack types.""},
+    {""id"": ""C1-129"", ""unit"": 1, ""topic"": ""1.5"", ""tags"": [""ai-defense"", ""human-in-loop""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""why-is-human-review-still-important-even-when"", ""code"": """", ""stem"": ""Why is human review still important even when AI handles most threat detection?"", ""options"": [""Humans can read encrypted traffic that AI cannot"", ""AI is unable to process more than one alert at a time"", ""Humans never make mistakes in security decisions"", ""Humans can investigate flagged events in context and catch AI errors""], ""answer"": 3, ""explanation"": ""Humans add contextual judgment and can correct AI mistakes such as false positives or missed novel attacks. AI handles high volume well, neither humans nor AI read properly encrypted traffic without keys, and humans are certainly not error-free.""},
+    {""id"": ""C1-130"", ""unit"": 1, ""topic"": ""1.4"", ""tags"": [""1.5"", ""ai-dual-use""], ""type"": ""multi-correct"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""ai-is-described-as-dual-use-in-cybersecurity-which"", ""code"": """", ""stem"": ""AI is described as 'dual-use' in cybersecurity. Which statements support this characterization?\n\nI.   The same generative models that scale phishing can also draft user-awareness training\nII.  Anomaly detection that defends accounts can also help attackers map normal behavior to evade it\nIII. AI is useful only to attackers, never to defenders"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""Dual-use means the same capabilities aid both sides: generative models help attackers and defenders (I), and behavioral modeling can be turned to evasion (II). Statement III is false because AI clearly benefits defenders as well.""},
+    {""id"": ""C2-101"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""cia-triad"", ""integrity""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-hospital-discovers-that-a-patient-s-recorded"", ""code"": """", ""stem"": ""A hospital discovers that a patient's recorded blood type was silently altered in its database. Which element of the CIA triad was MOST directly violated?"", ""options"": [""Confidentiality"", ""Availability"", ""Authentication"", ""Integrity""], ""answer"": 3, ""explanation"": ""Unauthorized alteration of data violates integrity, which concerns accuracy and trustworthiness. Confidentiality is about disclosure, availability about access when needed, and authentication is not part of the CIA triad.""},
+    {""id"": ""C2-102"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""cia-triad"", ""availability""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-ransomware-attack-encrypts-a-company-s-files"", ""code"": """", ""stem"": ""A ransomware attack encrypts a company's files so employees cannot open them until a ransom is paid. Which element of the CIA triad is MOST directly affected?"", ""options"": [""Confidentiality"", ""Availability"", ""Integrity"", ""Non-repudiation""], ""answer"": 1, ""explanation"": ""Blocking legitimate users from accessing their own data primarily harms availability. The data may still be confidential and unaltered; non-repudiation is unrelated to access.""},
+    {""id"": ""C2-103"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""risk"", ""definitions""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""consider-these-definitions-used-in-risk-analysis-which"", ""code"": """", ""stem"": ""Consider these definitions used in risk analysis. Which are stated correctly?\n\nI.   A vulnerability is a weakness that could be exploited\nII.  A threat is a potential cause of an unwanted incident\nIII. Risk is identical to vulnerability with no other factors"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""A vulnerability is an exploitable weakness (I) and a threat is a potential cause of harm (II). Statement III is false: risk combines threat, vulnerability, and impact; it is not the same as a vulnerability alone.""},
+    {""id"": ""C2-104"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""least-privilege""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-new-intern-is-given-access-only-to"", ""code"": """", ""stem"": ""A new intern is given access only to the specific shared folder needed for their project and nothing more. This BEST illustrates which principle?"", ""options"": [""Least privilege"", ""Defense in depth"", ""Security through obscurity"", ""Non-repudiation""], ""answer"": 0, ""explanation"": ""Granting only the minimum access required for a role is the principle of least privilege. Defense in depth layers multiple controls, security through obscurity hides design details, and non-repudiation ensures actions cannot be denied.""},
+    {""id"": ""C2-105"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""defense-in-depth""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-building-uses-a-perimeter-fence-a-badge-controlled"", ""code"": """", ""stem"": ""A building uses a perimeter fence, a badge-controlled lobby, a locked server room, and a logged cabinet for backups. Relying on multiple independent layers so that no single failure grants full access BEST illustrates:"", ""options"": [""Least privilege"", ""Single sign-on"", ""Separation of duties"", ""Defense in depth""], ""answer"": 3, ""explanation"": ""Layering several independent controls so a breach of one does not compromise everything is defense in depth. Least privilege limits access scope, single sign-on consolidates logins, and separation of duties divides a task among people.""},
+    {""id"": ""C2-106"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""control-types""], ""type"": ""spot-flaw"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-team-labels-each-control-by-its-function"", ""code"": ""I.   Security camera footage reviewed after an incident - detective\nII.  Door lock that stops entry - preventive\nIII. Restoring files from backup after an attack - corrective\nIV.  A motion-triggered alarm that records intrusions - preventive"", ""stem"": ""A team labels each control by its function. Which label is INCORRECT?"", ""options"": [""Label I"", ""Label II"", ""Label III"", ""Label IV""], ""answer"": 3, ""explanation"": ""An alarm that records intrusions detects and signals events; it is detective, not preventive. Reviewing footage is detective, a lock is preventive, and restoring from backup is corrective - those three are labeled correctly.""},
+    {""id"": ""C2-107"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""control-categories""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""a-written-acceptable-use-policy-that-employees-must-sign"", ""code"": """", ""stem"": ""A written acceptable-use policy that employees must sign is BEST categorized as which type of control?"", ""options"": [""Administrative control"", ""Physical control"", ""Technical control"", ""Biometric control""], ""answer"": 0, ""explanation"": ""Policies, procedures, and training are administrative (managerial) controls. Physical controls are tangible barriers, technical controls are implemented in hardware/software, and biometrics are a technical authentication method.""},
+    {""id"": ""C2-108"", ""unit"": 2, ""topic"": ""2.2"", ""tags"": [""tailgating""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-employee-badges-into-a-secure-door-and"", ""code"": """", ""stem"": ""An employee badges into a secure door and an unfamiliar person carrying a large box says 'Could you hold that? My hands are full,' and slips in behind them without badging. This attack is:"", ""options"": [""Phishing"", ""Credential stuffing"", ""Tailgating"", ""Pharming""], ""answer"": 2, ""explanation"": ""Following an authorized person through a controlled door without presenting credentials is tailgating (piggybacking). The other options are digital attacks unrelated to physical entry.""},
+    {""id"": ""C2-109"", ""unit"": 2, ""topic"": ""2.2"", ""tags"": [""dumpster-diving""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-attacker-recovers-printed-account-statements-and-an"", ""code"": """", ""stem"": ""An attacker recovers printed account statements and an org chart from a company's unsecured trash bins to plan a later attack. This reconnaissance technique is called:"", ""options"": [""Shoulder surfing"", ""Tailgating"", ""Vishing"", ""Dumpster diving""], ""answer"": 3, ""explanation"": ""Searching discarded materials for useful information is dumpster diving. Shoulder surfing observes screens or keypads, tailgating is unauthorized entry, and vishing is voice phishing.""},
+    {""id"": ""C2-110"", ""unit"": 2, ""topic"": ""2.2"", ""tags"": [""shoulder-surfing""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""a-person-standing-close-behind-a-user-at"", ""code"": """", ""stem"": ""A person standing close behind a user at an ATM watches them enter their PIN. This is BEST described as:"", ""options"": [""Baiting"", ""A watering hole attack"", ""Pretexting"", ""Shoulder surfing""], ""answer"": 3, ""explanation"": ""Directly observing someone enter sensitive information is shoulder surfing. Baiting uses a lure item, a watering hole compromises a visited site, and pretexting builds a false story to extract information.""},
+    {""id"": ""C2-111"", ""unit"": 2, ""topic"": ""2.2"", ""tags"": [""physical-attacks""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-of-the-following-are-physical-security-threats"", ""code"": """", ""stem"": ""Which of the following are physical security threats rather than purely digital ones?\n\nI.   Tailgating into a restricted area\nII.  Stealing an unlocked laptop from a desk\nIII. A SQL injection against a web form"", ""options"": [""II and III only"", ""I and III only"", ""I and II only"", ""I, II, and III""], ""answer"": 2, ""explanation"": ""Tailgating (I) and laptop theft (II) are physical threats. SQL injection (III) is a software/application attack carried out over a network, not a physical one.""},
+    {""id"": ""C2-112"", ""unit"": 2, ""topic"": ""2.2"", ""tags"": [""clean-desk""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-office-reviews-employee-habits-which-habit-creates"", ""code"": ""I.   Locks the screen when stepping away\nII.  Writes the system password on a sticky note under the keyboard\nIII. Shreds documents containing account numbers\nIV.  Stores backup drives in a locked cabinet"", ""stem"": ""An office reviews employee habits. Which habit creates the GREATEST physical security risk?"", ""options"": [""Habit II"", ""Habit I"", ""Habit III"", ""Habit IV""], ""answer"": 0, ""explanation"": ""A written password under the keyboard (II) is trivially found by anyone with physical access, defeating the password entirely. Locking screens, shredding sensitive documents, and securing backups all reduce risk.""},
+    {""id"": ""C2-113"", ""unit"": 2, ""topic"": ""2.3"", ""tags"": [""mantrap-tailgating""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""to-stop-tailgating-at-a-data-center-entrance"", ""code"": """", ""stem"": ""To stop tailgating at a data center entrance, which control is MOST effective because it allows only one authenticated person to pass at a time?"", ""options"": [""A motion-activated camera"", ""A visitor sign-in sheet"", ""A taller perimeter fence"", ""An access-control vestibule (mantrap)""], ""answer"": 3, ""explanation"": ""An access-control vestibule (mantrap) physically allows only one verified person through per cycle, directly preventing piggybacking. A camera detects but does not prevent, a sign-in sheet relies on honesty, and a fence does not address a person following through a door.""},
+    {""id"": ""C2-114"", ""unit"": 2, ""topic"": ""2.3"", ""tags"": [""biometrics""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""a-fingerprint-scanner-at-a-secure-door-authenticates"", ""code"": """", ""stem"": ""A fingerprint scanner at a secure door authenticates people based on:"", ""options"": [""Something you know"", ""Something you are"", ""Something you have"", ""Somewhere you are""], ""answer"": 1, ""explanation"": ""Biometrics such as fingerprints are 'something you are.' A password is something you know, a badge or token is something you have, and location is 'somewhere you are.'""},
+    {""id"": ""C2-115"", ""unit"": 2, ""topic"": ""2.3"", ""tags"": [""physical-controls""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-controls-help-protect-a-physical-server-room"", ""code"": """", ""stem"": ""Which controls help protect a physical server room?\n\nI.   Badge readers limiting entry to authorized staff\nII.  Logging and reviewing who enters and when\nIII. Posting the door access code on a public sign"", ""options"": [""II and III only"", ""I and III only"", ""I, II, and III"", ""I and II only""], ""answer"": 3, ""explanation"": ""Badge readers (I) restrict entry and entry logs (II) provide accountability. Publicly posting the access code (III) destroys the protection it was meant to provide.""},
+    {""id"": ""C2-116"", ""unit"": 2, ""topic"": ""2.3"", ""tags"": [""least-privilege-physical""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-company-gives-every-employee-a-master-badge"", ""code"": """", ""stem"": ""A company gives every employee a master badge that opens all doors 'for convenience.' Which principle does this MOST clearly violate, and what is the better approach?"", ""options"": [""Defense in depth; add a second fence"", ""Availability; make doors open faster"", ""Non-repudiation; require longer passwords"", ""Least privilege; grant each badge access only to areas the role requires""], ""answer"": 3, ""explanation"": ""Universal access violates least privilege; badges should open only the areas a role needs. The other principles do not address the over-provisioning of physical access.""},
+    {""id"": ""C2-117"", ""unit"": 2, ""topic"": ""2.3"", ""tags"": [""zones""], ""type"": ""spot-flaw"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-building-is-divided-into-security-zones-which"", ""code"": ""I.   The public lobby requires no badge\nII.  The employee area requires a badge\nIII. The server room shares one unlocked door with the public lobby\nIV.  The records vault requires badge plus PIN"", ""stem"": ""A building is divided into security zones. Which design choice WEAKENS the zoning scheme?"", ""options"": [""Choice I"", ""Choice II"", ""Choice III"", ""Choice IV""], ""answer"": 2, ""explanation"": ""An unlocked door connecting the most sensitive zone (server room) directly to the public lobby (III) bypasses the entire layered scheme. A badge-free public lobby, a badged employee area, and a badge-plus-PIN vault form a sensible escalation of controls.""},
+    {""id"": ""C2-118"", ""unit"": 2, ""topic"": ""2.4"", ""tags"": [""detection-vs-prevention""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""surveillance-cameras-that-record-activity-in-a-parking"", ""code"": """", ""stem"": ""Surveillance cameras that record activity in a parking garage are PRIMARILY which kind of control?"", ""options"": [""Preventive"", ""Corrective"", ""Detective"", ""Compensating only""], ""answer"": 2, ""explanation"": ""Cameras that record events support detection and later investigation, making them detective controls. They may deter, but they do not physically prevent or correct an incident on their own.""},
+    {""id"": ""C2-119"", ""unit"": 2, ""topic"": ""2.4"", ""tags"": [""detection-methods""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-mechanisms-help-detect-a-physical-intrusion-as"", ""code"": """", ""stem"": ""Which mechanisms help DETECT a physical intrusion (as opposed to preventing one)?\n\nI.   Motion sensors that trigger an alert\nII.  Entry logs reviewed for unusual access times\nIII. A deadbolt lock on the door"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""Motion sensors (I) and reviewed entry logs (II) reveal that an intrusion occurred. A deadbolt (III) prevents entry; it does not detect or report an attempt.""},
+    {""id"": ""C2-120"", ""unit"": 2, ""topic"": ""2.4"", ""tags"": [""audit-log""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""reviewing-a-door-access-log-security-notices-a"", ""code"": """", ""stem"": ""Reviewing a door access log, security notices a badge belonging to an employee on vacation entered the records room at 2:00 AM. The MOST important immediate conclusion is that:"", ""options"": [""The badge may be lost, stolen, or cloned and should be investigated and disabled"", ""The log is malfunctioning and should be ignored"", ""The employee secretly came to work"", ""Vacationing employees are normally in the building at night""], ""answer"": 0, ""explanation"": ""A badge used while its owner is away strongly suggests it was lost, stolen, or cloned and warrants investigation and immediate deactivation. Dismissing the log or assuming benign explanations ignores a clear anomaly.""},
+    {""id"": ""C2-121"", ""unit"": 2, ""topic"": ""2.4"", ""tags"": [""alarm-response""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""why-is-an-intrusion-alarm-more-useful-when"", ""code"": """", ""stem"": ""Why is an intrusion alarm more useful when paired with a defined response procedure?"", ""options"": [""The alarm becomes a preventive control on its own"", ""It removes the need for any physical locks"", ""Detection only reduces harm if someone acts on the alert"", ""It guarantees no false alarms""], ""answer"": 2, ""explanation"": ""Detection has value only if it leads to action; a response procedure ensures alerts are investigated and contained. An alarm does not become preventive by itself, does not replace locks, and does not eliminate false alarms.""},
+    {""id"": ""C2-122"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""2.4"", ""control-functions""], ""type"": ""concept"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-guard-checks-ids-at-the-door-stopping"", ""code"": """", ""stem"": ""A guard checks IDs at the door (stopping unauthorized entry) AND patrols hallways to spot and report break-ins. The guard is therefore serving as which combination of controls?"", ""options"": [""Preventive and detective"", ""Corrective and compensating"", ""Detective only"", ""Preventive only""], ""answer"": 0, ""explanation"": ""Checking IDs prevents unauthorized entry (preventive) while patrolling to spot and report intrusions detects them (detective). The guard fills both roles, so neither single-function answer is complete.""},
+    {""id"": ""C2-123"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""cia-mapping""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""match-each-safeguard-to-the-cia-element-it"", ""code"": """", ""stem"": ""Match each safeguard to the CIA element it most directly supports. Which pairings are correct?\n\nI.   Encrypting a stolen laptop's disk - confidentiality\nII.  Keeping versioned backups - availability\nIII. Using checksums to detect tampering - integrity"", ""options"": [""I, II, and III"", ""I and II only"", ""II and III only"", ""I and III only""], ""answer"": 0, ""explanation"": ""Disk encryption protects confidentiality, backups restore availability, and checksums detect unauthorized changes to support integrity. All three pairings are correct.""},
+    {""id"": ""C2-124"", ""unit"": 2, ""topic"": ""2.2"", ""tags"": [""2.3"", ""visitor-policy""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-site-s-visitor-policy-contains-the-rules"", ""code"": ""I.   Visitors sign in and wear a temporary badge\nII.  Visitors are escorted in restricted areas\nIII. Visitors may prop secure doors open for convenience\nIV.  Visitor badges expire at end of day"", ""stem"": ""A site's visitor policy contains the rules below. Which rule undermines physical security?"", ""options"": [""Rule I"", ""Rule II"", ""Rule III"", ""Rule IV""], ""answer"": 2, ""explanation"": ""Propping secure doors open (III) defeats access controls and enables tailgating or unauthorized entry. Sign-in with badges, escorting visitors, and expiring badges are all sound practices.""},
+    {""id"": ""C2-125"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""risk-treatment""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-company-decides-the-cost-of-a-control"", ""code"": """", ""stem"": ""A company decides the cost of a control exceeds the expected loss from a low-probability threat, so it formally chooses to accept that residual risk. This risk response is BEST called:"", ""options"": [""Risk avoidance"", ""Risk acceptance"", ""Risk transfer"", ""Risk elimination""], ""answer"": 1, ""explanation"": ""Knowingly choosing to tolerate a risk because mitigation is not cost-effective is risk acceptance. Avoidance removes the activity, transfer shifts the risk (e.g., insurance), and risk can rarely be fully eliminated.""},
+    {""id"": ""C2-126"", ""unit"": 2, ""topic"": ""2.2"", ""tags"": [""2.4"", ""combined""], ""type"": ""scenario"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""after-hours-footage-shows-an-unknown-person-tailgating-through"", ""code"": """", ""stem"": ""After-hours footage shows an unknown person tailgating through the lobby, then the records-room door log shows an entry with no matching badge swipe seconds later. Which conclusion is BEST supported?"", ""options"": [""The records room door control or its logging may have been bypassed and should be investigated"", ""The cameras are unreliable and footage should be deleted"", ""Nothing unusual occurred because the lobby is public"", ""The employee on the badge must have authorized the visitor""], ""answer"": 0, ""explanation"": ""An entry recorded with no corresponding badge swipe, combined with observed tailgating, suggests the door control or logging was bypassed and demands investigation. Deleting evidence, dismissing a public lobby, or assuming authorization all ignore the anomaly.""},
+    {""id"": ""C2-127"", ""unit"": 2, ""topic"": ""2.1"", ""tags"": [""threat-vs-vulnerability""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""an-unlocked-back-door-is-best-described-as"", ""code"": """", ""stem"": ""An unlocked back door is BEST described as which of the following, and an intruder who wants to use it is which?"", ""options"": [""The unlocked door is a threat; the intruder is a vulnerability"", ""Both are vulnerabilities"", ""The unlocked door is a vulnerability; the intruder is a threat"", ""Both are threats""], ""answer"": 2, ""explanation"": ""The unlocked door is a weakness that could be exploited (a vulnerability); the intruder is a potential cause of harm (a threat). Risk arises from a threat acting on a vulnerability.""},
+    {""id"": ""C3-101"", ""unit"": 3, ""topic"": ""3.1"", ""tags"": [""ddos""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-website-becomes-unreachable-because-thousands-of-compromised"", ""code"": """", ""stem"": ""A website becomes unreachable because thousands of compromised devices flood it with traffic simultaneously. This attack is BEST described as:"", ""options"": [""A man-in-the-middle attack"", ""A SQL injection"", ""A distributed denial-of-service (DDoS) attack"", ""A phishing campaign""], ""answer"": 2, ""explanation"": ""Overwhelming a target with traffic from many distributed compromised hosts is a DDoS attack, which harms availability. A MITM intercepts traffic, SQL injection targets databases, and phishing manipulates people.""},
+    {""id"": ""C3-102"", ""unit"": 3, ""topic"": ""3.1"", ""tags"": [""packet-sniffing""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""on-an-unencrypted-network-an-attacker-captures-and"", ""code"": """", ""stem"": ""On an unencrypted network, an attacker captures and reads packets passing across the wire, including a plaintext login. This passive technique is called:"", ""options"": [""A denial-of-service attack"", ""Packet sniffing (eavesdropping)"", ""ARP poisoning"", ""A brute-force attack""], ""answer"": 1, ""explanation"": ""Capturing and reading network traffic is packet sniffing/eavesdropping, a passive attack. DoS disrupts availability, ARP poisoning manipulates address mappings, and brute force guesses credentials.""},
+    {""id"": ""C3-103"", ""unit"": 3, ""topic"": ""3.1"", ""tags"": [""spoofing""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-attacker-forges-the-source-ip-address-of"", ""code"": """", ""stem"": ""An attacker forges the source IP address of packets so they appear to come from a trusted internal host. This technique is BEST described as:"", ""options"": [""Phishing"", ""Cross-site scripting"", ""IP spoofing"", ""Tailgating""], ""answer"": 2, ""explanation"": ""Falsifying the source address of packets to impersonate a trusted host is IP spoofing. Phishing targets people, cross-site scripting targets web browsers, and tailgating is a physical attack.""},
+    {""id"": ""C3-104"", ""unit"": 3, ""topic"": ""3.1"", ""tags"": [""network-attacks""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-of-the-following-primarily-threaten-network-availability"", ""code"": """", ""stem"": ""Which of the following primarily threaten network AVAILABILITY?\n\nI.   A DDoS flood against a server\nII.  Packet sniffing of plaintext traffic\nIII. Cutting the fiber line to a building"", ""options"": [""II and III only"", ""I and II only"", ""I, II, and III"", ""I and III only""], ""answer"": 3, ""explanation"": ""A DDoS flood (I) and physically cutting the line (III) both deny access, harming availability. Packet sniffing (II) is a passive read that threatens confidentiality, not availability.""},
+    {""id"": ""C3-105"", ""unit"": 3, ""topic"": ""3.1"", ""tags"": [""mitm"", ""arp""], ""type"": ""scenario"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""on-a-local-network-an-attacker-sends-forged"", ""code"": """", ""stem"": ""On a local network, an attacker sends forged ARP replies so that other devices associate the gateway's IP with the attacker's MAC address, routing victims' traffic through the attacker first. This enables which attack?"", ""options"": [""A SQL injection"", ""A man-in-the-middle attack via ARP poisoning"", ""A password-spray attack"", ""A captive portal attack""], ""answer"": 1, ""explanation"": ""ARP poisoning maps a legitimate IP to the attacker's MAC, inserting the attacker into the traffic path for a man-in-the-middle attack. The other options describe database, credential, and Wi-Fi portal attacks.""},
+    {""id"": ""C3-106"", ""unit"": 3, ""topic"": ""3.1"", ""tags"": [""replay-attack""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-attacker-captures-a-valid-authentication-message-and"", ""code"": """", ""stem"": ""An attacker captures a valid authentication message and later retransmits it unchanged to gain access, without ever knowing the password. This is BEST described as:"", ""options"": [""A phishing attack"", ""A denial-of-service attack"", ""A dictionary attack"", ""A replay attack""], ""answer"": 3, ""explanation"": ""Recording a valid transmission and resending it to be reauthenticated is a replay attack. It does not require knowing the credential, unlike a dictionary attack, and is unrelated to phishing or DoS.""},
+    {""id"": ""C3-107"", ""unit"": 3, ""topic"": ""3.2"", ""tags"": [""wireless-encryption""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-wireless-configuration-provides-the-strongest-protection-for"", ""code"": """", ""stem"": ""Which wireless configuration provides the STRONGEST protection for a modern office Wi-Fi network?"", ""options"": [""An open network with no password"", ""WEP encryption"", ""WPA3 encryption"", ""Hiding the SSID with no encryption""], ""answer"": 2, ""explanation"": ""WPA3 is the current strong standard for Wi-Fi encryption. Open networks offer none, WEP is broken and easily cracked, and hiding the SSID is obscurity that provides no real encryption.""},
+    {""id"": ""C3-108"", ""unit"": 3, ""topic"": ""3.2"", ""tags"": [""wireless-config""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-office-configures-its-wireless-network-with-the"", ""code"": ""I.   Uses WPA2/WPA3 encryption\nII.  Uses WEP for backward compatibility\nIII. Requires a strong, regularly rotated passphrase\nIV.  Separates guest traffic onto its own network"", ""stem"": ""An office configures its wireless network with the settings below. Which setting is the WEAKEST security choice?"", ""options"": [""Setting I"", ""Setting III"", ""Setting IV"", ""Setting II""], ""answer"": 3, ""explanation"": ""WEP (II) is obsolete and can be cracked in minutes, so enabling it badly weakens the network. WPA2/WPA3, strong rotated passphrases, and guest network separation are all sound choices.""},
+    {""id"": ""C3-109"", ""unit"": 3, ""topic"": ""3.2"", ""tags"": [""managerial-controls""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""a-written-policy-requiring-employees-to-connect-personal"", ""code"": """", ""stem"": ""A written policy requiring employees to connect personal devices only to a separate guest network is an example of which control category?"", ""options"": [""Technical control"", ""Managerial (administrative) control"", ""Physical control"", ""Biometric control""], ""answer"": 1, ""explanation"": ""Policies and procedures are managerial/administrative controls. The firewall or VLAN that enforces the separation would be a technical control, but the policy itself is administrative.""},
+    {""id"": ""C3-110"", ""unit"": 3, ""topic"": ""3.2"", ""tags"": [""ssid-obscurity""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-statements-about-hiding-a-wi-fi-network-s"", ""code"": """", ""stem"": ""Which statements about hiding a Wi-Fi network's SSID are TRUE?\n\nI.   It is a form of security through obscurity\nII.  It replaces the need for encryption\nIII. Determined attackers can still discover a hidden SSID"", ""options"": [""I and III only"", ""II and III only"", ""I and II only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""Hiding an SSID is obscurity (I) and can be uncovered by attackers monitoring traffic (III). It does NOT replace encryption (II); a hidden network without encryption is still readable.""},
+    {""id"": ""C3-111"", ""unit"": 3, ""topic"": ""3.3"", ""tags"": [""segmentation"", ""blast-radius""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-hospital-places-its-medical-devices-guest-wi-fi"", ""code"": """", ""stem"": ""A hospital places its medical devices, guest Wi-Fi, and administrative systems on separate isolated network segments. The PRIMARY security benefit is that:"", ""options"": [""A compromise in one segment is contained and cannot freely spread to others"", ""All devices get faster internet speeds"", ""Encryption is no longer necessary"", ""Passwords never need to be changed""], ""answer"": 0, ""explanation"": ""Segmentation limits lateral movement, so an attacker who breaches one segment cannot easily reach others - it contains the blast radius. It is not primarily about speed, and it does not remove the need for encryption or password hygiene.""},
+    {""id"": ""C3-112"", ""unit"": 3, ""topic"": ""3.3"", ""tags"": [""dmz""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-company-places-its-public-web-server-in"", ""code"": """", ""stem"": ""A company places its public web server in a DMZ between the internet and its internal network. The MAIN purpose of the DMZ is to:"", ""options"": [""Give the web server direct, unrestricted access to internal databases"", ""Encrypt all internal email automatically"", ""Replace the need for a firewall"", ""Expose a public service while keeping the internal network isolated if that service is compromised""], ""answer"": 3, ""explanation"": ""A DMZ isolates internet-facing services so that compromising them does not directly expose the internal network. It deliberately restricts access into the internal zone, relies on firewalls rather than replacing them, and is unrelated to email encryption.""},
+    {""id"": ""C3-113"", ""unit"": 3, ""topic"": ""3.3"", ""tags"": [""vlan"", ""segmentation""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-statements-about-network-segmentation-are-true-i"", ""code"": """", ""stem"": ""Which statements about network segmentation are TRUE?\n\nI.   VLANs can logically separate traffic on shared physical hardware\nII.  Segmentation can limit how far an attacker moves laterally\nIII. Segmentation makes encryption of sensitive data unnecessary"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""VLANs provide logical separation on shared switches (I) and segmentation restricts lateral movement (II). It does NOT replace encryption (III); confidentiality controls are still needed within and across segments.""},
+    {""id"": ""C3-114"", ""unit"": 3, ""topic"": ""3.3"", ""tags"": [""segmentation-design""], ""type"": ""spot-flaw"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-network-is-segmented-as-shown-which-configuration"", ""code"": ""I.   Guest Wi-Fi is isolated from internal systems\nII.  Point-of-sale terminals are on their own segment\nIII. A rule allows the guest segment full access to the database segment\nIV.  Inter-segment traffic is filtered by firewall rules"", ""stem"": ""A network is segmented as shown. Which configuration choice DEFEATS the purpose of segmentation?"", ""options"": [""Choice III"", ""Choice I"", ""Choice II"", ""Choice IV""], ""answer"": 0, ""explanation"": ""Allowing the untrusted guest segment full access to the database segment (III) removes the isolation segmentation is meant to provide. Isolating guest Wi-Fi, separating point-of-sale terminals, and filtering inter-segment traffic all support segmentation.""},
+    {""id"": ""C3-115"", ""unit"": 3, ""topic"": ""3.4"", ""tags"": [""firewall-default-deny""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-firewall-is-configured-so-that-all-traffic"", ""code"": """", ""stem"": ""A firewall is configured so that all traffic is blocked unless a rule explicitly permits it. This configuration is BEST described as:"", ""options"": [""Default-allow"", ""Stateless logging"", ""Promiscuous mode"", ""Default-deny""], ""answer"": 3, ""explanation"": ""Blocking everything except explicitly permitted traffic is a default-deny (deny-by-default) policy, the more secure baseline. Default-allow permits everything not explicitly blocked; the other options are unrelated.""},
+    {""id"": ""C3-116"", ""unit"": 3, ""topic"": ""3.4"", ""tags"": [""acl-rule-order""], ""type"": ""scenario"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-firewall-evaluates-rules-top-to-bottom-and"", ""code"": ""Option X:\n1) ALLOW 10.0.0.0/24\n2) DENY  10.0.0.5\n\nOption Y:\n1) DENY  10.0.0.5\n2) ALLOW 10.0.0.0/24"", ""stem"": ""A firewall evaluates rules top to bottom and applies the first match. The intent is to block host 10.0.0.5 but allow the rest of 10.0.0.0/24. Which rule order achieves the intent?"", ""options"": [""Option X, because the allow rule is more general"", ""Both options behave identically"", ""Option Y, because the specific deny is evaluated before the broad allow"", ""Neither option can block a single host""], ""answer"": 2, ""explanation"": ""With first-match evaluation, the specific DENY for 10.0.0.5 must come before the broad ALLOW (Option Y). In Option X the ALLOW matches 10.0.0.5 first, so the later DENY never applies.""},
+    {""id"": ""C3-117"", ""unit"": 3, ""topic"": ""3.4"", ""tags"": [""firewall-scope""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-statement-best-describes-what-a-network-firewall"", ""code"": """", ""stem"": ""Which statement BEST describes what a network firewall does?"", ""options"": [""It scans email attachments for spelling errors"", ""It filters traffic between networks based on a set of rules"", ""It encrypts every file stored on a hard drive"", ""It physically prevents people from entering a server room""], ""answer"": 1, ""explanation"": ""A firewall enforces rules that permit or block traffic between networks or hosts. It does not proofread email, encrypt stored files, or control physical entry.""},
+    {""id"": ""C3-118"", ""unit"": 3, ""topic"": ""3.4"", ""tags"": [""firewall-limits""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-statements-about-firewalls-are-true-i-a"", ""code"": """", ""stem"": ""Which statements about firewalls are TRUE?\n\nI.   A firewall can permit or deny traffic based on ports and addresses\nII.  A misconfigured allow rule can let malicious traffic through\nIII. A firewall alone guarantees the network can never be breached"", ""options"": [""II and III only"", ""I and III only"", ""I and II only"", ""I, II, and III""], ""answer"": 2, ""explanation"": ""Firewalls filter by ports/addresses (I) and a bad allow rule can admit attacks (II). No single control guarantees the network can never be breached (III); defense in depth is required.""},
+    {""id"": ""C3-119"", ""unit"": 3, ""topic"": ""3.5"", ""tags"": [""ids-vs-ips""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""what-is-the-key-difference-between-an-intrusion"", ""code"": """", ""stem"": ""What is the KEY difference between an intrusion detection system (IDS) and an intrusion prevention system (IPS)?"", ""options"": [""An IDS alerts on suspicious traffic; an IPS can also actively block it"", ""An IDS encrypts traffic; an IPS decrypts it"", ""An IDS works only on wireless; an IPS works only on wired networks"", ""There is no functional difference between them""], ""answer"": 0, ""explanation"": ""An IDS monitors and alerts on suspicious activity, while an IPS additionally takes action to block or drop malicious traffic in line. Neither is defined by encryption or by wired/wireless medium.""},
+    {""id"": ""C3-120"", ""unit"": 3, ""topic"": ""3.5"", ""tags"": [""signature-vs-anomaly""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-detection-system-that-compares-traffic-against-a"", ""code"": """", ""stem"": ""A detection system that compares traffic against a database of known attack patterns uses which method, and what is its main weakness?"", ""options"": [""Anomaly-based; it cannot detect any known attacks"", ""Signature-based; it produces no false negatives ever"", ""Signature-based; it may miss brand-new attacks not yet in its database"", ""Anomaly-based; it requires no baseline of normal behavior""], ""answer"": 2, ""explanation"": ""Matching traffic to known patterns is signature-based detection, whose weakness is missing novel (zero-day) attacks absent from its signature database. Anomaly-based detection instead learns a baseline and flags deviations.""},
+    {""id"": ""C3-121"", ""unit"": 3, ""topic"": ""3.5"", ""tags"": [""siem""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-siem-system-aggregates-logs-from-firewalls-servers"", ""code"": """", ""stem"": ""A SIEM system aggregates logs from firewalls, servers, and IDS sensors, then correlates events to highlight likely incidents. Its PRIMARY value is that it:"", ""options"": [""Replaces the need for firewalls and IDS sensors"", ""Centralizes and correlates data from many sources to reveal patterns a single log would miss"", ""Encrypts all network traffic end to end"", ""Physically secures the data center""], ""answer"": 1, ""explanation"": ""A SIEM centralizes and correlates events across many sources so that distributed attack patterns become visible. It complements rather than replaces firewalls and IDS, does not perform traffic encryption, and is unrelated to physical security.""},
+    {""id"": ""C3-122"", ""unit"": 3, ""topic"": ""3.5"", ""tags"": [""detection-concepts""], ""type"": ""multi-correct"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""which-statements-about-detecting-network-attacks-are-true"", ""code"": """", ""stem"": ""Which statements about detecting network attacks are TRUE?\n\nI.   Signature-based detection struggles with zero-day attacks\nII.  Anomaly-based detection can generate false positives from unusual but benign activity\nIII. A SIEM helps correlate events from multiple devices"", ""options"": [""I and II only"", ""I, II, and III"", ""II and III only"", ""I and III only""], ""answer"": 1, ""explanation"": ""Signature detection misses unknown attacks (I), anomaly detection can flag harmless oddities as false positives (II), and a SIEM correlates multi-source events (III). All three statements are true.""},
+    {""id"": ""C3-123"", ""unit"": 3, ""topic"": ""3.5"", ""tags"": [""log-analysis""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-siem-correlates-these-near-simultaneous-events-hundreds-of"", ""code"": """", ""stem"": ""A SIEM correlates these near-simultaneous events: hundreds of failed logins on a server, one success, then a large outbound data transfer to an unfamiliar IP. The MOST likely interpretation is:"", ""options"": [""Routine nightly backup activity"", ""A user simply mistyping their password many times"", ""A successful brute-force/guessing attack followed by data exfiltration"", ""A scheduled software update""], ""answer"": 2, ""explanation"": ""A flood of failures ending in success indicates a likely brute-force or guessing breach, and the subsequent large unfamiliar outbound transfer indicates data exfiltration. Routine backups, simple mistyping, and updates would not produce this exact correlated pattern.""},
+    {""id"": ""C3-124"", ""unit"": 3, ""topic"": ""3.5"", ""tags"": [""monitoring-gaps""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-organization-s-network-monitoring-setup-is-described-below"", ""code"": ""I.   IDS sensors watch inbound traffic\nII.  Firewall and server logs feed a SIEM\nIII. No one reviews SIEM alerts or logs\nIV.  Alerts are correlated automatically"", ""stem"": ""An organization's network-monitoring setup is described below. Which gap MOST undermines its ability to detect attacks?"", ""options"": [""Gap I"", ""Gap II"", ""Gap III"", ""Gap IV""], ""answer"": 2, ""explanation"": ""If no one reviews the alerts or logs (III), detection produces no response and attacks proceed unnoticed. Watching inbound traffic, feeding logs to a SIEM, and automated correlation are all strengths, not gaps.""},
+    {""id"": ""C3-125"", ""unit"": 3, ""topic"": ""3.5"", ""tags"": [""baseline""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""why-does-anomaly-based-network-detection-require-establishing-a"", ""code"": """", ""stem"": ""Why does anomaly-based network detection require establishing a baseline of normal activity first?"", ""options"": [""To know what 'unusual' looks like so deviations can be flagged"", ""To encrypt all traffic on the network"", ""To replace the firewall's rule set"", ""To physically lock the network closet""], ""answer"": 0, ""explanation"": ""Anomaly detection flags deviations from normal, so it must first learn what normal looks like. It is not an encryption, firewall, or physical-security mechanism.""},
+    {""id"": ""C3-126"", ""unit"": 3, ""topic"": ""3.1"", ""tags"": [""3.4"", ""attack-defense-map""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""match-each-attack-to-a-control-that-helps"", ""code"": """", ""stem"": ""Match each attack to a control that helps defend against it. Which pairings are reasonable?\n\nI.   Packet sniffing on Wi-Fi - WPA3 encryption\nII.  Unwanted inbound traffic - firewall rules\nIII. Lateral movement after a breach - network segmentation"", ""options"": [""I, II, and III"", ""I and II only"", ""II and III only"", ""I and III only""], ""answer"": 0, ""explanation"": ""Encryption defeats sniffing (I), firewall rules block unwanted inbound traffic (II), and segmentation limits lateral movement after a breach (III). All three pairings are reasonable defenses.""},
+    {""id"": ""C3-127"", ""unit"": 3, ""topic"": ""3.1"", ""tags"": [""dos-vs-ddos""], ""type"": ""concept"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""why-is-a-distributed-denial-of-service-ddos-attack-typically"", ""code"": """", ""stem"": ""Why is a distributed denial-of-service (DDoS) attack typically HARDER to defend against than a single-source denial-of-service attack?"", ""options"": [""DDoS traffic is always encrypted and unreadable"", ""Traffic comes from many distributed sources, so simply blocking one address is insufficient"", ""DDoS attacks only target wireless networks"", ""A single firewall rule always stops a DDoS completely""], ""answer"": 1, ""explanation"": ""DDoS traffic originates from many distributed hosts, so blocking a single source does little; defenders must filter or absorb traffic from thousands of addresses. DDoS is not defined by encryption or medium, and no single rule reliably stops it.""},
+    {""id"": ""C3-128"", ""unit"": 3, ""topic"": ""3.2"", ""tags"": [""3.3"", ""layered-defense""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-retailer-wants-to-protect-customer-payment-data"", ""code"": """", ""stem"": ""A retailer wants to protect customer payment data on its network. Which combination BEST reflects layered network defense?"", ""options"": [""Place payment systems on the open guest Wi-Fi for convenience"", ""Rely solely on hiding the payment server's SSID"", ""Put payment systems on an isolated segment, encrypt their traffic, and restrict access with firewall rules"", ""Disable all logging to reduce noise""], ""answer"": 2, ""explanation"": ""Isolating payment systems, encrypting their traffic, and restricting access with firewall rules combines multiple independent controls (defense in depth). Using guest Wi-Fi, relying on SSID obscurity, or disabling logging each weakens security.""},
+    {""id"": ""C4-101"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""malware"", ""worm-vs-virus""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""what-distinguishes-a-worm-from-a-traditional-virus"", ""code"": """", ""stem"": ""What distinguishes a worm from a traditional virus?"", ""options"": [""A worm can self-propagate across networks without needing a host file or user action"", ""A worm can only infect printed documents"", ""A worm always requires the user to open an email attachment"", ""A worm cannot replicate itself at all""], ""answer"": 0, ""explanation"": ""A worm self-replicates and spreads across networks on its own, without attaching to a host file or requiring user action. A virus typically needs a host file and some user action to spread.""},
+    {""id"": ""C4-102"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""trojan""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-user-downloads-what-appears-to-be-a"", ""code"": """", ""stem"": ""A user downloads what appears to be a free game, but it secretly installs a program that gives an attacker remote access. The disguised malware is BEST classified as a:"", ""options"": [""Worm"", ""Denial-of-service tool"", ""Firewall"", ""Trojan""], ""answer"": 3, ""explanation"": ""Malware disguised as legitimate software to trick a user into installing it is a Trojan. A worm self-propagates, DoS tools flood targets, and a firewall is a defensive control.""},
+    {""id"": ""C4-103"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""malware-types""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""match-each-behavior-to-its-malware-type-which"", ""code"": """", ""stem"": ""Match each behavior to its malware type. Which pairings are correct?\n\nI.   Encrypts files and demands payment - ransomware\nII.  Secretly records keystrokes and activity - spyware\nIII. Disguises itself as a useful program - Trojan"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 3, ""explanation"": ""Ransomware encrypts and extorts, spyware covertly monitors activity, and a Trojan masquerades as legitimate software. All three pairings are correct.""},
+    {""id"": ""C4-104"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""iot"", ""default-credentials""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-company-installs-internet-connected-security-cameras-but-never"", ""code"": """", ""stem"": ""A company installs internet-connected security cameras but never changes the manufacturer's default admin password. Which vulnerability does this create?"", ""options"": [""The cameras can be accessed by anyone who knows the well-published default credentials"", ""The cameras will record in lower resolution"", ""The cameras cannot connect to Wi-Fi"", ""The cameras automatically encrypt all footage""], ""answer"": 0, ""explanation"": ""Default credentials for IoT devices are widely published, so leaving them unchanged lets attackers log in trivially. It does not affect resolution or connectivity, and it does not provide encryption.""},
+    {""id"": ""C4-105"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""patching""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-team-manages-device-security-as-described-which"", ""code"": ""I.   Installs security updates promptly\nII.  Runs software years past its end-of-support date\nIII. Removes unused applications\nIV.  Uses reputable antivirus software"", ""stem"": ""A team manages device security as described. Which practice creates the GREATEST vulnerability?"", ""options"": [""Practice II"", ""Practice I"", ""Practice III"", ""Practice IV""], ""answer"": 0, ""explanation"": ""Running end-of-support software (II) means known vulnerabilities never get patched, leaving permanent openings. Prompt updates, removing unused apps, and antivirus all reduce risk.""},
+    {""id"": ""C4-106"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""zero-day""], ""type"": ""concept"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-zero-day-vulnerability-is-best-described-as-a"", ""code"": """", ""stem"": ""A zero-day vulnerability is BEST described as a flaw that:"", ""options"": [""Has been known and patched for years"", ""Can only affect devices that are turned off"", ""Is unknown to the vendor or unpatched, so no fix is yet available"", ""Exists only in printed manuals""], ""answer"": 2, ""explanation"": ""A zero-day is a vulnerability with no available patch because the vendor has not yet fixed (or learned of) it, giving defenders 'zero days' to prepare. It is the opposite of a long-known, patched flaw.""},
+    {""id"": ""C4-107"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""rootkit""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""malware-that-embeds-itself-deep-in-a-system"", ""code"": """", ""stem"": ""Malware that embeds itself deep in a system to hide its presence and maintain privileged access is BEST described as a:"", ""options"": [""CAPTCHA"", ""Rootkit"", ""Cookie"", ""Patch""], ""answer"": 1, ""explanation"": ""A rootkit conceals itself and maintains elevated, persistent access while evading detection. A CAPTCHA distinguishes humans from bots, a cookie stores small web data, and a patch fixes software.""},
+    {""id"": ""C4-108"", ""unit"": 4, ""topic"": ""4.2"", ""tags"": [""mfa-factors""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-login-that-requires-a-password-plus-a"", ""code"": """", ""stem"": ""A login that requires a password PLUS a code from the user's phone combines which two authentication factors?"", ""options"": [""Something you are and somewhere you are"", ""Something you know and something you have"", ""Something you have and something you are"", ""Two instances of something you know""], ""answer"": 1, ""explanation"": ""A password is something you know and a code on the user's phone is something you have, so this combines two distinct factor types - true multi-factor authentication. A biometric would be 'something you are.'""},
+    {""id"": ""C4-109"", ""unit"": 4, ""topic"": ""4.2"", ""tags"": [""mfa-misconception""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-site-claims-to-use-multi-factor-authentication-which"", ""code"": ""I.   Password plus a fingerprint scan\nII.  Password plus a one-time code from an authenticator app\nIII. Password plus a second, different password\nIV.  PIN plus a hardware security key"", ""stem"": ""A site claims to use multi-factor authentication. Which described login is NOT genuine multi-factor authentication?"", ""options"": [""Login I"", ""Login II"", ""Login III"", ""Login IV""], ""answer"": 2, ""explanation"": ""A password plus another password (III) uses two instances of the same factor (something you know), so it is not true multi-factor. The others each combine two different factor types.""},
+    {""id"": ""C4-110"", ""unit"": 4, ""topic"": ""4.2"", ""tags"": [""password-manager""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""why-does-using-a-password-manager-improve-account"", ""code"": """", ""stem"": ""Why does using a password manager improve account security?"", ""options"": [""It lets users keep one easy password for every site"", ""It makes multi-factor authentication unnecessary"", ""It enables a unique, strong password per site without memorizing them all"", ""It publicly shares passwords for backup""], ""answer"": 2, ""explanation"": ""A password manager generates and stores a unique strong password for each site, defeating credential-stuffing risk from reuse, without the user memorizing them. It does not encourage reuse, replace MFA, or share passwords publicly.""},
+    {""id"": ""C4-111"", ""unit"": 4, ""topic"": ""4.2"", ""tags"": [""password-policy""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-password-practices-strengthen-account-security-i-using"", ""code"": """", ""stem"": ""Which password practices strengthen account security?\n\nI.   Using a long, unique passphrase per account\nII.  Enabling multi-factor authentication\nIII. Reusing one memorable password across all accounts"", ""options"": [""II and III only"", ""I and III only"", ""I, II, and III"", ""I and II only""], ""answer"": 3, ""explanation"": ""Long unique passphrases (I) and MFA (II) both strengthen security. Reusing one password everywhere (III) is a weakness that lets one breach compromise every account.""},
+    {""id"": ""C4-112"", ""unit"": 4, ""topic"": ""4.2"", ""tags"": [""biometric-tradeoff""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""which-is-a-genuine-drawback-of-biometric-authentication"", ""code"": """", ""stem"": ""Which is a genuine drawback of biometric authentication compared with a password?"", ""options"": [""Biometrics can be changed instantly if compromised"", ""Biometrics require the user to memorize a long string"", ""Biometrics are never convenient for users"", ""A compromised biometric cannot simply be reset like a password""], ""answer"": 3, ""explanation"": ""Unlike a password, a fingerprint or face cannot be reissued if its data is stolen, which is a real drawback. Biometrics are generally convenient and require no memorization, so the other options are false.""},
+    {""id"": ""C4-113"", ""unit"": 4, ""topic"": ""4.3"", ""tags"": [""hardening""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""disabling-unused-services-removing-unnecessary-software-and-closing"", ""code"": """", ""stem"": ""Disabling unused services, removing unnecessary software, and closing unneeded ports on a device is collectively known as:"", ""options"": [""Social engineering"", ""Packet sniffing"", ""Device hardening"", ""Phishing""], ""answer"": 2, ""explanation"": ""Reducing a device's attack surface by removing or disabling what is not needed is device hardening. The other options are attack techniques, not protective measures.""},
+    {""id"": ""C4-114"", ""unit"": 4, ""topic"": ""4.3"", ""tags"": [""ransomware-backups""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""to-minimize-damage-if-ransomware-encrypts-a-workstation"", ""code"": """", ""stem"": ""To minimize damage if ransomware encrypts a workstation's files, the MOST effective preparation is to:"", ""options"": [""Maintain regular, tested offline or isolated backups of important data"", ""Store the only copy of files on the same workstation"", ""Disable all software updates"", ""Use the same password everywhere for quick recovery""], ""answer"": 0, ""explanation"": ""Regular, tested backups kept offline or isolated let an organization restore data without paying a ransom. Keeping the only copy on the infected device, disabling updates, and reusing passwords all worsen the situation.""},
+    {""id"": ""C4-115"", ""unit"": 4, ""topic"": ""4.3"", ""tags"": [""device-protection""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-measures-help-protect-an-individual-laptop-i"", ""code"": """", ""stem"": ""Which measures help protect an individual laptop?\n\nI.   Keeping the operating system and applications patched\nII.  Encrypting the disk so a stolen drive is unreadable\nIII. Leaving the device unlocked for convenience"", ""options"": [""II and III only"", ""I and III only"", ""I, II, and III"", ""I and II only""], ""answer"": 3, ""explanation"": ""Patching (I) closes known vulnerabilities and disk encryption (II) protects data if the device is stolen. Leaving the device unlocked (III) removes a basic protection and increases risk.""},
+    {""id"": ""C4-116"", ""unit"": 4, ""topic"": ""4.3"", ""tags"": [""hardening-checklist""], ""type"": ""spot-flaw"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""an-it-team-applies-the-hardening-steps-below"", ""code"": ""I.   Changes default administrator passwords\nII.  Enables automatic security updates\nIII. Grants every user local administrator rights\nIV.  Removes preinstalled software that is not needed"", ""stem"": ""An IT team applies the hardening steps below to new devices. Which step WEAKENS security rather than strengthening it?"", ""options"": [""Step I"", ""Step II"", ""Step IV"", ""Step III""], ""answer"": 3, ""explanation"": ""Giving every user local administrator rights (III) violates least privilege and lets any compromise gain full control of the device. Changing default passwords, enabling updates, and removing bloatware all harden the device.""},
+    {""id"": ""C4-117"", ""unit"": 4, ""topic"": ""4.3"", ""tags"": [""disk-encryption""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""encrypting-a-laptop-s-hard-drive-primarily-protects"", ""code"": """", ""stem"": ""Encrypting a laptop's hard drive PRIMARILY protects against which outcome?"", ""options"": [""The laptop running out of battery"", ""A phishing email reaching the user"", ""A stolen laptop's data being read by the thief"", ""The network being flooded by a DDoS""], ""answer"": 2, ""explanation"": ""Full-disk encryption renders stored data unreadable to anyone without the key, protecting confidentiality if the device is lost or stolen. It does not affect battery life, email phishing, or network availability.""},
+    {""id"": ""C4-118"", ""unit"": 4, ""topic"": ""4.4"", ""tags"": [""signs-of-compromise""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-of-the-following-is-the-strongest-sign"", ""code"": """", ""stem"": ""Which of the following is the STRONGEST sign that a workstation may be infected with malware?"", ""options"": [""The screen brightness is set to maximum"", ""The user has many browser bookmarks"", ""The desktop wallpaper was recently changed by the user"", ""Unknown programs launch on startup and the device sends large amounts of unexplained network traffic""], ""answer"": 3, ""explanation"": ""Unknown auto-starting programs plus unexplained outbound traffic strongly indicate malware (e.g., a bot communicating with a command server). Brightness, bookmarks, and a user-chosen wallpaper are benign.""},
+    {""id"": ""C4-119"", ""unit"": 4, ""topic"": ""4.4"", ""tags"": [""edr-behavioral""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""endpoint-detection-that-watches-a-device-for-suspicious"", ""code"": """", ""stem"": ""Endpoint detection that watches a device for suspicious BEHAVIOR (such as a program suddenly encrypting many files) rather than only matching known malware signatures is valuable because it can:"", ""options"": [""Encrypt the network connection"", ""Replace the need for backups"", ""Physically lock the device"", ""Detect novel threats that have no known signature yet""], ""answer"": 3, ""explanation"": ""Behavioral detection can catch new or modified malware that signature scanning would miss, by reacting to malicious actions. It does not encrypt connections, replace backups, or provide physical security.""},
+    {""id"": ""C4-120"", ""unit"": 4, ""topic"": ""4.4"", ""tags"": [""detection-signals""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-observations-could-indicate-a-device-has-been"", ""code"": """", ""stem"": ""Which observations could indicate a device has been compromised?\n\nI.   Antivirus has been silently disabled\nII.  New unknown administrator accounts appear\nIII. The device receives a routine vendor security patch"", ""options"": [""II and III only"", ""I and III only"", ""I and II only"", ""I, II, and III""], ""answer"": 2, ""explanation"": ""Antivirus being silently disabled (I) and unexpected new admin accounts (II) are classic indicators of compromise. Receiving a routine vendor patch (III) is normal, expected maintenance.""},
+    {""id"": ""C4-121"", ""unit"": 4, ""topic"": ""4.4"", ""tags"": [""response""], ""type"": ""scenario"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-user-notices-their-device-is-unusually-slow"", ""code"": """", ""stem"": ""A user notices their device is unusually slow, a security tool reports a disabled service, and files are being renamed with a strange extension. What is the BEST immediate action?"", ""options"": [""Disconnect the device from the network and report it to security/IT"", ""Pay any ransom demand right away"", ""Keep working and hope it resolves itself"", ""Connect more devices to share the load""], ""answer"": 0, ""explanation"": ""These are signs of active malware (likely ransomware); isolating the device from the network limits spread and preserves evidence while experts respond. Paying immediately, ignoring it, or connecting more devices all increase harm.""},
+    {""id"": ""C4-122"", ""unit"": 4, ""topic"": ""4.4"", ""tags"": [""logs""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""why-are-device-and-application-logs-valuable-after"", ""code"": """", ""stem"": ""Why are device and application logs valuable AFTER a security incident?"", ""options"": [""They automatically reverse all damage"", ""They can show what happened, when, and how the attacker acted, aiding investigation"", ""They encrypt the device retroactively"", ""They prevent the attack from ever starting""], ""answer"": 1, ""explanation"": ""Logs provide a record that supports investigation and response after an incident. They do not undo damage, encrypt retroactively, or prevent the original attack.""},
+    {""id"": ""C4-123"", ""unit"": 4, ""topic"": ""4.4"", ""tags"": [""detection-gap""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-small-office-relies-on-the-device-security-setup"", ""code"": ""I.   Antivirus is installed on all devices\nII.  No logs are kept and no alerts are reviewed\nIII. Devices receive automatic updates\nIV.  Backups run nightly"", ""stem"": ""A small office relies on the device-security setup below. Which weakness MOST limits its ability to detect a compromise?"", ""options"": [""Weakness I"", ""Weakness III"", ""Weakness II"", ""Weakness IV""], ""answer"": 2, ""explanation"": ""Keeping no logs and reviewing no alerts (II) leaves the office blind to compromises in progress. Installed antivirus, automatic updates, and nightly backups all support, not undermine, security.""},
+    {""id"": ""C4-124"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""4.3"", ""attack-defense-map""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""match-each-device-threat-to-a-control-that"", ""code"": """", ""stem"": ""Match each device threat to a control that helps defend against it. Which pairings are reasonable?\n\nI.   Stolen laptop with sensitive files - full-disk encryption\nII.  Exploitation of a known vulnerability - timely patching\nIII. Default device password abuse - changing default credentials"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 3, ""explanation"": ""Disk encryption protects a stolen laptop's data (I), patching closes known vulnerabilities (II), and changing default credentials prevents default-password abuse (III). All three pairings are reasonable.""},
+    {""id"": ""C4-125"", ""unit"": 4, ""topic"": ""4.1"", ""tags"": [""malware-spread""], ""type"": ""concept"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""which-scenario-best-illustrates-why-a-single-unpatched"", ""code"": """", ""stem"": ""Which scenario BEST illustrates why a single unpatched device can endanger an entire network?"", ""options"": [""The unpatched device simply runs more slowly than the rest"", ""A worm exploits the unpatched device, then spreads automatically to others sharing the network"", ""The unpatched device uses more electricity"", ""The unpatched device displays advertisements only to its own user""], ""answer"": 1, ""explanation"": ""A worm can exploit one unpatched host and self-propagate to others, so a single weak device becomes an entry point for the whole network. Slower speed, power use, and local ads do not endanger other devices.""},
+    {""id"": ""C4-126"", ""unit"": 4, ""topic"": ""4.2"", ""tags"": [""sso-tradeoff""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""single-sign-on-sso-lets-users-access-many-applications"", ""code"": """", ""stem"": ""Single sign-on (SSO) lets users access many applications with one login. What is a security TRADE-OFF of SSO?"", ""options"": [""Users must memorize a separate password for every application"", ""If the single set of credentials is compromised, many applications are exposed at once"", ""It makes every application slower to load"", ""It removes the ability to log out""], ""answer"": 1, ""explanation"": ""SSO concentrates risk: compromising the one credential can expose every connected application, which is why SSO is usually paired with strong MFA. SSO reduces the number of passwords to remember rather than increasing it.""},
+    {""id"": ""C5-101"", ""unit"": 5, ""topic"": ""5.1"", ""tags"": [""sql-injection""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-login-form-passes-user-input-directly-into"", ""code"": """", ""stem"": ""A login form passes user input directly into a database query, allowing an attacker to type input that changes the query and bypasses the password check. This attack is BEST described as:"", ""options"": [""A denial-of-service attack"", ""Tailgating"", ""A replay attack"", ""SQL injection""], ""answer"": 3, ""explanation"": ""Injecting input that alters a database query is SQL injection, caused by trusting unsanitized user input. DoS targets availability, tailgating is physical, and a replay attack resends captured traffic.""},
+    {""id"": ""C5-102"", ""unit"": 5, ""topic"": ""5.1"", ""tags"": [""xss""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-attacker-submits-a-comment-containing-a-script"", ""code"": """", ""stem"": ""An attacker submits a comment containing a script that later runs in other visitors' browsers when they view the page. This attack is BEST described as:"", ""options"": [""A brute-force attack"", ""Cross-site scripting (XSS)"", ""A DDoS attack"", ""Dumpster diving""], ""answer"": 1, ""explanation"": ""Injecting a script that executes in other users' browsers is cross-site scripting (XSS), which results from failing to sanitize output. Brute force guesses credentials, DDoS floods availability, and dumpster diving is physical reconnaissance.""},
+    {""id"": ""C5-103"", ""unit"": 5, ""topic"": ""5.1"", ""tags"": [""root-cause""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""both-sql-injection-and-cross-site-scripting-share-which"", ""code"": """", ""stem"": ""Both SQL injection and cross-site scripting share which common root cause?"", ""options"": [""Using too many backups"", ""Encrypting data at rest"", ""Enabling multi-factor authentication"", ""Failure to validate and sanitize untrusted input/output""], ""answer"": 3, ""explanation"": ""Both stem from trusting untrusted input/output without validation or sanitization. Backups, encryption, and MFA are protections and are not the cause of these injection flaws.""},
+    {""id"": ""C5-104"", ""unit"": 5, ""topic"": ""5.1"", ""tags"": [""app-attacks""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-of-the-following-are-application-layer-attacks-i"", ""code"": """", ""stem"": ""Which of the following are application-layer attacks?\n\nI.   SQL injection\nII.  Cross-site scripting\nIII. Tailgating into a server room"", ""options"": [""II and III only"", ""I and II only"", ""I and III only"", ""I, II, and III""], ""answer"": 1, ""explanation"": ""SQL injection (I) and cross-site scripting (II) target application input/output handling. Tailgating (III) is a physical security attack, not an application-layer one.""},
+    {""id"": ""C5-105"", ""unit"": 5, ""topic"": ""5.1"", ""tags"": [""broken-access-control""], ""type"": ""scenario"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-banking-app-shows-a-user-their-statement"", ""code"": """", ""stem"": ""A banking app shows a user their statement at the URL .../account?id=1042. The user changes the URL to id=1043 and sees another customer's statement. Which vulnerability does this reveal?"", ""options"": [""A strong encryption scheme working correctly"", ""Broken access control (the app fails to verify the user owns the requested record)"", ""A denial-of-service attack"", ""A properly configured firewall""], ""answer"": 1, ""explanation"": ""The app exposes records by ID without checking that the requester is authorized to view them - broken access control (insecure direct object reference). It is a flaw, not encryption, DoS, or firewall behavior.""},
+    {""id"": ""C5-106"", ""unit"": 5, ""topic"": ""5.1"", ""tags"": [""input-handling""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-web-team-reviews-how-their-app-handles"", ""code"": ""I.   Validates input against an expected format\nII.  Inserts raw user input directly into database queries\nIII. Escapes output before displaying it\nIV.  Rejects overly long or malformed input"", ""stem"": ""A web team reviews how their app handles user input. Which practice INTRODUCES a vulnerability?"", ""options"": [""Practice I"", ""Practice III"", ""Practice II"", ""Practice IV""], ""answer"": 2, ""explanation"": ""Inserting raw user input directly into queries (II) enables SQL injection. Validating input, escaping output, and rejecting malformed input are all protective practices.""},
+    {""id"": ""C5-107"", ""unit"": 5, ""topic"": ""5.2"", ""tags"": [""rbac""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""in-role-based-access-control-rbac-permissions-are-granted"", ""code"": """", ""stem"": ""In role-based access control (RBAC), permissions are granted based on:"", ""options"": [""The user's seniority in years only"", ""The user's assigned role within the organization"", ""Whichever files the user requests first"", ""The time of day the user logs in""], ""answer"": 1, ""explanation"": ""RBAC assigns permissions to roles, and users receive access according to their role. Seniority, request order, and time of day are not how RBAC determines permissions.""},
+    {""id"": ""C5-108"", ""unit"": 5, ""topic"": ""5.2"", ""tags"": [""separation-of-duties""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-company-requires-that-the-employee-who-submits"", ""code"": """", ""stem"": ""A company requires that the employee who submits a payment cannot also be the one who approves it. This control is BEST described as:"", ""options"": [""Single sign-on"", ""Separation of duties"", ""Defense in depth"", ""Security through obscurity""], ""answer"": 1, ""explanation"": ""Requiring two different people for a sensitive transaction is separation of duties, which prevents one person from completing a fraudulent action alone. The other terms describe different concepts.""},
+    {""id"": ""C5-109"", ""unit"": 5, ""topic"": ""5.2"", ""tags"": [""data-access""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-practices-support-the-principle-of-least-privilege"", ""code"": """", ""stem"": ""Which practices support the principle of least privilege for DATA access?\n\nI.   Granting employees access only to the data their job requires\nII.  Reviewing and revoking access when roles change\nIII. Giving all staff read/write access to every database for convenience"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""Granting only job-necessary access (I) and revoking access on role change (II) implement least privilege. Universal read/write access (III) is the opposite of least privilege.""},
+    {""id"": ""C5-110"", ""unit"": 5, ""topic"": ""5.2"", ""tags"": [""data-classification""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""why-do-organizations-classify-data-into-levels-such"", ""code"": """", ""stem"": ""Why do organizations classify data into levels such as public, internal, and confidential?"", ""options"": [""To make all data publicly downloadable"", ""To delete data automatically each night"", ""To apply protection appropriate to each data's sensitivity"", ""To avoid ever needing encryption""], ""answer"": 2, ""explanation"": ""Data classification lets an organization apply controls proportional to sensitivity, focusing strong protections where they matter most. It is not about publishing, auto-deleting, or avoiding encryption.""},
+    {""id"": ""C5-111"", ""unit"": 5, ""topic"": ""5.3"", ""tags"": [""symmetric""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""in-symmetric-encryption-such-as-aes-the-same"", ""code"": """", ""stem"": ""In symmetric encryption such as AES, the SAME key is used to:"", ""options"": [""Encrypt with one key and decrypt with a different key"", ""Only hash data, never reverse it"", ""Both encrypt and decrypt the data"", ""Sign data without any key""], ""answer"": 2, ""explanation"": ""Symmetric encryption uses a single shared key for both encryption and decryption. Using different keys for each operation describes asymmetric encryption, and hashing is one-way.""},
+    {""id"": ""C5-112"", ""unit"": 5, ""topic"": ""5.3"", ""tags"": [""hashing-vs-encryption""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""what-is-the-key-difference-between-hashing-and"", ""code"": """", ""stem"": ""What is the KEY difference between hashing and encryption?"", ""options"": [""Hashing is reversible but encryption is not"", ""Hashing is one-way and not meant to be reversed; encryption is reversible with the correct key"", ""Hashing requires two keys; encryption requires none"", ""They are identical processes""], ""answer"": 1, ""explanation"": ""Hashing is a one-way function used for integrity and password storage and is not meant to be reversed, while encryption is designed to be reversed with the correct key. The other statements reverse or confuse these properties.""},
+    {""id"": ""C5-113"", ""unit"": 5, ""topic"": ""5.3"", ""tags"": [""password-storage""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-database-stores-user-passwords-which-storage-approach"", ""code"": """", ""stem"": ""A database stores user passwords. Which storage approach is the MOST secure?"", ""options"": [""Store passwords as plaintext for easy recovery"", ""Store salted hashes of passwords, never the passwords themselves"", ""Store passwords encrypted with a key kept next to the database"", ""Store passwords reversed character by character""], ""answer"": 1, ""explanation"": ""Storing salted hashes means the original passwords are never kept and identical passwords produce different hashes, resisting precomputed attacks. Plaintext is unsafe, a key stored beside the data offers little protection, and reversing characters is trivial to undo.""},
+    {""id"": ""C5-114"", ""unit"": 5, ""topic"": ""5.3"", ""tags"": [""salt""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""why-is-a-unique-salt-added-to-each"", ""code"": """", ""stem"": ""Why is a unique 'salt' added to each password before hashing?"", ""options"": [""So identical passwords produce different hashes, defeating precomputed (rainbow table) attacks"", ""To make the password shorter"", ""To encrypt the network connection"", ""To allow the password to be recovered in plaintext""], ""answer"": 0, ""explanation"": ""A unique salt ensures identical passwords hash to different values, defeating rainbow-table lookups. It does not shorten passwords, encrypt connections, or make hashes reversible.""},
+    {""id"": ""C5-115"", ""unit"": 5, ""topic"": ""5.3"", ""tags"": [""encryption-at-rest""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-statements-about-encrypting-stored-data-at-rest"", ""code"": """", ""stem"": ""Which statements about encrypting stored data ('at rest') are TRUE?\n\nI.   It protects confidentiality if storage media are stolen\nII.  Proper key management is essential to its effectiveness\nIII. It guarantees the data can never be altered"", ""options"": [""II and III only"", ""I and III only"", ""I and II only"", ""I, II, and III""], ""answer"": 2, ""explanation"": ""Encryption at rest protects confidentiality of stolen media (I) and depends on sound key management (II). It does not by itself guarantee integrity (III); detecting alteration requires additional controls such as hashing or signatures.""},
+    {""id"": ""C5-116"", ""unit"": 5, ""topic"": ""5.4"", ""tags"": [""public-key""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""in-asymmetric-public-key-cryptography-if-alice-wants-others"", ""code"": """", ""stem"": ""In asymmetric (public-key) cryptography, if Alice wants others to send her confidential messages, she publishes which key, and keeps which key secret?"", ""options"": [""Publishes her private key; keeps her public key secret"", ""Publishes her public key; keeps her private key secret"", ""Publishes both keys"", ""Keeps both keys secret and shares a password instead""], ""answer"": 1, ""explanation"": ""Senders encrypt with Alice's public key, which she can share freely; only her secret private key can decrypt. Publishing the private key would destroy the system's security.""},
+    {""id"": ""C5-117"", ""unit"": 5, ""topic"": ""5.4"", ""tags"": [""digital-signature""], ""type"": ""concept"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""to-create-a-digital-signature-proving-a-message"", ""code"": """", ""stem"": ""To create a digital signature proving a message came from her and was not altered, the sender encrypts a hash of the message with which key, and recipients verify it with which key?"", ""options"": [""Signs with her public key; verified with her private key"", ""Signs with her private key; verified with her public key"", ""Signs with the recipient's public key; verified with the recipient's private key"", ""Signs and verifies with the same shared secret key""], ""answer"": 1, ""explanation"": ""A digital signature is created with the sender's private key and verified with the sender's public key, proving authenticity and integrity since only she holds the private key. Using the recipient's keys would provide confidentiality, not a signature.""},
+    {""id"": ""C5-118"", ""unit"": 5, ""topic"": ""5.4"", ""tags"": [""symmetric-vs-asymmetric""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-statements-correctly-contrast-symmetric-and-asymmetric-cryptography"", ""code"": """", ""stem"": ""Which statements correctly contrast symmetric and asymmetric cryptography?\n\nI.   Symmetric uses one shared key; asymmetric uses a public/private key pair\nII.  Asymmetric solves the problem of securely distributing a shared secret\nIII. Symmetric encryption is generally slower than asymmetric for large data"", ""options"": [""I and II only"", ""II and III only"", ""I and III only"", ""I, II, and III""], ""answer"": 0, ""explanation"": ""Symmetric uses one shared key while asymmetric uses a key pair (I), and asymmetric helps distribute keys without a prior shared secret (II). Statement III is false: symmetric encryption is generally FASTER than asymmetric for bulk data.""},
+    {""id"": ""C5-119"", ""unit"": 5, ""topic"": ""5.4"", ""tags"": [""hybrid""], ""type"": ""scenario"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""secure-messaging-often-uses-asymmetric-cryptography-to-exchange"", ""code"": """", ""stem"": ""Secure messaging often uses asymmetric cryptography to exchange a key and then symmetric encryption for the conversation itself. Why combine them this way?"", ""options"": [""Symmetric is used because it cannot be decrypted at all"", ""Asymmetric is used for bulk data because it is much faster"", ""Asymmetric safely shares the key without a prior secret, while faster symmetric encryption handles the bulk data"", ""Combining them removes the need for any keys""], ""answer"": 2, ""explanation"": ""Asymmetric cryptography solves secure key distribution, then efficient symmetric encryption protects the actual data - leveraging the strength of each. Symmetric is faster (not unbreakable), and the scheme still relies on keys.""},
+    {""id"": ""C5-120"", ""unit"": 5, ""topic"": ""5.4"", ""tags"": [""pki-certificate""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""when-a-browser-connects-to-an-https-site"", ""code"": """", ""stem"": ""When a browser connects to an HTTPS site, a digital certificate signed by a trusted certificate authority primarily lets the browser:"", ""options"": [""Verify that the site's public key really belongs to that site"", ""Speed up the website's images"", ""Store the user's password in plaintext"", ""Disable the site's firewall""], ""answer"": 0, ""explanation"": ""A CA-signed certificate binds a public key to a verified identity, letting the browser trust that the key belongs to the legitimate site. It is unrelated to image speed, password storage, or firewalls.""},
+    {""id"": ""C5-121"", ""unit"": 5, ""topic"": ""5.5"", ""tags"": [""parameterized-queries""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-secure-coding-technique-most-directly-prevents-sql-injection"", ""code"": """", ""stem"": ""Which secure-coding technique MOST directly prevents SQL injection?"", ""options"": [""Choosing a longer database password"", ""Hiding the database server's name"", ""Using parameterized queries (prepared statements) that separate code from data"", ""Increasing the server's memory""], ""answer"": 2, ""explanation"": ""Parameterized queries keep user input as data rather than executable query code, neutralizing injection. A longer DB password, an obscured server name, and more memory do not address the injection flaw.""},
+    {""id"": ""C5-122"", ""unit"": 5, ""topic"": ""5.5"", ""tags"": [""input-validation""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""why-is-server-side-input-validation-more-trustworthy-than"", ""code"": """", ""stem"": ""Why is server-side input validation more trustworthy than relying only on validation in the browser?"", ""options"": [""Browsers cannot run any validation code at all"", ""Server-side validation encrypts the database"", ""Client-side validation is impossible to implement"", ""Attackers can bypass client-side checks by sending requests directly to the server""], ""answer"": 3, ""explanation"": ""Client-side checks can be skipped by crafting requests directly to the server, so validation must also occur server-side where the attacker cannot disable it. Browsers can run validation, but it is not authoritative.""},
+    {""id"": ""C5-123"", ""unit"": 5, ""topic"": ""5.5"", ""tags"": [""secure-development""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-practices-strengthen-application-security-i-validating-and"", ""code"": """", ""stem"": ""Which practices strengthen application security?\n\nI.   Validating and sanitizing all untrusted input\nII.  Keeping libraries and frameworks patched\nIII. Displaying detailed internal error messages with stack traces to all users"", ""options"": [""II and III only"", ""I and III only"", ""I, II, and III"", ""I and II only""], ""answer"": 3, ""explanation"": ""Validating input (I) and patching dependencies (II) strengthen security. Showing detailed internal errors and stack traces to all users (III) leaks information attackers can exploit and is a weakness.""},
+    {""id"": ""C5-124"", ""unit"": 5, ""topic"": ""5.5"", ""tags"": [""app-hardening""], ""type"": ""spot-flaw"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-development-team-adopts-the-practices-below-which"", ""code"": ""I.   Sanitizes user input before processing\nII.  Stores the database admin password in the public source code repository\nIII. Applies security patches to dependencies\nIV.  Uses HTTPS for all traffic"", ""stem"": ""A development team adopts the practices below. Which one is a SECURITY MISTAKE?"", ""options"": [""Practice I"", ""Practice III"", ""Practice II"", ""Practice IV""], ""answer"": 2, ""explanation"": ""Committing the database admin password to a public repository (II) exposes the secret to anyone who views the code. Sanitizing input, patching dependencies, and using HTTPS are all sound practices.""},
+    {""id"": ""C5-125"", ""unit"": 5, ""topic"": ""5.5"", ""tags"": [""waf""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""a-web-application-firewall-waf-protects-an-application"", ""code"": """", ""stem"": ""A web application firewall (WAF) protects an application by:"", ""options"": [""Encrypting the hard drive of every client device"", ""Inspecting and filtering web requests to block common attacks like injection attempts"", ""Physically guarding the data center door"", ""Replacing the need for input validation entirely""], ""answer"": 1, ""explanation"": ""A WAF inspects HTTP traffic and blocks malicious patterns such as injection or XSS attempts. It does not encrypt client disks, provide physical security, or eliminate the need for secure coding and input validation.""},
+    {""id"": ""C5-126"", ""unit"": 5, ""topic"": ""5.6"", ""tags"": [""integrity-monitoring""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-system-stores-a-cryptographic-hash-of-an"", ""code"": """", ""stem"": ""A system stores a cryptographic hash of an important file and periodically recomputes it to confirm the file has not changed. This technique detects:"", ""options"": [""Unauthorized modification of the file (integrity violations)"", ""How much electricity the server uses"", ""The physical temperature of the room"", ""The user's typing speed""], ""answer"": 0, ""explanation"": ""Comparing a stored hash to a freshly computed one (file integrity monitoring) reveals unauthorized changes, supporting the integrity goal. It does not measure power, temperature, or typing speed.""},
+    {""id"": ""C5-127"", ""unit"": 5, ""topic"": ""5.6"", ""tags"": [""anomalous-access""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""logs-show-that-a-marketing-employee-s-account"", ""code"": """", ""stem"": ""Logs show that a marketing employee's account suddenly queried and exported the entire customer payment-card table at 3:00 AM. The MOST appropriate interpretation is that:"", ""options"": [""This is normal marketing activity and needs no review"", ""The account may be compromised or misused and the access should be investigated"", ""The database is simply running a backup"", ""Marketing employees always work at 3:00 AM""], ""answer"": 1, ""explanation"": ""A role-inappropriate, large, off-hours data export is a strong anomaly suggesting account compromise or misuse and warrants investigation. Dismissing it as normal, a backup, or routine ignores a clear red flag.""},
+    {""id"": ""C5-128"", ""unit"": 5, ""topic"": ""5.6"", ""tags"": [""detection-signals""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-signals-could-indicate-an-attack-against-an"", ""code"": """", ""stem"": ""Which signals could indicate an attack against an application or its data?\n\nI.   A spike in database errors matching injection-style input\nII.  A WAF logging many blocked malicious requests from one source\nIII. A routine, scheduled software update being applied"", ""options"": [""II and III only"", ""I and III only"", ""I, II, and III"", ""I and II only""], ""answer"": 3, ""explanation"": ""A burst of injection-style errors (I) and many blocked malicious requests from one source (II) indicate attack activity. A scheduled software update (III) is normal maintenance, not an attack signal.""},
+    {""id"": ""C5-129"", ""unit"": 5, ""topic"": ""5.6"", ""tags"": [""logging-gap""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-application-s-monitoring-is-configured-as-below"", ""code"": ""I.   Logs all database access attempts\nII.  Alerts on unusually large data exports\nIII. Disables logging on the payment-data table to save space\nIV.  Reviews WAF alerts daily"", ""stem"": ""An application's monitoring is configured as below. Which choice MOST weakens the ability to detect data attacks?"", ""options"": [""Choice I"", ""Choice II"", ""Choice III"", ""Choice IV""], ""answer"": 2, ""explanation"": ""Disabling logging on the most sensitive table (III) creates a blind spot exactly where attacks would be most damaging. Logging access, alerting on large exports, and reviewing WAF alerts all aid detection.""},
+    {""id"": ""C5-130"", ""unit"": 5, ""topic"": ""5.6"", ""tags"": [""defense-in-depth-data""], ""type"": ""concept"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""which-combination-best-reflects-defense-in-depth-for"", ""code"": """", ""stem"": ""Which combination BEST reflects defense in depth for protecting a sensitive customer database?"", ""options"": [""Rely only on a strong database password"", ""Make the database publicly readable but rename the server"", ""Disable all logging and trust the firewall alone"", ""Encrypt the data at rest, enforce least-privilege access, validate application input, and log/monitor access""], ""answer"": 3, ""explanation"": ""Combining encryption, least-privilege access control, input validation, and monitoring layers independent controls so no single failure exposes the data. A lone password, obscurity, or a single firewall with no logging are all single points of failure.""},
+    {""id"": ""C5-131"", ""unit"": 5, ""topic"": ""5.3"", ""tags"": [""5.4"", ""crypto-goals""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""which-cryptographic-tool-is-the-right-choice-to"", ""code"": """", ""stem"": ""Which cryptographic tool is the RIGHT choice to verify that a downloaded file was not altered in transit, without needing to keep it secret?"", ""options"": [""A published hash (checksum) of the file"", ""A longer Wi-Fi password"", ""A faster CPU"", ""A larger monitor""], ""answer"": 0, ""explanation"": ""Comparing a freshly computed hash to a trusted published checksum verifies integrity without secrecy. A Wi-Fi password, CPU speed, and monitor size are unrelated to verifying file integrity.""},
+    {""id"": ""C5-132"", ""unit"": 5, ""topic"": ""5.1"", ""tags"": [""5.5"", ""injection-defense""], ""type"": ""multi-correct"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""which-measures-help-defend-a-web-app-against"", ""code"": """", ""stem"": ""Which measures help defend a web app against injection attacks?\n\nI.   Parameterized queries that separate code from data\nII.  Validating input against strict expected formats\nIII. Trusting all input that comes from logged-in users"", ""options"": [""II and III only"", ""I and II only"", ""I and III only"", ""I, II, and III""], ""answer"": 1, ""explanation"": ""Parameterized queries (I) and strict input validation (II) defend against injection. Trusting input merely because a user is logged in (III) is unsafe, since authenticated users can also send malicious input.""},
+    {""id"": ""C5-133"", ""unit"": 5, ""topic"": ""5.2"", ""tags"": [""access-review""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""why-should-organizations-periodically-review-who-has-access"", ""code"": """", ""stem"": ""Why should organizations periodically review who has access to sensitive data?"", ""options"": [""To make all data public"", ""To delete the database"", ""To disable encryption"", ""To remove access that is no longer needed and catch over-privileged accounts""], ""answer"": 3, ""explanation"": ""Access reviews catch lingering or excessive permissions (e.g., after role changes), enforcing least privilege over time. They are not about publishing data, deleting databases, or disabling encryption.""},
+    {""id"": ""C5-134"", ""unit"": 5, ""topic"": ""5.3"", ""tags"": [""key-management""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-company-encrypts-its-backups-but-stores-the"", ""code"": """", ""stem"": ""A company encrypts its backups but stores the only copy of the decryption key on the same server as the backups, with no other copy. What is the MAIN risk?"", ""options"": [""The backups will be too small"", ""Encryption will make the data public"", ""The key will speed up the network"", ""If that server is lost or its key is stolen, the encryption is either useless or the data becomes unrecoverable""], ""answer"": 3, ""explanation"": ""Co-locating the sole key with the encrypted data means an attacker who reaches the server gets both, and losing the server destroys the only key, making data unrecoverable - both reflect poor key management. The other options are nonsensical.""},
+    {""id"": ""C5-135"", ""unit"": 5, ""topic"": ""5.4"", ""tags"": [""nonrepudiation""], ""type"": ""concept"", ""difficulty"": ""expert"", ""featured"": false, ""slug"": ""a-valid-digital-signature-on-a-contract-provides"", ""code"": """", ""stem"": ""A valid digital signature on a contract provides non-repudiation, meaning:"", ""options"": [""The signer cannot credibly deny having signed it, since only their private key could produce the signature"", ""The contract is automatically encrypted from all readers"", ""The contract can never be read by the recipient"", ""The signature hides the contract's contents""], ""answer"": 0, ""explanation"": ""Because only the signer holds the private key used to sign, a valid signature ties the action to them, so they cannot plausibly deny it - that is non-repudiation. A signature authenticates and protects integrity; it does not conceal the document's contents.""},
+    {""id"": ""C5-136"", ""unit"": 5, ""topic"": ""5.3"", ""tags"": [""5.6"", ""cia-controls""], ""type"": ""multi-correct"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""match-each-control-to-the-security-goal-it"", ""code"": """", ""stem"": ""Match each control to the security goal it primarily supports. Which pairings are correct?\n\nI.   Hashing a file and rechecking it later - integrity\nII.  Encrypting stored customer data - confidentiality\nIII. Keeping tested backups of the database - availability"", ""options"": [""I and II only"", ""II and III only"", ""I, II, and III"", ""I and III only""], ""answer"": 2, ""explanation"": ""Re-hashing verifies integrity, encryption protects confidentiality, and tested backups restore availability. All three pairings correctly map a control to its primary CIA goal.""},
+    {""id"": ""C5-137"", ""unit"": 5, ""topic"": ""5.2"", ""tags"": [""access-control-design""], ""type"": ""spot-flaw"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""a-records-system-uses-the-access-rules-below"", ""code"": ""I.   Nurses can view records only for their assigned patients\nII.  Billing staff can view only billing fields\nIII. Every employee can edit every patient's full record\nIV.  Access is revoked when an employee leaves"", ""stem"": ""A records system uses the access rules below. Which rule violates least privilege?"", ""options"": [""Rule I"", ""Rule II"", ""Rule IV"", ""Rule III""], ""answer"": 3, ""explanation"": ""Allowing every employee to edit every full record (III) grants far more access than any single role needs, violating least privilege. Scoped access for nurses and billing staff, and revoking access on departure, all uphold it.""},
+    {""id"": ""C5-138"", ""unit"": 5, ""topic"": ""5.1"", ""tags"": [""5.5"", ""defense-mapping""], ""type"": ""concept"", ""difficulty"": ""hard"", ""featured"": true, ""slug"": ""an-app-is-vulnerable-to-cross-site-scripting-which"", ""code"": """", ""stem"": ""An app is vulnerable to cross-site scripting. Which fix MOST directly addresses it?"", ""options"": [""Buying a faster web server"", ""Properly encoding/escaping user-supplied content before it is rendered in the page"", ""Increasing the session timeout"", ""Renaming the application""], ""answer"": 1, ""explanation"": ""Encoding or escaping user content before rendering prevents the browser from executing injected scripts, directly fixing XSS. Server speed, session timeout, and renaming do not address the flaw.""},
+    {""id"": ""C5-139"", ""unit"": 5, ""topic"": ""5.6"", ""tags"": [""audit-trail""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""slug"": ""an-immutable-audit-trail-of-who-accessed-or"", ""code"": """", ""stem"": ""An immutable audit trail of who accessed or changed sensitive data is valuable because it:"", ""options"": [""Prevents the database from ever being attacked"", ""Supports accountability and helps reconstruct what happened during an incident"", ""Encrypts the network automatically"", ""Eliminates the need for access controls""], ""answer"": 1, ""explanation"": ""A tamper-resistant audit trail provides accountability and an investigative record after an incident. It does not by itself prevent attacks, encrypt traffic, or replace access controls.""},
+    {""id"": ""C5-140"", ""unit"": 5, ""topic"": ""5.2"", ""tags"": [""chmod"", ""file-permissions""], ""type"": ""concept"", ""difficulty"": ""medium"", ""featured"": true, ""code"": """", ""stem"": ""A file must give the owner read, write, and execute; the group read and execute; and others no access. Which chmod numeric command sets exactly these permissions?"", ""options"": [""chmod 640 report.txt"", ""chmod 755 report.txt"", ""chmod 750 report.txt"", ""chmod 570 report.txt""], ""answer"": 2, ""explanation"": ""Each digit is the sum of 4 (read) + 2 (write) + 1 (execute), read in owner-group-other order. The owner needs rwx (4+2+1=7), the group needs r-x (4+1=5), and others need nothing (0), giving 750. 640 denies the owner execute, 755 lets others read and execute, and 570 reverses the owner and group values."", ""slug"": ""a-file-must-give-the-owner-read-write""},
+    {""id"": ""C5-141"", ""unit"": 5, ""topic"": ""5.6"", ""tags"": [""false-negatives"", ""integrity-monitoring""], ""type"": ""scenario"", ""difficulty"": ""hard"", ""featured"": true, ""code"": """", ""stem"": ""An analyst relies only on cryptographic hash checks to detect attacks on a sensitive file. Which attack would this method FAIL to detect?"", ""options"": [""An attacker modifies a record inside the file"", ""An attacker copies and exfiltrates the file without changing it"", ""An attacker appends new rows to the file"", ""An attacker encrypts the file during a ransomware attack""], ""answer"": 1, ""explanation"": ""Hash comparison only reveals whether data have been altered. Modifying, appending, and encrypting all change the file, so the recomputed hash would not match. Copying the file leaves it byte-for-byte identical, so the hash still matches even though the data were stolen. This is the classic false negative for hash-based integrity monitoring, and it is why hashing is paired with access logging or DLP."", ""slug"": ""an-analyst-relies-only-on-cryptographic-hash-checks""},
+  ];
+
+  /* ========================== helpers ============================ */
+  function byId(id) { return POOL.filter(function (q) { return q.id === id; }); }
+  function byUnit(u) { return POOL.filter(function (q) { return q.unit === u; }); }
+  function byTopic(t) { return POOL.filter(function (q) { return q.topic === t; }); }
+  function featuredPool() { return POOL.filter(function (q) { return q.featured; }); }
+  function letter(i) { return String.fromCharCode(65 + i); }
+
+  // Deterministic PRNG (mulberry32) so the permutation is identical on every
+  // load and every server. Date selects the index; it does not shuffle.
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function seededShuffle(arr, seed) {
+    var rnd = mulberry32(seed);
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rnd() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  /* ===================== shared question renderer ===================== */
+  // opts: { modeLabel: ""preview""|""retrieval""|null }
+  function renderQuestion(q, mountEl, opts) {
+    opts = opts || {};
+    mountEl.innerHTML = """";
+
+    var card = document.createElement(""div"");
+    card.className = ""cy-q"";
+    card.setAttribute(""data-qid"", q.id);
+
+    if (opts.modeLabel === ""preview"") {
+      var bp = document.createElement(""div"");
+      bp.className = ""cy-modebanner preview"";
+      bp.textContent = ""Preview - your class has not been taught this yet. Take your best guess, then read the explanation."";
+      card.appendChild(bp);
+    } else if (opts.modeLabel === ""retrieval"") {
+      var br = document.createElement(""div"");
+      br.className = ""cy-modebanner retrieval"";
+      br.textContent = ""Review - retrieval practice on material already covered."";
+      card.appendChild(br);
+    }
+
+    var tags = document.createElement(""div"");
+    tags.className = ""cy-qtags"";
+    var tagHtml =
+      '<span class=""cy-tag topic"">Topic ' + q.topic + '</span>' +
+      '<span class=""cy-tag"">' + (UNIT_TITLES[q.unit] || ('Unit ' + q.unit)) + '</span>';
+    if (q.skill) tagHtml += '<span class=""cy-tag"">' + q.skill + '</span>';
+    if (q.type && TYPE_LABELS[q.type]) tagHtml += '<span class=""cy-tag"">' + TYPE_LABELS[q.type] + '</span>';
+    tagHtml += '<span class=""cy-tag d-' + q.difficulty + '"">' + q.difficulty + '</span>';
+    tags.innerHTML = tagHtml;
+    card.appendChild(tags);
+
+    var stem = document.createElement(""p"");
+    stem.className = ""cy-stem"";
+    stem.textContent = q.stem;
+    card.appendChild(stem);
+
+    if (q.code && q.code.trim()) {
+      var codeEl = document.createElement(""pre"");
+      codeEl.className = ""cy-code"";
+      codeEl.textContent = q.code;
+      card.appendChild(codeEl);
+    }
+
+    var isMulti = Array.isArray(q.answer);
+    if (isMulti) {
+      var mn = document.createElement(""p"");
+      mn.className = ""cy-multinote"";
+      mn.textContent = ""Select all that apply, then check your answer."";
+      card.appendChild(mn);
+    }
+
+    var ul = document.createElement(""ul"");
+    ul.className = ""cy-opts"";
+    var selected = [];
+    var locked = false;
+
+    q.options.forEach(function (text, i) {
+      var li = document.createElement(""li"");
+      li.className = ""cy-opt"";
+      li.setAttribute(""data-i"", String(i));
+      li.innerHTML = '<span class=""cy-letter"">' + letter(i) + '</span><span class=""cy-otext""></span>';
+      li.querySelector("".cy-otext"").textContent = text;
+      li.addEventListener(""click"", function () {
+        if (locked) return;
+        if (isMulti) {
+          var pos = selected.indexOf(i);
+          if (pos === -1) { selected.push(i); li.classList.add(""sel""); }
+          else { selected.splice(pos, 1); li.classList.remove(""sel""); }
+        } else {
+          lockSingle(i);
+        }
+      });
+      ul.appendChild(li);
+    });
+    card.appendChild(ul);
+
+    var explain = document.createElement(""div"");
+    explain.className = ""cy-explain"";
+    explain.innerHTML = ""<b>Explanation. </b>"" + q.explanation;
+
+    function reveal(correctSet, chosenSet) {
+      locked = true;
+      var opts2 = ul.querySelectorAll("".cy-opt"");
+      opts2.forEach(function (li) {
+        var idx = parseInt(li.getAttribute(""data-i""), 10);
+        li.classList.add(""locked"");
+        li.classList.remove(""sel"");
+        if (correctSet.indexOf(idx) !== -1) li.classList.add(""correct"");
+        else if (chosenSet.indexOf(idx) !== -1) li.classList.add(""wrong"");
+      });
+      explain.classList.add(""show"");
+    }
+
+    function lockSingle(i) {
+      reveal([q.answer], [i]);
+    }
+
+    if (isMulti) {
+      var row = document.createElement(""div"");
+      row.className = ""cy-checkrow"";
+      var checkBtn = document.createElement(""button"");
+      checkBtn.className = ""cy-btn cy-btn-solid"";
+      checkBtn.textContent = ""Check answer"";
+      checkBtn.addEventListener(""click"", function () {
+        if (locked) return;
+        reveal(q.answer.slice(), selected.slice());
+      });
+      row.appendChild(checkBtn);
+      card.appendChild(row);
+    }
+
+    card.appendChild(explain);
+
+    var pl = document.createElement(""div"");
+    pl.className = ""cy-permalink"";
+    pl.innerHTML = 'Permalink: <a href=""' + BLOG_BASE + q.slug + '"">' + BLOG_BASE + q.slug + '</a>';
+    card.appendChild(pl);
+
+    mountEl.appendChild(card);
+  }
+
+  /* ============================ TODAY ============================ */
+  // Fixed epoch (a Monday). dayNumber selects into a fixed permutation of the
+  // FEATURED set, so the whole featured set cycles with no repeats until exhausted.
+  var EPOCH = new Date(2026, 7, 17); // 2026-08-17, months are 0-indexed
+  var PERM_SEED = 0x5C7B12A9;
+
+  function dayNumber() {
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var diff = Math.floor((today - EPOCH) / 86400000);
+    return diff;
+  }
+  function renderToday() {
+    var feat = featuredPool();
+    var order = seededShuffle(feat.map(function (q) { return q.id; }), PERM_SEED);
+    var L = order.length;
+    var d = dayNumber();
+    var idx = ((d % L) + L) % L;
+    var q = byId(order[idx])[0];
+
+    var badge = document.getElementById(""cy-datebadge"");
+    var dateStr = new Date().toLocaleDateString(""en-US"", { weekday: ""long"", year: ""numeric"", month: ""long"", day: ""numeric"" });
+    badge.textContent = dateStr;
+
+    renderQuestion(q, document.getElementById(""cy-today-mount""), {});
+  }
+
+  /* ========================== PRACTICE ========================== */
+  var practiceLastId = null;
+  var practiceScope = null; // null = anywhere, or a unit number
+
+  function drawPractice() {
+    var src = practiceScope === null ? POOL : byUnit(practiceScope);
+    if (src.length === 0) return;
+    var pick;
+    if (src.length === 1) {
+      pick = src[0];
+    } else {
+      do { pick = src[Math.floor(Math.random() * src.length)]; }
+      while (pick.id === practiceLastId);
+    }
+    practiceLastId = pick.id;
+    renderQuestion(pick, document.getElementById(""cy-practice-mount""), {});
+    document.getElementById(""cy-draw-another"").style.display = ""inline-block"";
+  }
+
+  function buildUnitChips() {
+    var wrap = document.getElementById(""cy-unit-chips"");
+    [1, 2, 3, 4, 5].forEach(function (u) {
+      var c = document.createElement(""button"");
+      c.className = ""cy-chip"";
+      c.textContent = ""Unit "" + u + "": "" + UNIT_TITLES[u];
+      c.addEventListener(""click"", function () {
+        practiceScope = u;
+        setActiveChip(wrap, c);
+        drawPractice();
+      });
+      wrap.appendChild(c);
+    });
+  }
+  function setActiveChip(wrap, active) {
+    wrap.querySelectorAll("".cy-chip"").forEach(function (x) { x.classList.remove(""active""); });
+    if (active) active.classList.add(""active"");
+  }
+
+  /* =========================== BROWSE =========================== */
+  // Browse is the teacher-directed mode: pick a unit, pick a section, then step
+  // through that section's questions by number (Q1..Qn). A single question shows
+  // at a time, with a copy-able deep link so a specific question can be assigned.
+  var browseUnit = null;
+  var browseTopic = null;
+  var browseIdx = 0;   // index of the shown question within the current section
+  var browseQs = [];   // the current section's question list (after prior-topic logic)
+
+  function distinctTopicsForUnit(u) {
+    var set = {};
+    byUnit(u).forEach(function (q) { set[q.topic] = true; });
+    return Object.keys(set).sort(function (a, b) { return parseFloat(a) - parseFloat(b); });
+  }
+  function priorTopic(t) {
+    // Same unit only: 3.2 -> 3.1. Returns null if no prior topic in pool.
+    var parts = t.split(""."");
+    var minor = parseInt(parts[1], 10);
+    if (minor <= 1) return null;
+    var cand = parts[0] + ""."" + (minor - 1);
+    return byTopic(cand).length ? cand : null;
+  }
+  function setChipActiveByAttr(wrap, attr, val) {
+    var chips = wrap.querySelectorAll("".cy-chip"");
+    chips.forEach(function (c) { c.classList.toggle(""active"", c.getAttribute(attr) === String(val)); });
+  }
+
+  function buildBrowseUnits() {
+    var wrap = document.getElementById(""cy-browse-units"");
+    wrap.innerHTML = """";
+    [1, 2, 3, 4, 5].forEach(function (u) {
+      var c = document.createElement(""button"");
+      c.className = ""cy-chip"";
+      c.setAttribute(""data-unit"", String(u));
+      c.textContent = ""Unit "" + u;
+      c.title = UNIT_TITLES[u];
+      c.addEventListener(""click"", function () { selectBrowseUnit(u); });
+      wrap.appendChild(c);
+    });
+  }
+  function selectBrowseUnit(u) {
+    browseUnit = u; browseTopic = null;
+    setChipActiveByAttr(document.getElementById(""cy-browse-units""), ""data-unit"", u);
+    renderTopicList();
+    document.getElementById(""cy-browse-toggles"").style.display = ""none"";
+    document.getElementById(""cy-browse-nav"").innerHTML = """";
+    document.getElementById(""cy-browse-mount"").innerHTML = """";
+  }
+  function renderTopicList() {
+    var wrap = document.getElementById(""cy-browse-topics"");
+    wrap.innerHTML = """";
+    if (browseUnit === null) return;
+    distinctTopicsForUnit(browseUnit).forEach(function (t) {
+      var c = document.createElement(""button"");
+      c.className = ""cy-chip"";
+      c.setAttribute(""data-topic"", t);
+      c.textContent = t + (TOPIC_TITLES[t] ? ("": "" + TOPIC_TITLES[t]) : """");
+      c.addEventListener(""click"", function () { selectBrowseTopic(t); });
+      wrap.appendChild(c);
+    });
+  }
+  function selectBrowseTopic(t) {
+    browseTopic = t; browseIdx = 0;
+    setChipActiveByAttr(document.getElementById(""cy-browse-topics""), ""data-topic"", t);
+    document.getElementById(""cy-browse-toggles"").style.display = ""flex"";
+    renderSectionNav();
+  }
+
+  function currentSection() {
+    // Applies the prior-topic toggle. Returns { topic, label }.
+    var usePrior = document.getElementById(""cy-prior-topic"").checked;
+    var isReview = document.getElementById(""cy-mode-retrieval"").checked;
+    var topic = browseTopic, label = isReview ? ""retrieval"" : ""preview"";
+    if (usePrior) {
+      var p = priorTopic(browseTopic);
+      if (p) { topic = p; label = ""retrieval""; }
+    }
+    return { topic: topic, label: label };
+  }
+
+  function renderSectionNav() {
+    var nav = document.getElementById(""cy-browse-nav"");
+    var mount = document.getElementById(""cy-browse-mount"");
+    nav.innerHTML = """"; mount.innerHTML = """";
+    if (!browseTopic) return;
+
+    var sec = currentSection();
+    browseQs = byTopic(sec.topic);
+    if (browseQs.length === 0) {
+      var e = document.createElement(""div"");
+      e.className = ""cy-empty"";
+      e.textContent = ""No questions tagged to this section yet."";
+      mount.appendChild(e);
+      return;
+    }
+    if (browseIdx >= browseQs.length) browseIdx = 0;
+
+    var lbl = document.createElement(""div"");
+    lbl.className = ""cy-navlabel"";
+    lbl.textContent = ""Section "" + sec.topic +
+      (TOPIC_TITLES[sec.topic] ? "" - "" + TOPIC_TITLES[sec.topic] : """") +
+      ""  ("" + browseQs.length + "" questions)"";
+    nav.appendChild(lbl);
+
+    var row = document.createElement(""div"");
+    row.className = ""cy-qnums"";
+    browseQs.forEach(function (q, i) {
+      var b = document.createElement(""button"");
+      b.className = ""cy-qnum"" + (i === browseIdx ? "" active"" : """");
+      b.textContent = ""Q"" + (i + 1);
+      b.title = q.id;
+      b.addEventListener(""click"", function () {
+        browseIdx = i;
+        var btns = row.querySelectorAll("".cy-qnum"");
+        btns.forEach(function (x, k) { x.classList.toggle(""active"", k === i); });
+        renderSectionQuestion(sec.label);
+      });
+      row.appendChild(b);
+    });
+    nav.appendChild(row);
+
+    renderSectionQuestion(sec.label);
+  }
+  function renderSectionQuestion(label) {
+    var mount = document.getElementById(""cy-browse-mount"");
+    mount.innerHTML = """";
+    var q = browseQs[browseIdx];
+    if (!q) return;
+    renderQuestion(q, mount, { modeLabel: label });
+    mount.appendChild(makeShareRow(q));
+  }
+  function makeShareRow(q) {
+    var wrap = document.createElement(""div"");
+    wrap.className = ""cy-share"";
+    var url = location.origin + location.pathname + ""?q="" + encodeURIComponent(q.id);
+    var inp = document.createElement(""input"");
+    inp.className = ""cy-share-inp""; inp.readOnly = true; inp.value = url;
+    var btn = document.createElement(""button"");
+    btn.className = ""cy-btn cy-btn-ghost cy-share-btn"";
+    btn.textContent = ""Copy link to this question"";
+    function flash() { btn.textContent = ""Copied""; setTimeout(function () { btn.textContent = ""Copy link to this question""; }, 1500); }
+    btn.addEventListener(""click"", function () {
+      inp.focus(); inp.select();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(flash, function () { try { document.execCommand(""copy""); flash(); } catch (e) {} });
+      } else {
+        try { document.execCommand(""copy""); flash(); } catch (e) {}
+      }
+    });
+    wrap.appendChild(inp);
+    wrap.appendChild(btn);
+    return wrap;
+  }
+
+  // Deep link: ?q=<question id> opens Browse straight to that question.
+  function openFromDeepLink() {
+    var params = new URLSearchParams(location.search);
+    var qid = params.get(""q"");
+    if (!qid) return;
+    var matches = byId(qid);
+    if (!matches.length) return;
+    var q = matches[0];
+    var tab = document.querySelector('#cyb-qotd .cy-tab[data-tab=""browse""]');
+    if (tab) tab.click();
+    selectBrowseUnit(q.unit);
+    selectBrowseTopic(q.topic);
+    var idx = 0;
+    for (var i = 0; i < browseQs.length; i++) { if (browseQs[i].id === q.id) { idx = i; break; } }
+    browseIdx = idx;
+    renderSectionNav();
+    var host = document.getElementById(""cyb-qotd"");
+    if (host && host.scrollIntoView) host.scrollIntoView({ behavior: ""smooth"", block: ""start"" });
+  }
+
+  /* ============================ tabs ============================ */
+  function initTabs() {
+    var tabs = document.querySelectorAll(""#cyb-qotd .cy-tab"");
+    var panels = document.querySelectorAll(""#cyb-qotd .cy-panel"");
+    tabs.forEach(function (t) {
+      t.addEventListener(""click"", function () {
+        tabs.forEach(function (x) { x.classList.remove(""active""); });
+        panels.forEach(function (p) { p.classList.remove(""active""); });
+        t.classList.add(""active"");
+        var name = t.getAttribute(""data-tab"");
+        document.querySelector('#cyb-qotd .cy-panel[data-panel=""' + name + '""]').classList.add(""active"");
+      });
+    });
+  }
+
+  /* ============================ init ============================ */
+  document.addEventListener(""DOMContentLoaded"", function () {
+    initTabs();
+    renderToday();
+    buildUnitChips();
+    buildBrowseUnits();
+    document.getElementById(""cy-rand-any"").addEventListener(""click"", function () {
+      practiceScope = null;
+      setActiveChip(document.getElementById(""cy-unit-chips""), null);
+      drawPractice();
+    });
+    document.getElementById(""cy-draw-another"").addEventListener(""click"", drawPractice);
+    document.getElementById(""cy-mode-retrieval"").addEventListener(""change"", function () { browseIdx = 0; renderSectionNav(); });
+    document.getElementById(""cy-prior-topic"").addEventListener(""change"", function () { browseIdx = 0; renderSectionNav(); });
+    openFromDeepLink();
+  });
+})();
+</script>","TRUE","2026-03-01"
+"ap-cybersecurity-practice","MERGE","AP Cybersecurity Practice","<div class=""ph-page"">
+<style>.ph-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:16px 0 30px;}.ph-grid>.ph-card{flex:1 1 330px;max-width:508px;}@media (max-width:760px){.ph-grid>.ph-card{flex:1 1 100%;max-width:none;}}.ph-card{display:block;position:relative;background:#F5F0FF;border:1px solid #e9d5ff;border-radius:14px;padding:18px 20px 46px;text-decoration:none!important;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}.ph-card:hover{transform:translateY(-2px);border-color:#A855F7;box-shadow:0 6px 20px rgba(107,33,168,.14);}.ph-card-focus{display:block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7C3AED;margin:0 0 7px;}.ph-card-title{display:block;font-family:""DM Serif Display"",Georgia,serif;font-size:20px;line-height:1.25;color:#1E1B4B;margin:0 0 9px;}.ph-card-blurb{display:block;font-family:Georgia,serif;font-size:15px;line-height:1.55;color:#4B5563;margin:0 0 12px;}.ph-card-meta{position:absolute;left:20px;right:20px;bottom:16px;font-family:""DM Sans"",system-ui,sans-serif;font-size:12.5px;color:#6B7280;}.ph-card-go{position:absolute;right:18px;bottom:14px;font-family:""DM Sans"",system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6B21A8;}.ph-pill{display:inline-block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin:0 7px 0 0;vertical-align:1px;}.ph-pill-intro{background:#DCFCE7;color:#15803D;}.ph-pill-core{background:#EDE9FE;color:#6B21A8;}.ph-pill-stretch{background:#FEF3C7;color:#B45309;}.ph-empty{font-family:Georgia,serif;font-size:15px;color:#6B7280;font-style:italic;margin:12px 0 24px;}</style>
+<style>.ph-page{max-width:900px;margin:0 auto;font-family:Georgia,serif;color:#1F2937;}.ph-page p{font-size:16.5px;line-height:1.7;max-width:72ch;margin:0 0 14px;}.ph-page h2{font-family:""DM Serif Display"",Georgia,serif;font-size:27px;color:#1E1B4B;margin:38px 0 6px;font-weight:400;}.ph-page a{color:#6B21A8;}.ph-hero{background:linear-gradient(135deg,#2E1065 0%,#6B21A8 62%,#7C3AED 100%);border-radius:18px;padding:40px 34px 34px;margin:0 0 26px;text-align:center;color:#fff;}.ph-hero h1{font-family:""DM Serif Display"",Georgia,serif;font-size:40px;line-height:1.15;color:#fff;margin:0 0 12px;font-weight:400;}.ph-eyebrow{display:inline-block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E9D5FF;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 16px;margin:0 0 16px;}.ph-hero p{font-size:17px;line-height:1.6;color:#EDE9FE;max-width:64ch;margin:0 auto;}.ph-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:26px auto 0;max-width:640px;}@media (max-width:640px){.ph-stats{grid-template-columns:1fr 1fr;}}.ph-stat b{display:block;font-family:""DM Serif Display"",Georgia,serif;font-size:26px;color:#fff;font-weight:400;line-height:1.1;}.ph-stat span{display:block;font-family:""DM Sans"",system-ui,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C4B5FD;margin-top:5px;}.ph-note{background:#F0FDF4;border:1px solid #BBF7D0;border-left:4px solid #15803D;border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0 28px;}.ph-note p{margin:0;font-size:15.5px;}.ph-band{background:#F5F0FF;border:1px solid #e9d5ff;border-radius:14px;padding:22px 24px;margin:30px 0 0;}.ph-band h2{margin-top:0;}.ph-band p:last-child{margin-bottom:0;}.ph-page table{border-collapse:separate;border-spacing:0;width:100%;margin:14px 0 20px;font-family:Georgia,serif;font-size:15px;border:1px solid #e9d5ff;border-radius:12px;overflow:hidden;}.ph-page th{background:#F5F0FF;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#6B21A8;text-align:left;padding:11px 14px;}.ph-page td{padding:11px 14px;border-top:1px solid #F3E8FF;vertical-align:top;line-height:1.55;}.ph-page td:first-child{font-family:""DM Serif Display"",Georgia,serif;font-size:19px;color:#6B21A8;width:52px;}.ph-sub{font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#7C3AED;margin:34px 0 0;}.ph-sub+h2{margin-top:4px;}</style>
+<div class=""ph-hero"">
+<div class=""ph-eyebrow"">Everything in one place</div>
+<h1>AP Cybersecurity Practice</h1>
+<p>The multiple-choice half, the free-response half, and the terminal labs. The exam is 60 questions in Section I and one Device Security Analysis in Section II.</p>
+<div class=""ph-stats"">
+<div class=""ph-stat"">
+<b>60</b><span>MCQ in section I</span>
+</div>
+<div class=""ph-stat"">
+<b>1</b><span>free response</span>
+</div>
+<div class=""ph-stat"">
+<b>5</b><span>FRQ sets</span>
+</div>
+<div class=""ph-stat"">
+<b>2</b><span>terminal labs</span>
+</div>
+</div>
+</div>
+<p class=""ph-sub"">Section I of the exam</p>
+<h2>Multiple choice</h2>
+<p>60 questions, drawn from all five units and the three skill categories. <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice-exam"">The AP Cybersecurity practice exam</a> gives you scored questions with explanations. The <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-exam-format"">exam format page</a> has the full breakdown of how the exam is built.</p>
+<div data-practice-course=""ap-cybersecurity"" data-practice-kind=""daily""><div class=""ph-grid"">
+<a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-question-of-the-day""><span class=""ph-card-focus"">A question a day, and the whole bank when you want it</span><span class=""ph-card-title"">Question of the Day</span><span class=""ph-card-blurb"">One question for everyone each day, a random draw when you want more, and every question browsable by unit and topic. Each one shows the answer and why the other options fail.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-core"">Free</span>152 questions &middot; All 5 units &middot; No login</span><span class=""ph-card-go"">Practice &rarr;</span></a>
+</div></div>
+<p class=""ph-sub"">Section II of the exam</p>
+<h2>Free response</h2>
+<p>One Device Security Analysis, parts A to E, 50 minutes. Full practice questions in the exam's exact format, each with sample responses and credit points. More on the format and what each part asks: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-practice"">the FRQ practice hub</a>.</p>
+<div data-practice-course=""ap-cybersecurity"" data-practice-kind=""frq""><div class=""ph-grid"">
+<a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-library-kiosk""><span class=""ph-card-focus"">The baseline: one attacker, one IP, one account</span><span class=""ph-card-title"">The library catalogue kiosk</span><span class=""ph-card-blurb"">Start here. A public catalogue kiosk with a single attacker hammering a single account, so you can learn where each of the five parts looks before the sets start hiding things.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-intro"">Start here</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-athletics-laptop""><span class=""ph-card-focus"">Outbound connections and a spread-out attack</span><span class=""ph-card-title"">The athletics department laptop</span><span class=""ph-card-blurb"">The same five parts, deliberately not the same reading. The blocked connection is outbound rather than inbound, and the password attack touches more than one username.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-core"">Core</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-print-server""><span class=""ph-card-focus"">A spray slow enough to stay under lockout, and SUID</span><span class=""ph-card-title"">The district print server</span><span class=""ph-card-blurb"">The attack that looks like nothing: nine accounts, one try each, three minutes apart, under every lockout threshold. Then the setuid bit, and the escalation that uses it.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-stretch"">Stretch</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-greenhouse-controller""><span class=""ph-card-focus"">No single attacker IP, and a rogue listening service</span><span class=""ph-card-title"">The greenhouse controller</span><span class=""ph-card-blurb"">The set where blocking the attacker address is the wrong answer, because there are six of them. Rewards anyone who reads the listening services instead of skimming past them.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-stretch"">Stretch</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-bluebird-studio""><span class=""ph-card-focus"">Rule order, and a sweep that narrows to one account</span><span class=""ph-card-title"">The design studio workstation</span><span class=""ph-card-blurb"">The set where the rule that would allow the connection is right there in the table and never runs. The password attack arrives in two stages, and one line tells you which account exists.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-stretch"">Stretch</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a>
+</div></div>
+<p class=""ph-sub"">Hands on</p>
+<h2>Terminal labs</h2>
+<p>A real browser terminal, no install and no account. Practice for the commands the free-response question asks you to write. All of them: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-labs"">the terminal labs hub</a>.</p>
+<div data-practice-course=""ap-cybersecurity"" data-practice-kind=""labs""><div class=""ph-grid"">
+<a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-2-terminal-lab""><span class=""ph-card-focus"">Unit 1</span><span class=""ph-card-title"">Find the tournament code</span><span class=""ph-card-blurb"">Hunt a file through a shared machine with nothing but a terminal, then work out who else could read it. Free AP Cybersecurity Topic 1.2 practice lab.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-intro"">Practice</span>Topic 1.2 · 10 min · 6 checks</span><span class=""ph-card-go"">Open →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cyber-unit-2-lesson-4-terminal-lab""><span class=""ph-card-focus"">Unit 2</span><span class=""ph-card-title"">Read the badge log</span><span class=""ph-card-blurb"">A week of badge swipes: three real attacks, two innocent oddities. Work the log with grep and tell them apart. Free AP Cybersecurity Topic 2.4 lab.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-intro"">Practice</span>Topic 2.4 · 20 min · 8 checks</span><span class=""ph-card-go"">Open →</span></a>
+</div></div>
+<div class=""ph-band"">
+<h2>Course content</h2>
+<p>Lessons, units and pacing rather than practice: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"">the complete course guide</a> for students, and <a href=""https://www.apcsexamprep.com/pages/cyber-command-center"">the Command Center</a> for teachers.</p>
+</div>
+<script>window.APCS_PRACTICE={base:""https://progress.apcsexamprep.com""};</script>
+<script src=""https://progress.apcsexamprep.com/practice-hub.js""></script>
+</div>","TRUE","2026-03-01"
