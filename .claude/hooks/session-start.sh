@@ -18,6 +18,37 @@ set -uo pipefail
 
 cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
 
+# ---- session identity, written where apcs and the claim guard can read it ---
+#  The Claude Code session id arrives on stdin in the hook payload and is NOT in
+#  the environment, so this is the only chance to record it. apcs claim uses it
+#  to label a claim and .claude/hooks/claim-guard.js uses it to tell your own
+#  locks from somebody else's. Without it every claim is unlabeled, and the
+#  guard treats an unlabeled claim as a stranger's, so a session would end up
+#  blocked by its own lock.
+#  BOUNDED READ. Claude Code sends the payload and closes stdin, so `cat`
+#  returns instantly in the normal case. A caller that spawns this hook with an
+#  open pipe and never writes to it, which is exactly what smoke/session-hook.js
+#  does, would otherwise block here forever and hang the session start. A hook
+#  that can hang is worse than a hook that learns nothing.
+if command -v timeout >/dev/null 2>&1; then
+  HOOK_INPUT=$(timeout 2 cat 2>/dev/null || true)
+else
+  HOOK_INPUT=""
+fi
+SESSION_LABEL=$(printf '%s' "$HOOK_INPUT" | node -e '
+  let s = ""; process.stdin.on("data", (d) => { s += d; });
+  process.stdin.on("end", () => {
+    try { process.stdout.write(String(JSON.parse(s).session_id || "")); } catch (_) {}
+  });
+' 2>/dev/null || true)
+[ -z "$SESSION_LABEL" ] && SESSION_LABEL="${CLAUDE_CODE_CONTAINER_ID:-}"
+if [ -n "$SESSION_LABEL" ]; then
+  printf '%s' "$SESSION_LABEL" > "${TMPDIR:-/tmp}/apcs-session-label" 2>/dev/null || true
+fi
+# A new session has taken nothing yet, and the guard warns once per file per
+# session. Clearing the marker is what makes "once per session" true.
+rm -f "${TMPDIR:-/tmp}/apcs-claim-warned.json" "${TMPDIR:-/tmp}/apcs-claim-digest.json" 2>/dev/null || true
+
 # ── 1. dependencies ──────────────────────────────────────────────────────────
 # Remote only. A local checkout already has node_modules, and the container
 # state is cached after this completes, so a later session skips straight past.
@@ -156,6 +187,44 @@ echo '```json'
 printf '%s' "$BODY"
 echo ""
 echo '```'
+echo ""
+# ---- what is LOCKED right now --------------------------------------------
+#  in_flight is in the JSON above, and being in the JSON above is not the same
+#  as being read. On 2026-09-03 three sessions collided on one file with the
+#  digest sitting in all three contexts. So the locks get their own block.
+LOCKS=$(printf '%s' "$BODY" | node -e '
+  let s = ""; process.stdin.on("data", (d) => { s += d; });
+  process.stdin.on("end", () => {
+    const rows = (JSON.parse(s).in_flight || []).filter((r) => r && (r.locks || []).length);
+    if (!rows.length) { process.stdout.write(""); return; }
+    const out = rows.map((r) => "  " + (r.locks || []).join(", ")
+      + "\n      held by " + (r.surface || "?")
+      + (r.session_label ? " \"" + r.session_label + "\"" : " (unlabeled)")
+      + " on task #" + r.task_id + ", " + r.age_minutes + "m, " + r.state);
+    process.stdout.write(out.join("\n"));
+  });
+' 2>/dev/null || true)
+
+if [ -n "$LOCKS" ]; then
+  echo "### FILES ANOTHER SESSION IS HOLDING RIGHT NOW"
+  echo ""
+  echo "Do not edit these. A PreToolUse hook will refuse the edit anyway, but"
+  echo "knowing now is cheaper than being refused later."
+  echo ""
+  echo "$LOCKS"
+  echo ""
+else
+  echo "### NO FILES ARE CURRENTLY LOCKED BY ANY SESSION"
+  echo ""
+  echo "That is not permission to skip claiming. It means you are first."
+  echo ""
+fi
+
+echo "Rule 2 is ENFORCED, not remembered: .claude/hooks/claim-guard.js refuses an"
+echo "Edit or Write to a file another session holds. It cannot make you TAKE a lock,"
+echo "so take one: \`apcs claim <id> --lock repo:path\`. No board task for this work?"
+echo "Create one and claim that. Unclaimed work is how three sessions collided on"
+echo "2026-09-03 and threw away two of the three results."
 echo ""
 echo "Per CLAUDE.md: claim before you touch a file (\`apcs claim <id> --lock repo:path\`),"
 echo "close with an artifact (\`apcs done <id> --artifact <url>\`), and \`verified\` is"
