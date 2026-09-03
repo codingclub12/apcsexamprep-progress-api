@@ -137,7 +137,6 @@ are real.
 
 ## What is still open
 
-- The claim credential gap above. A decision.
 - The guard covers `Edit`, `Write` and `NotebookEdit`. It does not cover a write
   performed by a Bash heredoc or `sed -i`, and this session used exactly those
   all afternoon. Covering Bash means parsing arbitrary shell to find write
