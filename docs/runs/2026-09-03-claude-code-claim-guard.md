@@ -143,5 +143,6 @@ are real.
   targets, which is a much bigger and much less reliable job than reading
   `tool_input.file_path`. Worth knowing the hole is there rather than believing
   the guard is total.
-- Rotate `COMMAND_READ_TOKEN` and `TODO_KEY`. Still outstanding from earlier
-  today, still browser-only.
+- ~~Rotate the two tokens.~~ CLOSED, not done. Tanner decided the same day that
+  neither token is being rotated, permanently, and asked to stop being asked.
+  CLAUDE.md carries the decision.

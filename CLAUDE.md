@@ -84,6 +84,23 @@ workflows, and on the Claude Code environment. Both rotations are Tanner's, at a
 browser, and an agent asked to do one should say plainly that it cannot rather
 than appearing to.
 
+**NEITHER TOKEN IS BEING ROTATED. That is Tanner's decision, it is permanent, and
+it is not a defect to report.** Stated 2026-09-03, in those words, after the leak
+described above. Do not raise it with him again, do not open a board task for it,
+and do not put it in a run note's open items. A session that rediscovers the leak
+history and asks a fourth time has not found anything; it has failed to read this
+paragraph, which exists for exactly that reason.
+
+What does NOT follow, so this stays as small as the decision itself:
+
+- The rule against PRINTING a token is unchanged and matters MORE now, not less,
+  because a leaked value stays valid. The shell footgun above is still how it
+  happens.
+- The rotation endpoints are unchanged. An agent asked to rotate still cannot,
+  and still says so plainly rather than appearing to.
+- This is about these two tokens. It is not a general licence to leave a
+  credential in place after exposing it.
+
 The session's container must also be able to REACH the board:
 `progress.apcsexamprep.com` has to be in the environment's Custom allowed
 domains, or every session opens with DIGEST UNREACHABLE no matter which

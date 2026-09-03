@@ -178,8 +178,10 @@ Tanner's, at a browser. Flagged in the session report, not buried here.
 
 ## Still open
 
-- **Rotate both tokens.** Browser only. The read token is read-only and PII-stripped;
-  `TODO_KEY` can WRITE to the ledger, so it is the one that matters.
+- ~~**Rotate both tokens.**~~ CLOSED, not done. Tanner decided the same day that
+  neither token is rotated, permanently, and asked to stop being asked. CLAUDE.md
+  carries the decision so a later session does not rediscover the leak and raise
+  it again.
 - **Widen `smoke/encoding-guard.js`.** The gap is measured and the fix is measured. Not
   shipped. Wants a claim, a mutation run naming `expect_failure`, and its own PR.
 - **Task 85 needs a live gradebook response** from a session with the admin key that is
@@ -269,7 +271,10 @@ directly above it now says never to.
 
 ## Still open
 
-- Rotate `COMMAND_READ_TOKEN` and `TODO_KEY`. Browser only, agents are refused.
+- ~~Rotate the two tokens.~~ CLOSED, not done: Tanner decided on 2026-09-03 that
+  neither token is being rotated, permanently. Recorded in CLAUDE.md so no fifth
+  session raises it. The rule against printing a token matters more now, not
+  less, because a leaked value stays valid.
 - Task 85 needs a live gradebook response from a session with the admin key.
 - Teacher visibility into sandbox work, and whether public visibility is
   intentional. Both are decisions.
