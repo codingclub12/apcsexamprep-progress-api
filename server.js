@@ -76,6 +76,12 @@ app.use('/api/sandbox', require('./routes/sandbox'));
 app.use('/api/intro-java', require('./routes/intro-java'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/gate', require('./routes/gate'));
+// Site assistant, Phase 0: structured problem reports. No model, no chat, no
+// transcripts. Public with an optional bearer, so it sits with the other
+// role-agnostic routes rather than behind teacher or student auth. Root mounted
+// because it owns /api/assistant/* and the /apcs-report.js the storefront
+// loads. See docs/site-assistant-spec.md.
+app.use(require('./routes/assistant'));
 app.use('/api/files', require('./routes/files'));
 app.use('/api/slides', require('./routes/slides'));
 // Command center (Phase 1). Dual auth inside each router (browser cookie OR
