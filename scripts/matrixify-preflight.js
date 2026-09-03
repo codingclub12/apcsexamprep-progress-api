@@ -87,8 +87,6 @@ const mojibake = require('../lib/mojibake.js');
 //  future session grepping for the old rule lands on the explanation.
 //  Built from code points so this file stays pure ASCII. These are the byte
 //  sequences a UTF-8 bullet, dash or emoji turns into when read as Latin-1.
-const MOJIBAKE = [[0xE2, 0x80], [0xC3, 0xA2], [0xF0, 0x9F]]
-  .map((p) => String.fromCharCode(p[0]) + String.fromCharCode(p[1]));
 const EMOJI = /[\u{1F300}-\u{1FAFF}]/gu;
 const SHEET_NAMES = /(page|product|blog[-_ ]?post|article|collection|customer|order|smart[-_ ]?collection|redirect|metafield)/i;
 
