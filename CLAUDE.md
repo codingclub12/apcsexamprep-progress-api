@@ -718,10 +718,40 @@ Structure with PRIMM: predict, run, investigate, modify, make. Parsons problems 
 the rung between reading code and writing it, for the students who stall at a blank
 editor.
 
-**The fork that blocks all of this, and it is a fork rather than a task.** Bigger
-exercises need the sandbox, the sandbox runs through Judge0, and Judge0 is closed
-without Tanner naming that change specifically. Separately, the PII posture splits
-the design: `sandbox_programs` may store UNGRADED work so a student can reopen it
-tomorrow, and graded code may never be stored at all, only test-case pass counts.
-One artifact cannot be both. Choose which it is before building, and remember that
-adding a second PII exception is a decision rather than a patch.
+`docs/exercise-design-proposal.md` is the worked version of everything above, with
+the five rewritten CSA exercises, the `studio` activity type, and a recommended
+build order. Read it before scoping any of this; it landed on `main` the same day
+this section did.
+
+**The fork is which SHAPE the artifact is, and it decides the infrastructure. It is
+not a blocker, and an earlier draft of this section said it was.** Two shapes:
+
+- **A one-period autograded exercise does NOT need the sandbox and should not use
+  it.** It uses what the 53 existing CSA exercise pages already use: `program` or
+  `driver` mode in `lib/csa-code-modes.js`, hidden test cases, and the code-grading
+  contract where source is graded in transit and then DISCARDED, never stored. A
+  bigger exercise is a longer version of that shape, not a different one, so it
+  adds zero new PII surface and needs no Judge0 exception. What it needs built is
+  the activity type, a manifest row generator, and a verifier that checks each
+  stated requirement rather than only final stdout.
+- **A multi-day, personally-owned project is what the sandbox is already for,
+  today, with no new capability required.** It already runs Java for CSA and Python
+  and JavaScript for CSP, and already persists work and reopens it tomorrow. It
+  needs POINTING AT rather than building: `docs/sandbox.md` names both real gaps
+  itself, that it is not linked from the storefront and has no teacher visibility.
+  Closing the first is theme work and touches the PII posture not at all.
+
+So one artifact cannot be both, and that is the whole content of the fork: graded
+code is discarded by contract, sandbox work persists by design. Which need you are
+serving picks the shape, and the shape picks the infrastructure.
+
+**The one genuinely open decision is teacher visibility into sandbox work**, and it
+is Tanner's. Grading or even reviewing a multi-day capstone needs either a standing
+teacher read of `sandbox_programs` or a student-initiated snapshot into something a
+teacher can see. Strictly neither is a SECOND PII exception, since the text already
+sits in that table under the one exception this project has, but both expand what
+that exception covers, and `docs/sandbox.md` already says adding a teacher or admin
+path is a decision and not a patch. The proposal recommends the student-initiated
+snapshot over a standing read, and flags its own recommendation as the human's call.
+Do not scope `studio` or capstone work to depend on a teacher seeing it until that
+decision is made.
