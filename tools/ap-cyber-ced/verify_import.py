@@ -55,9 +55,22 @@ csv.field_size_limit(sys.maxsize)
 # The four that must survive as entities, or the markup changes meaning.
 STRUCTURAL = ('&amp;', '&lt;', '&gt;', '&quot;')
 
-# Double-encoded lead sequences, written as escapes so smoke/encoding-guard.js
-# does not flag the file whose job is to catch them.
-MOJIBAKE = ['â€', 'Ã¢', 'Ã°', 'â¢']
+# Mojibake lead sequences, as REAL escapes this time. This comment used to say
+# they were escapes and they were literal characters, and the file went unflagged
+# only because smoke/encoding-guard.js did not scan .py. It does now.
+#
+# lib/mojibake.js is the authority and finds these by REVERSING them, which needs
+# no pattern list at all. This list is the Python-side stopgap for the live-body
+# check below, and it now covers the single-pass emoji leads the old one missed:
+# a 4-byte character corrupts into four, and nothing here looked for that.
+MOJIBAKE = [
+    '\u00e2\u20ac',    # cp1252,  3-byte original: bullet, dash, curly quote
+    '\u00e2\u0080',    # latin-1, 3-byte original: the same characters
+    '\u00f0\u0178',    # cp1252,  4-byte original: an emoji. MISSED before.
+    '\u00f0\u009f',    # latin-1, 4-byte original: an emoji. MISSED before.
+    '\u00c3\u00a2',    # doubly corrupted, 3-byte original
+    '\u00c3\u00b0',    # doubly corrupted, 4-byte original
+]
 
 VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link',
         'meta', 'source', 'track', 'wbr'}
@@ -170,7 +183,7 @@ def main():
 
         for m in MOJIBAKE:
             if m in live:
-                bad.append('double-encoded sequence in the live body')
+                bad.append('mojibake sequence in the live body')
                 break
 
         errors, unclosed = nesting_report(live)

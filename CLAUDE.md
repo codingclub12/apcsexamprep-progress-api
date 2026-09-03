@@ -450,5 +450,25 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   said until 2026-09-02: it has no EK check at all and is shaped for AP
   Cybersecurity page structure. Naming the wrong tool here is worse than naming
   none, because the check comes back clean.
+- `lib/mojibake.js` is the ONLY place that gets to say what mojibake looks like.
+  Do not write a byte pattern into a check, and do not paste a corrupted sample
+  into a rule. Until 2026-09-03 there were three detectors and all three missed
+  the two forms reported on a live page, because each was a list of remembered
+  byte pairs: they reversed through latin-1 only, so the cp1252 flavor that a
+  spreadsheet and a browser actually produce was invisible, and they tried widths
+  3 and 2, so a 4-byte character (any emoji) was invisible at every width.
+  `lib/site-crawl.js` had already worked out the cp1252 half and said so in a
+  comment; it was right and the other two stayed wrong anyway, which is the
+  argument for one module rather than a fourth opinion.
+  The module derives its rules from UTF-8 instead: a run starts only where a
+  character maps back to a legal lead byte (0xC2 to 0xF4), the lead byte states
+  the width, and a run is mojibake only if it reverses to exactly one valid
+  character. That covers both codecs, all three widths and any corruption depth,
+  including forms nobody has seen yet.
+  A rule written from a sample is worse than no rule, because it comes back
+  clean: the drafts for this fix carried a DOUBLY corrupted bullet and emoji, and
+  the two depths do not share a single leading character, so a check matching one
+  cannot see the other. `npm run smoke:encoding` is the gate and
+  `python3 scripts/mojibake-rederive.py` is the second opinion.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.

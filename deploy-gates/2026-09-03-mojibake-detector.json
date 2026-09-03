@@ -1,0 +1,109 @@
+{
+  "change": "one mojibake detector, derived from UTF-8 rather than from remembered byte patterns, and the three blind guards it replaces",
+  "_context": "Three detectors disagreed and all three missed the two forms reported on a live page: a cp1252 bullet (U+00E2 U+20AC U+00A2) and a cp1252 emoji (U+00F0 U+0178 U+017D U+00AF). lib/site-crawl.js already knew about cp1252 and said so in a comment aimed at smoke/encoding-guard.js; it was right and the other two stayed wrong anyway. Every one of the three also missed 4-byte characters entirely, because all three tried widths 3 and 2 with a lead set that stopped at U+00E2.",
+  "_expect_failure_note": "Every expect_failure below includes the literal [FAIL] prefix on purpose. The gate checks that the string appears in the mutated run's output, and an assertion NAME appears on both the pass and fail lines, so naming the assertion alone would only prove it ran. With the prefix it proves it went red.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the encoding guard, now including the two forms reported live",
+      "command": "npm run --silent smoke:encoding",
+      "expect": "OK - all 87 checks passed"
+    },
+    {
+      "kind": "suite",
+      "name": "the Matrixify preflight, which is the gate between a sheet and a live page",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "60 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the live-page crawler, which now sees a corrupted emoji",
+      "command": "npm run --silent smoke:sitecrawl",
+      "expect": "OK - all 132 checks passed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: reversing through latin-1 only",
+      "_why": "This is the actual defect. latin-1 maps every byte, which reads like the broader case and is not: cp1252 puts bytes 0x80 to 0x9F above U+00FF, so a latin-1 reversal cannot produce them and the round-trip test throws the run away. cp1252 is what Excel, Windows and every CSV pipeline into this store produce.",
+      "file": "lib/mojibake.js",
+      "find": "const CODECS = ['cp1252', 'latin1'];",
+      "replace": "const CODECS = ['latin1'];",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "[FAIL] detects THE cp1252 BULLET, reported live"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE OTHER HALF: a 4-byte character corrupts into four, not three",
+      "_why": "All three previous detectors tried widths 3 and 2. A corrupted emoji is four characters, so no width they tried could ever match one, and the reported page had one.",
+      "file": "lib/mojibake.js",
+      "find": "  if (leadByte >= 0xF0) return 4;",
+      "replace": "  if (leadByte >= 0xF0) return 3;",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "[FAIL] detects THE cp1252 EMOJI, reported live"
+    },
+    {
+      "kind": "mutation",
+      "name": "the lead range has to reach 0xF4, or no emoji is even a candidate",
+      "_why": "Separate guard from the width above: one decides how long a run is, the other decides whether it can start at all. The old lead set stopped at U+00E2, so both were broken and fixing either alone changes nothing.",
+      "file": "lib/mojibake.js",
+      "find": "const LEAD_MAX = 0xF4;",
+      "replace": "const LEAD_MAX = 0xEF;",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "[FAIL] detects the latin-1 emoji"
+    },
+    {
+      "kind": "mutation",
+      "name": "the suspect tier is real, or it would block a real import",
+      "_why": "Widening the lead range costs one class of false positive: Shopify's own Nordic locale files carry sort labels that reverse cleanly to U+0156 and U+0596. If plausible() stops discriminating, legitimate text starts failing builds, which is how a guard gets switched off.",
+      "file": "lib/mojibake.js",
+      "find": "  return PLAUSIBLE.some(([lo, hi]) => cp >= lo && cp <= hi);",
+      "replace": "  return true;",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "[FAIL] the Norwegian sort label does not fail a build"
+    },
+    {
+      "kind": "mutation",
+      "name": "the preflight actually refuses a sheet, rather than counting one",
+      "_why": "The preflight is the only gate between a Matrixify sheet and a live page body. Its old rule was three hardcoded latin-1 byte pairs, and its own smoke fixture was built the same wrong way, so the guard and its test shared one blind spot and agreed with each other.",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "    if (moji.hits.length) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "[FAIL]   a cp1252 mojibaked body is refused, the form a spreadsheet produces"
+    },
+    {
+      "kind": "mutation",
+      "name": "the live-page crawler really asks the module",
+      "_why": "lib/site-crawl.js is what looks at rendered storefront HTML, which is where the reported bullet and emoji were seen. Delegating its detector to the module is only worth something if the delegation is asserted.",
+      "file": "lib/site-crawl.js",
+      "find": "  return mojibake.detect(text, cap)",
+      "replace": "  return [].concat(mojibake.detect(text, cap)).slice(0, 0)",
+      "command": "npm run --silent smoke:sitecrawl",
+      "expect_failure": "[FAIL] a corrupted EMOJI is detected, which needs width 4"
+    },
+    {
+      "kind": "mutation",
+      "name": "scanning .txt is load-bearing, not tidiness",
+      "_why": "Adding .txt to the scan is what found 65 corrupted runs in the AP Cybersecurity CED extract, the document docs/ap-cyber-unit1-ced-realignment.md names as the authority for Unit 1. Every semantic check in this repo passed while that file said the wrong thing.",
+      "file": "smoke/encoding-guard.js",
+      "find": "  '.txt', '.py', '.csv', '.liquid']);",
+      "replace": "  '.py', '.csv', '.liquid']);",
+      "command": "npm run --silent smoke:encoding",
+      "expect_failure": "[FAIL] the CED extract is in the scan, which is how its 65 runs were found"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation, on Python's own codecs, agrees on every file",
+      "_why": "lib/mojibake.js reverses through a cp1252 table a person typed into that file. If the table is wrong, every JavaScript check in the repo is wrong the same way and they all agree with each other, which is the exact failure being fixed. This script imports no JavaScript: it uses Python's built-in cp1252 and latin-1 codecs and derives the run lengths from UTF-8. It also SCORES the old rule, so the claim that it missed the reported forms is a measurement rather than an assertion. Honest limit: the PLAUSIBLE ranges are policy, not an encoding fact, so they are re-stated there and compared rather than independently derived.",
+      "command": "python3 scripts/mojibake-rederive.py",
+      "expect": "REDERIVE OK"
+    },
+    {
+      "kind": "live",
+      "name": "production serves what this tree is",
+      "_why": "The commit sha is derived from the tree rather than pinned, so this assertion is false before the deploy, false if the deploy never runs, and true only once production is actually serving this code. An assertion that would have passed yesterday is decoration.",
+      "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const got=JSON.parse(cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'})).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
+      "expect": "PRODUCTION SERVES THIS TREE"
+    }
+  ]
+}

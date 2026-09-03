@@ -164,10 +164,31 @@ ok('a challenge short-circuits the other checks rather than reporting ten of the
   C.checkPage(url('x'), res('<html><title>Just a moment...</title></html>')).length === 1);
 
 console.log('\n  Encoding, template leaks and placeholders\n');
-ok('double-encoded text is detected', C.detectMojibake('the studentâ€™s answer').length > 0);
-ok('a correctly encoded accent is NOT mojibake', C.detectMojibake('naive café résumé').length === 0);
+//  Fixtures BUILT from the bytes of the character they stand for, not pasted in
+//  as literal corrupted characters. The pasted versions made this file the only
+//  place in the repo smoke/encoding-guard.js had to be told to ignore, and a
+//  fixture nobody can scan is a fixture nobody can check. The corrupter is
+//  shared: a hand-cut five-entry copy of its table here produced a fixture that
+//  was cp1252 for one byte and latin-1 for another, which no single misreading
+//  can produce, so the module correctly refused to call it mojibake and the
+//  assertion failed for a reason that had nothing to do with the code under test.
+const fx = require('./mojibake-fixtures.js');
+const QUOTE = fx.cp1252Once(0x2019);   // U+00E2 U+20AC U+2122, three characters
+const EMOJI = fx.cp1252Once(0x1F3AF);  // U+00F0 U+0178 U+017D U+00AF, FOUR
+const ACCENT = String.fromCodePoint(0x00E9);
+ok('double-encoded text is detected', C.detectMojibake('the student' + QUOTE + 's answer').length > 0);
+//  THE ONE THAT WAS MISSING. A 4-byte character corrupts into four, and this
+//  detector tried widths 3 and 2 with a lead set that stopped at U+00E2, so a
+//  corrupted emoji was invisible to it at every width. One was reported on a
+//  live page, and this crawler is what looks at live pages.
+ok('a corrupted EMOJI is detected, which needs width 4',
+  C.detectMojibake('goal ' + EMOJI + ' here').length > 0);
+ok('a correctly encoded accent is NOT mojibake',
+  C.detectMojibake('naive caf' + ACCENT + ' r' + ACCENT + 'sum' + ACCENT).length === 0);
 ok('mojibake in visible prose is a finding',
-  C.checkPage(url('x'), res(page({ body: '<p>the studentâ€™s answer</p>' }))).some((f) => f.kind === 'mojibake'));
+  C.checkPage(url('x'), res(page({ body: '<p>the student' + QUOTE + 's answer</p>' }))).some((f) => f.kind === 'mojibake'));
+ok('a corrupted emoji in visible prose is a finding too',
+  C.checkPage(url('x'), res(page({ body: '<p>goal ' + EMOJI + ' here</p>' }))).some((f) => f.kind === 'mojibake'));
 ok('unrendered Liquid in the body is a finding',
   C.checkPage(url('x'), res(page({ body: '<p>{{ product.title }}</p>' }))).some((f) => f.kind === 'liquid-leak'));
 ok('a Liquid tag is a finding',

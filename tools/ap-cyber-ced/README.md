@@ -161,3 +161,38 @@ Both were false failures on a page that was fine, and both are documented in
 
 See `docs/ap-cyber-unit1-ced-realignment.md` for the work orders, the per-page
 damage table, and what has shipped.
+
+## The extract was mojibaked, and is not any more (2026-09-03)
+
+`CED-UNIT1-EXTRACT.txt` carried **65 corrupted runs**: 10 right single quotes, 28
+en spaces, 13 middle dots, 12 section signs and 2 em dashes. Each was a character
+whose UTF-8 bytes had been read as latin-1 and re-encoded, so "they don't comply"
+was stored with the apostrophe replaced by the three characters
+U+00E2 U+0080 U+0099, which render as punctuation-shaped noise and mean nothing.
+
+Nothing caught it for as long as the file has existed, for a dull reason:
+`smoke/encoding-guard.js` did not scan `.txt`. It does now, which is how this was
+found. The repair used `repair()` from `lib/mojibake.js`, which reverses the
+misreading rather than retyping the text, and the arithmetic closes exactly: 65
+runs, 105 characters recovered, 17599 down to 17494.
+
+Re-check it at any time:
+
+```
+npm run smoke:encoding                   # red if any run comes back
+python3 scripts/mojibake-rederive.py     # the same verdict, from Python's codecs
+```
+
+This matters more than a formatting nit, because
+`docs/ap-cyber-unit1-ced-realignment.md` names this file as the authority for
+Unit 1. Every semantic check in this repo passed while it said the wrong thing,
+which is the failure mode `lib/mojibake.js` exists to close: corrupted text is
+still valid UTF-8, so it parses, it lints, it serves, and only the meaning is
+wrong.
+
+**Reported, but NOT verifiable from this repo:** that the source
+`ap-cybersecurity-course-and-exam-description__1_.pdf` in the chat project is
+extracted UTF-8 text carrying a `.pdf` extension, with no `%PDF` header and no
+`/Root`, so `pdftotext` and `pdfplumber` fail on it. That file is not in this
+repository, so this paragraph is a pointer rather than a checked fact. A session
+that cannot open it should suspect the file, not conclude the CED is unavailable.

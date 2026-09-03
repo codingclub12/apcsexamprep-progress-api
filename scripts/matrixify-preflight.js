@@ -61,10 +61,24 @@ const publishedAtOk = (v) => {
   //  <date> then a time, and nothing else.
   return new RegExp('^' + PUBLISHED_AT_DATE + '[ T]\\d{2}:\\d{2}(:\\d{2})?Z?$').test(t);
 };
-//  Built from code points so this file stays pure ASCII. These are the byte
-//  sequences a UTF-8 bullet, dash or emoji turns into when read as Latin-1.
-const MOJIBAKE = [[0xE2, 0x80], [0xC3, 0xA2], [0xF0, 0x9F]]
-  .map((p) => String.fromCharCode(p[0]) + String.fromCharCode(p[1]));
+//  MOJIBAKE IS NOT A PATTERN MATCH ANY MORE, and the three byte pairs that used
+//  to live here are why. They were the LATIN-1 lead sequences for a bullet, a
+//  doubly corrupted bullet and an emoji:
+//
+//    U+00E2 U+0080    a 3-byte character, latin-1
+//    U+00C3 U+00A2    the same, corrupted a second time
+//    U+00F0 U+009F    a 4-byte character, latin-1
+//
+//  A Matrixify sheet comes out of Excel or a CSV pipeline, so the flavor it
+//  actually carries is CP1252, where those leads read U+00E2 U+20AC and
+//  U+00F0 U+0178 instead. Neither is in that list, so a sheet carrying the
+//  bullet reported on a live page passed this gate. smoke/matrixify-preflight.js
+//  passed too, because its fixture was built in the latin-1 flavor as well: the
+//  guard and its test shared one blind spot and agreed with each other.
+//
+//  lib/mojibake.js finds these by REVERSING them, which needs no list and covers
+//  both codecs, all three widths and any corruption depth.
+const mojibake = require('../lib/mojibake.js');
 const EMOJI = /[\u{1F300}-\u{1FAFF}]/gu;
 const SHEET_NAMES = /(page|product|blog[-_ ]?post|article|collection|customer|order|smart[-_ ]?collection|redirect|metafield)/i;
 
@@ -209,12 +223,21 @@ function preflight(path, opts) {
   }
 
   const hi = col('Handle');
-  let nonAscii = 0, scriptsChecked = 0, carriedEmoji = 0;
+  let nonAscii = 0, scriptsChecked = 0, carriedEmoji = 0, mojiSuspects = 0;
   for (const r of body) {
     const cellText = bi === -1 ? '' : String(r[bi] || '');
-    for (const sig of MOJIBAKE) {
-      if (cellText.indexOf(sig) !== -1) { problems.push('mojibake sequence present in a body'); break; }
+    //  cap 5: a body is up to 270K characters and one is enough to refuse the
+    //  sheet, so there is no reason to walk a corrupted megabyte to the end.
+    const moji = mojibake.scan(cellText, 5);
+    if (moji.hits.length) {
+      problems.push('mojibake sequence present in a body: '
+        + mojibake.summarize(moji.hits) + '. Reverse it, do not retype the body.');
     }
+    //  A suspect is a run that reverses cleanly but recovers a character this
+    //  store's content should not contain. Reported, never fatal: refusing a
+    //  sheet on one would block a real import over a Nordic sort label. See the
+    //  second-tier note in lib/mojibake.js.
+    mojiSuspects += moji.suspects.length;
     //  CARRIED vs INTRODUCED, the same distinction the non-ASCII note makes.
     //  The handoff says emoji are not used in this store's page content, and the
     //  live Cyber Command Center body carries 27 of them in its resource rows.
@@ -266,13 +289,18 @@ function preflight(path, opts) {
   if (carriedEmoji) {
     notes.push(`${carriedEmoji} emoji carried through from the live bodies, none added.`);
   }
+  if (mojiSuspects) {
+    notes.push(`${mojiSuspects} run(s) reverse cleanly but recover a character this store `
+      + 'should not have. Not refused, because a Nordic sort label looks exactly like this. '
+      + 'Check them by hand if a page looks wrong.');
+  }
   if (nonAscii) {
     notes.push(`${nonAscii} non-ASCII characters carried through from the live bodies `
       + '(bullets, arrows, non-breaking spaces). Not introduced here, and the BOM is what keeps '
       + 'them intact.');
   }
 
-  return { problems, notes, rows: body.length, header, scriptsChecked, nonAscii };
+  return { problems, notes, rows: body.length, header, scriptsChecked, nonAscii, mojiSuspects };
 }
 
 if (require.main === module) {
