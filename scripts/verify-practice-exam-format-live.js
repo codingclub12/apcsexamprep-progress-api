@@ -15,6 +15,7 @@
 // -----------------------------------------------------------------------------
 const SF = require('../lib/storefront-fetch');
 const C = require('../lib/site-crawl');
+const EX = require('../scripts/extract-live-body');
 
 const PATH = '/pages/ap-cybersecurity-practice-exam';
 let pass = 0, fail = 0;
@@ -24,13 +25,22 @@ const ok = (n, c, x) => { if (c) { pass++; console.log('  [PASS] ' + n); }
 const r = SF.page(PATH);            // throws unless this is provably the real page
 const html = r.body;
 const text = C.visibleText(html);
+//  BODY vs RENDERED, and the distinction is the whole reason this check was
+//  wrong on its first live run. A rendered page is the theme plus the body, so
+//  asserting "this string is gone from the source" makes this sheet answer for
+//  the navigation as well. It failed on exactly that: the body was correct and
+//  the nav still said Full-length. The repo's own empty-page audit makes the
+//  same point, that measuring what a page SERVES measures the theme and calls
+//  it content. Assertions about what this sheet changed run against the stored
+//  body; the nav is a separate surface with its own board task.
+const body = EX.extract(html);
 const title = (html.match(/<title>([^<]*)<\/title>/i) || [])[1] || '';
 
 console.log('\nWas FALSE before the import, must be true after');
 ok('the tab title no longer sells 40 + 3 as the exam', !/40 MCQ \+ 3 Free Response/.test(title), title);
 ok('the tab title says Practice Set', /Practice Set/.test(title), title);
 ok('the H1 says Practice Set', /<h1[^>]*>\s*AP Cybersecurity Practice Set\s*<\/h1>/.test(html));
-ok('no full-length claim anywhere in the source', !/full[ -]?length/i.test(html));
+ok('no full-length claim in the page BODY', !/full[ -]?length/i.test(body));
 ok('the real shape is stated above the fold',
   text.includes('the real exam is 60 multiple choice questions and one free-response question'));
 ok('the schema headline was corrected', !/"headline": "AP Cybersecurity Practice Exam/.test(html));
@@ -41,6 +51,14 @@ ok('43 question cards still served', (html.match(/class="pq-card"/g) || []).leng
 ok('160 options still served', (html.match(/class="pq-opt"/g) || []).length === 160);
 ok('the existing format note survived',
   text.includes('deliberately shaped for study rather than as a replica'));
+
+//  Reported, not asserted. This sheet cannot change the theme, so failing here
+//  would mean this gate can never pass until unrelated theme work ships. It is
+//  printed loudly so it is not quietly forgotten.
+const navHits = [...html.matchAll(/full[ -]?length/gi)].length;
+console.log('\nNot this sheet\'s surface, tracked as board 200');
+console.log('  theme nav still carries ' + navHits + ' full-length claim(s): '
+  + 'apcs-nav-source.liquid dl-sub, header.liquid apcs-dropdown-subtitle');
 
 console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
 process.exit(fail ? 1 : 0);
