@@ -34,7 +34,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const ekDensity = require('../../lib/cyber-ek-density');
 const cyberTopics = require('../../lib/cyber-topics');
-const { mojibakeFailures } = require('./mojibake');
+const mojibake = require('../../lib/mojibake');
 
 const RULES = {
   R1: 'a CED Essential Knowledge code in student-visible text',
@@ -337,12 +337,31 @@ function ruleDeadLinks(rows, liveHandles) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  RULE 7: mojibake, at every corruption depth. See ./mojibake.js for why this
-//  is a structural test rather than a list of patterns, and for what a
-//  pattern list would have missed.
+//  RULE 7: mojibake, at every corruption depth.
+//
+//  DETECTION IS NOT DONE HERE. It goes through lib/mojibake.js, for the same
+//  reason rule 1 goes through lib/cyber-ek-density.js: one module per
+//  convention, or two modules eventually disagree about the same page.
+//
+//  This branch shipped its own structural detector on 2026-09-03 and main
+//  shipped one the same afternoon, from a different direction and with a
+//  generated-fixture suite behind it. Two implementations of one convention is
+//  the thing both of them exist to prevent, so this file now formats what the
+//  shared module finds and holds no opinion of its own about what mojibake is.
+//
+//  What a formatter still owes the reader: the codec and the width. "cp1252,
+//  width 4" is what says an emoji was damaged once, and "latin1, width 2" is
+//  what says the damage has been run over twice. A message that only said
+//  "mojibake here" would send somebody back to the module to find out which.
 // ─────────────────────────────────────────────────────────────────────────────
 function ruleMojibake(value, where) {
-  return mojibakeFailures(value, where).map((m) => `R7 ${RULES.R7}: ${m}`);
+  const text = String(value == null ? '' : value);
+  if (!text) return [];
+  return mojibake.analyze(text).map((h) => {
+    const context = text.slice(Math.max(0, h.index - 40), h.index + h.width + 40);
+    return `R7 ${RULES.R7}: ${where}: ${JSON.stringify(h.chunk)} at ${h.index}`
+      + ` means ${JSON.stringify(h.fixed)} (${h.codec}, width ${h.width}): ${JSON.stringify(context)}`;
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

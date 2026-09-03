@@ -50,7 +50,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const cyberTopics = require('../lib/cyber-topics');
-const { findMojibake } = require('../tools/ap-cyber-ced/mojibake');
+const mojibake = require('../lib/mojibake');
 const { build, serialize } = require('../tools/ap-cyber-ced/build-topics');
 const { SKILL_CATEGORIES, EXPECTED_TOPICS } = require('../tools/ap-cyber-ced/topics-parse');
 const { COURSES } = require('../utils');
@@ -186,7 +186,7 @@ check('there is no topic 2.5, 3.6 or 4.5', () => {
 check('every title is plain ASCII and free of mojibake', () => {
   for (const t of doc.topics) {
     assert.ok(!/[^\x20-\x7e]/.test(t.title), `${t.topic} title is not plain ASCII: ${JSON.stringify(t.title)}`);
-    assert.deepStrictEqual(findMojibake(t.title), [], `${t.topic} title carries mojibake`);
+    assert.deepStrictEqual(mojibake.analyze(t.title), [], `${t.topic} title carries mojibake`);
   }
 });
 

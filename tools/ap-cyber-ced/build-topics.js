@@ -57,7 +57,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { parseTopics, SKILL_CATEGORIES, EXPECTED_TOPICS } = require('./topics-parse');
 const { pageFromHandle } = require('../../utils');
-const { findMojibake } = require('./mojibake');
+const mojibake = require('../../lib/mojibake');
 
 const ROOT = path.join(__dirname, '..', '..');
 const OUT = path.join(ROOT, 'data', 'cyber-topics.json');
@@ -185,7 +185,7 @@ function verify(doc) {
   for (const t of doc.topics) {
     if (!t.title) fail.push(`${t.topic} has no title`);
     if (/[^\x20-\x7e]/.test(t.title)) fail.push(`${t.topic} title is not plain ASCII: ${JSON.stringify(t.title)}`);
-    if (findMojibake(t.title).length) fail.push(`${t.topic} title carries mojibake: ${JSON.stringify(t.title)}`);
+    if (mojibake.analyze(t.title).length) fail.push(`${t.topic} title carries mojibake: ${JSON.stringify(t.title)}`);
     if (/TOPIC|Required Course Content|return to contents/i.test(t.title)) {
       fail.push(`${t.topic} title picked up page furniture: ${JSON.stringify(t.title)}`);
     }

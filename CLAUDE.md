@@ -692,24 +692,41 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   `--check` refuses a hand-edit. Cyber page sheets are built by
   `tools/ap-cyber-ced/generate-sheet.js` and refused by
   `tools/ap-cyber-ced/validator.js` on the seven rules named above, every one of
-  them mutation tested per rule. Read `docs/ap-cyber-taxonomy-and-validator.md`
-  before generating a cyber page, adding a topic, or adding a rule.
+  them mutation tested per rule; its rule 7 goes through `lib/mojibake.js` for the
+  same reason its rule 1 goes through `lib/cyber-ek-density.js`. Read
+  `docs/ap-cyber-taxonomy-and-validator.md` before generating a cyber page,
+  adding a topic, or adding a rule.
   The 1.3 versus 1.4 swap is what these exist for: the site calls topic 1.3
   "Wireless Security" and the CED calls it "Best Practices for Public Networks",
   because the mapping used to live in page bodies.
-- **The general mojibake detector described above now exists**, as
-  `tools/ap-cyber-ced/mojibake.js`, shipped 2026-09-03 with the taxonomy work.
-  It is the "closing the gap" paragraph built: lead set widened to every
-  character a UTF-8 lead byte C2 to F4 becomes, a cp1252 table beside latin-1,
-  chunk widths up to 4, and the same reversibility round trip as the proof. Both
-  depths, six characters, zero false positives on accented text; rule 7 of the
-  sheet validator routes through it and the mutation battery asserts single-pass
-  and double-pass separately.
-  `smoke/encoding-guard.js` and `scripts/matrixify-preflight.js` are still on
-  their own older detectors and still carry the blind spot the rule above
-  measures. They are board items 187 and 186, deliberately not changed inside
-  another change: a repo-wide detector getting stricter can turn CI red on real
-  existing damage, which is the right outcome and the wrong surprise.
+- Mojibake is detected with `lib/mojibake.js`, never with a pasted pattern. Go
+  through the module the same way EK codes go through `lib/cyber-ek-density.js`.
+  A handoff on 2026-09-03 told a future session to reject two literal strings,
+  and both were the DOUBLE corrupted form: the reported live failure is the
+  single corrupted form and contains neither. The same inversion was already
+  live in `smoke/encoding-guard.js`, which gates every pull request and reported
+  this repo clean while four tracked files were corrupted.
+  Two facts a pattern list keeps getting wrong. First, there are two flavours,
+  latin-1 and cp1252, and NEITHER subsumes the other: each reverses 27 code
+  points the other cannot, so a detector with one of them is blind to a whole
+  flavour. Second, the sequence width comes from the lead byte, and a 4 byte
+  lead means an emoji; a detector that only tries widths 3 and 2 cannot see a
+  corrupted emoji at all. Anchoring on U+00C3 is not the general rule either.
+  It is the natural next guess and it reproduces the original defect exactly,
+  because U+00C3 first appears at depth 2. `npm run smoke:encoding` generates
+  its cases rather than listing them, and the deploy gate has a mutation that
+  proves the U+00C3 rule insufficient.
+- A `.pdf` extension is not evidence of a PDF. Check for the `%PDF` header
+  before reaching for `pdftotext` or `pdfplumber`, because a CED file that is
+  really extracted text will make the parser fail and make a session conclude
+  the CED is unavailable when it is sitting right there. The extracts in
+  `tools/ap-cyber-ced/` are correctly named `.txt`; the mis-extensioned copy
+  reported on 2026-09-03 is in the Claude project, not in this repo, so this is
+  a check to run rather than a fact about a path.
+  `CED-UNIT1-EXTRACT.txt` had 65 mojibake characters repaired on 2026-09-03.
+  Its em-dashes and curly quotes are College Board's verbatim wording, so the
+  no-em-dash convention above does not apply to it: that rule governs text we
+  author, and re-flattening a quoted source is a corruption, not a fix.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
 

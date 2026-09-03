@@ -35,7 +35,7 @@ const path = require('path');
 const { generate, specDrift, specErrors, liveHandles } = require('../tools/ap-cyber-ced/generate-sheet');
 const { validate, ruleExamWeighting, ruleEmDash, ruleDeadLinks } = require('../tools/ap-cyber-ced/validator');
 const { writeCsv, parseCsv, roundTrip, HEADER, PUBLISHED_AT } = require('../tools/ap-cyber-ced/sheet-csv');
-const { findMojibake, mojibakeDepth } = require('../tools/ap-cyber-ced/mojibake');
+const mojibake = require('../lib/mojibake');
 const { corruptOnce } = require('../tools/ap-cyber-ced/validator-mutation');
 const cyberTopics = require('../lib/cyber-topics');
 
@@ -206,68 +206,72 @@ check('a row with no source spec cannot be judged, and says so', () => {
   assert.ok(out.fail.some((m) => /has no source spec/.test(m)), JSON.stringify(out.fail.slice(0, 2)));
 });
 
-// ── 4. Rule 7: the mutations have teeth ──────────────────────────────────────
-//  THE NARROW RULE, exactly as the handoff prescribed it: U+00C3 followed by a
-//  codepoint in U+0080 to U+00BF, against decoded text. Reproduced here so the
-//  comparison is a measurement rather than an argument.
-const narrowRule7 = (text) => /\u00c3[\u0080-\u00bf]/.test(text);
-
+// ── 4. Rule 7 through the validator, at both corruption depths ───────────────
+//  Detection belongs to lib/mojibake.js, and smoke/encoding-guard.js proves that
+//  module against generated fixtures at both depths and in both flavours. This
+//  suite does not re-prove it and holds no second detector: what it owns is the
+//  question that module cannot answer, which is whether RULE 7 of the sheet
+//  validator actually fires on a sheet.
+//
+//  Both depths are still asserted separately here, because that is the specific
+//  way this rule was found hollow before it shipped: a mutation built from the
+//  double-pass form goes red against a rule blind to the single-pass form, which
+//  is the one on live pages, and that green report is worse than no report.
 const BULLET = String.fromCodePoint(0x2022);
 const DART = String.fromCodePoint(0x1f3af);
 const singlePass = corruptOnce(BULLET);
 const doublePass = corruptOnce(corruptOnce(BULLET));
 
-check('the general rule catches SINGLE-pass corruption', () => {
-  assert.strictEqual(mojibakeDepth(singlePass), 1);
-  assert.strictEqual(findMojibake(singlePass)[0].means, BULLET);
+//  A sheet carrying `bad` in its lede, judged the way the generator judges one.
+function sheetWith(bad) {
+  const rows = built.rows.map((r, i) => (i === 0
+    ? { ...r, 'Body HTML': r['Body HTML'].replace('This is fixture text', `${bad} This is fixture text`) }
+    : r));
+  return validate(parseCsv(writeCsv(rows, HEADER)), { specs: SPECS, liveHandles: HANDLES });
+}
+
+check('rule 7 fires on SINGLE-pass corruption, the depth on live pages', () => {
+  const report = sheetWith(singlePass);
+  assert.ok(report.byRule.R7.length, 'the validator passed a sheet with single-pass mojibake');
+  assert.ok(report.byRule.R7[0].includes(JSON.stringify(BULLET)),
+    `the failure should name the character it really is: ${report.byRule.R7[0]}`);
 });
 
-check('the general rule catches DOUBLE-pass corruption', () => {
-  assert.strictEqual(mojibakeDepth(doublePass), 2);
-  assert.ok(findMojibake(doublePass).length);
+check('rule 7 fires on DOUBLE-pass corruption', () => {
+  assert.ok(sheetWith(doublePass).byRule.R7.length,
+    'the validator passed a sheet with double-pass mojibake');
 });
 
-check('the general rule catches a corrupted 4-byte character', () => {
-  assert.strictEqual(findMojibake(corruptOnce(DART))[0].means, DART);
+check('rule 7 fires on a corrupted 4-byte character', () => {
+  assert.ok(sheetWith(corruptOnce(DART)).byRule.R7.length,
+    'the validator passed a sheet with a corrupted emoji');
 });
 
-//  This is the hollow-rule proof. The narrow rule goes red on the double-pass
-//  mutation and green on the single-pass one, so a battery that asserted only
-//  the double-pass depth would have reported rule 7 proven while the corruption
-//  actually seen on live pages walked straight through.
-check('the PRESCRIBED narrow rule is hollow, and provably so', () => {
-  assert.ok(narrowRule7(doublePass),
-    'the narrow rule should catch the double-pass form, which is what it was written from');
-  assert.ok(!narrowRule7(singlePass),
-    'the narrow rule is supposed to MISS single-pass corruption; if it does not, this proof needs rewriting');
-  assert.ok(!narrowRule7(corruptOnce(DART)), 'and it misses a corrupted 4-byte character too');
-  //  And the general rule catches every one of them.
-  for (const bad of [singlePass, doublePass, corruptOnce(DART)]) {
-    assert.ok(findMojibake(bad).length, 'the general rule must catch what the narrow one misses');
-  }
+check('rule 7 fires on a damaged Title column, not only on the body', () => {
+  const rows = built.rows.map((r, i) => (i === 0 ? { ...r, Title: `${r.Title} ${corruptOnce(DART)}` } : r));
+  const report = validate(parseCsv(writeCsv(rows, HEADER)), { specs: SPECS, liveHandles: HANDLES });
+  assert.ok(report.byRule.R7.length, 'a damaged title is a damaged page');
 });
 
-check('mojibake of the kind in this repo\'s own CED dumps is caught', () => {
-  //  The dumps carry "AP Cybersecurity<damage>Course Framework", where the
-  //  damage is an en space and a middle dot run through cp1252 once. Built from
-  //  codepoints rather than pasted, so an editor cannot quietly repair it.
-  const damaged = `AP Cybersecurity${corruptOnce(' · ')}Course Framework`;
-  assert.ok(findMojibake(damaged).length >= 2, JSON.stringify(findMojibake(damaged)));
+check('the failure names the codec and the width, so it can be acted on', () => {
+  const m = /\((cp1252|latin1), width (\d)\)/.exec(sheetWith(corruptOnce(DART)).byRule.R7[0]);
+  assert.ok(m, 'no codec or width in the message');
+  assert.strictEqual(m[2], '4', 'a corrupted emoji is a width-4 sequence');
 });
 
-check('healthy text with accents and symbols is not flagged', () => {
-  for (const clean of [
-    'cafe naive resume', 'café naïve âme rôle straße señor',
-    '▲ ▼ → • … ✓', 'the quick brown fox, 100% of it',
-    'à la carte', 'Mañana',
-  ]) {
-    assert.deepStrictEqual(findMojibake(clean), [], JSON.stringify(clean));
-  }
-});
-
-check('the whole fixture sheet is free of mojibake at every depth', () => {
+check('a clean sheet has no mojibake in any column, at any depth', () => {
   for (const row of built.rows) {
-    for (const col of HEADER) assert.strictEqual(mojibakeDepth(String(row[col] || '')), 0, `${row.Handle} ${col}`);
+    for (const col of HEADER) {
+      assert.deepStrictEqual(mojibake.analyze(String(row[col] || '')), [], `${row.Handle} ${col}`);
+    }
+  }
+});
+
+check('healthy text with accents and symbols does not trip rule 7', () => {
+  for (const clean of ['cafe naive resume', 'caf\u00e9 na\u00efve \u00e2me r\u00f4le stra\u00dfe se\u00f1or',
+    '\u25b2 \u25bc \u2192 \u2022 \u2026 \u2713', 'the quick brown fox, 100% of it',
+    '\u00e0 la carte', 'Ma\u00f1ana']) {
+    assert.deepStrictEqual(sheetWith(clean).byRule.R7, [], JSON.stringify(clean));
   }
 });
 

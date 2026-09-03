@@ -90,7 +90,7 @@ went 908 to 932.
 | R4 | a topic title that is not the canonical one, byte for byte |
 | R5 | a Body HTML column on a row that is not a body update |
 | R6 | an internal link to a handle that does not resolve |
-| R7 | mojibake, at any corruption depth |
+| R7 | mojibake, at any corruption depth (through `lib/mojibake.js`) |
 
 Four of these have a subtlety that decides whether the rule is usable at all.
 
@@ -132,26 +132,46 @@ by U+00E2. Run it twice and those become seven, led by U+00C3.
 The handoff for this work prescribed the rule as "U+00C3 followed by a codepoint
 in U+0080 to U+00BF, against decoded text". That is the double-pass form only. It
 passes the single-pass form, which is the one that has actually been observed on
-live pages, and it passes the corruption sitting in this repo's own CED text
-dumps. `smoke/cyber-sheet-gate.js` runs the narrow rule side by side with the
-implemented one and asserts that gap, so the claim is a measurement rather than
-an argument.
+live pages, and it passed the corruption that was sitting in this repo's own CED
+text dumps until they were repaired on 2026-09-03.
 
-`tools/ap-cyber-ced/mojibake.js` is therefore structural, not a pattern list:
-map each character back to the byte a single-byte codec would have given it,
-require a UTF-8 lead byte followed by the continuation bytes it demands, decode,
-and require exactly one character back. Anything that survives that was mojibake,
-at any depth, on either codec, for 2, 3 and 4 byte characters.
+**Detection is not implemented here.** It lives in `lib/mojibake.js`, and rule 7
+formats what that module reports, for the same reason rule 1 goes through
+`lib/cyber-ek-density.js`: one module per convention, or two modules eventually
+disagree about the same page.
 
-**cp1252 is not optional.** `smoke/encoding-guard.js` tries latin-1 only, and the
-characters a bullet turns into include the euro sign, which has no latin-1 byte
-at all: the reversal is lossy, the character is skipped, and the file reports
-clean. Every byte from 0x80 to 0x9F is in that gap, and those are exactly the
-bytes that appear mid-sequence in a corrupted 3-byte character.
-`scripts/matrixify-preflight.js` has the same blind spot from the other
-direction: its pattern list is latin-1 pairs. Both are filed on the board rather
-than changed here, because a repo-wide detector getting stricter is its own
-change with its own blast radius.
+That is worth recording as more than a style choice, because for a few hours it
+was not true. This work shipped its own structural detector and `main` shipped
+one the same afternoon (PR #482), from the opposite direction: it started from
+`smoke/encoding-guard.js` reporting the repository clean while four tracked files
+were corrupted. Both arrived at the same three conclusions independently, which
+is the strongest evidence available that they are right:
+
+- the lead set has to be the whole UTF-8 lead class, not U+00C2, U+00C3, U+00E2
+- latin-1 and cp1252 each reverse 27 codepoints the other cannot, so a detector
+  carrying one flavour is blind to a whole flavour
+- the width comes from the lead byte, and a 4-byte lead means an emoji, so a
+  detector trying widths 3 and 2 cannot see a damaged emoji at all
+
+Two implementations of one convention is exactly what both were built to prevent,
+so this side converged onto `lib/mojibake.js` and deleted its own. What rule 7
+adds is the codec and the width in the failure message: "cp1252, width 4" says an
+emoji was damaged once, and "latin1, width 2" says the damage has been run over
+twice.
+
+**Who proves what, so neither suite re-proves the other's job.**
+`npm run smoke:encoding` proves the module, against generated fixtures at both
+depths in both flavours, and asserts by name that the U+00C3 anchor is
+insufficient. `npm run smoke:cybersheet` proves that RULE 7 fires on a sheet, at
+both depths, on a 4-byte character, and in the Title column as well as the body.
+The deploy gate then narrows the shared module on purpose (LEAD_MIN and LEAD_MAX
+to 0xC3, and cp1252 dropped from CODECS) and requires the single-pass assertion
+in this side's suite to go red by name. A module can be correct and a rule can
+still fail to call it.
+
+`scripts/matrixify-preflight.js` still screens sheets against three latin-1 byte
+pairs and still carries the blind spot. Board 186. Cyber sheets go through this
+validator, so they are covered; every other sheet in the repo is not.
 
 ## 5. Generating a sheet
 
@@ -225,4 +245,5 @@ pages it found misaligned).
 - **Whether a lesson reads well.** No check settles that.
 - **The 25 lesson pages against 24 topics question**, and the live
   `ap-cyber-unit-4-lesson-5` page, which tracks as lesson 4.5 and is not a CED
-  topic at all. Filed on the board.
+  topic at all. Filed on the board as 188.
+- **Every sheet in the repo that is not a cyber sheet**, for mojibake. Board 186.

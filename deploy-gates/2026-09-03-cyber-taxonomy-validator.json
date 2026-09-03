@@ -22,22 +22,22 @@
     {
       "kind": "mutation",
       "name": "rule 7 reduced to the prescribed narrow form is caught as hollow",
-      "file": "tools/ap-cyber-ced/mojibake.js",
-      "find": "  if (byte >= 0xc2 && byte <= 0xdf) return 2;\n  if (byte >= 0xe0 && byte <= 0xef) return 3;\n  if (byte >= 0xf0 && byte <= 0xf4) return 4;",
-      "replace": "  if (byte === 0xc3) return 2;",
+      "file": "lib/mojibake.js",
+      "find": "const LEAD_MIN = 0xC2;  // 0xC0 and 0xC1 are never legal UTF-8 lead bytes\nconst LEAD_MAX = 0xF4;  // 0xF5 and above are never legal either",
+      "replace": "const LEAD_MIN = 0xC3;\nconst LEAD_MAX = 0xC3;",
       "command": "npm run --silent smoke:cybersheet",
-      "expect_failure": "the general rule must catch what the narrow one misses",
-      "_why": "This is the mutation that matters most in this change. Narrowing the detector to U+00C3 plus a continuation byte is EXACTLY what the handoff prescribed, and it still catches double-pass corruption, so a battery that only asserted that depth would report rule 7 proven. The single-pass form is what lives on real pages, so the suite has to go red on the single-pass assertion specifically."
+      "expect_failure": "FAIL  rule 7 fires on SINGLE-pass corruption, the depth on live pages",
+      "_why": "Narrowing the shared detector to the U+00C3 lead is EXACTLY what the handoff prescribed for rule 7, and it still catches double-pass corruption, so a battery that only asserted that depth would report rule 7 proven. The single-pass form is what lives on real pages, so this pins the single-pass assertion by name. Detection lives in lib/mojibake.js (shipped on main the same afternoon); this mutation proves the sheet validator NOTICES when that module is narrowed, which is a different claim from smoke:encoding proving the module itself."
     },
     {
       "kind": "mutation",
       "name": "rule 7 blind to cp1252 (latin-1 only) is caught",
-      "file": "tools/ap-cyber-ced/mojibake.js",
-      "find": "for (const [b, cp] of Object.entries(CP1252_HIGH)) BYTE_OF.set(cp, Number(b));",
-      "replace": "",
+      "file": "lib/mojibake.js",
+      "find": "const CODECS = ['latin1', 'cp1252'];",
+      "replace": "const CODECS = ['latin1'];",
       "command": "npm run --silent smoke:cybersheet",
-      "expect_failure": "the general rule catches SINGLE-pass corruption",
-      "_why": "The repo's existing encoding guard is latin-1 only, and that is why it cannot see the corruption the hazard docs name: the euro sign has no latin-1 byte. Dropping the cp1252 table here reproduces that blind spot and the suite must notice."
+      "expect_failure": "FAIL  rule 7 fires on SINGLE-pass corruption, the depth on live pages",
+      "_why": "latin-1 alone cannot see the corruption the hazard docs name, because the euro sign has no latin-1 byte to encode back to. That was the shipped state of smoke/encoding-guard.js until 2026-09-03. Dropping cp1252 from the shared codec list reproduces the blind spot, and rule 7 has to go red on it."
     },
     {
       "kind": "mutation",
@@ -46,7 +46,7 @@
       "find": "const EMDASH = /\\u2014|&mdash;|&#8212;|&#x2014;/gi;",
       "replace": "const EMDASH = /\\u2014/gi;",
       "command": "npm run --silent smoke:cybersheetmutation",
-      "expect_failure": "MISSED by R3",
+      "expect_failure": "MISSED [R3]",
       "_why": "&mdash; renders as an em-dash, so a rule that only looks for the literal character passes the encoded form of the same defect. Pinned to MISSED by R3 rather than to the word MISSED, so another rule failing cannot stand in for this one."
     },
     {
@@ -66,7 +66,7 @@
       "find": "  for (const u of unbalanced) {",
       "replace": "  for (const u of []) {",
       "command": "npm run --silent smoke:cybersheetmutation",
-      "expect_failure": "MISSED by R1",
+      "expect_failure": "MISSED [R1]",
       "_why": "An unbalanced block means the EK protection map is unreliable, and an unreliable map reports codes as protected that are not. Silence there reads exactly like a clean page, which is the failure mode the density module was rewritten to make visible."
     },
     {

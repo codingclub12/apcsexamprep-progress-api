@@ -45,8 +45,10 @@ exactly the way a sound page would. Parse it, do not count it.
 import csv
 import html
 import json
+import os
 import re
 import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import urllib.request
 from html.parser import HTMLParser
 
@@ -55,9 +57,13 @@ csv.field_size_limit(sys.maxsize)
 # The four that must survive as entities, or the markup changes meaning.
 STRUCTURAL = ('&amp;', '&lt;', '&gt;', '&quot;')
 
-# Double-encoded lead sequences, written as escapes so smoke/encoding-guard.js
-# does not flag the file whose job is to catch them.
-MOJIBAKE = ['â€', 'Ã¢', 'Ã°', 'â¢']
+# Structural detection, not a pattern list. What was here was four literal
+# strings under a comment claiming they were written as escapes so the
+# repository encoding guard would not flag this file. They were literals, the
+# comment described an intention nobody implemented, and the corrected guard
+# flagged this file on its first run. None of the four could match a corrupted
+# emoji. See tools/ap-cyber-ced/mojibake.py.
+import mojibake as _mojibake
 
 VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link',
         'meta', 'source', 'track', 'wbr'}
@@ -168,10 +174,10 @@ def main():
                        '        sheet: %r\n        live : %r'
                        % (i, a[i - 80:i + 160], b[i - 80:i + 160]))
 
-        for m in MOJIBAKE:
-            if m in live:
-                bad.append('double-encoded sequence in the live body')
-                break
+        hits = _mojibake.analyze(live, cap=3)
+        if hits:
+            bad.append('double-encoded sequence in the live body: '
+                       + ', '.join('%r should be %r' % (h['chunk'], h['fixed']) for h in hits))
 
         errors, unclosed = nesting_report(live)
         if errors or unclosed:

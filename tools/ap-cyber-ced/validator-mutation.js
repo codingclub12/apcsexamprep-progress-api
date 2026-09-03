@@ -152,21 +152,27 @@ const MUTATIONS = [
   {
     rule: 'R7',
     name: 'SINGLE-pass mojibake, the depth seen on live pages',
-    expect: 'mojibake at',
+    //  Computed from the character being damaged, not typed: a pin retyped by
+    //  hand is a pin that stops matching the next time the message is reworded,
+    //  which is how these three quietly stopped proving anything when rule 7
+    //  moved onto the shared detector.
+    expect: `means ${JSON.stringify(BULLET)} (cp1252, width 3)`,
     rows: (rows) => patchBody(rows, 0, (b) =>
       b.replace('This is fixture text', `${corruptOnce(BULLET)} This is fixture text`)),
   },
   {
     rule: 'R7',
     name: 'DOUBLE-pass mojibake, the depth the first draft of the rule assumed',
-    expect: 'mojibake at',
+    expect: 'mojibake:',
     rows: (rows) => patchBody(rows, 0, (b) =>
       b.replace('This is fixture text', `${corruptOnce(corruptOnce(BULLET))} This is fixture text`)),
   },
   {
     rule: 'R7',
     name: 'SINGLE-pass mojibake of a 4-byte character, in the Title column',
-    expect: 'mojibake at',
+    //  width 4 is the assertion: a detector that only tries widths 2 and 3
+    //  cannot see a damaged emoji at all.
+    expect: 'width 4',
     rows: (rows) => rows.map((r, i) => (i === 0
       ? { ...r, Title: `${r.Title} ${corruptOnce(DART)}` }
       : r)),
@@ -267,9 +273,22 @@ function main() {
       //  case it was written for: a rule that fires on nothing. A pin that
       //  cannot match the failure it targets is the hollow-guard problem one
       //  level up.
-      const why = report.fail.length
-        ? `MISSED by ${m.rule}, only ${others.join(',')} fired`
-        : `MISSED by ${m.rule}: the validator passed a broken sheet`;
+      //  Three genuinely different outcomes, and reporting them as one line
+      //  cost this battery a confusing run: the rule fired, on a message the
+      //  mutation was not pinned to, and the report read "only  fired".
+      //  Three genuinely different outcomes, and every one of them names the
+      //  rule the same way, as `MISSED [R1]`. Reporting them with three
+      //  different phrasings is what stranded two deploy-gate pins: a gate
+      //  pinned to "MISSED by R1" cannot match "MISSED: R1 fired but not on",
+      //  so the mutation read as unproven while the battery was working
+      //  correctly. One shape, every branch.
+      const own = report.byRule[m.rule] || [];
+      const tag = `MISSED [${m.rule}]`;
+      const why = own.length
+        ? `${tag} fired, but not on ${JSON.stringify(m.expect)}: the pin is stale`
+        : report.fail.length
+          ? `${tag} did not fire; only ${others.join(',')} did`
+          : `${tag} did not fire, and the validator passed a broken sheet`;
       console.log(`  ${label.padEnd(62)}${why}`);
       for (const f of report.fail.slice(0, 2)) console.log(`      ${f.slice(0, 150)}`);
     }
