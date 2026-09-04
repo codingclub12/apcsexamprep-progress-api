@@ -50,6 +50,8 @@
     "smoke:csafrq": "node smoke/csa-frq-pages.js",
     "smoke:csp-exercise-pages": "node smoke/csp-exercise-pages.js",
     "smoke:csp-exercise-discoverability": "node smoke/csp-exercise-discoverability.js",
+    "smoke:csaslides": "node smoke/csa-slide-gate.js",
+    "smoke:csadeckdays": "python3 scripts/csa-deck-days-from-content.py --check",
     "smoke:cspslides": "node smoke/csp-slide-gate.js",
     "smoke:cspembeds": "node smoke/csp-slide-embeds.js",
     "smoke:cyberslides": "node smoke/cyber-slide-gate.js",

@@ -113,17 +113,34 @@ const grant = (teacherId, course) => db.prepare(
   grant(cspTeacher.id, 'ap-csp');
   const cspTeacherTok = signTeacherToken(cspTeacher);
 
-  console.log('1. Scope: the manifest knows exactly the 15 Unit 1 lessons, nothing else');
+  console.log('1. Scope: the manifest knows all 53 CSA lessons, and nothing else');
   {
-    ok('  15 lessons wired (Unit 1 only)', manifest.LESSON_IDS.length === 15, manifest.LESSON_IDS);
-    ok('  1-1 through 1-15 are all present', manifest.LESSON_IDS.every((l, i) => l === `1-${i + 1}`), manifest.LESSON_IDS);
+    // Was 15 (Unit 1 pilot) until 2026-09-04. Units 2-4 joined when the
+    // already-authored teacher-kit decks were wired up, so the old
+    // "2-1 is outside the pilot and 404s" assertion below had to invert. It is
+    // kept rather than deleted, because a lesson silently leaving the manifest
+    // is exactly the regression this section is for.
+    ok('  53 lessons wired (all four units)', manifest.LESSON_IDS.length === 53, manifest.LESSON_IDS.length);
+    ok('  1-1 through 1-15 are all present',
+       Array.from({ length: 15 }, (_, i) => `1-${i + 1}`).every((l) => manifest.LESSON_IDS.includes(l)),
+       manifest.LESSON_IDS);
+    ok('  38 lessons come from the authored kit content',
+       manifest.AUTHORED_LESSON_IDS.length === 38, manifest.AUTHORED_LESSON_IDS.length);
+    ok('  every authored lesson has at least one teaching day',
+       manifest.AUTHORED_LESSON_IDS.every((l) => manifest.dayCount(l) >= 1));
 
-    // Units 2-4 are real CSA units (lib/csa-nav.js has Unit 4 built) but are
-    // deliberately outside this pilot's manifest, same posture as cyber's
-    // Units 3-5: unwired means 404, not a silent empty response.
+    // These four used to 404 as "outside the pilot". They are wired now, and
+    // an entitled teacher must reach them with a 200 and an empty deck list.
     for (const l of ['2-1', '3-1', '4-1', '4-13']) {
       const r = await slides(COURSE, l, paidTeacherTok);
-      ok(`  lesson ${l} (outside the Unit 1 pilot) -> 404`, r.status === 404, r);
+      ok(`  lesson ${l} (Units 2-4, now wired) -> 200`, r.status === 200, r);
+      ok(`  lesson ${l} reports zero decks until conversion runs`,
+         r.body && Array.isArray(r.body.decks) && r.body.decks.length === 0, r.body);
+    }
+    // A lesson number no CSA unit has must still 404 rather than answer empty.
+    for (const l of ['5-1', '2-13', '3-10', '4-18']) {
+      const r = await slides(COURSE, l, paidTeacherTok);
+      ok(`  lesson ${l} does not exist in the CED -> 404`, r.status === 404, r);
     }
     const r404 = await slides(COURSE, '9-9', paidTeacherTok);
     ok('  unknown lesson -> 404', r404.status === 404, r404);
@@ -179,7 +196,7 @@ const grant = (teacherId, course) => db.prepare(
        !r.text.includes(GOOGLE_HOST), r.text);
   }
 
-  console.log('5. Every one of the 15 Unit 1 lessons is in the same honest pending state');
+  console.log('5. Every one of the 53 lessons is in the same honest pending state');
   {
     let allEmpty = true;
     let allUnlocked = true;
@@ -188,8 +205,8 @@ const grant = (teacherId, course) => db.prepare(
       if (!(r.body && r.body.locked === false)) allUnlocked = false;
       if (!(r.body && Array.isArray(r.body.decks) && r.body.decks.length === 0)) allEmpty = false;
     }
-    ok('  all 15 lessons unlock for the entitled teacher', allUnlocked);
-    ok('  all 15 lessons report zero decks (no content authored yet)', allEmpty);
+    ok('  all 53 lessons unlock for the entitled teacher', allUnlocked);
+    ok('  all 53 lessons report zero decks (nothing converted to Slides yet)', allEmpty);
   }
 
   console.log('6. An entitled STUDENT sees the identical pending state, never a teacher-only leak');
