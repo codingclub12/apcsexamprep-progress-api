@@ -4,6 +4,7 @@
   "groups": [
     {
       "id": "cyber-unit-exams",
+      "sheet": "cyber-unit-exam-noindex-pages.csv",
       "reason": "End-of-unit graded assessments for AP Cybersecurity. CLAUDE.md tier 3: unit tests plus keys are gated, noindex, premium only. Each page served all 20 questions, all four options and a full rationale per option as crawlable HTML, so the instrument and its key were public. Linked from no public nav, so noindex costs no promoted traffic. Confirmed live 2026-09-04: all five returned 200 with no robots meta.",
       "added": "2026-09-04",
       "handles": [
@@ -13,6 +14,53 @@
         "ap-cyber-unit-4-exam",
         "ap-cyber-unit-5-exam"
       ]
+    },
+    {
+      "id": "internal-and-gated",
+      "sheet": "internal-pages-noindex-pages.csv",
+      "reason": "Operator tools, editor shakedown pages, sign-in walls, and one premium delivery page holding answer keys. None carries a custom global.title_tag or an SEO-shaped page title, which is the signal that separates them from the nine pages below that were deliberately invested in. Confirmed live 2026-09-04: all seven returned 200 with no robots meta.",
+      "added": "2026-09-04",
+      "handles": [
+        "admin-tracker",
+        "ap-csa-code-editor-test",
+        "java-editor-test",
+        "cyber-dashboard",
+        "join",
+        "my-progress",
+        "ap-csp-teacher-resources"
+      ],
+      "notes": {
+        "admin-tracker": "Operator tool. Prompts for the admin key.",
+        "ap-csa-code-editor-test": "Shakedown checklist page, not student content.",
+        "java-editor-test": "Test page. Carries no meta description at all.",
+        "cyber-dashboard": "The teacher app itself: gradebook, exports, join codes, behind a sign-in. Distinct from cyber-teacher-dashboard, which is its marketing page and stays indexed.",
+        "join": "Student sign-in wall. An import deleted live content on this handle once (board 112), so no sheet touching it may carry a Body HTML column.",
+        "my-progress": "Student sign-in wall. Nothing to rank behind it.",
+        "ap-csp-teacher-resources": "Premium member content. The page itself says files marked KEY are answer keys, for your eyes only. Tier 3."
+      }
     }
-  ]
+  ],
+  "excluded": {
+    "_comment": "Named here rather than merely absent, because docs/meta-description-gaps.md lists all of these under one heading of 17 and a future session WILL find that list again. Measured live 2026-09-04.",
+    "seo-invested": {
+      "reason": "Each carries a custom global.title_tag or a written SEO page title. theme.liquid renders global.title_tag when set and otherwise appends the brand suffix, so a title that does not end in the brand is proof someone set one deliberately. Noindexing these would remove pages the site is actively competing with.",
+      "handles": {
+        "csa-command-center": "AP CSA Pacing Guide 2026-27: Full-Year Course Map",
+        "csp-command-center": "AP CSP Pacing Guide 2026-27: Full-Year Course Map",
+        "cyber-command-center": "AP Cybersecurity Pacing Guide 2026-27: Full-Year Map",
+        "ap-networking-command-center": "AP Networking Pacing Guide: Full-Year Course Map",
+        "cyber-class": "AP CS Teacher Portal: Free Class Codes & Gradebook",
+        "csa-teacher-dashboard": "AP CSA Teacher Dashboard | Free Class Gradebook",
+        "csp-teacher-dashboard": "AP CSP Teacher Dashboard | Free Class Gradebook",
+        "cyber-teacher-dashboard": "AP Cybersecurity Teacher Dashboard | Free Class Gradebook",
+        "ap-cybersecurity-supplemental-resources": "AP Cybersecurity Study Resources | Free Practice, Topics & Tools"
+      }
+    },
+    "not-a-page": {
+      "reason": "A MERGE on a handle Shopify cannot find CREATES a blank page there. This one is a 301, so the sheet would publish an empty record over a working redirect.",
+      "handles": {
+        "cyber-teacher-teaching-hub": "301 to /pages/cyber-command-center"
+      }
+    }
+  }
 }
