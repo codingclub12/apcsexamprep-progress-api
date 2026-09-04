@@ -49,6 +49,9 @@
   .err{background:rgba(208,59,59,.10);border:1px solid rgba(208,59,59,.3);border-radius:10px;padding:12px 14px;color:var(--critical)}
   .foot{color:var(--muted);font-size:12px;margin-top:18px}
 </style>
+<!-- Product analytics, on every served page by convention; smoke/posthog.js
+     asserts it. Inert unless the key is configured. See public/posthog-init.js. -->
+<script src="/posthog-init.js"></script>
 </head>
 <body>
 <div class="wrap">
