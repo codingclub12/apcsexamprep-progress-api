@@ -222,13 +222,43 @@ function main() {
     .map((k) => `  '${k}': '${ids[k]}',`).join('\n');
   const stamp = new Date().toISOString().slice(0, 10);
 
-  const next = src
-    .replace(/const SLIDE_IDS = \{[\s\S]*?\n\};/, `const SLIDE_IDS = {\n${body}\n};`)
-    .replace(/const GENERATED_AT = .*;/, `const GENERATED_AT = '${stamp}';`);
+  // The block is `const SLIDE_IDS = {};` while empty and a multi-line object
+  // once populated, so the pattern must accept both. Requiring a newline before
+  // the closing brace, as this did until 2026-09-04, matches the populated form
+  // and silently misses the empty one, which is the only form a FIRST import
+  // ever sees.
+  const BLOCK = /const SLIDE_IDS = \{[\s\S]*?\};/;
+  const withIds = src.replace(BLOCK, `const SLIDE_IDS = {\n${body}\n};`);
 
-  if (next === src) { fail('could not find the SLIDE_IDS block to replace; config file shape changed.'); return; }
+  // Check THIS replacement, not the file as a whole. The old guard compared the
+  // finished text against the original, and the date substitution below always
+  // succeeds, so the file always differed and the guard always passed. It
+  // reported "Wrote 152 ids" over a file whose map was still empty.
+  if (withIds === src) {
+    fail('the SLIDE_IDS block was not replaced; config/csa-slide-embeds.js has '
+       + 'a shape this script does not recognize.');
+    return;
+  }
+
+  const next = withIds.replace(/const GENERATED_AT = .*;/, `const GENERATED_AT = '${stamp}';`);
   fs.writeFileSync(OUT, next);
+
+  // Read the file back through the module system and ask IT how many ids it
+  // has. Writing is not evidence that writing worked: the whole reason this
+  // check exists is that the previous version printed a confident count over an
+  // empty map. Anything that goes wrong between here and a require() is exactly
+  // what a caller would hit.
+  delete require.cache[require.resolve(OUT)];
+  const reread = require(OUT);
+  const landed = typeof reread.count === 'function' ? reread.count() : -1;
+  if (landed !== got) {
+    fail(`wrote ${got} ids but the file reports ${landed} on read-back. `
+       + 'The map on disk does not match what this script believes it wrote.');
+    return;
+  }
+
   console.log(`\nWrote ${got} ids to ${path.relative(process.cwd(), OUT)} (generated ${stamp}).`);
+  console.log(`Read back through require(): ${landed} ids.`);
 }
 
 // Sort so the generated file reads in lesson order rather than string order

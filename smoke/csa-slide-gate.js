@@ -129,13 +129,28 @@ const grant = (teacherId, course) => db.prepare(
     ok('  every authored lesson has at least one teaching day',
        manifest.AUTHORED_LESSON_IDS.every((l) => manifest.dayCount(l) >= 1));
 
-    // These four used to 404 as "outside the pilot". They are wired now, and
-    // an entitled teacher must reach them with a 200 and an empty deck list.
+    // These four used to 404 as "outside the pilot", then answered 200 with an
+    // empty list while the decks were unconverted. The conversion ran on
+    // 2026-09-04, so an entitled teacher must now actually GET something: two
+    // teaching days, a teacher and a student deck each.
     for (const l of ['2-1', '3-1', '4-1', '4-13']) {
       const r = await slides(COURSE, l, paidTeacherTok);
-      ok(`  lesson ${l} (Units 2-4, now wired) -> 200`, r.status === 200, r);
-      ok(`  lesson ${l} reports zero decks until conversion runs`,
-         r.body && Array.isArray(r.body.decks) && r.body.decks.length === 0, r.body);
+      ok(`  lesson ${l} (Units 2-4) -> 200`, r.status === 200, r);
+      const decks = (r.body && r.body.decks) || [];
+      ok(`  lesson ${l} serves 4 decks (2 days x teacher/student)`,
+         decks.length === 4, decks.length);
+      ok(`  lesson ${l} every deck carries a Slides id`,
+         decks.length > 0 && decks.every((d) => d.embedUrl || d.slideId), decks);
+    }
+    // Unit 1 is the other half of the same fact and the reason this is not
+    // simply "everything works now". Its decks predate the kit builder, live
+    // only in Drive as .pptx, and its manifest day counts are placeholders, so
+    // it must still answer 200 with nothing rather than half a lesson.
+    for (const l of ['1-1', '1-8', '1-15']) {
+      const r = await slides(COURSE, l, paidTeacherTok);
+      ok(`  lesson ${l} (Unit 1, unconverted) -> 200 with no decks`,
+         r.status === 200 && r.body && Array.isArray(r.body.decks)
+         && r.body.decks.length === 0, r.body);
     }
     // A lesson number no CSA unit has must still 404 rather than answer empty.
     for (const l of ['5-1', '2-13', '3-10', '4-18']) {
@@ -183,7 +198,7 @@ const grant = (teacherId, course) => db.prepare(
     s2.close();
   }
 
-  console.log('4. Entitled teacher: locked opens, and the state is PENDING because nothing is converted');
+  console.log('4. Entitled teacher on Unit 1: unlocked, and still pending because Unit 1 is unconverted');
   {
     const r = await slides(COURSE, '1-1', paidTeacherTok);
     ok('  entitled teacher: unlocked (locked === false)', r.body && r.body.locked === false, r.body);
@@ -196,20 +211,29 @@ const grant = (teacherId, course) => db.prepare(
        !r.text.includes(GOOGLE_HOST), r.text);
   }
 
-  console.log('5. Every one of the 53 lessons is in the same honest pending state');
+  console.log('5. All 53 lessons unlock, and the 38 converted ones actually serve');
   {
-    let allEmpty = true;
     let allUnlocked = true;
+    let served = 0, empty = 0;
+    const wrongShape = [];
     for (const l of manifest.LESSON_IDS) {
       const r = await slides(COURSE, l, paidTeacherTok);
       if (!(r.body && r.body.locked === false)) allUnlocked = false;
-      if (!(r.body && Array.isArray(r.body.decks) && r.body.decks.length === 0)) allEmpty = false;
+      const decks = (r.body && r.body.decks) || [];
+      if (decks.length) served++; else empty++;
+      // A lesson serving an odd number of decks has lost one half of a
+      // teacher/student pair, which is worse than serving none: it hands a
+      // student a deck meant for the room's front.
+      if (decks.length % 2) wrongShape.push(`${l}:${decks.length}`);
     }
     ok('  all 53 lessons unlock for the entitled teacher', allUnlocked);
-    ok('  all 53 lessons report zero decks (nothing converted to Slides yet)', allEmpty);
+    ok('  the 38 authored lessons serve decks', served === 38, served);
+    ok('  the 15 Unit 1 lessons still serve none', empty === 15, empty);
+    ok('  no lesson serves half a teacher/student pair',
+       wrongShape.length === 0, wrongShape);
   }
 
-  console.log('6. An entitled STUDENT sees the identical pending state, never a teacher-only leak');
+  console.log('6. An entitled STUDENT sees the identical Unit 1 state, never a teacher-only leak');
   {
     const r = await slides(COURSE, '1-1', paidStudentTok);
     ok('  entitled student: unlocked', r.body && r.body.locked === false, r.body);
@@ -307,6 +331,37 @@ const grant = (teacherId, course) => db.prepare(
     // almost nothing, it has stopped seeing the file rather than found it clean.
     ok('  the literal scan actually read the file',
       literals.length > 40, `only ${literals.length} literals found`);
+  }
+
+  // ── THE WRITER'S PATTERN STILL MATCHES THE FILE IT WRITES ────────────────
+  //  scripts/csa-slide-embeds-from-csv.js swaps the SLIDE_IDS block by regex.
+  //  Its pattern required a newline before the closing brace, which matches a
+  //  POPULATED map and misses `const SLIDE_IDS = {};` entirely. That is the
+  //  only form a first import ever sees, so the very first real run wrote the
+  //  date, left the map empty, and printed "Wrote 152 ids" over it.
+  //
+  //  Two files have to agree here and neither imports the other, so this is
+  //  the only place that can notice when they stop.
+  {
+    const writer = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts', 'csa-slide-embeds-from-csv.js'), 'utf8');
+    const cfgPath = path.join(__dirname, '..', 'config', 'csa-slide-embeds.js');
+    const cfg = fs.readFileSync(cfgPath, 'utf8');
+
+    const m = /const BLOCK = (\/[\s\S]*?\/);\n/.exec(writer);
+    ok('the embeds writer declares its SLIDE_IDS pattern as BLOCK', !!m);
+    if (m) {
+      // eslint-disable-next-line no-eval
+      const re = eval(m[1]);
+      ok('  that pattern matches config/csa-slide-embeds.js as it stands now',
+        re.test(cfg));
+      // And against the empty form specifically, which is what a fresh repo or
+      // a reset config looks like and what the old pattern could not see.
+      ok('  and against an EMPTY map, the form a first import meets',
+        re.test('const SLIDE_IDS = {};\nconst GENERATED_AT = null;'));
+      ok('  and against a populated map',
+        re.test("const SLIDE_IDS = {\n  '2-1|1|student': 'abc',\n};\n"));
+    }
   }
 
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
