@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep &middot; Knowledge base</title>
+<style>
+  :root{color-scheme:light dark;--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink-2:#52514e;
+    --muted:#898781;--border:rgba(11,11,11,0.10);--csa:#2a78d6;--good:#0ca30c;--critical:#d03b3b;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06)}
+  @media (prefers-color-scheme:dark){:root{--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink-2:#c3c2b7;
+    --muted:#898781;--border:rgba(255,255,255,0.10);--csa:#3987e5;--critical:#e66767;--shadow:none}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--plane);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+  .wrap{display:grid;grid-template-columns:300px 1fr;gap:16px;padding:18px;max-width:1240px;margin:0 auto}
+  @media (max-width:820px){.wrap{grid-template-columns:1fr}}
+  h1{font-size:20px;margin:0 0 12px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:14px}
+  .item{padding:7px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent}
+  .item:hover{background:rgba(42,120,214,.07)}
+  .item.on{background:rgba(42,120,214,.12);border-color:rgba(42,120,214,.35)}
+  .item .t{font-size:13px;font-weight:600}
+  .item .m{font-size:11px;color:var(--muted)}
+  .pill{display:inline-block;padding:0 7px;border-radius:999px;font-size:11px;font-weight:700}
+  .draft{background:rgba(137,135,129,.18);color:var(--ink-2)}
+  .published{background:rgba(12,163,12,.14);color:var(--good)}
+  .archived{background:rgba(208,59,59,.12);color:var(--critical)}
+  label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin:10px 0 4px}
+  input,select,textarea{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--border);
+    border-radius:8px;background:var(--plane);color:var(--ink)}
+  textarea{min-height:340px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.55}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+  .row>div{flex:1;min-width:130px}
+  button{background:var(--csa);color:#fff;border:0;border-radius:8px;padding:8px 15px;font:inherit;font-weight:600;cursor:pointer}
+  button.ghost{background:var(--plane);color:var(--ink);border:1px solid var(--border)}
+  button[disabled]{opacity:.55;cursor:default}
+  .bar{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+  .msg{font-size:13px;color:var(--ink-2)}
+  .vers{font-size:12px;color:var(--muted);margin-top:10px}
+  .vers b{cursor:pointer;color:var(--csa)}
+  .hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <h1>Knowledge base</h1>
+    <div class="card">
+      <div class="row"><div>
+        <label for="filter">Show</label>
+        <select id="filter"><option value="">Everything</option><option value="draft">Drafts</option>
+          <option value="published">Published</option><option value="archived">Archived</option></select>
+      </div></div>
+      <div id="list" style="margin-top:10px"></div>
+      <div class="bar"><button class="ghost" id="new">New article</button></div>
+    </div>
+  </div>
+  <div>
+    <div class="card" id="editor"><p class="msg">Pick an article, or start a new one.</p></div>
+  </div>
+</div>
+<script src="/posthog-init.js"></script>
+<script>
+(function(){
+  'use strict';
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var listEl=document.getElementById('list'), edEl=document.getElementById('editor');
+  var current=null, meta={statuses:['draft','published','archived'],audiences:['all','teacher','student','anonymous']};
+
+  function api(path,opts){return fetch('/api/admin'+path,Object.assign({credentials:'same-origin'},opts||{}))
+    .then(function(r){return r.json().then(function(b){return {s:r.status,b:b};});});}
+
+  function load(){
+    var f=document.getElementById('filter').value;
+    api('/kb'+(f?'?status='+f:'')).then(function(o){
+      if(o.s===403||o.s===401){listEl.innerHTML='<p class="msg">Sign in at /admin/login first.</p>';return;}
+      if(o.s!==200){listEl.innerHTML='<p class="msg">'+esc((o.b&&o.b.error)||'Could not load.')+'</p>';return;}
+      meta.statuses=o.b.statuses||meta.statuses; meta.audiences=o.b.audiences||meta.audiences;
+      listEl.innerHTML=(o.b.articles||[]).map(function(a){
+        return '<div class="item'+(current&&current.id===a.id?' on':'')+'" data-id="'+esc(a.id)+'">'+
+          '<div class="t">'+esc(a.title)+'</div><div class="m">'+
+          '<span class="pill '+esc(a.status)+'">'+esc(a.status)+'</span> v'+esc(a.version)+
+          ' &middot; '+esc(a.category||'no category')+' &middot; '+esc(a.body_length)+' chars</div></div>';
+      }).join('')||'<p class="msg">Nothing here.</p>';
+      Array.prototype.forEach.call(listEl.querySelectorAll('.item'),function(el){
+        el.addEventListener('click',function(){open(el.getAttribute('data-id'));});});
+    });
+  }
+
+  function form(a,versions){
+    var opt=function(list,v){return list.map(function(x){
+      return '<option value="'+esc(x)+'"'+(x===v?' selected':'')+'>'+esc(x)+'</option>';}).join('');};
+    edEl.innerHTML=
+      '<div class="row">'+
+      '<div style="flex:2"><label for="title">Title</label><input id="title" value="'+esc(a.title||'')+'"></div>'+
+      '<div><label for="status">Status</label><select id="status">'+opt(meta.statuses,a.status||'draft')+'</select></div>'+
+      '<div><label for="audience">Audience</label><select id="audience">'+opt(meta.audiences,a.audience||'all')+'</select></div>'+
+      '</div>'+
+      '<div class="row">'+
+      '<div><label for="category">Category</label><input id="category" value="'+esc(a.category||'')+'"></div>'+
+      '<div><label for="course">Course</label><input id="course" value="'+esc(a.course||'')+'"></div>'+
+      '<div><label for="tags">Tags</label><input id="tags" value="'+esc(a.tags||'')+'"></div>'+
+      '</div>'+
+      '<label for="body">Body (markdown)</label><textarea id="body">'+esc(a.body_md||'')+'</textarea>'+
+      '<p class="hint">Site mechanics only. No lesson content, no quiz text, no answer keys: this corpus is what search reads, and it is safe because of what it does not contain. Drafts are never served to anyone.</p>'+
+      '<div class="bar"><button id="save">Save</button>'+
+      (a.slug?'<a class="msg" href="/help/'+esc(a.slug)+'" target="_blank">preview</a>':'')+
+      '<span class="msg" id="msg"></span></div>'+
+      (versions&&versions.length?'<div class="vers">History: '+versions.map(function(v){
+        return '<b data-v="'+esc(v.version)+'">v'+esc(v.version)+'</b>';}).join(', ')+
+        ' &middot; click a version to restore it</div>':'');
+    document.getElementById('save').addEventListener('click',save);
+    Array.prototype.forEach.call(edEl.querySelectorAll('.vers b'),function(el){
+      el.addEventListener('click',function(){
+        api('/kb/'+encodeURIComponent(current.id)+'/revert',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({version:Number(el.getAttribute('data-v'))})})
+          .then(function(o){ if(o.b&&o.b.article){open(o.b.article.id);load();} });
+      });});
+  }
+
+  function open(id){
+    api('/kb/'+encodeURIComponent(id)).then(function(o){
+      if(o.s!==200){edEl.innerHTML='<p class="msg">'+esc((o.b&&o.b.error)||'Not found')+'</p>';return;}
+      current=o.b.article; form(o.b.article,o.b.versions); load();
+    });
+  }
+
+  function save(){
+    var btn=document.getElementById('save'), msg=document.getElementById('msg');
+    btn.disabled=true; msg.textContent='Saving...';
+    var payload={
+      title:document.getElementById('title').value,
+      body_md:document.getElementById('body').value,
+      status:document.getElementById('status').value,
+      audience:document.getElementById('audience').value,
+      category:document.getElementById('category').value,
+      course:document.getElementById('course').value,
+      tags:document.getElementById('tags').value
+    };
+    if(current&&current.id) payload.id=current.id;
+    api('/kb',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+      .then(function(o){
+        btn.disabled=false;
+        if(o.s!==200){msg.textContent=(o.b&&o.b.error)||'Save failed';return;}
+        msg.textContent='Saved as v'+o.b.article.version;
+        current=o.b.article; load(); open(o.b.article.id);
+      }).catch(function(){btn.disabled=false;msg.textContent='Save failed';});
+  }
+
+  document.getElementById('filter').addEventListener('change',load);
+  document.getElementById('new').addEventListener('click',function(){current=null;form({},[]);});
+  load();
+})();
+</script>
+</body>
+</html>

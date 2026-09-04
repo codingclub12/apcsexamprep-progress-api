@@ -27,6 +27,7 @@
     "smoke:admingates": "node smoke/admin-gates.js",
     "smoke:assistantreport": "node smoke/assistant-report.js",
     "smoke:assistantdiag": "node smoke/assistant-diagnostics.js",
+    "smoke:assistantkb": "node smoke/assistant-kb.js",
     "smoke:quizauthoring": "node smoke/quiz-bank-authoring.js",
     "smoke:denomsafety": "node smoke/denominator-safety.js",
     "smoke:scoreeventsource": "node smoke/score-event-source.js",
@@ -225,7 +226,8 @@
     "smoke:cyberpractice": "node smoke/cyber-practice-hub.js",
     "cyber:practicehubs": "node tools/ap-cyber-ced/build-practice-hubs.js",
     "cyber:practicesheet": "node tools/ap-cyber-ced/generate-practice-sheet.js",
-    "verify:cyberpractice": "node scripts/verify-cyber-practice-live.js"
+    "verify:cyberpractice": "node scripts/verify-cyber-practice-live.js",
+    "seed:kb": "node scripts/seed-kb.js"
   },
   "keywords": [],
   "author": "",

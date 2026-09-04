@@ -1796,4 +1796,54 @@ router.get('/identity-collisions', (req, res) => {
   }
 });
 
+// ── SITE ASSISTANT: KNOWLEDGE BASE EDITOR (Phase 1) ──────────────────────────
+//  Mounted here rather than in routes/assistant.js so it inherits requireAdmin
+//  above, which is the real fail-closed gate. A second copy of that check in
+//  another file is a second thing that can be wrong.
+//
+//  The KB is why an incorrect answer about site mechanics does not need a
+//  deploy to fix. Public reads live in routes/assistant.js and serve published
+//  articles only; everything here can see drafts, which is the difference.
+const kb = require('../lib/assistant/kb');
+
+//  GET /api/admin/kb            every article, any status
+//  GET /api/admin/kb?status=    filtered
+router.get('/kb', (req, res) => {
+  try {
+    res.json({
+      articles: kb.list({ status: req.query.status, category: req.query.category }),
+      statuses: kb.STATUSES,
+      audiences: kb.AUDIENCES,
+      limits: kb.LIMITS,
+    });
+  } catch (e) {
+    console.error('admin/kb list:', e);
+    res.status(500).json({ error: 'kb list failed' });
+  }
+});
+
+//  GET /api/admin/kb/:idOrSlug  one article with its body and history
+router.get('/kb/:id', (req, res) => {
+  const a = kb.get(req.params.id);
+  if (!a) return res.status(404).json({ error: 'No such article' });
+  res.json({ article: a, versions: kb.versions(a.id) });
+});
+
+//  POST /api/admin/kb           create or update, versioned
+//  Body: { id?, slug?, title, body_md, status?, audience?, category?, course?, tags? }
+router.post('/kb', (req, res) => {
+  const out = kb.save(req.body || {}, 'tanner');
+  if (out.error) return res.status(400).json({ error: out.error });
+  res.json({ ok: true, created: !!out.created, article: out.article });
+});
+
+//  POST /api/admin/kb/:id/revert  { version }
+router.post('/kb/:id/revert', (req, res) => {
+  const a = kb.get(req.params.id);
+  if (!a) return res.status(404).json({ error: 'No such article' });
+  const out = kb.revert(a.id, (req.body || {}).version, 'tanner');
+  if (out.error) return res.status(400).json({ error: out.error });
+  res.json({ ok: true, article: out.article });
+});
+
 module.exports = router;
