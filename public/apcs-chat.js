@@ -1,4 +1,8 @@
-/* APCSExamPrep front desk widget. Phase 3, anonymous commerce pages.
+/* APCSExamPrep chat widget. Two surfaces, one file.
+ *
+ *   store and information pages  ->  the anonymous front desk (Phase 3)
+ *   /pages/my-progress           ->  the student help desk    (Phase 4)
+ *   lesson, lab, assessment      ->  nothing at all
  *
  * Served from the API rather than the theme so a copy change needs no Shopify
  * deploy, and so the script and the endpoint it posts to can never be different
@@ -37,15 +41,40 @@
 
   // Scope, mirrored from lib/assistant/scope.js. Kept deliberately simple: this
   // is a "do not render" check, and the server decides the real answer.
+  //
+  // TWO MODES, one file. On a store or information page it is the anonymous
+  // front desk; on the student's own progress page it is the student help desk,
+  // signed in, with no Turnstile and a different endpoint contract. They share
+  // a file because they share the shell, the session handling and the config
+  // check, and two copies of that would have to be kept in step by hand.
+  //
+  // Coursework pages get NEITHER. The script tag is supposed to be absent from
+  // lesson, lab and assessment templates; this is the second lock on that door.
   var COURSEWORK = /^\/pages\/(ap-csa|ap-csp|ap-cybersecurity|ap-networking|intro-java)\b/;
   var TEACHER = /^\/(admin|teacher)\b|^\/pages\/(teacher|command)/;
-  function allowedHere() {
+  var STUDENT_PORTAL = /^\/pages\/(my-progress|join|my-)/;
+
+  function surface() {
     var p = (location.pathname || '/').toLowerCase();
-    if (COURSEWORK.test(p)) return false;
-    if (TEACHER.test(p)) return false;
-    return true;
+    if (COURSEWORK.test(p)) return null;
+    if (TEACHER.test(p)) return null;
+    if (STUDENT_PORTAL.test(p)) return 'student';
+    return 'anonymous';
   }
-  if (!allowedHere()) return;
+  var MODE = surface();
+  if (!MODE) return;
+
+  // Student token keys, STUDENT FIRST. Spec section 7 is explicit about the
+  // order and about why: reading a teacher key first is what broke quiz previews
+  // for every signed-in teacher once already. On this page a teacher key is not
+  // wanted at all, so none is listed.
+  var STUDENT_KEYS = ['apcse_student', 'apcs_student_token', 'student_token', 'apcse_token', 'apcs_token'];
+  function studentToken() {
+    for (var i = 0; i < STUDENT_KEYS.length; i++) {
+      try { var v = localStorage.getItem(STUDENT_KEYS[i]); if (v) return v; } catch (e) {}
+    }
+    return null;
+  }
 
   function sessionId() {
     try {
@@ -111,6 +140,9 @@
   // person who is obviously a person never sees a puzzle; Cloudflare shows one
   // only when it wants to.
   function loadTurnstile(cb) {
+    // Anonymous only, per spec section 7. A signed-in student already cost
+    // something to create and does not get a puzzle on their own grades page.
+    if (MODE !== 'anonymous') { cb(null); return; }
     if (!cfg || !cfg.turnstile_site_key) { cb(null); return; }
     if (window.turnstile) { cb(window.turnstile); return; }
     var s = document.createElement('script');
@@ -160,9 +192,14 @@
     var thinking = bubble('desk', 'One moment...');
 
     token(function (tok) {
+      var headers = { 'Content-Type': 'application/json' };
+      if (MODE === 'student') {
+        var st = studentToken();
+        if (st) headers.Authorization = 'Bearer ' + st;
+      }
       fetch(API + '/api/assistant/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify({
           message: text,
           sessionId: sessionId(),
@@ -196,7 +233,9 @@
     panel.hidden = false;
     input.focus();
     if (!log.childNodes.length) {
-      bubble('desk', 'Hello. I can help with pricing, licensing, purchase orders and how the site works. I do not help with quiz or lesson content.');
+      bubble('desk', MODE === 'student'
+        ? 'Hi. I can tell you what is unlocked, what you have finished, and whether your work recorded. I do not help with the questions themselves, and I cannot see your marks.'
+        : 'Hello. I can help with pricing, licensing, purchase orders and how the site works. I do not help with quiz or lesson content.');
     }
   }
   function closePanel() {
@@ -216,25 +255,28 @@
     launcher = document.createElement('button');
     launcher.className = 'launch';
     launcher.type = 'button';
-    launcher.textContent = 'Questions?';
-    launcher.setAttribute('aria-label', 'Open the front desk');
+    launcher.textContent = MODE === 'student' ? 'Need help?' : 'Questions?';
+    launcher.setAttribute('aria-label', MODE === 'student' ? 'Open the help desk' : 'Open the front desk');
     root.appendChild(launcher);
 
     panel = document.createElement('div');
     panel.className = 'panel';
     panel.hidden = true;
     panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-label', 'Front desk');
+    panel.setAttribute('aria-label', MODE === 'student' ? 'Help desk' : 'Front desk');
     panel.innerHTML =
-      '<div class="head"><span>Front desk</span>' +
+      '<div class="head"><span>' + (MODE === 'student' ? 'Help desk' : 'Front desk') + '</span>' +
       '<button type="button" id="x" aria-label="Close">&#215;</button></div>' +
       '<div class="log" id="log" aria-live="polite"></div>' +
       '<div class="ts" id="ts"></div>' +
       '<div class="ask"><textarea id="q" rows="1" aria-label="Your question" ' +
-      'placeholder="Do you take purchase orders?"></textarea>' +
+      'placeholder="' + (MODE === 'student' ? 'Why is 1.2 locked?' : 'Do you take purchase orders?') + '"></textarea>' +
       '<button type="button" id="send">Ask</button></div>' +
-      '<div class="foot">We do not answer quiz or lesson questions here. ' +
-      'Nothing you type is used to train anything.</div>';
+      '<div class="foot">' + (MODE === 'student'
+        ? 'I do not help with quiz or lesson questions, and I cannot see your marks. ' +
+          'What you type here is not saved.'
+        : 'We do not answer quiz or lesson questions here. ' +
+          'Nothing you type is used to train anything.') + '</div>';
     root.appendChild(panel);
 
     log = root.getElementById('log');
@@ -260,7 +302,13 @@
     fetch(API + '/api/assistant/chat/config')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (c) {
-        if (!c || !c.anon_enabled) return;
+        if (!c) return;
+        if (MODE === 'student' && !c.student_enabled) return;
+        if (MODE === 'anonymous' && !c.anon_enabled) return;
+        // A student page with nobody signed in renders nothing. The server
+        // would refuse anyway; not drawing a box that cannot work is better
+        // than drawing one that says "sign in" on a page they are already on.
+        if (MODE === 'student' && !studentToken()) return;
         cfg = c;
         build();
       })

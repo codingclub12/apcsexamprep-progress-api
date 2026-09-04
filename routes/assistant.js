@@ -435,7 +435,15 @@ const chatUserLimit = makeRateLimit({
   windowMs: CHAT_WINDOW_MS,
   max: CHAT_MAX_PER_WINDOW,
   message: 'Too many messages. Please wait a moment before sending another.',
-  keyFn: (req) => (req.teacher ? 'teacher:' + req.teacher.id : null),
+  // Keyed on whoever the token says this is, not on the teacher alone. A school
+  // is one NAT address for students too, and a class of thirty sharing one
+  // window would throttle a lesson the moment it started.
+  keyFn: (req) => {
+    if (req.teacher) return 'teacher:' + req.teacher.id;
+    const w = req.chatWho;
+    if (w && w.userRef) return w.role + ':' + w.userRef;
+    return null;
+  },
 });
 
 // PHASE 3 adds the anonymous path, behind its OWN switch. ASSISTANT_ANON_ENABLED
@@ -452,13 +460,27 @@ function anonEnabled() {
   return v === '1' || v === 'true' || v === 'on' || v === 'yes';
 }
 
+// PHASE 4: students, behind their own switch again. Off by default, and with it
+// off a student token is refused exactly as it was in Phases 2 and 3. Each
+// audience got its own variable rather than one master switch on purpose: the
+// three populations carry different risk and the person turning them on should
+// have to say which one they mean.
+function studentEnabled() {
+  const v = String(process.env.ASSISTANT_STUDENT_ENABLED || '').trim().toLowerCase();
+  return v === '1' || v === 'true' || v === 'on' || v === 'yes';
+}
+
 // Replaces requireTeacher on this route only. Same fail-closed posture, one more
 // allowed outcome. Identity is resolved from the token, never from the body.
 function chatIdentity(req, res, next) {
   const who = identify(req);
   if (who.role === 'teacher') { req.chatWho = who; return next(); }
   if (who.role === 'student') {
-    return res.status(401).json({ error: 'The assistant is not open to student accounts yet.' });
+    if (!studentEnabled()) {
+      return res.status(401).json({ error: 'The assistant is not open to student accounts yet.' });
+    }
+    req.chatWho = who;
+    return next();
   }
   if (!anonEnabled()) {
     return res.status(401).json({ error: 'Teacher auth required' });
@@ -521,6 +543,7 @@ router.get('/api/assistant/chat/config', helpLimit, (req, res) => {
   res.set('Cache-Control', 'public, max-age=60');
   res.json({
     anon_enabled: anonEnabled(),
+    student_enabled: studentEnabled(),
     model_configured: require('../lib/assistant/provider').configured(),
     turnstile_site_key: require('../lib/assistant/turnstile').siteKey(),
     turnstile_configured: require('../lib/assistant/turnstile').configured(),
@@ -568,3 +591,4 @@ router.get('/apcs-report.js', (req, res) => {
 module.exports = router;
 module.exports.LIMITER = { WINDOW_MS, MAX_PER_WINDOW };
 module.exports.CHAT_LIMITER = { CHAT_WINDOW_MS, CHAT_MAX_PER_WINDOW, CHAT_IP_MAX };
+module.exports.SWITCHES = { anonEnabled, studentEnabled };
