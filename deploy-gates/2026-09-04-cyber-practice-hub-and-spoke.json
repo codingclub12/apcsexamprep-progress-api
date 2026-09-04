@@ -1,0 +1,99 @@
+{
+  "change": "the cyber practice layer becomes a hub and spoke, and it reaches the course",
+  "_context": [
+    "Measured against the storefront on 2026-09-04, not inferred. AP Cyber ran two",
+    "content layers that did not touch each other: ap-cybersecurity-topics linked 46",
+    "concept spokes and 0 course lessons, while the complete course guide linked 130",
+    "course pages and 13 concept spokes. The practice layer reached neither, and the",
+    "topics hub linked no practice page at all.",
+    "129 pieces of practice were live and hubbed nowhere: 27 lesson quizzes, 54",
+    "exercises, 32 labs, 5 case files, 5 unit exams, 2 projects and 4 scenario and FRQ",
+    "sets, reachable only through the course guide or by typing the URL.",
+    "This adds five per-unit practice spokes and wires them both ways. It renames,",
+    "retires and redirects nothing: the 34 MERGE rows in the 2026-09-03 page audit are",
+    "a fact about the taxonomy, not a licence to delete a page with ranking equity."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the package builds, validates and survives the Matrixify preflight",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect": "OK - 17 checks, 13 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "suite",
+      "name": "the shared topic-sheet validator still passes its own gate after the flatten fix",
+      "_why": "This change edits tools/ap-cyber-ced/validator.js, which the cyber topic sheet pipeline also uses. Its own suite must be unaffected.",
+      "command": "npm run --silent smoke:cybersheet",
+      "expect": "OK - a correct sheet passes, a bad spec is refused, and rule 7 is not hollow"
+    },
+    {
+      "kind": "suite",
+      "name": "and all seven of its rules are still independently provable red",
+      "command": "npm run --silent smoke:cybersheetmutation",
+      "expect": "all 7 rules independently proven red"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation, in another language, reaches the same graph from the SHEET",
+      "_why": "Generation is not evidence that generation worked. This shares no code with the generator: a different CSV parser, its own idea of what an anchor is, and asset expectations derived from the live sitemap rather than from config/cyber-practice-hubs.json. If the generator and its config were wrong in the same way, this is what notices.",
+      "command": "python3 scripts/cyber-practice-rederive.py smoke/fixtures/live-page-handles-2026-09-04.txt imports/2026-09-04/cyber-practice-new-pages.csv imports/2026-09-04/cyber-practice-hub-links-pages.csv",
+      "expect": "OK - 17 checks re-derived from the sheet, independently of the generator"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THE BRIEF WAS ABOUT: a practice page that carries a CED topic title",
+      "_why": "Cannibalisation is the risk this package was asked to avoid. P1 is the rule that makes intent separation mechanical rather than remembered. Break it by letting a topic title through and the suite must go red.",
+      "file": "tools/ap-cyber-ced/practice-validator.js",
+      "find": "    if (heading.includes(t.title)) {",
+      "replace": "    if (false && heading.includes(t.title)) {",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "a practice page carrying a CED topic title, the cannibalisation case"
+    },
+    {
+      "kind": "mutation",
+      "name": "the hub silently dropping a spoke it claims to link",
+      "_why": "A hub that lists four of five units looks correct on the page and leaves one unit's 20-odd practice pages orphaned. P3 checks the emitted anchors rather than the plan that produced them.",
+      "file": "tools/ap-cyber-ced/practice-validator.js",
+      "find": "    if (!have.has(e.to)) {",
+      "replace": "    if (false && !have.has(e.to)) {",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "the practice hub silently dropping a spoke it claims to link"
+    },
+    {
+      "kind": "mutation",
+      "name": "an update that rewrites a live body instead of extending it",
+      "_why": "Matrixify MERGE writes the WHOLE Body HTML, so an update that drops any of the original silently deletes live content. This repo has already lost 90 bytes a page that way while every semantic check passed. P5 checks reversibility, which is stricter than containment.",
+      "file": "tools/ap-cyber-ced/practice-validator.js",
+      "find": "    if (back !== sp.base_body) {",
+      "replace": "    if (false && back !== sp.base_body) {",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "an update that changes the live body outside its own fence"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE FLATTEN FIX, PROVED NOT HOLLOW: stop stripping style blocks and R2 goes back to reporting CSS",
+      "_why": "The fix makes rules 1 and 2 read only student-visible text. The risk of any fix that removes candidates is that it removes real ones too. Reverting it must make the suite red on the CSS false positive, and the same suite asserts R2 still fires on a fabricated weighting in visible text.",
+      "file": "tools/ap-cyber-ced/validator.js",
+      "find": "const flatten = (html) => stripInvisible(stripComments(html))",
+      "replace": "const flatten = (html) => (stripComments(html))",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "R2 does not report a CSS gradient percentage as an exam weighting"
+    },
+    {
+      "kind": "mutation",
+      "name": "a spoke that links another unit's practice",
+      "_why": "The error this shape of generator actually makes is a copy-paste that leaves unit 3's labs on the unit 4 page. Nothing throws, and the page looks right.",
+      "file": "tools/ap-cyber-ced/practice-validator.js",
+      "find": "        if (links.has(a)) {",
+      "replace": "        if (false && links.has(a)) {",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "a spoke linking an asset that belongs to another unit"
+    }
+  ],
+  "not_covered": [
+    "The pages are NOT live. Both sheets are generated, preflighted and clear to import, and a Matrixify import is a human action through the Shopify admin. So there is no live check in this gate and there cannot be one until the sheet is imported.",
+    "After the import, the live check is: the five handles return 200, ap-cybersecurity-topics contains a link to ap-cybersecurity-practice, and ap-cybersecurity-practice contains all five spoke handles. All three were FALSE before the import, so they assert something the change made true.",
+    "Whether any individual practice page is good is a judgement, not a re-check. This gate proves the graph, not the teaching."
+  ]
+}
