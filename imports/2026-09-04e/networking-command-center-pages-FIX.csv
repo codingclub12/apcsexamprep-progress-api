@@ -1,0 +1,661 @@
+﻿"Handle","Command","Body HTML"
+"ap-networking-command-center","MERGE","<!-- apcs-ccx cross-link bar (managed) --><div id=""apcs-ccx"">
+<style>#apcs-ccx{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;}#apcs-ccx *{box-sizing:border-box!important;}#apcs-ccx .ccx-bar{display:flex!important;gap:8px!important;align-items:center!important;background:#0f1f3d!important;padding:10px 14px!important;border-radius:10px!important;margin:0 0 18px!important;flex-wrap:wrap!important;}#apcs-ccx .ccx-lbl{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-right:2px!important;}#apcs-ccx a.ccx-link{display:inline-block!important;padding:7px 13px!important;border-radius:7px!important;font-size:14px!important;font-weight:600!important;line-height:1.2!important;text-decoration:none!important;color:#e5edff!important;-webkit-text-fill-color:#e5edff!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-link:hover{background:rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-active{background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:#2563eb!important;cursor:default!important;}#apcs-ccx .ccx-sep{width:1px!important;height:20px!important;background:rgba(255,255,255,.2)!important;margin:0 4px!important;}</style>
+<nav class=""ccx-bar"" aria-label=""Teacher hubs""><span class=""ccx-lbl"">Hubs</span><a class=""ccx-link"" href=""/pages/cyber-command-center"">Cyber</a><a class=""ccx-link"" href=""/pages/csp-command-center"">CSP</a><a class=""ccx-link"" href=""/pages/csa-command-center"">CSA</a><a class=""ccx-link ccx-active"" href=""/pages/ap-networking-command-center"" aria-current=""page"">Networking</a><span class=""ccx-sep""></span><a class=""ccx-link"" href=""/pages/cyber-dashboard"">Gradebook -&gt;</a></nav>
+</div>
+<link href=""https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=DM+Serif+Display&amp;display=swap"" rel=""stylesheet"">
+<style>#anet-wrap{--navy:#0f1f3d;--blue:#1a56db;--blue2:#3b82f6;--bg:#f1f5f9;--card:#fff;--line:#e2e8f0;--ink:#1e293b;--muted:#64748b;--green:#16a34a;--amber:#d97706;--red:#dc2626;--lock:#94a3b8;}
+  #anet-wrap *{box-sizing:border-box;}
+  #anet-wrap{font-family:""DM Sans"",system-ui,sans-serif;background:var(--bg)!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;margin:0;display:block;}
+  #anet-wrap .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px;}
+  #anet-wrap h1,#anet-wrap h2,#anet-wrap h3{font-family:""DM Serif Display"",serif;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin:0;}
+  #anet-wrap a{color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;text-decoration:none;}
+  #anet-wrap .tag{display:inline-block;background:#dcfce7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.04em;}
+  #anet-wrap .tag.free{background:#dcfce7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+  #anet-wrap .tag.locked{background:#f1f5f9!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+  /* status banner */
+  #anet-wrap .banner{border-radius:14px;padding:16px 18px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;}
+  #anet-wrap .banner.signin{background:linear-gradient(135deg,#0f1f3d,#1a2a4d)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  #anet-wrap .banner.signin h3,#anet-wrap .banner.signin p{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  #anet-wrap .banner.locked{background:#fffbeb!important;border:1px solid #fde68a;}
+  #anet-wrap .banner .b-txt{flex:1;min-width:220px;}
+  #anet-wrap .banner h3{font-size:16px;margin-bottom:3px;}
+  #anet-wrap .banner p{font-size:13px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin:0;line-height:1.5;}
+  #anet-wrap .banner.signin p{color:#c7d2e5!important;-webkit-text-fill-color:#c7d2e5!important;}
+  #anet-wrap .field{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px;}
+  #anet-wrap .field.stack{flex-direction:column;align-items:stretch;max-width:340px;}
+  #anet-wrap .field.stack input,#anet-wrap .field.stack .btn{width:100%;flex:none;}
+  #anet-wrap .field input{font-family:inherit;font-size:14px;padding:11px 13px;border-radius:9px;border:1px solid var(--line);min-width:170px;flex:1;background:#fff!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;}
+  #anet-wrap .field input::placeholder{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  #anet-wrap .banner.signin a{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;}
+  #anet-wrap .btn{font-family:inherit;font-size:14px;font-weight:700;padding:10px 16px;border-radius:9px;border:none;background:var(--blue)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;cursor:pointer;white-space:nowrap;}
+  #anet-wrap .btn.ghost{background:#fff!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;border:1px solid var(--line);}
+  #anet-wrap .msg{font-size:12.5px;font-weight:600;margin-top:8px;min-height:15px;}
+  #anet-wrap .msg.err{color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;}
+  #anet-wrap .msg.ok{color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;}
+  /* header */
+  #anet-wrap .tcc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 0 18px;border-bottom:1px solid var(--line);margin-bottom:22px;}
+  #anet-wrap .tcc-title{display:flex;align-items:center;gap:12px;}
+  #anet-wrap .tcc-logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#1a56db,#0f1f3d)!important;display:flex;align-items:center;justify-content:center;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:""DM Serif Display"",serif;font-size:18px;}
+  #anet-wrap .tcc-title h1{font-size:21px;}
+  #anet-wrap .tcc-title .sub{font-size:12.5px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;}
+  #anet-wrap .who{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;text-align:right;}
+  #anet-wrap .who a{font-weight:600;cursor:pointer;}
+  /* progress strip */
+  #anet-wrap .prog{background:var(--card)!important;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+  #anet-wrap .prog .bar-wrap{flex:1;min-width:200px;}
+  #anet-wrap .prog .bar-lbl{font-size:12.5px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin-bottom:6px;}
+  #anet-wrap .prog .bar-lbl b{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:""DM Serif Display"",serif;font-weight:400;}
+  #anet-wrap .prog .bar{height:9px;border-radius:999px;background:#e8eef7!important;overflow:hidden;}
+  #anet-wrap .prog .bar i{display:block;height:100%;background:linear-gradient(90deg,#1a56db,#3b82f6)!important;width:0;transition:width .3s;}
+  #anet-wrap .prog .resume{font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:#eff6ff!important;color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;cursor:pointer;}
+  /* units */
+  #anet-wrap .unit{background:var(--card)!important;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:14px;}
+  #anet-wrap .u-head{display:flex;align-items:center;gap:12px;padding:15px 18px;cursor:pointer;background:#f8fafc!important;border-bottom:1px solid transparent;}
+  #anet-wrap .unit.open .u-head{border-bottom-color:var(--line);}
+  #anet-wrap .u-num{width:34px;height:34px;flex:none;border-radius:9px;background:var(--navy)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:""DM Serif Display"",serif;font-size:16px;display:flex;align-items:center;justify-content:center;}
+  #anet-wrap .unit.lock .u-num{background:var(--lock)!important;}
+  #anet-wrap .u-head h2{font-size:17px;}
+  #anet-wrap .u-head .u-meta{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin-top:1px;}
+  #anet-wrap .u-head .u-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+  #anet-wrap .u-head .u-days{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;background:#eff6ff!important;padding:5px 10px;border-radius:999px;white-space:nowrap;}
+  #anet-wrap .u-head .caret{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;transition:transform .15s;}
+  #anet-wrap .unit.open .caret{transform:rotate(90deg);}
+  #anet-wrap .u-body{display:none;padding:6px 10px 10px;}
+  #anet-wrap .unit.open .u-body{display:block;}
+  /* lesson accordion */
+  #anet-wrap .lsn{border:1px solid var(--line);border-radius:12px;margin-top:10px;overflow:hidden;}
+  #anet-wrap .lsn:first-child{margin-top:2px;}
+  #anet-wrap .l-head{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;}
+  #anet-wrap .l-chk{width:22px;height:22px;flex:none;border-radius:6px;border:2px solid var(--line);background:#fff!important;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff!important;-webkit-text-fill-color:#fff!important;cursor:pointer;}
+  #anet-wrap .l-chk.done{background:var(--green)!important;border-color:var(--green);}
+  #anet-wrap .l-id{font-family:""DM Serif Display"",serif;font-size:14px;color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;flex:none;}
+  #anet-wrap .l-name{font-size:14px;font-weight:700;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;flex:1;min-width:0;}
+  #anet-wrap .lsn.done .l-name{color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;}
+  #anet-wrap .l-days{font-size:11px;font-weight:700;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;flex:none;}
+  #anet-wrap .l-ced{font-size:10px;font-weight:800;letter-spacing:.03em;color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:6px;padding:2px 6px;flex:none;white-space:nowrap;}
+  #anet-wrap .l-caret{font-size:11px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;transition:transform .15s;flex:none;}
+  #anet-wrap .lsn.open .l-caret{transform:rotate(90deg);}
+  #anet-wrap .l-body{display:none;padding:2px 14px 14px 48px;}
+  #anet-wrap .lsn.open .l-body{display:block;}
+  #anet-wrap .plan{font-size:12.5px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;line-height:1.55;margin:6px 0 12px;}
+  #anet-wrap .plan b{color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;}
+  #anet-wrap .mats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
+  #anet-wrap .mat{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;padding:9px 11px;border-radius:9px;border:1px solid var(--line);background:#f8fafc!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  #anet-wrap a.mat:hover{border-color:var(--blue);}
+  #anet-wrap .mat .m-ico{font-size:14px;}
+  #anet-wrap .mat.disabled{color:var(--lock)!important;-webkit-text-fill-color:var(--lock)!important;background:#f1f5f9!important;cursor:not-allowed;}
+  #anet-wrap a.mat.site{background:#ecfdf5!important;border-color:#a7f3d0;color:#065f46!important;-webkit-text-fill-color:#065f46!important;}
+  #anet-wrap a.mat.site:hover{border-color:var(--green);}
+  #anet-wrap button.mat.copy{font-family:inherit;cursor:pointer;background:#eff6ff!important;border-color:#bfdbfe;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;}
+  #anet-wrap button.mat.copy:hover{border-color:var(--blue);}
+  #anet-wrap .stu-pair{display:inline-flex;align-items:center;gap:2px;}
+  #anet-wrap button.mat.copy.mini{padding:9px 9px;}
+  #anet-wrap .mats-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin:14px 0 6px;}
+  #anet-wrap .mats-lbl:first-child{margin-top:2px;}
+  #anet-wrap .uwrap{display:flex;gap:8px;flex-wrap:wrap;margin:12px 2px 4px;}
+  #anet-wrap .uwrap .wp{font-size:12px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;background:#f1f5f9!important;border:1px solid var(--line);border-radius:9px;padding:8px 11px;}
+  #anet-wrap .unit.lock .uwrap .wp{color:var(--lock)!important;-webkit-text-fill-color:var(--lock)!important;}
+  #anet-wrap .exam .u-num{background:linear-gradient(135deg,#16a34a,#0f1f3d)!important;}
+  #anet-wrap .locknote{font-size:12.5px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;padding:10px 14px 14px 48px;}
+  #anet-wrap .u-note{display:flex;gap:9px;font-size:12.5px;line-height:1.5;color:#0f3b66!important;-webkit-text-fill-color:#0f3b66!important;background:#eff6ff!important;border:1px solid #bfdbfe;border-left:3px solid var(--blue);border-radius:9px;padding:11px 13px;margin:2px 2px 12px;}
+  #anet-wrap .u-note b{color:#0b2c4d!important;-webkit-text-fill-color:#0b2c4d!important;}
+  #anet-wrap .foot{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin-top:22px;line-height:1.65;}
+  /* header gradebook link */
+  #anet-wrap .who .navlink{display:inline-block;font-weight:600;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:#fff!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:4px;}
+  #anet-wrap .who .navlink:hover{border-color:var(--blue);}
+  /* summary stat blocks */
+  #anet-wrap .blocks{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+  #anet-wrap .block{background:var(--card)!important;border:1px solid var(--line);border-radius:14px;padding:16px;}
+  #anet-wrap .block .b-ico{font-size:20px;margin-bottom:8px;}
+  #anet-wrap .block .b-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;}
+  #anet-wrap .block .b-main{font-family:""DM Serif Display"",serif;font-size:24px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin:2px 0;}
+  #anet-wrap .block .b-note{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;line-height:1.45;}
+  /* controls strip */
+  #anet-wrap .ctrls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  #anet-wrap .ctrls .exp{font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:#fff!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;cursor:pointer;margin-left:auto;}
+  @media(max-width:820px){#anet-wrap .blocks{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){#anet-wrap .l-body{padding-left:14px;}#anet-wrap .blocks{grid-template-columns:1fr;}}</style>
+<div id=""anet-wrap"">
+  <div class=""wrap"">
+    <div class=""tcc-head"">
+      <div class=""tcc-title"">
+        <div class=""tcc-logo"">NET</div>
+        <div>
+<h1>AP Networking Command Center</h1>
+<div class=""sub"">APCSExamPrep • full-year pacing, materials &amp; your teaching progress</div>
+</div>
+      </div>
+      <div class=""who"" id=""anet-who""></div>
+    </div>
+
+    <div id=""anet-banner""></div>
+    <div id=""anet-prog"" style=""display:none;""></div>
+    <div class=""blocks"" id=""anet-blocks""></div>
+    <div class=""ctrls""><button class=""exp"" id=""anet-expand"">Expand all units</button></div>
+    <div id=""anet-units""></div>
+
+    <div class=""foot"">
+      Pilot (for use beginning 2026-2027 school year). A suggested pace in <b>45-minute periods</b>: on a block (90-minute) schedule, merge two days into one block. Adjust to your calendar and the day ranges update automatically. The 22 topics plus each unit's performance task, review, and test come to 66 periods; with the 3-period course launch that is the 69-period core. The full-year guide reaches 180 periods by adding labeled extension blocks (lab, certification crosswalk, capstone, and flex) rather than padding the core. Teacher packs open in Drive; lesson buttons open the live student pages. Your ""taught"" progress is saved on this device. <br><br>AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  ""use strict"";
+
+  /* ============================================================================
+     CONFIG  -  the only things you edit
+     ---------------------------------------------------------------------------- */
+  var CFG = {
+    // Ported verbatim from the AP CSA Command Center, which was itself ported
+    // from Cyber. Only the course data below differs; the CSS and every render
+    // function are unchanged, so all four hubs stay identical in layout and
+    // behaviour. If you restyle one of the four, restyle all four.
+    API: ""https://progress.apcsexamprep.com"",
+    COURSE: ""ap-networking"",
+    TOKEN_KEY: ""apcse_teacher_token"",
+    SIGNIN_URL: ""/pages/cyber-class"",
+    HUB_PATH: ""/pages/ap-networking-command-center"",
+    DASHBOARD_URL: ""/pages/cyber-dashboard"",
+    BUY_URL: ""/products/ap-networking-teacher-bundle"",
+
+    // Unit 1 is the free preview, matching Cyber (FREE_UNITS [1]), CSP
+    // (FREE_BI [1]) and CSA.
+    FREE_UNITS: [1],
+
+    // Per-topic material URLs ride on each lesson (sd / sg / tf), so there is
+    // no single course-wide folder to fall back to.
+    DRIVE: """",
+    SITE: ""/pages/"",
+
+    // Cumulative review and exams from pacing/README.md. The other extension
+    // blocks (lab, certification crosswalk, capstone, flex) are teacher-directed
+    // and deliberately not paced here.
+    EXAM_REVIEW_DAYS: 24
+  };
+
+  /* UNITS: title, suggested days, and the lesson folder link. Each lesson folder
+     holds the slide deck, guided notes, quiz, and supplements. To deep-link an
+     individual file, add a `mats` object to a lesson, e.g.:
+       mats: { deck:""<url>"", notes:""<url>"", quiz:""<url>"", supp:""<url>"" }
+     Leave `mats` off and all four buttons open the lesson folder.
+     For site-hosted student pages (practice / coding), add `site` links later:
+       site: { notes:""<url>"", coding:""<url>"" }                                    */
+  var D = CFG.DRIVE, P = CFG.SITE;
+  var UNITS = [
+    {n:1,name:""Managing My Connections"",frqDays:2,labDays:1,testDays:1,hub:""/pages/ap-networking-unit-1"",tests:""api:9db620e6972544fe"",lessons:[
+      {id:""1.1"",title:""Fixing What's Slowing Me Down: Troubleshooting Issues on My Device"",days:3,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1cSW87nJIj53WGW4hAFNvZhkC5_ikQjkL/view"",sg:""https://drive.google.com/file/d/1iOjcci4-BXsM4o1iMijLfboRwzF_ZUoE/view"",tf:""api:e771cddbd4cd2809""}},
+      {id:""1.2"",title:""Getting the Most Out of My Network: Connecting and Optimizing My Device"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1bQ5uBWoDE4W7fqR2xHRWiJRbAr9zbyNS/view"",sg:""https://drive.google.com/file/d/1ts7mrZKkIJlUYz4Uj5E4j9m_YVcJaGuC/view"",tf:""api:ee54b0472f404528""}},
+      {id:""1.3"",title:""What Could Go Wrong: Identifying the Security Needs of My Device"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1SGAbOqobsCW3xaNt-aYy8tHLGX9CCD-H/view"",sg:""https://drive.google.com/file/d/1kXXj8B9nj9d_nBYizexT_w8M6BxcOuNG/view"",tf:""api:ff2935d2b03ac4bc""}},
+      {id:""1.4"",title:""Locking It Down: Securing My Device"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1d-H0xWk1QfIhvAoWBvyGOQvqvtfxrxoe/view"",sg:""https://drive.google.com/file/d/1s7jhhCFZ9LpOgelsKAPlyXDNsRNlhCPz/view"",tf:""api:a95683c7069454c3""}}
+    ]},
+    {n:2,name:""Managing My Shared Connections"",frqDays:2,labDays:1,testDays:1,hub:""/pages/ap-networking-unit-2"",tests:""api:68b2fa1a1026d4bf"",lessons:[
+      {id:""2.1"",title:""Missed Connection: Troubleshooting My SOHO Network"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/176gXqAzimD7NDiv4qqO0ftUjPxapYdvy/view"",sg:""https://drive.google.com/file/d/1bqe6TyZO5aaGeW2oULmzkF0jU4v-AFlu/view"",tf:""api:7a23dc887ae4cf45""}},
+      {id:""2.2"",title:""Identification Needed: Documenting My Network"",days:3,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1sZa_enN28PGGVy_gF3w8ht7iueEXpDTl/view"",sg:""https://drive.google.com/file/d/19xQY1tjefkEPwVl_eUcPep-gUgcBB869/view"",tf:""api:3abc2a181970aa2f""}},
+      {id:""2.3"",title:""Smart Moves: Upgrading My Network"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1LN8YOJA-C-H6G_fL0W72cC5R0rXurK1r/view"",sg:""https://drive.google.com/file/d/1O_kncLv37YQzoTvHu81IN_vf_AkKMFWv/view"",tf:""api:1a80ffaa742a934b""}},
+      {id:""2.4"",title:""Leveling Up: Advanced Features on My Network"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/14aLJ6c0o0SUntl5M5n78UDfSDt3-bVWq/view"",sg:""https://drive.google.com/file/d/1svJg1HCEX-mLXwQl4csHh8IlBpV1vxhg/view"",tf:""api:27486e4c91e4c7b2""}},
+      {id:""2.5"",title:""Guarding My Network: Identifying Security Needs"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1d-wkKBhk95WPJi4Pu4kfDnWuaySc0Ymq/view"",sg:""https://drive.google.com/file/d/1u_EdQ5Dbm7bmlkEBcPMQFXXuwFMn_ZkZ/view"",tf:""api:af96350a9cbc78cc""}},
+      {id:""2.6"",title:""Applying Defense: Securing My Network"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1DLw16u9UQL1bp3Y7lygrGZBELSlcXAR1/view"",sg:""https://drive.google.com/file/d/1hAXeGm3gETN7A8F6Ex-MdzxmCKaGHjVi/view"",tf:""api:b2660e4ad6d12f41""}}
+    ]},
+    {n:3,name:""Managing Many Connections"",frqDays:2,labDays:1,testDays:1,hub:""/pages/ap-networking-unit-3"",tests:""api:611fdcb6af28c8c9"",lessons:[
+      {id:""3.1"",title:""Planning a Network: Choosing the Right Devices and Connections"",days:1,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1cCt-fEe9un-EoIPRmqO4BQ7Yo2BQovGX/view"",sg:""https://drive.google.com/file/d/1A6hJPysp7IS5hc3t9zFyXKq3DH63Fz0T/view"",tf:""api:98be12787deda921""}},
+      {id:""3.2"",title:""Creating a Network: Switching and Topologies"",days:3,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1ZwtfmASJ-cQs-OSAqwCv6S9Nt9_ILgmv/view"",sg:""https://drive.google.com/file/d/1TmdWjc6d265ifXjEAubULwcFXNvTpXmN/view"",tf:""api:e2c6dc6136015a25""}},
+      {id:""3.3"",title:""Making It Work: Connecting, Configuring, and Verifying Access"",days:3,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1wCY5cpmE-o38jCN2b60ycCNwEtCHDuF6/view"",sg:""https://drive.google.com/file/d/1R8_Es1j4GE7brwuJef3sR-EGvdn6-WRg/view"",tf:""api:02ccb09d086df53c""}},
+      {id:""3.4"",title:""Building the Boundaries: Identifying Segmentation Security"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1NYtEIZF44NI2iDLKaFzprLI-kjmcCS6_/view"",sg:""https://drive.google.com/file/d/1_W2UZMh9lKkv1870EEXwt0yomTCeEoEL/view"",tf:""api:9a9b4ba5cc80629b""}},
+      {id:""3.5"",title:""Controlling the Traffic: Firewalls and Filtering"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1kBzzY1CNb8mtW07RJ6_AjwbYvzAL6PTO/view"",sg:""https://drive.google.com/file/d/1X3E_eqyTGMqcyA-Tr9Xr7WwtCEk81mP4/view"",tf:""api:ae43e4be19e1a1f3""}},
+      {id:""3.6"",title:""Restored Connections: Documenting, Diagnosing, and Fixing a Segmented LAN"",days:3,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1TpwslE4u6KNPanEY9uzLBSO0czw65tlw/view"",sg:""https://drive.google.com/file/d/163JmvAIff6OQl1Xcun-BEmpKeg2dMtER/view"",tf:""api:5b5eb9920f3c349a""}}
+    ]},
+    {n:4,name:""Managing Our Global Connections"",frqDays:2,labDays:1,testDays:1,hub:""/pages/ap-networking-unit-4"",tests:""api:b01c50ba7fb185bb"",lessons:[
+      {id:""4.1"",title:""What Happens When Networks Break or Fail?"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1QviexP890bXgt3X_NbnTkKNDIrzCJzcv/view"",sg:""https://drive.google.com/file/d/1kNoDCN2ZwP0_lajsztZgpLMGfgotY1-i/view"",tf:""api:2c027f5581c069a7""}},
+      {id:""4.2"",title:""The Language of the Network: Protocols and the OSI and TCP/IP Models"",days:3,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1D9ia4RxSS8qHL6bEnOpzHHBdRc76Q92m/view"",sg:""https://drive.google.com/file/d/11avyb4cKNV_E1BZp4H_n7rA1Imzm7uux/view"",tf:""api:1849574ac55a57a3""}},
+      {id:""4.3"",title:""Tools of Network Analysts: Using the CLI"",days:1,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1H88fvRJ4IV6ZEVNdSYcBWemJFsnb5xy3/view"",sg:""https://drive.google.com/file/d/1gqldYumlZejeTP0V12dcJjcIgcllstYA/view"",tf:""api:858023206c5512d1""}},
+      {id:""4.4"",title:""How Data Travel the Internet: Routing, Metrics, and Paths"",days:3,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/16ZkFbuDXMY1GXIB_C1_U2ea57GfdfIK_/view"",sg:""https://drive.google.com/file/d/13A-8qwRrHFG87-afwNtnwAQmwBVDPiXF/view"",tf:""api:b838b2416bf4be1d""}},
+      {id:""4.5"",title:""From the Inside Out: Monitoring and Defending a Large Network"",days:3,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/14tQXgZTGdg56Jm9FF_7l-OJYyyCOvpAa/view"",sg:""https://drive.google.com/file/d/1y0PxQbO7q-_T5dcfeX0Owfy7-G7FS-gV/view"",tf:""api:266711c043beb3f2""}},
+      {id:""4.6"",title:""Moving Forward: Designing for Reliability and Growth"",days:2,act:0,folder:"""",mats:{sd:""https://drive.google.com/file/d/1VypayeZ94DFkvpORkywiZ2pZRBJSEXFf/view"",sg:""https://drive.google.com/file/d/1v0Kz_qAbPVA_zBUgJeJ4HKN5ZOMKvLHk/view"",tf:""api:4f6129f31a2a9f51""}}
+    ]}
+  ];
+
+  var MATERIALS = [
+    { key:""sd"", label:""Student deck"",  ico:""\uD83D\uDCCA"" },
+    { key:""sg"", label:""Student guide"", ico:""\uD83D\uDCC4"" },
+    { key:""tf"", label:""Teacher pack"",  ico:""\uD83D\uDD11"", ent:true }
+  ];
+  var ARROW = ""\u2197"";
+
+  /* Student-site activities (scenario & free-response practice). These open the
+     live lesson exercise pages on the site, not Drive. Gated as Drive materials. */
+  var SITE = [];
+
+  /* STU: the student-facing pages per lesson (lesson page / quiz / two scenarios),
+     as live-site paths. U1/U2 lesson pages use descriptive slugs; U3/U4/U5 use
+     ap-cyber-unit-N-lesson-M. U3 mirrors the site's own 6-lesson teaching order
+     (3.N -> lesson-N), which is a flow-optimized resequencing of the 5 CED topics:
+     site 3.1 & 3.2 = CED 3.1 (Vulnerabilities & Attacks); site 3.3 = CED 3.4
+     (Firewalls); site 3.4 = CED 3.3 (Segmentation); site 3.5 = CED 3.5 (Detecting);
+     site 3.6 = CED 3.2 (Managerial Controls & Wireless). */
+  var STU = {
+    ""1.1"":{page:""/pages/ap-networking-lesson-1-1-troubleshooting-slow-device""},
+    ""1.2"":{page:""/pages/ap-networking-lesson-1-2-connecting-optimizing-device""},
+    ""1.3"":{page:""/pages/ap-networking-lesson-1-3-security-needs-device""},
+    ""1.4"":{page:""/pages/ap-networking-lesson-1-4-securing-my-device""},
+    ""2.1"":{page:""/pages/ap-networking-lesson-2-1-troubleshooting-soho-network""},
+    ""2.2"":{page:""/pages/ap-networking-lesson-2-2-mac-ip-addresses""},
+    ""2.3"":{page:""/pages/ap-networking-lesson-2-3-upgrading-soho-network""},
+    ""2.4"":{page:""/pages/ap-networking-lesson-2-4-media-server-ai-network""},
+    ""2.5"":{page:""/pages/ap-networking-lesson-2-5-soho-security-vulnerabilities""},
+    ""2.6"":{page:""/pages/ap-networking-lesson-2-6-firewalls-network-segmentation""},
+    ""3.1"":{page:""/pages/ap-networking-lesson-3-1-planning-network-devices""},
+    ""3.2"":{page:""/pages/ap-networking-lesson-3-2-switching-network-topologies""},
+    ""3.3"":{page:""/pages/ap-networking-lesson-3-3-configuring-verifying-access""},
+    ""3.4"":{page:""/pages/ap-networking-lesson-3-4-network-segmentation-security""},
+    ""3.5"":{page:""/pages/ap-networking-lesson-3-5-firewalls-traffic-filtering""},
+    ""3.6"":{page:""/pages/ap-networking-lesson-3-6-troubleshooting-segmented-lan""},
+    ""4.1"":{page:""/pages/ap-networking-lesson-4-1-network-failures-cia""},
+    ""4.2"":{page:""/pages/ap-networking-lesson-4-2-protocols-osi-tcp-ip-models""},
+    ""4.3"":{page:""/pages/ap-networking-lesson-4-3-cli-commands""},
+    ""4.4"":{page:""/pages/ap-networking-lesson-4-4-routing-data-paths""},
+    ""4.5"":{page:""/pages/ap-networking-lesson-4-5-monitoring-defending-network""},
+    ""4.6"":{page:""/pages/ap-networking-lesson-4-6-ipv6-reliability-growth""}
+  };
+
+  /* ---------- tiny helpers ---------- */
+  function el(id){ return document.getElementById(id); }
+  // Replacement strings use hex escapes (\x26=&, \x3b=;) so this file is immune to
+  // HTML-entity DECODING by page editors (e.g. Shopify), which would otherwise turn
+  // """""" back into a raw quote and break this function's string literal.
+  function esc(s){ return String(s==null?"""":s).replace(/&/g,""\x26amp\x3b"").replace(/</g,""\x26lt\x3b"").replace(/>/g,""\x26gt\x3b"").replace(/""/g,""\x26quot\x3b""); }
+  function getToken(){ try{ return localStorage.getItem(CFG.TOKEN_KEY)||null; }catch(e){ return null; } }
+  function setToken(t){ try{ localStorage.setItem(CFG.TOKEN_KEY,t); }catch(e){} }
+  function clearToken(){ try{ localStorage.removeItem(CFG.TOKEN_KEY); }catch(e){} }
+
+  /* ---------- ""taught"" progress (saved on this device) ---------- */
+  var TAUGHT_KEY = ""anet_taught_"" + CFG.COURSE;
+  function loadTaught(){ try{ return JSON.parse(localStorage.getItem(TAUGHT_KEY)||""{}"")||{}; }catch(e){ return {}; } }
+  function saveTaught(o){ try{ localStorage.setItem(TAUGHT_KEY, JSON.stringify(o)); }catch(e){} }
+  var taught = loadTaught();
+
+  /* ---------- day-plan text ---------- */
+  function planText(l){
+    // Networking topics carry three checks for understanding inline plus one
+    // mastery challenge at the end, so the last period always closes on the
+    // challenge rather than a separate quiz handout.
+    if(l.days<=1) return '<b>Period 1:</b> Student deck and guided notes, the checks for understanding, then the mastery challenge.';
+    if(l.days===2) return '<b>Period 1:</b> Student deck and guided notes, with the checks for understanding. <b>Period 2:</b> Lab and independent practice, then the mastery challenge.';
+    if(l.days===3) return '<b>Period 1:</b> Student deck and guided notes. <b>Period 2:</b> Lab, focused on the traps. <b>Period 3:</b> Independent practice, then the mastery challenge.';
+    return '<b>Period 1:</b> Student deck and guided notes. <b>Period 2:</b> Lab. <b>Period '+(l.days-1)+':</b> Independent practice. <b>Period '+l.days+':</b> Review, then the mastery challenge.';
+  }
+  function lessonDays(l){ return l.days + (l.act||0); }
+  function unitDays(u){
+    var d=(u.frqDays||0)+(u.labDays||0)+(u.testDays||0);
+    u.lessons.forEach(function(l){ d+=lessonDays(l); });
+    return d;
+  }
+  function allLessons(){ var a=[]; UNITS.forEach(function(u){ u.lessons.forEach(function(l){ a.push(l); }); }); return a; }
+  function unitFree(u){ return CFG.FREE_UNITS.indexOf(u.n)>=0; }
+
+  /* ---------- sign-in / create links that round-trip back here via ?next= ---------- */
+  function authHref(hash){
+    return CFG.SIGNIN_URL + ""?next="" + encodeURIComponent(CFG.HUB_PATH) + (hash||"""");
+  }
+
+  /* ---------- course totals for the summary blocks ---------- */
+  function courseTotals(){
+    var lessons=0, days=(CFG.EXAM_REVIEW_DAYS||0);
+    UNITS.forEach(function(u){ lessons+=u.lessons.length; days+=unitDays(u); });
+    return { units:UNITS.length, lessons:lessons, days:days };
+  }
+
+  /* ---------- summary stat blocks (always shown: overview + funnel) ---------- */
+  function renderBlocks(){
+    var t=courseTotals(), weeks=Math.round(t.days/5);
+    var blocks=[
+      { ico:""\uD83D\uDCDA"", lbl:""Course"",      main:t.units+"" units"",      note:t.lessons+"" topics, fully sequenced with materials"" },
+      { ico:""\uD83D\uDCC5"", lbl:""Pacing"",      main:t.days+"" periods"",     note:""core pace in 45-min periods; 180 with extension blocks"" },
+      { ico:""\uD83C\uDF93"", lbl:""Start Here"",  main:""Topic 1.1"",           note:""Troubleshooting Issues on My Device"" },
+      { ico:""\uD83D\uDCDD"", lbl:""Every Topic"", main:""4 auto-graded items"", note:""3 checks for understanding plus 1 mastery challenge"" }
+    ];
+    el(""anet-blocks"").innerHTML = blocks.map(function(b){
+      return '<div class=""block""><div class=""b-ico"">'+b.ico+'</div><div class=""b-lbl"">'+b.lbl+'</div>'
+        + '<div class=""b-main"">'+b.main+'</div><div class=""b-note"">'+b.note+'</div></div>';
+    }).join("""");
+  }
+
+  /* ============================================================================
+     STATE:  entitled = full access; else free units only.
+     ---------------------------------------------------------------------------- */
+  var STATE = { token:getToken(), entitled:false, teacher:null, checked:false };
+
+  function apiGate(cb){
+    if(!STATE.token){ cb(false); return; }
+    fetch(CFG.API+""/api/gate/check?course=""+encodeURIComponent(CFG.COURSE),
+      { headers:{ Authorization:""Bearer ""+STATE.token } })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ cb(!!(d && d.entitled && d.role===""teacher""), d); })
+      .catch(function(){ cb(false); });
+  }
+  // Returns the teacher object (unwrapped from { teacher }) plus an HTTP status.
+  // status 401 = the saved token is expired/invalid, so the caller drops it and
+  // shows the sign-in form instead of a dead-end ""redeem a code"" box.
+  function apiMe(cb){
+    if(!STATE.token){ cb(null, 0); return; }
+    fetch(CFG.API+""/api/teacher/me"", { headers:{ Authorization:""Bearer ""+STATE.token } })
+      .then(function(r){
+        if(r.status===401){ cb(null, 401); return; }
+        if(!r.ok){ cb(null, r.status); return; }
+        return r.json().then(function(j){ cb(j && j.teacher ? j.teacher : j, 200); });
+      })
+      .catch(function(){ cb(null, -1); });
+  }
+
+  /* ---------- render the top banner + who ---------- */
+  function renderWho(){
+    var w=el(""anet-who"");
+    var grade = '<a class=""navlink"" href=""'+esc(CFG.DASHBOARD_URL)+'"">\uD83D\uDCCA Gradebook</a><br>';
+    if(STATE.teacher){
+      w.innerHTML = grade + 'Signed in as <b>'+esc(STATE.teacher.email)+'</b>  <a id=""anet-out"">Sign out</a>';
+      var o=el(""anet-out""); if(o) o.onclick=function(){ clearToken(); location.reload(); };
+    } else { w.innerHTML = grade; }
+  }
+
+  function renderBanner(){
+    var b=el(""anet-banner"");
+    if(STATE.entitled){ b.innerHTML=""""; b.style.display=""none""; return; }
+    b.style.display="""";
+    if(!STATE.token){
+      // signed out: offer inline sign-in + link to the central sign-in page
+      b.className=""banner signin"";
+      b.innerHTML =
+        '<div class=""b-txt""><h3>Sign in to open your full course</h3>'
+        + '<p>Unit 1 is free to preview below. Sign in with the teacher email and password you use across APCSExamPrep to unlock Units 2 to 4.</p>'
+        + '<div class=""field stack""><input id=""anet-email"" type=""email"" placeholder=""Email"" autocomplete=""username"" />'
+        + '<input id=""anet-pass"" type=""password"" placeholder=""Password"" autocomplete=""current-password"" />'
+        + '<button class=""btn"" id=""anet-login"">Sign in</button></div>'
+        + '<div class=""msg err"" id=""anet-lmsg""></div>'
+        + '<p style=""margin-top:6px;font-size:12.5px;"">New here? <a href=""'+esc(authHref(""#create""))+'"">Create your teacher account</a>'
+        + '  \u00B7  Prefer the main page? <a href=""'+esc(authHref(""#signin""))+'"">Sign in there</a>.</p></div>';
+      wireLogin();
+    } else {
+      // signed in but not entitled: buy or redeem a code
+      b.className=""banner locked"";
+      b.innerHTML =
+        '<div class=""b-txt""><h3>You are signed in, but this course is not on your account yet</h3>'
+        + '<p>Unit 1 is free below. Purchase the AP Networking teacher bundle, or redeem the access code from your welcome email, to unlock Units 2 to 4.</p>'
+        + '<div class=""field""><a class=""btn"" href=""'+esc(CFG.BUY_URL)+'"">Get the bundle</a>'
+        + '<input id=""anet-code"" type=""text"" placeholder=""Access code"" />'
+        + '<button class=""btn ghost"" id=""anet-redeem"">Redeem code</button></div>'
+        + '<div class=""msg"" id=""anet-rmsg""></div></div>';
+      wireRedeem();
+    }
+  }
+
+  function wireLogin(){
+    var btn=el(""anet-login""); if(!btn) return;
+    function go(){
+      var email=(el(""anet-email"").value||"""").trim(), pass=el(""anet-pass"").value||"""";
+      var m=el(""anet-lmsg""); m.textContent=""Signing in...""; m.className=""msg"";
+      fetch(CFG.API+""/api/teacher/login"",{ method:""POST"", headers:{""Content-Type"":""application/json""},
+        body:JSON.stringify({ email:email, password:pass }) })
+        .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j }; }); })
+        .then(function(res){
+          if(res.ok && res.j && res.j.token){ setToken(res.j.token); location.reload(); }
+          else { m.className=""msg err""; m.textContent=(res.j && res.j.error) || ""Sign in failed. Check your email and password.""; }
+        }).catch(function(){ m.className=""msg err""; m.textContent=""Could not reach the sign-in service. Try again.""; });
+    }
+    btn.onclick=go;
+    el(""anet-pass"").addEventListener(""keydown"",function(e){ if(e.key===""Enter"") go(); });
+  }
+
+  function wireRedeem(){
+    var btn=el(""anet-redeem""); if(!btn) return;
+    btn.onclick=function(){
+      var code=(el(""anet-code"").value||"""").trim(), m=el(""anet-rmsg"");
+      if(!code){ m.className=""msg err""; m.textContent=""Enter your access code.""; return; }
+      m.className=""msg""; m.textContent=""Checking..."";
+      fetch(CFG.API+""/api/teacher/redeem"",{ method:""POST"",
+        headers:{""Content-Type"":""application/json"", Authorization:""Bearer ""+STATE.token },
+        body:JSON.stringify({ code:code }) })
+        .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j }; }); })
+        .then(function(res){
+          if(res.ok && res.j && res.j.entitled){ m.className=""msg ok""; m.textContent=""Unlocked! Loading your course...""; setTimeout(function(){ location.reload(); },700); }
+          else { m.className=""msg err""; m.textContent=(res.j && res.j.error) || ""That code did not work.""; }
+        }).catch(function(){ m.className=""msg err""; m.textContent=""Could not reach the service. Try again.""; });
+    };
+  }
+
+  /* ---------- progress strip (entitled only) ---------- */
+  function renderProgress(){
+    var p=el(""anet-prog"");
+    if(!STATE.entitled){ p.style.display=""none""; return; }
+    p.style.display="""";
+    var lessons=allLessons(), done=lessons.filter(function(l){ return taught[l.id]; }).length;
+    var pct=lessons.length?Math.round(done/lessons.length*100):0;
+    var next=lessons.filter(function(l){ return !taught[l.id]; })[0];
+    p.className=""prog"";
+    p.innerHTML =
+      '<div class=""bar-wrap""><div class=""bar-lbl"">You have taught <b>'+done+'</b> of <b>'+lessons.length+'</b> lessons</div>'
+      + '<div class=""bar""><i style=""width:'+pct+'%""></i></div></div>'
+      + (next ? '<button class=""resume"" id=""anet-resume"">Continue \u2192 Lesson '+esc(next.id)+'</button>'
+              : '<button class=""resume"" id=""anet-resume"">All lessons taught \uD83C\uDF89</button>');
+    var r=el(""anet-resume"");
+    if(r && next) r.onclick=function(){ openTo(next.id); };
+  }
+
+  /* ---------- units + lessons ---------- */
+  var expandAll=false;
+  function wireExpand(){
+    var b=el(""anet-expand""); if(!b) return;
+    b.onclick=function(){
+      expandAll=!expandAll;
+      b.textContent = expandAll ? ""Collapse units"" : ""Expand all units"";
+      renderUnits();
+    };
+  }
+
+  function matButton(l, mat, unlocked){
+    var url = (l.mats && l.mats[mat.key]) ? l.mats[mat.key] : l.folder;
+    // Student decks and guides are answer-stripped and ride with the free
+    // preview. Teacher packs carry the answer keys, so they need a real
+    // entitlement, not merely an unlocked unit.
+    var allowed = mat.ent ? STATE.entitled : unlocked;
+    if(!allowed || !url){
+      return '<span class=""mat disabled""><span class=""m-ico"">'+mat.ico+'</span>'+mat.label+'</span>';
+    }
+    if(url.indexOf('api:') === 0){
+      return '<a class=""mat"" href=""#"" data-file=""'+esc(url.slice(4))+'""><span class=""m-ico"">'+mat.ico+'</span>'+mat.label+' '+ARROW+'</a>';
+    }
+    return '<a class=""mat"" href=""'+esc(url)+'"" target=""_blank"" rel=""noopener""><span class=""m-ico"">'+mat.ico+'</span>'+mat.label+' '+ARROW+'</a>';
+  }
+
+  /* Teacher materials are no longer URLs in this page. They are ids resolved by
+     the API against the signed in teacher's entitlement, because printing the
+     URLs here is what put the whole paid bundle one anonymous request away.
+     One delegated listener rather than one per link: the unit list is rebuilt
+     on every expand and per-link handlers would accumulate. */
+  document.addEventListener('click', function(ev){
+    var a = ev.target && ev.target.closest ? ev.target.closest('a[data-file]') : null;
+    if(!a) return;
+    ev.preventDefault();
+    if(a.getAttribute('data-busy')) return;
+    a.setAttribute('data-busy','1');
+    var tok = null;
+    try { tok = localStorage.getItem('apcse_teacher_token'); } catch(e){ tok = null; }
+    fetch('https://progress.apcsexamprep.com/api/files/' + encodeURIComponent(a.getAttribute('data-file')) + '?as=json', {
+      headers: tok ? { Authorization: 'Bearer ' + tok } : {}
+    }).then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){
+        if(j && j.url){ window.open(j.url, '_blank', 'noopener'); }
+        else { alert('Sign in as the teacher who purchased this bundle to open these files.'); }
+      })
+      .catch(function(){ alert('Could not open that file. Please try again.'); })
+      .then(function(){ a.removeAttribute('data-busy'); });
+  });
+
+
+  function siteButton(l, s, unlocked){
+    var url = l.site && l.site[s.key];
+    if(!url) return '';
+    if(!unlocked) return '<span class=""mat disabled""><span class=""m-ico"">'+s.ico+'</span>'+s.label+'</span>';
+    return '<a class=""mat site"" href=""'+esc(url)+'"" target=""_blank"" rel=""noopener""><span class=""m-ico"">'+s.ico+'</span>'+s.label+' '+ARROW+'</a>';
+  }
+
+  /* ---------- ""copy student link"" (assign to students) ----------
+     The reliable per-lesson student destination in Cyber is the quiz page
+     (deterministic handle). To copy a different page instead, change studentPath. */
+  function studentSection(l, unlocked){
+    var s = STU[l.id]; if(!s) return '';
+    var dests = [ ['page','Lesson page'] ];
+    var out = dests.map(function(d){
+      var url = s[d[0]]; if(!url) return '';
+      if(!unlocked) return '<span class=""mat disabled"">'+d[1]+'</span>';
+      return '<span class=""stu-pair""><a class=""mat site"" href=""'+esc(url)+'"" target=""_blank"" rel=""noopener"">'+d[1]+' '+ARROW+'</a>'
+        + '<button class=""mat copy mini"" title=""Copy this link to assign to students"" data-copy=""'+esc(url)+'"">\uD83D\uDCCB</button></span>';
+    }).join('');
+    if(!out) return '';
+    return '<div class=""mats-lbl"">Student pages \u00B7 open, or \uD83D\uDCCB copy the link to assign</div><div class=""mats"">'+out+'</div>';
+  }
+  function fallbackCopy(text){
+    try{ var ta=document.createElement(""textarea""); ta.value=text; ta.style.position=""fixed""; ta.style.opacity=""0"";
+      document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand(""copy""); document.body.removeChild(ta); }catch(e){}
+  }
+
+  function lessonHTML(l, unlocked){
+    var done = !!taught[l.id];
+    var mats = MATERIALS.map(function(m){ return matButton(l,m,unlocked); }).join("""");
+    var td = lessonDays(l);
+    var chk = unlocked
+      ? '<div class=""l-chk'+(done?' done':'')+'"" data-chk=""'+esc(l.id)+'"" title=""Mark taught"">'+(done?""\u2713"":"""")+'</div>'
+      : '<div class=""l-chk"" style=""opacity:.4"" title=""Sign in to track"">\uD83D\uDD12</div>';
+    return ''
+      + '<div class=""lsn'+(done?' done':'')+'"" data-lsn=""'+esc(l.id)+'"">'
+      +   '<div class=""l-head"">'+chk
+      +     '<span class=""l-id"">'+esc(l.id)+'</span><span class=""l-name"">'+esc(l.title)+'</span>'
+      +     (l.ced ? '<span class=""l-ced"">'+esc(l.ced)+'</span>' : '')
+      +     '<span class=""l-days"">'+td+(td===1?' day':' days')+'</span><span class=""l-caret"">\u25B6</span>'
+      +   '</div>'
+      +   '<div class=""l-body""><div class=""plan"">'+planText(l)+'</div>'
+      +     '<div class=""mats-lbl"">Teacher materials</div><div class=""mats"">'+mats+'</div>'
+      +     studentSection(l, unlocked)
+      +   '</div>'
+      + '</div>';
+  }
+
+  function renderUnits(){
+    var out="""", runningDay=1;
+    UNITS.forEach(function(u,ui){
+      var unlocked = STATE.entitled || unitFree(u);
+      var uStart=runningDay, uEnd=runningDay+unitDays(u)-1; runningDay=uEnd+1;
+      var lessons = u.lessons.map(function(l){ return lessonHTML(l, unlocked); }).join("""");
+      var wrap = '<div class=""uwrap"">'
+        + '<span class=""wp"">\uD83D\uDCDD Performance task \u00B7 '+(u.frqDays||0)+'d</span>'
+        + '<span class=""wp"">\uD83D\uDD04 Unit review \u00B7 '+(u.labDays||0)+'d</span>'
+        + '<span class=""wp"">\u2705 Unit test \u00B7 '+(u.testDays||0)+'d</span>'
+        + (u.hub
+            ? '<a class=""mat site"" href=""'+esc(u.hub)+'"" target=""_blank"" rel=""noopener"">'
+              + '<span class=""m-ico"">\uD83C\uDFE0</span>Unit hub '+ARROW+'</a>'
+            : '')
+        + (STATE.entitled && u.tests
+            ? '<a class=""mat"" href=""'+(String(u.tests).indexOf('api:')===0 ? '#"" data-file=""'+esc(String(u.tests).slice(4)) : esc(u.tests)+'"" target=""_blank"" rel=""noopener')+'"">'
+              + '<span class=""m-ico"">\uD83D\uDCE6</span>Unit test and performance task '+ARROW+'</a>'
+            : '')
+        + '</div>';
+      var noteHTML = u.note ? '<div class=""u-note""><span>\uD83D\uDCCC</span><span>'+u.note+'</span></div>' : '';
+      var body = noteHTML + lessons + wrap
+        + (unlocked ? '' : '<div class=""locknote"">\uD83D\uDD12 Units 2 to 4 unlock with the AP Networking teacher bundle. Unit 1 is free to preview.</div>');
+      var tag = unitFree(u) ? '<span class=""tag free"">FREE PREVIEW</span>'
+              : (unlocked ? '' : '<span class=""tag locked"">\uD83D\uDD12 PREMIUM</span>');
+      out += ''
+        + '<div class=""unit'+(unlocked?"""":"" lock"")+((ui===0||expandAll)?"" open"":"""")+'"" data-u=""'+ui+'"">'
+        +   '<div class=""u-head"">'
+        +     '<div class=""u-num"">'+u.n+'</div>'
+        +     '<div><h2>'+esc(u.name)+'</h2><div class=""u-meta"">'+u.lessons.length+' topics + performance task, review & test \u2022 Days '+uStart+'\u2013'+uEnd+'</div></div>'
+        +     '<div class=""u-right"">'+tag+'<div class=""u-days"">'+unitDays(u)+' days</div><div class=""caret"">\u25B6</div></div>'
+        +   '</div>'
+        +   '<div class=""u-body"">'+body+'</div>'
+        + '</div>';
+    });
+    // Year-end cumulative AP exam review + practice block.
+    var erd = CFG.EXAM_REVIEW_DAYS||0;
+    if(erd>0){
+      var eStart=runningDay, eEnd=runningDay+erd-1; runningDay=eEnd+1;
+      out += ''
+        + '<div class=""unit exam'+(STATE.entitled?"""":"" lock"")+'"">'
+        +   '<div class=""u-head"" style=""cursor:default"">'
+        +     '<div class=""u-num"">\uD83C\uDF93</div>'
+        +     '<div><h2>Cumulative Review & Exams</h2><div class=""u-meta"">Cumulative review across all four units \u2022 Days '+eStart+'\u2013'+eEnd+'</div></div>'
+        +     '<div class=""u-right""><div class=""u-days"">'+erd+' days</div></div>'
+        +   '</div>'
+        + '</div>';
+    }
+    el(""anet-units"").innerHTML=out;
+    wireAccordions();
+  }
+
+  function wireAccordions(){
+    document.querySelectorAll(""#anet-units .u-head"").forEach(function(h){
+      h.onclick=function(){ h.parentNode.classList.toggle(""open""); };
+    });
+    document.querySelectorAll(""#anet-units .mat.copy[data-copy]"").forEach(function(b){
+      b.onclick=function(e){
+        e.stopPropagation();
+        var url = location.origin + b.getAttribute(""data-copy"");
+        var orig = b.innerHTML;
+        var done = function(){ b.innerHTML='<span class=""m-ico"">\u2713</span>Copied!'; setTimeout(function(){ b.innerHTML=orig; }, 1300); };
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(url).then(done, function(){ fallbackCopy(url); done(); });
+        } else { fallbackCopy(url); done(); }
+      };
+    });
+    document.querySelectorAll(""#anet-units .l-head"").forEach(function(h){
+      h.onclick=function(e){
+        if(e.target && e.target.getAttribute && e.target.getAttribute(""data-chk"")) return; // let checkbox handle itself
+        h.parentNode.classList.toggle(""open"");
+      };
+    });
+    document.querySelectorAll(""#anet-units .l-chk[data-chk]"").forEach(function(c){
+      c.onclick=function(e){
+        e.stopPropagation();
+        var id=c.getAttribute(""data-chk"");
+        taught[id] = !taught[id];
+        if(!taught[id]) delete taught[id];
+        saveTaught(taught);
+        renderUnits(); renderProgress();
+        openTo(id, true); // keep it open after re-render
+      };
+    });
+  }
+
+  // open a specific lesson (and its unit), optionally without scrolling
+  function openTo(lessonId, noScroll){
+    UNITS.forEach(function(u,ui){
+      if(u.lessons.some(function(l){ return l.id===lessonId; })){
+        var unitEl=document.querySelector('#anet-units .unit[data-u=""'+ui+'""]');
+        if(unitEl) unitEl.classList.add(""open"");
+      }
+    });
+    var lsnEl=document.querySelector('#anet-units .lsn[data-lsn=""'+lessonId+'""]');
+    if(lsnEl){ lsnEl.classList.add(""open""); if(!noScroll) lsnEl.scrollIntoView({behavior:""smooth"",block:""center""}); }
+  }
+
+  /* ============================================================================
+     BOOT
+     ---------------------------------------------------------------------------- */
+  function paint(){ renderWho(); renderBanner(); renderBlocks(); renderProgress(); renderUnits(); }
+
+  function boot(){
+    wireExpand();
+    paint(); // instant render: free preview + ""checking"" state
+    if(!STATE.token) return;
+    // Validate the saved session first. A 401 means the token is expired/invalid:
+    // drop it so the teacher gets the sign-in form, not a dead-end redeem box.
+    apiMe(function(me, status){
+      if(status===401){
+        clearToken(); STATE.token=null; STATE.teacher=null; STATE.entitled=false; paint(); return;
+      }
+      if(me) STATE.teacher=me;
+      apiGate(function(entitled){ STATE.entitled=entitled; paint(); });
+    });
+  }
+  boot();
+})();
+</script>"
