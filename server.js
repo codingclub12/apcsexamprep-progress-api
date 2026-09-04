@@ -422,6 +422,13 @@ app.get('/admin/denominators', (req, res) => {
 // session the login page is served, so neither the markup nor its data-fetching
 // JS reaches an unauthenticated visitor. The page never embeds TODO_KEY in any
 // form; its fetches ride the httpOnly cookie.
+// Knowledge base editor. Same gate as every other admin page: the session
+// cookie or the login screen, never the raw key on a URL.
+app.get('/admin/kb', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.sendFile(path.join(__dirname, 'public', adminSession.isAuthed(req) ? 'kb.html' : 'login.html'));
+});
+
 app.get('/admin/command', (req, res) => {
   res.set('Cache-Control', 'no-store');
   const file = adminSession.isAuthed(req) ? 'command.html' : 'login.html';

@@ -607,6 +607,84 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_chat_esc_user ON chat_escalations(user_ref);
   -- The per-day volume cap counts today's rows on every public POST.
   CREATE INDEX IF NOT EXISTS idx_chat_esc_created ON chat_escalations(created_at);
+
+  -- ── SITE ASSISTANT: KNOWLEDGE BASE (Phase 1) ───────────────────────────────
+  --  Answers about how the site WORKS, written by a human, served without a
+  --  model. The reason it lives in the database rather than in the repo is the
+  --  one the spec gives: correcting a wrong answer must not require a deploy.
+  --
+  --  This is also the assistant's entire retrieval corpus (spec layer 1). It
+  --  contains site mechanics and nothing else: no lesson bodies, no quiz text,
+  --  no answer keys. Keeping it that way is what makes retrieval safe to run
+  --  next to an assessment product.
+  CREATE TABLE IF NOT EXISTS kb_articles (
+    id         TEXT PRIMARY KEY,
+    slug       TEXT NOT NULL UNIQUE,
+    title      TEXT NOT NULL,
+    body_md    TEXT NOT NULL,
+    audience   TEXT NOT NULL DEFAULT 'all',    -- all | teacher | student | anonymous
+    category   TEXT,                           -- the escalation taxonomy, so the
+                                               -- digest can group answers against
+                                               -- the same schema as the questions
+    course     TEXT,
+    tags       TEXT,
+    status     TEXT NOT NULL DEFAULT 'draft',  -- draft | published | archived
+    version    INTEGER NOT NULL DEFAULT 1,
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_by TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_kb_status ON kb_articles(status, category);
+
+  -- Every save keeps the version it replaced, so a wrong edit is one revert away
+  -- rather than a restore from backup.
+  CREATE TABLE IF NOT EXISTS kb_article_versions (
+    id         TEXT PRIMARY KEY,
+    article_id TEXT NOT NULL REFERENCES kb_articles(id) ON DELETE CASCADE,
+    version    INTEGER NOT NULL,
+    title      TEXT NOT NULL,
+    body_md    TEXT NOT NULL,
+    status     TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    created_by TEXT,
+    UNIQUE (article_id, version)
+  );
+  CREATE INDEX IF NOT EXISTS idx_kb_versions_article ON kb_article_versions(article_id, version DESC);
+
+  -- ── THE PART THE FIRST DRAFT GOT WRONG ─────────────────────────────────────
+  --  This is an EXTERNAL CONTENT fts5 table: it stores no copy of the text and
+  --  reads through to kb_articles by rowid. That is the right shape, and it has
+  --  one consequence that is easy to miss and silent when missed: sqlite does
+  --  NOT maintain it. Without the three triggers below the index simply stops
+  --  matching reality, and the failure mode is a search that quietly returns
+  --  fewer results rather than an error anyone sees.
+  --
+  --  docs/site-assistant-review.md flagged exactly this in the v1 handoff, which
+  --  specified content='kb_articles' and no triggers.
+  --
+  --  The 'delete' command rows are how external-content fts5 is told to forget a
+  --  row, and they must carry the OLD values, which is why update is a delete
+  --  followed by an insert rather than an update.
+  CREATE VIRTUAL TABLE IF NOT EXISTS kb_fts USING fts5(
+    title, body_md, tags,
+    content='kb_articles', content_rowid='rowid'
+  );
+
+  CREATE TRIGGER IF NOT EXISTS kb_ai AFTER INSERT ON kb_articles BEGIN
+    INSERT INTO kb_fts(rowid, title, body_md, tags)
+    VALUES (new.rowid, new.title, new.body_md, new.tags);
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS kb_ad AFTER DELETE ON kb_articles BEGIN
+    INSERT INTO kb_fts(kb_fts, rowid, title, body_md, tags)
+    VALUES ('delete', old.rowid, old.title, old.body_md, old.tags);
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS kb_au AFTER UPDATE ON kb_articles BEGIN
+    INSERT INTO kb_fts(kb_fts, rowid, title, body_md, tags)
+    VALUES ('delete', old.rowid, old.title, old.body_md, old.tags);
+    INSERT INTO kb_fts(rowid, title, body_md, tags)
+    VALUES (new.rowid, new.title, new.body_md, new.tags);
+  END;
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists

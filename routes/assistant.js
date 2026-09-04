@@ -11,6 +11,8 @@
 //    GET  /apcs-report.js                 the affordance itself
 //    GET  /api/assistant/diagnostics      teacher auth, "check my account"
 //    GET  /teacher/diagnostics            the panel that renders it
+//    GET  /api/assistant/help             public search over published articles
+//    GET  /help                           the help page that renders it
 //
 //  No model, no chat, no transcripts.
 //
@@ -50,6 +52,7 @@ const { verifyStudentToken, pageFromHandle } = require('../utils');
 const { pageScope } = require('../lib/assistant/scope');
 const report = require('../lib/assistant/report');
 const reads = require('../lib/assistant/reads');
+const kb = require('../lib/assistant/kb');
 const { requireTeacher } = require('../middleware');
 
 // Five reports per IP per fifteen minutes. A person filing a real bug files one,
@@ -338,6 +341,49 @@ router.get('/api/assistant/diagnostics', requireTeacher, (req, res) => {
 router.get('/teacher/diagnostics', (req, res) => {
   res.set('Cache-Control', 'public, max-age=300');
   res.sendFile(require('path').join(__dirname, '..', 'public', 'teacher-diagnostics.html'));
+});
+
+// ── PHASE 1: THE KNOWLEDGE BASE, READ SIDE ───────────────────────────────────
+//
+//  Published articles only. kb.search filters to status='published' in SQL, so
+//  there is no code path here that could serve a draft: half-written site
+//  mechanics are worse than silence.
+//
+//  Public and unauthenticated, because everything in this corpus is site
+//  mechanics rather than account state. Nothing here reads a class, a student
+//  or a grade, so there is nothing to withhold.
+//
+//  GET /api/assistant/help?q=...   search, or browse when q is empty
+//  GET /api/assistant/help/:slug   one article
+const helpLimit = makeRateLimit({
+  windowMs: 60 * 1000, max: 60,
+  message: 'Too many searches. Please wait a moment.',
+});
+
+router.get('/api/assistant/help', helpLimit, (req, res) => {
+  try {
+    const q = typeof req.query.q === 'string' ? req.query.q.slice(0, 200) : '';
+    const out = kb.search(q, { limit: req.query.limit });
+    res.set('Cache-Control', 'public, max-age=60');
+    res.json(out);
+  } catch (e) {
+    console.error('assistant/help:', e);
+    res.status(500).json({ error: 'Search is unavailable right now.' });
+  }
+});
+
+router.get('/api/assistant/help/:slug', helpLimit, (req, res) => {
+  const a = kb.published(req.params.slug);
+  // A draft and a nonexistent article answer the same way, so an unfinished
+  // article cannot be discovered by guessing slugs.
+  if (!a) return res.status(404).json({ error: 'No such article.' });
+  res.set('Cache-Control', 'public, max-age=60');
+  res.json({ article: a });
+});
+
+router.get('/help', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=300');
+  res.sendFile(require('path').join(__dirname, '..', 'public', 'help.html'));
 });
 
 // The affordance. Served from here rather than the theme so a copy change does
