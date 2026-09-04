@@ -233,7 +233,8 @@
     "seed:kb": "node scripts/seed-kb.js",
     "smoke:assistantexfil": "node smoke/assistant-exfiltration.js",
     "smoke:cyberexamreplica": "node smoke/cyber-exam-replica.js",
-    "cyber:examblueprint": "node tools/ap-cyber-ced/build-exam-blueprint.js"
+    "cyber:examblueprint": "node tools/ap-cyber-ced/build-exam-blueprint.js",
+    "smoke:assistantanon": "node smoke/assistant-anonymous.js"
   },
   "keywords": [],
   "author": "",
