@@ -85,6 +85,30 @@ var ROOT_FOLDER_ID = '1HYnA1ZNByvHDBqlJGcbCT3lRC4PphbHV';
 // Only these units. See the header before adding 3, 4 or 5.
 var UNITS = [2, 3, 4];
 
+// What preview() should find, so it can tell a good upload from a partial one.
+//
+// THESE ARE COPIES, and that is the whole problem with them. Apps Script cannot
+// read this repo, so the numbers have to be typed here, and a typed number goes
+// stale the moment its source moves. This pair was wrong from the day the script
+// was written: it said 9 lessons and 70 decks, which is the shape of the cyber
+// script this one was adapted from, not of AP CSA Units 2-4. preview() therefore
+// enumerated all 152 decks correctly, printed every per-unit total correctly, and
+// then told Tanner to stop and reconcile against a number that had nothing to do
+// with his course.
+//
+// The source of truth is config/csa-slide-days.json, whose `days` map holds one
+// entry per lesson with that lesson's teaching-day count. These are its totals
+// for units 2, 3 and 4:
+//
+//     38 lessons, 76 teaching days, 152 decks (each day has a TEACHER and a
+//     STUDENT variant), split 48 / 36 / 68 across the three units.
+//
+// npm run smoke:csaslides re-derives all of that from the json and fails if
+// either constant drifts from it. That check is the only reason it is acceptable
+// to keep literals here at all.
+var EXPECT_LESSONS = 38;
+var EXPECT_DECKS = 152;
+
 var OUTPUT_FOLDER_NAME = 'AP CSA Slides (converted)';
 var SHEET_NAME = 'AP CSA Slides Map';
 var HEADER = ['lesson', 'day', 'variant', 'sourceName', 'slidesId', 'embedUrl', 'status'];
@@ -239,8 +263,9 @@ function preview() {
   lines.push('  lessons: ' + lessons.length);
   lines.push('  decks  : ' + found.decks.length);
   lines.push('');
-  lines.push('  EXPECTED: 9 lessons, 70 decks (35 days x 2 variants).');
-  lines.push(found.decks.length === 70 && lessons.length === 9
+  lines.push('  EXPECTED: ' + EXPECT_LESSONS + ' lessons, ' + EXPECT_DECKS
+    + ' decks (' + (EXPECT_DECKS / 2) + ' days x 2 variants).');
+  lines.push(found.decks.length === EXPECT_DECKS && lessons.length === EXPECT_LESSONS
     ? '  MATCHES the independent enumeration. Safe to run start().'
     : '  DOES NOT MATCH. Stop and reconcile before running start().');
 

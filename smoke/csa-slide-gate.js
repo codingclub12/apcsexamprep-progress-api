@@ -216,6 +216,47 @@ const grant = (teacherId, course) => db.prepare(
     ok('  entitled student: decks is an empty array', r.body && Array.isArray(r.body.decks) && r.body.decks.length === 0, r.body);
   }
 
+  // ── THE APPS SCRIPT'S EXPECTED COUNTS MATCH THE AUTHORED DAY DATA ─────────
+  //  scripts/csa-slides-conversion.gs runs in Google Apps Script, which cannot
+  //  read this repo, so the shape it checks an upload against has to be typed
+  //  into the file as literals. Nothing tied those literals to anything until
+  //  2026-09-04, and they were wrong the whole time: 9 lessons and 70 decks,
+  //  carried over from the cyber script it was adapted from. preview() found
+  //  all 152 CSA decks, printed every per-unit total correctly, and then told
+  //  the operator to stop and reconcile against a number from another course.
+  //
+  //  A copied number needs a check that it still matches its source, and this
+  //  is that check. config/csa-slide-days.json is the source: one entry per
+  //  lesson, valued in teaching days, generated from the authored content.
+  {
+    const gs = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts', 'csa-slides-conversion.gs'), 'utf8');
+    const days = require('../config/csa-slide-days.json').days;
+    const lessons = Object.keys(days);
+    const totalDays = lessons.reduce((n, k) => n + Number(days[k]), 0);
+
+    const constant = (name) => {
+      const m = new RegExp('var\\s+' + name + '\\s*=\\s*(\\d+)').exec(gs);
+      return m ? Number(m[1]) : null;
+    };
+    const gotLessons = constant('EXPECT_LESSONS');
+    const gotDecks = constant('EXPECT_DECKS');
+
+    ok('conversion script declares EXPECT_LESSONS and EXPECT_DECKS',
+      gotLessons !== null && gotDecks !== null,
+      `read ${gotLessons} / ${gotDecks}`);
+    ok('  EXPECT_LESSONS matches the authored lesson count',
+      gotLessons === lessons.length, `gs=${gotLessons} json=${lessons.length}`);
+    ok('  EXPECT_DECKS matches teaching days x 2 variants',
+      gotDecks === totalDays * 2, `gs=${gotDecks} json=${totalDays * 2}`);
+    // The pair must also agree with ITSELF. A script claiming more lessons than
+    // decks, or an odd deck count, describes a shape that cannot exist: every
+    // teaching day ships exactly one TEACHER and one STUDENT deck.
+    ok('  the two constants describe a possible shape',
+      gotDecks % 2 === 0 && gotDecks >= gotLessons * 2,
+      `${gotLessons} lessons cannot yield ${gotDecks} decks`);
+  }
+
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
   server.close();
   try { db.close(); } catch (e) {}
