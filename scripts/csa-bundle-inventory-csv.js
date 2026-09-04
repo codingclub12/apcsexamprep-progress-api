@@ -102,6 +102,20 @@ function check(live, blk) {
   const raw = fs.readFileSync(OUT, 'utf8');
   if (!raw.startsWith(BOM)) problems.push('missing UTF-8 BOM');
 
+  //  ROW STRUCTURE. The Body HTML field legitimately contains line breaks, so
+  //  this file cannot be all-CRLF the way a short metafield sheet is: the
+  //  noindex sheets have 0 bare LF and these have close to 300, all of them
+  //  inside the quoted body. That is correct, because a \r injected into the
+  //  field would land in the page body on import.
+  //
+  //  What must hold is that no line break leaked OUT of the field: exactly two
+  //  CRLF row terminators, header and one data row. Asserted because the first
+  //  cut of this check tested nothing about line endings at all, and the sheets
+  //  it passed did not import.
+  const crlf = (raw.match(/\r\n/g) || []).length;
+  if (crlf !== 2) problems.push(`${crlf} CRLF row terminators, expected exactly 2 (header and one row)`);
+  if (/\r(?!\n)/.test(raw)) problems.push('a bare CR outside a CRLF pair');
+
   const t = raw.slice(BOM.length);
   const rows = [];
   let row = [], field = '', q = false, i = 0;
