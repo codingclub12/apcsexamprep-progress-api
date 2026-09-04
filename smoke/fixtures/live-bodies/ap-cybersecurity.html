@@ -1,0 +1,252 @@
+<!-- ============================================================
+     AP CYBERSECURITY :: CANONICAL COURSE HUB
+     Target page: /pages/ap-cybersecurity
+     Spoke center for the entire AP Cyber section.
+     Scoped under #apcyber-hub. all:initial + !important so Shopify/Dawn
+     cannot recolor titles or buttons. No emojis (HTML entities / inline SVG only).
+     ============================================================ -->
+<style>
+#apcyber-hub, #apcyber-hub * { all: initial !important; box-sizing: border-box !important; font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; }
+#apcyber-hub { display:block !important; max-width:1080px !important; margin:0 auto !important; padding:0 16px 56px !important; color:#1f2937 !important; -webkit-text-fill-color:#1f2937 !important; line-height:1.55 !important; }
+#apcyber-hub .ch-block { display:block !important; }
+#apcyber-hub a { text-decoration:none !important; cursor:pointer !important; }
+
+/* breadcrumb */
+#apcyber-hub .ch-crumb { display:block !important; font-size:13px !important; color:#6b7280 !important; -webkit-text-fill-color:#6b7280 !important; padding:18px 0 8px !important; }
+#apcyber-hub .ch-crumb a { color:#6b21a8 !important; -webkit-text-fill-color:#6b21a8 !important; }
+
+/* hero */
+#apcyber-hub .ch-hero { display:block !important; background:#1e1b4b !important; background:linear-gradient(135deg,#1e1b4b 0%,#3b0764 50%,#4c1d95 100%) !important; border-radius:18px !important; padding:42px 34px !important; margin-bottom:30px !important; }
+#apcyber-hub .ch-eyebrow { display:block !important; font-size:13px !important; font-weight:700 !important; letter-spacing:2px !important; text-transform:uppercase !important; color:#fcd34d !important; -webkit-text-fill-color:#fcd34d !important; margin-bottom:12px !important; }
+#apcyber-hub .ch-h1 { display:block !important; font-size:38px !important; line-height:1.15 !important; font-weight:800 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; margin-bottom:14px !important; }
+#apcyber-hub .ch-sub { display:block !important; font-size:17px !important; color:#ddd6fe !important; -webkit-text-fill-color:#ddd6fe !important; max-width:680px !important; margin-bottom:22px !important; }
+#apcyber-hub .ch-stats { display:flex !important; flex-wrap:wrap !important; gap:26px !important; margin-bottom:26px !important; }
+#apcyber-hub .ch-stat { display:block !important; }
+#apcyber-hub .ch-stat b { display:block !important; font-size:26px !important; font-weight:800 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; }
+#apcyber-hub .ch-stat span { display:block !important; font-size:12px !important; letter-spacing:.5px !important; text-transform:uppercase !important; color:#c4b5fd !important; -webkit-text-fill-color:#c4b5fd !important; }
+#apcyber-hub a.ch-cta { display:inline-block !important; background:#a855f7 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-weight:700 !important; font-size:16px !important; padding:14px 30px !important; border-radius:10px !important; }
+#apcyber-hub a.ch-cta:link, #apcyber-hub a.ch-cta:visited, #apcyber-hub a.ch-cta:hover, #apcyber-hub a.ch-cta:active { color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; }
+#apcyber-hub a.ch-cta:hover { background:#9333ea !important; }
+
+/* section headings */
+#apcyber-hub .ch-sec-title { display:block !important; font-size:24px !important; font-weight:800 !important; color:#1e1b4b !important; -webkit-text-fill-color:#1e1b4b !important; margin:38px 0 6px !important; }
+#apcyber-hub .ch-sec-note { display:block !important; font-size:15px !important; color:#6b7280 !important; -webkit-text-fill-color:#6b7280 !important; margin-bottom:18px !important; }
+
+/* start-here row */
+#apcyber-hub .ch-startgrid { display:grid !important; grid-template-columns:repeat(4,1fr) !important; gap:14px !important; margin-bottom:8px !important; }
+#apcyber-hub a.ch-startcard { display:block !important; background:#f5f0ff !important; border:1px solid #ddd6fe !important; border-radius:12px !important; padding:16px 16px !important; }
+#apcyber-hub a.ch-startcard:hover { border-color:#7c3aed !important; background:#ede9fe !important; }
+#apcyber-hub a.ch-startcard b { display:block !important; font-size:15px !important; font-weight:700 !important; color:#1e1b4b !important; -webkit-text-fill-color:#1e1b4b !important; margin-bottom:3px !important; }
+#apcyber-hub a.ch-startcard span { display:block !important; font-size:13px !important; color:#6b7280 !important; -webkit-text-fill-color:#6b7280 !important; }
+
+/* unit cards */
+#apcyber-hub .ch-unit { display:block !important; border:1px solid #ddd6fe !important; border-radius:14px !important; padding:22px 24px !important; margin-bottom:16px !important; background:#ffffff !important; }
+#apcyber-hub .ch-unit-head { display:flex !important; align-items:center !important; gap:14px !important; margin-bottom:14px !important; }
+#apcyber-hub .ch-unit-badge { display:inline-block !important; min-width:54px !important; text-align:center !important; background:#3b0764 !important; color:#fcd34d !important; -webkit-text-fill-color:#fcd34d !important; font-weight:800 !important; font-size:13px !important; letter-spacing:1px !important; padding:7px 10px !important; border-radius:8px !important; }
+#apcyber-hub a.ch-unit-title { display:inline-block !important; font-size:19px !important; font-weight:800 !important; color:#1e1b4b !important; -webkit-text-fill-color:#1e1b4b !important; }
+#apcyber-hub a.ch-unit-title:hover { color:#6b21a8 !important; -webkit-text-fill-color:#6b21a8 !important; }
+#apcyber-hub .ch-lessons { display:grid !important; grid-template-columns:repeat(2,1fr) !important; gap:8px 22px !important; margin-bottom:12px !important; }
+#apcyber-hub a.ch-lesson { display:block !important; font-size:15px !important; color:#4c1d95 !important; -webkit-text-fill-color:#4c1d95 !important; padding:5px 0 5px 16px !important; border-left:3px solid #c4b5fd !important; }
+#apcyber-hub a.ch-lesson:hover { color:#7c3aed !important; -webkit-text-fill-color:#7c3aed !important; border-left-color:#7c3aed !important; }
+#apcyber-hub .ch-unit-foot { display:block !important; font-size:14px !important; padding-top:8px !important; border-top:1px solid #ede9fe !important; }
+#apcyber-hub .ch-unit-foot a { color:#6b21a8 !important; -webkit-text-fill-color:#6b21a8 !important; font-weight:600 !important; }
+#apcyber-hub .ch-unit-foot span { color:#c4b5fd !important; -webkit-text-fill-color:#c4b5fd !important; padding:0 8px !important; }
+
+/* tools + concept grid */
+#apcyber-hub .ch-grid3 { display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:14px !important; }
+#apcyber-hub a.ch-tool { display:block !important; background:#ffffff !important; border:1px solid #ddd6fe !important; border-radius:12px !important; padding:18px 18px !important; }
+#apcyber-hub a.ch-tool:hover { border-color:#7c3aed !important; background:#f5f0ff !important; }
+#apcyber-hub a.ch-tool b { display:block !important; font-size:16px !important; font-weight:700 !important; color:#1e1b4b !important; -webkit-text-fill-color:#1e1b4b !important; margin-bottom:4px !important; }
+#apcyber-hub a.ch-tool span { display:block !important; font-size:13px !important; color:#6b7280 !important; -webkit-text-fill-color:#6b7280 !important; }
+
+/* concept chips */
+#apcyber-hub .ch-chips { display:flex !important; flex-wrap:wrap !important; gap:8px !important; }
+#apcyber-hub a.ch-chip { display:inline-block !important; font-size:13px !important; color:#4c1d95 !important; -webkit-text-fill-color:#4c1d95 !important; background:#f5f0ff !important; border:1px solid #ddd6fe !important; border-radius:999px !important; padding:6px 13px !important; }
+#apcyber-hub a.ch-chip:hover { background:#7c3aed !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; border-color:#7c3aed !important; }
+
+/* teacher band */
+#apcyber-hub .ch-teach { display:block !important; background:#1e1b4b !important; background:linear-gradient(135deg,#3b0764 0%,#4c1d95 100%) !important; border-radius:14px !important; padding:28px 30px !important; margin-top:14px !important; }
+#apcyber-hub .ch-teach b { display:block !important; font-size:20px !important; font-weight:800 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; margin-bottom:6px !important; }
+#apcyber-hub .ch-teach p { display:block !important; font-size:15px !important; color:#ddd6fe !important; -webkit-text-fill-color:#ddd6fe !important; margin-bottom:16px !important; max-width:640px !important; }
+#apcyber-hub a.ch-teach-cta { display:inline-block !important; background:#fcd34d !important; color:#3b0764 !important; -webkit-text-fill-color:#3b0764 !important; font-weight:700 !important; font-size:15px !important; padding:12px 24px !important; border-radius:9px !important; margin-right:10px !important; }
+#apcyber-hub a.ch-teach-cta:link, #apcyber-hub a.ch-teach-cta:visited, #apcyber-hub a.ch-teach-cta:hover { color:#3b0764 !important; -webkit-text-fill-color:#3b0764 !important; }
+#apcyber-hub a.ch-teach-link { display:inline-block !important; color:#c4b5fd !important; -webkit-text-fill-color:#c4b5fd !important; font-weight:600 !important; font-size:15px !important; }
+
+@media (max-width:760px){
+  #apcyber-hub .ch-h1{font-size:29px !important;}
+  #apcyber-hub .ch-startgrid{grid-template-columns:repeat(2,1fr) !important;}
+  #apcyber-hub .ch-lessons{grid-template-columns:1fr !important;}
+  #apcyber-hub .ch-grid3{grid-template-columns:1fr !important;}
+  #apcyber-hub .ch-hero{padding:30px 22px !important;}
+}
+</style>
+
+<div id="apcyber-hub">
+  <div class="ch-crumb ch-block">
+    <a href="/">Home</a> › AP Cybersecurity
+  </div>
+
+  <!-- HERO -->
+  <div class="ch-hero ch-block">
+    <span class="ch-eyebrow">AP Cybersecurity · Exam May 2027</span>
+    <span class="ch-h1">The Complete AP Cybersecurity Course Hub</span>
+    <span class="ch-sub">Every unit, lesson, lab, and practice tool for the new AP Cybersecurity course, mapped to the College Board Course and Exam Description. Start with the fundamentals or jump straight to the unit you need.</span>
+    <div class="ch-stats ch-block">
+      <span class="ch-stat"><b>5</b><span>Units</span></span>
+      <span class="ch-stat"><b>20+</b><span>Lessons</span></span>
+      <span class="ch-stat"><b>200+</b><span>Practice Qs</span></span>
+      <span class="ch-stat"><b>May 2027</b><span>First Exam</span></span>
+    </div>
+    <a class="ch-cta" href="/pages/what-is-ap-cybersecurity">Start Here →</a>
+  </div>
+
+  <!-- START HERE -->
+  <span class="ch-sec-title ch-block">New to the course? Start here</span>
+  <span class="ch-sec-note ch-block">The four pages that orient you before you dive into the units.</span>
+  <div class="ch-startgrid ch-block">
+    <a class="ch-startcard" href="/pages/what-is-ap-cybersecurity"><b>What Is AP Cyber?</b><span>The course, exam, and who it's for</span></a>
+    <a class="ch-startcard" href="/pages/ap-cybersecurity-exam-format"><b>Exam Format</b><span>Question types and scoring</span></a>
+    <a class="ch-startcard" href="/pages/ap-cybersecurity-study-plan-practice"><b>Study Plan</b><span>How to study for the exam</span></a>
+    <a class="ch-startcard" href="/pages/ap-cybersecurity-ced-explained"><b>CED Explained</b><span>The framework in plain English</span></a>
+  </div>
+
+  <!-- UNITS SPINE -->
+  <span class="ch-sec-title ch-block">The Five Units</span>
+  <span class="ch-sec-note ch-block">Each unit hub links to its lessons, labs, quizzes, and unit exam.</span>
+
+  <!-- UNIT 1 -->
+  <div class="ch-unit ch-block">
+    <div class="ch-unit-head">
+      <span class="ch-unit-badge">UNIT 1</span>
+      <a class="ch-unit-title" href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Securing Information</a>
+    </div>
+    <div class="ch-lessons">
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-1-social-engineering">1.1 · Understanding Social Engineering</a>
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-1-password-attacks">1.2 · Suspicious Website Logins</a>
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-1-wireless-security">1.3 · Best Practices for Public Networks</a>
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-1-ai-driven-threats">1.4 · AI-Based Cybersecurity Attacks</a>
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense">1.5 · Leveraging AI in Cyber Defense</a>
+    </div>
+    <div class="ch-unit-foot ch-block">
+      <a href="/pages/ap-cyber-unit-1-exam">Unit 1 Exam</a><span>|</span><a href="/pages/ap-cyber-unit-1-scenario-practice">Scenario Practice</a><span>|</span><a href="/pages/ap-cyber-unit-1-project">Unit Project</a>
+    </div>
+  </div>
+
+  <!-- UNIT 2 -->
+  <div class="ch-unit ch-block">
+    <div class="ch-unit-head">
+      <span class="ch-unit-badge">UNIT 2</span>
+      <a class="ch-unit-title" href="/pages/ap-cybersecurity-unit-2-securing-spaces">Securing Spaces</a>
+    </div>
+    <div class="ch-lessons">
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-2-cyber-foundations">2.1 · Cyber Foundations</a>
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-2-physical-vulnerabilities">2.2 · Physical Vulnerabilities &amp; Attacks</a>
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-2-protecting-physical-spaces">2.3 · Protecting Physical Spaces</a>
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-2-detecting-physical-attacks">2.4 · Detecting Physical Attacks</a>
+    </div>
+    <div class="ch-unit-foot ch-block">
+      <a href="/pages/ap-cyber-unit-2-exam">Unit 2 Exam</a><span>|</span><a href="/pages/ap-cybersecurity-unit-2-complete-study-guide">Unit 2 Study Guide</a>
+    </div>
+  </div>
+
+  <!-- UNIT 3 -->
+  <div class="ch-unit ch-block">
+    <div class="ch-unit-head">
+      <span class="ch-unit-badge">UNIT 3</span>
+      <a class="ch-unit-title" href="/pages/ap-cybersecurity-unit-3-securing-networks">Securing Networks</a>
+    </div>
+    <div class="ch-lessons">
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-3-lesson-1">3.1 · Network Fundamentals &amp; Attack Surface</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-3-lesson-2">3.2 · Network Attacks</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-3-lesson-3">3.3 · Firewalls &amp; Packet Filtering</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-3-lesson-4">3.4 · Network Segmentation &amp; VLANs</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-3-lesson-5">3.5 · IDS, IPS &amp; SIEM</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-3-lesson-6">3.6 · Network Security Policies &amp; Wireless</a>
+    </div>
+    <div class="ch-unit-foot ch-block">
+      <a href="/pages/ap-cyber-unit-3-exam">Unit 3 Exam</a><span>|</span><a href="/pages/ap-cyber-unit-3-scenario-practice">Scenario Practice</a><span>|</span><a href="/pages/ap-cyber-unit-3-project">Unit Project</a>
+    </div>
+  </div>
+
+  <!-- UNIT 4 -->
+  <div class="ch-unit ch-block">
+    <div class="ch-unit-head">
+      <span class="ch-unit-badge">UNIT 4</span>
+      <a class="ch-unit-title" href="/pages/ap-cybersecurity-unit-4-securing-devices">Securing Devices</a>
+    </div>
+    <div class="ch-lessons">
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-4-lesson-1">4.1 · Device Vulnerabilities &amp; Attacks</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-4-lesson-2">4.2 · Authentication</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-4-lesson-3">4.3 · Protecting Devices</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-4-lesson-4">4.4 · Detecting Attacks on Devices</a>
+    </div>
+    <div class="ch-unit-foot ch-block">
+      <a href="/pages/ap-cyber-unit-4-exam">Unit 4 Exam</a>
+    </div>
+  </div>
+
+  <!-- UNIT 5 -->
+  <div class="ch-unit ch-block">
+    <div class="ch-unit-head">
+      <span class="ch-unit-badge">UNIT 5</span>
+      <a class="ch-unit-title" href="/pages/ap-cybersecurity-unit-5-securing-applications-and-data">Securing Applications &amp; Data</a>
+    </div>
+    <div class="ch-lessons">
+      <a class="ch-lesson" href="/pages/ap-cybersecurity-unit-5-securing-applications-and-data">Unit 5 Study Guide &amp; Lessons</a>
+      <a class="ch-lesson" href="/pages/ap-cyber-unit-5-practice-exam">Unit 5 Practice Exam (40 MCQ)</a>
+    </div>
+    <div class="ch-unit-foot ch-block">
+      <a href="/pages/ap-cyber-unit-5-exam">Unit 5 Exam</a>
+    </div>
+  </div>
+
+  <!-- TOOLS -->
+  <span class="ch-sec-title ch-block">Practice &amp; Tools</span>
+  <span class="ch-sec-note ch-block">Build custom tests, estimate your score, and drill question types.</span>
+  <div class="ch-grid3 ch-block">
+    <a class="ch-tool" href="/pages/ap-cybersecurity-test-builder"><b>Test Builder</b><span>Generate custom practice tests from the question bank</span></a>
+    <a class="ch-tool" href="/pages/ap-cybersecurity-practice-exam"><b>Full Practice Exam</b><span>Complete timed practice test</span></a>
+    <a class="ch-tool" href="/pages/ap-cybersecurity-score-calculator"><b>Score Calculator</b><span>Estimate your AP score for 2027</span></a>
+    <a class="ch-tool" href="/pages/ap-cybersecurity-practice-questions"><b>Practice Questions</b><span>Targeted MCQ practice by topic</span></a>
+    <a class="ch-tool" href="/pages/ap-cybersecurity-question-of-the-day"><b>Question of the Day</b><span>One new AP-style question daily</span></a>
+    <a class="ch-tool" href="/pages/ap-cybersecurity-supplemental-resources"><b>Study Resources</b><span>Free guides, references, and downloads</span></a>
+  </div>
+
+  <!-- CONCEPT LIBRARY -->
+  <span class="ch-sec-title ch-block">Concept Library</span>
+  <span class="ch-sec-note ch-block">Short, focused explainers for every exam term. <a href="/pages/ap-cybersecurity-topics" style="color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;font-weight:600!important;">See all topics →</a></span>
+  <div class="ch-chips ch-block">
+    <a class="ch-chip" href="/pages/ap-cybersecurity-social-engineering-tactics">Social Engineering</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-phishing-vishing-smishing">Phishing vs Vishing</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-password-attacks">Password Attacks</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-mfa">MFA</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-public-wifi-dangers">Public Wi-Fi</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-vpn">VPNs</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-evil-twin">Evil Twin</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-deepfakes">Deepfakes</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-malware-types">Malware Types</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-physical-attacks">Physical Attacks</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-access-controls">Access Controls</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-risk-assessment">Risk Assessment</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-network-attacks">Network Attacks</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-firewalls">Firewalls</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-network-segmentation">Network Segmentation</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-ids-ips">IDS vs IPS</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-siem">SIEM</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-protecting-devices">Protecting Devices</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-cryptography">Cryptography</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-sql-injection">SQL Injection</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-xss">XSS</a>
+    <a class="ch-chip" href="/pages/ap-cybersecurity-threat-actors">Threat Actors</a>
+  </div>
+
+  <!-- TEACHER -->
+  <div class="ch-teach ch-block">
+    <b>Teaching AP Cybersecurity?</b>
+    <p>Full curriculum bundles, lesson decks, guided notes, labs, and assessments built to the Fall 2026 CED. Founding Teacher pricing is open now.</p>
+    <a class="ch-teach-cta" href="/pages/ap-cybersecurity-teacher-resources">Teacher Resources</a>
+    <a class="ch-teach-link" href="/pages/ap-cybersecurity-teacher-course-planning">Course Planning Guide →</a>
+  </div>
+
+</div>
+<!-- END AP CYBERSECURITY HUB -->
