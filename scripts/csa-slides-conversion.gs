@@ -61,11 +61,26 @@
  */
 
 // The Drive folder holding the uploaded Unit_2 / Unit_3 / Unit_4 tree.
-// THERE IS NO DEFAULT ON PURPOSE. The cyber script could hardcode its folder
-// because that folder already existed; this one is created by the upload in
-// step 2 above, so a hardcoded id here would point at somebody else's folder
-// or at nothing. preview() refuses to run until this is set.
-var ROOT_FOLDER_ID = 'PUT_THE_FOLDER_ID_HERE';
+//
+// This was deliberately unset until 2026-09-04, on the reasoning that the
+// folder did not exist yet so any id here would point at nothing. The folder
+// exists now: Tanner uploaded the kit into "AP CSA Teacher Bundle" that day and
+// the id below was read back off Drive, not typed from a message. Verified at
+// the same time: Unit_2 holds twelve lesson folders, 2.1 through 2.12, so the
+// tree survived the unzip rather than arriving flattened.
+//
+// The preflight below still refuses the placeholder, which is what protects the
+// next person who copies this script for a different course.
+//
+// ONE HAZARD WORTH KNOWING, because it is invisible and it is already present.
+// That same bundle folder contains a pre-existing "Unit 1" folder, spelled with
+// a SPACE. Unit 1 must not be converted: its fifteen topics all report one day
+// in config/csa-slide-days.json while Drive holds thirty five, so converting it
+// would write day counts that disagree with the decks. Two independent things
+// stop it. The matcher below requires an underscore, so "Unit 1" never matches
+// and is skipped before the lesson loop can complain about it; and UNITS
+// excludes 1 regardless. Do not "fix" either one into accepting a space.
+var ROOT_FOLDER_ID = '1HYnA1ZNByvHDBqlJGcbCT3lRC4PphbHV';
 
 // Only these units. See the header before adding 3, 4 or 5.
 var UNITS = [2, 3, 4];
