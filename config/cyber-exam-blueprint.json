@@ -1,0 +1,308 @@
+{
+  "_source": {
+    "generated_by": "tools/ap-cyber-ced/build-exam-blueprint.js",
+    "built": "2026-09-04",
+    "ced": "Section I is 60 multiple-choice, 70 percent, 80 minutes. Section II is one free-response, 30 percent, 50 minutes.",
+    "weighting_rule": "each skill category is 25 to 40 percent of the multiple-choice section",
+    "not_published": "The CED states NO per-unit or per-topic exam weighting. Any such number is fabricated and rule R2 refuses it.",
+    "skill_4": "Collaborate does not appear in the CED MCQ weighting table and carries no topics here. It is deliberately absent.",
+    "allocation": "Topic-first, then categories assigned from what each topic can carry. Skill 3 is fixed first because it lives on five topics and has no slack."
+  },
+  "course": "ap-cybersecurity",
+  "mcq_total": 60,
+  "band": {
+    "low": 25,
+    "high": 40
+  },
+  "split": {
+    "1": 20,
+    "2": 20,
+    "3": 20
+  },
+  "skill_names": {
+    "1": "Analyze Risk",
+    "2": "Mitigate Risk",
+    "3": "Detect Attacks"
+  },
+  "by_skill": {
+    "1": 20,
+    "2": 20,
+    "3": 20
+  },
+  "percent": {
+    "1": 33.3,
+    "2": 33.3,
+    "3": 33.3
+  },
+  "plan": [
+    {
+      "topic": "1.1",
+      "unit": 1,
+      "title": "Understanding Social Engineering",
+      "items": 2,
+      "by_skill": {
+        "1": 2
+      }
+    },
+    {
+      "topic": "1.2",
+      "unit": 1,
+      "title": "Suspicious Website Logins",
+      "items": 3,
+      "by_skill": {
+        "1": 3
+      }
+    },
+    {
+      "topic": "1.3",
+      "unit": 1,
+      "title": "Best Practices for Public Networks",
+      "items": 3,
+      "by_skill": {
+        "1": 3
+      }
+    },
+    {
+      "topic": "1.4",
+      "unit": 1,
+      "title": "AI-Based Cybersecurity Attacks",
+      "items": 2,
+      "by_skill": {
+        "1": 2
+      }
+    },
+    {
+      "topic": "1.5",
+      "unit": 1,
+      "title": "Leveraging AI in Cyber Defense",
+      "items": 4,
+      "by_skill": {
+        "3": 4
+      }
+    },
+    {
+      "topic": "2.1",
+      "unit": 2,
+      "title": "Cyber Foundations",
+      "items": 2,
+      "by_skill": {
+        "1": 2
+      }
+    },
+    {
+      "topic": "2.2",
+      "unit": 2,
+      "title": "Physical Vulnerabilities and Attacks",
+      "items": 2,
+      "by_skill": {
+        "1": 2
+      }
+    },
+    {
+      "topic": "2.3",
+      "unit": 2,
+      "title": "Protecting Physical Spaces",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "2.4",
+      "unit": 2,
+      "title": "Detecting Physical Attacks",
+      "items": 4,
+      "by_skill": {
+        "3": 4
+      }
+    },
+    {
+      "topic": "3.1",
+      "unit": 3,
+      "title": "Network Vulnerabilities and Attacks",
+      "items": 2,
+      "by_skill": {
+        "1": 2
+      }
+    },
+    {
+      "topic": "3.2",
+      "unit": 3,
+      "title": "Protecting Networks: Managerial Controls and Wireless Security",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "3.3",
+      "unit": 3,
+      "title": "Protecting Networks: Segmentation",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "3.4",
+      "unit": 3,
+      "title": "Protecting Networks: Firewalls",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "3.5",
+      "unit": 3,
+      "title": "Detecting Network Attacks",
+      "items": 4,
+      "by_skill": {
+        "3": 4
+      }
+    },
+    {
+      "topic": "4.1",
+      "unit": 4,
+      "title": "Device Vulnerabilities and Attacks",
+      "items": 2,
+      "by_skill": {
+        "1": 2
+      }
+    },
+    {
+      "topic": "4.2",
+      "unit": 4,
+      "title": "Authentication",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "4.3",
+      "unit": 4,
+      "title": "Protecting Devices",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "4.4",
+      "unit": 4,
+      "title": "Detecting Attacks on Devices",
+      "items": 4,
+      "by_skill": {
+        "3": 4
+      }
+    },
+    {
+      "topic": "5.1",
+      "unit": 5,
+      "title": "Application and Data Vulnerabilities and Attacks",
+      "items": 2,
+      "by_skill": {
+        "1": 2
+      }
+    },
+    {
+      "topic": "5.2",
+      "unit": 5,
+      "title": "Protecting Applications and Data: Managerial Controls and Access Controls",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "5.3",
+      "unit": 5,
+      "title": "Protecting Stored Data with Cryptography",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "5.4",
+      "unit": 5,
+      "title": "Asymmetric Cryptography",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "5.5",
+      "unit": 5,
+      "title": "Protecting Applications",
+      "items": 2,
+      "by_skill": {
+        "2": 2
+      }
+    },
+    {
+      "topic": "5.6",
+      "unit": 5,
+      "title": "Detecting Attacks on Data and Applications",
+      "items": 4,
+      "by_skill": {
+        "3": 4
+      }
+    }
+  ],
+  "per_topic": {
+    "1.1": 2,
+    "1.2": 3,
+    "1.3": 3,
+    "1.4": 2,
+    "1.5": 4,
+    "2.1": 2,
+    "2.2": 2,
+    "2.3": 2,
+    "2.4": 4,
+    "3.1": 2,
+    "3.2": 2,
+    "3.3": 2,
+    "3.4": 2,
+    "3.5": 4,
+    "4.1": 2,
+    "4.2": 2,
+    "4.3": 2,
+    "4.4": 4,
+    "5.1": 2,
+    "5.2": 2,
+    "5.3": 2,
+    "5.4": 2,
+    "5.5": 2,
+    "5.6": 4
+  },
+  "per_unit": {
+    "1": 14,
+    "2": 10,
+    "3": 12,
+    "4": 10,
+    "5": 14
+  },
+  "uncovered_topics": [],
+  "frq": {
+    "count": 1,
+    "name": "Device Security Analysis",
+    "minutes": 50,
+    "weight_percent": 30,
+    "sources": 6,
+    "parts": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "skill_categories": [
+      2,
+      3
+    ],
+    "note": "Only skill categories 2 and 3 are assessed on the free-response. An FRQ prompt testing category 1 or 4 is mislabeled however good the item is."
+  }
+}
