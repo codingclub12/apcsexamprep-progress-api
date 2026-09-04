@@ -87,6 +87,84 @@ ok('no item reuses a stem from the 43 already on the study set',
 ok('the disjointness fixture actually holds the study set', existing.stems.length === 43,
   String(existing.stems.length));
 
+// ── the page render ────────────────────────────────────────────────────────
+//  The generator rebuilds the live body of ap-cybersecurity-practice-exam,
+//  which ranks at position 1.6. The fixture is the real stored body so the
+//  render is testable offline and stays testable after the import.
+const gen = require('../tools/ap-cyber-ced/generate-exam-sheet.js');
+//  Named apart from `base`, which is already the validate() result above.
+const sharedRules = require('../tools/ap-cyber-ced/validator.js');
+const FIXTURES = require('path').join(__dirname, 'fixtures', 'live-bodies');
+const liveBody = require('fs').readFileSync(
+  require('path').join(FIXTURES, 'ap-cybersecurity-practice-exam.html'), 'utf8');
+
+const rendered = gen.generate({ bodies: FIXTURES, existingStems: existing.stems });
+const nb = rendered.body;
+
+ok('the render parse-backs through CSV with no drift', rendered.drift.length === 0, rendered.drift.join('; '));
+ok('the rendered body carries 60 scored cards, numbered 1 to 60',
+  (() => {
+    const c = [...nb.matchAll(/<div class="pq-card" data-correct="([A-D])" data-qid="(\d+)"/g)];
+    return c.length === 60 && c.every((m, i) => Number(m[2]) === i + 1);
+  })());
+ok('every card carries exactly four options', (nb.match(/class="pq-opt"/g) || []).length === 240,
+  String((nb.match(/class="pq-opt"/g) || []).length));
+ok('the free response renders six sources and five parts',
+  (nb.match(/<div class="pq-card">/g) || []).length === 11);
+//  ── THE STALE COUNT GUARD ───────────────────────────────────────────────────
+//  This check used to be five hand-written patterns. It reported clean while the
+//  rendered body still said "Section 1: Multiple Choice (40 Questions)" and
+//  still listed a question count per unit from the 40 question set: neither
+//  string matched any of the five, and nothing about the list could report that
+//  it had gone blind. The guard is derived from the item bank now, and the
+//  measurement below is what makes it worth having: on the LIVE body it finds 27
+//  claims the new bank cannot justify, and on the rendered body it finds none.
+const staleOnLive = gen.countClaims(liveBody);
+const staleOnNew = gen.countClaims(nb);
+ok('no count claim survives that the item bank cannot justify', staleOnNew.length === 0,
+  staleOnNew.map((v) => JSON.stringify(v.text)).join(', '));
+ok('and the same guard finds 27 of them in the body it started from, so it is not vacuous',
+  staleOnLive.length === 27, `${staleOnLive.length} on the live body`);
+ok('the words that named the old shape are gone as well',
+  !/Practice Set/.test(nb) && !/study set rather than a replica/i.test(nb));
+ok('the rendered body is clean on the shared content rules',
+  sharedRules.ruleEkCodes(nb).length === 0 && sharedRules.ruleExamWeighting(nb).length === 0
+  && sharedRules.ruleEmDash(nb, 'body').length === 0 && sharedRules.ruleMojibake(nb, 'body').length === 0,
+  `R1=${sharedRules.ruleEkCodes(nb).length} R2=${sharedRules.ruleExamWeighting(nb).length} R3=${sharedRules.ruleEmDash(nb, 'body').length} R7=${sharedRules.ruleMojibake(nb, 'body').length}`);
+//  ── THE LIVE VERIFIER, RUN OFFLINE ──────────────────────────────────────────
+//  Exactly the assertions scripts/verify-cyber-exam-replica-live.js will make
+//  against the served page, run here against the body the generator produces.
+//  One assertion set run twice rather than two that can drift: a verifier that
+//  disagrees with the generator reports a false regression, which has already
+//  happened once in this repo. The second call is what makes it non-vacuous.
+const verifier = require('../scripts/verify-cyber-exam-replica-live.js');
+{
+  const onNew = verifier.check(nb, `<title>${gen.SEO_TITLE}</title>`, null);
+  const onLive = verifier.check(liveBody, '<title>AP Cybersecurity Practice Set | 40 MCQ + 3 FRQ</title>', null);
+  ok('every assertion the live verifier will make holds against the rendered body',
+    onNew.fails.length === 0, onNew.fails.join('; '));
+  ok('and 13 of its 17 fail against the body it replaces, so none of them is decoration',
+    onLive.fails.length === 13, `${onLive.fails.length} failed on the live body`);
+}
+
+ok('the SEO title states the new shape, since the old one embedded the count',
+  gen.SEO_TITLE.includes('60 MCQ') && !gen.SEO_TITLE.includes('40'));
+ok('the sheet carries no Title and no meta description column, so one SERP variable moves',
+  !gen.HEADER.includes('Title') && !gen.HEADER.includes('SEO Description'),
+  gen.HEADER.join(','));
+
+//  R2 learned the published section weightings while this shipped. Prove the
+//  exemption is narrow: the two CED numbers next to a section word pass, and
+//  everything else that looks like a weighting still fails.
+ok('R2 accepts the CED section weighting, 70 percent for Section I',
+  sharedRules.ruleExamWeighting('<p>Section I is 70 percent of the exam.</p>').length === 0);
+ok('R2 still refuses a fabricated per-unit weighting',
+  sharedRules.ruleExamWeighting('<p>Unit 3 is about 20 to 25% of the exam.</p>').length > 0);
+ok('R2 still refuses 70 percent attached to a unit rather than a section',
+  sharedRules.ruleExamWeighting('<p>Unit 3 is 70 percent of the exam.</p>').length > 0);
+ok('R2 still refuses a section weighting the CED does not publish',
+  sharedRules.ruleExamWeighting('<p>Section I is 50 percent of the exam.</p>').length > 0);
+
 // ── mutations ──────────────────────────────────────────────────────────────
 console.log('\n  mutations (a green mutation run is a FAILED check)\n');
 
@@ -155,6 +233,70 @@ for (const m of MUTATIONS) {
     missed += 1;
     console.log(`  ${m.rule.padEnd(3)} ${m.label.padEnd(60)} MISSED${others.length ? `  (only ${others.join(', ')} fired)` : ''}`);
   }
+}
+
+//  Render mutations. These do not go through validate(), they break the
+//  generator's own guards, so they are asserted directly.
+console.log();
+{
+  const fs2 = require('fs');
+  const os2 = require('os');
+  const path2 = require('path');
+  const dir = fs2.mkdtempSync(path2.join(os2.tmpdir(), 'exam-render-'));
+  const liveFile = path2.join(FIXTURES, 'ap-cybersecurity-practice-exam.html');
+  const live = fs2.readFileSync(liveFile, 'utf8');
+
+  //  A live body that has drifted under us must refuse, not silently leave a
+  //  stale count on a page that now claims 60 questions.
+  fs2.writeFileSync(path2.join(dir, 'ap-cybersecurity-practice-exam.html'),
+    live.replace('<h1>AP Cybersecurity Practice Set</h1>', '<h1>AP Cyber Practice</h1>'));
+  let refused = false;
+  try { gen.generate({ bodies: dir, existingStems: existing.stems }); }
+  catch (e) { refused = /head edits do not match/.test(e.message); }
+  ok('the generator refuses a live body whose head has drifted', refused);
+
+  //  An empty stored body must never become an empty Body HTML cell.
+  fs2.writeFileSync(path2.join(dir, 'ap-cybersecurity-practice-exam.html'), '   ');
+  let refusedEmpty = false;
+  try { gen.generate({ bodies: dir, existingStems: existing.stems }); }
+  catch (e) { refusedEmpty = /empty/.test(e.message); }
+  ok('the generator refuses an empty stored body', refusedEmpty);
+
+  //  ── THE THREE THAT SHIPPED PAST THE OLD CHECK ────────────────────────────
+  //  Each of these puts the generator back into the state it was actually in
+  //  before the count guard existed, by removing one declared edit. The stale
+  //  string then survives into the rendered body, and the generator must refuse
+  //  rather than write a sheet. The old five-pattern check passed on all three.
+  fs2.writeFileSync(path2.join(dir, 'ap-cybersecurity-practice-exam.html'), live);
+  const dropEdit = (needle) => {
+    const i = gen.COUNT_EDITS.findIndex(([from]) => from.includes(needle));
+    if (i === -1) throw new Error(`no declared edit contains ${JSON.stringify(needle)}`);
+    return gen.COUNT_EDITS.splice(i, 1)[0];
+  };
+  const refusesWithout = (needle) => {
+    const removed = dropEdit(needle);
+    try {
+      gen.generate({ bodies: dir, existingStems: existing.stems });
+      return false;
+    } catch (e) {
+      return /count claims the item bank cannot justify/.test(e.message);
+    } finally {
+      gen.COUNT_EDITS.push(removed);
+    }
+  };
+  ok('MUTATION: drop the section heading edit and the generator refuses',
+    refusesWithout('Section 1: Multiple Choice (40 Questions)'));
+  ok('MUTATION: drop the per-unit FAQ edit and the generator refuses',
+    refusesWithout('Unit 1 (Introduction to Security, 7 questions)'));
+
+  //  The cross-page exemption is anchored, not a blanket pass for 15. An
+  //  unanchored exemption would re-admit any stale count that happened to be 15.
+  const sampler = gen.CROSS_PAGE_COUNTS[0];
+  ok('the cross-page count is accepted only next to the page it describes',
+    gen.countClaims(`<a href="/pages/${sampler.handle}">x</a> ${sampler.count} questions`).length === 0
+    && gen.countClaims(`${sampler.count} questions${' '.repeat(400)}${sampler.handle}`).length === 1);
+
+  fs2.rmSync(dir, { recursive: true, force: true });
 }
 
 console.log();
