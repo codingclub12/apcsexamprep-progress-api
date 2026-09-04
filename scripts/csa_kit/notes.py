@@ -289,6 +289,89 @@ def _segment(doc, label, minutes):
     return p
 
 
+
+def build_frq(path, item, key_edition):
+    """One free-response practice item, student packet or answer key.
+
+    The 53 items are authored in seed/csa-frq and already drive the live
+    auto-graded pages. Nothing here is new content: this renders what exists
+    into the printable packet the kit was missing, the same way the teacher
+    guide renders sections the deck was already using.
+
+    THE KEY IS A SEPARATE FILE AND SAYS SO ON ITS FIRST LINE. The reference
+    solution, the hints and the sample inputs all live in the key. A student
+    packet that quietly carried the solution would be the bell-ringer bug
+    again, one surface further out.
+    """
+    doc = Document()
+    for sec in doc.sections:
+        sec.top_margin = sec.bottom_margin = Inches(0.7)
+        sec.left_margin = sec.right_margin = Inches(0.8)
+
+    label = 'ANSWER KEY' if key_edition else 'FREE RESPONSE PRACTICE'
+    _p(doc, label, size=10, bold=True, color=ACCENT, space_after=2)
+    _p(doc, f"Topic {item['lesson']}: {item['name']}", size=19, bold=True,
+       color=NAVY, space_after=2)
+    _p(doc, f"{item['title']}   |   Question type: {item['frqTypeLabel']}",
+       size=9.5, color=MUTED, space_after=10)
+
+    if key_edition:
+        _p(doc, 'Teacher copy. Do not hand this page to students.',
+           size=9.5, color=MUTED, space_after=8)
+
+    if item.get('brief'):
+        _heading(doc, 'Why this question')
+        _p(doc, item['brief'], size=10.5, space_after=6)
+
+    if item.get('given'):
+        _heading(doc, 'Given')
+        _p(doc, item['given'], size=10.5, space_after=6)
+
+    if item.get('parts'):
+        _heading(doc, 'Write the following')
+        for part in item['parts']:
+            p = doc.add_paragraph()
+            p.paragraph_format.left_indent = Inches(0.2)
+            p.paragraph_format.space_after = Pt(6)
+            r = p.add_run(part['label'] + '  ')
+            r.font.size = Pt(10.5)
+            r.font.bold = True
+            r.font.name = 'Calibri'
+            r2 = p.add_run(part['text'])
+            r2.font.size = Pt(10.5)
+            r2.font.name = 'Calibri'
+
+    if item.get('task'):
+        _heading(doc, 'Requirements')
+        for line in item['task']:
+            _bullet(doc, line)
+
+    if item.get('starter') and not key_edition:
+        _heading(doc, 'Starter')
+        _mono(doc, item['starter'], indent=0.2)
+
+    if key_edition:
+        if item.get('reference'):
+            _heading(doc, 'Reference solution')
+            _mono(doc, item['reference'], indent=0.2)
+        if item.get('hints'):
+            _heading(doc, 'Hints, in the order to give them')
+            for h in item['hints']:
+                _bullet(doc, h)
+        if item.get('sampleCases'):
+            _heading(doc, 'Sample inputs')
+            _p(doc, 'Visible cases only. The hidden cases used by the '
+                    'auto-grader are deliberately not printed.',
+               size=9.5, color=MUTED, space_after=4)
+            for c in item['sampleCases']:
+                _mono(doc, (c.get('stdin') or '').rstrip('\n'), indent=0.2)
+
+    _p(doc)
+    _p(doc, TRADEMARK, size=7.5, color=MUTED, space_after=0)
+    _p(doc, f"APCSExamPrep.com   Topic {item['lesson']} free response",
+       size=7.5, color=MUTED, space_after=0)
+    doc.save(path)
+
 def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_line):
     """The full teacher guide for one topic.
 
