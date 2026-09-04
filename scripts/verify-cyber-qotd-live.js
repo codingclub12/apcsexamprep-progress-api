@@ -28,6 +28,7 @@ const fs = require('fs');
 const path = require('path');
 const sf = require('../lib/storefront-fetch');
 const mojibake = require('../lib/mojibake');
+const linkBlock = require('../lib/link-block');
 const { parseCsv } = require('../tools/ap-cyber-ced/sheet-csv');
 const gen = require('./cyber-qotd-page-csv');
 
@@ -81,6 +82,49 @@ const decodeFully = (t) => {
 };
 const semantic = (html) => decodeFully(html).replace(/>\s+</g, '><').replace(/\s+/g, ' ').trim();
 
+//  THIS SHEET IS NOT THE ONLY AUTHOR OF THESE PAGES.
+//
+//  "The stored body equals my sheet" is true at the moment of import and stops
+//  being true the first time another system in this repo edits the same page.
+//  On 2026-09-04 lib/link-block.js added a related-links block to
+//  ap-cybersecurity-practice, 1,514 characters of scoped CSS and anchors, and
+//  this check reported
+//
+//      ap-cybersecurity-practice: stored body differs from the sheet beyond
+//      normalisation
+//
+//  on a page that was entirely correct. Every question was live, the QOTD card
+//  was where the sheet put it, and the only difference was somebody else's
+//  block. That is the failure lib/storefront-fetch.js exists to prevent one
+//  directory over: a verifier that cries wolf gets ignored, and then it is not
+//  there on the day something is really wrong.
+//
+//  So the block comes off before the comparison, through link-block's OWN
+//  unmark() rather than a pattern written here. Same rule as mojibake going
+//  through lib/mojibake.js: a second opinion about another module's markers is
+//  a second thing to keep in sync, and it cannot tell you when it has stopped
+//  matching.
+//
+//  It narrows nothing else. unmark() removes only what sits between that
+//  module's own fences, so damage anywhere in the sheet's content still fails,
+//  and the row says when a block was stripped rather than quietly tolerating
+//  one. If a page ever grows a THIRD author, this reports it as a difference,
+//  which is the right answer: the fix is to teach this function about it, not
+//  to loosen the comparison.
+function comparable(bodyHtml) {
+  const raw = String(bodyHtml || '');
+  const stripped = raw.includes(linkBlock.MARK_OPEN) || raw.includes(linkBlock.CSS_OPEN);
+  return { text: semantic(stripped ? linkBlock.unmark(raw) : raw), stripped };
+}
+
+//  Say in the row that a page has a second author, so "same-content" never
+//  quietly means "same once I ignored 1,514 characters".
+const storedLabel = (same, cmp) => (same ? 'stored=same-content' : 'stored=CONTENT-DIFFERS')
+  + (cmp.stripped ? '+links' : '');
+const storedFail = (handle, cmp) => handle
+  + ': stored body differs from the sheet beyond normalisation'
+  + (cmp.stripped ? ', with the related-links block already removed' : '');
+
 function sheetRows(file) {
   const m = new Map();
   for (const r of parseCsv(fs.readFileSync(file, 'utf8')).rows) m.set(r.Handle, r);
@@ -111,10 +155,11 @@ function main() {
     catch (e) { fails.push(handle + ': rendered page unreadable: ' + e.message); }
 
     if (stored && want) {
-      const same = semantic(stored.body_html) === semantic(want['Body HTML']);
+      const cmp = comparable(stored.body_html);
+      const same = cmp.text === semantic(want['Body HTML']);
       const storedQs = (stored.body_html.match(/class="cy-bank-q"/g) || []).length;
-      row.push(same ? 'stored=same-content' : 'stored=CONTENT-DIFFERS');
-      if (!same) fails.push(handle + ': stored body differs from the sheet beyond normalisation');
+      row.push(storedLabel(same, cmp));
+      if (!same) fails.push(storedFail(handle, cmp));
       if (storedQs !== qs.length) {
         fails.push(handle + ': stored body holds ' + storedQs + ' questions, expected ' + qs.length);
       }
@@ -232,9 +277,10 @@ function main() {
     catch (e) { fails.push(handle + ': rendered page unreadable: ' + e.message); }
 
     if (stored && want) {
-      const same = semantic(stored.body_html) === semantic(want['Body HTML']);
-      row.push(same ? 'stored=same-content' : 'stored=CONTENT-DIFFERS');
-      if (!same) fails.push(handle + ': stored body differs from the sheet beyond normalisation');
+      const cmp = comparable(stored.body_html);
+      const same = cmp.text === semantic(want['Body HTML']);
+      row.push(storedLabel(same, cmp));
+      if (!same) fails.push(storedFail(handle, cmp));
     }
     if (rendered) {
       row.push('http=' + rendered.code);
