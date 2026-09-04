@@ -140,10 +140,49 @@ also the free preview, but it is a choice rather than CED pacing.
   hides decks, so converting Unit 1 before fixing this drops every Day 2 and
   Day 3 deck on the floor. Enumerating the 15 `Slide_Decks` folders is about 30
   Drive calls and was not spent this session. Fix it before converting Unit 1.
-- **The theme side is untouched.** `layout/theme.liquid` loads the slide gate
-  only for `/pages/ap-csa-lesson-1-`, so Units 2-4 lesson pages do not mount it.
-  Separate PR in the theme repo, against `claude/site-linking-audit-yhufjk`,
-  never `main`. That repo is not in this session's GitHub scope.
+- **The theme side is blocked on page bodies, not on the theme.** This was
+  checked live rather than assumed, and it is the finding that most changes the
+  plan.
+
+  `layout/theme.liquid` loads the slide gate only for `/pages/ap-csa-lesson-1-`,
+  so the obvious change is to widen that path condition. Widening it would not
+  work, because the pages themselves are not shaped for it. Fetched through
+  `lib/storefront-fetch.js` on 2026-09-04:
+
+  ```
+  1.1  intro-algorithms          <div id="apcsa-lesson" data-course="ap-csa" data-lesson-id="1.1">
+  2.1  algorithms-selection...   <div id="apcsa-lesson">
+  2.7  while-loops               <div id="apcsa-lesson">
+  4.13 implementing-2d-array...  <div id="apcsa-lesson">
+  4.16 recursion                 <div id="apcsa-lesson">
+  3.1  abstraction-and-...       no #apcsa-lesson wrapper at all (553 KB page)
+  3.4  constructors              no #apcsa-lesson wrapper at all
+  ```
+
+  So there are two different problems wearing one label. Units 2 and 4 have the
+  wrapper and are missing `data-course` and `data-lesson-id`, which is what
+  `csaLessonIdFromWrapper` reads. Unit 3 has no wrapper to hang anything on.
+
+  Two ways to fix it, with different owners, which is why this is being handed
+  over rather than decided here:
+
+  1. **Add the attributes to the page bodies.** Uniform across all three units,
+     keeps the gate script simple, and is the shape Unit 1 already uses. It is a
+     Matrixify sheet, which CLAUDE.md puts in the chat project and out of this
+     repo's scope.
+  2. **Derive the lesson id from the URL in the gate script.** The handles carry
+     it unambiguously (`ap-csa-lesson-2-7-while-loops`), so no slug table is
+     needed the way CSP needed one. This fixes the 29 lessons of Units 2 and 4
+     with no page-body change, and does nothing for Unit 3.
+
+  Option 2 was not shipped on purpose. It is a workaround for missing data, it
+  would be redundant the moment option 1 lands, and it cannot be verified live
+  until decks exist. Exercise, debug and FRQ pages were checked and carry no
+  `#apcsa-lesson`, so neither option risks mounting the gate on a support page.
+
+  Whichever is chosen, the theme PR goes against
+  `claude/site-linking-audit-yhufjk`, never `main`, and merging it is a live
+  deploy with no CI in between.
 - **Unit 4's 11% pacing gap**, if Tanner wants it closed. Roughly four days in
   the back half, around sorting and recursion.
 - **`scripts/csa_kit/__pycache__/*.pyc` is tracked in git**, so running the kit
