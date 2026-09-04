@@ -1,69 +1,75 @@
 'use strict';
 // ---------------------------------------------------------------------------
-//  AP CSA TEACHER BUNDLE SLIDE MANIFEST -- UNIT 1 PILOT ONLY.
+//  AP CSA TEACHER BUNDLE SLIDE MANIFEST.
 //
 //  Same role as config/csp-slide-manifest.js and config/cyber-slide-manifest.js,
 //  and it deliberately exports the identical shape so routes/slides.js can
 //  select a manifest by course and never branch on the course itself. See
 //  config/slide-manifests.js for the registry.
 //
-//  SCOPE: THE 15 UNIT 1 LESSONS ONLY, NOT ALL 53 CSA LESSONS.
-//  lib/csa-nav.js's UNIT_1 table is the authority for which 15 lessons those
-//  are and what their live page handles are (ap-csa-lesson-1-1-intro-algorithms
-//  through ap-csa-lesson-1-15-string-manipulation). Board task 183 is an
-//  engineering pilot, matching how the reporter script itself was piloted on
-//  CSA Unit 1 first (CLAUDE.md, "Current mission" / "Build order"). Units 2-4
-//  are absent from this manifest on purpose: adding them is a manifest edit,
-//  not a code change, once there is real content to add.
+//  SCOPE, AND HOW IT CHANGED ON 2026-09-04.
+//  This file covered the 15 Unit 1 lessons only when the pipe was built (board
+//  task 183, an engineering pilot with no content behind it). It now also
+//  covers the 38 lessons of Units 2, 3 and 4, because those decks turned out to
+//  ALREADY EXIST: scripts/csa_kit/content_unit{2,3,4}*.py holds the authored
+//  source for all 38, and scripts/build-csa-teacher-kit.py turns it into 152
+//  decks. That work landed 2026-08-24 and stopped one step short of shipping,
+//  on the stated reasoning that putting the files beside the Unit 1 folders in
+//  Drive was Tanner's call rather than a default. He made that call on
+//  2026-09-04, which is what this change is.
 //
-//  WHY EVERY LESSON RESOLVES ZERO DECKS, AND WHY THAT IS NOT A BUG.
-//  No AP CSA slide deck exists yet, gated or not (confirmed live 2026-09-03:
-//  the bundle's own sales page promises "Slides + Resources for All 4 Units"
-//  while carrying zero .pptx links, zero docs.google.com links and zero
-//  data-apcs-slides containers anywhere on the storefront; see
-//  docs/runs/2026-09-03-auditor-csp-slides.md, "ITEM 3"). This manifest does
-//  not invent a placeholder deck to paper over that. It lists all 15 lessons
-//  as KNOWN (isKnownLesson true, so the route answers 200 instead of 404 and
-//  the pipe is provably wired end to end) while config/csa-slide-embeds.js's
-//  map stays empty, so decksForLesson always returns []. An entitled caller
-//  therefore sees the gate's own honest "your access is active, the decks are
-//  being prepared" state (assets/apcs-slides-gate.js renderPending), the exact
-//  same code path config/cyber-slide-manifest.js's unconverted lessons already
-//  exercise, proven correct in smoke/cyber-slide-gate.js section 5. An
-//  unentitled caller sees the ordinary locked upsell, naming the AP CSA
-//  Teacher Bundle once assets/apcs-slides-gate.js's COURSES table is extended
-//  for it (theme repo, this same board task).
+//  WHERE THE DAY COUNTS COME FROM, AND WHY THE TWO HALVES DISAGREE.
+//  Units 2 to 4 read config/csa-slide-days.json, generated from the authored
+//  content by scripts/csa-deck-days-from-content.py and checked by
+//  `npm run smoke:csadeckdays`. Those numbers are real: one entry per lesson,
+//  equal to the number of Day<N>_Deck_*.pptx pairs the builder emits.
 //
-//  DAY_COUNT_BY_LESSON IS A PLACEHOLDER, UNLIKE ITS TWO SIBLING FILES.
-//  config/csp-slide-manifest.js's day counts were read from the Shopify file
-//  library; config/cyber-slide-manifest.js's were read from Drive. Neither
-//  exists for CSA: nobody has planned a by-day split for any Unit 1 lesson,
-//  so there is no artifact to read. Every entry below is 1, meaning only "this
-//  lesson is taught" (true for all 15, per lib/csa-nav.js's own
-//  built.lesson: true), not a sourced pacing claim. Do not treat these numbers
-//  as authored pacing the way the other two files' counts are, and do not
-//  copy them into a teacher-facing page. Replace with a real count, lesson by
-//  lesson, only once an actual deck set exists to count.
+//  Unit 1's table below is still the placeholder every-lesson-is-1 it always
+//  was, and that is not an oversight. Unit 1's decks predate the kit builder
+//  and exist only in Google Drive ('AP CSA Unit 1 Preview'), whose own
+//  COURSE-MATERIALS-INDEX.txt states 15 topics across 35 instructional days. So
+//  the real Unit 1 counts are knowable, they are just not derivable from
+//  anything in this repo, and inventing a split across 15 lessons to reach 35
+//  would be a fabrication dressed as data. Enumerating the Drive folders is the
+//  fix; until then a 1 here means "at least one teaching day exists", which is
+//  true, rather than a sourced pacing claim.
+//
+//  A DAY COUNT IS AN UPPER BOUND ON LOOKUPS, NOT A PROMISE OF CONTENT.
+//  decksForLesson walks day 1..dayCount and asks the embed map for each one. A
+//  count that is too LOW silently hides decks that exist. A count that is too
+//  high costs nothing but a few misses. That asymmetry is why Unit 1 sitting at
+//  1 is safe today (its embed map is empty, so there is nothing to hide) and
+//  becomes a real bug the moment Unit 1 decks are converted. Fix it before
+//  converting Unit 1, not after.
+//
+//  ZERO DECKS STILL RESOLVE FOR EVERY LESSON, INCLUDING UNITS 2 TO 4.
+//  config/csa-slide-embeds.js's id map is empty until the Apps Script has
+//  converted the .pptx files to Google Slides and its map sheet has been fed
+//  through scripts/csa-slide-embeds-from-csv.js. Every lesson here is therefore
+//  isKnownLesson true (the route answers 200 rather than 404, so the pipe is
+//  provably wired) with decksForLesson returning [], which is the honest
+//  entitled-with-nothing-to-show state that assets/apcs-slides-gate.js renders
+//  as "your access is active, the decks are being prepared". That is the same
+//  code path cyber's unconverted lessons already exercise.
 // ---------------------------------------------------------------------------
 
 const embeds = require('./csa-slide-embeds');
+const authored = require('./csa-slide-days.json');
 
-// lessonId -> placeholder day count. See the header: this is "at least one
-// teaching day exists", not a sourced pacing plan. Unit 1 only, the 15
-// lessons in lib/csa-nav.js's UNIT_1.
-const DAY_COUNT_BY_LESSON = {
+// Unit 1: placeholder, see the header. 15 lessons, lib/csa-nav.js's UNIT_1 is
+// the authority for which 15 and what their live handles are.
+const UNIT_1_DAYS = {
   '1-1': 1, '1-2': 1, '1-3': 1, '1-4': 1, '1-5': 1,
   '1-6': 1, '1-7': 1, '1-8': 1, '1-9': 1, '1-10': 1,
   '1-11': 1, '1-12': 1, '1-13': 1, '1-14': 1, '1-15': 1,
 };
 
+// Units 2 to 4: real counts, derived from the authored kit content.
+const DAY_COUNT_BY_LESSON = Object.assign({}, UNIT_1_DAYS, authored.days);
+
 // Deck variants, in the shape the route exposes them (lowercase, JS-friendly).
-// No filenames exist yet to fix a casing convention against, so this copies
-// config/cyber-slide-manifest.js's STUDENT/TEACHER casing rather than CSP's
-// Student/TEACHER mix, on the reasoning that a decision made once should not
-// be re-litigated per course without a reason; whoever builds the real
-// conversion script can change this in one place if the eventual file names
-// disagree.
+// The filename casing the kit builder actually emits is Day<N>_Deck_TEACHER
+// and Day<N>_Deck_STUDENT, so this matches the files rather than guessing.
 const VARIANTS = { teacher: 'TEACHER', student: 'STUDENT' };
 
 // AP CSP splits every deck across a CB Standard and a Deep Dive track. Neither
@@ -84,9 +90,7 @@ function dayCount(lessonId) {
 // config/cyber-slide-manifest.js: a deck with no embed is omitted entirely
 // rather than returned empty, because a CSA deck (like a cyber one) has no
 // .pptx fallback, so an unconverted slot is nothing at all rather than a
-// download-only stub. Today embeds.slideId() never finds an id for any
-// lesson, so this always returns [], which is the honest, tested,
-// entitled-with-nothing-to-show state described in the header above.
+// download-only stub.
 function decksForLesson(lessonId, variants) {
   if (!isKnownLesson(lessonId)) return null;
   const days = dayCount(lessonId);
@@ -109,4 +113,5 @@ module.exports = {
   LESSON_IDS: Object.keys(DAY_COUNT_BY_LESSON),
   VARIANT_KEYS: Object.keys(VARIANTS),
   TRACK_KEYS,
+  AUTHORED_LESSON_IDS: Object.keys(authored.days),
 };
