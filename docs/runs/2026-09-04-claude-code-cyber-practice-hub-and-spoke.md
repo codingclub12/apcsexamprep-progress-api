@@ -127,8 +127,13 @@ it rather than by reading it.
   the rule that claims it, all 11 rules proven red independently.
 - `npm run smoke:cybersheet` and `smoke:cybersheetmutation` - unchanged and
   green after the `flatten` fix, all 7 rules still provable red.
-- `node scripts/deploy-gate.js deploy-gates/2026-09-04-cyber-practice-hub-and-spoke.json --pre`
-  - suite, rederive and mutation all agree.
+- `node scripts/deploy-gate.js deploy-gates/2026-09-04-cyber-practice-hub-and-spoke.json`
+  - run again WITHOUT `--pre` after the merge: suite, rederive and mutation all
+  agree. It carries no live check, honestly, because nothing the code changed is
+  observable until the sheets are imported.
+- Merged as `1495621` and production reported that commit on `/api/health`
+  within about two minutes. Zero runtime surface: nothing under `routes/` or
+  `server.js` requires any file this added, and the server boots clean.
 - `python3 scripts/cyber-practice-rederive.py ...` - 17 checks re-derived from
   the CSV by a different parser in a different language, expectations taken from
   the live sitemap rather than from the generator's own config.
@@ -142,11 +147,16 @@ it rather than by reading it.
   `imports/2026-09-04/cyber-practice-new-pages.csv` FIRST, then
   `cyber-practice-hub-links-pages.csv`: the hub links point at the five new
   handles, so the reverse order publishes two hubs linking five 404s.
-- **The live check is deferred and is named in the gate.** After the import: the
-  five handles return 200, `ap-cybersecurity-topics` contains
-  `ap-cybersecurity-practice`, and `ap-cybersecurity-practice` contains all five
-  spoke handles. All three are false today, so they assert something the change
-  made true rather than something already true.
+- **The live check is written and runnable**, not described:
+  `npm run verify:cyberpractice`, gated by
+  `deploy-gates/2026-09-04-cyber-practice-import.json`. That gate is separate
+  from the code gate on purpose, because a content import is a different deploy
+  from a code deploy and folding them together would leave the code gate red for
+  reasons that have nothing to do with the code.
+  Run against the storefront BEFORE any import it reports 7 failures and 2
+  passes, which is the proof it is not decoration: the 7 are the assertions the
+  import makes true, and the 2 are preservation checks that were already true
+  and would catch a MERGE that blanked a live body.
 - **Course pages do not link back to their unit's practice spoke.** This pass is
   hub-down, which `docs/internal-linking.md` argues is the right first move:
   editing the hub rescues every spoke beneath it. The 128 course pages linking
