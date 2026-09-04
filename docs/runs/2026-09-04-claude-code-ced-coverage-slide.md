@@ -120,3 +120,38 @@ session established.
 - Whether the coverage slide should ALSO appear on the CSA and CSP summaries.
   Those courses have no EK table on the page, so it would need a different
   source, and nobody has asked.
+
+## Post-deploy live check, added after the merge
+
+Tanner merged theme PR #106 himself at 2026-09-04 13:58:35Z, six seconds after
+taking it out of draft. The deploy is confirmed, and this is the second gate run
+the convention asks for, the one where `live` can actually observe something.
+
+It asserts a thing that was FALSE before the deploy, which is the whole point of
+the rule. Not "the widget renders", which was true yesterday.
+
+The served asset moved:
+
+    before   apcs-lesson-summary.js?v=1603876131900443861...   8476 bytes
+    after    apcs-lesson-summary.js?v=636384150469707115...   11077 bytes
+
+Eight coverage markers are present in the new build and absent from the old one:
+`apcs-ls-cover`, `apcs-ls-cover-what`, `apcs-ls-cover-where`, `collectCoverage`,
+the CED alignment eyebrow, the slide headline, the Essential Knowledge copy, and
+the `ced ref` header match. Zero CED codes anywhere in the served file.
+
+Then the CDN copy itself, not the local build, rendered against three live page
+bodies fetched through `lib/storefront-fetch.js` with no User-Agent:
+
+    4.3   9 slides, coverage at 8 of 9,  9 rows, 0 EK codes
+    5.5   6 slides, coverage at 5 of 6,  5 rows, 0 EK codes
+    1.1  12 slides, coverage at 11 of 12, 8 rows, 0 EK codes
+
+5.5 is the one worth noting: it rendered NO widget at all before the mount-guard
+change, so its 5 rows are the guard doing what the commit said it would.
+
+The detector was proved to fire on "policy (4.3.A.1) governs" before that zero
+was trusted, same as during the build.
+
+Board #224 carries this as a note rather than as a verification. Rule 4 stands:
+the session that did the work is not the one that says it is true.
