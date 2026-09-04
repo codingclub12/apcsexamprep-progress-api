@@ -21,6 +21,8 @@ from docx.shared import Pt, Inches, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
 
+from csa_kit.differentiation import DIFFERENTIATION
+
 BLANK = '_' * 22
 NAVY = RGBColor(0x10, 0x24, 0x3A)
 ACCENT = RGBColor(0x2C, 0x6B, 0xAF)
@@ -543,6 +545,24 @@ def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_li
         _heading(doc, 'Vocabulary')
         for term, definition in vocab:
             _bullet(doc, f'{term}: {definition}')
+
+    # ── differentiation ──────────────────────────────────────────────────────
+    # The one section of the Unit 1 guides that is NOT rendered from the topic
+    # dict, because nothing in the dict describes it. It is authored separately
+    # in csa_kit/differentiation.py and is the only newly written content in
+    # this kit, which is why a topic missing from that file simply omits the
+    # section rather than printing a placeholder: a guide with no
+    # Differentiation heading is honest, and a heading over invented filler is
+    # not.
+    diff = DIFFERENTIATION.get(topic)
+    if diff:
+        _heading(doc, 'Differentiation')
+        _p(doc, 'Support', size=11.5, bold=True, color=ACCENT, space_after=3)
+        for item in diff['support']:
+            _bullet(doc, item)
+        _p(doc, 'Stretch', size=11.5, bold=True, color=ACCENT, space_after=3)
+        for item in diff['stretch']:
+            _bullet(doc, item)
 
     # ── the three surfaces ───────────────────────────────────────────────────
     _heading(doc, 'On the website (students)')

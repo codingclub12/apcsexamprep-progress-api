@@ -177,7 +177,27 @@ def main():
                         absent.append(f"{t['topic']} quiz: {q['stem'][:44]}")
     ok(f'all {required} key ideas and quiz stems reach the guide', not absent, absent[:4])
 
-    print('6. A free-response student packet never carries the answer')
+    print('6. Differentiation covers every topic and keeps its shape')
+    from csa_kit.differentiation import DIFFERENTIATION
+    topics = [t['topic'] for u in (2, 3, 4) for t in load_topics(u)]
+    missing = [t for t in topics if t not in DIFFERENTIATION]
+    extra = [t for t in DIFFERENTIATION if t not in topics]
+    ok(f'every one of the {len(topics)} topics has differentiation', not missing, missing[:5])
+    ok('no differentiation for a topic that does not exist', not extra, extra[:5])
+    shape = [t for t, v in DIFFERENTIATION.items()
+             if len(v.get('support', [])) != 3 or len(v.get('stretch', [])) != 4]
+    ok('every topic has exactly 3 support and 4 stretch', not shape, shape[:5])
+    unlabeled = [t for t, v in DIFFERENTIATION.items()
+                 if 'not tested' not in v['stretch'][3]]
+    ok('the fourth stretch task is labeled beyond-scope everywhere',
+       not unlabeled, unlabeled[:5])
+    dtext = '\n'.join(i for v in DIFFERENTIATION.values()
+                      for i in v['support'] + v['stretch'])
+    ok('no British spellings in the differentiation draft',
+       not BRITISH.search(dtext),
+       sorted({m.group(0).lower() for m in BRITISH.finditer(dtext)})[:5])
+
+    print('7. A free-response student packet never carries the answer')
     import json as _json
     frq_path = os.path.join(ROOT, 'config', 'csa-frq-kit.json')
     if not os.path.exists(frq_path):
