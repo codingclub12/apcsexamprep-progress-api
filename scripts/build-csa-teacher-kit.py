@@ -28,7 +28,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
 
 from csa_kit.deck import Deck
-from csa_kit.notes import build_notes, build_quiz, build_lesson_map
+from csa_kit.notes import build_notes, build_quiz, build_teacher_guide
 
 PREPARED = ('Prepared for the May 2027 AP CSA exam '
             '(2025 Course and Exam Description, four-unit structure).')
@@ -125,9 +125,11 @@ def main():
                        t['topic'], t['title'], t['handle'], t['quiz'], key_edition)
             made += 1
 
-        build_lesson_map(os.path.join(root, 'Teacher_Guide.docx'),
-                         t['topic'], t['title'], t['handle'], t['days'],
-                         '6 checks for understanding, 1 code exercise, 1 debugging exercise, the topic quiz')
+        build_teacher_guide(os.path.join(root, 'Teacher_Guide.docx'),
+                            t['topic'], t['title'], t['handle'], t['days'],
+                            t['vocab'], t['quiz'],
+                            '6 checks for understanding, 1 code exercise, '
+                            '1 debugging exercise, the topic quiz')
         made += 1
         print(f"  built {t['topic']}  {t['title']}  ({slides} slides per deck)")
 

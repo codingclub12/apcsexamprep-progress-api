@@ -151,6 +151,31 @@ def main():
     ok(f'no Java statement is buried in a warm-up prompt ({blocks} code blocks)',
        not inline, inline[:5])
 
+    print('5. The teacher guide carries the topic\'s actual teaching content')
+    import tempfile
+    from docx import Document
+    from csa_kit.notes import build_teacher_guide
+    required = 0
+    absent = []
+    with tempfile.TemporaryDirectory() as tmp:
+        for unit in (2, 3, 4):
+            for t in load_topics(unit):
+                out = os.path.join(tmp, f"g{t['topic']}.docx")
+                build_teacher_guide(out, t['topic'], t['title'], t['handle'],
+                                    t['days'], t['vocab'], t['quiz'], 'x')
+                text = '\n'.join(p.text for p in Document(out).paragraphs)
+                for d in t['days']:
+                    for _name, ideas in d.get('sections', []):
+                        for idea in ideas:
+                            required += 1
+                            if idea not in text:
+                                absent.append(f"{t['topic']} d{d['day']}: {idea[:44]}")
+                for q in t['quiz']:
+                    required += 1
+                    if q['stem'] not in text:
+                        absent.append(f"{t['topic']} quiz: {q['stem'][:44]}")
+    ok(f'all {required} key ideas and quiz stems reach the guide', not absent, absent[:4])
+
     print()
     if FAILED:
         print(f'{len(FAILED)} FAILED: ' + '; '.join(FAILED))

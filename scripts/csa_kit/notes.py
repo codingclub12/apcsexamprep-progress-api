@@ -14,6 +14,8 @@ glance. That is why they can never drift apart.
 No em-dashes anywhere in generated text.
 """
 
+import re
+
 from docx import Document
 from docx.shared import Pt, Inches, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -236,74 +238,248 @@ def build_quiz(path, topic, title, handle, questions, key_edition):
     doc.save(path)
 
 
-def build_lesson_map(path, topic, title, handle, days, graded_line):
-    """One page: what happens, in what order, on each day."""
+STRUCTURAL = ('bell ringer', 'objectives and guided', 'worked', 'misconception',
+              'stop and think', 'guided practice', 'independent practice',
+              'exit ticket')
+
+
+def _is_structural(label):
+    """True for a schedule segment whose content comes from a named field
+    (warmup, worked, misconception, discussion) rather than from sections."""
+    low = label.lower()
+    return any(low.startswith(p) for p in STRUCTURAL)
+
+
+def _bullet(doc, text, size=10.5, indent=0.25):
+    p = doc.add_paragraph(style='List Paragraph')
+    p.paragraph_format.left_indent = Inches(indent)
+    p.paragraph_format.space_after = Pt(3)
+    r = p.add_run(text)
+    r.font.size = Pt(size)
+    r.font.name = 'Calibri'
+    return p
+
+
+def _mono(doc, text, indent=0.45):
+    for line in text.split('\n'):
+        p = doc.add_paragraph()
+        p.paragraph_format.left_indent = Inches(indent)
+        p.paragraph_format.space_after = Pt(0)
+        r = p.add_run(line if line else ' ')
+        r.font.size = Pt(10)
+        r.font.name = 'Consolas'
+        r.font.color.rgb = NAVY
+    return doc
+
+
+def _segment(doc, label, minutes):
+    p = doc.add_paragraph()
+    p.paragraph_format.space_before = Pt(8)
+    p.paragraph_format.space_after = Pt(2)
+    r = p.add_run(label)
+    r.font.size = Pt(11)
+    r.font.bold = True
+    r.font.name = 'Calibri'
+    r.font.color.rgb = NAVY
+    if minutes:
+        r2 = p.add_run(f'   ({minutes} min)')
+        r2.font.size = Pt(9.5)
+        r2.font.name = 'Calibri'
+        r2.font.color.rgb = MUTED
+    return p
+
+
+def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_line):
+    """The full teacher guide for one topic.
+
+    THIS REPLACED A ONE PAGE LESSON MAP ON 2026-09-04, and the reason is worth
+    keeping. The Unit 1 guides Tanner already ships carry the learning
+    objectives with their CED codes, every teaching segment's actual content,
+    the bell ringer WITH its debrief answers, an exit ticket with answers, and
+    the traps the topic sets. The generated Units 2-4 guide carried two timing
+    tables and four sentences, so a teacher opening 1.3 and then 2.3 met two
+    different products.
+
+    Nothing here is newly authored. Every section below is rendered from the
+    same topic dict that already drives the slides, the guided notes and the
+    quiz, which is the kit's founding rule: one content source per topic, so
+    the surfaces cannot drift. The content was there the whole time and only
+    the deck and the notes were reading it.
+
+    ONE SECTION OF THE UNIT 1 GUIDE IS DELIBERATELY ABSENT. Unit 1 carries
+    Differentiation, three Support moves and four Stretch tasks per topic, and
+    there is nothing in the content dict to render that from. Inventing it here
+    would be authoring 266 items nobody has reviewed, which this repo treats as
+    a human decision rather than a generator feature.
+    """
     doc = Document()
     for s in doc.sections:
         s.top_margin = s.bottom_margin = Inches(0.7)
         s.left_margin = s.right_margin = Inches(0.8)
 
-    _p(doc, 'LESSON MAP', size=10, bold=True, color=ACCENT, space_after=2)
-    _p(doc, f'Topic {topic}: {title}', size=16, bold=True, color=NAVY, space_after=2)
-    _p(doc, 'One page. What happens, in what order, on each day.', size=10.5,
-       color=MUTED, space_after=10)
+    _p(doc, 'TEACHER GUIDE', size=10, bold=True, color=ACCENT, space_after=2)
+    _p(doc, f'Topic {topic}: {title}', size=19, bold=True, color=NAVY, space_after=2)
+    _p(doc, f'{len(days)} days   |   Prepared for the May 2027 AP CSA exam '
+            '(2025 Course and Exam Description, four-unit structure).',
+       size=9.5, color=MUTED, space_after=10)
 
+    # ── learning objectives ──────────────────────────────────────────────────
+    seen = []
     for d in days:
-        _heading(doc, f"Day {d['day']}")
-        _p(doc, d['focus'], size=11, color=MUTED, space_after=6)
+        for text, code in d.get('objectives', []):
+            if code not in [c for _, c in seen]:
+                seen.append((text, code))
+    if seen:
+        _heading(doc, 'Learning objectives')
         table = doc.add_table(rows=1, cols=2)
-        table.style = 'Table Grid'
+        table.style = 'Light Grid Accent 1'
+        table.alignment = WD_TABLE_ALIGNMENT.LEFT
         hdr = table.rows[0].cells
-        for cell, text in zip(hdr, ('Time', 'What happens')):
-            cell.text = ''
-            r = cell.paragraphs[0].add_run(text)
-            r.font.bold = True
-            r.font.size = Pt(10.5)
-            r.font.name = 'Calibri'
-        total = 0
-        for minutes, what in d['schedule']:
-            cells = table.add_row().cells
-            for cell, text in zip(cells, (f'{minutes} min', what)):
-                cell.text = ''
-                r = cell.paragraphs[0].add_run(text)
-                r.font.size = Pt(10.5)
-                r.font.name = 'Calibri'
-            total += minutes
-        cells = table.add_row().cells
-        for cell, text in zip(cells, (f'= {total} min', 'Full period')):
-            cell.text = ''
-            r = cell.paragraphs[0].add_run(text)
-            r.font.size = Pt(10.5)
-            r.font.bold = True
-            r.font.name = 'Calibri'
-        _p(doc, '', space_after=4)
-        for note in d.get('notes', []):
-            _p(doc, note, size=10, color=MUTED, space_after=6)
+        hdr[0].text, hdr[1].text = 'Code', 'Objective'
+        for text, code in seen:
+            row = table.add_row().cells
+            row[0].text = code.replace('LO ', '')
+            row[1].text = text
+        for row in table.rows:
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    for r in p.runs:
+                        r.font.size = Pt(10)
+                        r.font.name = 'Calibri'
 
+        _heading(doc, 'Students will be able to')
+        for text, _code in seen:
+            _bullet(doc, text)
+
+    # ── how the days run ─────────────────────────────────────────────────────
+    _heading(doc, 'How the days run')
+    for d in days:
+        p = doc.add_paragraph()
+        p.paragraph_format.space_before = Pt(10)
+        p.paragraph_format.space_after = Pt(2)
+        r = p.add_run(f"Day {d['day']}")
+        r.font.size = Pt(14)
+        r.font.bold = True
+        r.font.name = 'Cambria'
+        r.font.color.rgb = ACCENT
+        if d.get('focus'):
+            _p(doc, d['focus'], size=10, color=MUTED, space_after=4)
+
+        # Attach the day's sections to its teaching segments BY ORDER.
+        #
+        # Two earlier attempts failed and both are worth naming. Matching the
+        # schedule label to the section name exactly missed almost everything,
+        # because a label is a description and a name is a title: "Why order
+        # matters in a chain" against "Chains and order". Normalizing
+        # punctuation fixed one case out of 114 and left 76 teaching segments
+        # printing a heading and a timing with no content beneath, which is the
+        # most useful thing the guide carries.
+        #
+        # The order does line up, and it lines up in both shapes the content
+        # takes. Measured across all 76 days: 38 have one section per teaching
+        # segment, and 38 have one long segment covering two sections. So walk
+        # the segments in order, hand each the next section, and let the LAST
+        # teaching segment absorb whatever is left. Both shapes come out right
+        # and nothing is silently dropped.
+        sections = list(d.get('sections', []))
+        teach_idx = [i for i, (_m, lab) in enumerate(d.get('schedule', []))
+                     if not _is_structural(lab)]
+        attached = {}
+        if teach_idx:
+            per = len(sections) // len(teach_idx)
+            per = max(per, 1)
+            cursor = 0
+            for n, i in enumerate(teach_idx):
+                last = (n == len(teach_idx) - 1)
+                take = sections[cursor:] if last else sections[cursor:cursor + per]
+                attached[i] = take
+                cursor += len(take)
+        warm = d.get('warmup') or []
+        for seg_i, (minutes, label) in enumerate(d.get('schedule', [])):
+            _segment(doc, label, minutes)
+            low = label.lower()
+            if low.startswith('bell ringer') and len(warm) >= 3:
+                _bullet(doc, warm[1])
+                if len(warm) > 3 and warm[3]:
+                    _mono(doc, warm[3])
+                _bullet(doc, f'Debrief: {warm[2]}')
+            elif seg_i in attached:
+                for name, ideas in attached[seg_i]:
+                    if len(attached[seg_i]) > 1:
+                        _p(doc, name, size=10.5, bold=True, space_after=2)
+                    for idea in ideas:
+                        _bullet(doc, idea)
+            elif low.startswith('worked'):
+                w = d.get('worked') or {}
+                if w.get('note'):
+                    _bullet(doc, w['note'])
+                elif w.get('caption'):
+                    _bullet(doc, w['caption'])
+            elif low.startswith('misconception'):
+                m = d.get('misconception') or {}
+                if m.get('truth'):
+                    _bullet(doc, f"{m.get('heading', 'Misconception')}: {m['truth']}")
+            elif low.startswith('stop and think'):
+                for q in (d.get('discussion') or []):
+                    _bullet(doc, q)
+                if d.get('extra'):
+                    _bullet(doc, f"Homework: {d['extra']}")
+
+    # ── exit ticket ──────────────────────────────────────────────────────────
+    if quiz:
+        _heading(doc, 'Exit ticket, with answers')
+        _p(doc, 'Answers are shown. Do not hand this page to students.',
+           size=9.5, color=MUTED, space_after=6)
+        for i, q in enumerate(quiz, 1):
+            _p(doc, f"{i}. {q['stem']}", size=10.5, space_after=2)
+            for j, opt in enumerate(q['options']):
+                mark = '  <-- answer' if j == q['answer_index'] else ''
+                _bullet(doc, f"{chr(65 + j)}. {opt}{mark}", size=10, indent=0.45)
+            if q.get('why'):
+                _p(doc, f"Why: {q['why']}", size=9.5, color=MUTED, space_after=8)
+
+    # ── traps ────────────────────────────────────────────────────────────────
+    traps = []
+    for d in days:
+        m = d.get('misconception') or {}
+        if m.get('truth'):
+            traps.append((m.get('heading', 'Misconception'), m['truth']))
+        b = d.get('break_it') or {}
+        if b.get('why'):
+            change = (b.get('change') or 'One change').rstrip('.')
+            traps.append((f'Change it and see: {change}', b['why']))
+    if traps:
+        _heading(doc, 'Traps this topic sets')
+        for head, body in traps:
+            # rstrip the period: several headings already end with one, and
+            # "same conditions.. Separate ifs" is how that looked before.
+            _p(doc, f'{head.rstrip(".")}. {body}', size=10.5, space_after=6)
+
+    # ── vocabulary ───────────────────────────────────────────────────────────
+    if vocab:
+        _heading(doc, 'Vocabulary')
+        for term, definition in vocab:
+            _bullet(doc, f'{term}: {definition}')
+
+    # ── the three surfaces ───────────────────────────────────────────────────
     _heading(doc, 'On the website (students)')
-    _p(doc, 'Everything on this page is auto-graded and reports to your gradebook the '
-            'moment a student submits. Send students here rather than reading answers '
-            'off paper: it is where the scores come from.', size=10.5, space_after=6)
+    _p(doc, 'Everything on the lesson page is auto-graded and reports to your '
+            'gradebook the moment a student submits.', size=10.5, space_after=4)
     table = doc.add_table(rows=0, cols=2)
-    table.style = 'Table Grid'
-    for label, value in (('Lesson page', f'apcsexamprep.com/pages/{handle}'),
-                         ('Auto-graded on that page', graded_line),
-                         ('Your gradebook', 'apcsexamprep.com/pages/cyber-dashboard')):
-        cells = table.add_row().cells
-        for cell, text, bold in ((cells[0], label, True), (cells[1], value, False)):
-            cell.text = ''
-            r = cell.paragraphs[0].add_run(text)
-            r.font.size = Pt(10.5)
-            r.font.bold = bold
-            r.font.name = 'Calibri'
+    table.style = 'Light Grid Accent 1'
+    for k, v in (('Lesson page', f'apcsexamprep.com/pages/{handle}'),
+                 ('Auto-graded on that page', graded_line),
+                 ('Your gradebook', 'apcsexamprep.com/pages/cyber-dashboard')):
+        row = table.add_row().cells
+        row[0].text, row[1].text = k, v
+        for cell in row:
+            for p in cell.paragraphs:
+                for r in p.runs:
+                    r.font.size = Pt(10)
+                    r.font.name = 'Calibri'
 
-    _heading(doc, 'How the three surfaces fit together')
-    for label, purpose in (('Slides', 'The daily instruction you project'),
-                           ('This folder', 'What you print: notes, exercises, quiz, and the keys'),
-                           ('The website', 'Where students practice, and the only place scores are recorded')):
-        _p(doc, f'{label}: {purpose}', size=10.5, space_after=4)
-
-    _p(doc, '', space_after=10)
-    _p(doc, TRADEMARK, size=7.5, color=MUTED, space_after=2)
-    _p(doc, f'APCSExamPrep.com   Topic {topic} lesson map', size=8, color=MUTED)
+    _p(doc)
+    _p(doc, TRADEMARK, size=7.5, color=MUTED, space_after=0)
+    _p(doc, f'APCSExamPrep.com   Topic {topic} teacher guide', size=7.5,
+       color=MUTED, space_after=0)
     doc.save(path)
