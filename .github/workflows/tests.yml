@@ -89,6 +89,29 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Two suites are Python. smoke:csadeckdays is stdlib only and has always
+      # been fine. smoke:csakitstyle needs BOTH: it imports csa_kit.deck to
+      # check the bell-ringer rule, which pulls in python-pptx, and it builds
+      # the 38 teacher guides and reads them back, which needs python-docx.
+      # The runner ships neither.
+      #
+      # Both were found by simulating a runner without them rather than by
+      # reading the imports. The first attempt at this step installed only
+      # python-docx, because the docx import is the visible one in the suite
+      # while the pptx import is two files away in csa_kit/deck.py.
+      #
+      # INSTALLED RATHER THAN SKIPPED ON ImportError, deliberately. Degrading a
+      # check to a no-op when its dependency is missing is how a guard stops
+      # working without ever saying so, which is the failure this repo keeps
+      # finding in its own validators. A missing dependency should be loud and
+      # fixable, not quietly green.
+      #
+      # Pinned to the versions the suite was actually verified against, the
+      # same reasoning as npm ci above. Pinning a version nobody ran would
+      # test something this repo has never seen.
+      - name: Install Python deps for the two Python suites
+        run: python3 -m pip install --quiet python-docx==1.2.0 python-pptx==1.0.2
+
       # Every suite runs even after one fails, so a red build reports ALL the
       # damage rather than only the first thing to break. Failing fast here
       # would mean a second push to discover the second failure.

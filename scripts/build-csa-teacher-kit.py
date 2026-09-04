@@ -28,7 +28,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
 
 from csa_kit.deck import Deck
-from csa_kit.notes import build_notes, build_quiz, build_lesson_map
+from csa_kit.notes import build_notes, build_quiz, build_teacher_guide
 
 PREPARED = ('Prepared for the May 2027 AP CSA exam '
             '(2025 Course and Exam Description, four-unit structure).')
@@ -44,8 +44,14 @@ def build_deck(t, day, edition, path):
     d.title_slide(PREPARED,
                   note=f"Day {day['day']} of {len(t['days'])}. The Lesson Map in the Teacher Guide "
                        f"has a suggested time for each section if you want one.")
-    warm_head, warm_prompt, warm_draw = day['warmup']
-    d.warmup(warm_head, warm_prompt, warm_draw)
+    # A warm-up is [heading, prompt, draw_out] and may carry a fourth element,
+    # a code fragment to set as a real code block instead of running it into
+    # the prompt sentence. Unpacked by length so the 70 warm-ups that carry no
+    # code need no edit.
+    warm = day['warmup']
+    warm_head, warm_prompt, warm_draw = warm[0], warm[1], warm[2]
+    warm_code = warm[3] if len(warm) > 3 else None
+    d.warmup(warm_head, warm_prompt, warm_draw, warm_code)
     d.notes_preview([(name, ideas[0]) for name, ideas in day['sections']])
     d.objectives(day['objectives'])
     for i, (name, ideas) in enumerate(day['sections'], 1):
@@ -119,9 +125,11 @@ def main():
                        t['topic'], t['title'], t['handle'], t['quiz'], key_edition)
             made += 1
 
-        build_lesson_map(os.path.join(root, 'Teacher_Guide.docx'),
-                         t['topic'], t['title'], t['handle'], t['days'],
-                         '6 checks for understanding, 1 code exercise, 1 debugging exercise, the topic quiz')
+        build_teacher_guide(os.path.join(root, 'Teacher_Guide.docx'),
+                            t['topic'], t['title'], t['handle'], t['days'],
+                            t['vocab'], t['quiz'],
+                            '6 checks for understanding, 1 code exercise, '
+                            '1 debugging exercise, the topic quiz')
         made += 1
         print(f"  built {t['topic']}  {t['title']}  ({slides} slides per deck)")
 

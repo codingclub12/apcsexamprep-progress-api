@@ -67,10 +67,9 @@ TOPICS = [
      'Connect to 1.10: ignoring a return value is the same mistake from the caller side.',
    ],
    'warmup': ('What the method can and cannot change',
-     'On the board: "int x = 5; twice(x); System.out.println(x); where twice does n = n * 2. '
-     'What prints? Commit to an answer before we discuss."',
-     'It prints 5. The method doubled its own copy. Getting a wrong answer committed in writing first is what '
-     'makes the explanation land, so do not let anyone hedge.'),
+     'On the board, where twice does n = n * 2. "What prints? Commit to an answer before we discuss."',
+     'It prints 5. The method doubled its own copy. Getting a wrong answer committed in writing first is what makes the explanation land, so do not let anyone hedge.',
+     'int x = 5;\ntwice(x);\nSystem.out.println(x);'),
    'objectives': [
      ('I can write a method with parameters and a return value.', 'LO 3.5.A'),
      ('I can explain why changing a primitive parameter does not affect the caller.', 'LO 3.5.B'),
@@ -583,7 +582,7 @@ TOPICS = [
    ],
    'sections': [
      ('Constants and configuration', [
-       'static final declares a constant: one copy, and it cannot be reassigned after initialisation.',
+       'static final declares a constant: one copy, and it cannot be reassigned after initialization.',
        'A constant gives a name to a value and puts the value in exactly one place, which is 3.1 applied.',
        'Constants are conventionally written in capitals with underscores, such as MAX_SIZE.',
      ]),
@@ -706,7 +705,7 @@ TOPICS = [
      'lifetimes in twelve lines, which is the whole idea of scope made visible.'),
    'objectives': [
      ('I can state the scope and lifetime of a field, a local and a loop variable.', 'LO 3.8.A'),
-     ('I can recognise shadowing and the symptoms it produces.', 'LO 3.8.B'),
+     ('I can recognize shadowing and the symptoms it produces.', 'LO 3.8.B'),
      ('I can explain the difference between public and private access.', 'LO 3.8.C'),
    ],
    'sections': [
@@ -719,7 +718,7 @@ TOPICS = [
      ('Shadowing', [
        'When a local has the same name as a field, the bare name means the local everywhere in that method.',
        'The field is still there, still holding its own value, and simply unreachable by that name.',
-       'Two symptoms to recognise: a field that stays at its default, and a divide by zero from a count that was never accumulated.',
+       'Two symptoms to recognize: a field that stays at its default, and a divide by zero from a count that was never accumulated.',
      ]),
    ],
    'worked': {
@@ -759,7 +758,7 @@ TOPICS = [
    ],
    'learned': [
      'I can state the scope and lifetime of a field, a local and a loop variable.',
-     'I can recognise shadowing and the symptoms it produces.',
+     'I can recognize shadowing and the symptoms it produces.',
      'I can explain the difference between public and private access.',
    ],
    'up_next': 'Day 2 uses access modifiers deliberately to control what callers can reach.',
@@ -778,7 +777,7 @@ TOPICS = [
      (5, 'Exit ticket'),
    ],
    'notes': [
-     'Private fields, public behaviour is the rule. State it once and apply it repeatedly.',
+     'Private fields, public behavior is the rule. State it once and apply it repeatedly.',
      'A public field is not just untidy; it removes the class\'s ability to enforce anything.',
    ],
    'warmup': ('Retrieval on scope',
@@ -789,11 +788,11 @@ TOPICS = [
    'objectives': [
      ('I can choose public or private for each field and method deliberately.', 'LO 3.8.C'),
      ('I can explain why public fields remove a class\'s ability to enforce rules.', 'LO 3.8.C'),
-     ('I can keep data private while exposing the behaviour callers need.', 'LO 3.8.A'),
+     ('I can keep data private while exposing the behavior callers need.', 'LO 3.8.A'),
    ],
    'sections': [
      ('Choosing access', [
-       'The default rule is private fields and public behaviour: callers use methods, never the data directly.',
+       'The default rule is private fields and public behavior: callers use methods, never the data directly.',
        'A public field can be set to anything by anyone, so the class can no longer enforce any rule about it.',
        'A private field with a mutator lets the class validate every change before accepting it.',
      ]),
@@ -822,7 +821,7 @@ TOPICS = [
                 'longer on the path anyone uses.',
      'why': 'A public field removes the class\'s only opportunity to check anything. Validation works because '
             'there is exactly one way in, and making the field public opens a second way that skips it. Private '
-            'fields and public behaviour is what makes the rule enforceable.',
+            'fields and public behavior is what makes the rule enforceable.',
      'note': 'The validation code being untouched is the point. Nothing was deleted and the guarantee still '
              'vanished.',
    },
@@ -842,7 +841,7 @@ TOPICS = [
    'learned': [
      'I can choose public or private for each field and method deliberately.',
      'I can explain why public fields remove a class\'s ability to enforce rules.',
-     'I can keep data private while exposing the behaviour callers need.',
+     'I can keep data private while exposing the behavior callers need.',
    ],
    'up_next': 'Topic 3.9 introduces this, which names the field when a parameter shares its name.',
    'extra': 'Complete the graded debugging exercise for 3.8. It plants locals shadowing two different fields.',
@@ -910,14 +909,13 @@ TOPICS = [
      'Read every assignment left to right: the LEFT is what changes. Drill that phrasing.',
    ],
    'warmup': ('Which one did you mean',
-     'On the board: "public void setName(String name) { name = name; } The field is also called name. '
-     'What is the object\'s name after calling setName(\\"Ada\\")? Commit before we run it."',
-     'Unchanged, and usually null. Most of the class will say Ada. That gap between what the line looks like and '
-     'what it does is the entire topic, so collect the wrong answer in writing first.'),
+     'On the board, and the field is also called name. "What is the object\'s name after calling setName(\\"Ada\\")? Commit before we run it."',
+     'Unchanged, and usually null. Most of the class will say Ada. That gap between what the line looks like and what it does is the entire topic, so collect the wrong answer in writing first.',
+     'public void setName(String name) {\n    name = name;\n}'),
    'objectives': [
      ('I can explain what this refers to inside an instance method.', 'LO 3.9.A'),
      ('I can use this to assign a field when a parameter shares its name.', 'LO 3.9.B'),
-     ('I can recognise a self-assignment that does nothing.', 'LO 3.9.C'),
+     ('I can recognize a self-assignment that does nothing.', 'LO 3.9.C'),
    ],
    'sections': [
      ('this and the current object', [
@@ -953,7 +951,7 @@ TOPICS = [
             'the field is on the right, so it is only read, and the parameter it was copied into vanishes when '
             'the method returns. Field on the left, parameter on the right. This is tonight\'s graded debugging '
             'exercise.',
-     'note': 'Show both broken forms. Students who only see the first one do not recognise the reversed version, '
+     'note': 'Show both broken forms. Students who only see the first one do not recognize the reversed version, '
              'which is just as common.',
    },
    'misconception': {
@@ -961,7 +959,7 @@ TOPICS = [
      'think': 'name = name; obviously does nothing, so Java would tell me.',
      'truth': 'It is a syntactically perfect assignment of a variable to itself, and assigning a variable to '
               'itself is legal. The compiler checks grammar and types, and both are fine here. It has no way to '
-              'know you meant the field, because meaning is not its job. The only defence is reading the line '
+              'know you meant the field, because meaning is not its job. The only defense is reading the line '
               'and asking which variable each name refers to.',
      'note': 'Third time this unit that "it compiles" has proven nothing. That repetition is the point.',
    },
@@ -972,7 +970,7 @@ TOPICS = [
    'learned': [
      'I can explain what this refers to inside an instance method.',
      'I can use this to assign a field when a parameter shares its name.',
-     'I can recognise a self-assignment that does nothing.',
+     'I can recognize a self-assignment that does nothing.',
    ],
    'up_next': 'Day 2 uses this to pass the current object and to chain constructors, closing the unit.',
    'extra': 'Write a Point class with setX and setY, using this in both. Test that both setters actually work.',

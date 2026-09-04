@@ -194,7 +194,7 @@ TOPICS = [
             'it. This is the third time this rule has appeared: 2.5 guarded a division with a short circuit, 4.6 '
             'guarded an empty file, and this guards an empty filter. Whenever the denominator is computed rather '
             'than given, guard it.',
-     'note': 'Ask the class to name the other two appearances. Recognising the pattern is the goal, not the '
+     'note': 'Ask the class to name the other two appearances. Recognizing the pattern is the goal, not the '
              'individual fix.',
    },
    'misconception': {
@@ -343,7 +343,7 @@ TOPICS = [
      'I can find the number of rows and the number of columns.',
    ],
    'up_next': 'Topic 4.12 traverses the grid in both directions.',
-   'extra': 'Draw a 2 by 4 grid with every cell labelled grid[r][c]. Write down grid.length and grid[0].length.',
+   'extra': 'Draw a 2 by 4 grid with every cell labeled grid[r][c]. Write down grid.length and grid[0].length.',
   },
   {
    'day': 2,
@@ -414,7 +414,7 @@ TOPICS = [
               'a square grid, which is why the mistake survives so much testing. Use grid[r].length for the '
               'inner bound: it is correct on rectangular grids, correct on jagged ones, and correct on square '
               'ones, so there is never a reason to use anything else.',
-     'note': 'Give them the always-correct option and the choice stops being a judgement call.',
+     'note': 'Give them the always-correct option and the choice stops being a judgment call.',
    },
    'discussion': [
      'Why is grid[r].length a better inner bound than grid[0].length?',

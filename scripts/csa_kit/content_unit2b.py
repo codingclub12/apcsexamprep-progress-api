@@ -134,7 +134,7 @@ TOPICS = [
      'I can write an if / else if / else chain that selects exactly one branch.',
      'I can explain why the order of conditions in a chain changes the result.',
    ],
-   'up_next': 'Day 2 practises building chains from a specification, and looks at what a missing else costs.',
+   'up_next': 'Day 2 practices building chains from a specification, and looks at what a missing else costs.',
    'extra': 'Write the grade chain for A, B, C, D and F from memory, then check the boundary values 60, 70, 80 and 90.',
   },
   {
@@ -162,7 +162,7 @@ TOPICS = [
    'objectives': [
      ('I can translate a written specification into a correct if / else if chain.', 'LO 2.3.B'),
      ('I can test the boundary values of every condition I write.', 'LO 2.3.C'),
-     ('I can recognise an empty statement created by a stray semicolon.', 'LO 2.3.A'),
+     ('I can recognize an empty statement created by a stray semicolon.', 'LO 2.3.A'),
    ],
    'sections': [
      ('From specification to chain', [
@@ -173,7 +173,7 @@ TOPICS = [
      ('Boundaries and stray semicolons', [
        'Test each boundary explicitly: the value at the edge, one below it and one above it.',
        'A semicolon directly after if (condition) ends the statement, so the block underneath always executes.',
-       'This compiles without a warning, which is why it has to be recognised by sight rather than caught by the compiler.',
+       'This compiles without a warning, which is why it has to be recognized by sight rather than caught by the compiler.',
      ]),
    ],
    'worked': {
@@ -195,7 +195,7 @@ TOPICS = [
      'happens': 'PASS now prints for every score, including 12. The else is gone as far as that if is concerned, '
                 'and the block below simply always runs.',
      'why': 'The semicolon is a complete empty statement, so the if controls nothing and the block underneath is '
-            'just an ordinary block. Java accepts it silently. Recognising this on sight is the only defence, '
+            'just an ordinary block. Java accepts it silently. Recognizing this on sight is the only defense, '
             'and it is on tonight\'s graded debugging exercise.',
      'note': 'Show it on the projector rather than describing it. Nobody believes this one until they see PASS '
              'printed under a score of 12.',
@@ -215,7 +215,7 @@ TOPICS = [
    'learned': [
      'I can translate a written specification into a correct if / else if chain.',
      'I can test the boundary values of every condition I write.',
-     'I can recognise an empty statement created by a stray semicolon.',
+     'I can recognize an empty statement created by a stray semicolon.',
    ],
    'up_next': 'Topic 2.4 nests one if inside another, where an else can attach to the wrong one.',
    'extra': 'Complete the graded debugging exercise for 2.3. It plants both the separate ifs and the stray semicolon.',
@@ -333,7 +333,7 @@ TOPICS = [
      'truth': 'The compiler never sees your whitespace. It pairs each else with the nearest preceding if that has '
               'no else yet, and then your carefully aligned code does something different from what it looks like. '
               'Indentation is a message to the next human. Braces are the message to the compiler, and only one of '
-              'those two changes the behaviour.',
+              'those two changes the behavior.',
      'note': 'Students who have used Python find this genuinely surprising, and saying so out loud helps them.',
    },
    'discussion': [
@@ -345,7 +345,7 @@ TOPICS = [
      'I can apply the rule that an else pairs with the nearest unmatched if.',
      'I can use braces to make my intended pairing explicit.',
    ],
-   'up_next': 'Day 2 practises ordering rules from most specific to least, and flattening nested logic.',
+   'up_next': 'Day 2 practices ordering rules from most specific to least, and flattening nested logic.',
    'extra': 'Rewrite the ticket rules as nested ifs, then as a flat chain. Confirm both give the same answers.',
   },
   {
@@ -494,7 +494,7 @@ TOPICS = [
    'warmup': ('Which questions do you not need to ask',
      'On the board: "You are checking whether a shop is open AND has milk. You phone and they say they are closed. '
      'Do you still ask about the milk? Now: open OR delivers. They say they are open. Do you still ask about delivery?"',
-     'No, and no. Students already short circuit in ordinary life, so the operator behaviour is a name for '
+     'No, and no. Students already short circuit in ordinary life, so the operator behavior is a name for '
      'something they do without thinking, not a new idea.'),
    'objectives': [
      ('I can combine conditions correctly using && and ||.', 'LO 2.5.A'),
@@ -535,7 +535,7 @@ TOPICS = [
      'why': 'A single & is a real boolean operator that always evaluates both sides before combining them, so the '
             'division runs before the guard can matter. Only && skips. This is tonight\'s graded debugging '
             'exercise, alongside an or used as a range check.',
-     'note': 'Students find this genuinely shocking, which is why it sticks. Emphasise that both versions compile '
+     'note': 'Students find this genuinely shocking, which is why it sticks. Emphasize that both versions compile '
              'and only one survives contact with real data.',
    },
    'misconception': {
@@ -556,7 +556,7 @@ TOPICS = [
      'I can explain short circuit evaluation and predict which operands are evaluated.',
      'I can use a guard condition to make a later condition safe.',
    ],
-   'up_next': 'Day 2 practises building range checks and compound guards from specifications.',
+   'up_next': 'Day 2 practices building range checks and compound guards from specifications.',
    'extra': 'Write three range checks: 1 to 12 inclusive, strictly between 0 and 100, and outside 10 to 20.',
   },
   {
@@ -767,7 +767,7 @@ TOPICS = [
      'I can explain the difference between comparing references and comparing contents.',
      'I can choose == or equals correctly for a given type.',
    ],
-   'up_next': 'Day 2 practises rewriting conditions into equivalent forms and simplifying them.',
+   'up_next': 'Day 2 practices rewriting conditions into equivalent forms and simplifying them.',
    'extra': 'Predict, then check: does new String("hi") == "hi" print true or false? Explain the answer.',
   },
   {
@@ -794,7 +794,7 @@ TOPICS = [
    'objectives': [
      ('I can rewrite a condition into an equivalent simpler form.', 'LO 2.6.A'),
      ('I can justify a simplification with a truth table or De Morgan.', 'LO 2.6.A'),
-     ('I can recognise redundant comparisons against boolean literals.', 'LO 2.6.C'),
+     ('I can recognize redundant comparisons against boolean literals.', 'LO 2.6.C'),
    ],
    'sections': [
      ('Simplifying safely', [
@@ -846,7 +846,7 @@ TOPICS = [
    'learned': [
      'I can rewrite a condition into an equivalent simpler form.',
      'I can justify a simplification with a truth table or De Morgan.',
-     'I can recognise redundant comparisons against boolean literals.',
+     'I can recognize redundant comparisons against boolean literals.',
    ],
    'up_next': 'Topic 2.7 begins repetition properly with the while loop.',
    'extra': 'Complete the graded debugging exercise for 2.6. It plants == on Strings and a wrongly distributed not.',
@@ -863,8 +863,8 @@ TOPICS = [
  'vocab': [
    ('while loop', 'A control structure that repeats its body while a condition remains true.'),
    ('Loop body', 'The statements inside the braces, which run once per iteration.'),
-   ('Initialisation', 'Setting the loop variable to its starting value before the loop begins.'),
-   ('Update', 'The statement that moves the loop variable towards ending the loop.'),
+   ('Initialization', 'Setting the loop variable to its starting value before the loop begins.'),
+   ('Update', 'The statement that moves the loop variable toward ending the loop.'),
    ('Infinite loop', 'A loop whose condition never becomes false, so it never stops.'),
    ('Accumulator', 'A variable that builds up a result across iterations.'),
  ],
@@ -874,7 +874,7 @@ TOPICS = [
     'answer_index': 1,
     'why': 'The condition is checked before every pass, so a false condition means the body never runs at all.'},
    {'stem': 'What are the four parts of a correct counting while loop?',
-    'options': ['Declare, test, print, stop', 'Initialise, test, do the work, update',
+    'options': ['Declare, test, print, stop', 'Initialize, test, do the work, update',
                 'Start, body, end, return', 'Condition, body, else, exit'],
     'answer_index': 1,
     'why': 'Missing any one of the four gives an infinite loop or an off-by-one.'},
@@ -890,7 +890,7 @@ TOPICS = [
     'options': ['Nothing', 'The first value is skipped', 'The loop runs twice', 'It fails to compile'],
     'answer_index': 1,
     'why': 'The starting value is never used, so the sequence begins one step late.'},
-   {'stem': 'An accumulator for a sum should be initialised to:',
+   {'stem': 'An accumulator for a sum should be initialized to:',
     'options': ['1', '0', 'The first value', 'It does not matter'],
     'answer_index': 1,
     'why': 'Zero is the identity for addition, so it leaves the sum unchanged.'},
@@ -918,16 +918,16 @@ TOPICS = [
      'Every workable answer contains a condition and a repeated action: while there is another step, climb it. '
      'That is a while loop, and they wrote it before seeing the syntax.'),
    'objectives': [
-     ('I can write a while loop with correct initialisation, condition, body and update.', 'LO 2.7.A'),
+     ('I can write a while loop with correct initialization, condition, body and update.', 'LO 2.7.A'),
      ('I can trace a while loop by hand and predict its output exactly.', 'LO 2.7.B'),
      ('I can use an accumulator to build a result across iterations.', 'LO 2.7.C'),
    ],
    'sections': [
      ('The four parts of a counting loop', [
-       'Initialise the loop variable before the loop starts, so the first test has something to look at.',
+       'Initialize the loop variable before the loop starts, so the first test has something to look at.',
        'The condition is tested before every iteration, including the first. A false condition means the body never runs.',
        'Do the work first inside the body, then update the loop variable last. Updating first skips the starting value.',
-       'Without an update that moves towards the condition becoming false, the loop never ends.',
+       'Without an update that moves toward the condition becoming false, the loop never ends.',
      ]),
      ('Accumulators', [
        'An accumulator is declared before the loop so it survives across iterations, and updated inside it.',
@@ -939,7 +939,7 @@ TOPICS = [
      'heading': 'Trace it before you run it',
      'code': 'import java.util.Scanner;\n\npublic class Sum\n{\n    public static void main(String[] args)\n    {\n        Scanner input = new Scanner(System.in);\n        int n = input.nextInt();\n\n        int i = 1;\n        int total = 0;\n        while (i <= n)\n        {\n            System.out.println(i);\n            total = total + i;\n            i++;\n        }\n        System.out.println(total);\n    }\n}',
      'notice': [
-       'i = 1 before the loop - initialisation, so the first test is meaningful.',
+       'i = 1 before the loop - initialization, so the first test is meaningful.',
        'i <= n - includes n itself, which is what "through n" means.',
        'i++ last - the work happens first, so the starting value is used.',
      ],
@@ -973,7 +973,7 @@ TOPICS = [
      'Why does the update have to be the last statement in a counting loop rather than the first?',
    ],
    'learned': [
-     'I can write a while loop with correct initialisation, condition, body and update.',
+     'I can write a while loop with correct initialization, condition, body and update.',
      'I can trace a while loop by hand and predict its output exactly.',
      'I can use an accumulator to build a result across iterations.',
    ],
@@ -999,7 +999,7 @@ TOPICS = [
    'warmup': ('Retrieval on loop anatomy',
      'On the board, no notes: "1. Name the four parts of a counting loop. 2. Where does the update go? '
      '3. What runs first if the condition is false at the start?"',
-     'Initialise, test, work, update; last; nothing at all. The third is the one students miss, and it matters '
+     'Initialize, test, work, update; last; nothing at all. The third is the one students miss, and it matters '
      'today because a sentinel loop can legitimately run zero times.'),
    'objectives': [
      ('I can write a while loop that stops on a condition rather than a fixed count.', 'LO 2.7.A'),
@@ -1051,7 +1051,7 @@ TOPICS = [
      'note': 'This becomes important in 2.9, where an algorithm seeded from the first element breaks on empty input.',
    },
    'discussion': [
-     'For which input does the digit loop run zero times? Is that correct behaviour?',
+     'For which input does the digit loop run zero times? Is that correct behavior?',
      'What makes n = n / 10 an update, given that it does not look like a counter?',
    ],
    'learned': [

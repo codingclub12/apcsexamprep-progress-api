@@ -53,6 +53,7 @@
     "smoke:csp-exercise-discoverability": "node smoke/csp-exercise-discoverability.js",
     "smoke:csaslides": "node smoke/csa-slide-gate.js",
     "smoke:csadeckdays": "python3 scripts/csa-deck-days-from-content.py --check",
+    "smoke:csakitstyle": "python3 scripts/verify-csa-kit-style.py",
     "smoke:cspslides": "node smoke/csp-slide-gate.js",
     "smoke:cspembeds": "node smoke/csp-slide-embeds.js",
     "smoke:cyberslides": "node smoke/cyber-slide-gate.js",

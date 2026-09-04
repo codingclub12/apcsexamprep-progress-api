@@ -3,7 +3,7 @@ CSA teacher-kit deck builder.
 
 Design system extracted directly from the Unit 1 decks that already ship
 (Day1_Deck_TEACHER.pptx), so generated units are visually identical to the
-pilot rather than a lookalike. Every colour, font, size and position below was
+pilot rather than a lookalike. Every color, font, size and position below was
 read out of that file; none of it is invented.
 
 Slide grammar, in the order a day uses it:
@@ -108,7 +108,7 @@ CHAR_FACTOR = 0.60
 #  point taken from the footer above it, which a teacher does read.
 #
 #  T_BODY_MIN is the other one held back, and for a measurable reason rather
-#  than a judgement: it sets the three annotations in the compact worked
+#  than a judgment: it sets the three annotations in the compact worked
 #  example's right-hand column, stacked above the OUTPUT panel. At 15pt they
 #  need 3.47in and the column between the heading and the footer is 5.12in, of
 #  which OUTPUT wants 1.70in. Widening does not help, because the longest
@@ -378,19 +378,49 @@ class Deck:
         self._note(s, note)
 
     # ── warm-up ──────────────────────────────────────────────────────────────
-    def warmup(self, heading, prompt, draw_out=None):
+    def warmup(self, heading, prompt, draw_out=None, code=None):
+        """The bell ringer.
+
+        THE ANSWER IS NEVER DRAWN ON THIS SLIDE, and that is a fix rather than
+        a style choice. Until 2026-09-04 the teacher edition rendered draw_out
+        in a green "WORTH DRAWING OUT" card on the slide FACE. A teacher
+        projects the teacher edition, so the class read the answer to the bell
+        ringer at the same moment they were asked to work it out. Topic 2.2 day
+        1 printed "b > c is false, so the whole and is false" directly under
+        the question asking whether a > b && b > c is true.
+
+        draw_out is teacher guidance and it still ships, in the speaker notes,
+        which is exactly what the title slide already promises: "Speaker notes
+        carry the answers and the misconceptions for each slide." The student
+        edition never had the card and is unchanged.
+
+        `code` is a fragment set as a real code block instead of being run
+        together into the prompt sentence. A bell ringer that reads
+        `int i = 1; while (i <= n) { print(i); i++; }` inside a quoted sentence
+        is unreadable from the back of a room and hides the line structure the
+        question is asking about.
+        """
         s = self._new()
         self._head(s, 'WARM-UP', heading)
         w = CONTENT_W - 0.60
-        self._card(s, MARGIN, 1.90, CONTENT_W, 2.32, 'ON THE BOARD')
-        h = _must_fit('warm-up prompt', prompt, w, T_LEAD, 2.32 - CARD_TEXT_DY - 0.14, 1.25)
+        prompt_h = 1.72 if code else 2.32
+        self._card(s, MARGIN, 1.90, CONTENT_W, prompt_h, 'ON THE BOARD')
+        h = _must_fit('warm-up prompt', prompt, w, T_LEAD,
+                      prompt_h - CARD_TEXT_DY - 0.14, 1.25)
         _text(s, MARGIN + 0.30, 1.90 + CARD_TEXT_DY, w, h, prompt, size=T_LEAD, color=BODY,
               space_after=6, line=1.25)
-        if self.teacher and draw_out:
-            self._card(s, MARGIN, 4.38, CONTENT_W, 2.34, 'WORTH DRAWING OUT', GREEN_TINT, GREEN)
-            h = _must_fit('warm-up draw-out', draw_out, w, T_BODY, 2.34 - CARD_TEXT_DY - 0.14, 1.2)
-            _text(s, MARGIN + 0.30, 4.38 + CARD_TEXT_DY, w, h, draw_out, size=T_BODY,
-                  color=BODY, space_after=5, line=1.2)
+        if code:
+            # Same idiom as the worked example: a dark panel sized to the code
+            # it actually holds, so a three line bell ringer does not sit in a
+            # box built for a twelve line one.
+            code_w = CONTENT_W - 0.56
+            size = _code_size(code, code_w, 2.30)
+            ch = _code_h(code, size)
+            panel_h = ch + 0.26
+            self._card(s, MARGIN, 3.82, CONTENT_W, 0.92 + panel_h + 0.20,
+                       'ON THE BOARD, WRITTEN OUT')
+            _shape(s, MARGIN + 0.30, 4.74, code_w + 0.28, panel_h, CODE_BG)
+            self._code(s, MARGIN + 0.44, 4.87, code_w, ch, code, size)
         self._foot(s)
         self._note(s, draw_out)
 
@@ -695,8 +725,8 @@ class Deck:
 
 
 def _tokenize(line):
-    """Very small Java tokenizer, matching the highlight colours the Unit 1
-    decks use: keywords blue, numbers amber, strings green, comments grey."""
+    """Very small Java tokenizer, matching the highlight colors the Unit 1
+    decks use: keywords blue, numbers amber, strings green, comments gray."""
     out, i, n = [], 0, len(line)
     stripped = line.lstrip()
     if stripped.startswith('//'):
