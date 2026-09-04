@@ -56,12 +56,34 @@
 const embeds = require('./csa-slide-embeds');
 const authored = require('./csa-slide-days.json');
 
-// Unit 1: placeholder, see the header. 15 lessons, lib/csa-nav.js's UNIT_1 is
-// the authority for which 15 and what their live handles are.
+// Unit 1: COUNTED FROM DRIVE on 2026-09-04, no longer the placeholder row of
+// 1s this carried until then. lib/csa-nav.js's UNIT_1 is still the authority
+// for WHICH 15 lessons and what their live handles are; this is only how many
+// teaching days each one has.
+//
+// WHY THESE CANNOT COME FROM config/csa-slide-days.json like Units 2-4 do.
+// That file is generated from scripts/csa_kit/content_unit<N>.py, and Unit 1's
+// decks predate the kit builder: they were authored by hand and exist only as
+// .pptx in Google Drive. Its own header says so and refuses to guess them. So
+// these were counted instead, by listing the Day<N>_Deck_*.pptx files in each
+// lesson's Slide_Decks folder under "AP CSA Teacher Bundle" / "Unit 1"
+// (1F7NcKUp3okZTgd11ukASJr8m9zS3BqSr), fifteen folders, one query each.
+//
+// 28 teaching days, 56 decks. Every folder holds complete TEACHER and STUDENT
+// pairs, no odd counts.
+//
+// The placeholder was not uniformly wrong, which is the part worth knowing:
+// 1-6, 1-7 and 1-8 really are single-day lessons, so three of the fifteen were
+// right by accident. The other twelve understated, 1-5 by two days.
+//
+// THIS IS A MEASUREMENT WITH A DATE ON IT, not a derivation, and nothing in CI
+// can re-check it: the numbers live in a Drive folder no offline suite can
+// reach. If Unit 1's decks are re-authored through the kit builder, delete this
+// table and let csa-slide-days.json carry it like every other unit.
 const UNIT_1_DAYS = {
-  '1-1': 1, '1-2': 1, '1-3': 1, '1-4': 1, '1-5': 1,
-  '1-6': 1, '1-7': 1, '1-8': 1, '1-9': 1, '1-10': 1,
-  '1-11': 1, '1-12': 1, '1-13': 1, '1-14': 1, '1-15': 1,
+  '1-1': 2, '1-2': 2, '1-3': 2, '1-4': 2, '1-5': 3,
+  '1-6': 1, '1-7': 1, '1-8': 1, '1-9': 2, '1-10': 2,
+  '1-11': 2, '1-12': 2, '1-13': 2, '1-14': 2, '1-15': 2,
 };
 
 // Units 2 to 4: real counts, derived from the authored kit content.
