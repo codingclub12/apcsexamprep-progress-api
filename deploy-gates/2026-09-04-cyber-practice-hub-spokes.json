@@ -97,7 +97,7 @@
       "name": "the practice hub reaches all five spokes, and lost nothing doing it",
       "_why": "This is the existing package verifier and it is failing on exactly this edge today: 34 passed, 1 failed, the failure naming all five missing spoke handles. That single check flipping is the whole deploy. Its 34 other assertions are what prove the import cost nothing, including that the hub still carries its FRQ and labs sections.",
       "command": "node scripts/verify-cyber-practice-live.js",
-      "expect": "0 failed"
+      "expect": "OK - 35 live checks"
     }
   ],
   "not_covered": [

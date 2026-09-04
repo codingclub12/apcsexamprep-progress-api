@@ -120,7 +120,7 @@ Full offline suite: 188 of 189 pass. The one failure is `smoke:csakitstyle`,
 which fails identically on an unmodified tree in this container because
 `python-pptx` is not installed. Not a regression and not this branch's.
 
-## The live check, and why it cannot have run yet
+## The live check, and what it says now
 
 `scripts/verify-cyber-exam-replica-live.js`, run through `lib/storefront-fetch.js`
 with no User-Agent. Against the served page today, before any import:
@@ -151,9 +151,11 @@ surfaced it.
 
 ## Open
 
-- **The sheet is not imported.** `imports/2026-09-04c/cyber-practice-exam-replica-pages.csv`,
-  one row, MERGE, 135,089 bytes. Import it once through Shopify admin, then run
-  `npm run verify:cyberexamreplica`. The gate is not satisfied until that passes.
+- ~~The sheet is not imported.~~ **Imported 2026-09-04.** The live check now
+  reports **17 passed, 0 failed**: every one of the 13 assertions that was false
+  before the import is true, and the four preservation checks still hold. The gate
+  passes on all four kinds, suite, rederive, mutation and live. Re-run any time
+  with `npm run verify:cyberexamreplica`.
 - **Do not re-save the CSV as a spreadsheet.** The Body HTML cell is over 32,767
   characters, which is fine for CSV and would be truncated by xlsx.
 - **Whether the items are good items** is a teacher read, not a check. The suite
