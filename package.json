@@ -231,7 +231,9 @@
     "cyber:practicesheet": "node tools/ap-cyber-ced/generate-practice-sheet.js",
     "verify:cyberpractice": "node scripts/verify-cyber-practice-live.js",
     "seed:kb": "node scripts/seed-kb.js",
-    "smoke:assistantexfil": "node smoke/assistant-exfiltration.js"
+    "smoke:assistantexfil": "node smoke/assistant-exfiltration.js",
+    "smoke:cyberexamreplica": "node smoke/cyber-exam-replica.js",
+    "cyber:examblueprint": "node tools/ap-cyber-ced/build-exam-blueprint.js"
   },
   "keywords": [],
   "author": "",
