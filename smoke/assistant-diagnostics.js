@@ -233,12 +233,55 @@ const sentinelFree = (obj) => {
     directCalls.gates.activities.map((a) => a.pool));
 
   // And the module never selects the forbidden columns in the first place.
+  //
+  //  NARROWED 2026-09-04, and the narrowing is the point rather than a
+  //  concession. This used to grep the whole file for the words explanation,
+  //  prompt and options, which was right until Phase 2 added scanForSecrets:
+  //  the layer 6 tripwire has to COMPARE a candidate response against those
+  //  columns, inside SQLite, and it returns a verdict rather than a row. A grep
+  //  cannot tell "SELECT explanation" from "instr(@text, explanation) > 0", and
+  //  the difference between those two is the entire safety property.
+  //
+  //  So the file is split at the tripwire's own heading. Everything above it is
+  //  the DTO layer and may not name those columns at all, which is the original
+  //  rule unchanged and still the one that matters most. The tripwire below is
+  //  held to a different rule, checked here too: every SELECT in it returns
+  //  COUNT(*) and nothing else, so no column value can become a JavaScript
+  //  string in the first place. Then both are checked BEHAVIOURALLY, because a
+  //  source rule proves what was written and only a behaviour test proves what
+  //  it does.
   const src = fs.readFileSync(path.join(__dirname, '..', 'lib', 'assistant', 'reads.js'), 'utf8');
-  const code = src.split('\n').filter((l) => !l.trim().startsWith('//')).join('\n');
-  ok('reads.js never selects correct_index', !/correct_index/.test(code));
-  ok('reads.js never selects explanation', !/\bexplanation\b/.test(code));
-  ok('reads.js never selects prompt or options', !/\b(prompt|options)\b/.test(code));
-  ok('reads.js never uses SELECT *', !/SELECT\s+\*/i.test(code));
+  const MARK = 'scanForSecrets: the layer 6 corpus';
+  const markAt = src.indexOf(MARK);
+  ok('the tripwire section is where the guard expects it', markAt > 0, markAt);
+  const strip = (t) => t.split('\n').filter((l) => !l.trim().startsWith('//')).join('\n');
+  const dto = strip(src.slice(0, markAt));
+  const wire = strip(src.slice(markAt));
+
+  ok('reads.js never selects correct_index, anywhere in the file', !/correct_index/.test(strip(src)));
+  ok('the DTO layer never names explanation', !/\bexplanation\b/.test(dto));
+  ok('the DTO layer never names prompt or options', !/\b(prompt|options)\b/.test(dto));
+  ok('reads.js never uses SELECT *', !/SELECT\s+\*/i.test(strip(src)));
+
+  // The tripwire's own rule: it may name those columns, but only to compare
+  // them. A SELECT there that returned one would fail this.
+  const selects = (wire.match(/SELECT[\s\S]*?FROM/gi) || []).map((q) => q.replace(/\s+/g, ' ').trim());
+  ok('the tripwire has SELECT statements to check', selects.length >= 3, selects.length);
+  ok('every tripwire SELECT returns only a COUNT',
+    selects.every((q) => /^SELECT COUNT\(\*\) AS n FROM$/i.test(q)), selects);
+
+  // Behaviour, which is what actually protects the keys. The tripwire is handed
+  // each sentinel in turn: it must report a hit, and its entire return value
+  // must be a verdict with no character of what it matched anywhere in it.
+  for (const [name, probe] of [['prompt', SENTINEL_PROMPT], ['option', SENTINEL_OPTION], ['explanation', SENTINEL_EXPLAIN]]) {
+    const v = reads.scanForSecrets('some reply text containing ' + probe + ' in the middle', { course: COURSE });
+    ok('the tripwire detects a leaked ' + name, v.hit === true, v);
+    ok('the tripwire verdict for a ' + name + ' carries no bank text', !JSON.stringify(v).includes(probe), v);
+    ok('the tripwire verdict for a ' + name + ' is a fixed enum',
+      ['access_code', 'quiz_option', 'quiz_text', 'scan_error'].includes(v.kind), v.kind);
+  }
+  ok('the tripwire passes ordinary support prose',
+    reads.scanForSecrets('Your quiz is closed because the class default is on.', { course: COURSE }).hit === false);
 
   // ── 10) Ownership holds at the module level, not just the route ───────────
   ok('a read for a class the teacher does not own returns null',

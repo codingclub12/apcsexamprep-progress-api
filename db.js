@@ -685,6 +685,73 @@ db.exec(`
     INSERT INTO kb_fts(rowid, title, body_md, tags)
     VALUES (new.rowid, new.title, new.body_md, new.tags);
   END;
+
+  -- ── SITE ASSISTANT: CHAT (Phase 2) ─────────────────────────────────────────
+  --  Three tables, and the shape of them is the privacy posture rather than a
+  --  description of it. docs/site-assistant-spec.md section 8 allows exactly one
+  --  table of student-typed free text in this repo (sandbox_programs) and says
+  --  this design must not add a second. So chat_messages.content is NULLABLE and
+  --  every row records, in bodies_retained on its session, which of the two
+  --  happened. A student row carries a hash and a classification and no words.
+  --
+  --  Phase 2 opens chat to TEACHERS ONLY, who are adults with accounts, so every
+  --  row written today has bodies_retained = 1. The columns for the other posture
+  --  exist now because retrofitting a privacy default onto a table that already
+  --  has rows is how the exception gets granted by accident.
+  --
+  --  chat_tool_calls is separate from chat_messages rather than a JSON column on
+  --  it, per spec section 12. Tool results are typed DTOs out of
+  --  lib/assistant/reads.js, they are safe to keep, and they are the audit trail
+  --  for what the assistant told somebody about their own account. That is a
+  --  different retention question from the transcript and wants its own table.
+  CREATE TABLE IF NOT EXISTS chat_sessions (
+    id              TEXT PRIMARY KEY,
+    role            TEXT NOT NULL,        -- teacher | student | anonymous, server-resolved
+    user_ref        TEXT,                 -- teacher or student id, NULL when anonymous
+    page_scope      TEXT,                 -- derived server-side, never client-asserted
+    course          TEXT,
+    bodies_retained INTEGER NOT NULL DEFAULT 1,
+    message_count   INTEGER NOT NULL DEFAULT 0,
+    input_tokens    INTEGER NOT NULL DEFAULT 0,
+    output_tokens   INTEGER NOT NULL DEFAULT 0,
+    ip_hash         TEXT,                 -- daily-rotating hash, never a raw IP
+    started_at      TEXT DEFAULT (datetime('now')),
+    last_at         TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_chat_sessions_started ON chat_sessions(started_at);
+  -- Deletion by student id, wired into the same path that deletes a student.
+  CREATE INDEX IF NOT EXISTS idx_chat_sessions_user ON chat_sessions(user_ref);
+
+  CREATE TABLE IF NOT EXISTS chat_messages (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id     TEXT NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+    seq            INTEGER NOT NULL,
+    who            TEXT NOT NULL,          -- user | assistant
+    content        TEXT,                   -- NULL when the session is shape-only
+    content_hash   TEXT,                   -- repeat detection without the words
+    classification TEXT,                   -- an escalation category, for the taxonomy
+    flagged_reason TEXT,                   -- content_request | key_leak_blocked | ...
+    kb_slug        TEXT,                   -- the article that answered, when one did
+    model          TEXT,                   -- NULL when no model was called
+    input_tokens   INTEGER NOT NULL DEFAULT 0,
+    output_tokens  INTEGER NOT NULL DEFAULT 0,
+    created_at     TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(session_id, seq);
+  -- The daily spend ceiling sums today's tokens on every call, so the cost
+  -- question is answered by a query here rather than by a provider dashboard.
+  CREATE INDEX IF NOT EXISTS idx_chat_messages_created ON chat_messages(created_at);
+
+  CREATE TABLE IF NOT EXISTS chat_tool_calls (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id  TEXT NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+    message_id  INTEGER,
+    tool        TEXT NOT NULL,
+    params_json TEXT,
+    result_json TEXT,
+    created_at  TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_chat_tool_calls_session ON chat_tool_calls(session_id);
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
