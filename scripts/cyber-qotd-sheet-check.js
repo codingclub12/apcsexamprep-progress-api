@@ -104,7 +104,18 @@ function schemaChecks(row, where, fails, expected) {
     !q.acceptedAnswer || q.acceptedAnswer['@type'] !== 'Answer' || !String(q.acceptedAnswer.text || '').trim()).length;
   if (noAnswer) fails.push(`${where}: ${noAnswer} questions lack a usable acceptedAnswer`);
   // Google requires every marked-up question to be visible on its own page.
-  const invisible = (parsed.hasPart || []).filter((q) => !b.includes(gen.esc(q.text))).length;
+  // Compared as VISIBLE TEXT with whitespace normalised on both sides. A raw
+  // string match was wrong here: multi-line stems render across <br>, and HTML
+  // collapses whitespace, so the escaped stem is never a contiguous substring
+  // of a correct page. Assert what a reader sees, not how it is marked up.
+  const flat = (t) => String(t)
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(Number(d)))
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ').trim();
+  const visibleText = flat(b.replace(/<script[\s\S]*?<\/script>/gi, ' '));
+  const invisible = (parsed.hasPart || []).filter((q) => !visibleText.includes(flat(q.text))).length;
   if (invisible) fails.push(`${where}: ${invisible} schema questions are not rendered in the page HTML`);
   const ldText = (parsed.hasPart || [])
     .map((q) => `${q.text} ${q.acceptedAnswer && q.acceptedAnswer.text}`).join('\n');
@@ -118,6 +129,64 @@ function main() {
   const units = parseCsv(fs.readFileSync(UNIT_SHEET, 'utf8'));
   const links = parseCsv(fs.readFileSync(LINK_SHEET, 'utf8'));
   const perUnit = new Map(gen.unitsOf().map(([u, qs]) => [gen.unitHandle(u), qs.length]));
+
+  //  SURVIVES SHOPIFY'S DECODE. Shopify decodes entities when it stores a body:
+  //  measured 2026-09-04, no stored body on this store holds a single &lt;, &gt;
+  //  or &amp;. Prose does not care. A code block does. Question C1-102 shipped a
+  //  phishing header, Shopify decoded the escaped angle brackets, its sanitizer
+  //  read <it-support@micros0ft-secure.com> as a tag, and the live page served
+  //  "From: IT-Support <it-support>". The lookalike domain the student is asked
+  //  to spot had been deleted from the stimulus.
+  //
+  //  So this simulates the decode and requires the code to still be intact, and
+  //  requires no tag-shaped run to appear where one was not authored.
+  //  ONE PASS, and the distinction matters. Chained replaces are not a decode
+  //  pass: .replace(/&amp;/) turning "&amp;lt;" into "&lt;" and then a later
+  //  .replace(/&lt;/) in the same chain turning that into "<" decodes the same
+  //  text twice and reports a correctly double-escaped block as unsafe. This
+  //  check did exactly that on its first run. A real decoder matches each
+  //  entity once, left to right, and never rescans what it produced.
+  const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+  const decodeOnce = (t) => String(t).replace(/&(#\d+|#x[0-9a-fA-F]+|[a-zA-Z]+);/g, (m, e) => {
+    if (e[0] === '#') {
+      const n = e[1] === 'x' ? parseInt(e.slice(2), 16) : Number(e.slice(1));
+      return Number.isFinite(n) ? String.fromCodePoint(n) : m;
+    }
+    return Object.prototype.hasOwnProperty.call(ENT, e) ? ENT[e] : m;
+  });
+
+  for (const q of POOL.pool.filter((x) => x.code)) {
+    const emitted = /<pre class="cy-bank-code"><code>([\s\S]*?)<\/code><\/pre>/
+      .exec(gen.unitPageBody(q.unit, POOL.pool.filter((x) => x.unit === q.unit && x.code === q.code)));
+    if (!emitted) { fails.push(`${q.id}: code block not found in the rendered unit page`); continue; }
+    const afterShopify = decodeOnce(emitted[1]);
+    // After one decode the block must still escape its angle brackets, so the
+    // sanitizer never sees a tag.
+    if (/<[a-zA-Z@][^>\n]*>/.test(afterShopify)) {
+      fails.push(`${q.id}: after one entity decode the code block contains a tag-shaped run `
+        + `(${JSON.stringify((afterShopify.match(/<[a-zA-Z@][^>\n]*>/) || [])[0])}), which Shopify's `
+        + 'sanitizer will strip. Escape code blocks twice.');
+    }
+    // And the authored text must survive two decodes intact.
+    const fully = decodeOnce(afterShopify);
+    for (const frag of String(q.code).split(/\n/).map((t) => t.trim()).filter((t) => t.length > 8)) {
+      if (!fully.includes(frag)) {
+        fails.push(`${q.id}: code line ${JSON.stringify(frag.slice(0, 50))} does not survive the decode`);
+        break;
+      }
+    }
+  }
+
+  // Multi-line stems must keep their line structure. HTML collapses whitespace,
+  // so 30 multi-correct items rendered as unreadable run-on paragraphs before
+  // this was asserted.
+  for (const q of POOL.pool.filter((x) => /\n/.test(x.stem))) {
+    const body = gen.unitPageBody(q.unit, [q]);
+    if (!/<p class="cy-bank-stem">[^<]*<br>/.test(body)) {
+      fails.push(`${q.id}: a multi-line stem renders without <br>, so its numbered choices `
+        + 'collapse into one paragraph');
+    }
+  }
 
   // Pool integrity, first: nothing downstream is trustworthy over bad data.
   const thin = POOL.pool.filter((q) =>

@@ -42,6 +42,7 @@
     "cyber:topics": "node tools/ap-cyber-ced/build-topics.js",
     "cyberqotd:sheets": "node scripts/cyber-qotd-page-csv.js",
     "cyberqotd:mutation": "node scripts/cyber-qotd-sheet-mutation.js",
+    "cyberqotd:live": "node scripts/verify-cyber-qotd-live.js",
     "smoke:cyberqotd": "node scripts/cyber-qotd-sheet-check.js",
     "cyber:sheet": "node tools/ap-cyber-ced/generate-sheet.js",
     "smoke:exgate": "node smoke/exercise-gate.js",

@@ -65,7 +65,7 @@
       </article>
       <article class=""cy-bank-q"" id=""q-C1-102"">
         <p class=""cy-bank-stem"">An employee receives the email shown. Which single feature is the STRONGEST evidence that it is a phishing attempt rather than a legitimate message?</p>
-        <pre class=""cy-bank-code""><code>From: IT-Support &lt;it-support@micros0ft-secure.com&gt;
+        <pre class=""cy-bank-code""><code>From: IT-Support &amp;lt;it-support@micros0ft-secure.com&amp;gt;
 Subject: Re: Account Verification Required
 
 Dear User,
@@ -99,11 +99,8 @@ Click: http://account-verify.micros0ft-secure.com/login</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C1-104"">
-        <p class=""cy-bank-stem"">Which of the following are reliable warning signs that an email may be a phishing attempt?
-
-I.   The message creates pressure to act immediately
-II.  Hovering over a link reveals a destination different from the displayed text
-III. The email is addressed to the recipient by their correct full name</p>
+        <p class=""cy-bank-stem"">Which of the following are reliable warning signs that an email may be a phishing attempt?</p>
+        <p class=""cy-bank-stem"">I.   The message creates pressure to act immediately<br>II.  Hovering over a link reveals a destination different from the displayed text<br>III. The email is addressed to the recipient by their correct full name</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -162,7 +159,7 @@ III. The email is addressed to the recipient by their correct full name</p>
         <p class=""cy-bank-stem"">A company adopts the anti-social-engineering rules below. Which rule is itself a SECURITY WEAKNESS rather than a protection?</p>
         <pre class=""cy-bank-code""><code>I.   Never share passwords over phone or email
 II.  Verify unexpected requests through a second channel
-III. Trust any request that includes a manager&#39;s name
+III. Trust any request that includes a manager&amp;#39;s name
 IV.  Report suspicious messages to the security team</code></pre>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> Rule I</li>
@@ -225,11 +222,8 @@ IV.  Report suspicious messages to the security team</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C1-112"">
-        <p class=""cy-bank-stem"">While reviewing a login log, which of the following SHOULD raise suspicion of unauthorized access?
-
-I.   A successful login from a country the user has never visited
-II.  Dozens of failed logins followed by one success
-III. A login from the user&#39;s usual device and location</p>
+        <p class=""cy-bank-stem"">While reviewing a login log, which of the following SHOULD raise suspicion of unauthorized access?</p>
+        <p class=""cy-bank-stem"">I.   A successful login from a country the user has never visited<br>II.  Dozens of failed logins followed by one success<br>III. A login from the user&#39;s usual device and location</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -318,11 +312,8 @@ IV.  Reviews login alerts when they arrive</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C1-118"">
-        <p class=""cy-bank-stem"">Which practices reduce risk when using public Wi-Fi?
-
-I.   Confirming the official network name with staff before connecting
-II.  Verifying that sites show HTTPS before entering credentials
-III. Enabling file sharing so colleagues can reach your device</p>
+        <p class=""cy-bank-stem"">Which practices reduce risk when using public Wi-Fi?</p>
+        <p class=""cy-bank-stem"">I.   Confirming the official network name with staff before connecting<br>II.  Verifying that sites show HTTPS before entering credentials<br>III. Enabling file sharing so colleagues can reach your device</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -397,11 +388,8 @@ IV.  Confirms the network name at the help desk</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C1-123"">
-        <p class=""cy-bank-stem"">Which statements about AI-based cyberattacks are TRUE?
-
-I.   AI can generate deepfake audio and video to impersonate real people
-II.  AI lowers the skill and time needed to launch convincing attacks at scale
-III. AI-generated phishing is always easy to detect because it sounds robotic</p>
+        <p class=""cy-bank-stem"">Which statements about AI-based cyberattacks are TRUE?</p>
+        <p class=""cy-bank-stem"">I.   AI can generate deepfake audio and video to impersonate real people<br>II.  AI lowers the skill and time needed to launch convincing attacks at scale<br>III. AI-generated phishing is always easy to detect because it sounds robotic</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -417,7 +405,7 @@ III. AI-generated phishing is always easy to detect because it sounds robotic</p
       <article class=""cy-bank-q"" id=""q-C1-124"">
         <p class=""cy-bank-stem"">After a deepfake voice scam, a team proposes new verification rules. Which proposed rule would FAIL to defend against a convincing voice clone?</p>
         <pre class=""cy-bank-code""><code>I.   Confirm money transfers through a pre-agreed code word
-II.  Trust any request if the caller&#39;s voice sounds correct
+II.  Trust any request if the caller&amp;#39;s voice sounds correct
 III. Call the requester back on a known, official number
 IV.  Require a second approver for large transfers</code></pre>
         <ol class=""cy-bank-opts"">
@@ -433,11 +421,8 @@ IV.  Require a second approver for large transfers</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C1-130"">
-        <p class=""cy-bank-stem"">AI is described as &#39;dual-use&#39; in cybersecurity. Which statements support this characterization?
-
-I.   The same generative models that scale phishing can also draft user-awareness training
-II.  Anomaly detection that defends accounts can also help attackers map normal behavior to evade it
-III. AI is useful only to attackers, never to defenders</p>
+        <p class=""cy-bank-stem"">AI is described as &#39;dual-use&#39; in cybersecurity. Which statements support this characterization?</p>
+        <p class=""cy-bank-stem"">I.   The same generative models that scale phishing can also draft user-awareness training<br>II.  Anomaly detection that defends accounts can also help attackers map normal behavior to evade it<br>III. AI is useful only to attackers, never to defenders</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -466,11 +451,8 @@ III. AI is useful only to attackers, never to defenders</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C1-126"">
-        <p class=""cy-bank-stem"">Which are legitimate ways AI helps defenders?
-
-I.   Detecting unusual account behavior faster than manual review
-II.  Triaging large volumes of alerts to surface likely threats
-III. Guaranteeing zero false positives in threat detection</p>
+        <p class=""cy-bank-stem"">Which are legitimate ways AI helps defenders?</p>
+        <p class=""cy-bank-stem"">I.   Detecting unusual account behavior faster than manual review<br>II.  Triaging large volumes of alerts to surface likely threats<br>III. Guaranteeing zero false positives in threat detection</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -933,11 +915,8 @@ III. Guaranteeing zero false positives in threat detection</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C2-103"">
-        <p class=""cy-bank-stem"">Consider these definitions used in risk analysis. Which are stated correctly?
-
-I.   A vulnerability is a weakness that could be exploited
-II.  A threat is a potential cause of an unwanted incident
-III. Risk is identical to vulnerability with no other factors</p>
+        <p class=""cy-bank-stem"">Consider these definitions used in risk analysis. Which are stated correctly?</p>
+        <p class=""cy-bank-stem"">I.   A vulnerability is a weakness that could be exploited<br>II.  A threat is a potential cause of an unwanted incident<br>III. Risk is identical to vulnerability with no other factors</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -1025,11 +1004,8 @@ IV.  A motion-triggered alarm that records intrusions - preventive</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C2-123"">
-        <p class=""cy-bank-stem"">Match each safeguard to the CIA element it most directly supports. Which pairings are correct?
-
-I.   Encrypting a stolen laptop&#39;s disk - confidentiality
-II.  Keeping versioned backups - availability
-III. Using checksums to detect tampering - integrity</p>
+        <p class=""cy-bank-stem"">Match each safeguard to the CIA element it most directly supports. Which pairings are correct?</p>
+        <p class=""cy-bank-stem"">I.   Encrypting a stolen laptop&#39;s disk - confidentiality<br>II.  Keeping versioned backups - availability<br>III. Using checksums to detect tampering - integrity</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I, II, and III</li>
           <li><span class=""cy-bank-let"">B</span> I and II only</li>
@@ -1114,11 +1090,8 @@ III. Using checksums to detect tampering - integrity</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C2-111"">
-        <p class=""cy-bank-stem"">Which of the following are physical security threats rather than purely digital ones?
-
-I.   Tailgating into a restricted area
-II.  Stealing an unlocked laptop from a desk
-III. A SQL injection against a web form</p>
+        <p class=""cy-bank-stem"">Which of the following are physical security threats rather than purely digital ones?</p>
+        <p class=""cy-bank-stem"">I.   Tailgating into a restricted area<br>II.  Stealing an unlocked laptop from a desk<br>III. A SQL injection against a web form</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -1211,11 +1184,8 @@ IV.  Visitor badges expire at end of day</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C2-115"">
-        <p class=""cy-bank-stem"">Which controls help protect a physical server room?
-
-I.   Badge readers limiting entry to authorized staff
-II.  Logging and reviewing who enters and when
-III. Posting the door access code on a public sign</p>
+        <p class=""cy-bank-stem"">Which controls help protect a physical server room?</p>
+        <p class=""cy-bank-stem"">I.   Badge readers limiting entry to authorized staff<br>II.  Logging and reviewing who enters and when<br>III. Posting the door access code on a public sign</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -1276,11 +1246,8 @@ IV.  The records vault requires badge plus PIN</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C2-119"">
-        <p class=""cy-bank-stem"">Which mechanisms help DETECT a physical intrusion (as opposed to preventing one)?
-
-I.   Motion sensors that trigger an alert
-II.  Entry logs reviewed for unusual access times
-III. A deadbolt lock on the door</p>
+        <p class=""cy-bank-stem"">Which mechanisms help DETECT a physical intrusion (as opposed to preventing one)?</p>
+        <p class=""cy-bank-stem"">I.   Motion sensors that trigger an alert<br>II.  Entry logs reviewed for unusual access times<br>III. A deadbolt lock on the door</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -1713,11 +1680,8 @@ III. A deadbolt lock on the door</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C3-104"">
-        <p class=""cy-bank-stem"">Which of the following primarily threaten network AVAILABILITY?
-
-I.   A DDoS flood against a server
-II.  Packet sniffing of plaintext traffic
-III. Cutting the fiber line to a building</p>
+        <p class=""cy-bank-stem"">Which of the following primarily threaten network AVAILABILITY?</p>
+        <p class=""cy-bank-stem"">I.   A DDoS flood against a server<br>II.  Packet sniffing of plaintext traffic<br>III. Cutting the fiber line to a building</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and II only</li>
@@ -1759,11 +1723,8 @@ III. Cutting the fiber line to a building</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C3-126"">
-        <p class=""cy-bank-stem"">Match each attack to a control that helps defend against it. Which pairings are reasonable?
-
-I.   Packet sniffing on Wi-Fi - WPA3 encryption
-II.  Unwanted inbound traffic - firewall rules
-III. Lateral movement after a breach - network segmentation</p>
+        <p class=""cy-bank-stem"">Match each attack to a control that helps defend against it. Which pairings are reasonable?</p>
+        <p class=""cy-bank-stem"">I.   Packet sniffing on Wi-Fi - WPA3 encryption<br>II.  Unwanted inbound traffic - firewall rules<br>III. Lateral movement after a breach - network segmentation</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I, II, and III</li>
           <li><span class=""cy-bank-let"">B</span> I and II only</li>
@@ -1838,11 +1799,8 @@ IV.  Separates guest traffic onto its own network</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C3-110"">
-        <p class=""cy-bank-stem"">Which statements about hiding a Wi-Fi network&#39;s SSID are TRUE?
-
-I.   It is a form of security through obscurity
-II.  It replaces the need for encryption
-III. Determined attackers can still discover a hidden SSID</p>
+        <p class=""cy-bank-stem"">Which statements about hiding a Wi-Fi network&#39;s SSID are TRUE?</p>
+        <p class=""cy-bank-stem"">I.   It is a form of security through obscurity<br>II.  It replaces the need for encryption<br>III. Determined attackers can still discover a hidden SSID</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and III only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -1899,11 +1857,8 @@ III. Determined attackers can still discover a hidden SSID</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C3-113"">
-        <p class=""cy-bank-stem"">Which statements about network segmentation are TRUE?
-
-I.   VLANs can logically separate traffic on shared physical hardware
-II.  Segmentation can limit how far an attacker moves laterally
-III. Segmentation makes encryption of sensitive data unnecessary</p>
+        <p class=""cy-bank-stem"">Which statements about network segmentation are TRUE?</p>
+        <p class=""cy-bank-stem"">I.   VLANs can logically separate traffic on shared physical hardware<br>II.  Segmentation can limit how far an attacker moves laterally<br>III. Segmentation makes encryption of sensitive data unnecessary</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -1985,11 +1940,8 @@ Option Y:
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C3-118"">
-        <p class=""cy-bank-stem"">Which statements about firewalls are TRUE?
-
-I.   A firewall can permit or deny traffic based on ports and addresses
-II.  A misconfigured allow rule can let malicious traffic through
-III. A firewall alone guarantees the network can never be breached</p>
+        <p class=""cy-bank-stem"">Which statements about firewalls are TRUE?</p>
+        <p class=""cy-bank-stem"">I.   A firewall can permit or deny traffic based on ports and addresses<br>II.  A misconfigured allow rule can let malicious traffic through<br>III. A firewall alone guarantees the network can never be breached</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -2046,11 +1998,8 @@ III. A firewall alone guarantees the network can never be breached</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C3-122"">
-        <p class=""cy-bank-stem"">Which statements about detecting network attacks are TRUE?
-
-I.   Signature-based detection struggles with zero-day attacks
-II.  Anomaly-based detection can generate false positives from unusual but benign activity
-III. A SIEM helps correlate events from multiple devices</p>
+        <p class=""cy-bank-stem"">Which statements about detecting network attacks are TRUE?</p>
+        <p class=""cy-bank-stem"">I.   Signature-based detection struggles with zero-day attacks<br>II.  Anomaly-based detection can generate false positives from unusual but benign activity<br>III. A SIEM helps correlate events from multiple devices</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> I, II, and III</li>
@@ -2497,11 +2446,8 @@ IV.  Alerts are correlated automatically</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C4-103"">
-        <p class=""cy-bank-stem"">Match each behavior to its malware type. Which pairings are correct?
-
-I.   Encrypts files and demands payment - ransomware
-II.  Secretly records keystrokes and activity - spyware
-III. Disguises itself as a useful program - Trojan</p>
+        <p class=""cy-bank-stem"">Match each behavior to its malware type. Which pairings are correct?</p>
+        <p class=""cy-bank-stem"">I.   Encrypts files and demands payment - ransomware<br>II.  Secretly records keystrokes and activity - spyware<br>III. Disguises itself as a useful program - Trojan</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -2575,11 +2521,8 @@ IV.  Uses reputable antivirus software</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C4-124"">
-        <p class=""cy-bank-stem"">Match each device threat to a control that helps defend against it. Which pairings are reasonable?
-
-I.   Stolen laptop with sensitive files - full-disk encryption
-II.  Exploitation of a known vulnerability - timely patching
-III. Default device password abuse - changing default credentials</p>
+        <p class=""cy-bank-stem"">Match each device threat to a control that helps defend against it. Which pairings are reasonable?</p>
+        <p class=""cy-bank-stem"">I.   Stolen laptop with sensitive files - full-disk encryption<br>II.  Exploitation of a known vulnerability - timely patching<br>III. Default device password abuse - changing default credentials</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -2654,11 +2597,8 @@ IV.  PIN plus a hardware security key</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C4-111"">
-        <p class=""cy-bank-stem"">Which password practices strengthen account security?
-
-I.   Using a long, unique passphrase per account
-II.  Enabling multi-factor authentication
-III. Reusing one memorable password across all accounts</p>
+        <p class=""cy-bank-stem"">Which password practices strengthen account security?</p>
+        <p class=""cy-bank-stem"">I.   Using a long, unique passphrase per account<br>II.  Enabling multi-factor authentication<br>III. Reusing one memorable password across all accounts</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -2729,11 +2669,8 @@ III. Reusing one memorable password across all accounts</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C4-115"">
-        <p class=""cy-bank-stem"">Which measures help protect an individual laptop?
-
-I.   Keeping the operating system and applications patched
-II.  Encrypting the disk so a stolen drive is unreadable
-III. Leaving the device unlocked for convenience</p>
+        <p class=""cy-bank-stem"">Which measures help protect an individual laptop?</p>
+        <p class=""cy-bank-stem"">I.   Keeping the operating system and applications patched<br>II.  Encrypting the disk so a stolen drive is unreadable<br>III. Leaving the device unlocked for convenience</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -2808,11 +2745,8 @@ IV.  Removes preinstalled software that is not needed</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C4-120"">
-        <p class=""cy-bank-stem"">Which observations could indicate a device has been compromised?
-
-I.   Antivirus has been silently disabled
-II.  New unknown administrator accounts appear
-III. The device receives a routine vendor security patch</p>
+        <p class=""cy-bank-stem"">Which observations could indicate a device has been compromised?</p>
+        <p class=""cy-bank-stem"">I.   Antivirus has been silently disabled<br>II.  New unknown administrator accounts appear<br>III. The device receives a routine vendor security patch</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -3253,11 +3187,8 @@ IV.  Backups run nightly</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C5-104"">
-        <p class=""cy-bank-stem"">Which of the following are application-layer attacks?
-
-I.   SQL injection
-II.  Cross-site scripting
-III. Tailgating into a server room</p>
+        <p class=""cy-bank-stem"">Which of the following are application-layer attacks?</p>
+        <p class=""cy-bank-stem"">I.   SQL injection<br>II.  Cross-site scripting<br>III. Tailgating into a server room</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and II only</li>
@@ -3303,11 +3234,8 @@ IV.  Rejects overly long or malformed input</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C5-132"">
-        <p class=""cy-bank-stem"">Which measures help defend a web app against injection attacks?
-
-I.   Parameterized queries that separate code from data
-II.  Validating input against strict expected formats
-III. Trusting all input that comes from logged-in users</p>
+        <p class=""cy-bank-stem"">Which measures help defend a web app against injection attacks?</p>
+        <p class=""cy-bank-stem"">I.   Parameterized queries that separate code from data<br>II.  Validating input against strict expected formats<br>III. Trusting all input that comes from logged-in users</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and II only</li>
@@ -3364,11 +3292,8 @@ III. Trusting all input that comes from logged-in users</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C5-109"">
-        <p class=""cy-bank-stem"">Which practices support the principle of least privilege for DATA access?
-
-I.   Granting employees access only to the data their job requires
-II.  Reviewing and revoking access when roles change
-III. Giving all staff read/write access to every database for convenience</p>
+        <p class=""cy-bank-stem"">Which practices support the principle of least privilege for DATA access?</p>
+        <p class=""cy-bank-stem"">I.   Granting employees access only to the data their job requires<br>II.  Reviewing and revoking access when roles change<br>III. Giving all staff read/write access to every database for convenience</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -3413,7 +3338,7 @@ III. Giving all staff read/write access to every database for convenience</p>
         <p class=""cy-bank-stem"">A records system uses the access rules below. Which rule violates least privilege?</p>
         <pre class=""cy-bank-code""><code>I.   Nurses can view records only for their assigned patients
 II.  Billing staff can view only billing fields
-III. Every employee can edit every patient&#39;s full record
+III. Every employee can edit every patient&amp;#39;s full record
 IV.  Access is revoked when an employee leaves</code></pre>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> Rule I</li>
@@ -3499,11 +3424,8 @@ IV.  Access is revoked when an employee leaves</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C5-115"">
-        <p class=""cy-bank-stem"">Which statements about encrypting stored data (&#39;at rest&#39;) are TRUE?
-
-I.   It protects confidentiality if storage media are stolen
-II.  Proper key management is essential to its effectiveness
-III. It guarantees the data can never be altered</p>
+        <p class=""cy-bank-stem"">Which statements about encrypting stored data (&#39;at rest&#39;) are TRUE?</p>
+        <p class=""cy-bank-stem"">I.   It protects confidentiality if storage media are stolen<br>II.  Proper key management is essential to its effectiveness<br>III. It guarantees the data can never be altered</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -3545,11 +3467,8 @@ III. It guarantees the data can never be altered</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C5-136"">
-        <p class=""cy-bank-stem"">Match each control to the security goal it primarily supports. Which pairings are correct?
-
-I.   Hashing a file and rechecking it later - integrity
-II.  Encrypting stored customer data - confidentiality
-III. Keeping tested backups of the database - availability</p>
+        <p class=""cy-bank-stem"">Match each control to the security goal it primarily supports. Which pairings are correct?</p>
+        <p class=""cy-bank-stem"">I.   Hashing a file and rechecking it later - integrity<br>II.  Encrypting stored customer data - confidentiality<br>III. Keeping tested backups of the database - availability</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -3592,11 +3511,8 @@ III. Keeping tested backups of the database - availability</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C5-118"">
-        <p class=""cy-bank-stem"">Which statements correctly contrast symmetric and asymmetric cryptography?
-
-I.   Symmetric uses one shared key; asymmetric uses a public/private key pair
-II.  Asymmetric solves the problem of securely distributing a shared secret
-III. Symmetric encryption is generally slower than asymmetric for large data</p>
+        <p class=""cy-bank-stem"">Which statements correctly contrast symmetric and asymmetric cryptography?</p>
+        <p class=""cy-bank-stem"">I.   Symmetric uses one shared key; asymmetric uses a public/private key pair<br>II.  Asymmetric solves the problem of securely distributing a shared secret<br>III. Symmetric encryption is generally slower than asymmetric for large data</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> I and II only</li>
           <li><span class=""cy-bank-let"">B</span> II and III only</li>
@@ -3681,11 +3597,8 @@ III. Symmetric encryption is generally slower than asymmetric for large data</p>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C5-123"">
-        <p class=""cy-bank-stem"">Which practices strengthen application security?
-
-I.   Validating and sanitizing all untrusted input
-II.  Keeping libraries and frameworks patched
-III. Displaying detailed internal error messages with stack traces to all users</p>
+        <p class=""cy-bank-stem"">Which practices strengthen application security?</p>
+        <p class=""cy-bank-stem"">I.   Validating and sanitizing all untrusted input<br>II.  Keeping libraries and frameworks patched<br>III. Displaying detailed internal error messages with stack traces to all users</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
@@ -3760,11 +3673,8 @@ IV.  Uses HTTPS for all traffic</code></pre>
         </details>
       </article>
       <article class=""cy-bank-q"" id=""q-C5-128"">
-        <p class=""cy-bank-stem"">Which signals could indicate an attack against an application or its data?
-
-I.   A spike in database errors matching injection-style input
-II.  A WAF logging many blocked malicious requests from one source
-III. A routine, scheduled software update being applied</p>
+        <p class=""cy-bank-stem"">Which signals could indicate an attack against an application or its data?</p>
+        <p class=""cy-bank-stem"">I.   A spike in database errors matching injection-style input<br>II.  A WAF logging many blocked malicious requests from one source<br>III. A routine, scheduled software update being applied</p>
         <ol class=""cy-bank-opts"">
           <li><span class=""cy-bank-let"">A</span> II and III only</li>
           <li><span class=""cy-bank-let"">B</span> I and III only</li>
