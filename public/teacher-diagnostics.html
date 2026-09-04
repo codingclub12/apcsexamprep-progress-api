@@ -48,6 +48,17 @@
   .empty{color:var(--muted);font-size:13px;padding:6px 0}
   .err{background:rgba(208,59,59,.10);border:1px solid rgba(208,59,59,.3);border-radius:10px;padding:12px 14px;color:var(--critical)}
   .foot{color:var(--muted);font-size:12px;margin-top:18px}
+  .chat{margin-top:6px}
+  .log{display:flex;flex-direction:column;gap:10px;margin:0 0 12px}
+  .msg{max-width:92%;padding:9px 12px;border-radius:12px;font-size:14px;white-space:pre-wrap;word-wrap:break-word}
+  .msg.you{align-self:flex-end;background:var(--csa);color:#fff;border-bottom-right-radius:4px}
+  .msg.desk{align-self:flex-start;background:rgba(137,135,129,.13);color:var(--ink);border-bottom-left-radius:4px}
+  .msg.desk.plain{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.45}
+  .tag{display:block;margin-top:6px;font-size:11px;color:var(--muted);font-weight:600;
+    text-transform:uppercase;letter-spacing:.04em}
+  .ask{display:flex;gap:8px;align-items:flex-end}
+  .ask textarea{flex:1;min-height:44px;max-height:160px;resize:vertical;padding:9px 11px;font:inherit;
+    border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--ink)}
 </style>
 <!-- Product analytics, on every served page by convention; smoke/posthog.js
      asserts it. Inert unless the key is configured. See public/posthog-init.js. -->
@@ -59,6 +70,7 @@
   <p class="sub">What is actually true about your classes right now. Read straight from the
     database, with nothing written by a language model.</p>
   <div id="app"><p class="empty">Loading...</p></div>
+  <div id="chatcard"></div>
   <p class="foot" id="foot"></p>
 </div>
 
@@ -250,8 +262,108 @@
     }
   }
 
+  // ---- THE SUPPORT DESK ------------------------------------------------
+  //  Below the panel, deliberately, per docs/site-assistant-spec.md section 3.5.
+  //  The panel is the front door because it cannot be wrong; this is the long
+  //  tail for the questions a table of facts does not answer.
+  //
+  //  It sends the message, the page URL and the class you are looking at, and
+  //  that is the complete list. It never reads the page, never sends selected
+  //  text, and there is no field in the request that could carry either.
+  var chatCard = document.getElementById('chatcard');
+  var chatSession = null;
+  var chatBusy = false;
+
+  function chatShell(status) {
+    var note = status && status.enabled && status.model_configured
+      ? 'Ask about your classes, your courses, or how something on the site works. It reads the same live state as the panel above. It does not help with quiz or exercise content.'
+      : 'The assistant model is not switched on, so answers come back as your live account state and the matching help articles rather than as prose. Everything else works.';
+    chatCard.innerHTML =
+      '<div class="card chat"><h2>Ask about your account</h2>' +
+      '<p class="why" style="margin-left:0">' + esc(note) + '</p>' +
+      '<div class="log" id="log"></div>' +
+      '<div class="ask">' +
+      '<textarea id="q" rows="2" placeholder="Why is my 1.2 quiz greyed out?" aria-label="Ask the support desk"></textarea>' +
+      '<button id="send">Ask</button></div></div>';
+    var q = document.getElementById('q');
+    var send = document.getElementById('send');
+    send.addEventListener('click', function () { ask(q); });
+    q.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' && (ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); ask(q); }
+    });
+  }
+
+  function bubble(who, text, tag, plain) {
+    var log = document.getElementById('log');
+    var d = document.createElement('div');
+    d.className = 'msg ' + (who === 'you' ? 'you' : 'desk') + (plain ? ' plain' : '');
+    d.textContent = text;
+    if (tag) {
+      var t = document.createElement('span');
+      t.className = 'tag';
+      t.textContent = tag;
+      d.appendChild(t);
+    }
+    log.appendChild(d);
+    d.scrollIntoView({ block: 'nearest' });
+    return d;
+  }
+
+  function ask(q) {
+    if (chatBusy) return;
+    var text = (q.value || '').trim();
+    if (!text) return;
+    var t = token();
+    if (!t) { bubble('desk', 'Your sign-in has expired. Sign in again and reload this page.'); return; }
+    q.value = '';
+    chatBusy = true;
+    bubble('you', text);
+    var thinking = bubble('desk', 'Reading your account...');
+    fetch('/api/assistant/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
+      body: JSON.stringify({
+        message: text,
+        sessionId: chatSession,
+        classCode: state.klass || null,
+        pageUrl: location.href,
+        pageTitle: document.title
+      })
+    })
+      .then(function (r) { return r.json().then(function (b) { return { s: r.status, b: b }; }); })
+      .then(function (o) {
+        chatBusy = false;
+        thinking.remove();
+        if (o.s !== 200 || !o.b) {
+          bubble('desk', (o.b && o.b.error) || 'The assistant is unavailable right now. The report button still works.');
+          return;
+        }
+        chatSession = o.b.session_id || chatSession;
+        var tag = null, plain = false;
+        if (o.b.status === 'degraded') { tag = 'live state, no model'; plain = true; }
+        if (o.b.status === 'escalated') { tag = 'raised as ' + o.b.severity; }
+        if (o.b.status === 'blocked') { tag = 'reply withheld and logged'; }
+        bubble('desk', o.b.reply, tag, plain);
+      })
+      .catch(function () {
+        chatBusy = false;
+        thinking.remove();
+        bubble('desk', 'Could not reach the server. Check your connection and try again.');
+      });
+  }
+
+  function initChat() {
+    var t = token();
+    if (!t) return;
+    fetch('/api/assistant/chat/status', { headers: { Authorization: 'Bearer ' + t } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (st) { chatShell(st); })
+      .catch(function () { chatShell(null); });
+  }
+
   var qs = new URLSearchParams(location.search);
   fetchState(qs.get('class') || '');
+  initChat();
 })();
 </script>
 </body>

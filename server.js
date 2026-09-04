@@ -239,6 +239,19 @@ if (quizBank) console.log(`quiz bank: ${quizBank.total} source questions, ${quiz
 // hold, so nothing can be derived and a fresh database would link nothing until
 // students had browsed. Insert-only, so a handle a student was actually standing
 // on (learned by /track) is never replaced by one harvested from source.
+// The knowledge base stubs. Thirteen DRAFT articles, one per escalation category,
+// each saying plainly that it is unwritten and carrying a brief for the author.
+// Idempotent and create-only: kb.get(slug) short circuits, so it can never
+// overwrite something Tanner has written.
+//
+// Wired into boot rather than left as `npm run seed:kb` because there is no
+// shell on the Railway box, so a script that only ever runs by hand is a script
+// that runs on a laptop against a laptop database. The counts land on
+// /api/health under seed, which is the whole point of lib/boot-seed.js: a seed
+// that threw and a seed with nothing to do look identical from outside.
+const kbSeeded = runBootSeed('kb_articles', () => require('./scripts/seed-kb').seed());
+if (kbSeeded) console.log(`kb_articles: ${kbSeeded.created} created, ${kbSeeded.kept} already present`);
+
 const pageLinks = runBootSeed('page_links', () => require('./scripts/seed-page-links').seedPageLinks());
 if (pageLinks) console.log(`page links: ${pageLinks.changed} new of ${pageLinks.total} handles`);
 

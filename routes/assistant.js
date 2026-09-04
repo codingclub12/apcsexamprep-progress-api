@@ -53,6 +53,7 @@ const { pageScope } = require('../lib/assistant/scope');
 const report = require('../lib/assistant/report');
 const reads = require('../lib/assistant/reads');
 const kb = require('../lib/assistant/kb');
+const chat = require('../lib/assistant/chat');
 const { requireTeacher } = require('../middleware');
 
 // Five reports per IP per fifteen minutes. A person filing a real bug files one,
@@ -386,6 +387,120 @@ router.get('/help', (req, res) => {
   res.sendFile(require('path').join(__dirname, '..', 'public', 'help.html'));
 });
 
+// ── PHASE 2: CHAT ────────────────────────────────────────────────────────────
+//
+//  POST /api/assistant/chat   teacher auth, behind ASSISTANT_ENABLED
+//
+//  Teachers only, deliberately. Spec section 14 puts students last and puts them
+//  behind a privacy posture that is built but not yet needed, and the anonymous
+//  commerce path behind Turnstile, which does not exist here yet. requireTeacher
+//  is the same fail-closed middleware every other teacher route uses, so a
+//  student holding a class code cannot reach this and neither can an anonymous
+//  caller. There is no role field in the request: identity is the token.
+//
+//  Off by default. ASSISTANT_ENABLED unset means the endpoint still answers, but
+//  from the knowledge base and the live state block with no model call, which is
+//  the same degraded path a missing API key or a breached daily cap takes. That
+//  is on purpose: the failure mode of a support desk must be a worse answer, not
+//  an error page.
+//
+//  TWO WINDOWS, and the reason is a school building. lib/rate-limit.js keys on
+//  the client IP by default, and a school is one NAT address: thirty teachers in
+//  one building share it. A single IP window on a signed-in route therefore
+//  means one teacher's busy afternoon throttles the whole department, which is
+//  an outage wearing a 429.
+//
+//  So: a generous window on the IP in FRONT of the auth check, which is the
+//  flood brake and the thing that stops an unauthenticated caller burning JWT
+//  verifications, and a tight window on the TEACHER ID behind it, which is the
+//  fairness rule and the thing that stops one account spending the budget. Same
+//  module both times, never a second limiter.
+const CHAT_WINDOW_MS = Number(process.env.ASSISTANT_CHAT_WINDOW_MS) > 0
+  ? Number(process.env.ASSISTANT_CHAT_WINDOW_MS)
+  : 60 * 1000;
+const CHAT_MAX_PER_WINDOW = Number(process.env.ASSISTANT_CHAT_MAX_PER_WINDOW) > 0
+  ? Number(process.env.ASSISTANT_CHAT_MAX_PER_WINDOW)
+  : 10;
+// Sized for a school rather than a person: enough that a whole staff room can be
+// asking at once, low enough to stop a script.
+const CHAT_IP_MAX = Number(process.env.ASSISTANT_CHAT_IP_MAX) > 0
+  ? Number(process.env.ASSISTANT_CHAT_IP_MAX)
+  : 120;
+const chatIpLimit = makeRateLimit({
+  windowMs: CHAT_WINDOW_MS,
+  max: CHAT_IP_MAX,
+  message: 'Too many messages from this network. Please wait a moment.',
+});
+const chatUserLimit = makeRateLimit({
+  windowMs: CHAT_WINDOW_MS,
+  max: CHAT_MAX_PER_WINDOW,
+  message: 'Too many messages. Please wait a moment before sending another.',
+  keyFn: (req) => (req.teacher ? 'teacher:' + req.teacher.id : null),
+});
+
+router.post('/api/assistant/chat', chatIpLimit, requireTeacher, chatUserLimit, async (req, res) => {
+  try {
+    const t = req.teacher;
+    const body = req.body && typeof req.body === 'object' ? req.body : {};
+    const message = typeof body.message === 'string' ? body.message : '';
+    if (!message.trim()) return res.status(400).json({ error: 'A message is required.' });
+
+    // Layer 3: the page is identified, never quoted. pageUrl and pageTitle are
+    // the only two page fields this endpoint reads, and there is no third that
+    // could carry body content. A client sending one gets it ignored.
+    const pageUrl = report.clip(body.pageUrl, report.LIMITS.pageUrl);
+    const pageTitle = report.clip(body.pageTitle, report.LIMITS.pageTitle);
+    const scope = pageScope(pageUrl);
+
+    const out = await chat.respond({
+      message,
+      who: {
+        role: 'teacher',
+        userRef: t.id,
+        contactEmail: t.email || null,
+        contactName: t.name || null,
+        school: t.school || null,
+        course: courseFromUrl(pageUrl),
+      },
+      sessionId: typeof body.sessionId === 'string' ? body.sessionId.slice(0, 64) : null,
+      pageUrl,
+      pageTitle,
+      pageScope: scope,
+      classCode: typeof body.classCode === 'string' ? body.classCode.slice(0, 32) : null,
+      ipHash: ipHash(req),
+    });
+
+    // The assembled context is the suite's business, not the browser's. It is
+    // the largest thing this function touches and it holds the account state
+    // twice over, so it is dropped before the response is written rather than
+    // relied on to be ignored.
+    delete out.context;
+    delete out.state;
+    res.json(out);
+  } catch (e) {
+    console.error('assistant/chat:', e);
+    res.status(500).json({ error: 'The assistant is unavailable right now. The report button still works.' });
+  }
+});
+
+// What the widget needs to decide whether to render a chat box, and what an
+// operator needs to know whether the model is actually being called. Booleans
+// and counters only: no key, no recipient address, nothing that identifies a
+// person.
+router.get('/api/assistant/chat/status', requireTeacher, (req, res) => {
+  const day = require('../lib/assistant/store').tokensToday();
+  res.json({
+    enabled: chat.enabled(),
+    model_configured: require('../lib/assistant/provider').configured(),
+    caps: {
+      messages_per_session: chat.CAPS.messagesPerSession(),
+      tokens_per_session: chat.CAPS.tokensPerSession(),
+      tokens_per_day: chat.CAPS.tokensPerDay(),
+    },
+    spend: chat.spendReport(day),
+  });
+});
+
 // The affordance. Served from here rather than the theme so a copy change does
 // not need a Shopify deploy, and so the script and the endpoint it posts to can
 // never be different versions of each other.
@@ -398,3 +513,4 @@ router.get('/apcs-report.js', (req, res) => {
 
 module.exports = router;
 module.exports.LIMITER = { WINDOW_MS, MAX_PER_WINDOW };
+module.exports.CHAT_LIMITER = { CHAT_WINDOW_MS, CHAT_MAX_PER_WINDOW, CHAT_IP_MAX };

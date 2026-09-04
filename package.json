@@ -229,12 +229,14 @@
     "cyber:practicehubs": "node tools/ap-cyber-ced/build-practice-hubs.js",
     "cyber:practicesheet": "node tools/ap-cyber-ced/generate-practice-sheet.js",
     "verify:cyberpractice": "node scripts/verify-cyber-practice-live.js",
-    "seed:kb": "node scripts/seed-kb.js"
+    "seed:kb": "node scripts/seed-kb.js",
+    "smoke:assistantexfil": "node smoke/assistant-exfiltration.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.123.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.10.0",
     "cors": "^2.8.6",
