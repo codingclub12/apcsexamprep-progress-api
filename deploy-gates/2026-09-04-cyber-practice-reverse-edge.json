@@ -1,0 +1,88 @@
+{
+  "change": "the cyber practice hub and spoke becomes reachable from where students start",
+  "_context": [
+    "Measured live on 2026-09-04, the day the first two sheets were imported: the",
+    "five practice spokes had exactly ONE inbound path between them, topics hub to",
+    "umbrella to spoke, two hops. The course guide linked none of them, the teacher",
+    "Command Center linked none, all five unit study pages linked none, and so did",
+    "the course lesson pages and the concept spokes.",
+    "A spoke already linked UP to its unit study page. Without the edge back the",
+    "hub and spoke was a one-way street: reachable if you start at the practice hub,",
+    "invisible if you start anywhere a student actually starts.",
+    "This adds six reverse links plus the course guide, and repairs two dead anchors",
+    "on the course guide that a MERGE would otherwise have republished. Board 220,",
+    "and it closes the dead-link half of board 209."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the package builds, validates, and pins the link-block incident",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect": "OK - 29 checks, 16 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "suite",
+      "name": "every other lib/link-block.js consumer still passes after the shared fix",
+      "_why": "This change edits lib/link-block.js, which scripts/internal-link-csv.js uses for the whole site. Its other suites must be unaffected.",
+      "command": "npm run --silent smoke:linkgraph",
+      "expect": "128 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation agrees on the graph the sheets encode",
+      "command": "python3 scripts/cyber-practice-rederive.py smoke/fixtures/live-page-handles-2026-09-04.txt imports/2026-09-04/cyber-practice-new-pages.csv imports/2026-09-04/cyber-practice-hub-links-pages.csv",
+      "expect": "OK - 17 checks re-derived from the sheet, independently of the generator"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: revert the script-aware insertion and the Command Center breaks again",
+      "_why": "cyber-command-center has no .related block and no nav-row, so insertion fell through to the last </div>, which is inside a JavaScript string literal in its own 51KB script. The block went in mid-literal and the script died. Div balance, byte growth, anchor count and a byte-exact CSV round trip ALL passed. Reverting the fix must go red.",
+      "file": "lib/link-block.js",
+      "find": "    const lastClose = lastMarkupClose(body, ranges);",
+      "replace": "    const lastClose = body.lastIndexOf('</div>');",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "the page script still compiles afterwards"
+    },
+    {
+      "kind": "mutation",
+      "name": "and the compile guard behind it is not hollow",
+      "_why": "The insertion fix is a guess that the fallback is the only way in. The compile check is what holds when a future change finds a new way to break a script. Removing it must go red on its own.",
+      "file": "lib/link-block.js",
+      "find": "      if (hBefore[i] === true && hAfter[i] === false) {",
+      "replace": "      if (false && hBefore[i] === true && hAfter[i] === false) {",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "check() refuses an edit that breaks a script that compiled before it"
+    },
+    {
+      "kind": "mutation",
+      "name": "the reverse edge is enforced, not described",
+      "file": "tools/ap-cyber-ced/practice-validator.js",
+      "find": "    if (!have.has(e.to)) {",
+      "replace": "    if (false && !have.has(e.to)) {",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "a unit study page that stops linking its practice spoke"
+    },
+    {
+      "kind": "mutation",
+      "name": "narrowing the content rules to authored text did not open a blind spot",
+      "_why": "authoredText() stops rules 1, 2, 3 and 7 judging prose this package did not write, which is what lets a one-link edit ship to a page carrying 40 em-dashes of its own. The risk of any narrowing is that it hides a real defect, so an em-dash INSIDE the added block must still be caught.",
+      "file": "tools/ap-cyber-ced/practice-validator.js",
+      "find": "  if (!sp || sp.created) return body;",
+      "replace": "  if (!sp || sp.created) return body;\n  if (sp) return '';",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "an em-dash INSIDE the block this package adds, the authorship hole"
+    },
+    {
+      "kind": "live",
+      "name": "the storefront serves the two-way graph, and nothing was erased doing it",
+      "_why": "Every reverse assertion was measured FALSE on 2026-09-04 after the first import: no unit study page, neither course-spine hub, linked any practice page. The course guide's two dead anchors were live 404s. Run before this import the script reports those failures, which is the proof it is not decoration.",
+      "command": "node scripts/verify-cyber-practice-live.js",
+      "expect": "proving it erased nothing"
+    }
+  ],
+  "not_covered": [
+    "The 128 course lesson pages and the 63 concept spokes still do not link practice directly. Both already link their unit study page, which now does, so they are two hops rather than orphaned. Adding 191 rows is a different change with a different risk profile and belongs to the internal-link pipeline.",
+    "Whether the practice layer earns traffic without taking it from the concept spokes is a Search Console question over weeks. The structural half is rule P1.",
+    "This repairs two dead anchors on the course guide. Board 209 also names ap-cybersecurity-study-guides on other pages; only the course guide is touched here."
+  ]
+}

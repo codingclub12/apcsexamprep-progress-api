@@ -32,6 +32,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const sf = require('../lib/storefront-fetch.js');
+const extractBody = require('./extract-live-body.js');
 const spec = require('../lib/cyber-practice-spec');
 
 const LINK = /href\s*=\s*["'](?:https?:\/\/[^/"']*apcsexamprep\.com)?\/pages\/([^"'#?]+)/gi;
@@ -56,6 +57,28 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 //  scripts/link-graph.js uses for the full crawl.
 const GAP_MS = 1500;
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  THE PAGE BODY, NOT THE RENDERED PAGE.
+//
+//  Found 2026-09-04 by this script failing on a repair that had actually
+//  worked. It was reading the whole rendered document, which carries about 135
+//  theme anchors before the content starts. ap-cybersecurity-study-guides is a
+//  dead handle in the theme's own chrome: it appears twice in the rendered HTML
+//  of EVERY page on the site, including a page created hours earlier, and zero
+//  times in any page body. So "the course guide no longer links it" could never
+//  pass no matter what the sheet did, because the sheet does not own that link.
+//
+//  The mirror of that is the real risk: an assertion that a page DOES link
+//  something can be satisfied by chrome rather than by the edit under test.
+//  Measured before changing this, so the fix rests on evidence rather than
+//  worry: the chrome links none of the six practice handles, so nothing here
+//  was passing on chrome. It was luck rather than design, and design is
+//  cheaper: everything below now reads the stored body, which is exactly what
+//  a Matrixify sheet controls.
+//
+//  docs/internal-linking.md makes the same distinction and calls it zone: only
+//  a body anchor is architecture, a chrome anchor is present on every page
+//  whether or not anyone linked anything.
 async function body(handle) {
   //  page() asserts a positive marker the bot challenge cannot fake and throws
   //  otherwise, so a failure here is a real failure and never a quiet 403.
@@ -63,7 +86,10 @@ async function body(handle) {
   for (let attempt = 0; attempt < 4; attempt += 1) {
     try {
       const r = await sf.page(`/pages/${handle}`);
-      return typeof r === 'string' ? r : r.body;
+      const rendered = typeof r === 'string' ? r : r.body;
+      //  Throws on a page with no rte wrapper, which is a real failure: every
+      //  page this checks is a standard Shopify page template.
+      return extractBody.extract(rendered);
     } catch (e) {
       last = e;
       //  A 404 is an answer: the page is not there, which is what this run is
@@ -120,7 +146,29 @@ async function main() {
   ok('the concept hub links the practice hub (it linked no practice page at all before)',
     linksIn(topics).has(u.handle));
 
-  //  4. Nothing the import was supposed to leave alone got erased. The two
+  //  4. The REVERSE edge. Before the second import wave the five spokes had
+  //     exactly one inbound path between them, topics hub to umbrella to spoke.
+  //     These are the edges that make the hub and spoke reachable from where a
+  //     student actually starts, so each one is asserted on the live page.
+  for (const e of spec.reverseSources()) {
+    await sleep(GAP_MS);
+    let html = null;
+    try { html = await body(e.from); } catch (err) { /* the assertion reports it */ }
+    ok(`${e.from} reaches the practice layer (${e.why})`,
+      !!html && linksIn(html).has(e.to));
+  }
+
+  //  The two dead anchors the course-guide repair removed. Both were live 404s
+  //  before that import, so this is a claim the change made true.
+  await sleep(GAP_MS);
+  const guide = await body(spec.umbrella().course_guide);
+  const guideLinks = linksIn(guide);
+  for (const rp of spec.courseGuideRepairs()) {
+    ok(`the course guide no longer links the dead handle ${rp.from}`, !guideLinks.has(rp.from));
+    ok(`and links ${rp.to} in its place`, guideLinks.has(rp.to));
+  }
+
+  //  5. Nothing the import was supposed to leave alone got erased. The two
   //     extended pages keep their own titles and their existing content.
   //  These last two are PRESERVATION checks, and unlike everything above they
   //  were already true before the import. They are here because a MERGE writes
