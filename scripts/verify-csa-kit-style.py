@@ -34,6 +34,7 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 
 # British -> US. Only forms that actually differ; "exercise" and "promise" are
@@ -175,6 +176,39 @@ def main():
                     if q['stem'] not in text:
                         absent.append(f"{t['topic']} quiz: {q['stem'][:44]}")
     ok(f'all {required} key ideas and quiz stems reach the guide', not absent, absent[:4])
+
+    print('6. A free-response student packet never carries the answer')
+    import json as _json
+    frq_path = os.path.join(ROOT, 'config', 'csa-frq-kit.json')
+    if not os.path.exists(frq_path):
+        ok('config/csa-frq-kit.json exists', False,
+           'run: node scripts/csa-frq-export.js')
+    else:
+        from csa_kit.notes import build_frq
+        items = _json.load(open(frq_path, encoding='utf-8'))['items']
+        leaked = []
+        checked = 0
+        with tempfile.TemporaryDirectory() as tmp:
+            for lesson, item in items.items():
+                out = os.path.join(tmp, f'frq{lesson}.docx')
+                build_frq(out, item, False)
+                text = '\n'.join(p.text for p in Document(out).paragraphs)
+                checked += 1
+                ref = [l.strip() for l in (item.get('reference') or '').split('\n')
+                       if len(l.strip()) > 12]
+                for i in range(max(0, len(ref) - 2)):
+                    if '\n'.join(ref[i:i + 3]) in text:
+                        leaked.append(f'{lesson}: reference solution')
+                        break
+                for h in item.get('hints', []):
+                    if len(h) > 40 and h[:50] in text:
+                        leaked.append(f'{lesson}: hint')
+                        break
+        ok(f'all {checked} student packets withhold the solution and hints',
+           not leaked, leaked[:4])
+        hidden = [l for l, it in items.items()
+                  if any(c.get('hidden') for c in it.get('sampleCases', []))]
+        ok('no hidden auto-grader case is exported to print', not hidden, hidden[:4])
 
     print()
     if FAILED:

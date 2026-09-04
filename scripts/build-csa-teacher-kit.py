@@ -20,6 +20,7 @@ the quiz, so the three surfaces cannot drift apart.
 """
 
 import argparse
+import json
 import importlib
 import os
 import re
@@ -28,7 +29,22 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
 
 from csa_kit.deck import Deck
-from csa_kit.notes import build_notes, build_quiz, build_teacher_guide
+from csa_kit.notes import (build_notes, build_quiz, build_teacher_guide,
+                          build_frq)
+from csa_kit.course_docs import build_course_docs
+
+# The 53 free-response items, exported from seed/csa-frq. Read once.
+_FRQ_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         'config', 'csa-frq-kit.json')
+try:
+    with open(_FRQ_PATH, encoding='utf-8') as _fh:
+        FRQ_ITEMS = json.load(_fh)['items']
+except FileNotFoundError:
+    # Not fatal: the kit still builds without FRQ packets, and saying so beats
+    # a traceback that looks like the whole builder is broken.
+    print('note: config/csa-frq-kit.json missing, no FRQ packets will be built.'
+          ' Run: node scripts/csa-frq-export.js')
+    FRQ_ITEMS = {}
 
 PREPARED = ('Prepared for the May 2027 AP CSA exam '
             '(2025 Course and Exam Description, four-unit structure).')
@@ -125,6 +141,19 @@ def main():
                        t['topic'], t['title'], t['handle'], t['quiz'], key_edition)
             made += 1
 
+        # The lesson's free-response practice item, student packet and key.
+        # Content comes from config/csa-frq-kit.json, exported from
+        # seed/csa-frq by scripts/csa-frq-export.js. A lesson with no item
+        # simply gets no FRQ folder rather than an empty one.
+        frq_item = FRQ_ITEMS.get(t['topic'])
+        if frq_item:
+            frq_dir = os.path.join(root, 'FRQ')
+            os.makedirs(frq_dir, exist_ok=True)
+            for key_edition, suffix in ((False, 'STUDENT'), (True, 'KEY')):
+                build_frq(os.path.join(frq_dir, f'FRQ_{suffix}.docx'),
+                          frq_item, key_edition)
+                made += 1
+
         build_teacher_guide(os.path.join(root, 'Teacher_Guide.docx'),
                             t['topic'], t['title'], t['handle'], t['days'],
                             t['vocab'], t['quiz'],
@@ -132,6 +161,26 @@ def main():
                             '1 debugging exercise, the topic quiz')
         made += 1
         print(f"  built {t['topic']}  {t['title']}  ({slides} slides per deck)")
+
+    # Course-level documents. Written on every unit build rather than behind a
+    # flag, because they are cheap, identical each time, and a kit missing its
+    # Start_Here because somebody forgot the flag is worse than four rewritten
+    # files. Day counts are COUNTED from the units actually present on disk, so
+    # a partial build says so in the table instead of claiming units it has not
+    # built.
+    day_counts = {}
+    for unit_dir in sorted(os.listdir(args.out)):
+        m = re.match(r'Unit_(\d+)$', unit_dir)
+        if not m:
+            continue
+        n = 0
+        for lesson in os.listdir(os.path.join(args.out, unit_dir)):
+            decks = os.path.join(args.out, unit_dir, lesson, 'Slide_Decks')
+            if os.path.isdir(decks):
+                n += len([f for f in os.listdir(decks)
+                          if f.endswith('_Deck_TEACHER.pptx')])
+        day_counts[m.group(1)] = n
+    made += build_course_docs(args.out, day_counts)
 
     print(f"\n{made} files written under {args.out}")
 
