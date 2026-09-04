@@ -42,7 +42,36 @@ const router = express.Router();
 const { verifyStudentToken } = require('../utils');
 const { makeRateLimit } = require('../lib/rate-limit');
 const entitlements = require('../lib/entitlements');
-const MANIFEST = require('../seed/csp-teacher-files.json');
+
+// ── TWO MANIFESTS, ONE TABLE ────────────────────────────────────────────────
+//  CSP entries carry a storefront `path`; AP Networking entries carry a
+//  `drive` target instead, because that bundle was never uploaded to Shopify
+//  and lives in Google Drive. The route does not branch on the course, only on
+//  which of the two an entry has, the same way config/slide-manifests.js keeps
+//  course-specific shape out of routes/slides.js.
+//
+//  Ids are sha256 prefixes over different namespaces (a storefront pathname for
+//  CSP, the string `drive:<kind>:<id>` for networking), so a collision would be
+//  a genuine hash collision rather than a naming accident. It is still checked
+//  at load, because a silent overwrite here would hand one course's teacher
+//  another course's file.
+function loadManifests(sources) {
+  const merged = {};
+  for (const [name, table] of sources) {
+    for (const [id, entry] of Object.entries(table)) {
+      if (Object.prototype.hasOwnProperty.call(merged, id)) {
+        throw new Error(`file manifest id collision on ${id} (${name})`);
+      }
+      merged[id] = entry;
+    }
+  }
+  return merged;
+}
+
+const MANIFEST = loadManifests([
+  ['csp', require('../seed/csp-teacher-files.json')],
+  ['networking', require('../seed/networking-teacher-files.json')],
+]);
 
 // Where the files actually live. The API runs on progress.apcsexamprep.com and
 // the files are served by the storefront, so the redirect has to be absolute.
@@ -77,6 +106,25 @@ function refuse(res) {
   return res.status(403).json({ error: 'Not available.' });
 }
 
+// A manifest entry to the URL it stands for, or null if it is not a shape this
+// route will emit. Null means refuse: an entry that satisfies neither guard is
+// a corrupt manifest line, and guessing at it is how an open redirect ships.
+//
+// A Drive id is the opaque suffix Google puts in its own URLs. The character
+// class is deliberately exactly what Drive uses, with a length floor, so a
+// value carrying a slash, a dot or a scheme cannot escape the template.
+function resolveUrl(file) {
+  if (typeof file.path === 'string') {
+    if (!/^\/cdn\/shop\/files\/[A-Za-z0-9._-]+$/.test(file.path)) return null;
+    return STOREFRONT + file.path;
+  }
+  const d = file.drive;
+  if (!d || typeof d.id !== 'string' || !/^[A-Za-z0-9_-]{20,64}$/.test(d.id)) return null;
+  if (d.kind === 'folder') return `https://drive.google.com/drive/folders/${d.id}`;
+  if (d.kind === 'file') return `https://drive.google.com/file/d/${d.id}/view`;
+  return null;
+}
+
 // GET /api/files/:id  ->  302 to the real file, or 403
 router.get('/:id', fileLimit, (req, res) => {
   const id = typeof req.params.id === 'string' ? req.params.id : '';
@@ -93,14 +141,16 @@ router.get('/:id', fileLimit, (req, res) => {
     if (!entitlements.evaluateTeacherGate(payload.id, file.course)) return refuse(res);
   }
 
-  // The path came from the manifest, never from the request, so there is nothing
-  // a caller can steer here. Checked anyway, because a manifest is a file on
-  // disk and this is the one place a bad line in it would become an open
-  // redirect off our own origin.
-  if (!/^\/cdn\/shop\/files\/[A-Za-z0-9._-]+$/.test(file.path)) return refuse(res);
+  // The target came from the manifest, never from the request, so there is
+  // nothing a caller can steer here. Checked anyway, because a manifest is a
+  // file on disk and this is the one place a bad line in it would become an
+  // open redirect off our own origin. Each shape gets its own guard rather than
+  // one loose pattern, so a networking entry can never satisfy the CSP rule or
+  // the other way round, and an entry carrying neither is refused.
+  const url = resolveUrl(file);
+  if (!url) return refuse(res);
 
   res.set('Cache-Control', 'private, no-store');
-  const url = STOREFRONT + file.path;
 
   // Two ways out, for two different callers.
   //
@@ -128,7 +178,10 @@ router.get('/', fileLimit, (req, res) => {
   for (const [id, f] of Object.entries(MANIFEST)) {
     if (f.course !== course) continue;
     if (!f.free && !entitled) continue;
-    out.push({ id, label: f.label, topic: f.topic, bigIdea: f.bigIdea });
+    // bigIdea is CSP's grouping and unit is networking's. Both are emitted as
+    // whatever the entry actually has, so a consumer reads one shape and gets
+    // undefined for the dimension its course does not use.
+    out.push({ id, label: f.label, topic: f.topic, bigIdea: f.bigIdea, unit: f.unit });
   }
   return res.json({ course, entitled, files: out });
 });
