@@ -1,0 +1,108 @@
+{
+  "change": "the cyber practice hub links its five unit spokes, rebuilt against today's body rather than re-importing a stale sheet",
+  "_context": [
+    "scripts/verify-cyber-practice-live.js reports 34 of 35 live checks passing.",
+    "The one failure is that ap-cybersecurity-practice links NONE of its five unit",
+    "spokes. The spokes serve 200, each reaches the course and its unit study page,",
+    "and every unit study page reaches its spoke. Only the hub's own downward edge",
+    "is missing, so those five pages are reachable from a study page and from",
+    "nowhere a student browsing the practice layer would look.",
+    "",
+    "THE ROW ALREADY EXISTS, AND RE-IMPORTING IT WOULD HAVE COST MORE THAN IT FIXED.",
+    "imports/2026-09-04/cyber-practice-hub-links-pages.csv carries that handle with",
+    "all five links, and the other row in the same two row file matches its live",
+    "body character for character, so one row landed and one did not. Diffing the",
+    "stale row against today's live body finds three differences, not one:",
+    "",
+    "    insert  883 chars   the related-links CSS          expected",
+    "    insert  643 chars   the five spoke anchors         expected",
+    "    DELETE  722 chars   a Question of the Day block    NOT EXPECTED",
+    "",
+    "The live page has GAINED a Question of the Day card since that sheet was",
+    "written: 152 questions across all five units. A MERGE republishes the whole",
+    "Body HTML, so re-importing would have silently erased it, and nothing about",
+    "re-running the file would have said so. The block is rebuilt from today's body",
+    "through the same lib/link-block.js instead.",
+    "",
+    "The lesson is not about this sheet. A generated sheet is only valid against the",
+    "body it was generated from, and a live page can change under it between",
+    "generation and import. Check before re-importing anything more than a few hours",
+    "old, and check by DIFFING rather than by asking whether it looks current."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the repair, and the proof the stale sheet was destructive",
+      "command": "npm run --silent smoke:cyberhubrepair",
+      "expect": "OK - 22 checks, 5 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "suite",
+      "name": "the practice package it belongs to did not regress",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect": "OK - 29 checks, 16 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "suite",
+      "name": "lib/link-block.js is shared, and its other consumer suite still passes",
+      "command": "npm run --silent smoke:linkgraph",
+      "expect": "0 failed",
+      "_why": "There is no dedicated link-block suite; the module is exercised through its consumers. smoke:cyberpractice above is one and smoke:linkgraph is the other, and this pass calls build() and check() exactly as they do."
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation proves nothing was deleted, by diff rather than by marker list",
+      "_why": "The generator proves 'nothing was lost' against a list of markers it declares, and a list cannot report that it has stopped covering the page: same shape as the stale-count patterns that let two wrong numbers onto the practice exam earlier today. This is Python, shares no code, and requires that EVERY character of the live body survives and every difference is an insertion. It also re-derives the finding itself, that the sheet already in imports/2026-09-04 deletes a 722 character Question of the Day block.",
+      "command": "python3 scripts/cyber-hub-spokes-rederive.py",
+      "expect": "OK - 20 checks re-derived from the sheet by diff, independently of the generator"
+    },
+    {
+      "kind": "suite",
+      "name": "the sheet clears the Matrixify preflight",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-04d/cyber-practice-hub-spokes-pages.csv",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT MATTERS: let the build drop a section the live page had",
+      "_why": "This is the stale sheet's defect, reproduced. The guard compares each declared marker on the live body against the built body and refuses when one is lost. Without it the generator happily writes a sheet that deletes live content, which is precisely what imports/2026-09-04 would have done.",
+      "file": "tools/ap-cyber-ced/generate-practice-hub-repair.js",
+      "find": "  const lost = CARRIED.filter((c) => live.includes(c.marker) && !res.body.includes(c.marker));",
+      "replace": "  const lost = [];",
+      "command": "npm run --silent smoke:cyberhubrepair",
+      "expect_failure": "MUTATION: dropping the carried marker from the output is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "accept a partial edge instead of insisting on all five spokes",
+      "_why": "A sheet that adds three of five links reads as a fix and leaves two pages orphaned. The count is derived from the spec rather than typed, and the assertion is what makes the derivation load-bearing.",
+      "file": "tools/ap-cyber-ced/generate-practice-hub-repair.js",
+      "find": "  if (res.added.length !== 5) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberhubrepair",
+      "expect_failure": "MUTATION: a spec with three spokes instead of five is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop refusing a missing stored body",
+      "_why": "An empty Body HTML cell in a MERGE erases the live page. This is the most expensive mistake available in this whole pipeline and the refusal has to be proven, not assumed.",
+      "file": "tools/ap-cyber-ced/generate-practice-hub-repair.js",
+      "find": "  if (!fs.existsSync(file)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberhubrepair",
+      "expect_failure": "MUTATION: a missing stored body is refused, never an empty cell"
+    },
+    {
+      "kind": "live",
+      "name": "the practice hub reaches all five spokes, and lost nothing doing it",
+      "_why": "This is the existing package verifier and it is failing on exactly this edge today: 34 passed, 1 failed, the failure naming all five missing spoke handles. That single check flipping is the whole deploy. Its 34 other assertions are what prove the import cost nothing, including that the hub still carries its FRQ and labs sections.",
+      "command": "node scripts/verify-cyber-practice-live.js",
+      "expect": "0 failed"
+    }
+  ],
+  "not_covered": [
+    "WHY the row did not land the first time. The other row in the same file did, so this was not a whole-file refusal. Matrixify's own import log would say, and nobody has it. The practical answer is the same either way: re-check the live body before re-importing, and the generator now does.",
+    "Whether the Question of the Day block should be on the practice hub at all. It is, somebody put it there deliberately, and this pass is not the place to second-guess it.",
+    "The five spokes are still linked from only two places once this lands: their unit study page and now the hub. Whether they deserve an entry in the nav is a separate question and a theme change."
+  ]
+}
