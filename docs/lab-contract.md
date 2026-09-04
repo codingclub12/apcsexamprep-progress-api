@@ -14,7 +14,7 @@ config/labs/<course>-<item>.json   the authored lab: brief, filesystem, checks
 lib/lab-spec.js                    loads and validates it at boot
 public/lab-player.js               the shell, the matcher and the UI
 routes/labs.js                     GET /api/labs, /lab/:course/:item, /lab-player.js
-POST /api/progress/attempt         where the grade goes, item_type 'lab'
+POST /api/progress/attempt         where the grade goes, item_type 'terminal-lab'
 smoke/labs.js                      plays every lab's own solution and fails if it cannot be finished
 ```
 
@@ -47,7 +47,7 @@ So every check is evaluated in the page and the submission carries the check
 index and its boolean, nothing else:
 
 ```json
-{ "item_type": "lab", "score": 6, "max_score": 8,
+{ "item_type": "terminal-lab", "score": 6, "max_score": 8,
   "detail": [{"q":1,"sel":null,"ok":true}, {"q":2,"sel":null,"ok":true}] }
 ```
 
@@ -78,7 +78,7 @@ current shape is tamper-proof.
   "item_id": "4.3-lab",
   "lesson_id": "4.3",            // the gradebook cell this lands in
   "unit": "unit-4",
-  "item_type": "lab",
+  "item_type": "terminal-lab",     // never plain "lab", see below
   "graded": true,                // stated explicitly, never inferred
   "points": 8,                   // MUST equal checks.length
   "est_minutes": 20,
@@ -133,46 +133,71 @@ reason no teacher can see on screen. `ap-cybersecurity` is exactly that case
 today (see `docs/cyber-denominator-gaps.md`), so `1.2-lab` ships as practice.
 Flipping it later is one field plus `node scripts/seed-manifest.js --update`.
 
-## `graded: false` is a real setting, and two labs use it on purpose
+## The activity type is `terminal-lab`, and that is load bearing
 
-Four of the six labs in `config/labs/` are graded. **The two AP Cybersecurity
-terminal labs are not**, and that is declared in the file rather than being an
-oversight:
+Every spec in `config/labs/` declares `item_type: "terminal-lab"`. It used to say
+`lab`, and the rename on 2026-09-04 fixed a live defect rather than tidying a
+name.
 
-    ap-cybersecurity-1.2-lab.json   graded: false
-    ap-cybersecurity-2.4-lab.json   graded: false
-    ap-networking-1.4-lab.json      graded: true
-    ap-networking-2.2-lab.json      graded: true
-    ap-networking-3.5-lab.json      graded: true
-    ap-networking-4.3-lab.json      graded: true
+`lib/gradebook-contract.js` `denominatorMap` builds one map keyed
+`(lesson, activity_type)`. It writes the authored `course_denominators` first and
+the generated `course_manifest` rows second, with `set` rather than `+=`, so when
+both describe the same key the manifest silently REPLACES the authored number.
 
-Those two pages say so to the student in as many words: "This one is practice.
-It checks your work on the page and records nothing." The page text and the
-config agree, so a teacher reporting that a terminal lab shows nothing in the
-gradebook has found the design, not a defect.
+AP Cybersecurity has an authored `1.2|lab` worth 30, for the lab widget on the
+Topic 1.2 lesson page. Grading the Topic 1.2 terminal lab put an 8 point manifest
+row on that same key, and Topic 1.2's lab column became 8 points for every cyber
+student. Nothing threw. The suite was green.
 
-**But "by design" here means "held, not abandoned", and the reason is
-architectural.** The config's own `_comment` is the authority and it is more
-specific than either reading that has been offered so far:
+Reproduced against two fresh databases with the real seeders:
 
-> `scripts/seed-manifest.js` deliberately does not seed `ap-cybersecurity`: that
-> course carries its own denominators. A lone manifest row here would add points
-> to every cyber student's denominator through a second path, which is the exact
-> failure `smoke/manifest-prune.js` exists to prevent. Flipping it to graded is
-> this one field plus a seed run, once the cyber denominator work in
-> `docs/cyber-denominator-gaps.md` closes.
+    graded:true    manifest 1.2 | 1.2-auth-lab | lab | 8
+                   denominatorMap 1.2|lab -> 8   (manifest)
+    graded:false   no manifest row
+                   denominatorMap 1.2|lab -> 30  (authored)
 
-So it is not that these labs are meant to be ungraded forever. They are graded
-capable and held at `false` until the cyber denominator path stops double
-counting. Telling a teacher "this is free practice by design" is true today and
-will stop being true, so say "it records nothing today" rather than implying a
-permanent choice.
+A simulated shell is not the widget on a lesson page, so it gets its own native
+name. `ACTIVITY_MAP` maps `terminal-lab` back to canonical `lab`, so a teacher
+still sees a lab; what changes is the KEY, since both `denominatorMap` and
+`attempt-rollup` key on the native name. Same shape as the `debug` extension of
+2026-09-01.
 
-This is recorded because it has already been read two other ways: once in a
-draft reply to a teacher that called it "a miss", and once as settled free
-practice. A `points` value is present on both (6 and 8), which is what makes the
-first misreading easy: points without `graded: true` prices the checkboxes on
-the page, not a gradebook cell.
+`npm run smoke:denomcollision` fails if any manifest `(lesson, type)` group ever
+lands on an authored denominator again. Measured across every seeder in the repo
+the day it was written: 306 manifest groups, 152 authored rows, zero in both. It
+is a fact about the data, not a tolerance.
+
+**This section previously predicted the bug and got the direction backwards.** It
+said a lone cyber manifest row would ADD points through a second path. It
+subtracts them. Recorded because the wrong prediction read as authoritative for a
+month and is why nobody checked.
+
+## `graded: false` is still a real setting
+
+The AP Cybersecurity terminal labs, and which of them are graded:
+
+    ap-cybersecurity-1.2-auth-lab.json   graded: true    since 2026-09-04
+    ap-cybersecurity-1.2-lab.json        graded: false
+    ap-cybersecurity-2.4-lab.json        graded: false
+    ap-networking-1.4-lab.json           graded: true
+    ap-networking-2.2-lab.json           graded: true
+    ap-networking-3.5-lab.json           graded: true
+    ap-networking-4.3-lab.json           graded: true
+
+The two that are still `false` say so to the student in as many words: "This one
+is practice. It checks your work on the page and records nothing." The page text
+and the config agree, so a teacher reporting that one of those shows nothing in
+the gradebook has found the design.
+
+That is now a per-lab statement rather than a blanket one, and it has to be: a
+teacher who was told "the cyber terminal labs are ungraded by design" in August
+was told something that is no longer true of all of them. It was Michelle asking
+about exactly this that started the work above.
+
+Say "it records nothing today" rather than implying a permanent choice. A
+`points` value is present on the ungraded ones too (6 and 8), which is what makes
+the misreading easy: points without `graded: true` prices the checkboxes on the
+page, not a gradebook cell.
 
 The five per-lesson Unit 1 labs are a different thing entirely from the two
 terminal labs, and a teacher asking about "the Unit 1 labs" almost always means

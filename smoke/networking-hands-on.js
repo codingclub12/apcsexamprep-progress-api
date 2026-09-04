@@ -184,7 +184,7 @@ for (const itemId of liveLabIds) {
 // the authored file item by item.
 const wouldAdd = [
   ...Object.entries(seed.NET_CONFIG_LABS).map(([lesson, points]) => ({
-    item_id: `${lesson}-lab`, unit: `unit-${lesson.split('.')[0]}`, lesson_id: lesson, item_type: 'lab', points })),
+    item_id: `${lesson}-lab`, unit: `unit-${lesson.split('.')[0]}`, lesson_id: lesson, item_type: 'terminal-lab', points })),
   ...Object.entries(seed.NET_UNIT_DOCS).map(([itemId, cfg]) => ({
     item_id: itemId, unit: cfg.unit, lesson_id: itemId, item_type: 'project', points: cfg.points })),
   ...Object.entries(seed.NET_TEAM_PROJECT).map(([itemId, cfg]) => ({
@@ -209,9 +209,14 @@ ok('the teacher-scored set is the 4 unit records plus the team task',
 
 console.log('\n── The canonical vocabulary knows these types ───────────────────');
 
-for (const t of ['lab', 'project']) {
+//  'terminal-lab' is the one whose canonical name differs from its native name,
+//  deliberately: a teacher should still see a lab. So the expectation is stated
+//  per type rather than as native === canonical, which would have quietly turned
+//  this into a check that only tests the types that happen to be identity.
+for (const [t, expected] of [['terminal-lab', 'lab'], ['project', 'project']]) {
   const c = canonicalActivity(t);
-  ok(`'${t}' maps deliberately, not through the practice default`, c.mapped === true && c.activity === t, c);
+  ok(`'${t}' maps deliberately to '${expected}', not through the practice default`,
+    c.mapped === true && c.activity === expected, c);
 }
 
 // A lab on a topic must not land in the same gradebook cell as that topic's

@@ -242,6 +242,40 @@ function main() {
 
   fails.push(...v.ruleDeadLinks([...units.rows, ...links.rows], liveHandles()));
 
+  //  EVERY TOPIC TITLE IN EVERY BODY MUST BE THE CED'S.
+  //
+  //  The pool shipped its own copy of all 24 and four had drifted, which put
+  //  three different names on topic 1.2 across the site. Correcting the strings
+  //  would fix today; asserting the titles come from lib/cyber-topics.js is
+  //  what stops them drifting again. Checked against what the sheets actually
+  //  carry, not against the generator's intent.
+  const canonTitle = {};
+  cyberTopics.topics().forEach((t) => { canonTitle[t.topic] = t.title; });
+  for (const row of [...units.rows, ...links.rows]) {
+    const b = row['Body HTML'] || '';
+    // Only OUR headings. A loose />Topic N.N ([^<]+)</ also matched the
+    // umbrella's lab cards, whose meta line reads "Topic 1.2 . 10 min . 6
+    // checks", and reported that as a wrong title. Anchor on the class this
+    // generator emits.
+    for (const m of b.matchAll(/class="cy-bank-th">Topic (\d+\.\d+) ([^<]+)</g)) {
+      const want = canonTitle[m[1]];
+      const got = m[2].replace(/&amp;/g, '&').replace(/&#39;/g, "'").trim();
+      if (want && got !== want) {
+        fails.push(`${row.Handle}: topic ${m[1]} heading reads ${JSON.stringify(got)}, `
+          + `the CED says ${JSON.stringify(want)}`);
+      }
+    }
+    // The browse UI's TOPIC_TITLES object on the QOTD page.
+    for (const m of b.matchAll(/"(\d+\.\d+)":\s*"((?:[^"\\]|\\.)*)"/g)) {
+      const want = canonTitle[m[1]];
+      const got = m[2].replace(/\\"/g, '"');
+      if (want && got !== want) {
+        fails.push(`${row.Handle}: TOPIC_TITLES[${m[1]}] is ${JSON.stringify(got)}, `
+          + `the CED says ${JSON.stringify(want)}`);
+      }
+    }
+  }
+
   const canon = new Set(cyberTopics.topics().map((t) => t.topic));
   Object.keys(POOL.TOPIC_TITLES).filter((t) => !canon.has(t))
     .forEach((t) => fails.push(`R4-hub topic ${t} is not in the CED taxonomy`));

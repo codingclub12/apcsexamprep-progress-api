@@ -435,12 +435,63 @@ const chatUserLimit = makeRateLimit({
   windowMs: CHAT_WINDOW_MS,
   max: CHAT_MAX_PER_WINDOW,
   message: 'Too many messages. Please wait a moment before sending another.',
-  keyFn: (req) => (req.teacher ? 'teacher:' + req.teacher.id : null),
+  // Keyed on whoever the token says this is, not on the teacher alone. A school
+  // is one NAT address for students too, and a class of thirty sharing one
+  // window would throttle a lesson the moment it started.
+  keyFn: (req) => {
+    if (req.teacher) return 'teacher:' + req.teacher.id;
+    const w = req.chatWho;
+    if (w && w.userRef) return w.role + ':' + w.userRef;
+    return null;
+  },
 });
 
-router.post('/api/assistant/chat', chatIpLimit, requireTeacher, chatUserLimit, async (req, res) => {
+// PHASE 3 adds the anonymous path, behind its OWN switch. ASSISTANT_ANON_ENABLED
+// is off by default, and with it off this endpoint behaves exactly as it did in
+// Phase 2: teacher token or 401. That is deliberate. Merging this must not open
+// a public POST endpoint on the day it deploys; turning it on is a decision
+// Tanner makes once Turnstile is configured, and it is one variable.
+//
+// A STUDENT token is refused on both settings. Phase 4 is not built, and the
+// anonymous path is not a side door into it: a signed-in minor must not reach
+// chat by having their token ignored.
+function anonEnabled() {
+  const v = String(process.env.ASSISTANT_ANON_ENABLED || '').trim().toLowerCase();
+  return v === '1' || v === 'true' || v === 'on' || v === 'yes';
+}
+
+// PHASE 4: students, behind their own switch again. Off by default, and with it
+// off a student token is refused exactly as it was in Phases 2 and 3. Each
+// audience got its own variable rather than one master switch on purpose: the
+// three populations carry different risk and the person turning them on should
+// have to say which one they mean.
+function studentEnabled() {
+  const v = String(process.env.ASSISTANT_STUDENT_ENABLED || '').trim().toLowerCase();
+  return v === '1' || v === 'true' || v === 'on' || v === 'yes';
+}
+
+// Replaces requireTeacher on this route only. Same fail-closed posture, one more
+// allowed outcome. Identity is resolved from the token, never from the body.
+function chatIdentity(req, res, next) {
+  const who = identify(req);
+  if (who.role === 'teacher') { req.chatWho = who; return next(); }
+  if (who.role === 'student') {
+    if (!studentEnabled()) {
+      return res.status(401).json({ error: 'The assistant is not open to student accounts yet.' });
+    }
+    req.chatWho = who;
+    return next();
+  }
+  if (!anonEnabled()) {
+    return res.status(401).json({ error: 'Teacher auth required' });
+  }
+  req.chatWho = who;
+  return next();
+}
+
+router.post('/api/assistant/chat', chatIpLimit, chatIdentity, chatUserLimit, async (req, res) => {
   try {
-    const t = req.teacher;
+    const who = req.chatWho;
     const body = req.body && typeof req.body === 'object' ? req.body : {};
     const message = typeof body.message === 'string' ? body.message : '';
     if (!message.trim()) return res.status(400).json({ error: 'A message is required.' });
@@ -454,20 +505,18 @@ router.post('/api/assistant/chat', chatIpLimit, requireTeacher, chatUserLimit, a
 
     const out = await chat.respond({
       message,
-      who: {
-        role: 'teacher',
-        userRef: t.id,
-        contactEmail: t.email || null,
-        contactName: t.name || null,
-        school: t.school || null,
-        course: courseFromUrl(pageUrl),
-      },
+      who: Object.assign({}, who, { course: courseFromUrl(pageUrl) }),
       sessionId: typeof body.sessionId === 'string' ? body.sessionId.slice(0, 64) : null,
       pageUrl,
       pageTitle,
       pageScope: scope,
       classCode: typeof body.classCode === 'string' ? body.classCode.slice(0, 32) : null,
       ipHash: ipHash(req),
+      // Turnstile, anonymous path only. The token is a one-shot proof from
+      // Cloudflare, not a credential: it authorises spending on this one
+      // request and nothing else, and it is never stored.
+      turnstileToken: typeof body.turnstileToken === 'string' ? body.turnstileToken.slice(0, 4096) : null,
+      remoteIp: req.ip || (req.socket && req.socket.remoteAddress) || null,
     });
 
     // The assembled context is the suite's business, not the browser's. It is
@@ -481,6 +530,24 @@ router.post('/api/assistant/chat', chatIpLimit, requireTeacher, chatUserLimit, a
     console.error('assistant/chat:', e);
     res.status(500).json({ error: 'The assistant is unavailable right now. The report button still works.' });
   }
+});
+
+// PUBLIC config for the widget. Booleans and the Turnstile SITE key, which is
+// public by design and is served to every browser that renders a challenge. The
+// secret key is not here and is never sent anywhere but Cloudflare.
+//
+// Unauthenticated on purpose: the widget has to know whether to render at all
+// before it knows who is looking, and everything here is already visible from
+// the page source of any site that uses Turnstile.
+router.get('/api/assistant/chat/config', helpLimit, (req, res) => {
+  res.set('Cache-Control', 'public, max-age=60');
+  res.json({
+    anon_enabled: anonEnabled(),
+    student_enabled: studentEnabled(),
+    model_configured: require('../lib/assistant/provider').configured(),
+    turnstile_site_key: require('../lib/assistant/turnstile').siteKey(),
+    turnstile_configured: require('../lib/assistant/turnstile').configured(),
+  });
 });
 
 // What the widget needs to decide whether to render a chat box, and what an
@@ -504,6 +571,16 @@ router.get('/api/assistant/chat/status', requireTeacher, (req, res) => {
 // The affordance. Served from here rather than the theme so a copy change does
 // not need a Shopify deploy, and so the script and the endpoint it posts to can
 // never be different versions of each other.
+// The Phase 3 widget. Commerce and marketing pages only; the script refuses to
+// render on coursework even if the tag lands there, which is the second lock on
+// spec layer 4's "absent, not disabled".
+router.get('/apcs-chat.js', (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Cache-Control', 'public, max-age=3600');
+  res.type('application/javascript');
+  res.sendFile(require('path').join(__dirname, '..', 'public', 'apcs-chat.js'));
+});
+
 router.get('/apcs-report.js', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Cache-Control', 'public, max-age=3600');
@@ -514,3 +591,4 @@ router.get('/apcs-report.js', (req, res) => {
 module.exports = router;
 module.exports.LIMITER = { WINDOW_MS, MAX_PER_WINDOW };
 module.exports.CHAT_LIMITER = { CHAT_WINDOW_MS, CHAT_MAX_PER_WINDOW, CHAT_IP_MAX };
+module.exports.SWITCHES = { anonEnabled, studentEnabled };

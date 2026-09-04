@@ -28,12 +28,21 @@
     "  permissions, no chmod, no ownership. The commands are ls, cd, cat, grep",
     "  and wc, and the brief teaches each one at the point of use.",
     "",
-    "WHY graded:false",
-    "  Same reason as the other two, and it is architectural rather than a",
-    "  judgement about the work: scripts/seed-manifest.js deliberately does not",
-    "  seed ap-cybersecurity, because that course carries its own denominators.",
-    "  A lone manifest row would double count. See docs/lab-contract.md.",
+    "GRADED, AND WHAT IT TOOK",
+    "  This shipped graded:false for a stated architectural reason: seed-manifest",
+    "  does not seed ap-cybersecurity, so a lone manifest row here would price the",
+    "  lab through a second path. Flipping it to true on 2026-09-04 proved the",
+    "  reasoning half right and the direction wrong. The row did not ADD points.",
+    "  It REPLACED them: denominatorMap writes the authored denominator first and",
+    "  the manifest second, with set rather than +=, and both keyed on",
+    "  (lesson, activity_type). Topic 1.2 had an authored lab worth 30 for the",
+    "  widget on the lesson page, so this 8 point row took its place and every",
+    "  cyber student read out of 8.",
     "",
+    "  The fix is the item_type above. A simulated shell is not the lesson page",
+    "  widget, so it is terminal-lab and gets its own key and its own column.",
+    "  1.2|lab is 30 again, 1.2|terminal-lab is 8, and smoke:denomcollision fails",
+    "  if any manifest row ever lands on an authored key again.",
     "HANDLE, WHICH IS NOT SETTLED",
     "  The natural handle for a Topic 1.2 terminal lab is",
     "  ap-cyber-unit-1-lesson-2-terminal-lab, and that is currently serving the",
@@ -46,7 +55,7 @@
   "item_id": "1.2-auth-lab",
   "lesson_id": "1.2",
   "unit": "unit-1",
-  "item_type": "lab",
+  "item_type": "terminal-lab",
   "graded": true,
   "points": 8,
   "est_minutes": 15,
@@ -132,18 +141,86 @@
     "cat auth.log",
     "grep m.okafor auth.log",
     "grep -c FAIL auth.log",
-    { "answer": "bruteforce" },
-    { "answer": "sprayvsforgot" },
-    { "answer": "hardening" }
+    {
+      "answer": "bruteforce"
+    },
+    {
+      "answer": "sprayvsforgot"
+    },
+    {
+      "answer": "hardening"
+    }
   ],
   "checks": [
-    { "n": 1, "label": "Open the logs folder", "match": { "event": "cmd", "cmd": "cd", "host": "local", "cwdAfter": "/home/you/portal/logs" } },
-    { "n": 2, "label": "Read the account reference before judging any sign-in", "match": { "event": "read", "file": "accounts.txt" } },
-    { "n": 3, "label": "Look at the sign-in log", "match": { "event": "read", "file": "auth.log" } },
-    { "n": 4, "label": "Filter the log to a single account", "match": { "event": "cmd", "cmd": "grep", "host": "local", "after": 3 } },
-    { "n": 5, "label": "Count the failures rather than eyeballing them", "match": { "event": "cmd", "cmd": "grep", "host": "local", "after": 4 } },
-    { "n": 6, "label": "Name the pattern that guessed one password until it worked", "match": { "event": "answer", "question": "bruteforce" } },
-    { "n": 7, "label": "Separate the password spray from the forgotten password", "match": { "event": "answer", "question": "sprayvsforgot" } },
-    { "n": 8, "label": "Say what would actually have stopped it", "match": { "event": "answer", "question": "hardening" } }
+    {
+      "n": 1,
+      "label": "Open the logs folder",
+      "match": {
+        "event": "cmd",
+        "cmd": "cd",
+        "host": "local",
+        "cwdAfter": "/home/you/portal/logs"
+      }
+    },
+    {
+      "n": 2,
+      "label": "Read the account reference before judging any sign-in",
+      "match": {
+        "event": "read",
+        "file": "accounts.txt"
+      }
+    },
+    {
+      "n": 3,
+      "label": "Look at the sign-in log",
+      "match": {
+        "event": "read",
+        "file": "auth.log"
+      }
+    },
+    {
+      "n": 4,
+      "label": "Filter the log to a single account",
+      "match": {
+        "event": "cmd",
+        "cmd": "grep",
+        "host": "local",
+        "after": 3
+      }
+    },
+    {
+      "n": 5,
+      "label": "Count the failures rather than eyeballing them",
+      "match": {
+        "event": "cmd",
+        "cmd": "grep",
+        "host": "local",
+        "after": 4
+      }
+    },
+    {
+      "n": 6,
+      "label": "Name the pattern that guessed one password until it worked",
+      "match": {
+        "event": "answer",
+        "question": "bruteforce"
+      }
+    },
+    {
+      "n": 7,
+      "label": "Separate the password spray from the forgotten password",
+      "match": {
+        "event": "answer",
+        "question": "sprayvsforgot"
+      }
+    },
+    {
+      "n": 8,
+      "label": "Say what would actually have stopped it",
+      "match": {
+        "event": "answer",
+        "question": "hardening"
+      }
+    }
   ]
 }

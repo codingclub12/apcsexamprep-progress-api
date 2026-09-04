@@ -188,6 +188,42 @@ runBootSeed('course_manifest dead-cfu cleanup', () => {
   return r;
 });
 
+//  The manifest rows go first, and they have to: the boot seed above is
+//  INSERT OR IGNORE, so the terminal-lab rename never reached a database that
+//  already had the old rows. Shipped without this on 2026-09-04 and production
+//  kept a 'lab' row while the player started posting 'terminal-lab', which the
+//  attempt route rejects as a mismatch. The lab 400s until this runs.
+runBootSeed('course_manifest terminal-lab retype', () => {
+  const { retypeTerminalLabManifest } = require('./scripts/seed-manifest');
+  const r = retypeTerminalLabManifest();
+  if (!r.candidates) {
+    console.log('course_manifest terminal-lab retype: nothing to move. Safe to delete this block.');
+  } else {
+    console.log(`course_manifest terminal-lab retype: moved ${r.moved} of ${r.candidates} row(s).`);
+    for (const b of r.byItem) console.log(`  ${b.course} ${b.item_id}: ${b.was} -> ${b.now}`);
+  }
+  return r;
+});
+
+//  Terminal-lab attempts written before the 2026-09-04 rename still say 'lab'.
+//  The manifest row for those items says 'terminal-lab' now, and attempt-rollup
+//  keys the cell on the ATTEMPT's type while denominating it from the MANIFEST,
+//  so a stale row would drop out of the gradebook. This moves them.
+//
+//  Idempotent and allowlisted by exact (course, item_id) from the specs. Once it
+//  logs "none" on a deploy this block can go; it is a migration, not a feature.
+runBootSeed('attempts terminal-lab retype', () => {
+  const { retypeTerminalLabAttempts } = require('./scripts/seed-manifest');
+  const r = retypeTerminalLabAttempts();
+  if (!r.candidates) {
+    console.log('attempts terminal-lab retype: none left to move. Safe to delete this block.');
+  } else {
+    console.log(`attempts terminal-lab retype: moved ${r.moved} of ${r.candidates} row(s) from 'lab' to 'terminal-lab'.`);
+    for (const b of r.byItem) console.log(`  ${b.course} ${b.item_id}: ${b.rows} row(s)`);
+  }
+  return r;
+});
+
 const MANIFEST_PRUNE = process.env.MANIFEST_PRUNE === '1';
 runBootSeed('course_manifest prune', () => {
   const { pruneManifest } = require('./scripts/seed-manifest');

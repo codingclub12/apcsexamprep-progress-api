@@ -216,6 +216,99 @@ const grant = (teacherId, course) => db.prepare(
     ok('  entitled student: decks is an empty array', r.body && Array.isArray(r.body.decks) && r.body.decks.length === 0, r.body);
   }
 
+  // ── THE APPS SCRIPT'S EXPECTED COUNTS MATCH THE AUTHORED DAY DATA ─────────
+  //  scripts/csa-slides-conversion.gs runs in Google Apps Script, which cannot
+  //  read this repo, so the shape it checks an upload against has to be typed
+  //  into the file as literals. Nothing tied those literals to anything until
+  //  2026-09-04, and they were wrong the whole time: 9 lessons and 70 decks,
+  //  carried over from the cyber script it was adapted from. preview() found
+  //  all 152 CSA decks, printed every per-unit total correctly, and then told
+  //  the operator to stop and reconcile against a number from another course.
+  //
+  //  A copied number needs a check that it still matches its source, and this
+  //  is that check. config/csa-slide-days.json is the source: one entry per
+  //  lesson, valued in teaching days, generated from the authored content.
+  {
+    const gs = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts', 'csa-slides-conversion.gs'), 'utf8');
+    const days = require('../config/csa-slide-days.json').days;
+    const lessons = Object.keys(days);
+    const totalDays = lessons.reduce((n, k) => n + Number(days[k]), 0);
+
+    const constant = (name) => {
+      const m = new RegExp('var\\s+' + name + '\\s*=\\s*(\\d+)').exec(gs);
+      return m ? Number(m[1]) : null;
+    };
+    const gotLessons = constant('EXPECT_LESSONS');
+    const gotDecks = constant('EXPECT_DECKS');
+
+    ok('conversion script declares EXPECT_LESSONS and EXPECT_DECKS',
+      gotLessons !== null && gotDecks !== null,
+      `read ${gotLessons} / ${gotDecks}`);
+    ok('  EXPECT_LESSONS matches the authored lesson count',
+      gotLessons === lessons.length, `gs=${gotLessons} json=${lessons.length}`);
+    ok('  EXPECT_DECKS matches teaching days x 2 variants',
+      gotDecks === totalDays * 2, `gs=${gotDecks} json=${totalDays * 2}`);
+    // The pair must also agree with ITSELF. A script claiming more lessons than
+    // decks, or an odd deck count, describes a shape that cannot exist: every
+    // teaching day ships exactly one TEACHER and one STUDENT deck.
+    ok('  the two constants describe a possible shape',
+      gotDecks % 2 === 0 && gotDecks >= gotLessons * 2,
+      `${gotLessons} lessons cannot yield ${gotDecks} decks`);
+  }
+
+  // ── NO CYBER VALUE SURVIVES IN AN EMITTED STRING ──────────────────────────
+  //  scripts/csa-slides-conversion.gs was adapted from the cyber script, and
+  //  three of its literals were never changed over. All three shipped:
+  //
+  //    'EXPECTED: 9 lessons, 70 decks'   the cyber shape, so preview() told the
+  //                                      operator to stop on a correct upload
+  //    'AP-CYBER_' + deck.lesson         152 CSA decks named AP-CYBER in Drive
+  //    'node scripts/cyber-slide-...'    the closing instruction named the wrong
+  //                                      importer, which reads the cyber
+  //                                      manifest and writes the cyber config
+  //
+  //  Each was found by a person looking, one at a time, after the fact. This is
+  //  the rule that finds the next one: no STRING LITERAL in the file may mention
+  //  cyber. Comments may and should, because the adaptation history is worth
+  //  keeping; it is the emitted values that must belong to this course.
+  {
+    const gs = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts', 'csa-slides-conversion.gs'), 'utf8');
+    // A regex over the whole file is not good enough in either direction, and
+    // both failures were seen while writing this. Matching literals directly
+    // starts on an apostrophe inside a comment and runs away, swallowing prose
+    // until the next quote. Stripping comments first with a // rule truncates
+    // any line holding an https:// URL and hides whatever follows it.
+    //
+    // So walk the file once and know which of the four states each character is
+    // in. It is twenty lines and it is exactly right, where the regex is short
+    // and wrong.
+    const literals = [];
+    {
+      let i = 0, buf = null, quote = null;
+      while (i < gs.length) {
+        const c = gs[i], d = gs[i + 1];
+        if (buf === null) {
+          if (c === '/' && d === '/') { while (i < gs.length && gs[i] !== '\n') i++; continue; }
+          if (c === '/' && d === '*') { i += 2; while (i < gs.length && !(gs[i] === '*' && gs[i + 1] === '/')) i++; i += 2; continue; }
+          if (c === "'" || c === '"') { quote = c; buf = ''; i++; continue; }
+          i++; continue;
+        }
+        if (c === '\\') { buf += gs[i + 1] || ''; i += 2; continue; }
+        if (c === quote) { literals.push(buf); buf = null; quote = null; i++; continue; }
+        buf += c; i++;
+      }
+    }
+    const offenders = literals.filter((l) => /cyber/i.test(l));
+    ok('no string literal in the conversion script mentions cyber',
+      offenders.length === 0, offenders.slice(0, 3).join('  '));
+    // The rule is only as good as its reach. If the literal scan ever returns
+    // almost nothing, it has stopped seeing the file rather than found it clean.
+    ok('  the literal scan actually read the file',
+      literals.length > 40, `only ${literals.length} literals found`);
+  }
+
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
   server.close();
   try { db.close(); } catch (e) {}

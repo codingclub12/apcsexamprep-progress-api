@@ -61,14 +61,53 @@
  */
 
 // The Drive folder holding the uploaded Unit_2 / Unit_3 / Unit_4 tree.
-// THERE IS NO DEFAULT ON PURPOSE. The cyber script could hardcode its folder
-// because that folder already existed; this one is created by the upload in
-// step 2 above, so a hardcoded id here would point at somebody else's folder
-// or at nothing. preview() refuses to run until this is set.
-var ROOT_FOLDER_ID = 'PUT_THE_FOLDER_ID_HERE';
+//
+// This was deliberately unset until 2026-09-04, on the reasoning that the
+// folder did not exist yet so any id here would point at nothing. The folder
+// exists now: Tanner uploaded the kit into "AP CSA Teacher Bundle" that day and
+// the id below was read back off Drive, not typed from a message. Verified at
+// the same time: Unit_2 holds twelve lesson folders, 2.1 through 2.12, so the
+// tree survived the unzip rather than arriving flattened.
+//
+// The preflight below still refuses the placeholder, which is what protects the
+// next person who copies this script for a different course.
+//
+// ONE HAZARD WORTH KNOWING, because it is invisible and it is already present.
+// That same bundle folder contains a pre-existing "Unit 1" folder, spelled with
+// a SPACE. Unit 1 must not be converted: its fifteen topics all report one day
+// in config/csa-slide-days.json while Drive holds thirty five, so converting it
+// would write day counts that disagree with the decks. Two independent things
+// stop it. The matcher below requires an underscore, so "Unit 1" never matches
+// and is skipped before the lesson loop can complain about it; and UNITS
+// excludes 1 regardless. Do not "fix" either one into accepting a space.
+var ROOT_FOLDER_ID = '1HYnA1ZNByvHDBqlJGcbCT3lRC4PphbHV';
 
 // Only these units. See the header before adding 3, 4 or 5.
 var UNITS = [2, 3, 4];
+
+// What preview() should find, so it can tell a good upload from a partial one.
+//
+// THESE ARE COPIES, and that is the whole problem with them. Apps Script cannot
+// read this repo, so the numbers have to be typed here, and a typed number goes
+// stale the moment its source moves. This pair was wrong from the day the script
+// was written: it said 9 lessons and 70 decks, which is the shape of the cyber
+// script this one was adapted from, not of AP CSA Units 2-4. preview() therefore
+// enumerated all 152 decks correctly, printed every per-unit total correctly, and
+// then told Tanner to stop and reconcile against a number that had nothing to do
+// with his course.
+//
+// The source of truth is config/csa-slide-days.json, whose `days` map holds one
+// entry per lesson with that lesson's teaching-day count. These are its totals
+// for units 2, 3 and 4:
+//
+//     38 lessons, 76 teaching days, 152 decks (each day has a TEACHER and a
+//     STUDENT variant), split 48 / 36 / 68 across the three units.
+//
+// npm run smoke:csaslides re-derives all of that from the json and fails if
+// either constant drifts from it. That check is the only reason it is acceptable
+// to keep literals here at all.
+var EXPECT_LESSONS = 38;
+var EXPECT_DECKS = 152;
 
 var OUTPUT_FOLDER_NAME = 'AP CSA Slides (converted)';
 var SHEET_NAME = 'AP CSA Slides Map';
@@ -145,7 +184,7 @@ function childFolders_(parent) {
  * {lesson:'1-2', day:3, variant:'TEACHER', fileId, fileName}.
  *
  * Folder names are Lesson_1.2_Something; the API speaks 1-2, so the dot is
- * normalised here and nowhere else. Deck files are Day<K>_Deck_STUDENT.pptx
+ * normalized here and nowhere else. Deck files are Day<K>_Deck_STUDENT.pptx
  * with STUDENT and TEACHER uppercase; the AP CSP decks use "Student", so a
  * regex copied from that build matches nothing here.
  */
@@ -224,8 +263,9 @@ function preview() {
   lines.push('  lessons: ' + lessons.length);
   lines.push('  decks  : ' + found.decks.length);
   lines.push('');
-  lines.push('  EXPECTED: 9 lessons, 70 decks (35 days x 2 variants).');
-  lines.push(found.decks.length === 70 && lessons.length === 9
+  lines.push('  EXPECTED: ' + EXPECT_LESSONS + ' lessons, ' + EXPECT_DECKS
+    + ' decks (' + (EXPECT_DECKS / 2) + ' days x 2 variants).');
+  lines.push(found.decks.length === EXPECT_DECKS && lessons.length === EXPECT_LESSONS
     ? '  MATCHES the independent enumeration. Safe to run start().'
     : '  DOES NOT MATCH. Stop and reconcile before running start().');
 
@@ -361,7 +401,7 @@ function alreadyDone_(sh) {
 function convertOne_(deck, destFolderId) {
   var copied = Drive.Files.copy(
     {
-      name: 'AP-CYBER_' + deck.lesson + '_Day' + deck.day + '_Deck_' + deck.variant,
+      name: 'AP-CSA_' + deck.lesson + '_Day' + deck.day + '_Deck_' + deck.variant,
       mimeType: MimeType.GOOGLE_SLIDES,
       parents: [destFolderId]
     },
@@ -443,7 +483,7 @@ function start() {
   removeTriggers_();
   Logger.log('run complete. converted ' + converted + ', failed ' + failed + '.');
   Logger.log('Now: File > Download > CSV on the sheet, then in the repo run');
-  Logger.log('  node scripts/cyber-slide-embeds-from-csv.js <export.csv>');
+  Logger.log('  node scripts/csa-slide-embeds-from-csv.js <export.csv>');
   Logger.log('and re-run with --write once it reports no refusals.');
 }
 
@@ -485,6 +525,44 @@ function report() {
   Logger.log('This is the script reporting on itself. It is not evidence.');
   Logger.log('Confirm against Drive and against a credential-free fetch of an');
   Logger.log('embed URL before treating the conversion as done.');
+}
+
+/**
+ * Rename decks whose prefix is not this course's.
+ *
+ * The first CSA conversion ran with the adapted script's original naming
+ * literal still in place, so 152 decks landed in Drive under another course's
+ * prefix. Nothing downstream reads the title: the sheet carries the file id and
+ * the embed map keys on that, so this is cosmetic. It is still worth fixing,
+ * because a teacher who opens the folder should not be told these are another
+ * course's decks.
+ *
+ * It does not name the wrong prefix, it replaces whatever prefix is there. That
+ * is both more general and the only version that passes smoke:csaslides, whose
+ * rule is that no string literal in this file may mention another course. A
+ * helper that had to spell the bad value out would have been the fourth
+ * instance of the bug it exists to clean up.
+ *
+ * Safe to run twice: a file already correct is skipped rather than re-prefixed.
+ */
+function renameConvertedDecks() {
+  var want = 'AP-CSA_';
+  var files = outputFolder_().getFiles();
+  var renamed = 0, ok = 0, untouched = 0;
+  while (files.hasNext()) {
+    var f = files.next();
+    var name = f.getName();
+    var cut = name.indexOf('_');
+    // No underscore means it is not a deck. The map spreadsheet lives in this
+    // same folder and must not be renamed.
+    if (cut < 0) { untouched++; continue; }
+    if (name.substring(0, cut + 1) === want) { ok++; continue; }
+    f.setName(want + name.substring(cut + 1));
+    renamed++;
+  }
+  Logger.log('renamed ' + renamed + ', already correct ' + ok + ', not a deck ' + untouched + '.');
+  Logger.log('The sheet is unaffected: it stores file ids, not titles, so the');
+  Logger.log('embed map does not change and does not need regenerating.');
 }
 
 function reset() {

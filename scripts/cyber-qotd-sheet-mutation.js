@@ -58,6 +58,7 @@ const MUTANTS = [
 // from canonical data is a legitimate edit and moves both counts together, so
 // mutating the pool could never test them.
 const GENERATOR_MUTANTS = [
+  ...MUTANTS.filter((m) => m.generator),
   { name: 'the renderer silently drops questions',
     expect: 'rendered',
     find: 'for (const q of list) parts.push(renderQuestion(q));',
@@ -86,6 +87,16 @@ const GENERATOR_MUTANTS = [
     expect: 'collapse into one paragraph',
     find: "rows.push(`        <p class=\"cy-bank-stem\">${lines.join('<br>')}</p>`);",
     replace: "rows.push(`        <p class=\"cy-bank-stem\">${lines.join(' ')}</p>`);" },
+  { name: 'unit-page headings fall back to the pool copy',
+    expect: 'the CED says',
+    find: '${esc(topicTitle(topic))}</h2>',
+    replace: '${esc(POOL.TOPIC_TITLES[topic])}</h2>',
+    generator: true },
+  { name: 'the QOTD browse UI keeps its own drifted titles',
+    expect: 'TOPIC_TITLES',
+    find: 'const src = canonicalTopicTitlesJs(SNAP(QOTD_HANDLE));',
+    replace: 'const src = SNAP(QOTD_HANDLE);',
+    generator: true },
   { name: 'an eduQuestionType other than Flashcard',
     expect: 'eduQuestionType other than',
     find: "eduQuestionType: 'Flashcard',",
@@ -99,7 +110,7 @@ function run() {
   let misses = 0;
 
   try {
-    for (const m of MUTANTS) {
+    for (const m of MUTANTS.filter((x) => !x.generator)) {
       const pool = JSON.parse(original);
       m.apply(pool);
       fs.writeFileSync(POOL_PATH, JSON.stringify(pool, null, 1));
