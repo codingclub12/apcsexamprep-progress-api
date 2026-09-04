@@ -1,0 +1,353 @@
+{
+  "_source": {
+    "generated_by": "tools/ap-cyber-ced/build-practice-hubs.js",
+    "course": "ap-cybersecurity",
+    "built": "2026-09-04",
+    "handle_inventory": {
+      "file": "smoke/fixtures/live-page-handles-2026-09-04.txt",
+      "sha256": "909dc7d0c1fdcceb53c08e8792cefff1057e9775a3dc35900318922ad516c9ec",
+      "note": "pulled from sitemap_pages_1.xml on 2026-09-04. Every handle below is in it."
+    },
+    "measured": {
+      "note": "the gap this closes, measured against the storefront on 2026-09-04",
+      "topics_hub_course_lesson_links": 0,
+      "practice_hub_course_lesson_links": 2,
+      "course_pages_live": 128
+    },
+    "known_limits": [
+      "Units 1 and 2 have no ap-cyber-unit-N-lesson-M pages; their lesson bodies live at ap-cybersecurity-unit-N-<slug>. Their quizzes, exercises and labs DO use the numbered handles, so the asset lists below are complete and the course_lesson_handles come from lib/cyber-topics.",
+      "ap-cyber-unit-1-lesson-2-auth-log-lab is live and is not matched by the lab pattern (it is a named lab under a lesson). It is listed under named_lab only if the handle shape matches; board task 198 covers its submit button.",
+      "ap-cyber-unit-5-practice-exam is filed under exam for unit 5 alongside ap-cyber-unit-5-exam. Both are live."
+    ]
+  },
+  "course": "ap-cybersecurity",
+  "intent_word": "Practice",
+  "umbrella": {
+    "handle": "ap-cybersecurity-practice",
+    "title": "AP Cybersecurity Practice: Every Quiz, Lab, Exam and Free-Response Set",
+    "intent": "practice",
+    "existing_siblings": [
+      "ap-cybersecurity-frq-practice",
+      "ap-cybersecurity-labs"
+    ],
+    "topics_hub": "ap-cybersecurity-topics",
+    "course_guide": "ap-cybersecurity-complete-course-guide"
+  },
+  "spokes": [
+    {
+      "unit_no": 1,
+      "unit_name": "Introduction to Cybersecurity",
+      "handle": "ap-cybersecurity-unit-1-practice",
+      "title": "AP Cybersecurity Unit 1 Practice Questions, Labs and Exam",
+      "intent": "practice",
+      "unit_study_page": "ap-cybersecurity-unit-1-introduction-to-security",
+      "topics": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5"
+      ],
+      "course_lesson_handles": [
+        "ap-cybersecurity-unit-1-social-engineering",
+        "ap-cybersecurity-unit-1-password-attacks",
+        "ap-cybersecurity-unit-1-wireless-security",
+        "ap-cybersecurity-unit-1-ai-driven-threats",
+        "ap-cybersecurity-unit-1-ai-cyber-defense"
+      ],
+      "assets": {
+        "quiz": [
+          "ap-cyber-unit-1-lesson-1-quiz",
+          "ap-cyber-unit-1-lesson-2-quiz",
+          "ap-cyber-unit-1-lesson-3-quiz",
+          "ap-cyber-unit-1-lesson-4-quiz",
+          "ap-cyber-unit-1-lesson-5-quiz"
+        ],
+        "exercise": [
+          "ap-cyber-unit-1-lesson-1-exercise-1",
+          "ap-cyber-unit-1-lesson-1-exercise-2",
+          "ap-cyber-unit-1-lesson-2-exercise-1",
+          "ap-cyber-unit-1-lesson-2-exercise-2",
+          "ap-cyber-unit-1-lesson-3-exercise-1",
+          "ap-cyber-unit-1-lesson-3-exercise-2",
+          "ap-cyber-unit-1-lesson-4-exercise-1",
+          "ap-cyber-unit-1-lesson-4-exercise-2",
+          "ap-cyber-unit-1-lesson-5-exercise-1",
+          "ap-cyber-unit-1-lesson-5-exercise-2"
+        ],
+        "lab": [
+          "ap-cyber-unit-1-lesson-1-lab",
+          "ap-cyber-unit-1-lesson-2-lab",
+          "ap-cyber-unit-1-lesson-2-terminal-lab",
+          "ap-cyber-unit-1-lesson-3-lab",
+          "ap-cyber-unit-1-lesson-4-lab",
+          "ap-cyber-unit-1-lesson-5-lab"
+        ],
+        "case_file": [
+          "ap-cyber-unit-1-case-file-1"
+        ],
+        "scenario": [
+          "ap-cyber-unit-1-scenario-practice"
+        ],
+        "frq": [
+          "ap-cyber-unit-1-frq-practice"
+        ],
+        "exam": [
+          "ap-cyber-unit-1-exam"
+        ],
+        "project": [
+          "ap-cyber-unit-1-project"
+        ]
+      },
+      "asset_count": 26
+    },
+    {
+      "unit_no": 2,
+      "unit_name": "Securing Physical Spaces",
+      "handle": "ap-cybersecurity-unit-2-practice",
+      "title": "AP Cybersecurity Unit 2 Practice Questions, Labs and Exam",
+      "intent": "practice",
+      "unit_study_page": "ap-cybersecurity-unit-2-securing-spaces",
+      "topics": [
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4"
+      ],
+      "course_lesson_handles": [
+        "ap-cybersecurity-unit-2-cyber-foundations",
+        "ap-cybersecurity-unit-2-physical-vulnerabilities",
+        "ap-cybersecurity-unit-2-protecting-physical-spaces",
+        "ap-cybersecurity-unit-2-detecting-physical-attacks"
+      ],
+      "assets": {
+        "quiz": [
+          "ap-cyber-unit-2-lesson-1-quiz",
+          "ap-cyber-unit-2-lesson-2-quiz",
+          "ap-cyber-unit-2-lesson-3-quiz",
+          "ap-cyber-unit-2-lesson-4-quiz",
+          "ap-cyber-unit-2-lesson-5-quiz"
+        ],
+        "exercise": [
+          "ap-cyber-unit-2-lesson-1-exercise-1",
+          "ap-cyber-unit-2-lesson-1-exercise-2",
+          "ap-cyber-unit-2-lesson-2-exercise-1",
+          "ap-cyber-unit-2-lesson-2-exercise-2",
+          "ap-cyber-unit-2-lesson-3-exercise-1",
+          "ap-cyber-unit-2-lesson-3-exercise-2",
+          "ap-cyber-unit-2-lesson-4-exercise-1",
+          "ap-cyber-unit-2-lesson-4-exercise-2",
+          "ap-cyber-unit-2-lesson-5-exercise-1",
+          "ap-cyber-unit-2-lesson-5-exercise-2"
+        ],
+        "lab": [
+          "ap-cyber-unit-2-lesson-1-lab",
+          "ap-cyber-unit-2-lesson-2-lab",
+          "ap-cyber-unit-2-lesson-3-lab",
+          "ap-cyber-unit-2-lesson-4-lab",
+          "ap-cyber-unit-2-lesson-4-terminal-lab",
+          "ap-cyber-unit-2-lesson-5-lab"
+        ],
+        "case_file": [
+          "ap-cyber-unit-2-case-file-2"
+        ],
+        "exam": [
+          "ap-cyber-unit-2-exam"
+        ]
+      },
+      "asset_count": 23
+    },
+    {
+      "unit_no": 3,
+      "unit_name": "Securing Networks",
+      "handle": "ap-cybersecurity-unit-3-practice",
+      "title": "AP Cybersecurity Unit 3 Practice Questions, Labs and Exam",
+      "intent": "practice",
+      "unit_study_page": "ap-cybersecurity-unit-3-securing-networks",
+      "topics": [
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5"
+      ],
+      "course_lesson_handles": [
+        "ap-cyber-unit-3-lesson-1",
+        "ap-cyber-unit-3-lesson-2",
+        "ap-cyber-unit-3-lesson-3",
+        "ap-cyber-unit-3-lesson-4",
+        "ap-cyber-unit-3-lesson-5",
+        "ap-cyber-unit-3-lesson-6"
+      ],
+      "assets": {
+        "quiz": [
+          "ap-cyber-unit-3-lesson-1-quiz",
+          "ap-cyber-unit-3-lesson-2-quiz",
+          "ap-cyber-unit-3-lesson-3-quiz",
+          "ap-cyber-unit-3-lesson-4-quiz",
+          "ap-cyber-unit-3-lesson-5-quiz",
+          "ap-cyber-unit-3-lesson-6-quiz"
+        ],
+        "exercise": [
+          "ap-cyber-unit-3-lesson-1-exercise-1",
+          "ap-cyber-unit-3-lesson-1-exercise-2",
+          "ap-cyber-unit-3-lesson-2-exercise-1",
+          "ap-cyber-unit-3-lesson-2-exercise-2",
+          "ap-cyber-unit-3-lesson-3-exercise-1",
+          "ap-cyber-unit-3-lesson-3-exercise-2",
+          "ap-cyber-unit-3-lesson-4-exercise-1",
+          "ap-cyber-unit-3-lesson-4-exercise-2",
+          "ap-cyber-unit-3-lesson-5-exercise-1",
+          "ap-cyber-unit-3-lesson-5-exercise-2",
+          "ap-cyber-unit-3-lesson-6-exercise-1",
+          "ap-cyber-unit-3-lesson-6-exercise-2"
+        ],
+        "lab": [
+          "ap-cyber-unit-3-lesson-1-lab",
+          "ap-cyber-unit-3-lesson-2-lab",
+          "ap-cyber-unit-3-lesson-3-lab",
+          "ap-cyber-unit-3-lesson-4-lab",
+          "ap-cyber-unit-3-lesson-5-lab",
+          "ap-cyber-unit-3-lesson-6-lab"
+        ],
+        "named_lab": [
+          "ap-cyber-unit-3-lab-log-analysis",
+          "ap-cyber-unit-3-lab-packet-capture",
+          "ap-cyber-unit-3-lab-port-mapping"
+        ],
+        "case_file": [
+          "ap-cyber-unit-3-case-file-3"
+        ],
+        "scenario": [
+          "ap-cyber-unit-3-scenario-practice"
+        ],
+        "exam": [
+          "ap-cyber-unit-3-exam"
+        ],
+        "project": [
+          "ap-cyber-unit-3-project"
+        ]
+      },
+      "asset_count": 31
+    },
+    {
+      "unit_no": 4,
+      "unit_name": "Securing Devices",
+      "handle": "ap-cybersecurity-unit-4-practice",
+      "title": "AP Cybersecurity Unit 4 Practice Questions, Labs and Exam",
+      "intent": "practice",
+      "unit_study_page": "ap-cybersecurity-unit-4-securing-devices",
+      "topics": [
+        "4.1",
+        "4.2",
+        "4.3",
+        "4.4"
+      ],
+      "course_lesson_handles": [
+        "ap-cyber-unit-4-lesson-1",
+        "ap-cyber-unit-4-lesson-2",
+        "ap-cyber-unit-4-lesson-3",
+        "ap-cyber-unit-4-lesson-4"
+      ],
+      "assets": {
+        "quiz": [
+          "ap-cyber-unit-4-lesson-1-quiz",
+          "ap-cyber-unit-4-lesson-2-quiz",
+          "ap-cyber-unit-4-lesson-3-quiz",
+          "ap-cyber-unit-4-lesson-4-quiz",
+          "ap-cyber-unit-4-lesson-5-quiz"
+        ],
+        "exercise": [
+          "ap-cyber-unit-4-lesson-1-exercise-1",
+          "ap-cyber-unit-4-lesson-1-exercise-2",
+          "ap-cyber-unit-4-lesson-2-exercise-1",
+          "ap-cyber-unit-4-lesson-2-exercise-2",
+          "ap-cyber-unit-4-lesson-3-exercise-1",
+          "ap-cyber-unit-4-lesson-3-exercise-2",
+          "ap-cyber-unit-4-lesson-4-exercise-1",
+          "ap-cyber-unit-4-lesson-4-exercise-2",
+          "ap-cyber-unit-4-lesson-5-exercise-1",
+          "ap-cyber-unit-4-lesson-5-exercise-2"
+        ],
+        "lab": [
+          "ap-cyber-unit-4-lesson-1-lab",
+          "ap-cyber-unit-4-lesson-2-lab",
+          "ap-cyber-unit-4-lesson-3-lab",
+          "ap-cyber-unit-4-lesson-4-lab",
+          "ap-cyber-unit-4-lesson-5-lab"
+        ],
+        "case_file": [
+          "ap-cyber-unit-4-case-file-4"
+        ],
+        "exam": [
+          "ap-cyber-unit-4-exam"
+        ]
+      },
+      "asset_count": 22
+    },
+    {
+      "unit_no": 5,
+      "unit_name": "Securing Applications and Data",
+      "handle": "ap-cybersecurity-unit-5-practice",
+      "title": "AP Cybersecurity Unit 5 Practice Questions, Labs and Exam",
+      "intent": "practice",
+      "unit_study_page": "ap-cybersecurity-unit-5-securing-applications-and-data",
+      "topics": [
+        "5.1",
+        "5.2",
+        "5.3",
+        "5.4",
+        "5.5",
+        "5.6"
+      ],
+      "course_lesson_handles": [
+        "ap-cyber-unit-5-lesson-1",
+        "ap-cyber-unit-5-lesson-2",
+        "ap-cyber-unit-5-lesson-3",
+        "ap-cyber-unit-5-lesson-4",
+        "ap-cyber-unit-5-lesson-5",
+        "ap-cyber-unit-5-lesson-6"
+      ],
+      "assets": {
+        "quiz": [
+          "ap-cyber-unit-5-lesson-1-quiz",
+          "ap-cyber-unit-5-lesson-2-quiz",
+          "ap-cyber-unit-5-lesson-3-quiz",
+          "ap-cyber-unit-5-lesson-4-quiz",
+          "ap-cyber-unit-5-lesson-5-quiz",
+          "ap-cyber-unit-5-lesson-6-quiz"
+        ],
+        "exercise": [
+          "ap-cyber-unit-5-lesson-1-exercise-1",
+          "ap-cyber-unit-5-lesson-1-exercise-2",
+          "ap-cyber-unit-5-lesson-2-exercise-1",
+          "ap-cyber-unit-5-lesson-2-exercise-2",
+          "ap-cyber-unit-5-lesson-3-exercise-1",
+          "ap-cyber-unit-5-lesson-3-exercise-2",
+          "ap-cyber-unit-5-lesson-4-exercise-1",
+          "ap-cyber-unit-5-lesson-4-exercise-2",
+          "ap-cyber-unit-5-lesson-5-exercise-1",
+          "ap-cyber-unit-5-lesson-5-exercise-2",
+          "ap-cyber-unit-5-lesson-6-exercise-1",
+          "ap-cyber-unit-5-lesson-6-exercise-2"
+        ],
+        "lab": [
+          "ap-cyber-unit-5-lesson-1-lab",
+          "ap-cyber-unit-5-lesson-2-lab",
+          "ap-cyber-unit-5-lesson-3-lab",
+          "ap-cyber-unit-5-lesson-4-lab",
+          "ap-cyber-unit-5-lesson-5-lab",
+          "ap-cyber-unit-5-lesson-6-lab"
+        ],
+        "case_file": [
+          "ap-cyber-unit-5-case-file-5"
+        ],
+        "exam": [
+          "ap-cyber-unit-5-exam",
+          "ap-cyber-unit-5-practice-exam"
+        ]
+      },
+      "asset_count": 27
+    }
+  ]
+}
