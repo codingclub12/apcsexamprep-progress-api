@@ -1,0 +1,115 @@
+{
+  "change": "ap-cybersecurity-practice-exam becomes the 60 MCQ plus Device Security Analysis replica, on the same URL",
+  "_context": [
+    "The page ranks 1.6 with a 40.6 percent click-through on 'ap cybersecurity",
+    "practice test', measured in the Search Console export for Aug 30 to Sep 1.",
+    "The decision taken with Tanner was an INTENT UPGRADE on the ranking URL",
+    "rather than a competing new page, and explicitly NOT a simultaneous rewrite",
+    "of title, meta, H1, URL, navigation and test body, because that leaves no",
+    "way to attribute a ranking move afterwards. So the sheet carries Handle,",
+    "Command, Body HTML and SEO Title and nothing else: one SERP variable moves.",
+    "",
+    "PR #532 shipped the 60 item bank and the free response. This gate is for the",
+    "RENDER: the generator that rebuilds the live body around them, and the sheet",
+    "it writes. The live check cannot run until a human imports that sheet, which",
+    "is why it is listed and why the pre-merge run is --pre.",
+    "",
+    "WHAT THIS GATE IS REALLY ABOUT. The first pass of this generator produced a",
+    "sheet that a 32 check suite called clean and that still carried two stale",
+    "counts from the 40 question set: the section heading '(40 Questions)' and a",
+    "FAQ answer listing a question count per unit. Neither matched any of the",
+    "five hand-written patterns the stale-count check was made of, and nothing",
+    "about that list could report that it had gone blind. The counts are derived",
+    "from config/cyber-exam-items.json now, and the mutations below are all aimed",
+    "at the guard rather than at the content, because the guard is the part that",
+    "was wrong."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the render, the item bank and the sheet, with the live verifier run offline",
+      "command": "npm run --silent smoke:cyberexamreplica",
+      "expect": "OK - 39 checks, 17 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "suite",
+      "name": "the shared content rules did not regress when R2 learned the CED section weightings",
+      "_why": "tools/ap-cyber-ced/validator.js is shared. R2 used to fail on '70 percent of the exam', which College Board publishes, so the exemption was added narrowly: the two section numbers next to a section word only. Every other consumer of that file has to stay green.",
+      "command": "npm run --silent smoke:cybersheet",
+      "expect": "OK - a correct sheet passes, a bad spec is refused, and rule 7 is not hollow"
+    },
+    {
+      "kind": "suite",
+      "name": "and its own per-rule mutation suite is still red on every rule",
+      "command": "npm run --silent smoke:cybersheetmutation",
+      "expect": "OK - 15 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation parses the sheet back and agrees, sharing no code",
+      "_why": "Python, reading the CSV as bytes. It re-derives the 24 topic numbers from the College Board CED text extracts rather than from config/cyber-topics.json, diffs every rendered stem, option set and key letter against the item bank, and re-implements the count guard independently. The two implementations agree that the live body states 27 counts the new bank cannot justify and the new body states none.",
+      "command": "python3 scripts/cyber-exam-replica-rederive.py imports/2026-09-04c/cyber-practice-exam-replica-pages.csv smoke/fixtures/live-bodies/ap-cybersecurity-practice-exam.html",
+      "expect": "OK - 31 checks re-derived from the sheet, independently of the generator"
+    },
+    {
+      "kind": "suite",
+      "name": "the sheet clears the Matrixify preflight, which is the gate before a live body",
+      "command": "node scripts/preflight-exam-replica.js",
+      "expect": "clear to import",
+      "_why": "The preflight refuses raw emoji unless shown the body they came from, so it can tell a character the live page already had from one this pass introduced. This wrapper hands it the committed fixture. Three emoji and 156 non-ASCII characters are carried through and none are added."
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: admit every number 1 to 60 and the guard goes blind again",
+      "_why": "This is the exact state the first draft of countClaims was in. Allowing the qid range to satisfy 'Question 37' also admitted 40 and 3, so the guard reported the OLD body clean: zero findings on a body that states 27 stale counts. It must go red.",
+      "file": "tools/ap-cyber-ced/generate-exam-sheet.js",
+      "find": "    : new Set([1, items.length, ...perUnit.values(), ...perSkill.values()]));",
+      "replace": "    : new Set([...Array.from({ length: 60 }, (_, i) => i + 1), ...perUnit.values(), ...perSkill.values()]));",
+      "command": "npm run --silent smoke:cyberexamreplica",
+      "expect_failure": "and the same guard finds 27 of them in the body it started from"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop refusing on an unjustifiable count and the generator writes the sheet anyway",
+      "_why": "Proves the refusal is wired, not merely computed. With it removed, dropping either of the two declared edits that were missing an hour ago produces a sheet instead of an error.",
+      "file": "tools/ap-cyber-ced/generate-exam-sheet.js",
+      "find": "  const stale = countClaims(built);",
+      "replace": "  const stale = [];",
+      "command": "npm run --silent smoke:cyberexamreplica",
+      "expect_failure": "MUTATION: drop the section heading edit and the generator refuses"
+    },
+    {
+      "kind": "mutation",
+      "name": "unanchor the cross-page exemption and 15 becomes a blanket pass",
+      "_why": "The one number allowed that the bank cannot justify is 15, because a linked page really does have 15 questions. Unanchored it would re-admit any stale count that happened to be 15, which is how exemptions rot.",
+      "file": "tools/ap-cyber-ced/generate-exam-sheet.js",
+      "find": "    if (CROSS_PAGE_COUNTS.some((c) => c.count === n && window.includes(c.handle))) continue;",
+      "replace": "    if (CROSS_PAGE_COUNTS.some((c) => c.count === n)) continue;",
+      "command": "npm run --silent smoke:cyberexamreplica",
+      "expect_failure": "the cross-page count is accepted only next to the page it describes"
+    },
+    {
+      "kind": "mutation",
+      "name": "soften one live assertion and the verifier stops being falsifiable",
+      "_why": "The live check is only worth running because 13 of its 17 assertions are FALSE on the body it replaces. The suite asserts that number, so an assertion weakened into something true beforehand is caught here rather than after the import, when a green verifier would mean nothing.",
+      "file": "scripts/verify-cyber-exam-replica-live.js",
+      "find": "  ok('the page serves 60 scored cards, where it served 40', cards.length === 60, cards.length);",
+      "replace": "  ok('the page serves 60 scored cards, where it served 40', cards.length >= 0, cards.length);",
+      "command": "npm run --silent smoke:cyberexamreplica",
+      "expect_failure": "and 13 of its 17 fail against the body it replaces"
+    },
+    {
+      "kind": "live",
+      "name": "the storefront serves the replica, and the SERP package came through the MERGE",
+      "_why": "Measured against the served page on 2026-09-04, before any import: 13 of these 17 assertions FAILED. The page serves 40 cards not 60, its h1 reads 'Practice Set', its title reads '40 MCQ + 3 FRQ', and its body states 27 counts the new bank cannot justify. The four that already passed are preservation checks, which are supposed to hold on both sides: the closing CTA, the scoring script, the resources grid and the schema blocks being present at all. A MERGE republishes the whole body, so a generator bug takes the breadcrumb with it, and 60 questions shipped without the breadcrumb is not a success.",
+      "command": "node scripts/verify-cyber-exam-replica-live.js",
+      "expect": "the replica is live, and the SERP package and page furniture came through it"
+    }
+  ],
+  "not_covered": [
+    "Whether the 60 items are GOOD items. The suite proves they are CED-shaped, disjoint from the existing study set, balanced on the skill band and free of the length tell in the correct option. Whether a question teaches well is a judgement and no re-check settles it; a teacher read is the only thing that does.",
+    "Whether the intent upgrade holds the ranking. That is Search Console over weeks, and the reason the sheet moves one SERP variable is so the answer is attributable when it arrives. Re-measure position and click-through for 'ap cybersecurity practice test' about three weeks after the import.",
+    "The page's own Title field and meta description, deliberately untouched. The meta already says '60 MCQ and one Device Security Analysis', which was aspirational before this import and is true after it.",
+    "Whether ap-cybersecurity-practice-questions, the 15 question sampler, should keep pointing here. It does, and that is still right, but the two pages now overlap less than they did."
+  ]
+}

@@ -148,6 +148,24 @@ const SKILL_WORDS = /\b(?:skill categor(?:y|ies)|analyze risk|mitigate risk|dete
 //  The CED's band. Both ends are the CED's numbers, not a tolerance.
 const BAND = { low: 25, high: 40 };
 
+//  ── THE SECTION WEIGHTINGS ARE PUBLISHED, AND THIS RULE DID NOT KNOW IT ────
+//  R2 was built to catch fabricated PER-UNIT weightings, and it treated the
+//  25 to 40 percent skill-category band as the only legitimate percentage on a
+//  cyber page. The CED also publishes a section split: Section I, the 60
+//  multiple choice, is 70 percent; Section II, the one free response, is 30
+//  percent. Both appear in this repo's own CLAUDE.md table.
+//
+//  So a page correctly stating "Section I: 60 multiple choice questions, 80
+//  minutes, 70 percent of the exam" was refused for printing a true fact.
+//  Found 2026-09-04 while rendering the 60 question replica, which states the
+//  section weightings because that is what makes it a replica.
+//
+//  The exemption is narrow on purpose: the number must be one of the two the
+//  CED publishes AND sit next to a word naming a section. 70 percent attached
+//  to a unit is still a fabrication and still fails.
+const SECTION_PERCENTS = new Set([70, 30]);
+const SECTION_WORDS = /\b(?:section\s+(?:i{1,2}|1|2|one|two)|multiple[- ]choice section|free[- ]response section)\b/i;
+
 const PERCENT = new RegExp(
   //  a range first, so "25% to 40%" is one claim rather than two
   '(\\d{1,3})\\s*(?:%|percent)?\\s*(?:to|through|[-\\u2013])\\s*(\\d{1,3})\\s*(?:%|percent)'
@@ -186,6 +204,11 @@ function ruleExamWeighting(body) {
 
     const context = JSON.stringify(text.slice(Math.max(0, m.index - 90), m.index + m[0].length + 90));
     const anchor = nearestAnchor(text, m.index, m[0].length, { unit: UNIT_WORDS, skill: SKILL_WORDS });
+
+    //  A published section weighting, next to a word naming a section, is a
+    //  fact rather than a fabrication.
+    const nearSection = SECTION_WORDS.test(window);
+    if (nearSection && values.every((v) => SECTION_PERCENTS.has(v))) continue;
 
     if (!anchor) {
       out.push(`R2 an exam weighting with nothing to attribute it to: ${JSON.stringify(m[0])}.`
@@ -433,5 +456,5 @@ function validate(sheet, opts = {}) {
 module.exports = {
   RULES, validate, flatten, stripComments, stripInvisible,
   ruleEkCodes, ruleExamWeighting, ruleEmDash, ruleTitle, ruleBodyColumn, ruleDeadLinks, ruleMojibake,
-  BAND, PAD,
+  BAND, PAD, SECTION_PERCENTS,
 };

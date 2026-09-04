@@ -239,6 +239,9 @@
     "smoke:assistantexfil": "node smoke/assistant-exfiltration.js",
     "smoke:cyberexamreplica": "node smoke/cyber-exam-replica.js",
     "cyber:examblueprint": "node tools/ap-cyber-ced/build-exam-blueprint.js",
+    "verify:cyberexamreplica": "node scripts/verify-cyber-exam-replica-live.js",
+    "smoke:cyberhubrepair": "node smoke/cyber-practice-hub-repair.js",
+    "cyber:hubrepair": "node tools/ap-cyber-ced/generate-practice-hub-repair.js",
     "smoke:assistantanon": "node smoke/assistant-anonymous.js",
     "smoke:assistantstudent": "node smoke/assistant-student.js"
   },
