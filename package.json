@@ -62,6 +62,7 @@
     "smoke:cyberslides": "node smoke/cyber-slide-gate.js",
     "smoke:networkingslides": "node smoke/networking-slide-gate.js",
     "smoke:networkingfiles": "node smoke/networking-file-gate.js",
+    "smoke:networkingccgate": "node smoke/networking-cc-gate.js",
     "net:filemanifest": "node scripts/build-networking-file-manifest.js",
     "smoke:slidetypebump": "node smoke/slide-type-bump.js",
     "smoke:cyberembeds": "node smoke/cyber-slide-embeds.js",
