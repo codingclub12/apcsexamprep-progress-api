@@ -61,6 +61,13 @@ const FROM_UNIT  = 'Unit 1';
 const TO_UNIT    = 'Unit 4';
 
 const NEW_TITLE = 'AP Cybersecurity Terminal Lab: Find the Tournament Code | Topic 4.3';
+//  SEO Title is a SEPARATE FIELD from Title and the first import proved it the
+//  expensive way: setting Title alone moved the rendered <h1> to Topic 4.3 and
+//  left <title>, og:title, twitter:title and the JSON-LD breadcrumb still
+//  saying Topic 1.2, because Shopify renders the title tag from the SEO Title
+//  metafield and only falls back to the page title when it is unset. This page
+//  had one. So all three fields move together.
+const NEW_SEO_TITLE = 'AP Cybersecurity Terminal Lab: Find the Tournament Code | Topic 4.3';
 const NEW_SEO_DESC =
   'Hunt a file through a shared machine with nothing but a terminal, then work out who else '
   + 'could read it. Free AP Cybersecurity Topic 4.3 practice lab.';
@@ -68,6 +75,17 @@ const NEW_SEO_DESC =
 function live(handle) {
   const rendered = sf.page('/pages/' + handle, { timeout: 40 }).body;
   return { rendered, body: extract(rendered) };
+}
+
+//  Already done? Then this page contributes no row. The sheets land in stages,
+//  so the generator has to survive a re-run after a partial import: the first
+//  version threw on the 2.4 page the moment its body sheet went in, which is
+//  correct refusal and useless behaviour.
+function alreadyMoved(text, label) {
+  const stale = (text.match(new RegExp(FROM_TOPIC.replace('.', '\\.'), 'g')) || []).length;
+  if (stale) return false;
+  console.log('  skip ' + label + ': already reads ' + TO_TOPIC);
+  return true;
 }
 
 //  Replace exactly `want` occurrences, or throw. A silent zero is how a sheet
@@ -91,15 +109,18 @@ const report = [];
   const { rendered } = live(LAB);
   const title = (rendered.match(/<title>([\s\S]*?)<\/title>/) || [])[1].trim();
   const desc = (rendered.match(/<meta name="description" content="([^"]*)"/) || [])[1];
-  if (!title.includes(FROM_TOPIC)) throw new Error(`${LAB}: title does not say ${FROM_TOPIC}, it says ${JSON.stringify(title)}`);
-  if (!desc.includes(FROM_TOPIC)) throw new Error(`${LAB}: description does not say ${FROM_TOPIC}`);
+  //  After the first import this page is HALF moved: page Title is already
+  //  Topic 4.3 while the SEO Title behind <title> is still Topic 1.2. So the
+  //  guard is that at least one of the two still needs moving, not that both do.
+  const stale = title.includes(FROM_TOPIC) || desc.includes(FROM_TOPIC);
+  if (!stale) throw new Error(`${LAB}: nothing left to move, title and description already read ${TO_TOPIC}`);
 
   //  Guard the assumption this whole row rests on: no topic label in the body.
   const body = extract(rendered);
   const inBody = (body.match(/Topic\s*1\.2/gi) || []).length;
   if (inBody) throw new Error(`${LAB}: the body DOES carry ${inBody} topic label(s); this sheet would miss them`);
 
-  metaRows.push({ Handle: LAB, Command: 'MERGE', Title: NEW_TITLE, 'SEO Description': NEW_SEO_DESC });
+  metaRows.push({ Handle: LAB, Command: 'MERGE', Title: NEW_TITLE, 'SEO Title': NEW_SEO_TITLE, 'SEO Description': NEW_SEO_DESC });
   report.push({ handle: LAB, kind: 'title + seo description', was: title, now: NEW_TITLE, bodyChanged: false });
 }
 
@@ -107,9 +128,11 @@ const report = [];
 {
   const h = 'ap-cyber-unit-2-lesson-4-terminal-lab';
   const { body } = live(h);
+  if (!alreadyMoved(body, h)) {
   const next = replaceExactly(body, `>${FROM_TOPIC}<`, `>${TO_TOPIC}<`, 1, h);
   bodyRows.push({ Handle: h, Command: 'MERGE', 'Body HTML': next });
   report.push({ handle: h, kind: 'sibling label', was: FROM_TOPIC, now: TO_TOPIC, bodyChanged: true, bytes: [body.length, next.length] });
+  }
 }
 
 // ── 3. the labs hub card ─────────────────────────────────────────────────────
@@ -119,6 +142,7 @@ const report = [];
 {
   const h = 'ap-cybersecurity-labs';
   const { body } = live(h);
+  if (!alreadyMoved(body, h + ' card')) {
   const open = body.indexOf(`<a class="ph-card" href="https://www.apcsexamprep.com/pages/${LAB}"`);
   if (open < 0) throw new Error(`${h}: no ph-card anchor for ${LAB}`);
   const close = body.indexOf('</a>', open);
@@ -133,6 +157,7 @@ const report = [];
   if (next.length - body.length !== fixed.length - card.length) throw new Error(`${h}: splice changed bytes outside the card`);
   bodyRows.push({ Handle: h, Command: 'MERGE', 'Body HTML': next });
   report.push({ handle: h, kind: 'hub card focus, blurb, meta', was: `${FROM_UNIT} / ${FROM_TOPIC} x2`, now: `${TO_UNIT} / ${TO_TOPIC} x2`, bodyChanged: true, bytes: [body.length, next.length] });
+  }
 }
 
 // ── write it ─────────────────────────────────────────────────────────────────
@@ -142,6 +167,9 @@ const report = [];
 //  is how a live page gets republished.
 const q = (s2) => '"' + String(s2 == null ? '' : s2).replace(/"/g, '""') + '"';
 function write(file, cols, rows) {
+  //  A header-only CSV is a sheet that says 'change nothing' and is exactly the
+  //  kind of thing that gets imported by mistake. Remove the stale file instead.
+  if (!rows.length) { try { fs.unlinkSync(file); } catch (e) {} return 0; }
   for (const r of rows) for (const c of cols) {
     if (r[c] == null || r[c] === '') throw new Error(`${file}: row ${r.Handle} has an empty ${c}, which Matrixify would write as a blank`);
   }
@@ -151,14 +179,16 @@ function write(file, cols, rows) {
   fs.writeFileSync(file, csv);
   return csv.length;
 }
-const a = write(OUT_META, ['Handle', 'Command', 'Title', 'SEO Description'], metaRows);
+const a = write(OUT_META, ['Handle', 'Command', 'Title', 'SEO Title', 'SEO Description'], metaRows);
 const b = write(OUT_BODY, ['Handle', 'Command', 'Body HTML'], bodyRows);
 const rel = (f) => path.relative(path.join(__dirname, '..'), f);
-console.log('wrote ' + rel(OUT_META) + '  ' + a + ' bytes, ' + metaRows.length + ' row');
-console.log('wrote ' + rel(OUT_BODY) + '  ' + b + ' bytes, ' + bodyRows.length + ' rows\n');
+console.log(a ? 'wrote ' + rel(OUT_META) + '  ' + a + ' bytes, ' + metaRows.length + ' row'
+  : 'no meta sheet needed, nothing left to move');
+console.log((b ? 'wrote ' + rel(OUT_BODY) + '  ' + b + ' bytes, ' + bodyRows.length + ' rows'
+  : 'no body sheet needed, every body already reads Topic 4.3') + '\n');
 for (const r of report) {
   console.log('  ' + r.handle);
   console.log('     ' + r.kind + ': ' + r.was + '  ->  ' + r.now);
   if (r.bytes) console.log('     body ' + r.bytes[0] + ' -> ' + r.bytes[1] + ' bytes');
 }
-module.exports = { metaRows, bodyRows, NEW_TITLE, NEW_SEO_DESC, LAB, FROM_TOPIC, TO_TOPIC, FROM_UNIT, TO_UNIT };
+module.exports = { metaRows, bodyRows, NEW_TITLE, NEW_SEO_TITLE, NEW_SEO_DESC, LAB, FROM_TOPIC, TO_TOPIC, FROM_UNIT, TO_UNIT };
