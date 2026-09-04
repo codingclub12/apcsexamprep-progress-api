@@ -188,6 +188,23 @@ runBootSeed('course_manifest dead-cfu cleanup', () => {
   return r;
 });
 
+//  The manifest rows go first, and they have to: the boot seed above is
+//  INSERT OR IGNORE, so the terminal-lab rename never reached a database that
+//  already had the old rows. Shipped without this on 2026-09-04 and production
+//  kept a 'lab' row while the player started posting 'terminal-lab', which the
+//  attempt route rejects as a mismatch. The lab 400s until this runs.
+runBootSeed('course_manifest terminal-lab retype', () => {
+  const { retypeTerminalLabManifest } = require('./scripts/seed-manifest');
+  const r = retypeTerminalLabManifest();
+  if (!r.candidates) {
+    console.log('course_manifest terminal-lab retype: nothing to move. Safe to delete this block.');
+  } else {
+    console.log(`course_manifest terminal-lab retype: moved ${r.moved} of ${r.candidates} row(s).`);
+    for (const b of r.byItem) console.log(`  ${b.course} ${b.item_id}: ${b.was} -> ${b.now}`);
+  }
+  return r;
+});
+
 //  Terminal-lab attempts written before the 2026-09-04 rename still say 'lab'.
 //  The manifest row for those items says 'terminal-lab' now, and attempt-rollup
 //  keys the cell on the ATTEMPT's type while denominating it from the MANIFEST,
