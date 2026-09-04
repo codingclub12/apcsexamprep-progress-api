@@ -1,0 +1,588 @@
+﻿"Handle","Command","Body HTML"
+"ap-cybersecurity-practice","MERGE","<div class=""ph-page"">
+<style>.ph-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:16px 0 30px;}.ph-grid>.ph-card{flex:1 1 330px;max-width:508px;}@media (max-width:760px){.ph-grid>.ph-card{flex:1 1 100%;max-width:none;}}.ph-card{display:block;position:relative;background:#F5F0FF;border:1px solid #e9d5ff;border-radius:14px;padding:18px 20px 46px;text-decoration:none!important;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}.ph-card:hover{transform:translateY(-2px);border-color:#A855F7;box-shadow:0 6px 20px rgba(107,33,168,.14);}.ph-card-focus{display:block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7C3AED;margin:0 0 7px;}.ph-card-title{display:block;font-family:""DM Serif Display"",Georgia,serif;font-size:20px;line-height:1.25;color:#1E1B4B;margin:0 0 9px;}.ph-card-blurb{display:block;font-family:Georgia,serif;font-size:15px;line-height:1.55;color:#4B5563;margin:0 0 12px;}.ph-card-meta{position:absolute;left:20px;right:20px;bottom:16px;font-family:""DM Sans"",system-ui,sans-serif;font-size:12.5px;color:#6B7280;}.ph-card-go{position:absolute;right:18px;bottom:14px;font-family:""DM Sans"",system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6B21A8;}.ph-pill{display:inline-block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin:0 7px 0 0;vertical-align:1px;}.ph-pill-intro{background:#DCFCE7;color:#15803D;}.ph-pill-core{background:#EDE9FE;color:#6B21A8;}.ph-pill-stretch{background:#FEF3C7;color:#B45309;}.ph-empty{font-family:Georgia,serif;font-size:15px;color:#6B7280;font-style:italic;margin:12px 0 24px;}</style>
+<style>.ph-page{max-width:900px;margin:0 auto;font-family:Georgia,serif;color:#1F2937;}.ph-page p{font-size:16.5px;line-height:1.7;max-width:72ch;margin:0 0 14px;}.ph-page h2{font-family:""DM Serif Display"",Georgia,serif;font-size:27px;color:#1E1B4B;margin:38px 0 6px;font-weight:400;}.ph-page a{color:#6B21A8;}.ph-hero{background:linear-gradient(135deg,#2E1065 0%,#6B21A8 62%,#7C3AED 100%);border-radius:18px;padding:40px 34px 34px;margin:0 0 26px;text-align:center;color:#fff;}.ph-hero h1{font-family:""DM Serif Display"",Georgia,serif;font-size:40px;line-height:1.15;color:#fff;margin:0 0 12px;font-weight:400;}.ph-eyebrow{display:inline-block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E9D5FF;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 16px;margin:0 0 16px;}.ph-hero p{font-size:17px;line-height:1.6;color:#EDE9FE;max-width:64ch;margin:0 auto;}.ph-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:26px auto 0;max-width:640px;}@media (max-width:640px){.ph-stats{grid-template-columns:1fr 1fr;}}.ph-stat b{display:block;font-family:""DM Serif Display"",Georgia,serif;font-size:26px;color:#fff;font-weight:400;line-height:1.1;}.ph-stat span{display:block;font-family:""DM Sans"",system-ui,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C4B5FD;margin-top:5px;}.ph-note{background:#F0FDF4;border:1px solid #BBF7D0;border-left:4px solid #15803D;border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0 28px;}.ph-note p{margin:0;font-size:15.5px;}.ph-band{background:#F5F0FF;border:1px solid #e9d5ff;border-radius:14px;padding:22px 24px;margin:30px 0 0;}.ph-band h2{margin-top:0;}.ph-band p:last-child{margin-bottom:0;}.ph-page table{border-collapse:separate;border-spacing:0;width:100%;margin:14px 0 20px;font-family:Georgia,serif;font-size:15px;border:1px solid #e9d5ff;border-radius:12px;overflow:hidden;}.ph-page th{background:#F5F0FF;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#6B21A8;text-align:left;padding:11px 14px;}.ph-page td{padding:11px 14px;border-top:1px solid #F3E8FF;vertical-align:top;line-height:1.55;}.ph-page td:first-child{font-family:""DM Serif Display"",Georgia,serif;font-size:19px;color:#6B21A8;width:52px;}.ph-sub{font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#7C3AED;margin:34px 0 0;}.ph-sub+h2{margin-top:4px;}
+/* apcs-related-links */
+#apcs-links-ap-cybersecurity-practice .related{background:#f9fafb!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:24px!important;margin:32px 0!important;}
+#apcs-links-ap-cybersecurity-practice .related h3{margin:0 0 14px!important;font-size:18px!important;font-weight:600!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;}
+#apcs-links-ap-cybersecurity-practice .related a{display:block!important;color:#3b82f6!important;text-decoration:none!important;padding:8px 0!important;border-bottom:1px solid #e5e7eb!important;font-size:15px!important;-webkit-text-fill-color:#3b82f6!important;}
+#apcs-links-ap-cybersecurity-practice .related a:last-child{border-bottom:none!important;}
+#apcs-links-ap-cybersecurity-practice .related a:hover{text-decoration:underline!important;}
+/* /apcs-related-links */
+</style>
+<div class=""ph-hero"">
+<div class=""ph-eyebrow"">Everything in one place</div>
+<h1>AP Cybersecurity Practice</h1>
+<p>The multiple-choice half, the free-response half, and the terminal labs. The exam is 60 questions in Section I and one Device Security Analysis in Section II.</p>
+<div class=""ph-stats"">
+<div class=""ph-stat"">
+<b>60</b><span>MCQ in section I</span>
+</div>
+<div class=""ph-stat"">
+<b>1</b><span>free response</span>
+</div>
+<div class=""ph-stat"">
+<b>5</b><span>FRQ sets</span>
+</div>
+<div class=""ph-stat"">
+<b>2</b><span>terminal labs</span>
+</div>
+</div>
+</div>
+<p class=""ph-sub"">Section I of the exam</p>
+<h2>Multiple choice</h2>
+<p>60 questions, drawn from all five units and the three skill categories. <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice-exam"">The AP Cybersecurity practice exam</a> gives you scored questions with explanations. The <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-exam-format"">exam format page</a> has the full breakdown of how the exam is built.</p>
+<p class=""ph-sub"">Section II of the exam</p>
+<h2>Free response</h2>
+<p>One Device Security Analysis, parts A to E, 50 minutes. Full practice questions in the exam's exact format, each with sample responses and credit points. More on the format and what each part asks: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-practice"">the FRQ practice hub</a>.</p>
+<div data-practice-course=""ap-cybersecurity"" data-practice-kind=""frq""><div class=""ph-grid"">
+<a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-library-kiosk""><span class=""ph-card-focus"">The baseline: one attacker, one IP, one account</span><span class=""ph-card-title"">The library catalogue kiosk</span><span class=""ph-card-blurb"">Start here. A public catalogue kiosk with a single attacker hammering a single account, so you can learn where each of the five parts looks before the sets start hiding things.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-intro"">Start here</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-athletics-laptop""><span class=""ph-card-focus"">Outbound connections and a spread-out attack</span><span class=""ph-card-title"">The athletics department laptop</span><span class=""ph-card-blurb"">The same five parts, deliberately not the same reading. The blocked connection is outbound rather than inbound, and the password attack touches more than one username.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-core"">Core</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-print-server""><span class=""ph-card-focus"">A spray slow enough to stay under lockout, and SUID</span><span class=""ph-card-title"">The district print server</span><span class=""ph-card-blurb"">The attack that looks like nothing: nine accounts, one try each, three minutes apart, under every lockout threshold. Then the setuid bit, and the escalation that uses it.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-stretch"">Stretch</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-greenhouse-controller""><span class=""ph-card-focus"">No single attacker IP, and a rogue listening service</span><span class=""ph-card-title"">The greenhouse controller</span><span class=""ph-card-blurb"">The set where blocking the attacker address is the wrong answer, because there are six of them. Rewards anyone who reads the listening services instead of skimming past them.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-stretch"">Stretch</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-bluebird-studio""><span class=""ph-card-focus"">Rule order, and a sweep that narrows to one account</span><span class=""ph-card-title"">The design studio workstation</span><span class=""ph-card-blurb"">The set where the rule that would allow the connection is right there in the table and never runs. The password attack arrives in two stages, and one line tells you which account exists.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-stretch"">Stretch</span>50 min · Parts A to E · 6 sources</span><span class=""ph-card-go"">Start →</span></a>
+</div></div>
+<p class=""ph-sub"">Hands on</p>
+<h2>Terminal labs</h2>
+<p>A real browser terminal, no install and no account. Practice for the commands the free-response question asks you to write. All of them: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-labs"">the terminal labs hub</a>.</p>
+<div data-practice-course=""ap-cybersecurity"" data-practice-kind=""labs""><div class=""ph-grid"">
+<a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-2-terminal-lab""><span class=""ph-card-focus"">Unit 1</span><span class=""ph-card-title"">Find the tournament code</span><span class=""ph-card-blurb"">Hunt a file through a shared machine with nothing but a terminal, then work out who else could read it. Free AP Cybersecurity Topic 1.2 practice lab.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-intro"">Practice</span>Topic 1.2 · 10 min · 6 checks</span><span class=""ph-card-go"">Open →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cyber-unit-2-lesson-4-terminal-lab""><span class=""ph-card-focus"">Unit 2</span><span class=""ph-card-title"">Read the badge log</span><span class=""ph-card-blurb"">A week of badge swipes: three real attacks, two innocent oddities. Work the log with grep and tell them apart. Free AP Cybersecurity Topic 2.4 lab.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-intro"">Practice</span>Topic 2.4 · 20 min · 8 checks</span><span class=""ph-card-go"">Open →</span></a>
+</div></div>
+<div class=""ph-band"">
+<h2>Course content</h2>
+<p>Lessons, units and pacing rather than practice: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"">the complete course guide</a> for students, and <a href=""https://www.apcsexamprep.com/pages/cyber-command-center"">the Command Center</a> for teachers.</p>
+</div>
+<script>window.APCS_PRACTICE={base:""https://progress.apcsexamprep.com""};</script>
+<script src=""https://progress.apcsexamprep.com/practice-hub.js""></script>
+</div>
+<!-- apcs-related-links -->
+<div id=""apcs-links-ap-cybersecurity-practice"">
+<div class=""related"">
+<h3>Practice by unit</h3>
+<a href=""/pages/ap-cybersecurity-unit-1-practice"">Unit 1 practice: Introduction to Cybersecurity</a>
+<a href=""/pages/ap-cybersecurity-unit-2-practice"">Unit 2 practice: Securing Physical Spaces</a>
+<a href=""/pages/ap-cybersecurity-unit-3-practice"">Unit 3 practice: Securing Networks</a>
+<a href=""/pages/ap-cybersecurity-unit-4-practice"">Unit 4 practice: Securing Devices</a>
+<a href=""/pages/ap-cybersecurity-unit-5-practice"">Unit 5 practice: Securing Applications and Data</a>
+</div>
+</div>
+<!-- /apcs-related-links -->"
+"ap-cybersecurity-topics","MERGE","<!--
+  PAGE: /pages/ap-cybersecurity-topics   (CONCEPT INDEX HUB = spoke-and-wheel wheel)
+  TITLE: AP Cybersecurity Topics Index | All 5 Units & Every Concept | APCSExamPrep.com
+  META: Every AP Cybersecurity concept organized by the 5 College Board units. Deep-dive guides for social engineering, authentication, cryptography, networks, malware, and more, plus a core-concept quick reference, exam tips per unit, common mistakes, and FAQ.
+  MODEL: built to match /pages/ap-csp-topics structure, on the AP Cyber purple brand.
+  STANDARD: class-scoped, -webkit-text-fill-color + !important on every color, HTML entities only, theme title hidden.
+
+  BUILD QUEUE (spoke pages this hub links to; create or set this hub to draft until they exist):
+    See the full concept->handle list at the bottom of this file in the SPOKES comment block.
+  CED NOTE: unit titles and the 24 topics are CED-exact. Sub-concept cards are the standard concepts taught within each
+    CED topic; when each spoke is built, cite its EK codes (same rule as the lesson pipeline).
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+  .page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+  .cyt{--navy:#1E1B4B;--cy:#6B21A8;--cy2:#7C3AED;--cy-lt:#C4B5FD;--cy-bg:#F5F0FF;--cy-dk:#581C87;--accent:#A855F7;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--gb:#e5e7eb;}
+  .cyt *{box-sizing:border-box;margin:0;padding:0;}
+  .cyt{font-family:""DM Sans"",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  /* HERO */
+  .cyt-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 88% 18%,rgba(168,85,247,.30) 0%,transparent 60%);padding:46px 24px 38px;}
+  .cyt-hero-in{max-width:920px;margin:0 auto;}
+  .cyt-eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cy-lt)!important;-webkit-text-fill-color:var(--cy-lt)!important;margin-bottom:10px;}
+  .cyt-hero h1{font-family:""DM Serif Display"",serif!important;font-size:clamp(28px,4.4vw,44px)!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .cyt-hero p{font-size:15px!important;color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;line-height:1.7!important;max-width:760px;}
+  .cyt-hero p .by{color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:600;}
+
+  .cyt-main{max-width:920px;margin:0 auto;padding:32px 24px 80px;}
+
+  /* QUICK NAV */
+  .cyt-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px;}
+  .cyt-nav a,.cyt-nav a:link,.cyt-nav a:visited{text-decoration:none;font-size:13px;font-weight:600;padding:7px 14px;border-radius:100px;background:#fff;border:1px solid var(--gb);color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;}
+  .cyt-nav a:hover{background:var(--cy-bg);border-color:var(--cy-lt);}
+  .cyt-nav a.solid,.cyt-nav a.solid:link,.cyt-nav a.solid:visited{background:var(--cy)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:var(--cy)!important;}
+
+  /* UNIT SECTION */
+  .cyt-unit{margin-bottom:40px;}
+  .cyt-tagline{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;background:var(--cy-bg);padding:4px 12px;border-radius:100px;margin-bottom:8px;}
+  .cyt-unit h2{font-family:""DM Serif Display"",serif!important;font-size:25px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:8px!important;}
+  .cyt-weight{font-size:13.5px;color:#475569;margin-bottom:8px;}
+  .cyt-weight strong{color:var(--cy-dk)!important;-webkit-text-fill-color:var(--cy-dk)!important;}
+  .cyt-desc{font-size:14.5px;color:#374151;line-height:1.75;margin-bottom:16px;}
+  .cyt-guidelink{display:inline-block;font-size:13.5px;font-weight:700;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;text-decoration:none;margin-bottom:14px;border-bottom:2px solid var(--cy-lt);}
+
+  .cyt-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:12px;}
+  .cyt-card,.cyt-card:link,.cyt-card:visited{display:block;text-decoration:none;background:#fff;border:1px solid var(--gb);border-radius:12px;padding:16px 18px;transition:all .15s;}
+  .cyt-card:hover{border-color:var(--accent);box-shadow:0 8px 20px rgba(107,33,168,.10);transform:translateY(-2px);}
+  .cyt-card .ct{font-size:15px;font-weight:700;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;display:block;margin-bottom:5px;}
+  .cyt-card .cd{font-size:13px;color:#4b5563!important;-webkit-text-fill-color:#4b5563!important;line-height:1.55;}
+  .cyt-card .ctp{display:inline-block;font-size:10px;font-weight:700;color:var(--accent)!important;-webkit-text-fill-color:var(--accent)!important;letter-spacing:.04em;margin-top:8px;}
+
+  /* SECTION HEADERS for support blocks */
+  .cyt-h2{font-family:""DM Serif Display"",serif!important;font-size:26px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin:48px 0 8px!important;padding-bottom:10px!important;border-bottom:2px solid var(--cy-bg)!important;}
+  .cyt-h2sub{font-size:14px;color:#475569;margin-bottom:18px;}
+
+  /* QUICK REFERENCE TABLE */
+  .cyt-tbl-wrap{overflow-x:auto;border:1px solid var(--gb);border-radius:12px;}
+  .cyt-tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:620px;}
+  .cyt-tbl thead tr{background:var(--cy);}
+  .cyt-tbl thead th{padding:11px 16px;text-align:left;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12.5px;white-space:nowrap;}
+  .cyt-tbl tbody tr:nth-child(even){background:var(--cy-bg);}
+  .cyt-tbl tbody td{padding:10px 16px;border-bottom:1px solid #e9d5ff;color:#374151;vertical-align:top;line-height:1.5;}
+  .cyt-tbl tbody td:first-child{font-weight:700;color:var(--cy-dk)!important;-webkit-text-fill-color:var(--cy-dk)!important;white-space:nowrap;}
+
+  /* EXAM TIPS */
+  .cyt-tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;}
+  .cyt-tip{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:16px 18px;}
+  .cyt-tip .u{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .cyt-tip h4{font-size:15px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:6px!important;}
+  .cyt-tip p{font-size:13.5px;color:#374151;line-height:1.6;}
+
+  /* MISTAKES */
+  .cyt-mis{background:#fff;border:1px solid var(--gb);border-radius:12px;padding:18px 20px;margin-bottom:12px;}
+  .cyt-mis h4{font-size:15px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:8px!important;}
+  .cyt-mis .w{font-size:13.5px;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:4px;}
+  .cyt-mis .r{font-size:13.5px;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .cyt-mis .w b,.cyt-mis .r b{font-weight:700;}
+
+  /* FAQ */
+  .faq{border:1px solid var(--gb);border-radius:10px;margin-bottom:10px;overflow:hidden;background:#fff;}
+  .faq-q{width:100%;text-align:left;background:none;border:none;padding:16px 18px;font-family:inherit;font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:center;}
+  .faq-q .pm{color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;font-weight:700;flex-shrink:0;}
+  .faq-a{display:none;padding:0 18px 16px;font-size:14px;color:#374151;line-height:1.7;}
+  .faq.open .faq-a{display:block;}
+
+  /* CTA */
+  .cyt-cta{background:linear-gradient(135deg,#3b0764 0%,#4c1d95 100%);border-radius:14px;padding:28px;margin-top:44px;text-align:center;}
+  .cyt-cta h3{font-family:""DM Serif Display"",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:8px!important;}
+  .cyt-cta p{font-size:14px!important;color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;margin-bottom:16px!important;}
+  .cyt-cta a,.cyt-cta a:link,.cyt-cta a:visited{display:inline-block;margin:5px;background:var(--accent)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none;font-weight:700;font-size:15px;padding:13px 28px;border-radius:10px;}
+  .cyt-cta a.ghost,.cyt-cta a.ghost:link,.cyt-cta a.ghost:visited{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.3);}
+  .cyt-cta a:hover{opacity:.92;}
+
+/* apcs-related-links */
+#apcs-links-ap-cybersecurity-topics .related{background:#f9fafb!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:24px!important;margin:32px 0!important;}
+#apcs-links-ap-cybersecurity-topics .related h3{margin:0 0 14px!important;font-size:18px!important;font-weight:600!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;}
+#apcs-links-ap-cybersecurity-topics .related a{display:block!important;color:#3b82f6!important;text-decoration:none!important;padding:8px 0!important;border-bottom:1px solid #e5e7eb!important;font-size:15px!important;-webkit-text-fill-color:#3b82f6!important;}
+#apcs-links-ap-cybersecurity-topics .related a:last-child{border-bottom:none!important;}
+#apcs-links-ap-cybersecurity-topics .related a:hover{text-decoration:underline!important;}
+/* /apcs-related-links */
+</style>
+
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[
+{""@type"":""ListItem"",""position"":1,""name"":""AP Cybersecurity"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},
+{""@type"":""ListItem"",""position"":2,""name"":""All Topics"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-topics""}
+]}</script>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@type"":""CollectionPage"",""name"":""AP Cybersecurity Topics Index"",""description"":""Every AP Cybersecurity concept organized by the 5 College Board units, with deep-dive guides, a core-concept quick reference, exam tips, common mistakes, and FAQ."",""url"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-topics"",""isPartOf"":{""@type"":""Course"",""name"":""AP Cybersecurity Complete Course"",""url"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},""author"":{""@type"":""Organization"",""name"":""AP CS Exam Prep""}}</script>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@type"":""FAQPage"",""mainEntity"":[
+{""@type"":""Question"",""name"":""How many units are on the AP Cybersecurity exam?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The College Board AP Cybersecurity course has five units: Introduction to Security, Securing Spaces, Securing Networks, Securing Devices, and Securing Applications and Data. Each unit follows the same arc of identifying vulnerabilities, protecting against them, and detecting attacks.""}},
+{""@type"":""Question"",""name"":""What does the AP Cybersecurity exam look like?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The exam has two sections: Section I is multiple-choice and Section II is free-response built around applied security scenarios. Both sections draw from all five units, so a balanced review across units matters.""}},
+{""@type"":""Question"",""name"":""When is the first AP Cybersecurity exam?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""AP Cybersecurity launches nationally in the 2026 to 2027 school year, with the first exam in 2027. Building familiarity early gives you a large advantage in a course with little existing competition for study material.""}},
+{""@type"":""Question"",""name"":""What is the CIA triad?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The CIA triad is the core model of security goals: Confidentiality (only authorized people can read data), Integrity (data is accurate and unaltered), and Availability (data and systems are accessible when needed). Almost every control maps to protecting one of these three goals.""}},
+{""@type"":""Question"",""name"":""What is the difference between symmetric and asymmetric encryption?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Symmetric encryption uses the same key to encrypt and decrypt, which is fast but requires safely sharing the key. Asymmetric encryption uses a public key to encrypt and a private key to decrypt, which solves the key-sharing problem. On the exam, remember that the public key encrypts and only the matching private key can decrypt.""}},
+{""@type"":""Question"",""name"":""What is the difference between a virus and a worm?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""A virus attaches to a file or program and needs a user action to spread, such as opening the file. A worm is self-propagating and spreads across a network on its own without user action. Both are malware, but the spreading mechanism is the key distinction.""}},
+{""@type"":""Question"",""name"":""What is the difference between intimidation and urgency in social engineering?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Intimidation pressures a target with the threat of a negative consequence, while urgency pressures a target with a deadline so they act before thinking. Many messages use both, so the exam asks for the primary tactic.""}},
+{""@type"":""Question"",""name"":""Do I need to memorize every attack sub-type for AP Cybersecurity?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""You should be able to identify the category of attack and the defense that applies, such as recognizing a denial-of-service attack or a phishing message. Memorizing specific tool names or rare sub-type labels is usually enrichment rather than a required skill.""}}
+]}</script>
+
+<div class=""cyt"">
+
+  <div class=""cyt-hero""><div class=""cyt-hero-in"">
+    <div class=""cyt-eyebrow"">AP Cybersecurity • Concept Index</div>
+    <h1>AP Cybersecurity Topics (All 5 Units)</h1>
+    <p>Every AP Cybersecurity concept organized by the College Board's five units. Each card links to a deep-dive guide with the concept explained, examples, exam tips, and practice. Includes a core-concept quick reference, one exam insight per unit, the mistakes that cost the most points, and an FAQ. <span class=""by"">Built by Tanner Crow, AP CS teacher at Blue Valley North High School, 11+ years.</span> Aligned to the College Board CED.</p>
+  </div></div>
+
+  <div class=""cyt-main"">
+
+    <!-- QUICK NAV -->
+    <div class=""cyt-nav"">
+      <a class=""solid"" href=""/pages/ap-cybersecurity-complete-course-guide"">Course Hub</a>
+      <a href=""#u1"">Unit 1: Intro to Security</a>
+      <a href=""#u2"">Unit 2: Securing Spaces</a>
+      <a href=""#u3"">Unit 3: Securing Networks</a>
+      <a href=""#u4"">Unit 4: Securing Devices</a>
+      <a href=""#u5"">Unit 5: Apps &amp; Data</a>
+      <a href=""#ref"">Quick Reference</a>
+      <a href=""#tips"">Exam Tips</a>
+      <a href=""#faq"">FAQ</a>
+      <a href=""/pages/ap-cybersecurity-practice-questions"">Practice</a>
+    </div>
+
+    <!-- UNIT 1 -->
+    <div class=""cyt-unit"" id=""u1"">
+      <span class=""cyt-tagline"">Unit 1 • 5 CED topics</span>
+      <h2>Unit 1: Introduction to Security</h2>
+      <div class=""cyt-weight"">
+<strong>Focus:</strong> how adversaries target people and weak access. Social engineering is the single highest-frequency Unit 1 concept.</div>
+      <p class=""cyt-desc"">Unit 1 introduces the human and access side of security: how attackers manipulate people, exploit weak authentication, take advantage of public networks, and increasingly use AI to scale attacks. Expect message-analysis questions that ask you to name the tactic and channel, plus questions on strengthening authentication.</p>
+      <a class=""cyt-guidelink"" href=""/pages/ap-cybersecurity-unit-1-introduction-to-security"">Full Unit 1 study guide →</a>
+      <div class=""cyt-cards"">
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-social-engineering-tactics""><span class=""ct"">Social Engineering</span><span class=""cd"">Manipulating people into revealing information, clicking links, or downloading files. The entry point for most real attacks.</span><span class=""ctp"">Topic 1.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-intimidation-vs-urgency""><span class=""ct"">Intimidation vs Urgency</span><span class=""cd"">The two framework tactics. Intimidation threatens a consequence; urgency imposes a deadline. Know how to spot the primary one.</span><span class=""ctp"">Topic 1.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-phishing-vishing-smishing""><span class=""ct"">Phishing, Vishing &amp; Smishing</span><span class=""cd"">Social engineering by email, voice call, and text. Same goal, different channel. Identify the channel in a scenario.</span><span class=""ctp"">Topic 1.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-password-attacks""><span class=""ct"">Password Attacks</span><span class=""cd"">Brute force, credential stuffing, and password spraying. How attackers exploit weak or reused passwords.</span><span class=""ctp"">Topic 1.2</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-authentication-strengthening""><span class=""ct"">Strengthening Authentication</span><span class=""cd"">Why weak authentication fails and how length, uniqueness, and password managers make accounts harder to crack.</span><span class=""ctp"">Topic 1.2</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-mfa""><span class=""ct"">Multi-Factor Authentication</span><span class=""cd"">Combining factors you know, have, and are. Why MFA helps and why a phished one-time code can still defeat it.</span><span class=""ctp"">Topic 1.2</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-public-wifi-dangers""><span class=""ct"">Public Wi-Fi Dangers</span><span class=""cd"">Why open networks are risky: interception of unencrypted traffic and exposure of sensitive data.</span><span class=""ctp"">Topic 1.3</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-evil-twin""><span class=""ct"">Evil Twin &amp; Rogue Access Points</span><span class=""cd"">A fake network that mimics a real SSID to capture traffic. Plus jamming and war driving.</span><span class=""ctp"">Topic 1.3</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-vpn""><span class=""ct"">VPNs &amp; Protecting Your Data</span><span class=""cd"">How a VPN encrypts traffic, plus the individual protections for using the internet on untrusted networks.</span><span class=""ctp"">Topic 1.3</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-ai-attacks""><span class=""ct"">AI-Powered Cyberattacks</span><span class=""cd"">How adversaries use AI to scale and sharpen attacks, from more convincing phishing to faster reconnaissance.</span><span class=""ctp"">Topic 1.4</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-deepfakes""><span class=""ct"">Deepfakes &amp; Voice Cloning</span><span class=""cd"">AI-generated audio and video used to impersonate trusted people and defeat human verification.</span><span class=""ctp"">Topic 1.4</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-ai-defense""><span class=""ct"">AI in Cyber Defense</span><span class=""cd"">How defenders use AI for faster, more accurate threat detection and response.</span><span class=""ctp"">Topic 1.5</span></a>
+      </div>
+    </div>
+
+    <!-- UNIT 2 -->
+    <div class=""cyt-unit"" id=""u2"">
+      <span class=""cyt-tagline"">Unit 2 • 4 CED topics</span>
+      <h2>Unit 2: Securing Spaces</h2>
+      <div class=""cyt-weight"">
+<strong>Focus:</strong> the security foundations of the whole course (adversaries, attack phases, risk, controls, defense in depth) plus physical security.</div>
+      <p class=""cyt-desc"">Unit 2 lays the groundwork for everything that follows: who the adversaries are, the phases of an attack, how risk is assessed, the types of security controls, and defense in depth. It then applies these to physical spaces, where attackers bypass digital controls through physical access.</p>
+      <a class=""cyt-guidelink"" href=""/pages/ap-cybersecurity-unit-2-securing-spaces"">Full Unit 2 study guide →</a>
+      <div class=""cyt-cards"">
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-social-engineering-tactics""><span class=""ct"">7 Social Engineering Tactics</span><span class=""cd"">Pretexting, authority, intimidation, consensus, scarcity, familiarity, and urgency.</span><span class=""ctp"">Topic 2.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-threat-actors""><span class=""ct"">Types of Threat Actors</span><span class=""cd"">Script kiddies, hacktivists, insider threats, cyberterrorists, and criminal organizations.</span><span class=""ctp"">Topic 2.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-cyberattack-phases""><span class=""ct"">Phases of a Cyberattack</span><span class=""cd"">Recon, initial access, persistence, lateral movement, taking action, evading detection.</span><span class=""ctp"">Topic 2.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-risk-assessment""><span class=""ct"">Risk Assessment &amp; Strategies</span><span class=""cd"">Likelihood and severity, plus avoidance, transference, mitigation, and residual risk.</span><span class=""ctp"">Topic 2.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-security-controls""><span class=""ct"">Types of Security Controls</span><span class=""cd"">The CIA triad, and controls classified by type and by function.</span><span class=""ctp"">Topic 2.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-defense-in-depth""><span class=""ct"">Defense in Depth</span><span class=""cd"">Layering multiple controls so that one failure does not breach the whole system.</span><span class=""ctp"">Topic 2.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-physical-attacks""><span class=""ct"">Physical Security Attacks</span><span class=""cd"">Tailgating, shoulder surfing, dumpster diving, and card cloning.</span><span class=""ctp"">Topic 2.2</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-protecting-physical-spaces""><span class=""ct"">Protecting Physical Spaces</span><span class=""cd"">Managerial and physical controls: locks, card readers, vestibules, UPS, and policy.</span><span class=""ctp"">Topic 2.3</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-detecting-physical-attacks""><span class=""ct"">Detecting Physical Attacks</span><span class=""cd"">Cameras, security guards, and motion sensors, plus effective placement.</span><span class=""ctp"">Topic 2.4</span></a>
+      </div>
+    </div>
+
+    <!-- UNIT 3 -->
+    <div class=""cyt-unit"" id=""u3"">
+      <span class=""cyt-tagline"">Unit 3 • 5 CED topics</span>
+      <h2>Unit 3: Securing Networks</h2>
+      <div class=""cyt-weight"">
+<strong>Focus:</strong> know the protect controls (segmentation, firewalls) and the detect controls (IDS vs IPS) cold. The IDS/IPS distinction is a classic trap.</div>
+      <p class=""cyt-desc"">Unit 3 covers how networks are attacked and defended: common network attacks, managerial and wireless controls, segmentation to limit blast radius, firewalls to filter traffic, and the monitoring tools that detect intrusions. Many questions hinge on matching the right control to the right threat.</p>
+      <a class=""cyt-guidelink"" href=""/pages/ap-cybersecurity-unit-3-securing-networks"">Full Unit 3 study guide →</a>
+      <div class=""cyt-cards"">
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-network-attacks""><span class=""ct"">Network Attacks Overview</span><span class=""cd"">ARP spoofing, MAC flooding, DNS poisoning, and smurf attacks, plus how adversaries reach a network.</span><span class=""ctp"">Topic 3.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-mac-flooding""><span class=""ct"">MAC Flooding</span><span class=""cd"">Overwhelming a switch so it broadcasts traffic to every port, enabling sniffing.</span><span class=""ctp"">Topic 3.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-dns-poisoning""><span class=""ct"">DNS Poisoning</span><span class=""cd"">Corrupting name resolution so a correct domain name leads to a malicious server.</span><span class=""ctp"">Topic 3.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-ddos""><span class=""ct"">DoS &amp; DDoS Attacks</span><span class=""cd"">Flooding a system to make it unavailable. The difference between a single source and a distributed botnet.</span><span class=""ctp"">Topic 3.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-man-in-the-middle""><span class=""ct"">Man-in-the-Middle Attacks</span><span class=""cd"">Intercepting communication between two parties to read or alter it. Why encryption defeats it.</span><span class=""ctp"">Topic 3.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-wireless-security""><span class=""ct"">Managerial &amp; Wireless Controls</span><span class=""cd"">Policies and wireless protections that reduce network risk before an attack starts.</span><span class=""ctp"">Topic 3.2</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-network-segmentation""><span class=""ct"">Network Segmentation &amp; VLANs</span><span class=""cd"">Dividing a network so a breach in one segment cannot reach the rest.</span><span class=""ctp"">Topic 3.3</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-firewalls""><span class=""ct"">Firewalls</span><span class=""cd"">Filtering traffic by rules to allow or block based on source, destination, and port.</span><span class=""ctp"">Topic 3.4</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-ids-ips""><span class=""ct"">IDS vs IPS</span><span class=""cd"">An IDS detects and alerts; an IPS detects and blocks. The exam tests this distinction directly.</span><span class=""ctp"">Topic 3.5</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-siem""><span class=""ct"">SIEM &amp; Network Monitoring</span><span class=""cd"">Centralizing logs to spot patterns and detect attacks across many systems at once.</span><span class=""ctp"">Topic 3.5</span></a>
+      </div>
+    </div>
+
+    <!-- UNIT 4 -->
+    <div class=""cyt-unit"" id=""u4"">
+      <span class=""cyt-tagline"">Unit 4 • 4 CED topics</span>
+      <h2>Unit 4: Securing Devices</h2>
+      <div class=""cyt-weight"">
+<strong>Focus:</strong> classify malware by how it spreads and what it does, and know the authentication factors (know, have, are, where).</div>
+      <p class=""cyt-desc"">Unit 4 focuses on the devices themselves: the malware that attacks them, how authentication and password hashing protect access, how devices are hardened with anti-malware and patching, and how attacks on devices are detected. Malware classification and the authentication factors are high-yield here.</p>
+      <a class=""cyt-guidelink"" href=""/pages/ap-cybersecurity-unit-4-securing-devices"">Full Unit 4 study guide →</a>
+      <div class=""cyt-cards"">
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-malware-types""><span class=""ct"">Types of Malware</span><span class=""cd"">Virus, worm, trojan, ransomware, spyware, keylogger, logic bomb, rootkit, and fileless.</span><span class=""ctp"">Topic 4.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-authentication""><span class=""ct"">Authentication &amp; Hashing</span><span class=""cd"">The four authentication factors and why passwords are stored as hashes.</span><span class=""ctp"">Topic 4.2</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-protecting-devices""><span class=""ct"">Protecting Devices</span><span class=""cd"">Anti-malware, patching the OS and software, and host-based firewalls.</span><span class=""ctp"">Topic 4.3</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-detecting-device-attacks""><span class=""ct"">Detecting Device Attacks</span><span class=""cd"">Indicators of compromise and the controls that surface them.</span><span class=""ctp"">Topic 4.4</span></a>
+      </div>
+    </div>
+
+    <!-- UNIT 5 -->
+    <div class=""cyt-unit"" id=""u5"">
+      <span class=""cyt-tagline"">Unit 5 • 6 CED topics</span>
+      <h2>Unit 5: Securing Applications and Data</h2>
+      <div class=""cyt-weight"">
+<strong>Focus:</strong> cryptography is the heavy hitter. Get symmetric vs asymmetric exactly right, and know that input sanitization stops both injection and XSS.</div>
+      <p class=""cyt-desc"">Unit 5 is the largest unit and covers application and data security: the application attacks (SQL injection, XSS), the access controls that limit exposure, the cryptography that protects data, input sanitization, and detecting attacks on data. The cryptography topics carry the most weight and the most confusion.</p>
+      <a class=""cyt-guidelink"" href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Full Unit 5 study guide →</a>
+      <div class=""cyt-cards"">
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-sql-injection""><span class=""ct"">SQL Injection</span><span class=""cd"">Inserting malicious commands through input to read or alter a database.</span><span class=""ctp"">Topic 5.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-xss""><span class=""ct"">Cross-Site Scripting (XSS)</span><span class=""cd"">Injecting code a browser runs, reflected (Type I) vs stored (Type II).</span><span class=""ctp"">Topic 5.1</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-access-controls""><span class=""ct"">Access Controls &amp; Least Privilege</span><span class=""cd"">Authorization and giving each entity only the access it needs.</span><span class=""ctp"">Topic 5.2</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-cryptography""><span class=""ct"">Symmetric vs Asymmetric Encryption</span><span class=""cd"">One shared key vs a public/private key pair, and why key length matters.</span><span class=""ctp"">Topics 5.3-5.4</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-input-sanitization""><span class=""ct"">Input Sanitization</span><span class=""cd"">Cleaning untrusted input to stop injection and XSS, plus secure by design.</span><span class=""ctp"">Topic 5.5</span></a>
+        <a class=""cyt-card"" href=""/pages/ap-cybersecurity-detecting-data-attacks""><span class=""ct"">Detecting Data Attacks</span><span class=""cd"">Verifying a file's hash to detect tampering, plus monitoring.</span><span class=""ctp"">Topic 5.6</span></a>
+      </div>
+    </div>
+
+    <!-- QUICK REFERENCE -->
+    <h2 class=""cyt-h2"" id=""ref"">Core Concept Quick Reference</h2>
+    <div class=""cyt-h2sub"">The highest-yield concepts across all five units, with the one exam note that matters most for each.</div>
+    <div class=""cyt-tbl-wrap"">
+      <table class=""cyt-tbl"">
+        <thead><tr>
+<th>Concept</th>
+<th>What it is</th>
+<th>Key exam note</th>
+</tr></thead>
+        <tbody>
+          <tr>
+<td>Social engineering</td>
+<td>Manipulating a person, not a machine.</td>
+<td>Identify the primary tactic (intimidation or urgency) and the channel.</td>
+</tr>
+          <tr>
+<td>Intimidation vs urgency</td>
+<td>Threat vs deadline.</td>
+<td>Both can appear; pick the one the message leans on hardest.</td>
+</tr>
+          <tr>
+<td>Phishing / vishing / smishing</td>
+<td>Social engineering by email / voice / text.</td>
+<td>Same goal, different channel. Naming the exact channel is the skill.</td>
+</tr>
+          <tr>
+<td>MFA</td>
+<td>Two or more authentication factors.</td>
+<td>Strong, but a phished one-time code can still defeat it.</td>
+</tr>
+          <tr>
+<td>Evil twin</td>
+<td>Fake Wi-Fi mimicking a real network.</td>
+<td>Verify the network name; a VPN protects traffic if you connect.</td>
+</tr>
+          <tr>
+<td>CIA triad</td>
+<td>Confidentiality, Integrity, Availability.</td>
+<td>Map every control to the goal it protects.</td>
+</tr>
+          <tr>
+<td>Defense in depth</td>
+<td>Layered controls.</td>
+<td>One control failing should not breach the whole system.</td>
+</tr>
+          <tr>
+<td>Tailgating</td>
+<td>Following someone through a secure door.</td>
+<td>Physical social engineering; mantraps and badges defend it.</td>
+</tr>
+          <tr>
+<td>DoS vs DDoS</td>
+<td>Flooding from one vs many sources.</td>
+<td>DDoS uses a distributed botnet; both target availability.</td>
+</tr>
+          <tr>
+<td>Man-in-the-middle</td>
+<td>Intercepting traffic between two parties.</td>
+<td>Encryption (TLS) defeats reading the intercepted data.</td>
+</tr>
+          <tr>
+<td>Firewall</td>
+<td>Rule-based traffic filter.</td>
+<td>Allows or blocks by source, destination, and port.</td>
+</tr>
+          <tr>
+<td>IDS vs IPS</td>
+<td>Detect-and-alert vs detect-and-block.</td>
+<td>IDS only warns; IPS actively stops the traffic.</td>
+</tr>
+          <tr>
+<td>Network segmentation</td>
+<td>Dividing a network into zones.</td>
+<td>Limits blast radius so a breach cannot spread freely.</td>
+</tr>
+          <tr>
+<td>Malware types</td>
+<td>Virus, worm, trojan, ransomware, spyware.</td>
+<td>Worm self-spreads; virus needs a host and user action.</td>
+</tr>
+          <tr>
+<td>Authentication factors</td>
+<td>Know, have, are.</td>
+<td>Combining categories is what makes MFA strong.</td>
+</tr>
+          <tr>
+<td>Symmetric encryption</td>
+<td>One shared key.</td>
+<td>Fast, but the key must be shared securely.</td>
+</tr>
+          <tr>
+<td>Asymmetric encryption</td>
+<td>Public + private key pair.</td>
+<td>Public key encrypts; only the private key decrypts.</td>
+</tr>
+          <tr>
+<td>Hashing</td>
+<td>One-way fingerprint of data.</td>
+<td>Not reversible and not encryption; used for integrity.</td>
+</tr>
+          <tr>
+<td>SQL injection</td>
+<td>Malicious input into a database query.</td>
+<td>Input validation and parameterized queries defend it.</td>
+</tr>
+          <tr>
+<td>Least privilege</td>
+<td>Minimum access needed.</td>
+<td>Limits what a compromised account can reach.</td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- EXAM TIPS -->
+    <h2 class=""cyt-h2"" id=""tips"">Exam Tips: One Insight Per Unit</h2>
+    <div class=""cyt-h2sub"">The single highest-value thing to internalize for each unit.</div>
+    <div class=""cyt-tips"">
+      <div class=""cyt-tip"">
+<div class=""u"">Unit 1</div>
+<h4>Name the tactic and the channel</h4>
+<p>Message questions reward identifying intimidation vs urgency and the delivery channel. Naming the exact sub-type like whaling is enrichment, not required.</p>
+</div>
+      <div class=""cyt-tip"">
+<div class=""u"">Unit 2</div>
+<h4>Run everything through the CIA triad</h4>
+<p>For any control or attack, ask which goal it touches: confidentiality, integrity, or availability. That single lens answers a surprising number of questions.</p>
+</div>
+      <div class=""cyt-tip"">
+<div class=""u"">Unit 3</div>
+<h4>IDS warns, IPS blocks</h4>
+<p>The most common Unit 3 trap is treating detection and prevention as the same. An IDS only alerts; an IPS actively stops the traffic.</p>
+</div>
+      <div class=""cyt-tip"">
+<div class=""u"">Unit 4</div>
+<h4>Classify malware by spread and effect</h4>
+<p>Do not memorize names in isolation. Ask how it spreads (on its own or with user action) and what it does (encrypt, spy, control).</p>
+</div>
+      <div class=""cyt-tip"">
+<div class=""u"">Unit 5</div>
+<h4>Public key encrypts, private key decrypts</h4>
+<p>The most-missed crypto point. Asymmetric: anyone can encrypt with the public key, only the private key holder can decrypt. Hashing is one-way and is not encryption.</p>
+</div>
+    </div>
+
+    <!-- COMMON MISTAKES -->
+    <h2 class=""cyt-h2"">Common Mistakes That Cost Points</h2>
+    <div class=""cyt-h2sub"">The errors that show up most when reviewing cybersecurity assessments.</div>
+    <div class=""cyt-mis"">
+<h4>Confusing a tactic with an impact</h4>
+<div class=""w"">
+<b>Wrong:</b> ""The victim felt intimidated"" is an impact of social engineering.</div>
+<div class=""r"">
+<b>Right:</b> Intimidation is a tactic. The impacts are what the attacker gained: personal information, credentials, or malware.</div>
+</div>
+    <div class=""cyt-mis"">
+<h4>Thinking MFA stops everything</h4>
+<div class=""w"">
+<b>Wrong:</b> Multi-factor authentication makes an account unphishable.</div>
+<div class=""r"">
+<b>Right:</b> MFA raises the bar, but a victim can still be tricked into reading a one-time code aloud, handing over a valid factor.</div>
+</div>
+    <div class=""cyt-mis"">
+<h4>Mixing up symmetric and asymmetric keys</h4>
+<div class=""w"">
+<b>Wrong:</b> The public key decrypts the message.</div>
+<div class=""r"">
+<b>Right:</b> The public key encrypts; only the matching private key can decrypt. Symmetric uses one shared key for both.</div>
+</div>
+    <div class=""cyt-mis"">
+<h4>Treating hashing as encryption</h4>
+<div class=""w"">
+<b>Wrong:</b> You can decrypt a hash to recover the original data.</div>
+<div class=""r"">
+<b>Right:</b> Hashing is one-way. It verifies integrity and cannot be reversed to reveal the input.</div>
+</div>
+    <div class=""cyt-mis"">
+<h4>IDS vs IPS</h4>
+<div class=""w"">
+<b>Wrong:</b> An intrusion detection system blocks attacks.</div>
+<div class=""r"">
+<b>Right:</b> An IDS detects and alerts. An IPS detects and blocks. Only the IPS stops the traffic.</div>
+</div>
+    <div class=""cyt-mis"">
+<h4>Virus vs worm</h4>
+<div class=""w"">
+<b>Wrong:</b> A worm needs a user to open a file to spread.</div>
+<div class=""r"">
+<b>Right:</b> A worm self-propagates across a network. A virus attaches to a host and needs user action.</div>
+</div>
+    <div class=""cyt-mis"">
+<h4>DoS vs DDoS</h4>
+<div class=""w"">
+<b>Wrong:</b> A DoS and a DDoS are the same attack.</div>
+<div class=""r"">
+<b>Right:</b> A DoS comes from a single source; a DDoS is distributed across many compromised machines. Both target availability.</div>
+</div>
+    <div class=""cyt-mis"">
+<h4>CIA triad confusion</h4>
+<div class=""w"">
+<b>Wrong:</b> Keeping data secret is integrity.</div>
+<div class=""r"">
+<b>Right:</b> Secrecy is confidentiality. Integrity means the data is accurate and unaltered. Availability means it is accessible when needed.</div>
+</div>
+
+    <!-- FAQ -->
+    <h2 class=""cyt-h2"" id=""faq"">Frequently Asked Questions</h2>
+    <div class=""faq"">
+<button class=""faq-q"">How many units are on the AP Cybersecurity exam?<span class=""pm"">+</span></button><div class=""faq-a"">Five: Introduction to Security, Securing Spaces, Securing Networks, Securing Devices, and Securing Applications and Data. Each unit follows the same arc of identifying vulnerabilities, protecting against them, and detecting attacks.</div>
+</div>
+    <div class=""faq"">
+<button class=""faq-q"">What does the AP Cybersecurity exam look like?<span class=""pm"">+</span></button><div class=""faq-a"">It has two sections: a multiple-choice section and a free-response section built around applied security scenarios. Both pull from all five units. See the <a href=""/pages/ap-cybersecurity-exam-format"" style=""color:#6B21A8;-webkit-text-fill-color:#6B21A8;font-weight:700;"">exam format guide</a> for details.</div>
+</div>
+    <div class=""faq"">
+<button class=""faq-q"">When is the first AP Cybersecurity exam?<span class=""pm"">+</span></button><div class=""faq-a"">The course launches nationally in the 2026 to 2027 school year, with the first exam in 2027. Studying early is a real advantage in a course with little existing competition for material.</div>
+</div>
+    <div class=""faq"">
+<button class=""faq-q"">What is the CIA triad?<span class=""pm"">+</span></button><div class=""faq-a"">The three core goals of security: Confidentiality (only authorized people can read data), Integrity (data is accurate and unaltered), and Availability (data and systems are accessible when needed). Almost every control maps to one of these.</div>
+</div>
+    <div class=""faq"">
+<button class=""faq-q"">What is the difference between symmetric and asymmetric encryption?<span class=""pm"">+</span></button><div class=""faq-a"">Symmetric uses the same key to encrypt and decrypt, which is fast but requires sharing the key safely. Asymmetric uses a public key to encrypt and a private key to decrypt, which solves the key-sharing problem. Remember: public key encrypts, private key decrypts.</div>
+</div>
+    <div class=""faq"">
+<button class=""faq-q"">What is the difference between a virus and a worm?<span class=""pm"">+</span></button><div class=""faq-a"">A virus attaches to a file or program and needs a user action to spread. A worm spreads across a network on its own. Both are malware; the spreading mechanism is the key distinction.</div>
+</div>
+    <div class=""faq"">
+<button class=""faq-q"">What is the difference between intimidation and urgency?<span class=""pm"">+</span></button><div class=""faq-a"">Intimidation threatens a negative consequence; urgency imposes a deadline. Many messages use both, so the exam asks for the primary tactic.</div>
+</div>
+    <div class=""faq"">
+<button class=""faq-q"">Do I need to memorize every attack sub-type?<span class=""pm"">+</span></button><div class=""faq-a"">You should identify the category of attack and the matching defense. Memorizing rare sub-type labels or specific tool names is usually enrichment, not a required skill.</div>
+</div>
+
+    <!-- CTA -->
+    <div class=""cyt-cta"">
+      <h3>Ready to practice?</h3>
+      <p>Drill these concepts with exam-style questions, or review the full study guide.</p>
+      <a href=""/pages/ap-cybersecurity-practice-questions"">Practice Questions</a>
+      <a class=""ghost"" href=""/pages/ap-cybersecurity-study-guide"">Full Study Guide</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.cyt .faq-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      var f=q.parentElement, open=f.classList.contains('open');
+      f.classList.toggle('open'); q.querySelector('.pm').textContent=open?'+':'\u2212';
+    });
+  });
+})();
+</script>
+
+<!-- ============================================================
+  SPOKES BUILD QUEUE (concept guide pages this hub links to).
+  Create each, or set this hub to draft until built. Suggested handles:
+  U1: ap-cybersecurity-social-engineering (built), -intimidation-vs-urgency, -phishing-vishing-smishing,
+      -password-attacks, -authentication-strengthening, -mfa, -public-wifi-dangers, -evil-twin, -vpn,
+      -ai-attacks, -deepfakes, -ai-defense
+  U2: -cia-triad, -defense-in-depth, -physical-attacks, -tailgating, -physical-access-controls, -detecting-physical-attacks
+  U3: -network-attacks, -ddos, -man-in-the-middle, -wireless-security, -network-segmentation, -firewalls, -ids-ips, -siem
+  U4: -device-attacks, -malware-types, -authentication, -endpoint-security, -mobile-iot-security, -detecting-device-attacks
+  U5: -app-data-vulnerabilities, -sql-injection, -xss, -access-controls, -cryptography,
+      -symmetric-encryption-hashing, -asymmetric-cryptography, -secure-coding, -detecting-app-attacks
+  Also verify the 5 unit study-guide handles already linked above exist (U1/U2 confirmed live).
+============================================================ -->
+<!-- apcs-related-links -->
+<div id=""apcs-links-ap-cybersecurity-topics"">
+<div class=""related"">
+<h3>Practice</h3>
+<a href=""/pages/ap-cybersecurity-practice"">AP Cybersecurity practice: quizzes, labs and exams</a>
+</div>
+</div>
+<!-- /apcs-related-links -->"

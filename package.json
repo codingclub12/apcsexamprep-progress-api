@@ -220,7 +220,11 @@
     "smoke:practiceexamformat": "node smoke/cyber-practice-exam-format.js",
     "verify:practiceexamformat": "node scripts/verify-practice-exam-format-live.js",
     "smoke:examformatced": "node smoke/cyber-exam-format-ced.js",
-    "verify:examformatced": "node scripts/verify-exam-format-ced-live.js"
+    "verify:examformatced": "node scripts/verify-exam-format-ced-live.js",
+    "smoke:cyberpractice": "node smoke/cyber-practice-hub.js",
+    "cyber:practicehubs": "node tools/ap-cyber-ced/build-practice-hubs.js",
+    "cyber:practicesheet": "node tools/ap-cyber-ced/generate-practice-sheet.js",
+    "verify:cyberpractice": "node scripts/verify-cyber-practice-live.js"
   },
   "keywords": [],
   "author": "",

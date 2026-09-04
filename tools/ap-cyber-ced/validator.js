@@ -55,9 +55,26 @@ const RULES = {
 //  this repo a false report in a different gate.
 const stripComments = (html) => String(html || '').replace(/<!--[\s\S]*?-->/g, '');
 
+//  A <style> or <script> body is not inside a tag, it sits BETWEEN two, so
+//  stripping tags alone leaves every CSS declaration in the text these rules
+//  read. That is not a cosmetic problem. EXAM_WORDS matches "weight", which
+//  appears in every "font-weight:" in every stylesheet, and PERCENT matches the
+//  "0%" and "100%" in every gradient and every "width:100%". Measured
+//  2026-09-04 on two live cyber hub bodies: 13 R2 failures, all of them CSS,
+//  none of them text a student can read.
+//
+//  These rules are about STUDENT-VISIBLE text, and nobody reads a stylesheet.
+//  Dropping both elements makes R1 and R2 match their own stated contract. It
+//  cannot hollow them: it only removes candidates, and a candidate removed here
+//  is one that never rendered. R3 and R7 read the raw column value rather than
+//  this, so an em-dash or mojibake hiding in a style block is still caught.
+const stripInvisible = (html) => String(html || '')
+  .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
+  .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ');
+
 //  Tags to spaces rather than to nothing, so two words either side of a tag do
 //  not fuse into one and defeat a word-boundary match.
-const flatten = (html) => stripComments(html)
+const flatten = (html) => stripInvisible(stripComments(html))
   .replace(/<[^>]+>/g, ' ')
   .replace(/&nbsp;/g, ' ')
   .replace(/\s+/g, ' ')
@@ -414,7 +431,7 @@ function validate(sheet, opts = {}) {
 }
 
 module.exports = {
-  RULES, validate, flatten, stripComments,
+  RULES, validate, flatten, stripComments, stripInvisible,
   ruleEkCodes, ruleExamWeighting, ruleEmDash, ruleTitle, ruleBodyColumn, ruleDeadLinks, ruleMojibake,
   BAND, PAD,
 };
