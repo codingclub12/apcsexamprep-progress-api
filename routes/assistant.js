@@ -9,6 +9,8 @@
 //    POST /api/assistant/report           optional bearer, files a report
 //    GET  /api/assistant/report/context   what the form may offer this caller
 //    GET  /apcs-report.js                 the affordance itself
+//    GET  /api/assistant/diagnostics      teacher auth, "check my account"
+//    GET  /teacher/diagnostics            the panel that renders it
 //
 //  No model, no chat, no transcripts.
 //
@@ -47,6 +49,8 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const { verifyStudentToken, pageFromHandle } = require('../utils');
 const { pageScope } = require('../lib/assistant/scope');
 const report = require('../lib/assistant/report');
+const reads = require('../lib/assistant/reads');
+const { requireTeacher } = require('../middleware');
 
 // Five reports per IP per fifteen minutes. A person filing a real bug files one,
 // maybe two if the first attempt also failed. Anything past five in a quarter
@@ -279,6 +283,61 @@ router.get('/api/assistant/report/context', (req, res) => {
     role: who.role,
     textStored: require('../lib/assistant/scope').retainsBodies(who.role, scope),
   });
+});
+
+// ── PHASE 0.5: THE DIAGNOSTIC PANEL ──────────────────────────────────────────
+//
+//  "Check my account". The highest-value thing this whole system does, and it
+//  needs no model: every question in the top support clusters is answerable by
+//  reading state the teacher already owns.
+//
+//  It cannot hallucinate, because nothing here generates a sentence. It cannot
+//  leak an answer key, because lib/assistant/reads.js has no return field that
+//  could carry one. It costs nothing per use. And it de-risks the chat phases
+//  that come after it: if these reads are wrong, a panel shows it plainly, where
+//  a chat reply would hide the same error inside prose that sounds fine.
+//
+//  Teacher auth, and every read is scoped to classes this teacher owns.
+router.get('/api/assistant/diagnostics', requireTeacher, (req, res) => {
+  try {
+    const t = req.teacher;
+    const out = {
+      teacher: { name: t.name || null },
+      entitlements: reads.getEntitlementState(t.id, t.email),
+      classes: reads.listClasses(t.id),
+      generated_at: new Date().toISOString(),
+    };
+
+    const code = typeof req.query.class === 'string' ? req.query.class.trim() : '';
+    if (code) {
+      const settings = reads.getClassSettings(t.id, code);
+      if (!settings) {
+        // A class this teacher does not own and a class that does not exist are
+        // the same answer, so the endpoint cannot be used to discover codes.
+        return res.status(404).json({ error: 'No class with that code on this account.' });
+      }
+      const lesson = typeof req.query.lesson === 'string' ? req.query.lesson.trim() : '';
+      out.class_detail = {
+        settings,
+        gates: reads.getGateState(t.id, code, { lesson: lesson || undefined }),
+        roster: reads.getRosterHealth(t.id, code),
+        scores: reads.getScoreVisibility(t.id, code, { lesson: lesson || undefined }),
+      };
+    }
+
+    res.json(out);
+  } catch (e) {
+    console.error('assistant/diagnostics:', e);
+    res.status(500).json({ error: 'Could not read your account state.' });
+  }
+});
+
+// The panel itself. Served from here for the same reason the report affordance
+// is: the page and the endpoint it reads can never be different versions of
+// each other.
+router.get('/teacher/diagnostics', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=300');
+  res.sendFile(require('path').join(__dirname, '..', 'public', 'teacher-diagnostics.html'));
 });
 
 // The affordance. Served from here rather than the theme so a copy change does
