@@ -716,7 +716,7 @@
           course: spec.course,
           lesson_id: spec.lesson_id,
           item_id: spec.item_id,
-          item_type: "lab",
+          item_type: spec.item_type,
           score: score,
           max_score: spec.points,
           duration_seconds: Math.min(86400, Math.round((Date.now() - state.startedAt) / 1000)),

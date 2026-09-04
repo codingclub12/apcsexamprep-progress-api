@@ -580,7 +580,12 @@ function buildRows() {
   if (NET_HANDS_ON_LIVE) {
     for (const [lesson, points] of Object.entries(NET_CONFIG_LABS)) {
       rows.push({ course: 'ap-networking', unit: `unit-${lesson.split('.')[0]}`,
-        lesson_id: lesson, item_id: `${lesson}-lab`, item_type: 'lab', points });
+        //  terminal-lab, matching config/networking-hands-on.json and the four
+        //  of these ten that have already shipped as specs in config/labs/.
+        //  Plain 'lab' here would put them on the same denominator key as a
+        //  per-lesson lab widget, which is the collision smoke:denomcollision
+        //  now refuses.
+        lesson_id: lesson, item_id: `${lesson}-lab`, item_type: 'terminal-lab', points });
     }
     for (const [itemId, cfg] of Object.entries(NET_UNIT_DOCS)) {
       rows.push({ course: 'ap-networking', unit: cfg.unit, lesson_id: itemId,
@@ -636,7 +641,12 @@ function buildRows() {
       seen.add(k);
       rows.push({
         course: spec.course, unit: spec.unit, lesson_id: spec.lesson_id,
-        item_id: spec.item_id, item_type: 'lab', points: spec.points,
+        //  spec.item_type, not a literal. It is 'terminal-lab' now, and the
+        //  literal here is exactly how a rename in the spec would fail to reach
+        //  the denominator: the row would keep saying 'lab' and keep colliding
+        //  with the per-lesson lab on the same lesson id. lib/lab-spec.js
+        //  refuses any other value, so this cannot drift open.
+        item_id: spec.item_id, item_type: spec.item_type, points: spec.points,
       });
     }
   }
@@ -762,6 +772,54 @@ function cleanDeadNetworkingCfus({ apply = true } = {}) {
   return { candidates: all.length, removable, kept, deleted, points };
 }
 
+//  ── RETYPE ATTEMPTS WRITTEN BEFORE THE terminal-lab RENAME ──────────────────
+//  Every attempt on a simulated-shell lab was stored with item_type 'lab' until
+//  2026-09-04. The manifest row for those items now says 'terminal-lab', and
+//  attempt-rollup keys a gradebook cell on `${lesson_id}|${item_type}` from the
+//  ATTEMPT row while denominating it from the MANIFEST row, so a stale 'lab'
+//  attempt would look for a denominator that no longer exists under that name
+//  and the student's score would fall out of the gradebook.
+//
+//  So the old rows move with the rename. Three things keep this safe to run on
+//  every boot:
+//
+//    - it is an allowlist by exact (course, item_id), taken from the specs
+//      themselves, never a pattern and never a course-wide sweep
+//    - it only rewrites rows that still say 'lab'. Once they are moved it
+//      changes nothing and reports 0, which is what makes it idempotent
+//    - it touches one column. No score, no student, no row is created or
+//      deleted, so the worst case is a type string that has to be moved back
+//
+//  Reversible by hand: UPDATE attempts SET item_type='lab' for the same ids.
+function retypeTerminalLabAttempts({ apply = true } = {}) {
+  const specs = labSpecs.all();
+  const pairs = specs.map((sp) => [sp.course, sp.item_id]);
+  if (!pairs.length) return { candidates: 0, moved: 0, byItem: [] };
+
+  const count = db.prepare(
+    "SELECT COUNT(*) n FROM attempts WHERE course = ? AND item_id = ? AND item_type = 'lab'"
+  );
+  const byItem = [];
+  for (const [course, itemId] of pairs) {
+    const n = count.get(course, itemId).n;
+    if (n) byItem.push({ course, item_id: itemId, rows: n });
+  }
+  const candidates = byItem.reduce((a, r) => a + r.rows, 0);
+
+  let moved = 0;
+  if (apply && candidates) {
+    const upd = db.prepare(
+      "UPDATE attempts SET item_type = 'terminal-lab' WHERE course = ? AND item_id = ? AND item_type = 'lab'"
+    );
+    moved = db.transaction((rs) => {
+      let n = 0;
+      for (const r of rs) n += upd.run(r.course, r.item_id).changes;
+      return n;
+    })(byItem);
+  }
+  return { candidates, moved, byItem };
+}
+
 if (require.main === module) {
   const apply = process.argv.includes('--prune');
   const result = seedManifest({ update: process.argv.includes('--update') });
@@ -782,7 +840,7 @@ if (require.main === module) {
 }
 
 module.exports = { seedManifest, buildRows, findOrphans, pruneManifest,
-  deadNetworkingCfuIds, cleanDeadNetworkingCfus,
+  deadNetworkingCfuIds, cleanDeadNetworkingCfus, retypeTerminalLabAttempts,
   introJavaRows, introJavaGradedRows, introJavaExerciseRows,
   INTRO_JAVA_PAGES_LIVE, INTRO_JAVA_EXERCISES_LIVE,
   NET_HANDS_ON_LIVE, NET_CONFIG_LABS, NET_UNIT_DOCS, NET_TEAM_PROJECT };

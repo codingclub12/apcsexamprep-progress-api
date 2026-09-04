@@ -98,7 +98,11 @@ function rateLimit(req, res, next) {
 // are evaluated in the browser and only the check index and its boolean arrive.
 // That does mean the score is client-computed, exactly as it already is for
 // every CSA widget. See docs/lab-contract.md.
-const ITEM_TYPES = new Set(['cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3', 'lab']);
+// 'lab' is the widget on a cyber lesson page. 'terminal-lab' is the simulated
+// shell in config/labs/. They are different activities that shared one name
+// until 2026-09-04, and sharing it moved a live denominator: see lib/lab-spec.js.
+// 'lab' stays accepted because rows written before the rename still carry it.
+const ITEM_TYPES = new Set(['cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3', 'lab', 'terminal-lab']);
 const GAP_ITEM_TYPE = 'gap';
 // Server-graded multiple choice: the concept checks and the lesson quiz.
 const CHOICE_ITEM_TYPES = new Set(['cfu', 'quiz']);
