@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep &middot; Check my account</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e;
+    --muted:#898781; --border:rgba(11,11,11,0.10); --csa:#2a78d6; --good:#0ca30c; --critical:#d03b3b;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7;
+      --muted:#898781; --border:rgba(255,255,255,0.10); --csa:#3987e5; --critical:#e66767; --shadow:none;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--plane);color:var(--ink);
+    font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px 16px 64px}
+  .wrap{max-width:840px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--ink-2);font-size:14px;margin:0 0 20px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    box-shadow:var(--shadow);padding:16px 18px;margin-bottom:14px}
+  .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+    margin:0 0 10px;font-weight:700}
+  .line{display:flex;gap:12px;align-items:baseline;padding:5px 0;flex-wrap:wrap}
+  .k{min-width:120px;color:var(--ink-2);font-size:13px;font-weight:600}
+  .v{flex:1;min-width:200px}
+  .why{color:var(--ink-2);font-size:13px;margin:4px 0 0 132px;line-height:1.5}
+  @media (max-width:600px){.why{margin-left:0}}
+  .pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700}
+  .ok{background:rgba(12,163,12,.13);color:var(--good)}
+  .bad{background:rgba(208,59,59,.13);color:var(--critical)}
+  .neutral{background:rgba(137,135,129,.16);color:var(--ink-2)}
+  select,button{font:inherit}
+  select{padding:7px 9px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)}
+  button{background:var(--csa);color:#fff;border:0;border-radius:8px;padding:8px 15px;font-weight:600;cursor:pointer}
+  button[disabled]{opacity:.55;cursor:default}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+  th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+  .empty{color:var(--muted);font-size:13px;padding:6px 0}
+  .err{background:rgba(208,59,59,.10);border:1px solid rgba(208,59,59,.3);border-radius:10px;padding:12px 14px;color:var(--critical)}
+  .foot{color:var(--muted);font-size:12px;margin-top:18px}
+</style>
+<!-- Product analytics, on every served page by convention; smoke/posthog.js
+     asserts it. Inert unless the key is configured. See public/posthog-init.js. -->
+<script src="/posthog-init.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <h1>Check my account</h1>
+  <p class="sub">What is actually true about your classes right now. Read straight from the
+    database, with nothing written by a language model.</p>
+  <div id="app"><p class="empty">Loading...</p></div>
+  <p class="foot" id="foot"></p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var TOKEN_KEYS = ['apcs_teacher_token', 'teacher_token', 'apcse_teacher_token'];
+  function token() {
+    for (var i = 0; i < TOKEN_KEYS.length; i++) {
+      try { var v = localStorage.getItem(TOKEN_KEYS[i]); if (v) return v; } catch (e) {}
+    }
+    return null;
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  var app = document.getElementById('app');
+  var foot = document.getElementById('foot');
+  var state = { data: null, klass: '' };
+
+  function pill(good, text) {
+    return '<span class="pill ' + (good ? 'ok' : 'bad') + '">' + esc(text) + '</span>';
+  }
+  function line(k, v, why) {
+    return '<div class="line"><div class="k">' + esc(k) + '</div><div class="v">' + v + '</div></div>' +
+      (why ? '<div class="why">' + why + '</div>' : '');
+  }
+
+  function fetchState(code) {
+    var t = token();
+    if (!t) {
+      app.innerHTML = '<div class="err">You are not signed in as a teacher on this browser. ' +
+        'Sign in, then open this page again.</div>';
+      return;
+    }
+    var url = '/api/assistant/diagnostics' + (code ? '?class=' + encodeURIComponent(code) : '');
+    fetch(url, { headers: { Authorization: 'Bearer ' + t } })
+      .then(function (r) { return r.json().then(function (b) { return { s: r.status, b: b }; }); })
+      .then(function (o) {
+        if (o.s === 401) {
+          app.innerHTML = '<div class="err">Your sign-in has expired. Sign in again, then reload.</div>';
+          return;
+        }
+        if (o.s !== 200) {
+          app.innerHTML = '<div class="err">' + esc((o.b && o.b.error) || 'Could not read your account.') + '</div>';
+          return;
+        }
+        state.data = o.b; state.klass = code || '';
+        render();
+      })
+      .catch(function () {
+        app.innerHTML = '<div class="err">Could not reach the server. Check your connection and reload.</div>';
+      });
+  }
+
+  function renderEntitlements(e) {
+    var h = '<div class="card"><h2>Your courses</h2>';
+    if (!e || !e.grants || !e.grants.length) {
+      h += '<p class="empty">No course is granted to this account yet.</p>';
+      if (e && e.unclaimed_purchases && e.unclaimed_purchases.length) {
+        h += '<div class="why"><strong>But a purchase is waiting.</strong> ' +
+          esc(e.unclaimed_purchases.map(function (p) { return p.course; }).join(', ')) +
+          ' was bought against your email and has not attached to this account. ' +
+          'Signing out and back in usually claims it. If it does not, report it and we will attach it by hand.</div>';
+      } else {
+        h += '<div class="why">If you have an access code, sign in first and then redeem it. ' +
+          'Redeeming before the account exists is the usual reason a course does not appear.</div>';
+      }
+      return h + '</div>';
+    }
+    e.grants.forEach(function (g) {
+      var live = g.status === 'active';
+      h += line(g.course, pill(live, live ? 'active' : g.status) +
+        ' <span class="neutral pill">' + esc(g.source) + '</span>' +
+        (g.granted_at ? ' <span style="color:var(--muted);font-size:12px">since ' + esc(String(g.granted_at).slice(0, 10)) + '</span>' : ''),
+        live ? '' : 'This grant is not active, so the course will not appear for you.');
+    });
+    if (e.unclaimed_purchases && e.unclaimed_purchases.length) {
+      h += '<div class="why"><strong>Also waiting:</strong> ' +
+        esc(e.unclaimed_purchases.map(function (p) { return p.course; }).join(', ')) +
+        ', bought but not yet attached. Sign out and back in to claim it.</div>';
+    }
+    return h + '</div>';
+  }
+
+  function renderPicker(classes) {
+    var h = '<div class="card"><h2>Class</h2>';
+    if (!classes.length) {
+      return h + '<p class="empty">You have no classes yet. Create one from your dashboard.</p></div>';
+    }
+    h += '<div class="line"><div class="k">Look at</div><div class="v"><select id="pick">' +
+      '<option value="">Choose a class...</option>';
+    classes.forEach(function (c) {
+      h += '<option value="' + esc(c.class_code) + '"' + (c.class_code === state.klass ? ' selected' : '') + '>' +
+        esc(c.class_code) + ' &middot; ' + esc(c.class_name) + (c.active ? '' : ' (inactive)') + '</option>';
+    });
+    h += '</select> <button id="go">Check</button></div></div>';
+    return h + '</div>';
+  }
+
+  function renderDetail(d) {
+    var s = d.settings, g = d.gates, r = d.roster, sc = d.scores;
+    var h = '<div class="card"><h2>' + esc(s.class_code) + ' &middot; ' + esc(s.class_name) + '</h2>';
+
+    h += line('Course', '<code>' + esc(s.course) + '</code>',
+      s.active ? '' : 'This class is marked inactive, so students cannot sign in to it.');
+    if (!s.active) h += line('Status', pill(false, 'inactive'), '');
+
+    h += line('Students',
+      esc(r.student_count) + ' on the roster, ' + esc(r.active_count) + ' active',
+      (r.never_signed_in > 0
+        ? '<strong>' + esc(r.never_signed_in) + ' have never signed in.</strong> They joined but have not come back, ' +
+          'or they were added and never given the class code and their PIN.'
+        : 'Everyone on the roster has signed in at least once.') +
+      (r.joined_24h > 0 ? ' ' + esc(r.joined_24h) + ' joined in the last day.' : ''));
+
+    var locked = s.quiz_lock_default === 1;
+    h += line('Quizzes',
+      locked ? pill(false, 'teacher-opened') : pill(true, 'open by default'),
+      locked
+        ? '<strong>This is why a quiz can be greyed out while the exercises work.</strong> ' +
+          'With teacher-opened quizzes, exercises and labs stay open and only quizzes and exams are shut ' +
+          'until you open them. That is the class behaving as configured, not a broken page.'
+        : 'Quizzes are open unless you have closed a specific one below.');
+
+    h += line('Mastery', esc(s.mastery_threshold) + ' percent' +
+      (s.retry_allowed ? ', retries allowed' : ', first attempt counts'),
+      s.retry_allowed ? '' : 'With retries off, the first attempt is the grade of record.');
+
+    h += '</div>';
+
+    // Gates
+    h += '<div class="card"><h2>What is open right now</h2>';
+    if (!g || !g.counts.activities) {
+      h += '<p class="empty">Nothing on the server render path for this course yet, so there is nothing to gate.</p>';
+    } else if (!g.closed.length) {
+      h += '<p class="empty">All ' + esc(g.counts.activities) + ' activities are open.</p>';
+    } else {
+      h += '<p class="empty">' + esc(g.counts.closed) + ' of ' + esc(g.counts.activities) + ' closed.</p>';
+      h += '<table><tr><th>Lesson</th><th>Activity</th><th>Why</th></tr>';
+      g.closed.forEach(function (a) {
+        h += '<tr><td>' + esc(a.lesson) + '</td><td>' + esc(a.activity_type) + '</td><td><code>' +
+          esc(a.reason) + '</code></td></tr>';
+      });
+      h += '</table>';
+      h += '<div class="why"><code>class-default-locked</code> means the class setting above is closing it. ' +
+        '<code>explicit-closed</code> means it was closed for this class on purpose.</div>';
+    }
+    h += '</div>';
+
+    // Scores
+    h += '<div class="card"><h2>Are scores arriving</h2>';
+    if (!sc.recorded_total) {
+      h += line('Recorded', pill(false, 'nothing yet'),
+        'No work has ever been recorded for this class. If students say they have finished something, ' +
+        'that is worth reporting: it usually means the page they used is not reporting, not that they did not do it.');
+    } else {
+      h += line('Recorded', esc(sc.recorded_total) + ' total, ' + esc(sc.recorded_24h) + ' in the last day, ' +
+        esc(sc.recorded_7d) + ' in the last week', '');
+      h += line('Last one', '<code>' + esc(sc.last_recorded_at || 'unknown') + '</code>',
+        sc.recorded_7d === 0
+          ? '<strong>Nothing in the last week.</strong> If your class has been working, something stopped reporting.'
+          : '');
+    }
+    h += '</div>';
+    return h;
+  }
+
+  function render() {
+    var d = state.data;
+    var h = renderEntitlements(d.entitlements);
+    h += renderPicker(d.classes || []);
+    if (d.class_detail) h += renderDetail(d.class_detail);
+    app.innerHTML = h;
+    foot.textContent = 'Read at ' + new Date(d.generated_at).toLocaleString() +
+      '. Nothing on this page is generated text.';
+
+    var pick = document.getElementById('pick');
+    var go = document.getElementById('go');
+    if (go && pick) {
+      go.addEventListener('click', function () {
+        if (!pick.value) return;
+        go.disabled = true; go.textContent = 'Checking...';
+        fetchState(pick.value);
+      });
+      pick.addEventListener('change', function () { if (pick.value) fetchState(pick.value); });
+    }
+  }
+
+  var qs = new URLSearchParams(location.search);
+  fetchState(qs.get('class') || '');
+})();
+</script>
+</body>
+</html>
