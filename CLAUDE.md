@@ -938,6 +938,28 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   who teaches this for a living, it fails, and no amount of technical accuracy
   fixes it. This applies to a run note and a commit message too, just with a
   lower bar: those are read by people who work here.
+- **A deliverable gets COMMITTED, and what you hand over is a commit-pinned
+  link.** Sending the file as well is fine and often helpful. Sending it
+  INSTEAD of the link is what keeps costing Tanner a round trip, and he asked
+  for this rule on 2026-09-04 after having to ask more than once for the same
+  Matrixify sheet to be re-sent.
+  The mechanism, because the rule looks like a preference and is not: a session
+  runs in a container that is reclaimed after inactivity, and everything under
+  the scratchpad goes with it. A sheet, a report, a generated asset or a page
+  snapshot that lives only there is GONE by the next session, and the next
+  session cannot fetch it for him either. Committed, it is permanent and he
+  never has to ask anyone.
+  Pin the commit rather than linking a branch. `main` moves, and an import
+  sheet is worth exactly the bytes that were validated, not whatever is there
+  a week later. This repo is public, so a raw link works logged out:
+  `https://raw.githubusercontent.com/codingclub12/apcsexamprep-progress-api/<sha>/<path>`.
+  Verify it before handing it over. The one on 2026-09-04 was checked at 200
+  with an md5 matching the local file, which takes one curl and turns "here is
+  a link" into "here is the file".
+  This does NOT mean commit everything. Scratch work, probe scripts and
+  mutation harnesses belong in the scratchpad and should die there. The test is
+  whether Tanner would ever want it again: a sheet he has to import, a report
+  he has to read, an artifact a run note cites.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
 
