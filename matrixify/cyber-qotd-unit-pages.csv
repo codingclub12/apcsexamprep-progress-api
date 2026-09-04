@@ -187,7 +187,7 @@ IV.  Report suspicious messages to the security team</code></pre>
           <p class=""cy-bank-exp"">Quid pro quo trades a benefit (free support) for access or information. Whaling targets executives, pharming redirects traffic via DNS/host manipulation, and tailgating is unauthorized physical entry.</p>
         </details>
       </article>
-      <h2 class=""cy-bank-th"">Topic 1.2 Detecting Suspicious Account Activity</h2>
+      <h2 class=""cy-bank-th"">Topic 1.2 Suspicious Website Logins</h2>
       <article class=""cy-bank-q"" id=""q-C1-110"">
         <p class=""cy-bank-stem"">A user&#39;s account login history is shown. Which entry is the STRONGEST indicator that the account has been compromised?</p>
         <pre class=""cy-bank-code""><code>Entry  Date/Time          Device        IP Location
@@ -885,7 +885,7 @@ IV.  Require a second approver for large transfers</code></pre>
   <h1>AP Cybersecurity Unit 2 Practice Questions: Securing Spaces</h1>
   <p class=""cy-bank-lede"">27 practice questions for Unit 2, Securing Spaces, grouped by CED topic. Read the question, commit to an answer, then open the answer to check yourself and see why the other options fail. Free, no login. <a href=""/pages/ap-cybersecurity-question-of-the-day"">One question a day</a> comes from this same bank, and the other units are linked at the foot of the page.</p>
   <section class=""cy-bank"">
-      <h2 class=""cy-bank-th"">Topic 2.1 Security Principles and Risk</h2>
+      <h2 class=""cy-bank-th"">Topic 2.1 Cyber Foundations</h2>
       <article class=""cy-bank-q"" id=""q-C2-101"">
         <p class=""cy-bank-stem"">A hospital discovers that a patient&#39;s recorded blood type was silently altered in its database. Which element of the CIA triad was MOST directly violated?</p>
         <ol class=""cy-bank-opts"">
@@ -1751,7 +1751,7 @@ IV.  The records vault requires badge plus PIN</code></pre>
           <p class=""cy-bank-exp"">DDoS traffic originates from many distributed hosts, so blocking a single source does little; defenders must filter or absorb traffic from thousands of addresses. DDoS is not defined by encryption or medium, and no single rule reliably stops it.</p>
         </details>
       </article>
-      <h2 class=""cy-bank-th"">Topic 3.2 Managerial Controls and Wireless Security</h2>
+      <h2 class=""cy-bank-th"">Topic 3.2 Protecting Networks: Managerial Controls and Wireless Security</h2>
       <article class=""cy-bank-q"" id=""q-C3-107"">
         <p class=""cy-bank-stem"">Which wireless configuration provides the STRONGEST protection for a modern office Wi-Fi network?</p>
         <ol class=""cy-bank-opts"">
@@ -3262,7 +3262,7 @@ IV.  Rejects overly long or malformed input</code></pre>
           <p class=""cy-bank-exp"">Encoding or escaping user content before rendering prevents the browser from executing injected scripts, directly fixing XSS. Server speed, session timeout, and renaming do not address the flaw.</p>
         </details>
       </article>
-      <h2 class=""cy-bank-th"">Topic 5.2 Managerial Controls and Access Controls</h2>
+      <h2 class=""cy-bank-th"">Topic 5.2 Protecting Applications and Data: Managerial Controls and Access Controls</h2>
       <article class=""cy-bank-q"" id=""q-C5-107"">
         <p class=""cy-bank-stem"">In role-based access control (RBAC), permissions are granted based on:</p>
         <ol class=""cy-bank-opts"">
