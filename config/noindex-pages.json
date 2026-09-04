@@ -1,0 +1,18 @@
+{
+  "_comment": "Shopify page handles that must carry the seo.hidden metafield. Shopify reads namespace seo, key hidden, value 1 and emits noindex plus nofollow on the page AND drops it from sitemap.xml, with no theme code involved. Deleting the metafield reverses both. Source: https://shopify.dev/docs/apps/build/marketing/optimize-storefront-seo",
+  "metafield": { "namespace": "seo", "key": "hidden", "type": "number_integer", "value": "1" },
+  "groups": [
+    {
+      "id": "cyber-unit-exams",
+      "reason": "End-of-unit graded assessments for AP Cybersecurity. CLAUDE.md tier 3: unit tests plus keys are gated, noindex, premium only. Each page served all 20 questions, all four options and a full rationale per option as crawlable HTML, so the instrument and its key were public. Linked from no public nav, so noindex costs no promoted traffic. Confirmed live 2026-09-04: all five returned 200 with no robots meta.",
+      "added": "2026-09-04",
+      "handles": [
+        "ap-cyber-unit-1-exam",
+        "ap-cyber-unit-2-exam",
+        "ap-cyber-unit-3-exam",
+        "ap-cyber-unit-4-exam",
+        "ap-cyber-unit-5-exam"
+      ]
+    }
+  ]
+}
