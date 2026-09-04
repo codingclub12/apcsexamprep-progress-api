@@ -50,25 +50,36 @@ const visible = (html) => String(html || '')
 
 //  WHAT "THE IMPORT LANDED" ACTUALLY MEANS.
 //
-//  Shopify normalises body_html on save: it decodes entities it considers
-//  redundant (&#39; to an apostrophe, &middot; to the character) and inserts a
-//  newline after some block tags, so <li><span> comes back as <li>\n<span>.
-//  Measured on this import: five unit pages differ from the sheet by between
-//  -90 and +56 bytes for exactly those two reasons, and nothing else.
+//  Shopify does not decode entities once, it normalises to canonical HTML:
+//  measured 2026-09-04 on this import,
+//      sheet &amp;lt;   -> stored &lt;    markup-significant, stays encoded
+//      sheet &amp;#39;  -> stored '       not significant, decoded fully
+//  Both render correctly. It also inserts a newline after some block tags, so
+//  <li><span> comes back as <li>\n<span>.
 //
-//  So byte equality is the WRONG assertion. It would be red on a perfectly
-//  correct import forever, which is how a check gets ignored. What has to hold
-//  is that the page still MEANS the same thing: the same visible text and the
-//  same number of questions. That is what is asserted, and a real truncation
-//  still fails it because losing a question loses its text.
-const semantic = (html) => String(html || '')
-  .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(Number(d)))
-  .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
-  .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-  .replace(/&middot;/g, '\u00b7').replace(/&rarr;/g, '\u2192').replace(/&nbsp;/g, ' ')
-  .replace(/>\s+</g, '><')
-  .replace(/\s+/g, ' ')
-  .trim();
+//  So byte equality is the WRONG assertion; it is red on a perfect import
+//  forever, which is how a check gets ignored. And a fixed-order decode is
+//  wrong too: it leaves &amp;#39; as &#39; on one side and ' on the other, and
+//  reports a difference that is not there. Decode to a FIXED POINT on both
+//  sides, then compare what the page means.
+const decodeFully = (t) => {
+  let out = String(t);
+  for (let i = 0; i < 5; i += 1) {
+    const next = out.replace(/&(#\d+|#x[0-9a-fA-F]+|[a-zA-Z]+);/g, (m, e) => {
+      if (e[0] === '#') {
+        const n = e[1] === 'x' ? parseInt(e.slice(2), 16) : Number(e.slice(1));
+        return Number.isFinite(n) ? String.fromCodePoint(n) : m;
+      }
+      const map = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", middot: '\u00b7',
+        rarr: '\u2192', nbsp: ' ' };
+      return Object.prototype.hasOwnProperty.call(map, e) ? map[e] : m;
+    });
+    if (next === out) break;
+    out = next;
+  }
+  return out;
+};
+const semantic = (html) => decodeFully(html).replace(/>\s+</g, '><').replace(/\s+/g, ' ').trim();
 
 function sheetRows(file) {
   const m = new Map();
@@ -80,6 +91,7 @@ function main() {
   const units = sheetRows(UNIT_SHEET);
   const links = sheetRows(LINK_SHEET);
   const fails = [];
+  const cloudflare = [];
   let crawlable = 0;
   let renderedTotal = 0;
   let expectedTotal = 0;
@@ -158,15 +170,44 @@ function main() {
       // angle brackets and its sanitizer ate the address inside them, deleting
       // the lookalike domain a student is asked to spot. Assert the authored
       // code survives on the LIVE page.
+      //  CODE BLOCKS: assert against the STORED body, and report Cloudflare
+      //  separately. These are two different owners.
+      //
+      //  Shopify eating an address is MINE: it decoded escaped angle brackets
+      //  and its sanitizer stripped what looked like a tag, which deleted the
+      //  lookalike domain from question C1-102. Fixed by escaping twice, and
+      //  the stored body is where that is provable.
+      //
+      //  Cloudflare rewriting an address at RENDER time is not mine and not
+      //  this import's: it turns any address into an email-protection link
+      //  reading "[email protected]". The existing 1.1 lab page carries 10 of
+      //  them today, so this is a site-wide condition on every phishing
+      //  specimen in the course, fixed by the Email Address Obfuscation toggle
+      //  in Cloudflare rather than by any sheet. Failing this check on it would
+      //  make the verifier permanently red for something a re-import cannot
+      //  change.
       const pool = require('../config/cyber-qotd-pool.json').pool;
+      const storedBody = stored ? stored.body_html : '';
       for (const q of pool.filter((x) => x.unit === u && x.code)) {
         for (const line of String(q.code).split('\n').map((t) => t.trim()).filter((t) => t.length > 8)) {
-          if (!visible(b).includes(line.replace(/\s+/g, ' '))) {
+          const wantLine = decodeFully(line).replace(/\s+/g, ' ');
+          if (!decodeFully(storedBody).replace(/\s+/g, ' ').includes(wantLine)) {
             fails.push(handle + ': ' + q.id + ' code line ' + JSON.stringify(line.slice(0, 46))
-              + ' is NOT on the served page');
+              + ' is NOT in the stored body');
             break;
           }
         }
+      }
+      //  Count only obfuscation inside OUR question markup. The theme's contact
+      //  widget carries a real address on every page and Cloudflare hiding that
+      //  one is correct behaviour, not a defect. Reporting all of them makes
+      //  this read as 11 problems when there is exactly one: a check that
+      //  overstates gets ignored.
+      const inQuestions = (b.match(/cy-bank-code[\s\S]{0,400}?__cf_email__/g) || []).length;
+      const total = (b.match(/__cf_email__/g) || []).length;
+      if (inQuestions) {
+        cloudflare.push(handle + ': ' + inQuestions + ' address(es) obfuscated INSIDE a question '
+          + '(' + (total - inQuestions) + ' more are the theme contact widget, which is correct)');
       }
 
       const moji = mojibake.analyze(visible(b));
@@ -214,6 +255,15 @@ function main() {
   console.log('');
   console.log('questions in served HTML : ' + renderedTotal + ' of ' + expectedTotal);
   console.log('crawlable text, live     : ' + crawlable.toLocaleString() + ' chars across 6 URLs');
+  if (cloudflare.length) {
+    console.log('');
+    console.log('SITE CONDITION, not this import (Cloudflare Email Address Obfuscation):');
+    cloudflare.forEach((c) => console.log('  ' + c));
+    console.log('  The stored bodies are correct. Cloudflare rewrites addresses at serve time,');
+    console.log('  so a phishing specimen reads "[email protected]" to a student. The existing');
+    console.log('  1.1 lab page carries 10 of these today. Fixed by the Cloudflare toggle,');
+    console.log('  never by a sheet.');
+  }
   console.log('');
   if (fails.length) {
     console.log('RESULT: FAIL - ' + fails.length + ' problem(s)');
