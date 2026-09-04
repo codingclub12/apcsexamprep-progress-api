@@ -189,6 +189,48 @@ also the free preview, but it is a choice rather than CED pacing.
   builder dirties the working tree for every session. Restored rather than
   committed here. Gitignoring it is a small separate change.
 
+## Four defects a person found and no check did
+
+Tanner opened the shipped decks and found four things, hours after the suite,
+the render check and the Java verifier were all green. Worth listing because
+none of them is the kind of thing any of those checks looks for.
+
+1. **British spelling.** 103 occurrences: initialise, behaviour, recognise,
+   defence, labelled, towards, neighbour, initialiser. The audience is American
+   teachers preparing students for an American exam.
+2. **The bell ringer printed its own answer.** `deck.py`'s `warmup` drew
+   `draw_out` in a green "WORTH DRAWING OUT" card on the slide FACE of the
+   teacher edition. A teacher projects the teacher edition, so Topic 2.2 day 1
+   showed "b > c is false, so the whole and is false" underneath the question
+   asking exactly that. The title slide had promised the opposite the whole
+   time: "Speaker notes carry the answers and the misconceptions for each
+   slide." The card is gone and the notes are unchanged.
+3. **Guided-notes blanks cut mid-word.** `notes.py` used `sentence[:58]`, a raw
+   character count, so students read "one of two value", "|| m" and "the inpu".
+   Now cut at the last word boundary at or before the ceiling.
+4. **Code ran inside a prose sentence.** Seven warm-ups quoted a whole program
+   on one line. A warm-up may now carry a fourth element rendered as a real
+   code block in the same dark panel the worked examples use.
+
+`smoke:csakitstyle` guards all four, and the mutation run is why it is worth
+trusting rather than a decoration.
+
+**The word-boundary rule was HOLLOW on the first pass.** It excused any head of
+length `TRUNCATE_AT`, so reverting `_cloze_head` to `sentence[:58]` left the
+suite GREEN: every head was then exactly that length and every one was
+forgiven. Only the separate dangling-punctuation assertion fired. The escape is
+now narrowed to a source that offers no word boundary at all. This is the third
+hollow guard this repo has found by mutation and the second found by mutating
+the exact rule rather than the suite as a whole.
+
+The guard also failed twice on its own first run, and both were real. It caught
+"honouring" in a comment this same change had just written, which is a fair
+result for a spelling rule. And it flagged `warmup`'s own docstring, because
+that docstring quotes the label it forbids while explaining why it was removed.
+Fixed by stripping the docstring via `__doc__` before matching, on the
+principle that a guard which cannot tell an explanation from the thing it
+forbids is worse than no guard.
+
 ## Memory for the next session
 
 - **"Create X" may mean "publish X".** Two of the three things asked for
