@@ -1,0 +1,948 @@
+{
+  "_source": {
+    "generated_by": "authored by hand against config/cyber-exam-blueprint.json",
+    "built": "2026-09-04",
+    "why_fresh": "Every item is new. The replica exists for pacing practice, and a replica two thirds made of items a student already worked through on the 40 question study set tests recall of those items rather than exam readiness. Rule E6 checks this against smoke/fixtures/cyber-practice-exam-existing-stems.json.",
+    "key_design": "The answer key was planned before the items were written: 15 of each letter, and no five item window uses fewer than three distinct letters or repeats one more than twice. The correct option is authored as a field and placed at its planned letter by the builder, so the key cannot disagree with the content.",
+    "board": 176
+  },
+  "course": "ap-cybersecurity",
+  "items": [
+    {
+      "id": "m01",
+      "topic": "1.1",
+      "skill": 1,
+      "stem": "An employee receives a phone call from someone claiming to be the company help desk. The caller already knows the employee's manager by name and the internal ticket system's name, and asks the employee to read back a code that was just texted to them. Which pair of techniques is the caller relying on most directly?",
+      "options": [
+        "Scarcity and consensus, because the caller implies a limited offer and that colleagues have already complied",
+        "Familiarity and authority, because insider knowledge makes the caller seem known and the claimed role is one employees expect to obey",
+        "Intimidation and impersonation, because the caller threatens consequences and adopts another person's identity",
+        "Urgency and consensus, because the caller sets a deadline and cites what other employees have done"
+      ],
+      "answer": "B",
+      "explanation": "Knowing the manager and the ticket system makes the caller sound like an insider, which is familiarity. Claiming the help desk role borrows authority. Nothing in the call sets a deadline, threatens the employee, or points to what colleagues did, so scarcity, urgency, intimidation and consensus are not what is doing the work."
+    },
+    {
+      "id": "m02",
+      "topic": "1.1",
+      "skill": 1,
+      "stem": "A student argues that a phishing message is harmless because the company logo is slightly blurry and the greeting reads Dear Customer. Which response BEST corrects that reasoning?",
+      "options": [
+        "The reasoning is sound, because low production quality reliably marks an attack as unsuccessful",
+        "The reasoning is wrong, because attackers avoid logos entirely in modern campaigns",
+        "The reasoning is wrong, because the risk comes from what the message asks the reader to do rather than from how polished it looks",
+        "The reasoning is sound, because a generic greeting means the sender holds no personal information"
+      ],
+      "answer": "C",
+      "explanation": "Polish is a weak signal in both directions. A crude message can still carry a working credential-harvesting link, and a well-resourced attacker can produce one indistinguishable from the real thing. The risk lives in the requested action, which is what a reader should learn to evaluate."
+    },
+    {
+      "id": "m03",
+      "topic": "1.2",
+      "skill": 1,
+      "stem": "A user is certain a login page is legitimate because the browser shows a padlock and the page is served over HTTPS. Which statement identifies the flaw in that conclusion?",
+      "options": [
+        "HTTPS certifies that the connection is encrypted, not that the site at the other end is the one the user intended to reach",
+        "HTTPS is used only by legitimate sites, so the conclusion holds in nearly all cases",
+        "The padlock indicates the browser vendor has reviewed the site for fraudulent content",
+        "HTTPS guarantees the owner's identity was verified against a government register"
+      ],
+      "answer": "A",
+      "explanation": "A certificate proves traffic is encrypted to whoever holds the certificate for that domain. Anyone can obtain one for a domain they control, including a look-alike. The padlock says the conversation is private; it says nothing about who is listening at the far end."
+    },
+    {
+      "id": "m04",
+      "topic": "1.2",
+      "skill": 1,
+      "stem": "An authentication log shows a successful login for one account at 02:14, then successful logins for the same account from two other countries within the next four minutes. Which conclusion is BEST supported?",
+      "options": [
+        "The user is travelling, and the log reflects ordinary roaming as their device reconnects through different regional gateways",
+        "The password was rotated recently, and the log records that change propagating across the authentication servers in sequence",
+        "The log is showing clock skew between servers rather than distinct sessions, so one event has been recorded three times",
+        "The credentials are likely in more than one party's hands, because one person cannot be in three countries within four minutes"
+      ],
+      "answer": "D",
+      "explanation": "The signal is physical impossibility. Travel does not move a person between countries in four minutes, a rotation does not create logins from new locations, and clock skew shifts timestamps rather than inventing source countries. Impossible travel is among the most reliable indicators that a credential is shared or stolen."
+    },
+    {
+      "id": "m05",
+      "topic": "1.2",
+      "skill": 1,
+      "stem": "Which of the following is the STRONGEST reason that reusing one password across many sites raises risk, even when that password is long and complex?",
+      "options": [
+        "Long passwords are more likely to be written down, which is the real exposure",
+        "A breach at any single site turns one stolen password into access to every other account that shares it",
+        "Complex passwords expire faster under most password policies",
+        "Reused passwords are mistyped more often, which triggers account lockouts"
+      ],
+      "answer": "B",
+      "explanation": "Complexity resists guessing but does nothing once a password has been disclosed by someone else's breach. Reuse converts one organisation's failure into a compromise of every account sharing that secret, which is exactly why credential stuffing works. The other options describe inconveniences, not the mechanism that multiplies damage."
+    },
+    {
+      "id": "m06",
+      "topic": "1.3",
+      "skill": 1,
+      "stem": "A traveller joins an open airport network whose name closely resembles the official one. Which risk does this MOST directly illustrate?",
+      "options": [
+        "An evil twin, in which an attacker operates a look-alike access point to sit in the path of anyone who joins",
+        "A denial of service, in which the legitimate access point is flooded until it stops responding",
+        "A supply chain attack, in which the network hardware was compromised before installation",
+        "A brute force attack, in which the network password is guessed by repeated automated attempts"
+      ],
+      "answer": "A",
+      "explanation": "A rogue access point advertising a name close to the real one is the evil twin pattern, and its value comes from being chosen: once a device associates, the attacker carries that device's traffic. Nothing here describes flooding, tampered hardware, or password guessing."
+    },
+    {
+      "id": "m07",
+      "topic": "1.3",
+      "skill": 1,
+      "stem": "Which of the following BEST explains why a virtual private network reduces risk on an untrusted wireless network?",
+      "options": [
+        "It hides the device so other clients on the network cannot see it at all",
+        "It replaces the wireless encryption with a stronger cipher negotiated by the access point",
+        "It authenticates the access point to the device, so look-alike networks cannot be joined",
+        "It builds an encrypted tunnel to a trusted endpoint, so a party in the local path carries ciphertext rather than readable content"
+      ],
+      "answer": "D",
+      "explanation": "The tunnel is the mechanism. Whoever controls the local network still carries the packets but can no longer read or usefully alter what is inside. A VPN does not make a device invisible, does not change what the access point negotiates, and does not verify the access point is genuine."
+    },
+    {
+      "id": "m08",
+      "topic": "1.3",
+      "skill": 1,
+      "stem": "A user says a public network is safe because the device shows it as secured with a password. Which counterpoint is MOST accurate?",
+      "options": [
+        "A password on a public network means traffic is encrypted end to end to each website",
+        "Password-protected networks cannot be impersonated by a second access point",
+        "A shared password excludes only outsiders, so anyone else who holds it may still be positioned to observe or interfere with traffic",
+        "The presence of a password guarantees the access point is operated by the venue"
+      ],
+      "answer": "C",
+      "explanation": "A credential that everyone in the lobby knows draws a boundary around a large and untrusted group. It does not make traffic private from the people inside that boundary, does not authenticate the operator, and does nothing to stop a look-alike advertising the same name."
+    },
+    {
+      "id": "m09",
+      "topic": "1.4",
+      "skill": 1,
+      "stem": "A finance officer receives a voice message that sounds exactly like the chief executive, authorising an urgent transfer to a new account. Which statement BEST describes why synthetic audio raises the risk of this request?",
+      "options": [
+        "It encrypts the request so that fraud monitoring cannot inspect the transfer instruction",
+        "It removes voice recognition as an independent check, so a control that once confirmed identity now confirms nothing",
+        "It guarantees the attacker has already compromised the executive's mailbox",
+        "It changes the transfer into a category that bypasses the bank's limits"
+      ],
+      "answer": "B",
+      "explanation": "The damage is to a control, not to the network. Staff were taught that a familiar voice authenticates the speaker, and convincing synthesis retires that assumption. The correct response is procedural: verify through a separate channel the caller does not control."
+    },
+    {
+      "id": "m10",
+      "topic": "1.4",
+      "skill": 1,
+      "stem": "Which of the following BEST describes why AI-generated phishing is harder to detect by eye than earlier campaigns?",
+      "options": [
+        "It removes the language errors and generic phrasing that readers were trained to treat as the tell",
+        "It defeats the mail server's encryption so filtering cannot run at all",
+        "It sends from addresses that cannot be recorded in mail logs",
+        "It embeds attachments that no antivirus product is capable of scanning"
+      ],
+      "answer": "A",
+      "explanation": "The advice given to users for years leaned on awkward grammar and generic greetings. Fluent, personalised text at scale strips that signal out, which is why detection has to move toward what the message asks for and where its links resolve. Nothing about generated text disables encryption, logging or scanning."
+    },
+    {
+      "id": "m11",
+      "topic": "1.5",
+      "skill": 3,
+      "stem": "A behavioural monitoring system flags an account whose file access pattern changed sharply this week. The account belongs to an employee who moved to a new team on Monday. Which interpretation is BEST?",
+      "options": [
+        "The alert confirms compromise, because behavioural systems do not flag authorised activity",
+        "The alert should be ignored, because behavioural monitoring cannot detect insider activity",
+        "The alert is likely a false positive driven by a legitimate role change, and the baseline for that account should be re-established",
+        "The alert proves the monitoring system is misconfigured and should be disabled for that team"
+      ],
+      "answer": "C",
+      "explanation": "Anomaly detection reports deviation from a learned baseline, and a genuine role change is a deviation. That makes the alert correct as a detection and wrong as a conclusion. The analyst's job is to explain the change, then let the system relearn, rather than to treat the flag as proof or to switch off monitoring."
+    },
+    {
+      "id": "m12",
+      "topic": "1.5",
+      "skill": 3,
+      "stem": "Which of the following is the MOST significant limitation of relying on a machine learning model trained on historical attack data?",
+      "options": [
+        "It cannot process log data in any volume large enough to be useful",
+        "It detects patterns resembling what it has seen, so a genuinely novel technique can pass while looking unremarkable",
+        "It requires the attacker's source code before it can classify an event",
+        "It can only run on traffic that has already been decrypted by the attacker"
+      ],
+      "answer": "B",
+      "explanation": "Training on the past is the strength and the ceiling. A model generalises from what it has seen, so techniques that do not resemble the training data are exactly the ones it is weakest against, which is why learned detection is layered with signature and rule-based methods rather than replacing them."
+    },
+    {
+      "id": "m13",
+      "topic": "1.5",
+      "skill": 3,
+      "stem": "A security team wants to reduce the time analysts spend triaging alerts. Which use of automation BEST preserves the analyst's judgement while cutting that time?",
+      "options": [
+        "Have the system close any alert it scores below a confidence threshold without recording it",
+        "Have the system disable any account that appears in more than one alert during a shift",
+        "Have the system suppress all alerts from hosts that generated a false positive in the past month",
+        "Have the system gather the related logs, asset owner and recent changes for each alert, and present them together for a human decision"
+      ],
+      "answer": "D",
+      "explanation": "Enrichment removes the gathering work and leaves the decision where it belongs. The other three all discard signal: silently closing, acting destructively on weak evidence, or blanket-suppressing a host that an attacker would then have reason to prefer."
+    },
+    {
+      "id": "m14",
+      "topic": "1.5",
+      "skill": 3,
+      "stem": "An intrusion detection system using anomaly-based detection reports a sharp rise in alerts the week a new backup job is introduced. Which explanation is MOST likely?",
+      "options": [
+        "The backup job produces traffic that differs from the learned baseline, so the system reports it as anomalous although it is authorised",
+        "The backup job has been compromised, because authorised jobs never raise anomaly alerts",
+        "The detection system has lost its signature database and defaulted to alerting on everything",
+        "The backup traffic is encrypted, which anomaly-based systems always report as an attack"
+      ],
+      "answer": "A",
+      "explanation": "Anomaly detection measures difference from normal, and a new scheduled job that moves large volumes at an unusual hour is different by construction. The alerts are working as designed; what is missing is a baseline update after an authorised change."
+    },
+    {
+      "id": "m15",
+      "topic": "2.1",
+      "skill": 1,
+      "stem": "A hospital's patient record system is encrypted by an attacker and staff cannot open any record for two days, although no data is copied out. Which element of the CIA triad is MOST directly harmed?",
+      "options": [
+        "Confidentiality, because the records were transformed into a form staff could not read",
+        "Integrity, because encryption changed the stored bytes of every record",
+        "Availability, because authorised users were prevented from reaching data they were entitled to use",
+        "Confidentiality, because the attacker necessarily held a copy in order to encrypt it"
+      ],
+      "answer": "C",
+      "explanation": "The loss described is access. Nothing left the hospital and nothing was altered in a way that made records wrong, but clinicians could not reach them, which is availability. Encryption did change the bytes, and that is why the distractors are tempting, but the harm being measured is the two days of denied access."
+    },
+    {
+      "id": "m16",
+      "topic": "2.1",
+      "skill": 1,
+      "stem": "Which of the following scenarios describes a threat rather than a vulnerability?",
+      "options": [
+        "A server running an operating system version that no longer receives security updates",
+        "A building entrance where the door latch can be forced without tools",
+        "An application that stores account passwords without hashing them",
+        "A criminal group known to target the organisation's sector for extortion payments"
+      ],
+      "answer": "D",
+      "explanation": "A vulnerability is a weakness in the thing you own; a threat is the actor or event with the potential to exploit one. The unpatched server, the weak latch and the unhashed passwords are all weaknesses. The criminal group is the party that might act on them."
+    },
+    {
+      "id": "m17",
+      "topic": "2.2",
+      "skill": 1,
+      "stem": "An employee badges through a secured door and a person carrying boxes follows closely behind, and the employee holds the door open for them. Which term BEST describes what happened, and why does the distinction matter?",
+      "options": [
+        "Tailgating, because the employee knowingly allowed the second person through, which makes staff behaviour the control that failed",
+        "Piggybacking, because the second person passed through without the employee's knowledge or consent",
+        "Shoulder surfing, because the second person was positioned to observe the credential being used",
+        "Dumpster diving, because the boxes provided a pretext for removing material from the building"
+      ],
+      "answer": "A",
+      "explanation": "The scenarios are distinguished by consent. Where the authorised person knowingly permits entry, the failure is behavioural and the fix is training and policy. Where entry happens without their knowledge, the fix leans toward physical design such as a mantrap or turnstile. Treating the two as interchangeable hides which control needs work."
+    },
+    {
+      "id": "m18",
+      "topic": "2.2",
+      "skill": 1,
+      "stem": "Which of the following BEST explains why an organisation's shredding policy is a security control rather than a housekeeping rule?",
+      "options": [
+        "Shredded paper is easier to recycle, which reduces the regulatory obligations that apply to the organisation's waste handling",
+        "Discarded documents can carry account numbers, network diagrams and names that support a later attack, so destroying them removes an information source",
+        "Shredding prevents an attacker from physically entering the building through the waste collection area at the rear of the premises",
+        "Shredding satisfies the encryption requirement that applies to the data an organisation holds at rest on its own systems"
+      ],
+      "answer": "B",
+      "explanation": "Waste is a reconnaissance source. Names, structures and account references pulled from discarded paper feed pretexting and targeted phishing later, so destruction removes an input to an attack rather than merely tidying. It is not a substitute for encryption, which governs stored electronic data."
+    },
+    {
+      "id": "m19",
+      "topic": "2.3",
+      "skill": 2,
+      "stem": "A data centre requires a badge to enter a vestibule and a separate biometric check to leave it into the server floor, with only one person admitted at a time. Which risk is this design MOST directly intended to mitigate?",
+      "options": [
+        "An authorised person copying data to removable media once inside the server floor",
+        "An attacker intercepting badge credentials as they are transmitted to the reader",
+        "An unauthorised person entering behind someone who is authorised, since the second check cannot be satisfied by following",
+        "A power interruption that would leave the server floor doors unlocked"
+      ],
+      "answer": "C",
+      "explanation": "The one-at-a-time vestibule exists to break the follow-through. Each person must independently satisfy a second check, so entering behind someone gains nothing. It does not address what an authorised insider does afterwards, credential interception, or power failure behaviour."
+    },
+    {
+      "id": "m20",
+      "topic": "2.3",
+      "skill": 2,
+      "stem": "An organisation wants to reduce the chance that a visitor wanders into a restricted area unnoticed. Which control addresses that MOST directly?",
+      "options": [
+        "Requiring visitors to agree to an acceptable use policy at reception",
+        "Increasing the length of the wireless network password used by guests",
+        "Installing additional lighting in the car park and along building approaches",
+        "Issuing visibly distinct visitor badges and requiring an escort in restricted zones"
+      ],
+      "answer": "D",
+      "explanation": "Making an unescorted visitor visually obvious turns every employee into a detection mechanism, and the escort requirement removes the opportunity outright. A signed policy is a deterrent on paper, and the wireless and lighting controls address different exposures altogether."
+    },
+    {
+      "id": "m21",
+      "topic": "2.4",
+      "skill": 3,
+      "stem": "A badge log shows an employee's card used at the main entrance at 08:02 and again at a loading dock on the far side of the site at 08:03. Which conclusion is BEST supported?",
+      "options": [
+        "The employee entered, realised they were at the wrong door, and walked around",
+        "The badge has likely been cloned or shared, because one person cannot traverse the site in one minute",
+        "The badge reader at the loading dock has a clock running one hour fast",
+        "The employee's card was used to admit a delivery driver with their knowledge"
+      ],
+      "answer": "B",
+      "explanation": "The one-minute gap across a site that cannot be walked in one minute is the finding. A clock error would show a shift of an hour rather than a minute, and while a shared badge is possible, the pattern first tells you the credential exists in two places, which is what an investigator confirms before assigning intent."
+    },
+    {
+      "id": "m22",
+      "topic": "2.4",
+      "skill": 3,
+      "stem": "Which of the following would MOST directly indicate that someone has attempted to tamper with a locked server rack?",
+      "options": [
+        "An increase in the rack's internal temperature over the previous week",
+        "A rise in the number of failed remote login attempts against servers in that rack",
+        "A change in the network switch's port count reported by the monitoring system",
+        "A seal across the rack door that is broken or shows a different serial number than the one recorded"
+      ],
+      "answer": "D",
+      "explanation": "Tamper-evident seals exist to make physical access leave a mark that cannot be undone quietly. Temperature and login failures are worth investigating but point elsewhere, and a port count change is a network observation rather than evidence about the enclosure."
+    },
+    {
+      "id": "m23",
+      "topic": "2.4",
+      "skill": 3,
+      "stem": "A review of camera footage is being used to investigate a suspected after-hours intrusion. Which limitation should the reviewer be MOST aware of?",
+      "options": [
+        "Footage cannot be used in an investigation unless it has been encrypted at the point of capture and signed by the recorder",
+        "Footage is admissible only where the cameras record continuously, because motion triggered recording omits the approach",
+        "Footage records what a camera could see, so areas outside coverage or obscured in the frame produce absence of evidence rather than evidence of absence",
+        "Footage cannot establish the time of an event, because camera clocks are never synchronised to a reliable time source"
+      ],
+      "answer": "C",
+      "explanation": "Coverage gaps are the trap. Concluding nothing happened because nothing appears on camera confuses the limits of the sensor with the facts of the event, which is the same reasoning error as treating a quiet log as proof of safety."
+    },
+    {
+      "id": "m24",
+      "topic": "2.4",
+      "skill": 3,
+      "stem": "An access log review finds a contractor's badge used to enter a records room at 23:40 on a Sunday. The contractor's agreement covers weekday daytime access only. Which step is the BEST immediate response?",
+      "options": [
+        "Treat the entry as an exception to be investigated, preserving the log and camera record before the retention window closes",
+        "Delete the contractor's badge from the system and close the matter as resolved",
+        "Wait for the contractor's next scheduled visit and ask them informally about it",
+        "Adjust the contractor's access hours to include weekends so the alert stops recurring"
+      ],
+      "answer": "A",
+      "explanation": "The entry contradicts the agreement, which makes it an exception rather than noise. Preserving evidence comes first because retention windows expire. Deleting the badge destroys context, an informal chat warns a possible subject, and widening the hours makes the discrepancy disappear without explaining it."
+    },
+    {
+      "id": "m25",
+      "topic": "3.1",
+      "skill": 1,
+      "stem": "An attacker floods a switch with frames carrying thousands of fabricated source addresses until the switch begins forwarding traffic to every port. Which outcome makes this worth doing from the attacker's point of view?",
+      "options": [
+        "The switch reassigns network addresses, so the attacker receives the victim's address",
+        "The switch stops isolating conversations, so traffic intended for one host becomes visible to the attacker's port",
+        "The switch disables its own encryption, so previously protected traffic is sent in the clear",
+        "The switch reboots into a maintenance mode that accepts unauthenticated configuration"
+      ],
+      "answer": "B",
+      "explanation": "Filling the address table forces the switch to fail open and flood frames it can no longer place, which turns a switched segment into something closer to a shared one. The value is visibility. It does not reassign addresses, disable encryption the switch never applied, or open a configuration mode."
+    },
+    {
+      "id": "m26",
+      "topic": "3.1",
+      "skill": 1,
+      "stem": "A workstation's traffic for a banking site is being silently relayed through an attacker's machine, which forwards it on so the session appears normal. Which characteristic makes this class of attack particularly difficult for the user to notice?",
+      "options": [
+        "The session continues to function correctly, so there is no failure for the user to observe",
+        "The attack prevents the site from loading, which users typically blame on the site",
+        "The attack changes the site's visual appearance in ways users rarely inspect",
+        "The attack requires the user to install software, which they will remember doing"
+      ],
+      "answer": "A",
+      "explanation": "Interception that forwards traffic preserves the experience. Nothing breaks, so the ordinary signals a user relies on, an error, a warning, a page that fails to load, never appear. That is why detection depends on certificate warnings and network-side controls rather than on the user noticing."
+    },
+    {
+      "id": "m27",
+      "topic": "3.2",
+      "skill": 2,
+      "stem": "An organisation is replacing an older wireless security configuration. Which choice provides the STRONGEST protection for traffic on the wireless segment?",
+      "options": [
+        "Wired Equivalent Privacy with the longest key length the equipment supports",
+        "An open network combined with hiding the network name from broadcast",
+        "The current generation of Wi-Fi Protected Access, with a passphrase that is long and unique to the organisation",
+        "MAC address filtering that admits only devices on an approved list"
+      ],
+      "answer": "C",
+      "explanation": "Only the first choice actually protects the traffic. WEP is broken regardless of key length, hiding a network name conceals nothing from a device that watches for it, and address filtering is defeated by copying an approved address. The last two are sometimes offered as security but neither encrypts anything."
+    },
+    {
+      "id": "m28",
+      "topic": "3.2",
+      "skill": 2,
+      "stem": "Which of the following is the BEST reason for an organisation to maintain a written wireless access policy rather than relying on technical configuration alone?",
+      "options": [
+        "A written policy is required before wireless encryption can be enabled on enterprise equipment",
+        "A written policy replaces the need to segment guest traffic from internal systems",
+        "A written policy prevents employees from connecting personal devices to any network",
+        "Configuration governs the equipment the organisation controls, while a policy sets expectations for the people and devices it does not"
+      ],
+      "answer": "D",
+      "explanation": "Technical controls end at the boundary of what the organisation administers. A policy reaches the decisions people make, including which networks to join elsewhere and what may be connected. It does not enable encryption, replace segmentation, or physically prevent a connection."
+    },
+    {
+      "id": "m29",
+      "topic": "3.3",
+      "skill": 2,
+      "stem": "A manufacturer places its factory control systems on a network segment that cannot route to the corporate segment where email is read. Which benefit does this MOST directly provide?",
+      "options": [
+        "The control systems no longer require patching, since they are unreachable from outside",
+        "An attacker who compromises a workstation through email has no network path to reach the control systems",
+        "Traffic between the two segments is automatically encrypted by the segmentation itself",
+        "The control systems gain redundancy, so a failure on one segment is absorbed by the other"
+      ],
+      "answer": "B",
+      "explanation": "Segmentation limits blast radius by removing reachability. The phishing click still succeeds, but the path from that workstation to the plant no longer exists. It does not remove the patching obligation, does not encrypt anything, and provides no redundancy."
+    },
+    {
+      "id": "m30",
+      "topic": "3.3",
+      "skill": 2,
+      "stem": "A school places student devices, staff devices and building systems such as door controllers on three separate segments. A consultant proposes merging them to simplify administration. Which response BEST states the security cost?",
+      "options": [
+        "A single segment means a compromised student device can reach the door controllers directly, which the current design prevents",
+        "A single segment would prevent the school from using encryption on any of the three groups",
+        "A single segment would require every device to be assigned a static address by hand",
+        "A single segment would stop the building systems from receiving vendor updates"
+      ],
+      "answer": "A",
+      "explanation": "The cost is reachability between groups with very different trust levels and very different patching realities. Building controllers are often long-lived and slow to update, which is precisely why they should not share a segment with the least controlled devices on site."
+    },
+    {
+      "id": "m31",
+      "topic": "3.4",
+      "skill": 2,
+      "stem": "A firewall rule set ends with a rule that denies all traffic not matched by an earlier rule. Which statement BEST describes why that final rule matters?",
+      "options": [
+        "It improves throughput, because the firewall stops evaluating rules once traffic is denied",
+        "It logs all traffic, because denied traffic is the only category firewalls record",
+        "It encrypts remaining traffic, because unmatched traffic is tunnelled by default",
+        "It makes the default posture deny, so anything the administrator did not explicitly permit is refused rather than allowed"
+      ],
+      "answer": "D",
+      "explanation": "Default deny is the posture the last rule establishes. Without it, anything the rule set failed to anticipate is permitted, which turns every gap in the author's imagination into an opening. The rule is about what happens to the unanticipated, not about speed, logging or encryption."
+    },
+    {
+      "id": "m32",
+      "topic": "3.4",
+      "skill": 2,
+      "stem": "An administrator needs to allow staff to reach an internal web application from home while exposing as little as possible. Which firewall approach BEST fits that goal?",
+      "options": [
+        "Permit all inbound traffic from any address, and rely on the application's own login page to reject strangers",
+        "Permit only the specific port the application uses, only from the remote access service's addresses, and deny everything else inbound",
+        "Disable the firewall for the application's server so that connectivity problems cannot be caused by rules",
+        "Permit all inbound traffic during business hours and deny all of it outside those hours"
+      ],
+      "answer": "B",
+      "explanation": "Least privilege applied to a rule set means narrowing on every axis available: which port, which sources, which direction. The alternatives all widen exposure and lean on a single remaining control, which is the pattern that turns one application flaw into an incident."
+    },
+    {
+      "id": "m33",
+      "topic": "3.5",
+      "skill": 3,
+      "stem": "A monitoring system reports that one internal host has opened connections to several hundred internal addresses on the same port within two minutes. Which activity is MOST consistent with that pattern?",
+      "options": [
+        "Scanning, in which a host enumerates which systems are reachable and listening on a given service",
+        "Data exfiltration, in which a large volume of information is transferred to an outside party",
+        "A denial of service, in which one target is overwhelmed by traffic from many sources",
+        "Routine software updating, in which each host retrieves patches from a vendor"
+      ],
+      "answer": "A",
+      "explanation": "Many destinations, one port, a short window: the shape is breadth-first enumeration. Exfiltration concentrates volume toward few external destinations, denial of service concentrates many sources on one target, and update traffic goes outward to vendor infrastructure."
+    },
+    {
+      "id": "m34",
+      "topic": "3.5",
+      "skill": 3,
+      "stem": "An analyst notices a workstation making a DNS request to the same unfamiliar domain every ten minutes, at almost exactly the same interval, at all hours. Which interpretation is BEST supported?",
+      "options": [
+        "A user is manually refreshing a website they have left open in a browser tab",
+        "The workstation's clock is wrong, which causes DNS requests to repeat",
+        "Automated software is calling out on a schedule, which is a pattern worth investigating as possible command and control",
+        "The DNS server is failing and the workstation is retrying a legitimate lookup"
+      ],
+      "answer": "C",
+      "explanation": "Regularity is the tell. Human browsing is irregular and follows the working day, while beaconing keeps a machine's rhythm at three in the morning as faithfully as at noon. Retries after failure cluster and then stop rather than continuing at a fixed interval for hours."
+    },
+    {
+      "id": "m35",
+      "topic": "3.5",
+      "skill": 3,
+      "stem": "Which of the following BEST distinguishes an intrusion detection system from an intrusion prevention system?",
+      "options": [
+        "A detection system inspects encrypted traffic, while a prevention system inspects only plaintext",
+        "A detection system operates on wireless segments, while a prevention system operates on wired ones",
+        "A detection system is updated by the vendor, while a prevention system relies on locally written rules",
+        "A detection system reports what it observes, while a prevention system is positioned to block the traffic it matches"
+      ],
+      "answer": "D",
+      "explanation": "The difference is placement and authority to act. Detection observes a copy and raises an alert; prevention sits in the traffic path and can drop what it matches, which is more powerful and carries the risk that a false positive interrupts legitimate work."
+    },
+    {
+      "id": "m36",
+      "topic": "3.5",
+      "skill": 3,
+      "stem": "A firewall log shows repeated outbound connection attempts from an internal server to an external address on an unusual port, all refused. Which conclusion is BEST supported?",
+      "options": [
+        "The server is functioning normally, because the firewall refused every attempt",
+        "The external address is attacking the server, since the connections involve it",
+        "Something on that server is attempting to reach an outside system, and the attempts failing does not mean the server is uncompromised",
+        "The log entries are duplicates of one event and should be treated as a single attempt"
+      ],
+      "answer": "C",
+      "explanation": "The direction is the finding. An internal server initiating repeated contact with an unfamiliar external address is behaviour to explain, and the firewall blocking it limits the damage without answering why the attempts are being made. Reading a successful block as an all-clear is the error the item tests."
+    },
+    {
+      "id": "m37",
+      "topic": "4.1",
+      "skill": 1,
+      "stem": "An organisation continues running an operating system version whose vendor stopped issuing security updates two years ago. Which statement BEST describes the resulting risk?",
+      "options": [
+        "Newly discovered flaws in that version will not be fixed, so the number of known and unpatched ways in grows over time",
+        "The system becomes immediately unusable, because unsupported software stops functioning",
+        "The risk is unchanged, because a system that worked securely on its last update day remains so",
+        "The risk applies only if the system is connected directly to the public internet"
+      ],
+      "answer": "A",
+      "explanation": "End of support freezes the defence while research continues. Each newly published flaw is permanent for that system, so exposure accumulates rather than staying still. The software keeps running, which is exactly why the risk is easy to ignore, and an internal system is still reachable by anything that gets inside."
+    },
+    {
+      "id": "m38",
+      "topic": "4.1",
+      "skill": 1,
+      "stem": "A smart thermostat, a networked printer and a security camera are installed on the same network as staff laptops. Which characteristic of these devices MOST increases risk relative to the laptops?",
+      "options": [
+        "They use more network bandwidth, which slows the detection systems that monitor the segment",
+        "They frequently ship with default credentials and receive updates rarely or never, while remaining permanently connected",
+        "They cannot be assigned network addresses, so they must be trusted implicitly",
+        "They store more sensitive information than the laptops on the same network"
+      ],
+      "answer": "B",
+      "explanation": "The exposure comes from weak defaults, thin update paths and constant connectivity. These devices are rarely inventoried and rarely patched, and they usually hold little data themselves, which is why they are valued as a foothold on the segment rather than as a target."
+    },
+    {
+      "id": "m39",
+      "topic": "4.2",
+      "skill": 2,
+      "stem": "A system requires a password and a code from an application on the user's phone. Which statement BEST explains why this resists credential theft more effectively than a password alone?",
+      "options": [
+        "The password is no longer transmitted, so it cannot be intercepted in the first place",
+        "The code replaces the password, so a stolen password grants no access to any system",
+        "The combination encrypts the session, which a password alone cannot do",
+        "An attacker who obtains the password still lacks the second factor, which is generated on a device they do not hold"
+      ],
+      "answer": "D",
+      "explanation": "Two factors mean two independent things must be obtained. Stealing the password by phishing or breach leaves the attacker short of a value that changes and is produced on hardware they do not possess. The password is still sent and still matters; the second factor is what makes possessing it insufficient."
+    },
+    {
+      "id": "m40",
+      "topic": "4.2",
+      "skill": 2,
+      "stem": "Which statement BEST describes a genuine limitation of using a fingerprint as an authentication factor?",
+      "options": [
+        "A fingerprint cannot be used on shared devices, because readers store only one print",
+        "A fingerprint provides no protection unless it is combined with a physical token",
+        "A fingerprint cannot be changed after it is compromised, unlike a password that can be reset",
+        "A fingerprint changes frequently enough that re-enrolment is required each month"
+      ],
+      "answer": "C",
+      "explanation": "Irrevocability is the real constraint. A password compromised today is replaced today; a biometric that has been captured cannot be reissued, which is why biometric templates are stored as protected derivations rather than images, and why biometrics are usually one factor among several."
+    },
+    {
+      "id": "m41",
+      "topic": "4.3",
+      "skill": 2,
+      "stem": "A laptop holding sensitive files is stolen from a car. Which control would MOST directly prevent the thief from reading those files?",
+      "options": [
+        "A screen lock that requires a password after five minutes of inactivity",
+        "Full disk encryption, which leaves the stored data unreadable without the key",
+        "Remote tracking software that reports the device's location",
+        "An antivirus product with real-time scanning enabled"
+      ],
+      "answer": "B",
+      "explanation": "Encryption is the control that survives loss of physical custody. A screen lock is bypassed by removing the drive, tracking may help recover the hardware without protecting the contents, and antivirus addresses malicious software rather than someone reading a disk they now own."
+    },
+    {
+      "id": "m42",
+      "topic": "4.3",
+      "skill": 2,
+      "stem": "Which of the following BEST explains why applying vendor updates promptly is one of the highest-value device controls?",
+      "options": [
+        "Updates increase device performance, which allows endpoint security software to run more often and scan more thoroughly",
+        "Updates replace the need for endpoint protection software on devices the organisation manages centrally",
+        "Updates are the only mechanism capable of removing malicious software once a device has already been infected",
+        "Most successful attacks use flaws that are already known and already fixed, so closing them removes the common path rather than a rare one"
+      ],
+      "answer": "D",
+      "explanation": "Patching wins because attackers prefer what already works. Published flaws with available exploit code are cheap to use and remain useful for as long as anyone leaves them open, so timely updating removes the bulk of realistic paths rather than an exotic one."
+    },
+    {
+      "id": "m43",
+      "topic": "4.4",
+      "skill": 3,
+      "stem": "A user reports their laptop has become slow, the fan runs constantly, and unfamiliar processes appear in the task list. Which step should an analyst take FIRST?",
+      "options": [
+        "Isolate the device from the network while preserving its current state for examination",
+        "Restart the device to clear the unfamiliar processes from memory",
+        "Run a disk cleanup utility to recover the performance the user reports",
+        "Reinstall the operating system to guarantee the unfamiliar processes are gone"
+      ],
+      "answer": "A",
+      "explanation": "Containment before eradication, and preservation before both. Isolation stops further outbound activity while keeping the evidence that explains what happened. Restarting, cleaning and reinstalling all destroy volatile state, and reinstalling discards the only copy of what an investigator needs."
+    },
+    {
+      "id": "m44",
+      "topic": "4.4",
+      "skill": 3,
+      "stem": "Which of the following log observations MOST strongly suggests that an attacker has established persistence on a device?",
+      "options": [
+        "A single failed login recorded on the device during the previous week",
+        "An antivirus definition update completing successfully overnight",
+        "A newly created scheduled task that runs an unfamiliar program each time the device starts",
+        "A user installing an application from the organisation's approved software catalogue"
+      ],
+      "answer": "C",
+      "explanation": "Persistence is about surviving a reboot. A scheduled task or startup entry pointing at something nobody recognises is the mechanism by which access is retained, which is why analysts examine autostart locations early. The other observations are ordinary operations."
+    },
+    {
+      "id": "m45",
+      "topic": "4.4",
+      "skill": 3,
+      "stem": "An endpoint protection product reports that it blocked a malicious file on a workstation. Which conclusion is BEST supported?",
+      "options": [
+        "The workstation is clean, because the product blocks every malicious file it encounters",
+        "One attempt was stopped, and the analyst should still determine how the file arrived and whether anything else came with it",
+        "The workstation must be rebuilt immediately, because any detection implies full compromise",
+        "The detection is a false positive, because genuine attacks are not detected by signature products"
+      ],
+      "answer": "B",
+      "explanation": "A block is a single event, not a verdict on the machine. The useful questions are how the file arrived, whether the same path delivered anything that was not detected, and whether other hosts received it. Treating the alert as either a clean bill of health or as proof of full compromise skips that work."
+    },
+    {
+      "id": "m46",
+      "topic": "4.4",
+      "skill": 3,
+      "stem": "A workstation's baseline shows it normally contacts three internal servers during the working day. Monitoring now shows it contacting forty internal hosts after midnight. Which interpretation is BEST?",
+      "options": [
+        "The change in both volume and timing is worth investigating as possible lateral movement from a compromised host",
+        "The workstation has been reassigned to a new user whose duties differ",
+        "The monitoring system has begun counting each connection attempt more than once",
+        "The workstation is performing a scheduled backup, which always contacts many hosts"
+      ],
+      "answer": "A",
+      "explanation": "Two things moved at once: how many hosts and when. A host reaching outward across a segment outside working hours is the pattern of an attacker exploring from a foothold. Reassignment, double counting and backups are all worth ruling out, and doing so is the investigation the alert should trigger."
+    },
+    {
+      "id": "m47",
+      "topic": "5.1",
+      "skill": 1,
+      "stem": "A search box passes whatever the user types directly into a database query. Which consequence BEST describes why this is dangerous?",
+      "options": [
+        "The database will run more slowly, because unfiltered input produces inefficient queries",
+        "The search results will be returned in an unpredictable order to the user",
+        "Input can be crafted so the database treats part of it as instructions rather than as a value to search for",
+        "The database will refuse the connection, because untrusted input is rejected by default"
+      ],
+      "answer": "C",
+      "explanation": "The flaw is the boundary between data and code disappearing. When user input is concatenated into a query, characters that end a value and begin a clause let the user extend the statement, which is how records outside the intended scope are read or altered. Performance and ordering are not the issue."
+    },
+    {
+      "id": "m48",
+      "topic": "5.1",
+      "skill": 1,
+      "stem": "An application stores a user's comment and later displays it to other users without escaping it. Which risk does this create?",
+      "options": [
+        "A comment containing script will overwrite the application's source files on the server",
+        "A comment containing script can execute in another user's browser in the context of that site",
+        "A comment containing script will prevent the page from being indexed by search engines",
+        "A comment containing script will be rejected by the browser before the page renders"
+      ],
+      "answer": "B",
+      "explanation": "Stored content that is rendered without escaping is treated as markup by the browser, so script arrives with the site's own origin and privileges. The damage happens in the reader's session, which is what makes the stored form more serious than a reflected one: every viewer is affected without clicking anything special."
+    },
+    {
+      "id": "m49",
+      "topic": "5.2",
+      "skill": 2,
+      "stem": "A hospital grants each clinician access only to the records of patients currently in their care. Which principle does this MOST directly implement?",
+      "options": [
+        "Defence in depth, in which multiple independent controls are layered",
+        "Separation of duties, in which no single person can complete a sensitive process alone",
+        "Non-repudiation, in which a party cannot deny having taken an action",
+        "Least privilege, in which access is limited to what the role requires to do its work"
+      ],
+      "answer": "D",
+      "explanation": "Least privilege scopes access to need. Defence in depth is about layering different controls, separation of duties splits a process across people to prevent unilateral action, and non-repudiation concerns proving who did something afterwards. All are real principles; only one describes narrowing a clinician's reach to their own patients."
+    },
+    {
+      "id": "m50",
+      "topic": "5.2",
+      "skill": 2,
+      "stem": "An organisation requires that the person who requests a payment cannot also approve it. Which principle does this implement, and what does it defend against?",
+      "options": [
+        "Separation of duties, which prevents one person from completing a sensitive process without a second party's involvement",
+        "Least privilege, which limits each person's access to the minimum their role requires",
+        "Defence in depth, which ensures a failure in one control is caught by another layer",
+        "Availability, which ensures payment systems remain reachable during business hours"
+      ],
+      "answer": "A",
+      "explanation": "Splitting a process so no individual controls it end to end is separation of duties, and it defends against both fraud and undetected error. Least privilege limits reach rather than splitting a workflow, and defence in depth describes layering rather than dividing responsibility."
+    },
+    {
+      "id": "m51",
+      "topic": "5.3",
+      "skill": 2,
+      "stem": "A system stores user passwords by running each through a hash function with a unique random value added per user. What does that per-user random value MOST directly prevent?",
+      "options": [
+        "The hash function from being reversed directly into the original password",
+        "An attacker from reading the password database if they obtain the server's disk",
+        "Users from choosing passwords that appear in common password lists",
+        "Identical passwords producing identical stored values, which would let precomputed tables and cross-account comparison work"
+      ],
+      "answer": "D",
+      "explanation": "The salt breaks precomputation and correlation. Without it, two users with the same password have the same stored value and one precomputed table serves every account. A good hash already resists reversal, obtaining the disk is a separate problem, and nothing about a salt influences what password a user picks."
+    },
+    {
+      "id": "m52",
+      "topic": "5.3",
+      "skill": 2,
+      "stem": "Which statement BEST describes the difference between hashing and encryption in how stored data is handled?",
+      "options": [
+        "Hashing protects data in transit, while encryption protects data only at rest",
+        "Hashing uses a key that must be kept secret, while encryption requires no key at all",
+        "Encryption is designed to be reversed with the correct key, while hashing is designed to be one way",
+        "Encryption produces a fixed length output, while hashing produces output as long as the input"
+      ],
+      "answer": "C",
+      "explanation": "Reversibility is the distinction that decides which to use. Data you must read again is encrypted; a value you only ever need to compare against, such as a password, is hashed. The other options invert the properties: hashes are fixed length and keyless, and both mechanisms are used at rest and in transit."
+    },
+    {
+      "id": "m53",
+      "topic": "5.4",
+      "skill": 2,
+      "stem": "Two parties who have never met need to exchange confidential messages. Which use of an asymmetric key pair achieves that?",
+      "options": [
+        "Each encrypts with the other's public key, so only the matching private key can decrypt the message",
+        "Each encrypts with their own private key, so only they can decrypt what they sent",
+        "Both agree on one shared private key in advance and encrypt with it",
+        "Each publishes their private key so the other can decrypt incoming messages"
+      ],
+      "answer": "A",
+      "explanation": "Confidentiality flows toward the private key. Encrypting to a published public key means only the holder of the corresponding private key can read the result, which is what allows strangers to establish secrecy without a prior shared secret. Publishing a private key destroys the scheme entirely."
+    },
+    {
+      "id": "m54",
+      "topic": "5.4",
+      "skill": 2,
+      "stem": "A message is signed with the sender's private key. Which property does verifying that signature with the sender's public key MOST directly establish?",
+      "options": [
+        "That the message contents were kept confidential while in transit",
+        "That the message came from the holder of the corresponding private key and was not altered after signing",
+        "That the message was delivered to the intended recipient without interception",
+        "That the recipient's identity has been verified by a certificate authority"
+      ],
+      "answer": "B",
+      "explanation": "Signing runs the key pair in the opposite direction from encryption and buys authenticity and integrity rather than secrecy. A signed message is readable by anyone; what verification shows is who held the private key and that the bytes have not changed since."
+    },
+    {
+      "id": "m55",
+      "topic": "5.5",
+      "skill": 2,
+      "stem": "An application validates the format of user input in the browser using JavaScript before submitting the form. Which statement identifies the security gap in relying on that alone?",
+      "options": [
+        "JavaScript validation slows the form, which encourages users to submit incomplete data",
+        "JavaScript validation cannot check the format of numbers, only of text",
+        "JavaScript validation runs after the request is sent, so it arrives too late to matter",
+        "A client can be bypassed entirely, so requests reaching the server may never have passed through that check"
+      ],
+      "answer": "D",
+      "explanation": "Anything running in the user's browser is under the user's control and can be edited, disabled or skipped by sending the request directly. Client-side checks are a usability feature that gives fast feedback; the authoritative check has to happen where the attacker cannot reach it, on the server."
+    },
+    {
+      "id": "m56",
+      "topic": "5.5",
+      "skill": 2,
+      "stem": "Which practice MOST directly reduces the risk that user input is interpreted as database instructions?",
+      "options": [
+        "Limiting the length of every input field to a small maximum",
+        "Renaming database tables so their names cannot be guessed by an attacker",
+        "Using parameterised queries, so input is bound as a value and never becomes part of the statement's structure",
+        "Running the database on a port other than its default"
+      ],
+      "answer": "C",
+      "explanation": "Parameterisation removes the ambiguity rather than trying to police it. Length limits, obscure table names and non-standard ports raise effort slightly and leave the underlying confusion between data and code intact, which is why filtering approaches keep failing against inputs nobody anticipated."
+    },
+    {
+      "id": "m57",
+      "topic": "5.6",
+      "skill": 3,
+      "stem": "A web server log shows hundreds of requests from one address to the same login endpoint within a minute, each with a different username. Which activity is MOST consistent with that pattern?",
+      "options": [
+        "A brute force against one account, in which many passwords are tried for a single username",
+        "Credential stuffing or user enumeration, in which many accounts are tried against one endpoint",
+        "A denial of service, in which the endpoint is overwhelmed to make it unavailable",
+        "Ordinary traffic from an office where many staff sign in at the start of a shift"
+      ],
+      "answer": "B",
+      "explanation": "The distinguishing feature is breadth across usernames rather than depth against one. Many usernames from a single source in a short window is the shape of a list being tried, which is why rate limiting keyed on source address and monitoring for high failure ratios both help here."
+    },
+    {
+      "id": "m58",
+      "topic": "5.6",
+      "skill": 3,
+      "stem": "Which log observation MOST strongly suggests that data is being removed from an organisation in bulk?",
+      "options": [
+        "A rise in inbound requests to the organisation's public website during a marketing campaign",
+        "An increase in internal file server reads by the finance team at the end of a quarter",
+        "A backup job writing a large volume to storage inside the organisation's own network",
+        "A sustained outbound transfer from an internal database server to an unfamiliar external address, far larger than its usual outbound volume"
+      ],
+      "answer": "D",
+      "explanation": "Exfiltration shows as volume leaving, toward somewhere unusual, from a system that does not normally send much outward. Inbound campaign traffic, seasonal internal reads and internal backups all move data but not across the boundary that matters, which is why a baseline of normal outbound volume per host is what makes the anomaly visible."
+    },
+    {
+      "id": "m59",
+      "topic": "5.6",
+      "skill": 3,
+      "stem": "An application's error log fills with database syntax errors containing fragments of user-supplied text such as quotation marks and the word UNION. Which conclusion is BEST supported?",
+      "options": [
+        "Someone is probing the application for injection flaws, and the errors record attempts that the database rejected",
+        "The database schema has become corrupted and requires restoration from backup",
+        "The application's connection to the database is intermittently failing under load",
+        "A developer has deployed a change that contains a typing error in a query"
+      ],
+      "answer": "A",
+      "explanation": "Syntax errors carrying attacker-shaped fragments are probing, not breakage. The important reading is that rejection is not safety: the same log tells you someone is testing the boundary, and an input that eventually parses will not appear as an error at all."
+    },
+    {
+      "id": "m60",
+      "topic": "5.6",
+      "skill": 3,
+      "stem": "A file integrity monitoring system reports that a configuration file on a web server changed at 03:12, outside any change window and with no associated change ticket. Which response is BEST?",
+      "options": [
+        "Restore the previous version immediately and take no further action, since the change is undone",
+        "Add the file to the monitoring system's exclusion list to stop the repeated alerting",
+        "Treat it as a potential unauthorised change, compare the file against the known good version, and preserve the evidence while investigating",
+        "Wait to see whether the file changes again before deciding whether to investigate"
+      ],
+      "answer": "C",
+      "explanation": "An unexplained change outside a change window is the alert doing its job. Comparing against a known good copy establishes what actually differs, and preserving state keeps the answer to how it happened. Restoring silently removes the evidence, excluding the file blinds the control, and waiting gives an intruder time."
+    }
+  ],
+  "frq": {
+    "name": "Device Security Analysis",
+    "minutes": 50,
+    "weight_percent": 30,
+    "scenario": "Brightline Physio is a four-person clinic. All appointment records and scanned referral letters live on one Linux server, HOPPER, which sits in a cupboard behind reception. Staff reach it over the clinic wireless network from three laptops. The clinic has no IT staff; a contractor set the server up two years ago and has not returned since. Last Tuesday the practice manager found that the appointment system was slow all afternoon, and on Wednesday morning a patient telephoned to say they had received an email about their referral that the clinic had not sent. You have been asked to review the device. Use the six sources below. Cite the source you are using in each answer.",
+    "sources": [
+      {
+        "id": "1",
+        "title": "Source 1: Clinic device policy, extract",
+        "body": "3.1  Patient records may be read only by staff providing care to that patient.\n3.2  Every account on a clinic device belongs to one named person. Shared or generic accounts are not permitted.\n3.4  Remote administration of clinic servers is permitted only from inside the clinic building.\n4.2  Security updates must be applied within 14 days of release.\n5.1  Backups are written nightly and stored so that a failure of the server does not also destroy the backup.\n6.3  Any suspected disclosure of patient information is reported to the practice manager the same day."
+      },
+      {
+        "id": "2",
+        "title": "Source 2: Firewall rules on HOPPER, in the order evaluated",
+        "body": "  #  ACTION  SOURCE            PORT   SERVICE\n  1  ALLOW   any               22     SSH\n  2  ALLOW   192.168.10.0/24   445    file sharing\n  3  ALLOW   any               3306   database\n  4  ALLOW   192.168.10.0/24   443    clinic appointment app\n  5  ALLOW   any               any    all remaining traffic\n\nThe clinic laptops are on 192.168.10.0/24. The clinic's internet connection has a public address and HOPPER is reachable from it."
+      },
+      {
+        "id": "3",
+        "title": "Source 3: Authentication log on HOPPER, extract",
+        "body": "Mar 03 22:14:07  sshd  Failed password for invalid user admin from 203.0.113.44\nMar 03 22:14:09  sshd  Failed password for invalid user root from 203.0.113.44\nMar 03 22:14:11  sshd  Failed password for invalid user test from 203.0.113.44\n   [ 2,481 further failed attempts from 203.0.113.44 between 22:14 and 02:36 ]\nMar 04 02:36:52  sshd  Accepted password for reception from 203.0.113.44\nMar 04 02:37:40  sudo  reception : COMMAND=/usr/bin/apt install netcat\nMar 04 02:41:05  sshd  Accepted password for reception from 198.51.100.7\n\nThe account 'reception' is used by all four staff members to log in to HOPPER."
+      },
+      {
+        "id": "4",
+        "title": "Source 4: Appointment application log, extract",
+        "body": "Mar 04 02:52:11  GET  /referrals/export?all=true        200   41.8 MB\nMar 04 02:55:03  GET  /referrals/export?all=true        200   41.8 MB\nMar 04 03:01:47  POST /admin/mail/send  recipients=1,204  200\nMar 04 09:12:26  GET  /appointments/today               200    2.1 KB\nMar 04 09:14:02  GET  /appointments/today               200    2.1 KB\n\nThe clinic has 1,204 patients on file. Normal daily outbound volume from HOPPER is under 5 MB."
+      },
+      {
+        "id": "5",
+        "title": "Source 5: File listing in /srv/clinic on HOPPER",
+        "body": "  drwxrwxrwx  reception  staff   referrals/\n  -rwxrwxrwx  reception  staff   patients.db\n  -rw-r--r--  reception  staff   appointments.conf\n  -rw-------  root       root    backup.key\n  -rwxrwxrwx  reception  staff   nightly-backup.sh\n\npatients.db holds every patient record. nightly-backup.sh is run automatically each night by the system as root."
+      },
+      {
+        "id": "6",
+        "title": "Source 6: Update and backup status on HOPPER",
+        "body": "  Operating system security updates available: 61\n  Oldest available update released: 19 months ago\n  Last successful backup: Mar 04, 01:00\n  Backup destination: /srv/clinic/backups on HOPPER\n  Backup destination free space: 4 GB"
+      }
+    ],
+    "parts": [
+      {
+        "part": "A",
+        "skill": 3,
+        "points": 6,
+        "prompt": "Identify TWO security issues with how HOPPER is configured, other than the file permissions in Source 5. For each, cite the source you used and explain what an attacker could do as a result.",
+        "rubric": [
+          "1 point for each correctly identified issue, to a maximum of 2 points. Acceptable issues include: SSH reachable from any address (Source 2, rule 1); the database port open to any address (Source 2, rule 3); a final allow-all rule so the rule set has no default deny (Source 2, rule 5); a shared 'reception' account used by four people (Source 3); 61 outstanding security updates, the oldest 19 months old (Source 6); the backup written to the same device it protects (Source 6).",
+          "1 point for each correct source citation, to a maximum of 2 points.",
+          "1 point for each explanation that names a consequence an attacker could achieve, to a maximum of 2 points. For example, an allow-all rule means any service that starts listening becomes reachable from the internet without anyone changing the firewall."
+        ]
+      },
+      {
+        "part": "B",
+        "skill": 2,
+        "points": 6,
+        "prompt": "State THREE provisions of the clinic device policy in Source 1 that the evidence shows are not being met. For each, cite the source that shows it is not being met.",
+        "rubric": [
+          "1 point for each provision correctly identified, to a maximum of 3 points. Expected: 3.2 named accounts, contradicted by the shared 'reception' account in Source 3; 3.4 remote administration only from inside the building, contradicted by the successful logins from 203.0.113.44 and 198.51.100.7 in Source 3; 4.2 updates within 14 days, contradicted by 61 updates and a 19 month old release in Source 6; 5.1 backups stored so a server failure does not destroy them, contradicted by the backup destination being a directory on HOPPER itself in Source 6.",
+          "1 point for each correct citation, to a maximum of 3 points.",
+          "No credit for naming a provision without evidence, or for citing a source that does not bear on the provision named."
+        ]
+      },
+      {
+        "part": "C",
+        "skill": 2,
+        "points": 7,
+        "prompt": "Using Source 5:\n(i) Explain what is wrong with the permissions on patients.db, and what an unauthorised user of HOPPER could do because of it.\n(ii) Explain why the permissions on nightly-backup.sh are more dangerous than the permissions on patients.db, given how that file is run.\n(iii) Write the chmod command that sets patients.db so that its owner may read and write it, members of the group may read it, and all other users have no access.",
+        "rubric": [
+          "(i) 1 point for identifying that patients.db is readable and writable by every user on the system, and 1 point for a consequence, such as any account on the device, including one an attacker obtains, being able to read or alter every patient record.",
+          "(ii) 1 point for identifying that nightly-backup.sh is writable by every user, and 2 points for explaining that because the system runs it automatically as root, an attacker who edits it gains execution as root the next time it runs, which is privilege escalation rather than only disclosure.",
+          "(iii) 2 points for chmod 640 patients.db. Award 2 points for the equivalent symbolic form, for example chmod u=rw,g=r,o= patients.db. Award 1 point for a command with the correct intent but the wrong digits, such as chmod 644, which leaves the file readable by all other users. Award no points for a command that does not change permissions on patients.db."
+        ]
+      },
+      {
+        "part": "D",
+        "skill": 3,
+        "points": 6,
+        "prompt": "Using Source 3 and Source 4, describe the sequence of events on the night of March 3 and 4. Your answer should identify how the attacker obtained access, what they did once they had it, and the evidence in the logs for each step.",
+        "rubric": [
+          "2 points for identifying a successful password guessing attack: 2,481 failed SSH attempts from 203.0.113.44 followed by an accepted password for 'reception' from the same address at 02:36 (Source 3).",
+          "2 points for identifying actions taken after access, with evidence. Acceptable: installing a tool with sudo at 02:37 (Source 3); a second login from a different address at 02:41 suggesting the credential was shared or sold (Source 3); two exports of every referral totalling 83.6 MB against a normal daily volume under 5 MB (Source 4).",
+          "2 points for identifying the mass mail send to 1,204 recipients at 03:01 (Source 4) and connecting it to the patient who reported receiving an email the clinic did not send. Award 1 point if the event is identified without that connection."
+        ]
+      },
+      {
+        "part": "E",
+        "skill": 2,
+        "points": 5,
+        "prompt": "Recommend THREE changes that would most reduce the risk of this happening again. For each, name the specific weakness it addresses and cite the source that shows that weakness. Do not repeat a recommendation that only restates a file permission change from part C.",
+        "rubric": [
+          "1 point for each recommendation that names a specific, implementable change, to a maximum of 3 points. Acceptable: restrict SSH to the clinic's internal range or require key-based authentication (Source 2 rule 1, Source 3); replace the final allow-all rule with a default deny (Source 2 rule 5); close the database port to external addresses (Source 2 rule 3); give each staff member a named account (Source 1 clause 3.2, Source 3); apply the 61 outstanding updates and set a schedule (Source 6); move backups off the device (Source 6).",
+          "1 point for citing sources correctly across the three recommendations.",
+          "1 point for a recommendation that would have interrupted THIS attack chain specifically, with reasoning. For example, restricting SSH to the internal range would have prevented the guessing attempts from 203.0.113.44 from reaching the service at all, which removes the step every later event depended on.",
+          "No credit for a general statement such as 'improve security' or 'train staff' without naming what would change."
+        ]
+      }
+    ]
+  }
+}
