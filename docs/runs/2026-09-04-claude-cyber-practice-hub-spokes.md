@@ -93,11 +93,13 @@ on an unmodified tree here because `python-pptx` is not installed.
 
 ## Open
 
-- **The sheet is not imported.** Import
-  `imports/2026-09-04d/cyber-practice-hub-spokes-pages.csv`, then run
-  `npm run verify:cyberpractice`. It is failing on exactly this edge right now,
-  so that one check flipping to green is the whole deploy, and its other 34
-  assertions are what prove the import cost nothing.
+- ~~The sheet is not imported.~~ **Imported 2026-09-04.**
+  `npm run verify:cyberpractice` now reports **35 live checks: 33 that the import
+  made true, 2 proving it erased nothing**, where it was 34 passed and 1 failed on
+  exactly this edge. Measured separately on the served page afterwards, because it
+  is the thing the stale sheet would have destroyed: the hub body is 13,254
+  characters, the Question of the Day block and its 152 question card are present,
+  all five spokes are linked, and the free response and labs sections are intact.
 - **Do not import `imports/2026-09-04/cyber-practice-hub-links-pages.csv` again.**
   Its topics-hub row already landed and its practice-hub row is destructive. The
   new sheet supersedes it.
