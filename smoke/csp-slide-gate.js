@@ -94,17 +94,26 @@ const grant = (teacherId, course) => db.prepare(
 
   console.log('1. Unknown course and unknown lesson both 404, never a leak');
   {
-    // Was 'ap-csa' until board task 183 gave it a real manifest
-    // (config/csa-slide-manifest.js, Unit 1 pilot). That is the exact "a
-    // course difference does not announce itself" trap this repo already
-    // learned once porting cyber (docs/runs/2026-08-25-claude-code-cyber-slide-gate.md):
-    // a course string baked into a test as "the unsupported one" goes stale
-    // the moment that course gets a manifest, and a stale example silently
-    // stops testing what it claims to. 'ap-networking' is a real course
-    // elsewhere in this repo (lib/entitlements.js) but has no slide manifest
-    // at all, so it is a genuine 404 rather than a coincidence of naming.
-    const r1 = await slides('ap-networking', '1-1', paidTeacherTok);
-    ok('  unsupported course -> 404', r1.status === 404, r1);
+    // THIS EXAMPLE IS DERIVED, AND IT TOOK TWO STALENESSES TO GET THERE.
+    // It was 'ap-csa' until board task 183 gave that course a manifest, then
+    // 'ap-networking' until that course got one too. Same trap both times, the
+    // one this repo already learned porting cyber
+    // (docs/runs/2026-08-25-claude-code-cyber-slide-gate.md): a course string
+    // baked in as "the unsupported one" goes stale the moment that course is
+    // wired, and a stale example stops testing what it claims to.
+    //
+    // The comment that used to sit here named that hazard precisely and then
+    // picked another literal anyway, which is why it sprang a second time. So
+    // pick nothing. Ask the registry which courses it serves and use a real
+    // course that is not one of them. This repairs itself the next time a
+    // course is wired. The only way it can go stale now is every course in the
+    // repo gaining a manifest, and the fallback turns that into an honest
+    // synthetic 404 rather than a silent pass.
+    const wired = new Set(require('../config/slide-manifests').COURSE_KEYS);
+    const unsupported = require('../lib/entitlements').VALID_COURSES.find((c) => !wired.has(c))
+      || 'ap-course-with-no-manifest';
+    const r1 = await slides(unsupported, '1-1', paidTeacherTok);
+    ok(`  unsupported course (${unsupported}) -> 404`, r1.status === 404, r1);
     ok('  unsupported course response has no CDN url', !r1.text.includes(CDN_HOST), r1.text);
 
     const r2 = await slides('ap-csp', '9-9', paidTeacherTok);
