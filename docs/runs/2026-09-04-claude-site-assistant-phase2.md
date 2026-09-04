@@ -23,6 +23,47 @@ negative.
 - `smoke:assistantdiag` 61 passed, 0 failed (was 48; the guard grew)
 - `smoke:assistantreport` 92, `smoke:assistantkb` 47, `smoke:posthog` 53
 - production `/api/health` reported `c2fdbd5` after the #518 merge
+- full local sweep, 191 suites: 4 nonzero rc and 1 flagged assert, all accounted
+  for. `auth`, `teacher` and `cleanup` are on CI's own EXCLUDE list (they drive a
+  browser against the live storefront, or deactivate real rows); `csakitstyle`
+  fails locally on a missing python-pptx that CI installs; `codegrade` prints a
+  string matching "N failed" while exiting `ALL PASS`, because the assertion it
+  is making is that a hardcoded submission gets told "2 of 3 test cases failed"
+
+### Phase 2 merged and verified live
+
+Merged as `164ff71` on `27877cc`, the exact SHA the Offline smoke suites check
+passed on at 04:36:41Z, guarded with `expectedHeadSha`. Production confirmed
+serving `164ff71` at 04:39:02Z, polled for that SHA rather than for a change.
+
+The CI check derives its suite list from `package.json`, so `smoke:assistantexfil`
+gated this PR with no workflow edit. That also makes CI's run strictly better
+evidence than the local sweep: same suites, clean checkout, and the two Python
+packages installed.
+
+Live assertions, every one of them false before this deploy:
+
+```
+POST /api/assistant/chat  (no auth)   401    was 404
+GET  /api/assistant/chat/status       401    was 404
+/teacher/diagnostics                  carries the desk, pure ASCII, and no
+                                      field anywhere in it that could send
+                                      page text
+/api/assistant/help?q=access          0 published results
+/api/assistant/help/<a draft slug>    404
+health.seed.seeds.kb_articles         created 13, kept 0, categories 13
+health.assistant                      mail_configured true, recipient_set false
+```
+
+The boot seed is the one worth noting: `created: 13, kept: 0` is the first time
+that seed has run against the production database rather than a laptop, which is
+the whole reason it was moved out of `npm run seed:kb` and into boot.
+
+A first read of that health body reported the seed as missing, because the probe
+looked at `seed.kb_articles` and the snapshot nests it one level deeper under
+`seed.seeds.kb_articles`. The seed was fine; the check was wrong. Worth recording
+only because a check that reads the wrong path reports exactly like a seed that
+silently did nothing, which is the failure `lib/boot-seed.js` exists to end.
 
 ## Four things worth keeping
 
@@ -129,9 +170,12 @@ described something it did not do.
   live and answering from live state and the knowledge base with no model call.
   That is the intended launch state: the degraded path is worth running on its
   own for a while before anything spends.
-- **The KB is empty in production** until the next deploy carries the boot seed
-  added here. `/help` will list nothing before then, which is correct behaviour
-  for an empty corpus but reads as broken.
+- **The KB has 13 drafts and no published articles.** The boot seed landed with
+  the deploy (below), so `/help` and `/api/assistant/help` correctly return
+  nothing: a draft answers the same 404 as a slug that does not exist. Tanner
+  writes the bodies, and the assistant must not invent site mechanics, so this
+  stays open until he does. Until then chat has an isolated corpus with nothing
+  in it, which is the safe direction to be wrong.
 - **No operator view** on `chat_sessions` yet, and no 90 day body sweep. Both are
   spec section 8 and 11 items and neither is urgent while the only sessions are
   teacher ones from today.
