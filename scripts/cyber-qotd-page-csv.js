@@ -84,12 +84,38 @@ const UMBRELLA_TITLE = 'AP Cybersecurity Practice';
 //  Escaping. Pure ASCII output, entities OUTSIDE script blocks and never inside
 //  one, per CONVENTIONS.md. The pool is already ASCII (checked) but a future
 //  edit will not be, so this is enforced rather than assumed.
+//
+//  ── WHY CODE BLOCKS ESCAPE TWICE ───────────────────────────────────────────
+//  Shopify DECODES html entities when it stores a body. Measured on this store
+//  2026-09-04: across every page checked, stored body_html contains zero
+//  occurrences of &lt;, &gt; or &amp;. They are all decoded on save.
+//
+//  For prose that is harmless. Inside a code block it deleted content. Question
+//  C1-102 shows a phishing header:
+//      From: IT-Support &lt;it-support@micros0ft-secure.com&gt;
+//  Shopify decoded that to a real angle bracket, its sanitizer then read
+//  <it-support@micros0ft-secure.com> as a tag, and what survived on the live
+//  page was:
+//      From: IT-Support <it-support>
+//  The lookalike domain is the entire question. A student is asked to spot
+//  micros0ft-secure.com and it had been deleted from the stimulus.
+//
+//  This is the same failure lib/storefront-fetch.js documents for Cloudflare
+//  email rewriting, by a different route: "does not damage the question, it
+//  deletes it". So code blocks escape twice. &amp;lt; survives one decode pass
+//  as &lt;, which renders as the character the question needs.
 // ---------------------------------------------------------------------------
 function esc(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;')
     .replace(/[^\x00-\x7F]/g, (c) => `&#${c.codePointAt(0)};`);
+}
+
+// For <pre><code>: escape, then escape the ampersands again so Shopify's decode
+// on save lands on &lt; rather than on a bare angle bracket its sanitizer eats.
+function escCode(s) {
+  return esc(s).replace(/&(?=(amp|lt|gt|quot|#\d+);)/g, '&amp;');
 }
 
 // JSON-LD lives inside a <script>, so entities are forbidden there. JSON.stringify
@@ -144,9 +170,23 @@ function renderQuestion(q) {
   rows.push(`      <article class="cy-bank-q" id="q-${esc(q.id)}">`);
   // The stem is immediately visible: the schema requires it, and a collapsed
   // question is a question Google cannot see.
-  rows.push(`        <p class="cy-bank-stem">${esc(q.stem)}</p>`);
+  //
+  // 30 of the 152 are multi-correct items whose stems carry real newlines, so
+  // the roman-numeral choices are separate lines as authored:
+  //     Which controls help protect a physical server room?
+  //     I.   Badge readers ...
+  //     II.  Locks ...
+  // HTML collapses whitespace, so rendering the stem as one <p> ran all of
+  // those together into a paragraph nobody can read. Blank-line separated
+  // blocks become paragraphs and single newlines become <br>, which is what the
+  // author wrote.
+  const blocks = String(q.stem).split(/\n\s*\n/).map((t) => t.trim()).filter(Boolean);
+  for (const block of blocks) {
+    const lines = block.split(/\n/).map((t) => t.trim()).filter(Boolean).map(esc);
+    rows.push(`        <p class="cy-bank-stem">${lines.join('<br>')}</p>`);
+  }
   if (q.code) {
-    rows.push(`        <pre class="cy-bank-code"><code>${esc(q.code)}</code></pre>`);
+    rows.push(`        <pre class="cy-bank-code"><code>${escCode(q.code)}</code></pre>`);
   }
   rows.push('        <ol class="cy-bank-opts">');
   q.options.forEach((opt, i) => {
