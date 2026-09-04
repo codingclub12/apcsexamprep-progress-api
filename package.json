@@ -69,6 +69,7 @@
     "smoke:bootseed": "node smoke/boot-seed-visibility.js",
     "smoke:volumepaths": "node smoke/volume-shadowed-paths.js",
     "smoke:encoding": "node smoke/encoding-guard.js",
+    "smoke:noindexsheet": "node smoke/noindex-sheet.js",
     "smoke:mojibakeparity": "node smoke/mojibake-parity.js",
     "smoke:blogcontent": "node smoke/blog-content.js",
     "smoke:traffic": "node smoke/traffic.js",
