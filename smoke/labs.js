@@ -157,7 +157,13 @@ for (const spec of labs.all()) {
     if (mine.length === 1) {
       const r = mine[0];
       ok(r.points === spec.points, `${spec.item_id}: manifest points ${r.points} equals spec points ${spec.points}`);
-      ok(r.item_type === 'lab', `${spec.item_id}: manifest item_type is 'lab'`);
+      //  'terminal-lab', not 'lab'. The row has to carry the SPEC's own type or
+      //  it lands back on the per-lesson lab's denominator key and replaces it,
+      //  which is what happened on 2026-09-04. Asserted against spec.item_type
+      //  rather than the literal so a future rename cannot pass this line while
+      //  the seeder keeps writing the old value.
+      ok(r.item_type === spec.item_type && r.item_type === 'terminal-lab',
+        `${spec.item_id}: manifest item_type is '${r.item_type}', spec says '${spec.item_type}'`);
       ok(r.lesson_id === spec.lesson_id, `${spec.item_id}: manifest lesson_id '${r.lesson_id}' equals spec lesson_id '${spec.lesson_id}'`);
       ok(r.unit === spec.unit, `${spec.item_id}: manifest unit '${r.unit}' equals spec unit '${spec.unit}'`);
     }

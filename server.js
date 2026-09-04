@@ -188,6 +188,25 @@ runBootSeed('course_manifest dead-cfu cleanup', () => {
   return r;
 });
 
+//  Terminal-lab attempts written before the 2026-09-04 rename still say 'lab'.
+//  The manifest row for those items says 'terminal-lab' now, and attempt-rollup
+//  keys the cell on the ATTEMPT's type while denominating it from the MANIFEST,
+//  so a stale row would drop out of the gradebook. This moves them.
+//
+//  Idempotent and allowlisted by exact (course, item_id) from the specs. Once it
+//  logs "none" on a deploy this block can go; it is a migration, not a feature.
+runBootSeed('attempts terminal-lab retype', () => {
+  const { retypeTerminalLabAttempts } = require('./scripts/seed-manifest');
+  const r = retypeTerminalLabAttempts();
+  if (!r.candidates) {
+    console.log('attempts terminal-lab retype: none left to move. Safe to delete this block.');
+  } else {
+    console.log(`attempts terminal-lab retype: moved ${r.moved} of ${r.candidates} row(s) from 'lab' to 'terminal-lab'.`);
+    for (const b of r.byItem) console.log(`  ${b.course} ${b.item_id}: ${b.rows} row(s)`);
+  }
+  return r;
+});
+
 const MANIFEST_PRUNE = process.env.MANIFEST_PRUNE === '1';
 runBootSeed('course_manifest prune', () => {
   const { pruneManifest } = require('./scripts/seed-manifest');
