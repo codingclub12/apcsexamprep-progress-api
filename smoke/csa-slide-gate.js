@@ -168,7 +168,12 @@ const grant = (teacherId, course) => db.prepare(
     ok('  anonymous: 200', anon.status === 200, anon);
     ok('  anonymous: locked', anon.body && anon.body.locked === true, anon.body);
     ok('  anonymous: decks is null', anon.body && anon.body.decks === null, anon.body);
-    ok('  anonymous: overview still reports a day count', anon.body && anon.body.days === 1, anon.body);
+    // 2, not 1. Lesson 1-1 carried a placeholder day count until its real one
+    // was counted out of Drive on 2026-09-04. The number matters here beyond
+    // being right: a locked caller is told how many days exist, so this is the
+    // assertion that the overview keeps being useful to someone who has not
+    // paid yet.
+    ok('  anonymous: overview still reports a day count', anon.body && anon.body.days === 2, anon.body);
     ok('  anonymous: ZERO docs.google.com anywhere in the payload',
        !anon.text.includes(GOOGLE_HOST), anon.text);
     ok('  anonymous: never cached', anon.cache === 'no-store', anon.cache);
@@ -204,7 +209,9 @@ const grant = (teacherId, course) => db.prepare(
     ok('  entitled teacher: unlocked (locked === false)', r.body && r.body.locked === false, r.body);
     ok('  decks is an empty array, not null (entitled, nothing to show yet)',
        r.body && Array.isArray(r.body.decks) && r.body.decks.length === 0, r.body);
-    ok('  day count is still reported even with nothing converted', r.body && r.body.days === 1, r.body);
+    // Unit 1 is unconverted but no longer a placeholder: 1-1 is a two-day
+    // lesson in Drive. Days and decks are independent facts and this pins that.
+    ok('  day count is still reported even with nothing converted', r.body && r.body.days === 2, r.body);
     ok('  tracks reported as empty for this course',
        r.body && Array.isArray(r.body.tracks) && r.body.tracks.length === 0, r.body && r.body.tracks);
     ok('  no docs.google.com anywhere: there is nothing converted to leak',
