@@ -92,7 +92,48 @@ cleared it at a larger size.
   nothing. Deleting it would have widened the diff to satisfy a guard rather
   than to fix anything, so the guards judge rendered content instead.
 
+## The import, and what it verified
+
+Imported 2026-09-04. Checked live on all three pages, 30 of 30 assertions: no
+slides iframe, no youtube iframe, no slides link, no `slides-section`, no
+`lesson-video-card`, no dead `#section-slides` anchor, no `VideoObject` schema,
+and the gate script, `#apcyber-wrapper` and `data-lesson-id` all still there.
+
+Then the positive half, which the negatives cannot show: the three live pages
+run in headless Chromium against the deployed gate asset each mount exactly one
+bundle panel, scoped to the right lesson (1-1, 1-2, 1-4), headed "Slide decks
+for this topic". The bundle link the panel offers,
+`/products/ap-cybersecurity-founding-teacher-bundle`, answers 200.
+
+So slides on these pages now come from the bundle through the gate and from
+nowhere else, which was the whole point.
+
+## Two things found while checking the bundle link
+
+Neither is this task's to fix, both are worth having written down.
+
+**The product page promises decks for five units.** It says "Editable PowerPoint
+slide decks for all five units" and "All five unit Superpacks, all slide decks
+... are finished and delivered on purchase", and the panel covers Units 1-2.
+Whether that is a delivery gap or only a surface gap depends on how a buyer
+actually receives the decks, which is not visible from the site. If they get the
+Drive folder at checkout then the panel is a convenience that lags and #208 is a
+nice-to-have; if the panel IS the delivery then teachers have paid for decks
+they cannot reach. Worth settling before #208 is scheduled.
+
+**The same page calls the cyber decks "dual-track (Deep Dive teacher / CB
+Standard student)".** Those are AP CSP's track names.
+`config/cyber-slide-manifest.js` is explicit that cyber has no track dimension
+at all and exports `TRACK_KEYS = []`; what cyber has is teacher and student
+VARIANTS. Reads like copy carried over from the CSP bundle.
+
+**The panel's own subtitle is vaguer than it needs to be.** It reads "A deck for
+every teaching day of this topic" rather than naming the number, because the
+self-mounted host carries no `data-days` and the count falls back to 0. The
+manifest knows 1.1 is 2 days and 1.2 is 4. Putting the day counts in
+`CYBER_KNOWN_LESSONS` beside the id translation would fix it in one line of
+theme, and was not done here because no theme change was in scope.
+
 ## Still open
 
-- The sheet is generated and preflighted. It has not been imported.
-- Units 3-5 decks, #208.
+- Units 3-5 decks, #208, and the delivery question above that sizes it.
