@@ -45,9 +45,25 @@
 const fs = require('fs');
 const path = require('path');
 const sf = require('../lib/storefront-fetch');
+const ins = require('../lib/page-section-insert');
 
 const HANDLE = 'ap-csp-teacher-superpack';
-const BLOCK_FILE = path.join(__dirname, '..', 'content', 'csp-bundle-inventory.html');
+//  Authored here rather than in a .html file so the only artifact is the sheet.
+const BLOCK = [
+'    <div class="also" style="margin-top:14px;">',
+'      <div class="also-title">Slides are what people ask about. Here is the rest of it.</div>',
+'      <p style="margin:10px 0 0;">Every one of the 35 topics ships the same set, so there is never a lesson where the one piece you need is the piece that was not made.</p>',
+'      <ul class="also-list">',
+'        <li><strong>Guided notes in two versions.</strong> CB Standard covers the required content. Deep Dive is the same lesson with enrichment sections, for block periods or an honors section. Same topic, same day, two handouts, so a mixed room does not need two preps. That is 224 files on its own.</li>',
+'        <li><strong>Two exercises and a topic quiz, each with a key.</strong></li>',
+'        <li><strong>A lesson map, a teacher guide, and a discussion guide</strong> for every topic, which is the part that matters when you are teaching something for the first time on four hours of sleep.</li>',
+'        <li><strong>A Big Idea exam with a key,</strong> five of them, one at the end of each Big Idea.</li>',
+'      </ul>',
+'      <p style="margin:12px 0 0;">Before any of that there is a year-long pacing guide and a semester block version, the Create Performance Task pack, the Big Idea 2 data project, and Innovation Investigations.</p>',
+'      <p style="margin:10px 0 0;">Around 590 files in total. Anything marked KEY sits on the teacher side of the site and the student-safe files are grouped separately, so you can print or post a handout without opening it first to check whether the answers are on page two.</p>',
+'    </div>',
+'',
+].join('\n');
 const OUT = path.join(__dirname, '..', 'matrixify', 'csp-teacher-bundle-inventory-pages.csv');
 
 //  The block goes immediately before the "Every purchase also includes" panel,
@@ -62,55 +78,7 @@ const SENTINEL = 'Slides are what people ask about.';
 const BOM = '﻿';
 const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
 
-function block() {
-  const b = fs.readFileSync(BLOCK_FILE, 'utf8');
-  if (!b.includes(SENTINEL)) throw new Error(`the block no longer contains the sentinel ${JSON.stringify(SENTINEL)}`);
-  //  Escapes, not the characters themselves. Writing an em-dash literally here
-  //  would put one in a file the repo greps for them, the same reason
-  //  lib/mojibake.js spells its examples as codepoints.
-  if (b.includes('\u2014') || b.includes('\u2013')) throw new Error('the block contains a dash this repo does not use in authored prose');
-  return b;
-}
 
-function splice(live, blk) {
-  const problems = [];
-  if (live.includes(SENTINEL)) problems.push('the section is ALREADY on the live page: nothing to do, and a second insert would print it twice');
-
-  const hits = live.split(ANCHOR).length - 1;
-  if (hits !== 1) problems.push(`the anchor occurs ${hits} times, expected exactly 1. The page layout changed and this script must be re-aimed rather than guessed at.`);
-  if (problems.length) return { problems };
-
-  //  A FUNCTION replacement, never a string one. String.replace interprets $&,
-  //  $` and $' inside a string replacement, so a block containing any of them
-  //  splices in the matched text, everything before the match, or everything
-  //  AFTER the match. Measured: a 14 byte body and a block carrying all three
-  //  came back as "AAA[block <anchor> and AAA and ZZZ end]<anchor>ZZZ". That is
-  //  silent body corruption from prose nobody would look at twice, and "$" is
-  //  one edit away on a page whose selling point is a price. A function
-  //  replacement is not interpreted at all.
-  const out = live.replace(ANCHOR, () => blk + ANCHOR);
-
-  problems.push(...verifyInsertion(live, blk, out));
-  return { problems, out };
-}
-
-//  The join-incident guard, factored out so it can be mutation tested against a
-//  deliberately corrupted output. splice() computes its own `out`, so a test
-//  that only calls splice() can never prove these two assertions actually fire.
-function verifyInsertion(live, blk, out) {
-  const problems = [];
-  //  Length first, because it is cheap and catches a replace that matched more
-  //  than intended.
-  if (out.length !== live.length + blk.length) {
-    problems.push(`length is ${out.length}, expected ${live.length + blk.length}. Something other than a pure insertion happened.`);
-  }
-  //  Then the exact one: strip the block back out and the original must return
-  //  byte for byte. A deletion anywhere else in the body fails here.
-  if (out.replace(blk, () => '') !== live) {
-    problems.push('removing the block does not return the live body byte for byte');
-  }
-  return problems;
-}
 
 function sheet(bodyHtml) {
   //  Handle, Command, Body HTML. No Title, no SEO columns, no Published At: a
@@ -163,14 +131,14 @@ function check(live, blk) {
 }
 
 function main() {
-  const blk = block();
+  const blk = ins.checkAuthored(BLOCK, SENTINEL);
   const page = sf.pageBody(HANDLE);
   const live = page.body_html;
   console.log(`live body: ${live.length} bytes, updated ${page.updated_at}`);
   console.log(`block:     ${blk.length} bytes`);
 
   if (!process.argv.includes('--check')) {
-    const { problems, out } = splice(live, blk);
+    const { problems, out } = ins.splice({ live, block: blk, anchor: ANCHOR, sentinel: SENTINEL });
     if (problems.length) {
       console.error(`\nREFUSED, ${problems.length} problem(s):`);
       for (const p of problems) console.error(`  ${p}`);
@@ -195,4 +163,4 @@ function main() {
 //  against the real page, so they have to be testable here.
 if (require.main === module) main();
 
-module.exports = { HANDLE, ANCHOR, SENTINEL, BLOCK_FILE, OUT, block, splice, verifyInsertion, sheet, check };
+module.exports = { HANDLE, ANCHOR, SENTINEL, BLOCK, OUT, sheet, check };
