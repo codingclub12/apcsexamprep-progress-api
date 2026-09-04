@@ -7,7 +7,7 @@
  * student /pages/my-progress page:
  *   - Auth is a TEACHER token (localStorage `apcse_teacher_token`), obtained by
  *     email + password at /pages/cyber-class (POST /api/teacher/login).
- *   - The dashboard reads ?code=<CLASS> and renders #tcdash-main / #dash-code /
+ *   - The dashboard reads ?code=<CLASS> and renders #tcdash-main / #gb-code /
  *     the stat tiles / the student table, backed by
  *     GET /api/teacher/classes/:code/progress.
  *
@@ -193,9 +193,25 @@ async function main() {
       record(`${code}: dashboard renders (#tcdash-main)`, mainVisible,
         mainVisible ? '' : 'teacher dashboard did not render');
       if (mainVisible) {
-        const codeText = ((await page.locator('#dash-code').textContent().catch(() => '')) || '').trim();
+        // #gb-code, not #dash-code. The dashboard rework renamed the element and
+        // this line was not updated, so `textContent` on a selector that matches
+        // nothing resolved to '' and the assertion failed for all five classes
+        // every night while the dashboard was rendering the code correctly.
+        //
+        // Two ids are tried because the page writes the same class code into
+        // both (`gb-code` in the join-code chip, `gb-share-code` in the share
+        // line), and a rename that takes one is unlikely to take both. If BOTH
+        // go missing the assertion still fails, which is the point: this must
+        // stay able to catch a dashboard that has genuinely stopped showing the
+        // teacher which class they are looking at.
+        const CODE_IDS = ['#gb-code', '#gb-share-code'];
+        let codeText = '';
+        for (const sel of CODE_IDS) {
+          const t = ((await page.locator(sel).textContent().catch(() => '')) || '').trim();
+          if (t) { codeText = t; break; }
+        }
         record(`${code}: dashboard shows the class code`, codeText.toUpperCase() === code,
-          codeText.toUpperCase() === code ? '' : `#dash-code was "${codeText}"`);
+          codeText.toUpperCase() === code ? '' : `${CODE_IDS.join(' / ')} was "${codeText}"`);
       } else {
         // Selector-agnostic fallback: is the class code text anywhere on the page?
         const hasCode = await page.getByText(code, { exact: false }).first().isVisible().catch(() => false);

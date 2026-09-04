@@ -109,8 +109,43 @@ const CFG = {
 
 // A stable, filesystem-safe run id (no colons). Used in the sentinel name too.
 const RUN_ID = new Date().toISOString().replace(/[:.]/g, '-');
-const DISPLAY_NAME = `ZZ-SMOKE ${RUN_ID}`;
 if (!CFG.pin) CFG.pin = String((Number(Date.now()) % 9000) + 1000); // 4 digits, 1000-9999
+
+// ── ONE SENTINEL PER CLASS, NOT ONE PER RUN ──────────────────────────────────
+//  This used to be a single `ZZ-SMOKE <run id>` registered into every class in
+//  the list, and that stopped working the day student accounts shipped
+//  (2026-08-27). Identity is now (name, PIN) ACROSS courses, and POST /join
+//  deliberately refuses a second class for a name and PIN it already knows:
+//  the honest door for "same kid, another course" is to sign in and POST
+//  /enroll, which the join page offers as add_existing.
+//
+//  So the first class passed and every later class failed at register, then
+//  failed login and /me because the student it was trying to sign in as had
+//  never been created. 32 assertion failures a night, every night, from a test
+//  asking the product to do something the product correctly refuses.
+//
+//  A monitor that is red for its own reasons is worse than no monitor, because
+//  by the second week nobody reads it, and this one is the only thing watching
+//  whether students can sign in at all.
+//
+//  WHAT THIS GIVES UP, stated because it is real: the run no longer exercises
+//  one student reaching several courses. That path deserves its own coverage
+//  (register once, then add the other classes through /enroll and assert the
+//  switcher lists them). It is a different test from this one, and writing it
+//  blind while this one is red would have shipped two broken tests instead of
+//  one working one.
+const NAME_MAX = 50;   // utils.sanitize truncates here; a silent trim would put
+                       // two classes back on the same name and reopen the bug.
+function sentinelName(classCode) {
+  const name = `ZZ-SMOKE ${RUN_ID} ${classCode}`;
+  if (name.length > NAME_MAX) {
+    console.error(`FATAL: sentinel name is ${name.length} chars, over the ${NAME_MAX} the server stores.`);
+    console.error(`       "${name}" would be truncated, and two classes could collide again.`);
+    process.exit(2);
+  }
+  return name;
+}
+let DISPLAY_NAME = sentinelName(CFG.classCodes[0] || 'UNSET');
 
 // ── Result tracking ───────────────────────────────────────────────────────────
 const results = [];   // { cls, block, name, pass, detail }
@@ -561,7 +596,7 @@ async function main() {
   console.log(`  site:    ${CFG.siteBase}`);
   console.log(`  api:     ${CFG.apiBase}`);
   console.log(`  classes: ${CFG.classCodes.join(', ') || '(unset!)'}`);
-  console.log(`  name:    ${DISPLAY_NAME}`);
+  console.log(`  name:    ZZ-SMOKE ${RUN_ID} <CLASS>  (one per class)`);
   console.log(`  pin:     ${CFG.pin}`);
   console.log('');
 
@@ -598,6 +633,8 @@ async function main() {
   // per class so a failure dump is scoped to the class that failed.
   for (const classCode of CFG.classCodes) {
     CURRENT_CLASS = classCode;
+    // Per class, for the reason spelled out where sentinelName is defined.
+    DISPLAY_NAME = sentinelName(classCode);
     consoleLog.length = 0;
     networkLog.length = 0;
     console.log(`\n################ CLASS ${classCode} ################`);

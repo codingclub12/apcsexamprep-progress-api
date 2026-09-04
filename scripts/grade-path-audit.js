@@ -71,12 +71,54 @@ function missingWriters(sources) {
   return Array.from(called).filter((n) => !defined.has(n) && n !== 'APCS_PAGE');
 }
 
+// Every `NAME = [ 'a', 'b' ]` in the file, as NAME -> ids. Arrays of anything
+// other than string literals are skipped rather than half-read, so a list of
+// selectors cannot masquerade as a list of ids.
+function idArrays(js) {
+  const out = new Map();
+  for (const m of js.matchAll(/([A-Za-z_$][\w$]*)\s*=\s*\[([^\][]*)\]/g)) {
+    const body = m[2].trim();
+    if (!body) continue;
+    const ids = Array.from(body.matchAll(/['"]([^'"]+)['"]/g)).map((x) => x[1]);
+    // Every element must have been a string literal. Comparing the count of
+    // quoted runs against the count of comma-separated elements is what rejects
+    // `[a, 'b']` and `[fn(), 'x']`.
+    if (ids.length && ids.length === body.replace(/,\s*$/, '').split(',').length) out.set(m[1], ids);
+  }
+  return out;
+}
+
 // The id list the deployed reporter ships with. Both quote styles: the source
 // writes 'score-display' and the minified build ships "score-display", and
 // matching only one returns an empty list and makes every page look uncovered.
+//
+// SCORE_IDS IS NOT ALWAYS AN ARRAY LITERAL. The deployed build assembles it as
+// `SCORE_IDS=RESULT_IDS.concat(PROGRESS_IDS)`, and a regex demanding `= [`
+// found nothing there, returned an empty list, and reported "could not be
+// read" every night from the day that refactor shipped. The four assertions
+// underneath were guarded on the list being non-empty, so the checks that
+// actually protect a student's grade stopped running and the only thing left
+// was the parse complaint. Resolve the names instead: whatever SCORE_IDS is
+// built from, the ids it ends up reading are what this audit is asking about.
 function scoreIds(js) {
-  const block = /SCORE_IDS\s*=\s*\[([\s\S]*?)\]/.exec(js);
-  return block ? Array.from(block[1].matchAll(/['"]([^'"]+)['"]/g)).map((x) => x[1]) : [];
+  const rhs = /SCORE_IDS\s*=\s*([\s\S]*?)(?:;|,\s*[A-Za-z_$][\w$]*\s*=[^=])/.exec(js);
+  if (!rhs) return [];
+  const expr = rhs[1];
+  const arrays = idArrays(js);
+  // An inline literal is still the common case and still wins outright.
+  const inline = /^\s*\[([^\][]*)\]/.exec(expr);
+  if (inline) return Array.from(inline[1].matchAll(/['"]([^'"]+)['"]/g)).map((x) => x[1]);
+  // Otherwise take every named list the expression mentions, in the order it
+  // mentions them, plus any array spelled out inside the expression itself.
+  const ids = [];
+  for (const m of expr.matchAll(/\[([^\][]*)\]|([A-Za-z_$][\w$]*)/g)) {
+    if (m[1] !== undefined) {
+      for (const s of m[1].matchAll(/['"]([^'"]+)['"]/g)) ids.push(s[1]);
+    } else if (arrays.has(m[2])) {
+      ids.push(...arrays.get(m[2]));
+    }
+  }
+  return ids;
 }
 
 const abs = (u) => (u.startsWith('//') ? 'https:' + u : u);
@@ -140,7 +182,16 @@ async function main() {
   const REQUIRED_IDS = module.exports.REQUIRED_SCORE_IDS;
   if (rep) {
     const ids = scoreIds(rep[1]);
-    if (!ids.length) findings.push('apcs-score-reporter.js: SCORE_IDS could not be read');
+    if (!ids.length) {
+      // Say BOTH things. The old wording reported only the parse failure while
+      // the four checks below quietly did not run, so a night that had stopped
+      // asking the question read the same as a night that asked and got a good
+      // answer. Whichever of these two lines is wrong, neither is silent.
+      findings.push('apcs-score-reporter.js: SCORE_IDS could not be read');
+      findings.push(
+        `apcs-score-reporter.js: coverage of #${REQUIRED_IDS.join(', #')} went UNCHECKED this run`
+      );
+    }
     for (const id of REQUIRED_IDS) {
       if (ids.length && !ids.includes(id)) {
         findings.push(`apcs-score-reporter.js no longer reads #${id}; pages using it score nothing`);
