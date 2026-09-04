@@ -236,7 +236,8 @@
     "smoke:assistantexfil": "node smoke/assistant-exfiltration.js",
     "smoke:cyberexamreplica": "node smoke/cyber-exam-replica.js",
     "cyber:examblueprint": "node tools/ap-cyber-ced/build-exam-blueprint.js",
-    "smoke:assistantanon": "node smoke/assistant-anonymous.js"
+    "smoke:assistantanon": "node smoke/assistant-anonymous.js",
+    "smoke:assistantstudent": "node smoke/assistant-student.js"
   },
   "keywords": [],
   "author": "",

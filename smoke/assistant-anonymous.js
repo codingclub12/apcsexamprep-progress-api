@@ -406,7 +406,28 @@ const failTurnstile = (reason) => async () => ({ ok: false, reason });
     ok('it posts exactly the five allowed fields',
       /message:/.test(w.t) && /pageUrl:/.test(w.t) && /pageTitle:/.test(w.t)
       && /sessionId:/.test(w.t) && /turnstileToken:/.test(w.t));
-    ok('it refuses to render on coursework paths', /COURSEWORK/.test(w.t) && /allowedHere/.test(w.t));
+    // BEHAVIOUR, NOT A FUNCTION NAME. This assertion used to look for the
+    // identifier `allowedHere`, and Phase 4 renaming it to `surface` turned the
+    // check red while the widget still refused coursework exactly as before. A
+    // guard tied to a name tests refactoring, not safety. So the regex literals
+    // are pulled out of the served file and RUN against real paths.
+    const rx = (name) => {
+      const m = new RegExp('var ' + name + ' = (/.+/);').exec(w.t);
+      return m ? eval(m[1]) : null; // eslint-disable-line no-eval
+    };
+    const COURSEWORK = rx('COURSEWORK');
+    const TEACHER = rx('TEACHER');
+    ok('the coursework pattern is present and parseable', !!COURSEWORK && !!TEACHER);
+    for (const p of ['/pages/ap-csa-unit-1-lesson-1-2', '/pages/ap-cybersecurity-1-1-quiz',
+      '/pages/ap-csp-course-bi1-intro', '/pages/intro-java-1-1']) {
+      ok(`the widget excludes ${p}`, COURSEWORK.test(p), p);
+    }
+    for (const p of ['/pages/teacher-dashboard', '/admin/command']) {
+      ok(`the widget excludes ${p}`, TEACHER.test(p), p);
+    }
+    for (const p of ['/pages/pricing', '/collections/all', '/']) {
+      ok(`but not ${p}`, !COURSEWORK.test(p) && !TEACHER.test(p), p);
+    }
     ok('it uses a shadow root so a theme save cannot restyle it', /attachShadow/.test(w.t));
     ok('it checks the server switch before rendering anything', /anon_enabled/.test(w.t));
   }
