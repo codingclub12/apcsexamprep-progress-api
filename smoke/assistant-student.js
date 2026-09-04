@@ -75,6 +75,10 @@ const PORTAL = 'https://apcsexamprep.com/pages/my-progress';
 // sentinel is not a sentinel: it collides with ids, timestamps and token counts,
 // and a leak test that cries wolf gets its assertion deleted rather than
 // investigated.
+//
+// Four digits narrowed that and did not close it, because the collision is with
+// HEX and hex contains every decimal digit. The close is in leaks() below, which
+// masks the handles before it scans. Length is not what makes these safe.
 const MARK_SCORE = 8021;
 const MARK_MAX = 9999;
 const OTHER_MARK = 7777;
@@ -126,8 +130,26 @@ const T1 = signTeacherToken({ id: 't1', email: 'teach@school.example' });
 
 const SENTINELS = [S_PROMPT, S_OPTION, S_CODE, S_TEACHER, S_OTHER_STUDENT,
   String(MARK_SCORE), String(MARK_MAX), String(OTHER_MARK), 'CYBER-OTHER'];
+// A mark is a DECIMAL number, and the text it is scanned against also carries
+// opaque handles, every one of which is HEXADECIMAL: 'esc_' plus 24 hex for an
+// escalation, 'cs_' plus 24 for a session, 64 for a content hash. Hex draws from
+// 0-9 and a-f, so it contains all ten decimal digits, and a decimal sentinel can
+// land inside a handle by chance no matter how long it is. Four digits across
+// the two ids in an escalation row is 42 windows at 1 in 65536, which measures
+// at 1 in 530 runs of this suite for the three marks together, and CI hit it on
+// 2026-09-04: 8021 came up inside a random escalation id, and a correct guard
+// reported a leak that was not there. Going to six digits would only move the
+// number, the same way going from two to four did.
+//
+// So mask the handles rather than shorten the scan. A run of 16 or more hex
+// characters is an identifier and never a place a mark can be read; a real leak
+// reads 8021, or 80.21%, or 8021 of 9999, in prose or as a JSON value, and none
+// of those survives inside a 16 character hex run. Every field a mark could
+// actually surface in is scanned exactly as before, and the mutation note above
+// the escalation assertion is what keeps that honest.
+const OPAQUE_HANDLE = /[0-9a-f]{16,}/g;
 function leaks(text) {
-  const t = String(text || '');
+  const t = String(text || '').replace(OPAQUE_HANDLE, '<handle>');
   return SENTINELS.filter((s) => t.includes(s));
 }
 
@@ -302,6 +324,11 @@ function bodiesFor(sessionId) {
     ok('the escalation records the role as student', esc && esc.role === 'student', esc && esc.role);
     ok('the escalation stores NO summary, because student sessions are shape-only',
       esc && esc.summary === null && esc.bodies_retained === 0, { s: esc && esc.summary, b: esc && esc.bodies_retained });
+    // This row is the one that carries two random hex handles, so it is where
+    // the masking in leaks() has to be proved not to have hollowed the guard.
+    // The mutation: make store() in lib/assistant/report.js write the mark into
+    // detail_json, and this line must go RED. It does. The mirror mutation is a
+    // handle forced to contain 8021, which must stay GREEN.
     ok('and it carries no sentinel anywhere', esc && leaks(JSON.stringify(esc)).length === 0, esc && leaks(JSON.stringify(esc)));
   }
 
