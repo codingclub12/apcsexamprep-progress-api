@@ -244,7 +244,10 @@
     "smoke:cyberhubrepair": "node smoke/cyber-practice-hub-repair.js",
     "cyber:hubrepair": "node tools/ap-cyber-ced/generate-practice-hub-repair.js",
     "smoke:assistantanon": "node smoke/assistant-anonymous.js",
-    "smoke:assistantstudent": "node smoke/assistant-student.js"
+    "smoke:assistantstudent": "node smoke/assistant-student.js",
+    "smoke:cyberctacourse": "node smoke/cyber-course-practice-cta.js",
+    "cyber:ctacourse": "node tools/ap-cyber-ced/generate-course-practice-cta.js",
+    "verify:cyberctacourse": "node scripts/verify-cyber-course-practice-live.js"
   },
   "keywords": [],
   "author": "",

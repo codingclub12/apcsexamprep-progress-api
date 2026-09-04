@@ -1,0 +1,104 @@
+{
+  "change": "the AP Cybersecurity practice hub moves from the bottom of the course to the top of it",
+  "_context": [
+    "Tanner asked for the practice hub in the nav AND linked at the top of the",
+    "course. The nav half shipped in theme PR #105. This is the course half.",
+    "",
+    "Measured on the served bodies 2026-09-04, after the hub and spoke import:",
+    "",
+    "    ap-cybersecurity                        72 anchors   hub ABSENT",
+    "    ap-cybersecurity-complete-course-guide 247 anchors   hub 247 of 247",
+    "    ap-cybersecurity-topics                 52 anchors   hub  51 of 52",
+    "",
+    "Every one of those links was placed by lib/link-block.js, which APPENDS. It",
+    "did its job; a link at the top is simply a different insertion, which is why",
+    "this is its own generator rather than another call into that module.",
+    "",
+    "THE ASSERTION IS ORDINAL, NOT EXISTENTIAL, AND THAT IS THE POINT. 'The course",
+    "guide links the practice hub' was ALREADY TRUE, from anchor 247 of 247 at the",
+    "bottom of a 105 KB page. A presence check would have passed on that and",
+    "reported a fix that had not happened, which is the same shape as the health",
+    "check that expected a status the server already returned. So both the suite",
+    "and the live check assert POSITION: inside the first four anchors of the body."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the bands, the ordinal claim, and the sheet",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect": "OK - 33 checks, 7 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "suite",
+      "name": "the two practice packages this sits on top of did not regress",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect": "OK - 29 checks, 16 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation parses the sheet back and agrees, by diff",
+      "_why": "Python, sharing no code with the generator. It diffs each row against the captured live body and requires that every character survives and there is exactly one insertion, and it re-derives the ordinal claim per page: absent on one, last on the other, front on both afterwards.",
+      "command": "python3 scripts/cyber-course-cta-rederive.py",
+      "expect": "OK - 35 checks re-derived from the sheet by diff, independently of the generator"
+    },
+    {
+      "kind": "suite",
+      "name": "the sheet clears the Matrixify preflight",
+      "_why": "Both course pages carry emoji of their own and this pass adds none, so the preflight needs the round trip. The wrapper hands it the committed fixtures: 40 emoji and 368 non-ASCII characters carried, none added.",
+      "command": "node scripts/preflight-course-practice-cta.js",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE WORTH HAVING: make buildBody something other than a pure insertion",
+      "_why": "A MERGE republishes the whole Body HTML, so the expensive failure is a generator that starts removing things. The first draft guarded that with a list of per-page markers copied from the hub repair generator, and it was DEAD CODE: a pure insertion cannot lose anything, and deleting the marker check changed no test outcome, so it was removed rather than kept for the look of it. What replaced it is the exact-split assertion, and this mutation is the only thing that can reach it: it makes buildBody remove a class on its way past, and the suite has to refuse.",
+      "file": "tools/ap-cyber-ced/generate-course-practice-cta.js",
+      "find": "  const body = live.replace(page.before, block + page.before);",
+      "replace": "  const body = live.replace(page.before, block + page.before).replace('ch-startgrid', 'x');",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect_failure": "the result is not the live body with one block inserted"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop refusing a page that already carries the band",
+      "_why": "A second import would otherwise put two bands on the page, and a MERGE makes that permanent.",
+      "file": "tools/ap-cyber-ced/generate-course-practice-cta.js",
+      "find": "  if (live.includes(MARK)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect_failure": "MUTATION: a body that already carries the band is refused, not doubled"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop checking that both practice links go on",
+      "_why": "A band that reaches only the hub, or only the exam, half does the job while reading as done.",
+      "file": "tools/ap-cyber-ced/generate-course-practice-cta.js",
+      "find": "  if (anchors(body) - anchors(live) !== 2) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect_failure": "MUTATION: a band that links only one of the two practice pages is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop requiring the insertion point to match exactly once",
+      "_why": "A marker that matches twice means the page moved under us and the insertion point can no longer be trusted; guessing which one to use is how a band lands in the middle of something.",
+      "file": "tools/ap-cyber-ced/generate-course-practice-cta.js",
+      "find": "  if (n !== 1) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect_failure": "MUTATION: an insertion point that matches twice is refused"
+    },
+    {
+      "kind": "live",
+      "name": "the served pages put the practice hub at the top, and came through intact",
+      "_why": "Measured before the import: 6 passed, 8 failed. The 8 failures are the whole change, four per page: the band is absent, the hub is absent or 247 of 247, the band does not link both practice pages, and the count is not stated. The 6 that already pass are preservation checks and are meant to hold on both sides, which is what rules out a band that shipped and took the page with it.",
+      "command": "node scripts/verify-cyber-course-practice-live.js",
+      "expect": "the practice hub is at the top of the course, and both pages came through intact"
+    }
+  ],
+  "not_covered": [
+    "ap-cybersecurity-topics still links the practice hub at 51 of 52. It is the concept layer rather than the course, so it is outside what was asked for here, and it is a third page with a third structure. Worth doing next, not worth widening this sheet for.",
+    "Whether a band under the hero is the right placement is a judgement about the page, not something a check settles. The literal ask was the top of the course, and the hero already carries its own Start Here button for a first-timer, so the newcomer path is not displaced.",
+    "Whether the band earns clicks. That is Search Console and session data over weeks, not a gate."
+  ]
+}
