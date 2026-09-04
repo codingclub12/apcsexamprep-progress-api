@@ -184,7 +184,7 @@ function childFolders_(parent) {
  * {lesson:'1-2', day:3, variant:'TEACHER', fileId, fileName}.
  *
  * Folder names are Lesson_1.2_Something; the API speaks 1-2, so the dot is
- * normalised here and nowhere else. Deck files are Day<K>_Deck_STUDENT.pptx
+ * normalized here and nowhere else. Deck files are Day<K>_Deck_STUDENT.pptx
  * with STUDENT and TEACHER uppercase; the AP CSP decks use "Student", so a
  * regex copied from that build matches nothing here.
  */
@@ -401,7 +401,7 @@ function alreadyDone_(sh) {
 function convertOne_(deck, destFolderId) {
   var copied = Drive.Files.copy(
     {
-      name: 'AP-CYBER_' + deck.lesson + '_Day' + deck.day + '_Deck_' + deck.variant,
+      name: 'AP-CSA_' + deck.lesson + '_Day' + deck.day + '_Deck_' + deck.variant,
       mimeType: MimeType.GOOGLE_SLIDES,
       parents: [destFolderId]
     },
@@ -483,7 +483,7 @@ function start() {
   removeTriggers_();
   Logger.log('run complete. converted ' + converted + ', failed ' + failed + '.');
   Logger.log('Now: File > Download > CSV on the sheet, then in the repo run');
-  Logger.log('  node scripts/cyber-slide-embeds-from-csv.js <export.csv>');
+  Logger.log('  node scripts/csa-slide-embeds-from-csv.js <export.csv>');
   Logger.log('and re-run with --write once it reports no refusals.');
 }
 
@@ -525,6 +525,44 @@ function report() {
   Logger.log('This is the script reporting on itself. It is not evidence.');
   Logger.log('Confirm against Drive and against a credential-free fetch of an');
   Logger.log('embed URL before treating the conversion as done.');
+}
+
+/**
+ * Rename decks whose prefix is not this course's.
+ *
+ * The first CSA conversion ran with the adapted script's original naming
+ * literal still in place, so 152 decks landed in Drive under another course's
+ * prefix. Nothing downstream reads the title: the sheet carries the file id and
+ * the embed map keys on that, so this is cosmetic. It is still worth fixing,
+ * because a teacher who opens the folder should not be told these are another
+ * course's decks.
+ *
+ * It does not name the wrong prefix, it replaces whatever prefix is there. That
+ * is both more general and the only version that passes smoke:csaslides, whose
+ * rule is that no string literal in this file may mention another course. A
+ * helper that had to spell the bad value out would have been the fourth
+ * instance of the bug it exists to clean up.
+ *
+ * Safe to run twice: a file already correct is skipped rather than re-prefixed.
+ */
+function renameConvertedDecks() {
+  var want = 'AP-CSA_';
+  var files = outputFolder_().getFiles();
+  var renamed = 0, ok = 0, untouched = 0;
+  while (files.hasNext()) {
+    var f = files.next();
+    var name = f.getName();
+    var cut = name.indexOf('_');
+    // No underscore means it is not a deck. The map spreadsheet lives in this
+    // same folder and must not be renamed.
+    if (cut < 0) { untouched++; continue; }
+    if (name.substring(0, cut + 1) === want) { ok++; continue; }
+    f.setName(want + name.substring(cut + 1));
+    renamed++;
+  }
+  Logger.log('renamed ' + renamed + ', already correct ' + ok + ', not a deck ' + untouched + '.');
+  Logger.log('The sheet is unaffected: it stores file ids, not titles, so the');
+  Logger.log('embed map does not change and does not need regenerating.');
 }
 
 function reset() {

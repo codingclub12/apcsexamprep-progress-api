@@ -257,6 +257,58 @@ const grant = (teacherId, course) => db.prepare(
       `${gotLessons} lessons cannot yield ${gotDecks} decks`);
   }
 
+  // ── NO CYBER VALUE SURVIVES IN AN EMITTED STRING ──────────────────────────
+  //  scripts/csa-slides-conversion.gs was adapted from the cyber script, and
+  //  three of its literals were never changed over. All three shipped:
+  //
+  //    'EXPECTED: 9 lessons, 70 decks'   the cyber shape, so preview() told the
+  //                                      operator to stop on a correct upload
+  //    'AP-CYBER_' + deck.lesson         152 CSA decks named AP-CYBER in Drive
+  //    'node scripts/cyber-slide-...'    the closing instruction named the wrong
+  //                                      importer, which reads the cyber
+  //                                      manifest and writes the cyber config
+  //
+  //  Each was found by a person looking, one at a time, after the fact. This is
+  //  the rule that finds the next one: no STRING LITERAL in the file may mention
+  //  cyber. Comments may and should, because the adaptation history is worth
+  //  keeping; it is the emitted values that must belong to this course.
+  {
+    const gs = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts', 'csa-slides-conversion.gs'), 'utf8');
+    // A regex over the whole file is not good enough in either direction, and
+    // both failures were seen while writing this. Matching literals directly
+    // starts on an apostrophe inside a comment and runs away, swallowing prose
+    // until the next quote. Stripping comments first with a // rule truncates
+    // any line holding an https:// URL and hides whatever follows it.
+    //
+    // So walk the file once and know which of the four states each character is
+    // in. It is twenty lines and it is exactly right, where the regex is short
+    // and wrong.
+    const literals = [];
+    {
+      let i = 0, buf = null, quote = null;
+      while (i < gs.length) {
+        const c = gs[i], d = gs[i + 1];
+        if (buf === null) {
+          if (c === '/' && d === '/') { while (i < gs.length && gs[i] !== '\n') i++; continue; }
+          if (c === '/' && d === '*') { i += 2; while (i < gs.length && !(gs[i] === '*' && gs[i + 1] === '/')) i++; i += 2; continue; }
+          if (c === "'" || c === '"') { quote = c; buf = ''; i++; continue; }
+          i++; continue;
+        }
+        if (c === '\\') { buf += gs[i + 1] || ''; i += 2; continue; }
+        if (c === quote) { literals.push(buf); buf = null; quote = null; i++; continue; }
+        buf += c; i++;
+      }
+    }
+    const offenders = literals.filter((l) => /cyber/i.test(l));
+    ok('no string literal in the conversion script mentions cyber',
+      offenders.length === 0, offenders.slice(0, 3).join('  '));
+    // The rule is only as good as its reach. If the literal scan ever returns
+    // almost nothing, it has stopped seeing the file rather than found it clean.
+    ok('  the literal scan actually read the file',
+      literals.length > 40, `only ${literals.length} literals found`);
+  }
+
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
   server.close();
   try { db.close(); } catch (e) {}
