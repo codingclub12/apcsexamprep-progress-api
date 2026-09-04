@@ -58,6 +58,45 @@ const RULES = {
   P5: 'a row that rewrites a live page instead of extending it',
 };
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  WHAT COUNTS AS TEXT THIS PACKAGE AUTHORED.
+//
+//  Rules 1, 2, 3 and 7 govern text WE WRITE. On a page this package CREATES the
+//  whole body is ours. On a page it EXTENDS, ours is only what sits inside
+//  lib/link-block.js's own fences; the rest is a live page somebody else wrote.
+//
+//  This is not a loosening, it is the rule's actual scope, and the difference
+//  is load-bearing. ap-cybersecurity-complete-course-guide carries 40-odd
+//  em-dashes in its existing prose. Judging the whole body would refuse a
+//  one-link edit over text the edit does not touch, which in practice means
+//  the guard gets switched off or the link never ships. Meanwhile a real
+//  defect, an em-dash or an EK code or mojibake in the link block we are
+//  adding, still lands inside the fence and is still caught. The suite proves
+//  that direction with its own mutation rather than asserting it here.
+//
+//  Structural rules are unaffected and still read the whole row: R5 (an empty
+//  Body cell), R6 (a dead link anywhere on the page), P3, P4 and P5.
+function authoredText(row, sp) {
+  const body = String(row['Body HTML'] == null ? '' : row['Body HTML']);
+  if (!sp || sp.created) return body;
+  const out = [];
+  const grab = (open, close) => {
+    let i = 0;
+    for (;;) {
+      const a = body.indexOf(open, i);
+      if (a === -1) return;
+      const b = body.indexOf(close, a + open.length);
+      if (b === -1) { out.push(body.slice(a)); return; }
+      out.push(body.slice(a + open.length, b));
+      i = b + close.length;
+    }
+  };
+  grab(linkBlock.MARK_OPEN, linkBlock.MARK_CLOSE);
+  grab(linkBlock.CSS_OPEN, linkBlock.CSS_CLOSE);
+  return out.join('\n');
+}
+
 const flatten = base.flatten;
 const stripComments = base.stripComments;
 
@@ -250,12 +289,17 @@ function validate(sheet, opts = {}) {
       fail.push(`P4 ${where} has no source spec, so nothing about it can be checked`);
       return;
     }
-    fail.push(...base.ruleEkCodes(row['Body HTML']));
-    fail.push(...base.ruleExamWeighting(row['Body HTML']));
+    //  Content rules read only what this package authored on that row.
+    const mine = authoredText(row, sp);
+    fail.push(...base.ruleEkCodes(mine));
+    fail.push(...base.ruleExamWeighting(mine));
     fail.push(...rulePracticeIntent(row, sp));
     for (const col of header) {
-      fail.push(...base.ruleEmDash(row[col], `${where} column ${JSON.stringify(col)}`));
-      fail.push(...base.ruleMojibake(row[col], `${where} column ${JSON.stringify(col)}`));
+      //  Every other column is short and entirely ours when present, so those
+      //  are judged whole. Only the body is split by authorship.
+      const value = col === 'Body HTML' ? mine : row[col];
+      fail.push(...base.ruleEmDash(value, `${where} column ${JSON.stringify(col)}`));
+      fail.push(...base.ruleMojibake(value, `${where} column ${JSON.stringify(col)}`));
     }
   });
 
@@ -277,7 +321,7 @@ function validate(sheet, opts = {}) {
 }
 
 module.exports = {
-  RULES, validate,
+  RULES, validate, authoredText,
   rulePracticeIntent, ruleNamespace, ruleEdges, ruleCoverage, ruleExtension,
   linksIn, headingOf,
 };

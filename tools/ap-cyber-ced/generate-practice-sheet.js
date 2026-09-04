@@ -182,15 +182,31 @@ function extendRow(handle, links, bodies, live, opts = {}) {
     throw new Error(`no stored body for ${handle} at ${file}. Fetch it before generating:`
       + ' an empty Body HTML cell would erase the live page.');
   }
-  const base = fs.readFileSync(file, 'utf8');
+  let base = fs.readFileSync(file, 'utf8');
   if (!base.trim()) throw new Error(`stored body for ${handle} is empty`);
+
+  //  Dead-anchor repair, before the link block. Each repair must actually match
+  //  something: a repair that changes nothing means the page moved under us and
+  //  the rest of this row can no longer be trusted, so it throws rather than
+  //  shipping a body built on a stale assumption.
+  let repaired = 0;
+  for (const rp of (opts.repairs || [])) {
+    const rx = new RegExp(`/pages/${rp.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![a-z0-9-])`, 'g');
+    const hits = (base.match(rx) || []).length;
+    if (!hits) throw new Error(`repair for ${handle} found no /pages/${rp.from} to fix`);
+    base = base.replace(rx, `/pages/${rp.to}`);
+    repaired += hits;
+  }
+
   const res = linkBlock.build(base, links, live, {
     selfHandle: handle,
     max: linkBlock.MAX_LINKS_HUB,
     heading: opts.heading || 'Related Resources',
   });
   if (!res.changed) throw new Error(`${handle} already carries every link, so the sheet would be a no-op`);
-  return { body: res.body, base, added: res.added, dropped: res.dropped };
+  //  `base` is the REPAIRED body, which is what P5 must compare against:
+  //  the repair is part of what this package authored on that page.
+  return { body: res.body, base, added: res.added, dropped: res.dropped, repaired };
 }
 
 //  ── WHY THIS EMITS TWO SHEETS AND NOT ONE ─────────────────────────────────
@@ -271,13 +287,40 @@ function generate(opts = {}) {
   //  The edge and coverage rules read the whole package, so they are validated
   //  against BOTH sheets together. Validating each file alone would report
   //  every cross-sheet edge as missing.
-  const allRows = [...createRows, ...extendRows];
-  const allSpecs = [...createSpecs, ...extendSpecs];
+  //  SHEET 3: the reverse edge. Seven live pages gain a link INTO the practice
+  //  layer. Body HTML only, same as sheet 2, and built from each page's own
+  //  live body through lib/link-block.js so nothing else on them moves.
+  const reverseRows = [];
+  const reverseSpecs = [];
+  const guideRows = [];
+  const guideSpecs = [];
+  for (const e of spec.reverseSources()) {
+    //  A page flagged needs_repair has dead anchors of its own. They are
+    //  repaired BEFORE the link block goes on, because R6 reads the finished
+    //  row and a MERGE republishes every link on the page, dead ones included.
+    const repairs = e.needs_repair ? spec.courseGuideRepairs() : [];
+    const r = extendRow(e.from, [{ handle: e.to, label: e.label }], bodies, resolvable,
+      { heading: 'Practice', repairs });
+    const row = { Handle: e.from, Command: 'MERGE', 'Body HTML': r.body };
+    const sp = { created: false, body_update: true, base_body: r.base };
+    if (e.needs_repair) {
+      guideRows.push(row); guideSpecs.push(sp);
+      notes.push(`${e.from}: added ${r.added.length} link, repaired ${r.repaired} dead anchor(s)`);
+    } else {
+      reverseRows.push(row); reverseSpecs.push(sp);
+      notes.push(`${e.from}: added ${r.added.length} link to ${e.to}`);
+    }
+  }
+
+  const allRows = [...createRows, ...extendRows, ...reverseRows, ...guideRows];
+  const allSpecs = [...createSpecs, ...extendSpecs, ...reverseSpecs, ...guideSpecs];
   const whole = sheetOf(allRows, allSpecs, CREATE_HEADER, live, newHandles);
 
   return {
     create: sheetOf(createRows, createSpecs, CREATE_HEADER, live, newHandles),
     extend: sheetOf(extendRows, extendSpecs, EXTEND_HEADER, live, newHandles),
+    reverse: sheetOf(reverseRows, reverseSpecs, EXTEND_HEADER, live, newHandles),
+    guide: sheetOf(guideRows, guideSpecs, EXTEND_HEADER, live, newHandles),
     whole,
     rows: allRows,
     specs: allSpecs,
@@ -305,13 +348,15 @@ function main() {
 
   //  Parse-back is checked on each file that will actually be imported, and on
   //  the package as a whole. Generation is not evidence that generation worked.
-  const drift = [...res.create.drift, ...res.extend.drift, ...res.whole.drift];
+  const drift = [...res.create.drift, ...res.extend.drift, ...res.reverse.drift,
+    ...res.guide.drift, ...res.whole.drift];
   if (drift.length) {
     console.error('\nPARSE-BACK DRIFT. A sheet does not read back as what was written:');
     for (const d of drift) console.error(`  ${d}`);
     process.exit(1);
   }
-  console.log(`\nparse-back: clean (${res.create.rows.length} new + ${res.extend.rows.length} extended)`);
+  console.log(`\nparse-back: clean (${res.create.rows.length} new + ${res.extend.rows.length} extended`
+    + ` + ${res.reverse.rows.length} reverse-linked)`);
 
   if (res.report.fail.length) {
     console.error(`\nVALIDATOR REFUSED (${res.report.fail.length}):`);
@@ -324,15 +369,20 @@ function main() {
     //  The file NAME carries the sheet type: a CSV has no tab name, so
     //  Matrixify reads the type off the filename and rejects the whole file in
     //  one second if it cannot find one.
-    const a = path.join(outDir, 'cyber-practice-new-pages.csv');
-    const b = path.join(outDir, 'cyber-practice-hub-links-pages.csv');
-    fs.writeFileSync(a, res.create.csv);
-    fs.writeFileSync(b, res.extend.csv);
-    console.log(`wrote ${a} (${Buffer.byteLength(res.create.csv)} bytes, ${res.create.rows.length} rows)`);
-    console.log(`wrote ${b} (${Buffer.byteLength(res.extend.csv)} bytes, ${res.extend.rows.length} rows)`);
-    console.log('\nIMPORT ORDER: the new pages first, then the hub links.');
-    console.log('The hub links point at the five new handles, so importing them first');
-    console.log('would publish two hubs linking five 404s.');
+    const files = [
+      ['cyber-practice-new-pages.csv', res.create],
+      ['cyber-practice-hub-links-pages.csv', res.extend],
+      ['cyber-practice-reverse-links-pages.csv', res.reverse],
+      ['cyber-course-guide-repair-pages.csv', res.guide],
+    ];
+    for (const [name, sheet] of files) {
+      const f = path.join(outDir, name);
+      fs.writeFileSync(f, sheet.csv);
+      console.log(`wrote ${f} (${Buffer.byteLength(sheet.csv)} bytes, ${sheet.rows.length} rows)`);
+    }
+    console.log('\nIMPORT ORDER: the new pages FIRST, then either link sheet.');
+    console.log('Both link sheets point at the five new handles, so importing one of them');
+    console.log('first would publish pages linking 404s.');
   } else {
     console.log('(no --out-dir, nothing written)');
   }

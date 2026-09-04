@@ -120,7 +120,29 @@ async function main() {
   ok('the concept hub links the practice hub (it linked no practice page at all before)',
     linksIn(topics).has(u.handle));
 
-  //  4. Nothing the import was supposed to leave alone got erased. The two
+  //  4. The REVERSE edge. Before the second import wave the five spokes had
+  //     exactly one inbound path between them, topics hub to umbrella to spoke.
+  //     These are the edges that make the hub and spoke reachable from where a
+  //     student actually starts, so each one is asserted on the live page.
+  for (const e of spec.reverseSources()) {
+    await sleep(GAP_MS);
+    let html = null;
+    try { html = await body(e.from); } catch (err) { /* the assertion reports it */ }
+    ok(`${e.from} reaches the practice layer (${e.why})`,
+      !!html && linksIn(html).has(e.to));
+  }
+
+  //  The two dead anchors the course-guide repair removed. Both were live 404s
+  //  before that import, so this is a claim the change made true.
+  await sleep(GAP_MS);
+  const guide = await body(spec.umbrella().course_guide);
+  const guideLinks = linksIn(guide);
+  for (const rp of spec.courseGuideRepairs()) {
+    ok(`the course guide no longer links the dead handle ${rp.from}`, !guideLinks.has(rp.from));
+    ok(`and links ${rp.to} in its place`, guideLinks.has(rp.to));
+  }
+
+  //  5. Nothing the import was supposed to leave alone got erased. The two
   //     extended pages keep their own titles and their existing content.
   //  These last two are PRESERVATION checks, and unlike everything above they
   //  were already true before the import. They are here because a MERGE writes

@@ -1,0 +1,1795 @@
+﻿"Handle","Command","Body HTML"
+"ap-cybersecurity-complete-course-guide","MERGE","<!-- ============================================================
+  AP CYBERSECURITY COURSE HUB - ALL 5 UNITS LIVE
+  Page: /pages/ap-cybersecurity-complete-course-guide
+  Last Updated: May 2026
+  
+  SHOPIFY NOTES:
+  - Unique wrapper: #apcyber-course-hub
+  - All CSS scoped with !important nuclear overrides
+  - NO raw emojis - HTML entities only
+  - Button text forced white with :link/:visited
+  - Purple branding: primary #6B21A8, accent #A855F7
+  
+  LIVE CONTENT (update handles if different):
+  - /pages/ap-cybersecurity-unit-1-introduction-to-security
+  - /pages/ap-cyber-unit-1-lesson-1-exercise-1
+  - /pages/ap-cyber-unit-1-lesson-1-exercise-2
+  - /pages/ap-cyber-unit-1-lesson-1-quiz         (import from CSV, publish first)
+  - /pages/ap-cyber-unit-1-exam                  (import from CSV, publish first)
+  - /pages/ap-cybersecurity-unit-1-introduction-to-security (study guide)
+  
+  HIDDEN PAGES - must publish before linking live:
+  Verify handles in Shopify admin before going live
+  ============================================================ -->
+<!--
+  PASTE-IN BLOCK: ""All Topics"" CTA banner -> links to the AP Cybersecurity topics hub.
+  WHERE: paste into the HTML/<> view of any of these pages, near the top or bottom:
+     - /pages/ap-cybersecurity-complete-course-guide  (course hub)
+     - /pages/ap-cybersecurity-practice-questions
+     - /pages/ap-cybersecurity-study-guide
+  WHY: gives the topics hub strong inlinks from your highest-authority Cyber pages, which then flows
+       link equity down to all 40 concept spokes.
+  TIP: vary the heading slightly per page so anchors read naturally (suggestions in the comment below).
+  SAFE: self-contained, scoped under .cyc-hubcta, color-locked, entity-only. No import, nothing wiped.
+
+  Anchor variants by page:
+    Course hub:      ""Browse every AP Cybersecurity concept""
+    Practice page:   ""Review the concepts behind these questions""
+    Study guide:     ""Explore all topics in depth""
+  (Edit the .hc-h text to match; keep the button pointed at /pages/ap-cybersecurity-topics.)
+-->
+<style>
+.cyc-hubcta{--navy:#1E1B4B;--cy:#6B21A8;--cy2:#7C3AED;--accent:#A855F7;}
+.cyc-hubcta{display:flex!important;align-items:center!important;gap:22px!important;flex-wrap:wrap!important;
+  font-family:""DM Sans"",system-ui,sans-serif!important;background:linear-gradient(135deg,#3b0764 0%,#4c1d95 100%)!important;
+  border-radius:14px!important;padding:22px 26px!important;margin:28px 0!important;}
+.cyc-hubcta *{box-sizing:border-box!important;margin:0!important;}
+.cyc-hubcta .hc-t{flex:1!important;min-width:220px!important;}
+.cyc-hubcta .hc-eb{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin-bottom:5px!important;}
+.cyc-hubcta .hc-h{font-family:""DM Serif Display"",Georgia,serif!important;font-size:21px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.2!important;margin-bottom:5px!important;}
+.cyc-hubcta .hc-d{font-size:13.5px!important;color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;line-height:1.5!important;}
+.cyc-hubcta a.hc-btn,.cyc-hubcta a.hc-btn:link,.cyc-hubcta a.hc-btn:visited{display:inline-block!important;background:var(--accent)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;font-size:15px!important;
+  padding:13px 26px!important;border-radius:10px!important;white-space:nowrap!important;}
+.cyc-hubcta a.hc-btn:hover{background:#9333ea!important;}
+</style>
+
+<style>
+/* ===== SHOPIFY TITLE RESET ===== */
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== WRAPPER RESET ===== */
+#apcyber-course-hub{
+  all:initial!important;
+  display:block!important;
+  font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;
+  background:#ffffff!important;
+  line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;
+}
+#apcyber-course-hub *{box-sizing:border-box!important;}
+
+/* ===== CSS VARIABLES ===== */
+#apcyber-course-hub{
+  --purple:#6B21A8;
+  --purple-mid:#7C3AED;
+  --purple-light:#A855F7;
+  --purple-bg:#F5F0FF;
+  --purple-border:#DDD6FE;
+  --dark:#1E1B4B;
+  --gray:#6B7280;
+  --gray-light:#F9FAFB;
+  --gray-border:#E5E7EB;
+  --green:#15803D;
+  --green-bg:#F0FDF4;
+  --green-border:#BBF7D0;
+  --lock:#9CA3AF;
+  --lock-bg:#F3F4F6;
+}
+
+/* ===== HERO ===== */
+#apcyber-course-hub .cyber-hero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#ffffff!important;
+  padding:56px 24px 48px!important;
+  text-align:center!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+#apcyber-course-hub .cyber-hero::before{
+  content:''!important;
+  position:absolute!important;
+  top:-60px!important;right:-60px!important;
+  width:300px!important;height:300px!important;
+  border-radius:50%!important;
+  background:rgba(168,85,247,0.15)!important;
+  pointer-events:none!important;
+}
+#apcyber-course-hub .cyber-hero::after{
+  content:''!important;
+  position:absolute!important;
+  bottom:-80px!important;left:-40px!important;
+  width:250px!important;height:250px!important;
+  border-radius:50%!important;
+  background:rgba(124,58,237,0.12)!important;
+  pointer-events:none!important;
+}
+#apcyber-course-hub .hero-badge{
+  display:inline-block!important;
+  background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;
+  color:#E9D5FF!important;
+  font-family:'Georgia',serif!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  letter-spacing:2px!important;
+  text-transform:uppercase!important;
+  padding:6px 16px!important;
+  border-radius:20px!important;
+  margin-bottom:20px!important;
+}
+#apcyber-course-hub .hero-title{
+  font-family:'Georgia',serif!important;
+  font-size:clamp(28px,5vw,46px)!important;
+  font-weight:700!important;
+  color:#ffffff!important;
+  margin:0 0 12px!important;
+  line-height:1.2!important;
+}
+#apcyber-course-hub .hero-subtitle{
+  font-size:17px!important;
+  color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;
+  margin:0 0 32px!important;
+  max-width:580px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+#apcyber-course-hub .hero-progress-wrap{
+  max-width:480px!important;
+  margin:0 auto 28px!important;
+}
+#apcyber-course-hub .progress-label{
+  display:flex!important;
+  justify-content:space-between!important;
+  font-size:12px!important;
+  color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;
+  margin-bottom:8px!important;
+}
+#apcyber-course-hub .progress-bar-bg{
+  background:rgba(255,255,255,0.15)!important;
+  border-radius:8px!important;
+  height:10px!important;
+  overflow:hidden!important;
+}
+#apcyber-course-hub .progress-bar-fill{
+  background:linear-gradient(90deg,#A855F7,#7C3AED)!important;
+  height:100%!important;
+  width:100%!important;
+  border-radius:8px!important;
+}
+#apcyber-course-hub .hero-stats{
+  display:flex!important;
+  justify-content:center!important;
+  gap:32px!important;
+  flex-wrap:wrap!important;
+  margin-top:8px!important;
+}
+#apcyber-course-hub .hero-stat{
+  text-align:center!important;
+}
+#apcyber-course-hub .hero-stat-num{
+  display:block!important;
+  font-size:26px!important;
+  font-weight:700!important;
+  color:#ffffff!important;
+  font-family:'Georgia',serif!important;
+}
+#apcyber-course-hub .hero-stat-lbl{
+  font-size:11px!important;
+  color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;
+  text-transform:uppercase!important;
+  letter-spacing:1px!important;
+}
+
+/* ===== ANNOUNCEMENT BAR ===== */
+#apcyber-course-hub .pilot-bar{
+  background:#FFF7ED!important;
+  border-top:3px solid #F59E0B!important;
+  border-bottom:1px solid #FDE68A!important;
+  padding:14px 24px!important;
+  text-align:center!important;
+  font-family:'Georgia',serif!important;
+  font-size:14px!important;
+  color:#92400E!important;
+}
+#apcyber-course-hub .pilot-bar strong{
+  color:#B45309!important;
+  font-weight:700!important;
+}
+
+/* ===== CONTAINER ===== */
+#apcyber-course-hub .container{
+  max-width:860px!important;
+  margin:0 auto!important;
+  padding:0 20px!important;
+}
+
+/* ===== SECTION HEADINGS ===== */
+#apcyber-course-hub .section{
+  padding:44px 20px!important;
+}
+#apcyber-course-hub .section-title{
+  font-family:'Georgia',serif!important;
+  font-size:22px!important;
+  font-weight:700!important;
+  color:#1E1B4B!important;
+  margin:0 0 6px!important;
+  max-width:860px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+#apcyber-course-hub .section-sub{
+  font-size:15px!important;
+  color:#6B7280!important;
+  font-family:'Georgia',serif!important;
+  margin:0 0 28px!important;
+  max-width:860px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+/* ===== UNIT CARDS ===== */
+#apcyber-course-hub .unit-list{
+  max-width:860px!important;
+  margin:0 auto!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:16px!important;
+}
+#apcyber-course-hub .unit-card{
+  border:1px solid #E5E7EB!important;
+  border-radius:12px!important;
+  overflow:hidden!important;
+  background:#ffffff!important;
+}
+#apcyber-course-hub .unit-card.live{
+  border-color:#DDD6FE!important;
+  box-shadow:0 2px 12px rgba(107,33,168,0.08)!important;
+}
+#apcyber-course-hub .unit-card.locked{
+  opacity:0.85!important;
+}
+#apcyber-course-hub .unit-header{
+  display:flex!important;
+  align-items:center!important;
+  gap:14px!important;
+  padding:18px 22px!important;
+  background:#F9FAFB!important;
+  cursor:default!important;
+}
+#apcyber-course-hub .unit-card.live .unit-header{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+}
+#apcyber-course-hub .unit-num{
+  width:36px!important;
+  height:36px!important;
+  border-radius:50%!important;
+  background:#E5E7EB!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-weight:700!important;
+  font-size:14px!important;
+  color:#6B7280!important;
+  font-family:'Georgia',serif!important;
+  flex-shrink:0!important;
+}
+#apcyber-course-hub .unit-card.live .unit-num{
+  background:#6B21A8!important;
+  color:#ffffff!important;
+}
+#apcyber-course-hub .unit-info{
+  flex:1!important;
+}
+#apcyber-course-hub .unit-name{
+  font-family:'Georgia',serif!important;
+  font-weight:700!important;
+  font-size:16px!important;
+  color:#1E1B4B!important;
+  margin:0 0 2px!important;
+}
+#apcyber-course-hub .unit-desc{
+  font-size:13px!important;
+  color:#6B7280!important;
+  font-family:'Georgia',serif!important;
+  margin:0!important;
+}
+#apcyber-course-hub .unit-badge{
+  font-size:11px!important;
+  font-weight:700!important;
+  letter-spacing:1px!important;
+  text-transform:uppercase!important;
+  padding:4px 10px!important;
+  border-radius:20px!important;
+  font-family:'Georgia',serif!important;
+  flex-shrink:0!important;
+}
+#apcyber-course-hub .badge-live{
+  background:#DCFCE7!important;
+  color:#15803D!important;
+  border:1px solid #BBF7D0!important;
+}
+#apcyber-course-hub .badge-building{
+  background:#FEF3C7!important;
+  color:#92400E!important;
+  border:1px solid #FDE68A!important;
+}
+#apcyber-course-hub .badge-soon{
+  background:#F3F4F6!important;
+  color:#6B7280!important;
+  border:1px solid #D1D5DB!important;
+}
+
+/* ===== LESSONS INSIDE UNIT ===== */
+#apcyber-course-hub .lesson-list{
+  padding:0 22px 18px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:10px!important;
+}
+#apcyber-course-hub .lesson-item{
+  border:1px solid #E5E7EB!important;
+  border-radius:8px!important;
+  overflow:hidden!important;
+  background:#ffffff!important;
+}
+#apcyber-course-hub .lesson-item.lesson-live{
+  border-color:#C4B5FD!important;
+}
+#apcyber-course-hub .lesson-header{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  padding:12px 16px!important;
+  background:#F9FAFB!important;
+}
+#apcyber-course-hub .lesson-item.lesson-live .lesson-header{
+  background:#F5F0FF!important;
+}
+#apcyber-course-hub .lesson-icon{
+  font-size:14px!important;
+  flex-shrink:0!important;
+}
+#apcyber-course-hub .lesson-name{
+  font-family:'Georgia',serif!important;
+  font-size:14px!important;
+  font-weight:700!important;
+  color:#1E1B4B!important;
+  flex:1!important;
+  margin:0!important;
+}
+#apcyber-course-hub .lesson-status{
+  font-size:11px!important;
+  font-weight:600!important;
+  color:#15803D!important;
+  font-family:'Georgia',serif!important;
+  background:#DCFCE7!important;
+  padding:2px 8px!important;
+  border-radius:10px!important;
+  border:1px solid #BBF7D0!important;
+}
+#apcyber-course-hub .lesson-status.lock-status{
+  color:#9CA3AF!important;
+  background:#F3F4F6!important;
+  border-color:#E5E7EB!important;
+}
+
+/* ===== EXERCISES ===== */
+#apcyber-course-hub .exercise-list{
+  padding:0 16px 14px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:6px!important;
+}
+#apcyber-course-hub .exercise-row{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  padding:9px 14px!important;
+  border-radius:6px!important;
+  background:#F9FAFB!important;
+  text-decoration:none!important;
+  border:1px solid transparent!important;
+  transition:all 0.15s!important;
+}
+#apcyber-course-hub a.exercise-row:link,
+#apcyber-course-hub a.exercise-row:visited{
+  color:#1E1B4B!important;
+  text-decoration:none!important;
+}
+#apcyber-course-hub a.exercise-row:hover{
+  background:#EDE9FE!important;
+  border-color:#C4B5FD!important;
+}
+#apcyber-course-hub .exercise-row.locked-row{
+  opacity:0.6!important;
+  cursor:not-allowed!important;
+}
+#apcyber-course-hub .ex-dot{
+  width:8px!important;
+  height:8px!important;
+  border-radius:50%!important;
+  background:#A855F7!important;
+  flex-shrink:0!important;
+}
+#apcyber-course-hub .ex-dot.ex-dot-lock{
+  background:#D1D5DB!important;
+}
+#apcyber-course-hub .ex-label{
+  flex:1!important;
+  font-size:13px!important;
+  font-family:'Georgia',serif!important;
+  color:#374151!important;
+}
+#apcyber-course-hub .ex-tag{
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:0.5px!important;
+  text-transform:uppercase!important;
+  color:#A855F7!important;
+  font-family:'Georgia',serif!important;
+}
+#apcyber-course-hub .ex-tag.ex-lock{
+  color:#9CA3AF!important;
+}
+#apcyber-course-hub .study-guide-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  font-size:12px!important;
+  color:#6B21A8!important;
+  font-family:'Georgia',serif!important;
+  font-weight:600!important;
+  text-decoration:none!important;
+  padding:6px 14px!important;
+  border:1px solid #DDD6FE!important;
+  border-radius:6px!important;
+  background:#F5F0FF!important;
+  margin:6px 0 2px!important;
+}
+#apcyber-course-hub a.study-guide-link:link,
+#apcyber-course-hub a.study-guide-link:visited{
+  color:#6B21A8!important;
+  text-decoration:none!important;
+}
+#apcyber-course-hub a.study-guide-link:hover{
+  background:#EDE9FE!important;
+}
+
+/* ===== LOCKED UNIT OVERLAY ===== */
+#apcyber-course-hub .locked-msg{
+  padding:14px 22px!important;
+  font-size:13px!important;
+  color:#9CA3AF!important;
+  font-family:'Georgia',serif!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  border-top:1px dashed #E5E7EB!important;
+}
+
+/* ===== CTA SECTION ===== */
+#apcyber-course-hub .cta-section{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;
+  padding:48px 24px!important;
+  text-align:center!important;
+}
+#apcyber-course-hub .cta-title{
+  font-family:'Georgia',serif!important;
+  font-size:26px!important;
+  font-weight:700!important;
+  color:#ffffff!important;
+  margin:0 0 12px!important;
+}
+#apcyber-course-hub .cta-sub{
+  font-size:15px!important;
+  color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;
+  margin:0 0 28px!important;
+}
+#apcyber-course-hub .cta-btn{
+  display:inline-block!important;
+  background:#A855F7!important;
+  color:#ffffff!important;
+  font-family:'Georgia',serif!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  padding:14px 32px!important;
+  border-radius:8px!important;
+  text-decoration:none!important;
+  border:none!important;
+  cursor:pointer!important;
+  margin:0 8px 8px!important;
+}
+#apcyber-course-hub a.cta-btn:link,
+#apcyber-course-hub a.cta-btn:visited{
+  color:#ffffff!important;
+  text-decoration:none!important;
+  -webkit-text-fill-color:#ffffff!important;
+}
+#apcyber-course-hub a.cta-btn:hover{
+  background:#9333EA!important;
+  opacity:1!important;
+}
+#apcyber-course-hub .cta-btn-outline{
+  display:inline-block!important;
+  background:transparent!important;
+  color:#E9D5FF!important;
+  font-family:'Georgia',serif!important;
+  font-size:15px!important;
+  font-weight:600!important;
+  padding:13px 28px!important;
+  border-radius:8px!important;
+  text-decoration:none!important;
+  border:1px solid rgba(168,85,247,0.5)!important;
+  cursor:pointer!important;
+  margin:0 8px 8px!important;
+}
+#apcyber-course-hub a.cta-btn-outline:link,
+#apcyber-course-hub a.cta-btn-outline:visited{
+  color:#E9D5FF!important;
+  text-decoration:none!important;
+}
+
+/* ===== WHAT'S INCLUDED GRID ===== */
+#apcyber-course-hub .features-grid{
+  max-width:860px!important;
+  margin:0 auto!important;
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr))!important;
+  gap:16px!important;
+}
+#apcyber-course-hub .feature-card{
+  border:1px solid #E5E7EB!important;
+  border-radius:10px!important;
+  padding:20px 18px!important;
+  background:#F9FAFB!important;
+  text-align:center!important;
+}
+#apcyber-course-hub .feature-icon{
+  font-size:28px!important;
+  display:block!important;
+  margin-bottom:10px!important;
+}
+#apcyber-course-hub .feature-title{
+  font-family:'Georgia',serif!important;
+  font-size:14px!important;
+  font-weight:700!important;
+  color:#1E1B4B!important;
+  margin:0 0 4px!important;
+}
+#apcyber-course-hub .feature-desc{
+  font-size:12px!important;
+  color:#6B7280!important;
+  font-family:'Georgia',serif!important;
+  margin:0!important;
+}
+#apcyber-course-hub .feature-coming{
+  font-size:10px!important;
+  color:#A855F7!important;
+  font-family:'Georgia',serif!important;
+  font-weight:700!important;
+  letter-spacing:1px!important;
+  text-transform:uppercase!important;
+  margin-top:6px!important;
+}
+
+/* ===== QUIZ / EXAM ROWS ===== */
+#apcyber-course-hub .ex-dot-quiz{
+  background:#D97706!important;
+}
+#apcyber-course-hub .ex-dot-exam{
+  background:#6B21A8!important;
+  width:10px!important;
+  height:10px!important;
+}
+#apcyber-course-hub .ex-tag-quiz{
+  color:#D97706!important;
+  font-weight:700!important;
+}
+#apcyber-course-hub .ex-tag-exam{
+  color:#6B21A8!important;
+  font-weight:700!important;
+}
+#apcyber-course-hub .exercise-row.quiz-row{
+  background:#FFFBEB!important;
+  border-color:#FDE68A!important;
+}
+#apcyber-course-hub a.exercise-row.quiz-row:hover{
+  background:#FEF3C7!important;
+  border-color:#F59E0B!important;
+}
+#apcyber-course-hub .exercise-row.exam-row{
+  background:#F5F0FF!important;
+  border-color:#DDD6FE!important;
+  border-width:2px!important;
+}
+#apcyber-course-hub a.exercise-row.exam-row:hover{
+  background:#EDE9FE!important;
+  border-color:#A855F7!important;
+}
+#apcyber-course-hub .unit-exam-sep{
+  border:none!important;
+  border-top:1px dashed #DDD6FE!important;
+  margin:8px 0 4px!important;
+}
+
+/* ===== DIVIDER ===== */
+#apcyber-course-hub .section-divider{
+  border:none!important;
+  border-top:1px solid #E5E7EB!important;
+  margin:0!important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  #apcyber-course-hub .hero-stats{gap:20px!important;}
+  #apcyber-course-hub .unit-header{flex-wrap:wrap!important;gap:10px!important;}
+  #apcyber-course-hub .features-grid{grid-template-columns:1fr 1fr!important;}
+}
+</style>
+
+<div id=""apcyber-course-hub"">
+
+  <!-- HERO -->
+  <div class=""cyber-hero"">
+    <div class=""hero-badge"">All 5 Units Live — Free Access</div>
+    <h1 class=""hero-title"">AP Cybersecurity Full Course</h1>
+    <p class=""hero-subtitle"">A complete unit-by-unit AP Cybersecurity course — lessons, exercises, quizzes, unit exams, and practice — built by a real AP teacher.</p>
+    <div class=""hero-progress-wrap"">
+      <div class=""progress-label"">
+        <span>Course Progress</span>
+        <span>All 5 Units Complete — 55+ Lessons, 250+ Practice Questions</span>
+      </div>
+      <div class=""progress-bar-bg"">
+        <div class=""progress-bar-fill""></div>
+      </div>
+    </div>
+    <div class=""hero-stats"">
+      <div class=""hero-stat"">
+        <span class=""hero-stat-num"">5</span>
+        <span class=""hero-stat-lbl"">Units</span>
+      </div>
+      <div class=""hero-stat"">
+        <span class=""hero-stat-num"">55+</span>
+        <span class=""hero-stat-lbl"">Lessons</span>
+      </div>
+      <div class=""hero-stat"">
+        <span class=""hero-stat-num"">250+</span>
+        <span class=""hero-stat-lbl"">Practice Questions</span>
+      </div>
+      <div class=""hero-stat"">
+        <span class=""hero-stat-num"">Free</span>
+        <span class=""hero-stat-lbl"">Full Access</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PILOT ANNOUNCEMENT -->
+  <div class=""pilot-bar"" style=""background:#F0FDF4!important;border-top:3px solid #15803D!important;border-bottom:1px solid #BBF7D0!important;color:#14532D!important;"">
+    <strong style=""color:#15803D!important;"">✓ All 5 Units Live:</strong> Every lesson, exercise, lab, quiz, and unit exam is available now — 100% free, no account required.
+  </div>
+
+  <!-- ======= TEACHER BAND (B2B CONVERSION) ======= -->
+<style>
+#apcyber-course-hub .tch-band{background:linear-gradient(135deg,#F5F0FF 0%,#EDE9FE 100%)!important;border-top:1px solid #DDD6FE!important;border-bottom:1px solid #DDD6FE!important;padding:40px 24px!important;}
+#apcyber-course-hub .tch-inner{max-width:900px!important;margin:0 auto!important;}
+#apcyber-course-hub .tch-eyebrow{font-size:11px!important;font-weight:700!important;letter-spacing:1.2px!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 8px!important;}
+#apcyber-course-hub .tch-h2{font-size:26px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 12px!important;line-height:1.25!important;}
+#apcyber-course-hub .tch-sub{font-size:15px!important;color:#3B0764!important;-webkit-text-fill-color:#3B0764!important;margin:0 0 18px!important;line-height:1.6!important;}
+#apcyber-course-hub .tch-value{font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;line-height:1.6!important;}
+#apcyber-course-hub .tch-price{background:#ffffff!important;border:1px solid #DDD6FE!important;border-left:4px solid #6B21A8!important;border-radius:8px!important;padding:14px 16px!important;margin:0 0 20px!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#apcyber-course-hub .tch-price strong{color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#apcyber-course-hub .tch-urgency{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;font-weight:700!important;}
+#apcyber-course-hub .tch-cta-row{display:flex!important;flex-wrap:wrap!important;gap:10px!important;}
+#apcyber-course-hub a.tch-btn{display:inline-block!important;background:#6B21A8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;padding:12px 20px!important;border-radius:8px!important;font-size:14px!important;font-weight:700!important;text-decoration:none!important;}
+#apcyber-course-hub a.tch-btn:link,#apcyber-course-hub a.tch-btn:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#apcyber-course-hub a.tch-btn:hover{background:#581C87!important;}
+#apcyber-course-hub a.tch-btn-out{display:inline-block!important;background:#ffffff!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;padding:12px 20px!important;border:2px solid #6B21A8!important;border-radius:8px!important;font-size:14px!important;font-weight:700!important;text-decoration:none!important;}
+#apcyber-course-hub a.tch-btn-out:link,#apcyber-course-hub a.tch-btn-out:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-course-hub a.tch-btn-out:hover{background:#F5F0FF!important;}
+@media(max-width:600px){#apcyber-course-hub .tch-h2{font-size:22px!important;}#apcyber-course-hub a.tch-btn,#apcyber-course-hub a.tch-btn-out{width:100%!important;text-align:center!important;}}
+</style>
+<div class=""tch-band"">
+  <div class=""tch-inner"">
+    <p class=""tch-eyebrow"">For Teachers</p>
+    <h2 class=""tch-h2"">Teach AP Cybersecurity with a Complete, CED-Aligned Curriculum</h2>
+    <p class=""tch-sub"">Pacing guides, lesson plans with answer keys, classroom-safe labs with rubrics, unit assessments, and a live student-progress dashboard. Built by a practicing AP CS teacher and aligned to the Fall 2026 Course and Exam Description.</p>
+    <p class=""tch-value"">Start free with a teacher preview and a full sample unit. The Founding Teacher Bundle unlocks all five units, every assessment, and the test builder.</p>
+   
+    <div class=""tch-cta-row"">
+      <a class=""tch-btn"" href=""/pages/ap-cybersecurity-teacher-resources"">See Teacher Resources →</a>
+      <a class=""tch-btn-out"" href=""/pages/ap-cybersecurity-test-builder"">Build a Custom Test →</a>
+      <a class=""tch-btn-out"" href=""/pages/cyber-dashboard"">Teacher Dashboard →</a>
+    </div>
+  </div>
+</div>
+
+  <!-- COURSE OUTLINE -->
+  <div class=""section"">
+    <div class=""container"">
+      <h2 class=""section-title"">Course Curriculum</h2>
+      <p class=""section-sub"">Full course — click any lesson to start. All 55+ lessons, exercises, labs, quizzes, and unit exams are live.</p>
+    </div>
+
+    <style>
+/* ===== QOTD PER-TOPIC CARD (added) ===== */
+#apcyber-course-hub .qotd-card{margin-top:10px!important;padding:12px 14px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;background:#F0FDFA!important;}
+#apcyber-course-hub .qotd-lbl{font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;letter-spacing:0.5px!important;text-transform:uppercase!important;color:#0F766E!important;margin:0 0 8px!important;}
+#apcyber-course-hub .qotd-lbl span{font-weight:400!important;text-transform:none!important;letter-spacing:0!important;color:#5EA9A2!important;}
+#apcyber-course-hub .qotd-days{display:flex!important;flex-wrap:wrap!important;gap:6px!important;}
+#apcyber-course-hub a.qotd-day,#apcyber-course-hub a.qotd-day:link,#apcyber-course-hub a.qotd-day:visited{display:inline-block!important;padding:6px 11px!important;border:1px solid #99F6E4!important;border-radius:6px!important;background:#ffffff!important;font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;line-height:1.2!important;}
+#apcyber-course-hub a.qotd-day:hover{background:#CCFBF1!important;border-color:#0F766E!important;}
+</style>
+
+<div class=""unit-list"">
+
+      <!-- ======= UNIT 1 - LIVE ======= -->
+      <div class=""unit-card live"">
+        <div class=""unit-header"">
+          <div class=""unit-num"">1</div>
+          <div class=""unit-info"">
+            <p class=""unit-name"">Unit 1: Introduction to Security</p>
+            <p class=""unit-desc"">Weeks 1–4  ·  1.1 Understanding Social Engineering  ·  1.2 Suspicious Website Logins  ·  1.3 Best Practices for Public Networks  ·  1.4 AI-Based Cybersecurity Attacks  ·  1.5 Leveraging AI in Cyber Defense</p>
+          </div>
+          <span class=""unit-badge badge-live"">✓ Live</span>
+        </div>
+
+        <!-- Lesson list -->
+        <div class=""lesson-list"">
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 1.1: Understanding Social Engineering</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-1-social-engineering""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — Understanding Social Engineering</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-1-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-1-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-1-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-1-lesson-1-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 1.1 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-101"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-102"">Day 2</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 1.2: Suspicious Website Logins</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-1-password-attacks""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — Suspicious Website Logins</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-2-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-2-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-2-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-2-terminal-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Terminal Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-1-lesson-2-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 1.2 · 4 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-110"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-111"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-112"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-113"">Day 4</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 1.3: Best Practices for Public Networks</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-1-wireless-security""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — Best Practices for Public Networks</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-3-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-3-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-3-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-1-lesson-3-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 1.3 · 4 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-116"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-117"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-118"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-119"">Day 4</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 1.4: AI-Based Cybersecurity Attacks</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-1-ai-driven-threats""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — AI-Based Cybersecurity Attacks</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-4-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-4-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-4-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-1-lesson-4-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 1.4 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-121"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-122"">Day 2</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 1.5: Leveraging AI in Cyber Defense</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-1-ai-cyber-defense""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — Leveraging AI in Cyber Defense</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-5-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-5-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-1-lesson-5-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-1-lesson-5-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+            </div>
+          </div>
+          <hr class=""unit-exam-sep"">
+          <div style=""padding:0 0 4px!important;""><a class=""exercise-row exam-row"" href=""/pages/ap-cyber-unit-1-exam""><div class=""ex-dot ex-dot-exam""></div>
+<span class=""ex-label""><strong>Unit 1 Exam</strong> — All Topics</span><span class=""ex-tag ex-tag-exam"">✍ Take Exam →</span></a></div>
+          <a class=""study-guide-link"" href=""/pages/ap-cybersecurity-unit-1-introduction-to-security"">📄 Unit 1 Study Guide</a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 1.5 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-125"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C1-126"">Day 2</a>
+                </div>
+              </div>
+
+        </div>
+      </div>
+
+      <!-- ======= UNIT 2 ======= -->
+      <div class=""unit-card live"">
+        <div class=""unit-header"">
+          <div class=""unit-num"">2</div>
+          <div class=""unit-info"">
+            <p class=""unit-name"">Unit 2: Securing Spaces</p>
+            <p class=""unit-desc"">Weeks 5–10  ·  2.1 Cyber Foundations  ·  2.2 Physical Vulnerabilities and Attacks  ·  2.3 Protecting Physical Spaces  ·  2.4 Detecting Physical Attacks</p>
+          </div>
+          <span class=""unit-badge badge-live"">Live</span>
+        </div>
+<!-- Lesson list -->
+        <div class=""lesson-list"">
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 2.1: Cyber Foundations</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-2-cyber-foundations""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — Cyber Foundations</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-1-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-1-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-1-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-2-lesson-1-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 2.1 · 8 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-101"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-102"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-103"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-104"">Day 4</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-105"">Day 5</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-107"">Day 6</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-123"">Day 7</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-125"">Day 8</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 2.2: Physical Vulnerabilities and Attacks</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-2-physical-vulnerabilities""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — Physical Vulnerabilities and Attacks</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-2-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-2-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-2-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-2-lesson-2-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 2.2 · 5 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-108"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-109"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-110"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-111"">Day 4</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-112"">Day 5</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 2.3: Protecting Physical Spaces</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-2-protecting-physical-spaces""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — Protecting Physical Spaces</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-3-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-3-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-3-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-2-lesson-3-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 2.3 · 4 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-113"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-114"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-115"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-116"">Day 4</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class=""lesson-item lesson-live"">
+            <div class=""lesson-header"">
+              <span class=""lesson-icon"">📚</span>
+              <p class=""lesson-name"">Topic 2.4: Detecting Physical Attacks</p>
+              <span class=""lesson-status"">Live</span>
+            </div>
+            <div class=""exercise-list"">
+              <a class=""exercise-row"" href=""/pages/ap-cybersecurity-unit-2-detecting-physical-attacks""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lesson — Detecting Physical Attacks</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-4-exercise-1""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-4-exercise-2""><div class=""ex-dot""></div>
+<span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-4-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row"" href=""/pages/ap-cyber-unit-2-lesson-4-terminal-lab""><div class=""ex-dot""></div>
+<span class=""ex-label"">Terminal Lab</span><span class=""ex-tag"">Start →</span></a>
+              <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-2-lesson-4-quiz""><div class=""ex-dot ex-dot-quiz""></div>
+<span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+            </div>
+          </div>
+          <hr class=""unit-exam-sep"">
+          <div style=""padding:0 0 4px!important;""><a class=""exercise-row exam-row"" href=""/pages/ap-cyber-unit-2-exam""><div class=""ex-dot ex-dot-exam""></div>
+<span class=""ex-label""><strong>Unit 2 Exam</strong> — All Topics</span><span class=""ex-tag ex-tag-exam"">✍ Take Exam →</span></a></div>
+          <a class=""study-guide-link"" href=""/pages/ap-cybersecurity-unit-2-securing-spaces"">📄 Unit 2 Study Guide</a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 2.4 · 4 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-118"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-119"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-120"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C2-121"">Day 4</a>
+                </div>
+              </div>
+
+        </div>
+      </div>
+
+      <!-- ======= UNIT 3 ======= -->
+      <div class=""unit-card live"">
+      <div class=""unit-header"">
+          <div class=""unit-num"">3</div>
+          <div class=""unit-info"">
+            <p class=""unit-name"">Unit 3: Securing Networks</p>
+            <p class=""unit-desc"">Weeks 11–18  ·  3.1 Network Vulnerabilities and Attacks  ·  3.2 Protecting Networks: Managerial Controls  ·  3.3 Protecting Networks: Segmentation  ·  3.4 Protecting Networks: Firewalls  ·  3.5 Detecting Network Attacks</p>
+<div class=""cyc-x3"">
+<style>.cyc-x3{background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid #1a56db;border-radius:9px;padding:13px 15px;margin:12px 0 4px;}.cyc-x3 .x3h{font-size:13px;font-weight:700;color:#0b2c4d;margin:0 0 4px;}.cyc-x3 .x3p{font-size:12.5px;line-height:1.5;color:#0f3b66;margin:0 0 9px;}.cyc-x3 .x3wrap{overflow-x:auto;}.cyc-x3 table{border-collapse:collapse;width:100%;font-size:12.5px;}.cyc-x3 th,.cyc-x3 td{text-align:left;padding:5px 9px 5px 0;color:#0f3b66;vertical-align:top;}.cyc-x3 th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#5b7fa6;border-bottom:1px solid #bfdbfe;}.cyc-x3 .x3n{white-space:nowrap;font-weight:700;}.cyc-x3 .x3c{white-space:nowrap;font-weight:700;}</style>
+<p class=""x3h"">Why the numbers below do not match the CED</p>
+<p class=""x3p"">Unit 3 is taught in six lessons, in a sequence built for the classroom rather than for the CED's topic order. All of CED 3.1 through 3.5 is covered. Lessons 1 and 2 both sit under CED 3.1 and share its teacher deck and notes.</p>
+<div class=""x3wrap""><table>
+<thead><tr>
+<th>Taught as</th>
+<th>Lesson</th>
+<th>CED topic</th>
+<th>CED title</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class=""x3n"">Lesson 1</td>
+<td class=""x3t"">Network Fundamentals &amp; Attack Surface</td>
+<td class=""x3c"">CED 3.1</td>
+<td class=""x3d"">Network Vulnerabilities and Attacks</td>
+</tr>
+<tr>
+<td class=""x3n"">Lesson 2</td>
+<td class=""x3t"">Network Attacks</td>
+<td class=""x3c"">CED 3.1</td>
+<td class=""x3d"">Network Vulnerabilities and Attacks</td>
+</tr>
+<tr>
+<td class=""x3n"">Lesson 3</td>
+<td class=""x3t"">Firewalls &amp; Packet Filtering</td>
+<td class=""x3c"">CED 3.4</td>
+<td class=""x3d"">Protecting Networks: Firewalls</td>
+</tr>
+<tr>
+<td class=""x3n"">Lesson 4</td>
+<td class=""x3t"">Network Segmentation &amp; VLANs</td>
+<td class=""x3c"">CED 3.3</td>
+<td class=""x3d"">Protecting Networks: Segmentation</td>
+</tr>
+<tr>
+<td class=""x3n"">Lesson 5</td>
+<td class=""x3t"">IDS, IPS &amp; SIEM</td>
+<td class=""x3c"">CED 3.5</td>
+<td class=""x3d"">Detecting Network Attacks</td>
+</tr>
+<tr>
+<td class=""x3n"">Lesson 6</td>
+<td class=""x3t"">Network Security Policies &amp; Wireless</td>
+<td class=""x3c"">CED 3.2</td>
+<td class=""x3d"">Protecting Networks: Managerial Controls</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+          </div>
+          <span class=""unit-badge badge-live"">Live</span>
+        </div>
+      <div class=""lesson-list"">
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Lesson 1: Network Fundamentals</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-1""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Network Fundamentals</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-1-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-1-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-1-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-3-lesson-1-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 3.1 · 3 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-101"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-102"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-103"">Day 3</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Lesson 2: Network Threats &amp; Attacks</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-2""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Network Threats &amp; Attacks</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-2-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-2-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-2-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-3-lesson-2-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 3.1 · 3 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-104"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-106"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-126"">Day 3</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Lesson 3: Firewalls &amp; ACLs</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-3""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Firewalls &amp; ACLs</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-3-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-3-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-3-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-3-lesson-3-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 3.4 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-115"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-117"">Day 2</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Lesson 4: VLANs &amp; Network Segmentation</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-4""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — VLANs &amp; Network Segmentation</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-4-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-4-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-4-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-3-lesson-4-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 3.3 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-111"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-112"">Day 2</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Lesson 5: IDS/IPS &amp; SIEM</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-5""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — IDS/IPS &amp; SIEM</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-5-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-5-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-5-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-3-lesson-5-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 3.5 · 4 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-119"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-120"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-121"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-123"">Day 4</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Lesson 6: Network Security Policies &amp; Wireless</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-6""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Incident Response</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-6-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-6-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-3-lesson-6-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-3-lesson-6-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+          </div>
+        </div>
+        <hr class=""unit-exam-sep"">
+        <div style=""padding:0 0 4px!important;"">
+          <a class=""exercise-row exam-row"" href=""/pages/ap-cyber-unit-3-exam""><div class=""ex-dot ex-dot-exam""></div> <span class=""ex-label""><strong>Unit 3 Exam</strong> — All Lessons</span> <span class=""ex-tag ex-tag-exam"">✍ Take Exam →</span></a>
+        </div>
+        <a class=""study-guide-link"" href=""/pages/ap-cybersecurity-unit-3-securing-networks"">📄 Unit 3 Study Guide (Reference Material)</a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 3.5 · 3 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-124"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-125"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C3-122"">Day 3</a>
+                </div>
+              </div>
+
+      </div>
+    </div>
+
+      <!-- ======= UNIT 4 ======= -->
+      <div class=""unit-card live"">
+      <div class=""unit-header"">
+          <div class=""unit-num"">4</div>
+          <div class=""unit-info"">
+            <p class=""unit-name"">Unit 4: Securing Devices</p>
+            <p class=""unit-desc"">Weeks 19–26  ·  4.1 Device Vulnerabilities and Attacks  ·  4.2 Authentication  ·  4.3 Protecting Devices  ·  4.4 Detecting Attacks on Devices</p>
+          </div>
+          <span class=""unit-badge badge-live"">Live</span>
+        </div>
+      <div class=""lesson-list"">
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 4.1: Device Vulnerabilities and Attacks</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-1""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Device Vulnerabilities and Attacks</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-1-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-1-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-1-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-4-lesson-1-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong> — 6 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 4.1 · 6 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-101"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-102"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-103"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-104"">Day 4</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-105"">Day 5</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-107"">Day 6</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 4.2: Authentication</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-2""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Authentication</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-2-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-2-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-2-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-4-lesson-2-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 4.2 · 5 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-108"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-109"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-110"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-111"">Day 4</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-112"">Day 5</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 4.3: Protecting Devices</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-3""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Protecting Devices</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-3-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-3-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-3-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-4-lesson-3-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 4.3 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-113"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-114"">Day 2</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 4.4: Detecting Attacks on Devices</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-4""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Detecting Attacks on Devices</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-4-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-4-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-4-lesson-4-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-4-lesson-4-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong> — 5 Questions</span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+          </div>
+        </div>
+        <hr class=""unit-exam-sep"">
+        <div style=""padding:0 0 4px!important;"">
+          <a class=""exercise-row exam-row"" href=""/pages/ap-cyber-unit-4-exam""><div class=""ex-dot ex-dot-exam""></div> <span class=""ex-label""><strong>Unit 4 Exam</strong> — All Lessons</span> <span class=""ex-tag ex-tag-exam"">✍ Take Exam →</span></a>
+        </div>
+        <a class=""study-guide-link"" href=""/pages/ap-cybersecurity-unit-4-securing-devices"">📄 Unit 4 Study Guide (Reference Material)</a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 4.4 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-118"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C4-119"">Day 2</a>
+                </div>
+              </div>
+
+      </div>
+    </div>
+
+      <!-- ======= UNIT 5 ======= -->
+      <div class=""unit-card live"">
+      <div class=""unit-header"">
+          <div class=""unit-num"">5</div>
+          <div class=""unit-info"">
+            <p class=""unit-name"">Unit 5: Securing Applications &amp; Data</p>
+            <p class=""unit-desc"">Weeks 27–32  ·  5.1 Application and Data Vulnerabilities  ·  5.2 Protecting Applications and Data  ·  5.3 Protecting Stored Data with Cryptography  ·  5.4 Asymmetric Cryptography  ·  5.5 Protecting Applications  ·  5.6 Detecting Attacks on Data and Applications</p>
+          </div>
+          <span class=""unit-badge badge-live"">Live</span>
+        </div>
+      <div class=""lesson-list"">
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 5.1: Application and Data Vulnerabilities</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-1""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Application and Data Vulnerabilities</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-1-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-5-lesson-1-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 5.1 · 5 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-101"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-102"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-103"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-104"">Day 4</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-106"">Day 5</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 5.2: Symmetric Cryptography</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-2""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Symmetric Cryptography</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-2-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-5-lesson-2-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 5.3 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-111"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-112"">Day 2</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 5.3: Hashing</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-3""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Hashing</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-3-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-5-lesson-3-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 5.3 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-113"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-114"">Day 2</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 5.4: Asymmetric Cryptography</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-4""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Asymmetric Cryptography</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-4-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-5-lesson-4-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 5.4 · 5 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-116"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-118"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-120"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-117"">Day 4</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-119"">Day 5</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 5.5: Protecting Applications</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-5""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Protecting Applications</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-5-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-5-lesson-5-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 5.5 · 2 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-121"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-122"">Day 2</a>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class=""lesson-item lesson-live"">
+          <div class=""lesson-header"">
+            <span class=""lesson-icon"">📚</span>
+            <p class=""lesson-name"">Topic 5.6: Detecting Attacks on Data and Applications</p>
+            <span class=""lesson-status"">Live</span>
+          </div>
+          <div class=""exercise-list"">
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-6""><div class=""ex-dot""></div> <span class=""ex-label"">Lesson — Detecting Attacks on Data and Applications</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 1</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2""><div class=""ex-dot""></div> <span class=""ex-label"">Exercise 2</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row"" href=""/pages/ap-cyber-unit-5-lesson-6-lab""><div class=""ex-dot""></div> <span class=""ex-label"">Lab</span><span class=""ex-tag"">Start →</span></a>
+            <a class=""exercise-row quiz-row"" href=""/pages/ap-cyber-unit-5-lesson-6-quiz""><div class=""ex-dot ex-dot-quiz""></div> <span class=""ex-label""><strong>Quiz</strong></span><span class=""ex-tag ex-tag-quiz"">Take Quiz →</span></a>
+          </div>
+        </div>
+        <hr class=""unit-exam-sep"">
+        <div style=""padding:0 0 4px!important;"">
+          <a class=""exercise-row exam-row"" href=""/pages/ap-cyber-unit-5-exam""><div class=""ex-dot ex-dot-exam""></div> <span class=""ex-label""><strong>Unit 5 Exam</strong> — All Lessons</span> <span class=""ex-tag ex-tag-exam"">✍ Take Exam →</span></a>
+        </div>
+        <a class=""study-guide-link"" href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">📄 Unit 5 Study Guide (Reference Material)</a>
+      </div>
+    </div>
+
+    </div>
+<!-- end unit-list -->
+  </div>
+<!-- end section -->
+
+  <hr class=""section-divider"">
+
+  <!-- WHAT'S INCLUDED -->
+  <div class=""section"">
+    <div class=""container"">
+      <h2 class=""section-title"">What’s Included</h2>
+      <p class=""section-sub"">Every content type a full AP course needs — all 5 units complete and live now.</p>
+    </div>
+    <div class=""features-grid"" style=""max-width:860px;margin:0 auto;"">
+      <div class=""feature-card"">
+        <span class=""feature-icon"">📚</span>
+        <p class=""feature-title"">Structured Lessons</p>
+        <p class=""feature-desc"">Concept explanation, real-world scenarios, worked examples</p>
+        <p class=""feature-coming"">All 5 Units Live</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">📋</span>
+        <p class=""feature-title"">Interactive Exercises</p>
+        <p class=""feature-desc"">Guided practice and applied challenges after each lesson</p>
+        <p class=""feature-coming"">All 5 Units Live</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">✍</span>
+        <p class=""feature-title"">MCQ Practice</p>
+        <p class=""feature-desc"">Lesson quizzes and unit exams with instant feedback and explanations</p>
+        <p class=""feature-coming"">All 5 Units Live</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">📄</span>
+        <p class=""feature-title"">Unit Study Guides</p>
+        <p class=""feature-desc"">5 comprehensive reference guides — all units available now</p>
+        <p class=""feature-coming"">All 5 Live Now</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">⏳</span>
+        <p class=""feature-title"">Timed Practice Exams</p>
+        <p class=""feature-desc"">Full-length digital exam-style practice covering all 5 units</p>
+        <p class=""feature-coming"">Available Now</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">👤</span>
+        <p class=""feature-title"">1-on-1 Tutoring</p>
+        <p class=""feature-desc"">Private sessions with Tanner — 451+ five-star reviews</p>
+        <p class=""feature-coming""><a href=""/pages/ap-computer-science-a-tutor"" style=""color:#A855F7!important;"">Book a Session →</a></p>
+      </div>
+    </div>
+  </div>
+
+  <hr class=""section-divider"">
+
+  <!-- BUILT FOR TEACHERS -->
+  <div class=""section"">
+    <div class=""container"">
+      <h2 class=""section-title"">Built for Teachers &amp; Students</h2>
+      <p class=""section-sub"">Use as a full-year course (32–36 weeks) or a semester elective. Teacher resources release alongside each unit.</p>
+    </div>
+    <div class=""features-grid"" style=""max-width:860px;margin:0 auto;"">
+      <div class=""feature-card"">
+        <span class=""feature-icon"">📅</span>
+        <p class=""feature-title"">Pacing Guides</p>
+        <p class=""feature-desc"">Full-year and semester calendars with lesson pacing and assessment checkpoints.</p>
+        <p class=""feature-coming"">Available Now</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">📝</span>
+        <p class=""feature-title"">Lesson Plans + Keys</p>
+        <p class=""feature-desc"">Teacher notes, common misconceptions, answer keys, and grading guidance per lesson.</p>
+        <p class=""feature-coming"">All 5 Units Live</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">🔮</span>
+        <p class=""feature-title"">Labs + Rubrics</p>
+        <p class=""feature-desc"">Classroom-safe cybersecurity labs with scoring rubrics and student reflections.</p>
+        <p class=""feature-coming"">All 5 Units Live</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">📊</span>
+        <p class=""feature-title"">Assessments</p>
+        <p class=""feature-desc"">Lesson quizzes and unit exams with full explanations and printable versions.</p>
+        <p class=""feature-coming"">All 5 Units Live</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">👥</span>
+        <p class=""feature-title"">Student-Paced Design</p>
+        <p class=""feature-desc"">Self-directed structure works for independent learners and flipped classrooms alike.</p>
+        <p class=""feature-coming"">All Units</p>
+      </div>
+      <div class=""feature-card"">
+        <span class=""feature-icon"">🎓</span>
+        <p class=""feature-title"">Built by a Real AP Teacher</p>
+        <p class=""feature-desc"">11+ years teaching AP CS at Blue Valley North — 451 five-star verified tutoring reviews.</p>
+        <p class=""feature-coming""><a href=""/pages/ap-computer-science-a-tutor"" style=""color:#A855F7!important;"">Meet Tanner →</a></p>
+      </div>
+    </div>
+  </div>
+
+  <hr class=""section-divider"">
+
+  <!-- CTA -->
+  <div class=""cta-section"">
+    <h2 class=""cta-title"">Start the Free Course Now</h2>
+    <p class=""cta-sub"">All 5 units live — lessons, exercises, labs, quizzes, and unit exams. Free access, no account required.</p>
+    <a href=""/pages/ap-cybersecurity-unit-1-introduction-to-security"" class=""cta-btn"">Start Unit 1 →</a>
+    <a href=""/pages/ap-cybersecurity-teacher-resources"" class=""cta-btn-outline"">Teacher Resources →</a>
+  </div>
+
+  <!-- FOOTER NOTE -->
+  <div style=""text-align:center!important;padding:20px!important;font-size:12px!important;color:#9CA3AF!important;font-family:'Georgia',serif!important;"">
+    AP Cybersecurity Course | APCSExamPrep.com | Built by Tanner Crow, AP CS Teacher (11+ years)<br>
+    AP® is a registered trademark of the College Board, which was not involved in the production of this course.
+  </div>
+
+</div><!-- end #apcyber-course-hub -->
+<div style=""font-family:Georgia,serif!important;max-width:900px!important;margin:0 auto!important;padding:0 16px 32px!important;"">
+
+  <h2 style=""font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;margin:0 0 16px!important;padding-bottom:10px!important;border-bottom:2px solid #CCFBF1!important;"">Exam Planning Resources</h2>
+
+  <div style=""display:grid!important;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))!important;gap:12px!important;margin-bottom:20px!important;"">
+    <a href=""/pages/ap-cybersecurity-test-builder"" style=""display:block!important;padding:14px 16px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #0F766E!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#0F766E!important;margin-bottom:4px!important;"">Teacher Tool</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;line-height:1.4!important;"">AP Cyber Test Builder — Custom Quizzes &amp; Exams</div>
+    </a>
+    <a href=""/pages/ap-cybersecurity-question-of-the-day"" style=""display:block!important;padding:14px 16px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #6B21A8!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin-bottom:4px!important;"">Daily Practice</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.4!important;"">AP Cyber Question of the Day</div>
+    </a>
+    <a href=""/pages/ap-cybersecurity-study-guide"" style=""display:block!important;padding:14px 16px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #0F766E!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#0F766E!important;margin-bottom:4px!important;"">Study Guides</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.4!important;"">AP Cyber Study Guides Hub — All 5 Units</div>
+    </a>
+    <a href=""/pages/ap-cybersecurity-practice-exam"" style=""display:block!important;padding:14px 16px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #0F766E!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#0F766E!important;margin-bottom:4px!important;"">Practice Exam</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;line-height:1.4!important;"">AP Cybersecurity Practice Exam — 40 MCQ + 3 FRQ</div>
+    </a>
+    <a href=""/pages/ap-cybersecurity-teacher-resources"" style=""display:block!important;padding:14px 16px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #0F766E!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#0F766E!important;margin-bottom:4px!important;"">Teachers</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;line-height:1.4!important;"">AP Cyber Teacher Resources &amp; Curriculum Bundle</div>
+    </a>
+    <a href=""/pages/ap-cybersecurity-exam-format"" style=""display:block!important;padding:14px 16px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #0F766E!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#0F766E!important;margin-bottom:4px!important;"">Exam Guide</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;line-height:1.4!important;"">AP Cyber Exam Format &amp; Scoring Guide (May 2027)</div>
+    </a>
+    <a href=""/pages/ap-cybersecurity-score-calculator"" style=""display:block!important;padding:14px 16px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #0F766E!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#0F766E!important;margin-bottom:4px!important;"">Score Calculator</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;line-height:1.4!important;"">Estimate Your AP Score — MCQ + FRQ (Estimated Cutoffs)</div>
+    </a>
+    <a href=""/pages/ap-college-credit-policy-search"" style=""display:block!important;padding:14px 16px!important;border:1px solid #CCFBF1!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #0F766E!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#0F766E!important;margin-bottom:4px!important;"">College Credit</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;line-height:1.4!important;"">AP Cyber College Credit &amp; University Policies</div>
+    </a>
+    <a href=""/pages/ap-cybersecurity-course"" style=""display:block!important;padding:14px 16px!important;border:1px solid #DBEAFE!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #0F766E!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#0F766E!important;margin-bottom:4px!important;"">New to the course</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;line-height:1.4!important;"">What Is AP Cybersecurity? Course, Exam &amp; Whether to Take It</div>
+    </a>
+    <a href=""/pages/ap-csa-exam-prep-hub"" style=""display:block!important;padding:14px 16px!important;border:1px solid #DBEAFE!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #1D4ED8!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#1D4ED8!important;margin-bottom:4px!important;"">Also on this site</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;line-height:1.4!important;"">AP Computer Science A Hub</div>
+    </a>
+    <a href=""/pages/ap-computer-science-principles-resources"" style=""display:block!important;padding:14px 16px!important;border:1px solid #DBEAFE!important;border-radius:8px!important;text-decoration:none!important;border-left:3px solid #1D4ED8!important;"">
+      <div style=""font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#1D4ED8!important;margin-bottom:4px!important;"">Also on this site</div>
+      <div style=""font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.4!important;"">AP Computer Science Principles Hub</div>
+    </a>
+  </div>
+
+</div>
+
+<style>
+.cyc-allt{--navy:#1E1B4B;--cy:#6B21A8;--cy2:#7C3AED;font-family:""DM Sans"",system-ui,sans-serif!important;background:#F5F0FF!important;border:1px solid #e9d5ff!important;border-radius:14px!important;padding:24px!important;margin:28px 0!important;text-align:center!important;}
+.cyc-allt *{box-sizing:border-box!important;margin:0!important;}
+.cyc-allt .at-h{font-family:""DM Serif Display"",Georgia,serif!important;font-size:21px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:6px!important;}
+.cyc-allt .at-sub{font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin-bottom:16px!important;line-height:1.5!important;}
+.cyc-allt a.at-btn,.cyc-allt a.at-btn:link,.cyc-allt a.at-btn:visited{display:inline-block!important;text-decoration:none!important;background:var(--cy)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:15px!important;padding:12px 24px!important;border-radius:10px!important;transition:background .15s ease!important;}
+.cyc-allt a.at-btn:hover{background:var(--cy2)!important;}
+</style>
+<div class=""cyc-allt"">
+  <div class=""at-h"">Looking for a specific concept?</div>
+  <div class=""at-sub"">Browse all 40 AP Cybersecurity concept guides in one place, organized by all 5 units: social engineering, networks, firewalls, malware, cryptography, and more.</div>
+  <a class=""at-btn"" href=""/pages/ap-cybersecurity-topics"">Open the All Topics index →</a>
+              <div class=""qotd-card"">
+                <div class=""qotd-lbl"">Question of the Day <span>Topic 5.6 · 7 days</span>
+</div>
+                <div class=""qotd-days"">
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-126"">Day 1</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-127"">Day 2</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-128"">Day 3</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-129"">Day 4</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-139"">Day 5</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-141"">Day 6</a>
+                  <a class=""qotd-day"" href=""/pages/ap-cybersecurity-question-of-the-day?q=C5-130"">Day 7</a>
+                </div>
+              </div>
+
+
+<!-- apcs-related-links -->
+<div class=""related"">
+<h3>Practice</h3>
+<a href=""/pages/ap-cybersecurity-practice"">AP Cybersecurity practice: every quiz, lab and exam</a>
+</div>
+<!-- /apcs-related-links -->
+</div>
+<!--APCYBER-HUB-ACCORDION-START-->
+<style>
+/* Cyber hub accordion - scoped under #apcyber-course-hub; no-JS = fully expanded */
+#apcyber-course-hub .unit-list.acc-ready .unit-card > .lesson-list{display:none!important;}
+#apcyber-course-hub .unit-list.acc-ready .unit-card.acc-open > .lesson-list{display:flex!important;}
+#apcyber-course-hub .unit-list.acc-ready .lesson-item > .exercise-list{display:none!important;}
+#apcyber-course-hub .unit-list.acc-ready .lesson-item.acc-open > .exercise-list{display:flex!important;}
+#apcyber-course-hub .unit-list.acc-ready .unit-card > .unit-header{cursor:pointer!important;}
+#apcyber-course-hub .unit-list.acc-ready .lesson-item > .lesson-header{cursor:pointer!important;}
+#apcyber-course-hub .unit-list.acc-ready .unit-card > .unit-header::after{content:""\25BE""!important;margin-left:auto!important;padding-left:10px!important;font-size:14px!important;line-height:1!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;transition:transform .18s!important;align-self:center!important;}
+#apcyber-course-hub .unit-list.acc-ready .unit-card.acc-open > .unit-header::after{transform:rotate(180deg)!important;}
+#apcyber-course-hub .unit-list.acc-ready .lesson-item > .lesson-header::after{content:""\25BE""!important;margin-left:auto!important;padding-left:10px!important;font-size:12px!important;line-height:1!important;color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;transition:transform .18s!important;align-self:center!important;}
+#apcyber-course-hub .unit-list.acc-ready .lesson-item.acc-open > .lesson-header::after{transform:rotate(180deg)!important;}
+#apcyber-course-hub #apcyber-acc-bar{display:flex!important;gap:8px!important;justify-content:flex-end!important;margin:0 0 12px!important;}
+#apcyber-course-hub #apcyber-acc-bar button{font:600 12px/1 Georgia,serif!important;cursor:pointer!important;padding:7px 12px!important;border-radius:7px!important;border:1px solid #6B21A8!important;background:#ffffff!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-course-hub #apcyber-acc-bar button:hover{background:#6B21A8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+
+/* apcs-related-links */
+#apcyber-course-hub .related{background:#f9fafb!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:24px!important;margin:32px 0!important;}
+#apcyber-course-hub .related h3{margin:0 0 14px!important;font-size:18px!important;font-weight:600!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;}
+#apcyber-course-hub .related a{display:block!important;color:#3b82f6!important;text-decoration:none!important;padding:8px 0!important;border-bottom:1px solid #e5e7eb!important;font-size:15px!important;-webkit-text-fill-color:#3b82f6!important;}
+#apcyber-course-hub .related a:last-child{border-bottom:none!important;}
+#apcyber-course-hub .related a:hover{text-decoration:underline!important;}
+/* /apcs-related-links */
+</style>
+<script>
+(function(){
+  function ready(fn){if(document.readyState!=='loading'){fn();}else{document.addEventListener('DOMContentLoaded',fn);}}
+  ready(function(){
+    var root=document.querySelector('#apcyber-course-hub') || document;
+    var list=root.querySelector('.unit-list'); if(!list) return;
+    var bar=document.createElement('div'); bar.id='apcyber-acc-bar';
+    bar.innerHTML='<button type=""button"" data-acc=""expand"">Expand all</button>'
+                 +'<button type=""button"" data-acc=""collapse"">Collapse all</button>';
+    list.parentNode.insertBefore(bar, list);
+    function all(open){ Array.prototype.forEach.call(list.querySelectorAll('.unit-card,.lesson-item'),function(e){e.classList.toggle('acc-open',open);}); }
+    bar.querySelector('[data-acc=""expand""]').addEventListener('click',function(){all(true);});
+    bar.querySelector('[data-acc=""collapse""]').addEventListener('click',function(){all(false);});
+    Array.prototype.forEach.call(list.querySelectorAll('.unit-card > .unit-header'),function(h){
+      h.addEventListener('click',function(){h.parentNode.classList.toggle('acc-open');});
+    });
+    Array.prototype.forEach.call(list.querySelectorAll('.lesson-item > .lesson-header'),function(h){
+      h.addEventListener('click',function(){h.parentNode.classList.toggle('acc-open');});
+    });
+    list.classList.add('acc-ready');
+    var first=list.querySelector('.unit-card'); if(first) first.classList.add('acc-open');
+  });
+})();
+</script>
+<!--APCYBER-HUB-PROGRESS-HIGHLIGHT-START (Unit 1 pilot)-->
+<script src=""https://www.apcsexamprep.com/cdn/shop/t/7/assets/apcs-hub-progress.js?v=2"" defer></script>"
