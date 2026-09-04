@@ -44,8 +44,14 @@ def build_deck(t, day, edition, path):
     d.title_slide(PREPARED,
                   note=f"Day {day['day']} of {len(t['days'])}. The Lesson Map in the Teacher Guide "
                        f"has a suggested time for each section if you want one.")
-    warm_head, warm_prompt, warm_draw = day['warmup']
-    d.warmup(warm_head, warm_prompt, warm_draw)
+    # A warm-up is [heading, prompt, draw_out] and may carry a fourth element,
+    # a code fragment to set as a real code block instead of running it into
+    # the prompt sentence. Unpacked by length so the 70 warm-ups that carry no
+    # code need no edit.
+    warm = day['warmup']
+    warm_head, warm_prompt, warm_draw = warm[0], warm[1], warm[2]
+    warm_code = warm[3] if len(warm) > 3 else None
+    d.warmup(warm_head, warm_prompt, warm_draw, warm_code)
     d.notes_preview([(name, ideas[0]) for name, ideas in day['sections']])
     d.objectives(day['objectives'])
     for i, (name, ideas) in enumerate(day['sections'], 1):

@@ -18,7 +18,7 @@ TOPICS = [
  'handle': 'ap-csa-lesson-2-8-for-loops',
  'subtitle': 'The same four parts as a while loop, gathered into one header',
  'vocab': [
-   ('for loop', 'A loop whose initialisation, condition and update appear together in its header.'),
+   ('for loop', 'A loop whose initialization, condition and update appear together in its header.'),
    ('Loop header', 'The three parts in parentheses, separated by semicolons.'),
    ('Loop variable', 'The variable that counts the iterations, usually declared in the header.'),
    ('Scope', 'The region of code where a variable exists. A variable declared in a for header exists only inside the loop.'),
@@ -34,7 +34,7 @@ TOPICS = [
     'options': ['4', '5', '6', 'Depends on the body'],
     'answer_index': 1,
     'why': 'i takes 0, 1, 2, 3 and 4, which is five values.'},
-   {'stem': 'A product accumulator should be initialised to:',
+   {'stem': 'A product accumulator should be initialized to:',
     'options': ['0', '1', 'The first value', 'n'],
     'answer_index': 1,
     'why': 'One is the identity for multiplication. Starting at 0 makes every product 0.'},
@@ -70,19 +70,18 @@ TOPICS = [
      'The identity idea pays off again in 4.13 and in recursion. Name it properly now.',
    ],
    'warmup': ('Find the four parts',
-     'On the board, yesterday\'s while loop: "int i = 1; while (i <= n) { print(i); i++; } Circle the '
-     'initialisation, the condition and the update. Two minutes."',
-     'Once all three are circled, point out that they are scattered across three different lines. The for loop '
-     'exists to gather them into one place, which is the entire motivation.'),
+     'On the board, yesterday\'s while loop. "Circle the initialization, the condition and the update. Two minutes."',
+     'Once all three are circled, point out that they are scattered across three different lines. The for loop exists to gather them into one place, which is the entire motivation.',
+     'int i = 1;\nwhile (i <= n) {\n    print(i);\n    i++;\n}'),
    'objectives': [
      ('I can write a for loop with a correct header and predict how many times it runs.', 'LO 2.8.A'),
      ('I can convert between an equivalent for loop and while loop.', 'LO 2.8.B'),
-     ('I can initialise an accumulator to the correct identity value.', 'LO 2.8.C'),
+     ('I can initialize an accumulator to the correct identity value.', 'LO 2.8.C'),
    ],
    'sections': [
      ('The for header', [
-       'A for header holds three parts separated by semicolons: initialisation, condition and update.',
-       'The initialisation runs once, before anything else. The condition is tested before every iteration.',
+       'A for header holds three parts separated by semicolons: initialization, condition and update.',
+       'The initialization runs once, before anything else. The condition is tested before every iteration.',
        'The update runs at the end of each iteration, after the body and before the next test.',
        'A variable declared in the header exists only inside the loop, which prevents accidental reuse afterwards.',
      ]),
@@ -106,7 +105,7 @@ TOPICS = [
              'the only possible explanation for the different answers.',
    },
    'break_it': {
-     'change': 'Initialise product to 0 instead of 1.',
+     'change': 'Initialize product to 0 instead of 1.',
      'happens': 'The factorial prints 0 for every input, including 5. The loop is correct, the multiplication is '
                 'correct, and the answer is always zero.',
      'why': 'Zero multiplied by anything is zero, so the accumulator can never recover, no matter how many correct '
@@ -131,7 +130,7 @@ TOPICS = [
    'learned': [
      'I can write a for loop with a correct header and predict how many times it runs.',
      'I can convert between an equivalent for loop and while loop.',
-     'I can initialise an accumulator to the correct identity value.',
+     'I can initialize an accumulator to the correct identity value.',
    ],
    'up_next': 'Day 2 concentrates on loop bounds and the off-by-one errors that live in them.',
    'extra': 'Write for loops that run exactly n times, exactly n - 1 times, and exactly once. Check each by tracing.',
@@ -191,7 +190,7 @@ TOPICS = [
      'change': 'Change the third loop from i < n to i <= n while the specification still says strictly below n.',
      'happens': 'The count goes from 3 to 4 for n = 4. One extra iteration, one wrong answer, no error message.',
      'why': 'An off-by-one is a one-character change with a one-unit consequence, which is exactly the size of '
-            'mistake that survives casual testing. The defence is counting the values the loop variable takes. '
+            'mistake that survives casual testing. The defense is counting the values the loop variable takes. '
             'This is on tonight\'s graded debugging exercise together with the zero product.',
      'note': 'Point out that for n = 1 the buggy loop runs once and the correct one runs zero times, which is a '
              '100 percent error. Smallest input, loudest signal.',
@@ -228,7 +227,7 @@ TOPICS = [
  'subtitle': 'The standard algorithms: maximum, minimum, count, sum, and where each one starts',
  'vocab': [
    ('Running maximum', 'A variable holding the largest value seen so far as a loop proceeds.'),
-   ('Seeding', 'Initialising an accumulator from the data itself rather than from a constant.'),
+   ('Seeding', 'Initializing an accumulator from the data itself rather than from a constant.'),
    ('Counter', 'A variable increased by one each time a condition is met.'),
    ('Traversal', 'Visiting every element of a collection exactly once.'),
    ('Edge case', 'An input at the boundary of what is allowed, such as an empty or single-element list.'),
@@ -321,7 +320,7 @@ TOPICS = [
      'change': 'Seed max with 0 instead of data[0], and start the scan at index 0.',
      'happens': 'On the list -5 -2 -9 -7 it reports a maximum of 0, which is not in the list at all. On any list '
                 'containing a positive number it is still correct, so most tests pass.',
-     'why': 'Initialising to 0 asserts that 0 is a candidate. When no element beats it, the loop reports a value '
+     'why': 'Initializing to 0 asserts that 0 is a candidate. When no element beats it, the loop reports a value '
             'that was never in the data. Seed from the data itself and the bug cannot exist. This is tonight\'s '
             'graded debugging exercise, alongside a counter that assigns instead of accumulating.',
      'note': 'Ask the class for a test case that would catch it. Anyone who says "make them all negative" has '
@@ -361,7 +360,7 @@ TOPICS = [
      (5, 'Exit ticket'),
    ],
    'notes': [
-     'The > versus >= tie question is a favourite exam distractor. Give it real time.',
+     'The > versus >= tie question is a favorite exam distractor. Give it real time.',
      'Empty input is a legitimate case and students must decide what it means rather than crashing.',
    ],
    'warmup': ('Retrieval on seeding',
@@ -687,7 +686,7 @@ TOPICS = [
     'options': ['Continues where it left off', 'Runs completely from its start value',
                 'Runs once', 'Is skipped after the first time'],
     'answer_index': 1,
-    'why': 'The inner initialisation runs again on every outer pass.'},
+    'why': 'The inner initialization runs again on every outer pass.'},
  ],
  'days': [
   {
@@ -756,7 +755,7 @@ TOPICS = [
    'misconception': {
      'heading': 'The inner loop picks up where it left off',
      'think': 'The inner loop finished at c = cols, so on the next row it carries on from there.',
-     'truth': 'The inner loop\'s initialisation runs again at the start of every outer pass, so c goes back to its '
+     'truth': 'The inner loop\'s initialization runs again at the start of every outer pass, so c goes back to its '
               'start value every single row. That is why each row has the same number of stars. If it genuinely '
               'resumed, only the first row would print anything at all, which is a useful thing to imagine when '
               'checking whether you believe this.',
@@ -1016,7 +1015,7 @@ TOPICS = [
    'sections': [
      ('Two algorithms, one problem', [
        'The same problem can often be solved with different amounts of work, and the counts make the difference visible.',
-       'Checking for any duplicate by comparing every pair is quadratic. Checking a sorted list by comparing neighbours is linear.',
+       'Checking for any duplicate by comparing every pair is quadratic. Checking a sorted list by comparing neighbors is linear.',
        'When two algorithms give the same answers, the one that grows more slowly is the better one at scale.',
      ]),
      ('Growth beats constants', [
@@ -1027,15 +1026,15 @@ TOPICS = [
    ],
    'worked': {
      'heading': 'Duplicate detection, two ways',
-     'code': 'public class Compare\n{\n    public static void main(String[] args)\n    {\n        int n = 6;\n        int[] sorted = {1, 2, 3, 4, 5, 5};\n\n        int pairwise = 0;\n        for (int i = 0; i < n; i++)\n        {\n            for (int j = i + 1; j < n; j++)\n            {\n                pairwise++;\n            }\n        }\n        System.out.println(pairwise);\n\n        int neighbours = 0;\n        for (int i = 1; i < n; i++)\n        {\n            neighbours++;\n        }\n        System.out.println(neighbours);\n    }\n}',
+     'code': 'public class Compare\n{\n    public static void main(String[] args)\n    {\n        int n = 6;\n        int[] sorted = {1, 2, 3, 4, 5, 5};\n\n        int pairwise = 0;\n        for (int i = 0; i < n; i++)\n        {\n            for (int j = i + 1; j < n; j++)\n            {\n                pairwise++;\n            }\n        }\n        System.out.println(pairwise);\n\n        int neighbors = 0;\n        for (int i = 1; i < n; i++)\n        {\n            neighbors++;\n        }\n        System.out.println(neighbors);\n    }\n}',
      'notice': [
        'pairwise - 15 comparisons, which is 6 times 5 divided by 2.',
-       'neighbours - 5 comparisons, one fewer than the number of items.',
+       'neighbors - 5 comparisons, one fewer than the number of items.',
        'Same answer - both detect the duplicate 5, at very different cost.',
      ],
      'output': ['15', '5'],
      'caption': 'Complete and runnable as shown. Both find the duplicate; one does three times the work.',
-     'note': 'Ask what the two counts would be for n = 12. Pairwise goes to 66, neighbours to 11. The gap widens, '
+     'note': 'Ask what the two counts would be for n = 12. Pairwise goes to 66, neighbors to 11. The gap widens, '
              'which is the point about growth rather than the point about 15 versus 5.',
    },
    'break_it': {
@@ -1058,7 +1057,7 @@ TOPICS = [
      'note': 'This closes the unit well: measure the growth, not the stopwatch.',
    },
    'discussion': [
-     'For n = 12, how many pairwise comparisons are there? How many neighbour comparisons?',
+     'For n = 12, how many pairwise comparisons are there? How many neighbor comparisons?',
      'When might you legitimately choose the quadratic algorithm anyway?',
    ],
    'learned': [

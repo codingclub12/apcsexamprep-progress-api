@@ -86,7 +86,7 @@ TOPICS = [
    'warmup': ('The vending machine decision',
      'On the board: "A vending machine takes coins until you have paid enough, then dispenses. '
      'List every point where it has to DECIDE something, and every point where it has to REPEAT something. '
-     'Four minutes, then compare with a neighbour."',
+     'Four minutes, then compare with a neighbor."',
      'Collect two lists out loud. Every decision is selection and every repeat is repetition, and students '
      'will have found both without the vocabulary. Name them only after the lists are on the board, so the '
      'words attach to something they already described.'),
@@ -128,7 +128,7 @@ TOPICS = [
      'why': 'The first assignment overwrites a before anything has saved it, so the second assignment copies the new '
             'value back onto itself. A swap always needs three statements and a temporary. This exact bug is tonight\'s '
             'graded debugging exercise.',
-     'note': 'Do this live with two labelled cups and a coin. Pouring cup A into cup B loses what was in B. '
+     'note': 'Do this live with two labeled cups and a coin. Pouring cup A into cup B loses what was in B. '
              'Students who see it physically stop making it.',
    },
    'misconception': {
@@ -209,7 +209,7 @@ TOPICS = [
      'happens': 'It compiles, it runs, and the countdown silently stops at 2. Four lines of output become three, '
                 'and nothing in the program complains.',
      'why': 'An off-by-one is the most common bug in the entire course and it never announces itself. The only '
-            'defence is testing the boundary deliberately: run the smallest input and count the lines you expect.',
+            'defense is testing the boundary deliberately: run the smallest input and count the lines you expect.',
      'note': 'Ask for the expected line count BEFORE running. Students who predict four and see three have just '
              'learned to test boundaries, which is the actual skill.',
    },

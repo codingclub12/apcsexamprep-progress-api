@@ -55,7 +55,7 @@ TOPICS = [
     'answer_index': 1,
     'why': 'The two now express the same rule twice and can disagree.'},
    {'stem': 'Which best describes encapsulation?',
-    'options': ['Writing short methods', 'Keeping data private and exposing behaviour',
+    'options': ['Writing short methods', 'Keeping data private and exposing behavior',
                 'Using many classes', 'Avoiding constructors'],
     'answer_index': 1,
     'why': 'Data is hidden; the methods define what callers may do with it.'},
@@ -80,7 +80,7 @@ TOPICS = [
    'warmup': ('The thing you use without understanding',
      'On the board: "Name three things you used this morning without knowing how they work internally. '
      'For each one, what do you actually need to know to use it?"',
-     'Steer towards: you need the interface, not the mechanism. A light switch, a car, Math.sqrt. That gap '
+     'Steer toward: you need the interface, not the mechanism. A light switch, a car, Math.sqrt. That gap '
      'between what you must know and what you may ignore IS abstraction, and they already rely on it constantly.'),
    'objectives': [
      ('I can explain what abstraction hides and what it exposes.', 'LO 3.1.A'),
@@ -90,7 +90,7 @@ TOPICS = [
    'sections': [
      ('Abstraction and encapsulation', [
        'Abstraction hides detail behind a name, so a caller can use something without knowing how it works.',
-       'Encapsulation keeps the data private and exposes behaviour, so the class controls how its data can change.',
+       'Encapsulation keeps the data private and exposes behavior, so the class controls how its data can change.',
        'A well-named method IS an abstraction: getSubtotal says what you get without saying how it is computed.',
      ]),
      ('Duplication and drift', [
@@ -177,7 +177,7 @@ TOPICS = [
        'Deciding what a class exposes is a design decision, and it decides what callers are able to do wrong.',
      ]),
      ('Refactoring safely', [
-       'Refactoring changes the structure without changing the behaviour, so the outputs before and after must match.',
+       'Refactoring changes the structure without changing the behavior, so the outputs before and after must match.',
        'Work in small steps and re-run after each one. A large refactor that fails gives you no information about where.',
        'When two methods compute the same thing, keep the clearer one and make the other call it.',
      ]),
@@ -205,11 +205,11 @@ TOPICS = [
    'misconception': {
      'heading': 'A refactor is finished when it compiles',
      'think': 'I restructured the class and it compiles, so the refactor worked.',
-     'truth': 'Refactoring means changing the structure WITHOUT changing the behaviour, so compiling proves only '
+     'truth': 'Refactoring means changing the structure WITHOUT changing the behavior, so compiling proves only '
               'half of it. The other half is that the outputs match what they were before. Run the same inputs '
               'through the old and new versions and compare. If you did not check the outputs, you did not '
               'refactor; you rewrote and hoped.',
-     'note': 'Connects straight back to 1.1: compiling proves valid Java, never correct behaviour.',
+     'note': 'Connects straight back to 1.1: compiling proves valid Java, never correct behavior.',
    },
    'discussion': [
      'Why is a misleading method name a broken abstraction rather than just untidy?',
@@ -238,7 +238,7 @@ TOPICS = [
    ('Side effect', 'A change made by a method beyond returning its value.'),
    ('State', 'The current values of an object\'s fields.'),
    ('Idempotent', 'Giving the same result however many times it is called.'),
-   ('Contract', 'What a caller is entitled to assume about a method\'s behaviour.'),
+   ('Contract', 'What a caller is entitled to assume about a method\'s behavior.'),
  ],
  'quiz': [
    {'stem': 'An accessor should:',
@@ -505,7 +505,7 @@ TOPICS = [
    'objectives': [
      ('I can identify the fields, constructor and methods of a class.', 'LO 3.3.A'),
      ('I can explain the difference between a declaration and an assignment.', 'LO 3.3.B'),
-     ('I can recognise the symptom of fields that were never assigned.', 'LO 3.3.C'),
+     ('I can recognize the symptom of fields that were never assigned.', 'LO 3.3.C'),
    ],
    'sections': [
      ('The parts of a class', [
@@ -552,7 +552,7 @@ TOPICS = [
               'as the object and every method can reach it. A local lives until its method returns and nothing '
               'else can see it at all. Adding a type inside a method silently creates the second kind, and the '
               'field you meant to set keeps its default value.',
-     'note': 'The word "silently" is doing the work. Emphasise that no warning appears at default settings.',
+     'note': 'The word "silently" is doing the work. Emphasize that no warning appears at default settings.',
    },
    'discussion': [
      'Every getter in a class returns 0. What are the two most likely causes, and how would you tell them apart?',
@@ -561,7 +561,7 @@ TOPICS = [
    'learned': [
      'I can identify the fields, constructor and methods of a class.',
      'I can explain the difference between a declaration and an assignment.',
-     'I can recognise the symptom of fields that were never assigned.',
+     'I can recognize the symptom of fields that were never assigned.',
    ],
    'up_next': 'Day 2 writes a class from scratch and tests each part as it is added.',
    'extra': 'Write a Rectangle class with two fields, a constructor and three getters. Test every getter.',
@@ -712,14 +712,13 @@ TOPICS = [
      'Chaining with this(...) is examinable and students rarely see it written down. Model it.',
    ],
    'warmup': ('Spot the constructor',
-     'On the board, three declarations inside class Rect: public Rect(int w), public void Rect(int w), '
-     'public int getWidth(). "Which one is the constructor? How do you know? What are the other two?"',
-     'Only the first. The second is a method that happens to be called Rect, which is legal and almost never '
-     'intended. Getting them to say "no return type" out loud now pays off in ten minutes.'),
+     'On the board, three declarations from inside class Rect. "Which one is the constructor? How do you know? What are the other two?"',
+     'Only the first. The second is a method that happens to be called Rect, which is legal and almost never intended. Getting them to say "no return type" out loud now pays off in ten minutes.',
+     'public Rect(int w)\npublic void Rect(int w)\npublic int getWidth()'),
    'objectives': [
-     ('I can write a constructor that initialises every field.', 'LO 3.4.A'),
+     ('I can write a constructor that initializes every field.', 'LO 3.4.A'),
      ('I can explain when Java supplies a default constructor.', 'LO 3.4.B'),
-     ('I can recognise a constructor accidentally written as a method.', 'LO 3.4.C'),
+     ('I can recognize a constructor accidentally written as a method.', 'LO 3.4.C'),
    ],
    'sections': [
      ('Constructors and the default', [
@@ -755,7 +754,7 @@ TOPICS = [
             'class name, so Java falls back to the default constructor and nothing is assigned. This is '
             'tonight\'s graded debugging exercise, together with a square that never sets its height.',
      'note': 'This is the highest-value five minutes in Unit 3. Every student will make this mistake once, and '
-             'the ones who saw it here will recognise it in seconds.',
+             'the ones who saw it here will recognize it in seconds.',
    },
    'misconception': {
      'heading': 'Adding void makes the declaration clearer',
@@ -771,9 +770,9 @@ TOPICS = [
      'Why must this(...) be the first statement of a constructor?',
    ],
    'learned': [
-     'I can write a constructor that initialises every field.',
+     'I can write a constructor that initializes every field.',
      'I can explain when Java supplies a default constructor.',
-     'I can recognise a constructor accidentally written as a method.',
+     'I can recognize a constructor accidentally written as a method.',
    ],
    'up_next': 'Day 2 writes overloaded constructors from a specification and chains them.',
    'extra': 'Write a Time class with constructors taking (h, m, s), (h, m) and (). Chain them all to the first.',

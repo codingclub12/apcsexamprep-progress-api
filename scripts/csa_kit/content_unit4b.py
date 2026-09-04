@@ -198,7 +198,7 @@ TOPICS = [
    'misconception': {
      'heading': 'Any test that passes is a good test',
      'think': 'I ran it and got the right answer, so the code is correct.',
-     'truth': 'A test only tells you about the behaviour it can distinguish. An array with no duplicates gives '
+     'truth': 'A test only tells you about the behavior it can distinguish. An array with no duplicates gives '
               'the same answer for both tie-breaking rules, so passing it says nothing about which rule you '
               'implemented. Before running, ask what input would produce DIFFERENT answers from a correct and an '
               'incorrect version, and run that one. If you cannot think of such an input, the test is decoration.',
@@ -274,13 +274,12 @@ TOPICS = [
    ],
    'notes': [
      'The parentheses placement is the whole lesson. Write both versions side by side and evaluate each aloud.',
-     'This is 1.5 returning. Say so; students who met it then recognise it faster now.',
+     'This is 1.5 returning. Say so; students who met it then recognize it faster now.',
    ],
    'warmup': ('Seven divided by two',
-     'On the board: "int a = 7; int b = 2; What does a / b give? What does (double)(a / b) give? '
-     'What does (double) a / b give? Write all three."',
-     '3, 3.0 and 3.5. The middle one is the trap, and seeing 3.0 rather than 3.5 written down in their own '
-     'handwriting is what makes the rule stick.'),
+     'On the board. "What does each of these three give? Write all three down before we run anything."',
+     '3, 3.0 and 3.5. The middle one is the trap, and seeing 3.0 rather than 3.5 written down in their own handwriting is what makes the rule stick.',
+     'int a = 7;\nint b = 2;\n\na / b\n(double)(a / b)\n(double) a / b'),
    'objectives': [
      ('I can compute the sum and average of an array.', 'LO 4.5.A'),
      ('I can place a cast so a division produces a fractional result.', 'LO 4.5.B'),
@@ -530,7 +529,7 @@ TOPICS = [
      'why': 'Two separate bugs that compound: the leftover newline is read as an empty first line, and the loop '
             'then tries to read one more line than the input contains. Both are on tonight\'s graded debugging '
             'exercise, and the empty first line is the classic signature of the mixed-reading trap.',
-     'note': 'The blank first line is the diagnostic. Once students recognise it, they fix this bug in seconds '
+     'note': 'The blank first line is the diagnostic. Once students recognize it, they fix this bug in seconds '
              'for the rest of their lives.',
    },
    'misconception': {
@@ -583,7 +582,7 @@ TOPICS = [
      ('Reading to the end', [
        'hasNextInt reports whether another integer is available, so a loop can read until the input runs out.',
        'This is a condition-driven loop: the number of iterations is decided by the data, not by a counter.',
-       'Empty input means zero iterations, which is correct behaviour and not an error.',
+       'Empty input means zero iterations, which is correct behavior and not an error.',
      ]),
      ('Accumulating while reading', [
        'Values can be summed and counted as they are read, without storing them all first.',
@@ -619,7 +618,7 @@ TOPICS = [
      'heading': 'A loop over input always runs at least once',
      'think': 'The program reads data, so the loop must execute at least one time.',
      'truth': 'A while loop tests before it does anything, so empty input means zero iterations and the program '
-              'continues past the loop with its counters still at 0. That is correct behaviour. The mistake is '
+              'continues past the loop with its counters still at 0. That is correct behavior. The mistake is '
               'writing code after the loop that assumes it ran, such as dividing by a count that is still zero. '
               'Always ask what your code does when the loop body never executes.',
      'note': 'Same idea as 2.7 day 2. The third appearance is when it finally sticks for most students.',

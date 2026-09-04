@@ -484,10 +484,9 @@ TOPICS = [
      'Put both loops side by side so the difference is structural rather than remembered.',
    ],
    'warmup': ('Translate the array loop',
-     'On the board, an array traversal: "for (int i = 0; i < data.length; i++) { total += data[i]; } '
-     'Rewrite it for an ArrayList<Integer>. What changes?"',
-     'length becomes size(), and data[i] becomes list.get(i). Two substitutions and nothing else, which is worth '
-     'saying plainly: this topic is the array topic with different spelling.'),
+     'On the board, an array traversal. "Rewrite it for an ArrayList<Integer>. What changes?"',
+     'length becomes size(), and data[i] becomes list.get(i). Two substitutions and nothing else, which is worth saying plainly: this topic is the array topic with different spelling.',
+     'for (int i = 0; i < data.length; i++) {\n    total += data[i];\n}'),
    'objectives': [
      ('I can traverse an ArrayList by index and with an enhanced for loop.', 'LO 4.9.A'),
      ('I can pair an accumulator seed with the correct starting index.', 'LO 4.9.B'),
@@ -614,7 +613,7 @@ TOPICS = [
      'heading': 'An empty collection is an error condition',
      'think': 'If the list is empty something has gone wrong upstream, so I do not need to handle it.',
      'truth': 'Empty is a perfectly ordinary state: a filter that matched nothing, a file with no records, a '
-              'class with no students enrolled yet. The correct behaviour is usually to report something '
+              'class with no students enrolled yet. The correct behavior is usually to report something '
               'sensible rather than to crash. A sum of nothing is 0; a maximum of nothing has no answer and must '
               'say so. Deciding what empty MEANS is part of the specification, not an afterthought.',
      'note': 'Same idea as 2.7 day 2, where a loop legitimately runs zero times.',

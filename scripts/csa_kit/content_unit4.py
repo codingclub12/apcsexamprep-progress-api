@@ -29,7 +29,7 @@ TOPICS = [
    ('Re-identification', 'Working out who a record belongs to from data that was meant to be anonymous.'),
    ('Suppression', 'Refusing to publish a statistic when the group is too small to protect anyone.'),
    ('Minimum group size', 'The smallest number of records a statistic may be computed over and still be published.'),
-   ('Data minimisation', 'Collecting only what the task actually requires.'),
+   ('Data minimization', 'Collecting only what the task actually requires.'),
  ],
  'quiz': [
    {'stem': 'An average computed over a single response is:',
@@ -56,7 +56,7 @@ TOPICS = [
                 'Records are counted', 'Averages are rounded'],
     'answer_index': 1,
     'why': 'Several non-identifying fields together can single someone out.'},
-   {'stem': 'Data minimisation says you should:',
+   {'stem': 'Data minimization says you should:',
     'options': ['Collect everything and filter later', 'Collect only what the task requires',
                 'Compress the data', 'Store one file per user'],
     'answer_index': 1,
@@ -71,7 +71,7 @@ TOPICS = [
      (3, 'Objectives and guided-notes preview'),
      (15, 'Aggregates, and where they stop hiding'),
      (10, 'Worked example: suppress a small group'),
-     (13, 'Re-identification and data minimisation'),
+     (13, 'Re-identification and data minimization'),
      (5, 'Misconception check: an average is always anonymous'),
      (8, 'Stop and think, then assign homework'),
    ],
@@ -87,19 +87,19 @@ TOPICS = [
    'objectives': [
      ('I can explain what an aggregate hides and when it stops hiding it.', 'LO 4.1.A'),
      ('I can identify when a statistic should be suppressed rather than published.', 'LO 4.1.B'),
-     ('I can explain data minimisation and why it reduces risk.', 'LO 4.1.C'),
+     ('I can explain data minimization and why it reduces risk.', 'LO 4.1.C'),
    ],
    'sections': [
      ('Aggregates and their limits', [
-       'An aggregate summarises many records, so no single record should be recoverable from it.',
+       'An aggregate summarizes many records, so no single record should be recoverable from it.',
        'That protection fails as the group shrinks. An average over one person IS that person\'s value.',
        'Real data releases set a minimum group size and suppress any statistic computed over fewer records.',
        'A count of responses is generally safe to publish, because it says nothing about what anyone answered.',
      ]),
-     ('Re-identification and minimisation', [
+     ('Re-identification and minimization', [
        'Several fields that identify nobody on their own can identify somebody together.',
        'Free text is especially risky, because it can carry names and details no schema anticipated.',
-       'Data minimisation is the strongest defence available: data never collected cannot leak.',
+       'Data minimization is the strongest defense available: data never collected cannot leak.',
      ]),
    ],
    'worked': {
@@ -118,7 +118,7 @@ TOPICS = [
    'break_it': {
      'change': 'Remove the suppression and also print responses[0] so you can "check the data looks right".',
      'happens': 'A group of one now publishes that person\'s exact answer twice: once as a raw record and once '
-                'labelled as the group average. Both lines look like ordinary reporting.',
+                'labeled as the group average. Both lines look like ordinary reporting.',
      'why': 'A debugging print left in is a disclosure in a program that handles other people\'s data, and an '
             'average over one record is not an aggregate at all. Both are on tonight\'s graded debugging '
             'exercise, which is the only one in the course where the bug is an ethical failure rather than a '
@@ -128,7 +128,7 @@ TOPICS = [
    },
    'misconception': {
      'heading': 'An average is always anonymous',
-     'think': 'Averages summarise groups, so publishing one can never reveal an individual.',
+     'think': 'Averages summarize groups, so publishing one can never reveal an individual.',
      'truth': 'It depends entirely on the group size. Over a thousand people an average reveals almost nothing '
               'about any one of them. Over one person it reveals everything, because the mean of one number is '
               'that number. Somewhere between those, protection fades out gradually rather than switching off, '
@@ -143,7 +143,7 @@ TOPICS = [
    'learned': [
      'I can explain what an aggregate hides and when it stops hiding it.',
      'I can identify when a statistic should be suppressed rather than published.',
-     'I can explain data minimisation and why it reduces risk.',
+     'I can explain data minimization and why it reduces risk.',
    ],
    'up_next': 'Day 2 looks at bias in data sets and at who is missing from them.',
    'extra': 'Find a published statistic online and work out how small its smallest reported group is.',
@@ -166,7 +166,7 @@ TOPICS = [
    ],
    'warmup': ('Retrieval on suppression',
      'On the board, no notes: "1. Why is an average over one person not anonymous? 2. Is a count of responses '
-     'safe to publish? 3. What is data minimisation?"',
+     'safe to publish? 3. What is data minimization?"',
      'Because the mean of one value is that value; generally yes; collect only what you need. All three should '
      'be quick, and the third is the one students find genuinely new.'),
    'objectives': [
@@ -293,10 +293,9 @@ TOPICS = [
      'Say the rule as a slogan: enhanced for to read, indexed for to write. They will repeat it back all year.',
    ],
    'warmup': ('Predict the output',
-     'On the board: "int[] data = {1, 2, 3}; for (int v : data) { v = v * 2; } then print every element. '
-     'Write down what you expect before we run it."',
-     'They will say 2 4 6 and it prints 1 2 3. Collect the prediction in writing first, because the surprise is '
-     'what makes the copy semantics memorable.'),
+     'On the board, then print every element. "Write down what you expect before we run it."',
+     'They will say 2 4 6 and it prints 1 2 3. Collect the prediction in writing first, because the surprise is what makes the copy semantics memorable.',
+     'int[] data = {1, 2, 3};\nfor (int v : data) {\n    v = v * 2;\n}'),
    'objectives': [
      ('I can traverse an array with an enhanced for loop.', 'LO 4.2.A'),
      ('I can explain why an enhanced for loop cannot modify the array.', 'LO 4.2.B'),
@@ -455,7 +454,7 @@ TOPICS = [
    ('Index', 'The position of an element, running from 0 to length minus 1.'),
    ('ArrayIndexOutOfBoundsException', 'The exception thrown when an index outside that range is used.'),
    ('Default element value', 'What a new array is filled with: 0 for numbers, false for boolean, null for objects.'),
-   ('Initialiser list', 'Creating an array from values in braces, such as {1, 2, 3}.'),
+   ('Initializer list', 'Creating an array from values in braces, such as {1, 2, 3}.'),
  ],
  'quiz': [
    {'stem': 'The valid indexes of an array of length 5 are:',
@@ -514,7 +513,7 @@ TOPICS = [
      ('Declaring and allocating', [
        'int[] data; declares a variable that can refer to an array. It does not create one.',
        'new int[5] allocates the array, filled with the default value: 0 for numbers, false for boolean, null for objects.',
-       'An initialiser list creates and fills at once: int[] data = {1, 2, 3};',
+       'An initializer list creates and fills at once: int[] data = {1, 2, 3};',
        'An array has a fixed size once created. Its length can never change.',
      ]),
      ('length and the last index', [

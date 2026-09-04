@@ -28,7 +28,13 @@ TRADEMARK = ("AP is a trademark of the College Board, which was not involved in 
              "the production of, and does not endorse, this resource.")
 
 # How much of a key-idea sentence the student sees before the blank starts.
+# This is a CEILING measured in characters, not the cut point. See _cloze_head.
 TRUNCATE_AT = 58
+
+# Never hand back a stub so short the sentence has stopped meaning anything.
+# If honoring the word boundary would cut below this, the hard character cut
+# is used instead, because a slightly ugly line beats a meaningless one.
+TRUNCATE_FLOOR = 28
 
 
 def _p(doc, text='', size=11, bold=False, color=None, space_after=6, align=None):
@@ -57,6 +63,33 @@ def _heading(doc, text):
     return p
 
 
+def _cloze_head(sentence):
+    """The visible part of a cloze line, cut at a word boundary.
+
+    Until 2026-09-04 this was a bare sentence[:TRUNCATE_AT], which cuts on a
+    character count and therefore lands wherever it lands. Real lines it
+    produced, from the shipped Unit 2 student notes:
+
+        "...evaluates to exactly one of two value"        (lost the s)
+        "...combine booleans: && means and, || m"         (mid-word)
+        "A truth table lists every possible combination of the inpu"
+
+    A student reading "the inpu" cannot tell whether the word was cut or
+    misspelled, and the sheet reads as broken rather than as a fill-in.
+
+    So: cut at the last space at or before the ceiling, then drop trailing
+    punctuation that would dangle in front of the blank. Fall back to the hard
+    cut when a word boundary would leave too little to be worth reading, which
+    is what TRUNCATE_FLOOR is for.
+    """
+    if len(sentence) <= TRUNCATE_AT:
+        return sentence.rstrip()
+    window = sentence[:TRUNCATE_AT + 1]
+    space = window.rfind(' ')
+    head = window[:space] if space >= TRUNCATE_FLOOR else sentence[:TRUNCATE_AT]
+    return head.rstrip().rstrip(',;:.')
+
+
 def _cloze_line(doc, sentence, key_edition):
     """A key idea, truncated so the student finishes writing it."""
     p = doc.add_paragraph()
@@ -66,7 +99,7 @@ def _cloze_line(doc, sentence, key_edition):
         r.font.size = Pt(11)
         r.font.name = 'Calibri'
     else:
-        head = sentence[:TRUNCATE_AT]
+        head = _cloze_head(sentence)
         r = p.add_run(head)
         r.font.size = Pt(11)
         r.font.name = 'Calibri'
