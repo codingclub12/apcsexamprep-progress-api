@@ -772,6 +772,51 @@ function cleanDeadNetworkingCfus({ apply = true } = {}) {
   return { candidates: all.length, removable, kept, deleted, points };
 }
 
+//  ── RETYPE MANIFEST ROWS WRITTEN BEFORE THE terminal-lab RENAME ─────────────
+//  The boot seed is INSERT OR IGNORE, deliberately: existing rows are never
+//  touched so a redeploy cannot rewrite a denominator by accident. That is the
+//  right default and it is exactly why the rename did not reach production on
+//  its own. The row for 1.2-auth-lab already existed typed 'lab', the insert was
+//  ignored, and the deploy shipped code that disagreed with its own data.
+//
+//  Measured against a database put back into production's state: the denominator
+//  stayed broken at 8, and worse, POST /api/progress/attempt began answering
+//  400 "item_type mismatch" because the player now sends 'terminal-lab' and the
+//  manifest still said 'lab'. The lab went from mis-denominated to unusable.
+//
+//  So the rename moves its own rows, on the same terms as the attempts retype:
+//  an allowlist by exact (course, item_id) from the specs, one column, and a
+//  no-op once done. It does NOT touch points, lesson_id or unit, so it cannot
+//  become a general "make the manifest match the specs" sweep, which is the
+//  thing INSERT OR IGNORE is protecting against in the first place.
+function retypeTerminalLabManifest({ apply = true } = {}) {
+  const specs = labSpecs.all();
+  if (!specs.length) return { candidates: 0, moved: 0, byItem: [] };
+
+  const find = db.prepare(
+    "SELECT item_type FROM course_manifest WHERE course = ? AND item_id = ? AND item_type != ?"
+  );
+  const byItem = [];
+  for (const sp of specs) {
+    const row = find.get(sp.course, sp.item_id, sp.item_type);
+    if (row) byItem.push({ course: sp.course, item_id: sp.item_id, was: row.item_type, now: sp.item_type });
+  }
+  const candidates = byItem.length;
+
+  let moved = 0;
+  if (apply && candidates) {
+    const upd = db.prepare(
+      'UPDATE course_manifest SET item_type = ? WHERE course = ? AND item_id = ?'
+    );
+    moved = db.transaction((rs) => {
+      let n = 0;
+      for (const r of rs) n += upd.run(r.now, r.course, r.item_id).changes;
+      return n;
+    })(byItem);
+  }
+  return { candidates, moved, byItem };
+}
+
 //  ── RETYPE ATTEMPTS WRITTEN BEFORE THE terminal-lab RENAME ──────────────────
 //  Every attempt on a simulated-shell lab was stored with item_type 'lab' until
 //  2026-09-04. The manifest row for those items now says 'terminal-lab', and
@@ -841,6 +886,7 @@ if (require.main === module) {
 
 module.exports = { seedManifest, buildRows, findOrphans, pruneManifest,
   deadNetworkingCfuIds, cleanDeadNetworkingCfus, retypeTerminalLabAttempts,
+  retypeTerminalLabManifest,
   introJavaRows, introJavaGradedRows, introJavaExerciseRows,
   INTRO_JAVA_PAGES_LIVE, INTRO_JAVA_EXERCISES_LIVE,
   NET_HANDS_ON_LIVE, NET_CONFIG_LABS, NET_UNIT_DOCS, NET_TEAM_PROJECT };
