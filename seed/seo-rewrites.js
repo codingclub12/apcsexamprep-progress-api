@@ -185,6 +185,82 @@ const PAGES = [
     description: 'Build custom AP Computer Science Principles practice tests by Big Idea and topic, from a full question bank aligned to the May 2027 exam. Free, no signup.',
     why: 'stale year in the description',
   },
+
+  // Found by the 2026-09-05 daily crawl, shard 4/7. Descriptions were scraped
+  // page furniture (breadcrumbs, nav labels) rather than authored text; three
+  // CSP games also carried the brand twice in the title.
+  {
+    handle: 'ap-csa-lesson-2-7-while-loops',
+    title: 'AP CSA Lesson 2.7: while Loops',
+    description: 'AP CSA Lesson 2.7 teaches while loops: correct initialization, condition and update, tracing execution, and spotting infinite loops and off by one errors.',
+    why: 'description was scraped breadcrumb and nav text',
+  },
+  {
+    handle: 'ap-csa-lesson-2-9-implementing-selection-iteration-algorithms',
+    title: 'AP CSA Lesson 2.9: Selection and Iteration Algorithms',
+    description: 'AP CSA Lesson 2.9 builds standard algorithms from loops and conditionals: divisibility, digit extraction, frequency counts, min and max, and running sums.',
+    why: 'description was scraped breadcrumb and nav text',
+  },
+  {
+    handle: 'ap-csp-course-bi3-unit-test-part-b',
+    title: 'AP CSP Big Idea 3 Unit Test, Part B',
+    description: 'A 14 question, auto scored AP CSP practice test on Big Idea 3 topics 3.10 through 3.18: lists, procedures, and abstraction. Retakes allowed, 70 percent to pass.',
+    why: 'description was scraped breadcrumb and nav text',
+  },
+  {
+    handle: 'ap-cybersecurity-unit-2-detecting-physical-attacks',
+    title: 'AP Cybersecurity 2.4: Detecting Physical Attacks',
+    description: 'AP Cybersecurity 2.4 covers detecting physical attacks: cameras, guards, motion sensors, entry point placement, false alarm prevention, and reading entry logs.',
+    why: 'description was scraped Command Center nav furniture',
+  },
+  {
+    handle: 'ap-csp-game-binary-conversion-race',
+    title: 'Binary Conversion Race, an AP CSP Game',
+    description: 'A 60 second AP CSP game on binary place value: build numbers by toggling bits or read a bit pattern and type its value. Streak bonuses reward correct answers.',
+    why: 'title carried the brand twice; description was scraped',
+  },
+  {
+    handle: 'ap-csp-game-spot-the-bias',
+    title: 'Spot the Bias, an AP CSP Game',
+    description: 'An AP CSP game on algorithmic bias: read how a system works, predict where bias entered its data or design, then pick the flaw. Keep a streak going.',
+    why: 'title carried the brand twice',
+  },
+  {
+    handle: 'ap-csp-game-two-sides',
+    title: 'Two Sides, an AP CSP Game',
+    description: 'An AP CSP game on the impact of computing: sort real innovations by their effects as beneficial, harmful, or it depends, since some effects are unintended.',
+    why: 'title carried the brand twice',
+  },
+
+  // Same 2026-09-05 crawl, persisting rather than fresh: these four CSA course
+  // hub pages have carried a scraped description for 9 to 10 nights with no
+  // board task. ap-csa-unit-1-course also had its title mismatched to the
+  // page content (Primitive Types instead of the actual Unit 1 topic,
+  // Objects and Methods), and ap-csa-unit-4-course carried an em dash.
+  {
+    handle: 'ap-csa-unit-1-course',
+    title: 'AP CSA Unit 1: Using Objects and Methods',
+    description: 'AP CSA Unit 1 covers the foundational building blocks of Java: variables, data types, expressions, method calls, and the String class, in 15 lessons.',
+    why: 'description was scraped breadcrumb text, and the title said Primitive Types while the page itself is Using Objects and Methods',
+  },
+  {
+    handle: 'ap-csa-unit-2-course',
+    title: 'AP CSA Unit 2: Selection and Iteration',
+    description: 'AP CSA Unit 2 covers conditional statements and loops, the control structures behind every algorithm you write, across 12 lessons and 96 plus questions.',
+    why: 'description was scraped breadcrumb text',
+  },
+  {
+    handle: 'ap-csa-unit-3-practice-exam-part-2',
+    title: 'AP CSA Unit 3 Practice Exam, Part 2: Class Creation',
+    description: 'Part 2 of the AP CSA Unit 3 practice exam, questions 26 to 50: methods, static versus instance, scope, the this keyword, toString, equals, and class design.',
+    why: 'description was scraped and carried the stale year 2025-2026',
+  },
+  {
+    handle: 'ap-csa-unit-4-course',
+    title: 'AP CSA Unit 4: Data Collections',
+    description: 'AP CSA Unit 4, the largest and most heavily tested unit on the exam, covers arrays, ArrayLists, 2D arrays, searching, sorting, and recursion.',
+    why: 'description was scraped breadcrumb text, and the title carried an em dash',
+  },
 ];
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
