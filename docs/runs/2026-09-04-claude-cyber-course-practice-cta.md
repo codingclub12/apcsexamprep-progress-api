@@ -92,10 +92,22 @@ sides, which is what rules out a band that shipped and took the page with it.
 
 ## Open
 
-- **The sheet is not imported.** `imports/2026-09-04e/cyber-course-practice-cta-pages.csv`.
-  Import it, then run `npm run verify:cyberctacourse`.
+- ~~The sheet is not imported.~~ **Imported 2026-09-06.**
+  `npm run verify:cyberctacourse` reports **14 passed, 0 failed**, where it was 6
+  and 8. Measured on the served bodies afterwards, and it matches the prediction
+  character for character:
+
+  | page | anchors | practice hub at |
+  |---|---|---|
+  | `ap-cybersecurity` | 74 | 2 of 74 |
+  | `ap-cybersecurity-complete-course-guide` | 249 | **1 of 249** |
+
+  The gate closes on all four kinds.
 - Do not re-save the CSV as a spreadsheet. One row is over 32,767 characters.
-- **`ap-cybersecurity-topics` still links the hub at 51 of 52.** It is the concept
+- **`ap-cybersecurity-topics` now links the hub at 52 of 52**, dead last. It was
+  51 of 52 when this was written and slipped one place when another anchor landed
+  above it, which is a small illustration of why the assertion here is ordinal:
+  nothing about that page changed, and its number moved anyway. It is the concept
   layer rather than the course, so it was outside what was asked for, and it is a
   third page with a third structure. Worth doing next; not worth widening this
   sheet for.
