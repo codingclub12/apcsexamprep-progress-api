@@ -183,6 +183,30 @@ retry is allowed), and the key is withheld until the teacher releases it. Seed k
 with `node scripts/seed-quiz-bank.js` (never auto-runs on boot). Full request and
 response shapes: `docs/phase2-server-scoring-contract.md`.
 
+### Assignment locking (which work a class can reach right now)
+```
+POST   /api/teacher/classes/:code/gate        Lock or unlock { course, unit, lesson?, activity_type?, open }
+DELETE /api/teacher/classes/:code/gate        Clear the row at that scope so the wider one decides again
+GET    /api/teacher/classes/:code/gates       Every explicit row, with its scope, plus the class default
+GET    /api/teacher/classes/:code/assignments The lock board: units, lessons, columns, availability. No roster.
+PUT    /api/teacher/classes/:code             { quiz_lock_default: 1 } locks quizzes and exams by default
+```
+
+An omitted `lesson` or `activity_type` means "all of them", so a whole unit or a
+whole lesson is one call. A narrower row always beats a wider one at read time, so
+the usual shape is to lock a unit and then open the lesson being taught this week.
+Nothing is expanded into per-activity rows, so a lesson added next term inherits
+its unit with no backfill.
+
+Teacher UI at `/teacher/assignments`. The gradebook contract carries `locked`,
+`lock_scope` and `lock_enforceable` per column, and `/admin/gradebook` shows the
+same state read-only.
+
+**A lock only bites where the server hands out the questions.** An activity whose
+questions are baked into the page body cannot be locked at all, and both the
+contract and the UI say so rather than drawing a padlock that does nothing.
+`docs/quiz-locking.md` has the design and the migration path.
+
 ### Graded reporting: which endpoint per course
 
 There are two graded-reporting paths and each course uses exactly one. Pick by

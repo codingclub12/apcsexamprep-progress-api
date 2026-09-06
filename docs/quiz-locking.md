@@ -95,24 +95,117 @@ spend it after the teacher closed the quiz, and a token minted before a class wa
 switched to locked-by-default would still work. Render-time-only checks leak
 through exactly that gap.
 
+## Scopes: unit, lesson, assignment
+
+Added 2026-09-06, because a teacher assigns by unit and by lesson and the table
+could only name one assignment at a time. Locking Unit 3 meant writing a row per
+activity and remembering to write another whenever a lesson was added.
+
+There is no new table and no migration. A gate row may carry the literal `*` in
+its `lesson` and/or `activity_type` column, standing for "every one of them", and
+the primary key already covered that shape. A row written before this existed has
+real ids in both columns, which is an activity-scope row, and it resolves exactly
+as it always did.
+
+| unit | lesson | activity_type | what it says |
+|---|---|---|---|
+| `unit-3` | `*` | `*` | every activity in unit 3 |
+| `unit-3` | `*` | `quiz` | every quiz in unit 3 |
+| `unit-3` | `3.2` | `*` | everything in lesson 3.2 |
+| `unit-3` | `3.2` | `quiz` | that one assignment |
+
+**Precedence is by narrowness, and it is stated rather than discovered.** A
+teacher who locks a unit and then opens one lesson inside it means the second
+thing, so:
+
+1. the exact activity, `(lesson, activity)`
+2. the lesson, `(lesson, *)`
+3. the activity type across the unit, `(*, activity)`
+4. the unit, `(*, *)`
+5. `classes.quiz_lock_default`
+
+2 beats 3 because a lesson is one lesson and an activity type spans every lesson
+in the unit, so the lesson row is the narrower statement. That is the only tie a
+teacher can write by accident, and it is decided in `lib/activity-gate.js` and
+asserted in `smoke/gate-scope.js` rather than left to whatever order SQL returns
+the rows in. The suite writes the pair both ways round, because the first version
+of that assertion passed under a resolver reduced to "keep the first row you see"
+purely because the lesson row happened to come back first.
+
+Nothing is expanded into per-activity rows. Resolution happens on every read, the
+same posture as `passed` against `mastery_threshold`, so a lesson added to a
+course next term inherits its unit with no backfill and nothing to keep in sync.
+
+**Clearing is not the same as opening.** An explicit open PINS an assignment
+against a later unit lock; `DELETE /gate` removes the row so the next widest scope
+decides again. Without the delete, a teacher who pinned something open had no way
+back.
+
 ## Teacher API
 
-    PUT  /api/teacher/classes/:code           { quiz_lock_default: 1 }
-    POST /api/teacher/classes/:code/gate      { course, unit, lesson,
-                                                activity_type, open }
-    GET  /api/teacher/classes/:code/gates
+    PUT    /api/teacher/classes/:code           { quiz_lock_default: 1 }
+    POST   /api/teacher/classes/:code/gate      { course, unit, lesson?,
+                                                  activity_type?, open }
+    DELETE /api/teacher/classes/:code/gate      { course, unit, lesson?,
+                                                  activity_type? }
+    GET    /api/teacher/classes/:code/gates
+    GET    /api/teacher/classes/:code/assignments
+
+`course` and `unit` are always required on a write. An omitted `lesson` or
+`activity_type` means `*`, which is how a whole unit or a whole lesson is set in
+one call. A course-wide lock is `quiz_lock_default` and deliberately has no second
+spelling here.
 
 The listing returns `quiz_lock_default` alongside the rows on purpose: a list of
 rows cannot be read correctly on its own, because an empty list means "everything
-open" under one default and "everything locked" under the other.
+open" under one default and "everything locked" under the other. Each row now
+carries the `scope` it expresses so the list is readable without decoding the
+asterisks.
 
-Opening an activity in a class whose default is `0` is still meaningful. It pins
-that activity open, so a later switch of the class to locked-by-default leaves it
-open.
+`/assignments` is the board the toggle UI reads. It calls
+`buildCanonicalGradebook` and throws the student rows away, so the lock a teacher
+flips, the lock the gradebook draws, and the lock a student hits all come out of
+one builder. A second, lighter query over `activity_gates` would be faster and
+would eventually disagree.
+
+## In the gradebook
+
+The canonical contract carries availability beside the grade, because "nobody has
+done the Unit 3 quiz" and "the Unit 3 quiz is locked" are the same fact and a
+teacher should not need two screens to join them.
+
+Per item: `locked`, `lock_scope`, `lock_reason`, `lock_explicit`, and
+`lock_enforceable`. Plus a `gates` block carrying the class default, the explicit
+rows, and `units` / `lessons` roll-ups with three states, `all`, `none` and
+`mixed`. Three, not two: collapsing `mixed` is how a teacher flips a switch that
+already looked the way they wanted it.
+
+`lock_enforceable` is the honest one. **A lock only bites where the server hands
+out the questions**, per the limitation at the top of this document, so an
+activity with no `quiz_bank` rows gets `false` and the UI draws it differently.
+`gates.locked_but_unenforceable` names those columns rather than counting them,
+because each one is a quiz to migrate onto the server render path before its
+padlock means anything.
+
+## Teacher UI
+
+`/teacher/assignments`, served from this repo, teacher JWT read from
+`localStorage` exactly as `/teacher/change-password` does. Switches at unit,
+lesson and assignment level: green is assigned, grey is locked, half-filled means
+the things under it disagree. An inherited switch is drawn in italics, so setting
+it explicitly reads as the pin that it is.
+
+A mixed switch settles everything under it OPEN on the first click, because the
+destructive direction should not be the one you get by accident.
+
+The operator gradebook at `/admin/gradebook` shows the same state read-only: a
+padlock on a locked column, a warning triangle where the lock is not enforceable.
+Read-only on purpose. The admin session cookie authorizes GET and nothing else,
+which is what closes CSRF against the admin API, and making those switches live
+would have meant weakening it.
 
 ## What is not built yet
 
-- **A teacher UI.** This is API only. Today a gate is set with a `POST`.
 - **Scheduled windows.** `opens_at` / `closes_at` were considered and left out.
   A teacher who wants a quiz open for one period will say so by opening it, and a
   schedule that silently closes an assessment mid-attempt is a support ticket
@@ -120,13 +213,33 @@ open.
 - **Per-student exceptions**, for the absent student making it up later. The
   shape would mirror `students.retry_override`: a nullable per-student column
   consulted ahead of the class default. Worth building only once a teacher asks.
+- **Due dates.** Locking says what a class can reach right now. It says nothing
+  about when work is due, and the two should not be collapsed into one row.
 
 ## Testing
 
     node scripts/seed-quiz-bank.js
     API_BASE=http://127.0.0.1:4311 node smoke/quiz-gate.js     # npm run smoke:quizgate
+    npm run smoke:gatescope             # the scopes, the ladder, the contract
+    npm run smoke:gatescopemutation     # and proof those assertions are not hollow
 
 Twenty assertions covering: an untouched class behaving as before, the class
 default closing quizzes with no per-activity writes, self-study staying open,
 opening one activity opening only that one, and a token minted while open failing
 to spend after close.
+
+`smoke:gatescope` is 59 assertions over the ladder, both enforcement points, the
+teacher API, the contract, and a block asserting that everything which worked
+before still does, reason strings included.
+
+`smoke:gatescopemutation` breaks thirteen rules one at a time and requires the
+suite to go red FOR THAT RULE. Per rule, not in aggregate: "the suite went red"
+is not evidence that the rule you meant to test does anything, and a mutation
+that reddens only a neighbouring assertion is reported as a failure. It caught
+one hollow assertion on its first run, which is the whole reason it exists.
+
+The mutation worth understanding is the fourth one, which puts the render path
+back on an equality match against `lesson` and `activity_type`. That is the SQL
+this feature had to change: a unit-scope row is invisible to it, so the resolver
+could be perfect and every student would still walk straight through a unit lock.
+A resolver-only assertion passes happily under it.

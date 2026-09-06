@@ -10,6 +10,7 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
+const { rowScope, SCOPE_ALL } = require('../lib/activity-gate');
 const { LESSON_SCORE_ITEM } = require('../scoring');
 const { buildCanonicalGradebook, canonicalActivity, isGradedActivity,
   pointsFromRatio, denominatorMap } = require('../lib/gradebook-contract');
@@ -1182,26 +1183,125 @@ router.get('/classes/:code/releases', requireTeacher, (req, res) => {
   res.json({ releases });
 });
 
-// ── OPEN / CLOSE AN ACTIVITY (availability gate) ──────────────────────────────
+// ── THE ASSIGNMENT BOARD ──────────────────────────────────────────────────────
+//  What is assigned and what is locked, for one class, shaped for the toggle UI
+//  at /teacher/assignments.
+//
+//  It calls buildCanonicalGradebook and then throws the student rows away. That
+//  is deliberate and it is not laziness: the lock a teacher flips here has to be
+//  the lock the gradebook draws and the lock a student hits, and the only way to
+//  guarantee that is for all three to come out of the same builder. A second,
+//  lighter query over activity_gates would be faster and would eventually
+//  disagree, which is the failure this repo has already paid for twice.
+//
+//  Nothing student-shaped goes on the wire. The board is about the course, so
+//  the response carries units, lessons, columns and their availability, and no
+//  roster, no names, no scores.
+router.get('/classes/:code/assignments', requireTeacher, (req, res) => {
+  try {
+    const cls = db.prepare('SELECT id, course FROM classes WHERE class_code = ? AND teacher_id = ?')
+      .get(req.params.code.toUpperCase(), req.teacher.id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+    const gb = buildCanonicalGradebook(cls.id, { course: req.query.course, reveal: false });
+    if (!gb) return res.status(404).json({ error: 'Class not found' });
+
+    res.json({
+      class: gb.class,
+      course: gb.course,
+      course_label: gb.course_label,
+      units: gb.units,
+      lessons: gb.lessons,
+      // One entry per column, carrying the four fields the toggle needs: whether
+      // it is locked, which scope decided that, whether the teacher set it here
+      // or inherited it, and whether the lock can actually be enforced.
+      items: gb.items.map((i) => ({
+        item_key: i.item_key,
+        unit: i.unit,
+        lesson_ref: i.lesson_ref,
+        activity: i.activity,
+        native_activity: i.native_activity,
+        label: i.label,
+        graded: i.graded,
+        possible: i.possible,
+        locked: i.locked,
+        lock_scope: i.lock_scope,
+        lock_reason: i.lock_reason,
+        lock_explicit: i.lock_explicit,
+        lock_enforceable: i.lock_enforceable,
+      })),
+      gates: gb.gates,
+    });
+  } catch (e) {
+    console.error('teacher/classes/:code/assignments:', e);
+    res.status(500).json({ error: 'Failed to build the assignment board' });
+  }
+});
+
+// ── GATE TARGET ───────────────────────────────────────────────────────────────
+//  Parses the (course, unit, lesson, activity_type) a gate write addresses, in
+//  exactly one place because three routes take it and a disagreement between
+//  them would let a teacher write a row at one scope and clear it at another,
+//  leaving a lock they cannot see a way to remove.
+//
+//  An omitted lesson or activity_type becomes '*'. course and unit are always
+//  required: a course-wide lock already exists as classes.quiz_lock_default, and
+//  a second spelling of it would be a second thing to keep in sync.
+function gateTarget(body) {
+  const b = body || {};
+  const course = b.course === undefined ? '' : String(b.course).trim();
+  const unit = b.unit === undefined ? '' : String(b.unit).trim();
+  if (!course || !unit) return { error: 'course and unit are required' };
+
+  const wide = (v) => (v === undefined || v === null || v === '' ? SCOPE_ALL : String(v).trim());
+  const lesson = wide(b.lesson);
+  const activity_type = wide(b.activity_type);
+
+  // '*' is the wildcard and nothing else may contain it, or a row would address
+  // a scope its own columns do not describe.
+  for (const [name, v] of [['course', course], ['unit', unit], ['lesson', lesson], ['activity_type', activity_type]]) {
+    if (v !== SCOPE_ALL && v.includes(SCOPE_ALL)) {
+      return { error: `${name} may be the wildcard "*" or a literal id, not a pattern` };
+    }
+  }
+  return { course, unit, lesson, activity_type };
+}
+
+// ── OPEN / CLOSE AN ASSIGNMENT (availability gate) ────────────────────────────
 // Controls whether the QUESTIONS are handed out at all, which is a different
 // question from /release (whether the ANSWERS come back after a submit). A quiz
 // used as a graded assessment needs this one: closed until the teacher opens it.
 //
 // Body: { course, unit, lesson, activity_type, open }   open defaults to true.
 //
+// SCOPE. lesson and activity_type each accept the literal '*', and each may be
+// omitted, which means the same thing. That is how a teacher locks or unlocks a
+// whole unit or a whole lesson in one call instead of one checkbox at a time:
+//
+//     { course, unit }                              the whole unit
+//     { course, unit, activity_type: 'quiz' }       every quiz in the unit
+//     { course, unit, lesson }                      the whole lesson
+//     { course, unit, lesson, activity_type }       one assignment
+//
+// A narrower row always wins over a wider one at read time, so opening one
+// lesson inside a locked unit does exactly what a teacher means by it. The
+// ladder is in lib/activity-gate.js and is resolved on every read, never stored,
+// so adding a lesson to a course later inherits its unit's setting with no
+// backfill and nothing to keep in sync.
+//
 // Writing open=1 on a class whose quiz_lock_default is 0 is still meaningful: it
-// pins the activity open, so a later switch of the class to locked-by-default
-// leaves this one open. Omit-and-delete is not offered on purpose; an explicit
-// row is the auditable thing a teacher can see in the list below.
+// pins the assignment open, so a later switch of the class to locked-by-default
+// leaves this one open. To stop pinning, DELETE the row rather than flipping it:
+// an explicit open and "no opinion, follow the wider scope" are different states
+// and the delete route below is how a teacher gets back to the second one.
 router.post('/classes/:code/gate', requireTeacher, (req, res) => {
   const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
     .get(req.params.code.toUpperCase(), req.teacher.id);
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-  const { course, unit, lesson, activity_type } = req.body || {};
-  if (!course || !unit || !lesson || !activity_type) {
-    return res.status(400).json({ error: 'course, unit, lesson, activity_type required' });
-  }
+  const target = gateTarget(req.body);
+  if (target.error) return res.status(400).json({ error: target.error });
+  const { course, unit, lesson, activity_type } = target;
   const open = req.body.open === undefined ? 1 : (req.body.open ? 1 : 0);
 
   db.prepare(`
@@ -1209,15 +1309,49 @@ router.post('/classes/:code/gate', requireTeacher, (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
     ON CONFLICT(class_id, course, unit, lesson, activity_type)
       DO UPDATE SET open = excluded.open, updated_at = datetime('now')
-  `).run(cls.id, String(course), String(unit), String(lesson), String(activity_type), open);
+  `).run(cls.id, course, unit, lesson, activity_type, open);
 
-  res.json({ ok: true, open: !!open, course, unit, lesson, activity_type });
+  res.json({ ok: true, open: !!open, scope: rowScope({ lesson, activity_type }), course, unit, lesson, activity_type });
+});
+
+// ── CLEAR A GATE ROW ──────────────────────────────────────────────────────────
+// Removes the teacher's explicit setting at exactly this scope so the next
+// widest one decides again. This is NOT the same as setting open=1: an explicit
+// open PINS the assignment open against a later unit lock or a later switch of
+// the class to locked-by-default, and a teacher who wanted "leave this one
+// alone" would otherwise have no way back from having pinned it.
+//
+// Deleting a scope that was never set is not an error. A teacher clicking
+// "clear" twice, or clearing a lesson whose state came from its unit, has
+// arrived at the state they asked for, and a 404 would say otherwise.
+router.delete('/classes/:code/gate', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  // A DELETE body is legal but awkward for some clients, so the target may also
+  // arrive as query params.
+  const target = gateTarget(Object.keys(req.body || {}).length ? req.body : req.query);
+  if (target.error) return res.status(400).json({ error: target.error });
+  const { course, unit, lesson, activity_type } = target;
+
+  const info = db.prepare(`
+    DELETE FROM activity_gates
+    WHERE class_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+  `).run(cls.id, course, unit, lesson, activity_type);
+
+  res.json({
+    ok: true, cleared: info.changes > 0,
+    scope: rowScope({ lesson, activity_type }), course, unit, lesson, activity_type,
+  });
 });
 
 // ── LIST ACTIVITY GATES ───────────────────────────────────────────────────────
 // Returns the class default alongside the explicit rows, because a row list on
 // its own cannot be read correctly: an empty list means "everything open" under
-// one default and "everything locked" under the other.
+// one default and "everything locked" under the other. Each row carries the
+// scope it expresses so a teacher reading the list can tell a unit-wide lock
+// from one assignment without decoding the asterisks themselves.
 router.get('/classes/:code/gates', requireTeacher, (req, res) => {
   const cls = db.prepare('SELECT id, quiz_lock_default FROM classes WHERE class_code = ? AND teacher_id = ?')
     .get(req.params.code.toUpperCase(), req.teacher.id);
@@ -1227,7 +1361,7 @@ router.get('/classes/:code/gates', requireTeacher, (req, res) => {
     SELECT course, unit, lesson, activity_type, open, updated_at
     FROM activity_gates WHERE class_id = ?
     ORDER BY course, unit, lesson, activity_type
-  `).all(cls.id);
+  `).all(cls.id).map((g) => ({ ...g, scope: rowScope(g) }));
 
   res.json({ quiz_lock_default: cls.quiz_lock_default ? 1 : 0, gates });
 });

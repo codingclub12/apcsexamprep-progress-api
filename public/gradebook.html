@@ -95,6 +95,14 @@
   td.lost { color:var(--warnc); font-weight:700; cursor:help; }
   td.unpriced { color:var(--warnc); }
 
+  /* A padlock says students cannot reach the column. The warning triangle says
+     the padlock is set and does nothing, because that activity's questions ship
+     inside the page body where no server-side gate can reach them. The two must
+     not look alike: one is a teacher's decision, the other is a promise the
+     server cannot keep. */
+  th .locked { color:var(--muted); }
+  th .nolock { color:var(--warnc); cursor:help; }
+
   .pill { display:inline-block; font-size:10.5px; padding:1px 6px; border-radius:99px; border:1px solid var(--border); color:var(--muted); margin-left:6px; vertical-align:middle; }
   .bar { height:5px; border-radius:3px; background:var(--grid); overflow:hidden; width:56px; display:inline-block; vertical-align:middle; }
   .bar i { display:block; height:100%; background:var(--csa); }
@@ -277,7 +285,9 @@
       ["Course total", n1(s.possible), "all graded items"],
       ["Students", s.students, s.students_with_scores + " with a grade"],
       ["Graded items", s.items_total, s.items_shown + " columns"],
-      ["Lessons", s.lessons_shown, d.units.length + " units"]
+      ["Lessons", s.lessons_shown, d.units.length + " units"],
+      ["Locked", (d.gates ? d.gates.locked_items : 0),
+        (d.gates && d.gates.quiz_lock_default) ? "class locked by default" : "columns students cannot reach"]
     ];
     document.getElementById("tiles").innerHTML = t.map(function (x) {
       return '<div class="tile"><b>' + esc(x[1]) + "</b><span>" + esc(x[0]) + "</span>" +
@@ -342,8 +352,25 @@
       var t = it.lesson_ref + " " + it.native_activity +
         (it.possible === null ? "  (no denominator)" : "  out of " + it.possible) +
         (it.graded ? "" : "  (not graded)");
+      // Availability, beside the grade. "Nobody has done the Unit 3 quiz" and
+      // "the Unit 3 quiz is locked" are the same fact, and a teacher should not
+      // need a second screen to join them. Read-only here: the admin session
+      // cookie authorizes GET and nothing else, on purpose, so the switches live
+      // on the teacher's own page at /teacher/assignments.
+      var lock = "";
+      if (it.locked) {
+        t += "  ·  LOCKED (" + (it.lock_scope || "class default") + ")";
+        // A lock the server cannot enforce is decoration: the questions ship in
+        // the page body, so it must not read as protection.
+        if (it.lock_enforceable === false) {
+          t += ", but NOT enforceable: this activity's questions live in the page body";
+          lock = '<span class="nolock" title="locked, but the questions are in the page body so the lock does nothing"> \u26A0</span>';
+        } else {
+          lock = '<span class="locked"> \uD83D\uDD12</span>';
+        }
+      }
       h.push('<th class="' + sep.trim() + '" title="' + esc(t) + '">' + esc(it.label) +
-        (it.possible === null && it.graded ? '<span class="unpriced"> !</span>' : "") + "</th>");
+        (it.possible === null && it.graded ? '<span class="unpriced"> !</span>' : "") + lock + "</th>");
     });
     h.push("</tr></thead><tbody>");
 
