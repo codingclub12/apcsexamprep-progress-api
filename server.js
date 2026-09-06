@@ -606,6 +606,16 @@ app.get('/teacher/change-password', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'teacher-change-password.html'));
 });
 
+// The assignment lock board. Which units, lessons and assignments this class can
+// reach, and the switches that change it. Teacher JWT, read by the page from the
+// browser exactly as the change-password page does; every write behind it is
+// ownership-checked server-side, so serving the HTML proves nothing and grants
+// nothing.
+app.get('/teacher/assignments', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.sendFile(path.join(__dirname, 'public', 'teacher-assignments.html'));
+});
+
 // Keep crawlers away from the admin surface and the reset pages. The gate is the
 // real protection for admin; this just avoids indexing or probing by well-behaved
 // bots (the reset pages carry no data, but a tokened URL should never be indexed).

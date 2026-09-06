@@ -66,13 +66,46 @@ rather than by accident.
   "possible":        5,                  // null only when nobody authored one
   "possible_source": "authored",         // 'manifest' | 'authored' | null
   "graded":          true,
-  "expected": true, "observed": true, "in_manifest": false
+  "expected": true, "observed": true, "in_manifest": false,
+
+  // Availability, added 2026-09-06. Resolved at read time through
+  // lib/activity-gate.js, the same ladder the render path and the submit path
+  // walk, so a padlock drawn from this can never disagree with what a student
+  // gets served.
+  "locked":           false,
+  "lock_scope":       null,        // 'activity' | 'lesson' | 'unit-activity' | 'unit' | null
+  "lock_reason":      "class-default-open",
+  "lock_explicit":    false,       // true when a teacher set a row at this scope
+  "lock_enforceable": true         // false means the lock is decoration
 }
 ```
 
 `item_key` is `unit/lesson_ref/native_activity`. The native name is in the key
 because `exercise-1` and `exercise-2` both normalize to `exercise` and must not
 collide.
+
+### Availability sits beside the grade, and says when it is a lie
+
+"Nobody has done the Unit 3 quiz" and "the Unit 3 quiz is locked" are the same
+fact. Splitting them across two screens makes a teacher join them by hand, so the
+contract carries both.
+
+`lock_enforceable` is the field that matters. **A lock only bites where the
+SERVER hands out the questions**, which is `quiz_bank`. An activity whose
+questions are baked into the Shopify page body cannot be locked at all: the
+browser has the whole instrument before any gate runs, and View Source defeats
+it. Every AP Cybersecurity Unit 1 quiz was in that state when gating was built,
+so this is the common case rather than the edge one. A UI that drew the padlock
+without reading this field would promise a teacher protection the server cannot
+deliver. `docs/quiz-locking.md` has the migration path.
+
+The response also carries a `gates` block: the class default (an empty row list
+reads as "all open" under one default and "all locked" under the other, so the
+rows alone cannot be read), the explicit rows, and `units` / `lessons` roll-ups
+with three states. Three, not two: `all`, `none`, and `mixed` for a unit whose
+columns disagree, which is the normal state once one lesson has been opened
+inside a locked unit. Collapsing `mixed` is how a teacher flips a switch that
+already looked the way they wanted it.
 
 ### lesson_seq is mandatory
 
@@ -233,3 +266,5 @@ the normalizer is missing something.
   be reverted by reverting the code.
 - `GET /api/teacher/classes/:code/progress`, the existing admin gradebook, and the CSV
   exports are untouched and still serve their current callers.
+- Due dates. Locking says what a class can reach right now and nothing about when
+  work is due. The two are different questions and should not share a row.

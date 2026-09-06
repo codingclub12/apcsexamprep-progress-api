@@ -36,7 +36,7 @@ const trafficShopify = require('../lib/traffic-shopify');
 const trafficPull = require('../lib/traffic-pull');
 const trafficCsv = require('../lib/traffic-csv');
 const { retrySqlExpr } = require('../retry-policy');
-const { resolveGate } = require('../lib/activity-gate');
+const { resolveGate, pickGateRow } = require('../lib/activity-gate');
 
 const router = express.Router();
 
@@ -1168,9 +1168,14 @@ router.get('/class/:id/gates', (req, res) => {
       ORDER BY unit, lesson, activity_type
     `).all(course);
 
-    const gateRowStmt = db.prepare(`
-      SELECT open FROM activity_gates
-      WHERE class_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+    // Every gate row for the class in one read, narrowed by pickGateRow. A gate
+    // may be written at unit, lesson or activity scope, and an equality match on
+    // lesson and activity_type would report a unit-wide lock as open, which is
+    // exactly the wrong answer to give the operator asking why a quiz is greyed
+    // out.
+    const gateRows = db.prepare(`
+      SELECT unit, lesson, activity_type, open FROM activity_gates
+      WHERE class_id = ? AND course = ?
     `);
 
     // The gate only bites when the activity's course is the class's own course.
@@ -1179,8 +1184,10 @@ router.get('/class/:id/gates', (req, res) => {
     // must see "open", not a hypothetical lock. Mirrors routes/quiz.js exactly.
     const gcls = cls.course === course ? cls : null;
 
+    const allGates = gcls ? gateRows.all(gcls.id, course) : [];
     const resolved = activities.map((a) => {
-      const row = gcls ? gateRowStmt.get(gcls.id, course, a.unit, a.lesson, a.activity_type) : null;
+      const inUnit = allGates.filter((r) => r.unit === a.unit);
+      const row = gcls ? pickGateRow(inUnit, a.lesson, a.activity_type) : null;
       const g = resolveGate(row, gcls, a.activity_type);
       return {
         unit: a.unit,
@@ -1189,6 +1196,9 @@ router.get('/class/:id/gates', (req, res) => {
         pool: a.pool,
         open: g.open,
         reason: g.reason,
+        // Which scope decided it, so an operator knows whether to edit the
+        // activity, the lesson, the unit, or the class default.
+        scope: g.scope,
         explicit_row: row ? (row.open ? 'open' : 'closed') : null,
       };
     });

@@ -31,7 +31,7 @@ const { resolveMode, retryAllowedFor } = require('../retry-policy');
 const { verifyStudentToken, newId, COURSES } = require('../utils');
 const { rollupScore } = require('../scoring');
 const { buildOrder, readOrder, sample } = require('../lib/quiz-order');
-const { resolveGate } = require('../lib/activity-gate');
+const { resolveScopedGate } = require('../lib/activity-gate');
 const wire = require('../lib/wire-log');
 
 // ── PREPARED STATEMENTS (module scope, reused) ────────────────────────────────
@@ -55,9 +55,15 @@ const releaseStmt = db.prepare(`
 const gateClassStmt = db.prepare(
   'SELECT id, course, quiz_lock_default FROM classes WHERE id = ?'
 );
+// Every gate row that could cover this unit, narrowed by pickGateRow rather
+// than by SQL. A gate may be written at unit, lesson or activity scope (see
+// lib/activity-gate.js), so an equality match on lesson and activity_type would
+// silently miss the wildcard rows a teacher writes when they lock a whole unit.
+// Scoped to one unit, so this reads a handful of rows, not the class's whole
+// gate list.
 const gateStmt = db.prepare(`
-  SELECT open FROM activity_gates
-  WHERE class_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+  SELECT lesson, activity_type, open FROM activity_gates
+  WHERE class_id = ? AND course = ? AND unit = ?
 `);
 
 const priorEventsStmt = db.prepare(`
@@ -248,8 +254,8 @@ router.get('/:course/:unit/:lesson/:activity_type', renderStudent, (req, res) =>
     // decide mode, so render and submit cannot disagree.
     const sCls = req.student ? gateClassStmt.get(req.student.class_id) : null;
     const gcls = sCls && sCls.course === course ? sCls : null;
-    const gateRow = gcls ? gateStmt.get(gcls.id, course, unit, lesson, activity_type) : null;
-    const gate = resolveGate(gateRow, gcls, activity_type);
+    const gateRows = gcls ? gateStmt.all(gcls.id, course, unit) : [];
+    const gate = resolveScopedGate(gateRows, gcls, lesson, activity_type);
     if (!gate.open) {
       return res.json({
         course, unit, lesson, activity_type,
@@ -317,8 +323,8 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
     //     submit after the teacher closed it, and a token minted before a class
     //     was switched to locked-by-default must not still spend.
     if (mode === 'class') {
-      const gRow = gateStmt.get(req.student.class_id, course, unit, lesson, activity_type);
-      const g = resolveGate(gRow, gateClassStmt.get(req.student.class_id), activity_type);
+      const gRows = gateStmt.all(req.student.class_id, course, unit);
+      const g = resolveScopedGate(gRows, gateClassStmt.get(req.student.class_id), lesson, activity_type);
       if (!g.open) {
         return res.status(403).json({
           error: 'This quiz is not open. Ask your teacher to open it.',

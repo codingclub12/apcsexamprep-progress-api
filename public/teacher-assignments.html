@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep &middot; Assignments</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --good:#34c759; --critical:#d03b3b; --warnc:#eda100; --csa:#2a78d6;
+    --off:#d6d5cf;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
+      --good:#30d158; --critical:#e66767; --warnc:#c98500; --csa:#3987e5;
+      --off:#3a3a38; --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink-2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--baseline:#383835;--border:rgba(255,255,255,0.10);--good:#30d158;--critical:#e66767;--warnc:#c98500;--csa:#3987e5;--off:#3a3a38;--shadow:none;}
+  :root[data-theme="light"]{--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink-2:#52514e;--muted:#898781;--grid:#e1e0d9;--baseline:#c3c2b7;--border:rgba(11,11,11,0.10);--good:#34c759;--critical:#d03b3b;--warnc:#eda100;--csa:#2a78d6;--off:#d6d5cf;--shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);}
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--plane); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--csa); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 20px 20px 80px; }
+
+  header.top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 16px; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  header.top h1 { font-size:20px; margin:0; font-weight:650; letter-spacing:-0.01em; }
+  header.top .sub { color:var(--muted); font-size:13px; }
+  header.top .spacer { flex:1 1 auto; }
+  button, select { font:inherit; color:var(--ink); background:transparent; border:1px solid var(--border); border-radius:8px; padding:7px 11px; cursor:pointer; }
+  button:hover { border-color:var(--baseline); }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .hint { color:var(--muted); font-size:12.5px; margin:0; max-width:78ch; }
+  .controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .controls select { max-width:100%; }
+
+  /* ── THE SWITCH ────────────────────────────────────────────────────────────
+     Green is assigned and reachable, grey is locked. The knob slides, and the
+     track carries the colour, because that is the control every teacher already
+     knows from their phone and it needs no legend.
+     A third state exists and matters: a unit or lesson whose columns disagree.
+     It is drawn half-filled rather than as one of the two settled states, so a
+     teacher never flips a switch that already looked the way they wanted it. */
+  .sw { position:relative; display:inline-block; width:44px; height:26px; flex:0 0 auto; vertical-align:middle; }
+  .sw input { position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; z-index:2; }
+  .sw .track { position:absolute; inset:0; border-radius:99px; background:var(--off); transition:background .18s ease; }
+  .sw .knob { position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff;
+              box-shadow:0 1px 3px rgba(0,0,0,0.3); transition:transform .18s ease; }
+  .sw.on .track { background:var(--good); }
+  .sw.on .knob { transform:translateX(18px); }
+  .sw.mixed .track { background:linear-gradient(90deg, var(--good) 50%, var(--off) 50%); }
+  .sw.mixed .knob { transform:translateX(9px); }
+  .sw input:focus-visible + .track { outline:2px solid var(--csa); outline-offset:2px; }
+  .sw.busy { opacity:.45; pointer-events:none; }
+
+  .unit { border:1px solid var(--border); border-radius:12px; background:var(--surface); margin-bottom:14px; box-shadow:var(--shadow); overflow:hidden; }
+  .unit > summary { display:flex; align-items:center; gap:12px; padding:13px 16px; cursor:pointer; list-style:none; font-weight:650; }
+  .unit > summary::-webkit-details-marker { display:none; }
+  .unit > summary .caret { color:var(--muted); font-size:12px; width:12px; }
+  .unit[open] > summary { border-bottom:1px solid var(--grid); }
+  .unit > summary .spacer { flex:1 1 auto; }
+  .unit > summary .count { color:var(--muted); font-size:12px; font-weight:400; }
+
+  .lesson { border-bottom:1px solid var(--grid); }
+  .lesson:last-child { border-bottom:0; }
+  .lrow { display:flex; align-items:center; gap:12px; padding:10px 16px 10px 30px; }
+  .lrow .name { font-weight:600; font-size:13.5px; }
+  .lrow .spacer { flex:1 1 auto; }
+  .items { padding:0 16px 10px 30px; display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { display:flex; align-items:center; gap:8px; border:1px solid var(--border); border-radius:99px;
+          padding:4px 10px 4px 6px; font-size:12.5px; background:var(--plane); }
+  .chip .lbl { color:var(--ink-2); }
+  .chip.inherit .lbl { color:var(--muted); font-style:italic; }
+  /* A lock the server cannot enforce is decoration, and saying so on the control
+     itself is the only place a teacher will read it. */
+  .chip.noforce { border-style:dashed; border-color:var(--warnc); }
+  .chip.noforce .lbl::after { content:" \26A0"; color:var(--warnc); }
+
+  .banner { border-radius:12px; padding:14px 16px; margin-bottom:18px; border:1px solid; font-size:13.5px; }
+  .banner.warn { border-color:var(--warnc); background:color-mix(in srgb, var(--warnc) 10%, transparent); }
+  .banner.bad { border-color:var(--critical); background:color-mix(in srgb, var(--critical) 9%, transparent); }
+  .banner b { display:block; font-size:14px; margin-bottom:4px; }
+  .banner ul { margin:8px 0 0; padding-left:20px; font-size:12.5px; color:var(--ink-2); }
+  .muted { color:var(--muted); }
+  .err { color:var(--critical); }
+  code { font:12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background:color-mix(in srgb, var(--ink) 6%, transparent); padding:1px 5px; border-radius:4px; }
+  #toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:var(--ink); color:var(--plane);
+           padding:9px 15px; border-radius:9px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .18s ease; z-index:20; }
+  #toast.show { opacity:1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Assignments</h1>
+    <span class="sub">green is assigned, grey is locked</span>
+    <span class="spacer"></span>
+    <button id="refreshBtn">Refresh</button>
+  </header>
+
+  <div class="card">
+    <div class="controls">
+      <select id="classSel"><option>Loading classes...</option></select>
+      <select id="courseSel" style="display:none"></select>
+      <span id="meta" class="muted"></span>
+    </div>
+    <p class="hint" style="margin-top:12px">
+      A switch on a unit sets the whole unit. A switch on a lesson sets that lesson and beats its
+      unit. A switch on one assignment beats both. So the usual shape is to lock a unit, then open
+      the lesson you are teaching this week, and the rest stays shut without you listing it.
+      <br /><br />
+      A half-filled switch means the things under it disagree, which is normal once you have opened
+      one lesson inside a locked unit. Clicking it settles everything under it one way.
+      A switch shown in italics is inherited: nothing is set at that level, so it is following the
+      level above it. Setting it explicitly PINS it, which is what you want for an assignment that
+      must stay open even if you lock the unit later.
+    </p>
+  </div>
+
+  <div id="banner"></div>
+  <div id="board"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+  var state = { classes: [], code: null, course: null, doc: null };
+
+  function esc(s) {
+    return String(s === null || s === undefined ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  // The theme's Command Center signs the teacher in and leaves the token here.
+  // Both key names are read because two pages in this repo already read both and
+  // a page that picks one of them silently signs half the teachers out.
+  function token() {
+    try {
+      return localStorage.getItem("apcs_teacher_token") ||
+             localStorage.getItem("teacher_token") || "";
+    } catch (e) { return ""; }
+  }
+  function api(path, method, body) {
+    return fetch(path, {
+      method: method || "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token()
+      },
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (r) {
+      if (r.status === 401 || r.status === 403) { var e = new Error("auth"); e.auth = true; throw e; }
+      return r.json().catch(function () { return null; }).then(function (j) {
+        if (!r.ok) throw new Error((j && j.error) || ("HTTP " + r.status));
+        return j;
+      });
+    });
+  }
+  var toastTimer = null;
+  function toast(msg) {
+    var t = document.getElementById("toast");
+    t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
+  }
+  function onErr(e) {
+    if (e && e.auth) {
+      document.getElementById("board").innerHTML =
+        '<div class="card">Your teacher sign-in has expired. Sign in again from the Command Center, then reload this page.</div>';
+      return;
+    }
+    console.error(e);
+    document.getElementById("board").innerHTML = '<div class="card err">Could not load: ' + esc(e.message) + "</div>";
+  }
+
+  // ── Switch markup. `state` is "on" | "off" | "mixed". ─────────────────────
+  //  aria-checked carries the same three states so the control is not
+  //  green-versus-grey to a screen reader, which would leave "mixed" unreadable.
+  function sw(kind, key, st, inherited) {
+    var cls = "sw" + (st === "on" ? " on" : "") + (st === "mixed" ? " mixed" : "");
+    var checked = st === "on" ? "true" : (st === "mixed" ? "mixed" : "false");
+    return '<span class="' + cls + '" data-kind="' + esc(kind) + '" data-key="' + esc(key) + '">' +
+      '<input type="checkbox" role="switch" aria-checked="' + checked + '"' +
+        (st === "on" ? " checked" : "") +
+        ' aria-label="' + (st === "on" ? "Assigned" : "Locked") + (inherited ? ", inherited" : "") + '" />' +
+      '<span class="track"></span><span class="knob"></span></span>';
+  }
+
+  function loadClasses() {
+    return api("/api/teacher/classes").then(function (d) {
+      state.classes = d.classes || [];
+      var sel = document.getElementById("classSel");
+      if (!state.classes.length) { sel.innerHTML = "<option>No classes</option>"; return; }
+      sel.innerHTML = state.classes.map(function (c) {
+        return '<option value="' + esc(c.class_code) + '">' + esc(c.class_code) + "  &middot;  " +
+          esc(c.class_name || "") + "  &middot;  " + esc(c.course) + "</option>";
+      }).join("");
+      state.code = state.code || state.classes[0].class_code;
+      sel.value = state.code;
+    });
+  }
+
+  function load() {
+    if (!state.code) return Promise.resolve();
+    var qs = state.course ? "?course=" + encodeURIComponent(state.course) : "";
+    return api("/api/teacher/classes/" + encodeURIComponent(state.code) + "/assignments" + qs)
+      .then(function (d) { state.doc = d; render(); });
+  }
+
+  function render() {
+    var d = state.doc;
+    if (!d) return;
+    document.getElementById("meta").textContent =
+      d.course_label + "  ·  " + d.gates.locked_items + " of " + d.items.length + " locked";
+
+    // A course-wide default is a real cause of "everything is grey" and is set
+    // on the class, not here, so it is stated rather than silently in effect.
+    var warn = [];
+    if (d.gates.quiz_lock_default) {
+      warn.push('<div class="banner warn"><b>This class is locked by default</b>' +
+        'Quizzes and exams stay shut until you open them. Everything else is unaffected. ' +
+        'The setting lives on the class, not on this page.</div>');
+    }
+    var nf = d.gates.locked_but_unenforceable || [];
+    if (nf.length) {
+      warn.push('<div class="banner bad"><b>' + nf.length + ' of these locks cannot be enforced yet</b>' +
+        'These assignments keep their questions inside the page itself, so the server never hands them out ' +
+        'and cannot withhold them. The switch is set and students can still reach the questions by viewing ' +
+        'the page source. Marked with a dashed outline below.<ul><li>' +
+        nf.slice(0, 12).map(esc).join("</li><li>") + "</li>" +
+        (nf.length > 12 ? "<li>and " + (nf.length - 12) + " more</li>" : "") + "</ul></div>");
+    }
+    document.getElementById("banner").innerHTML = warn.join("");
+
+    var byUnit = {};
+    d.items.forEach(function (it) { (byUnit[it.unit] = byUnit[it.unit] || []).push(it); });
+    var lessonOrder = {};
+    d.lessons.forEach(function (l, i) { lessonOrder[l.unit + "|" + l.lesson_ref] = i; });
+    var unitRoll = {}; (d.gates.units || []).forEach(function (u) { unitRoll[u.key] = u; });
+    var lessonRoll = {}; (d.gates.lessons || []).forEach(function (l) { lessonRoll[l.key] = l; });
+
+    // "Locked" is the stored fact; the switch shows ASSIGNED, so it is inverted
+    // here once rather than at every reader.
+    function stateFromRoll(roll) {
+      if (!roll) return "on";
+      if (roll.state === "all") return "off";
+      if (roll.state === "none") return "on";
+      return "mixed";
+    }
+
+    var html = (d.units || []).map(function (u) {
+      var items = byUnit[u.unit] || [];
+      if (!items.length) return "";
+      var byLesson = {};
+      items.forEach(function (it) { (byLesson[it.lesson_ref] = byLesson[it.lesson_ref] || []).push(it); });
+      var refs = Object.keys(byLesson).sort(function (a, b) {
+        return (lessonOrder[u.unit + "|" + a] || 0) - (lessonOrder[u.unit + "|" + b] || 0);
+      });
+      var uRoll = unitRoll[u.unit];
+      var lockedHere = uRoll ? uRoll.locked : 0;
+
+      var body = refs.map(function (ref) {
+        var lRoll = lessonRoll[u.unit + "|" + ref];
+        var chips = byLesson[ref].map(function (it) {
+          var cls = "chip" + (it.lock_explicit && it.lock_scope === "activity" ? "" : " inherit") +
+                    (it.locked && !it.lock_enforceable ? " noforce" : "");
+          return '<span class="' + cls + '" title="' + esc(it.lock_reason || "") + '">' +
+            sw("activity", u.unit + "|" + ref + "|" + it.native_activity,
+               it.locked ? "off" : "on", !(it.lock_explicit && it.lock_scope === "activity")) +
+            '<span class="lbl">' + esc(it.native_activity) + "</span></span>";
+        }).join("");
+        return '<div class="lesson"><div class="lrow">' +
+          sw("lesson", u.unit + "|" + ref, stateFromRoll(lRoll), false) +
+          '<span class="name">' + esc(ref) + "</span><span class=\"spacer\"></span>" +
+          '<span class="muted" style="font-size:12px">' +
+            (lRoll ? (lRoll.items - lRoll.locked) + " of " + lRoll.items + " open" : "") +
+          "</span></div><div class=\"items\">" + chips + "</div></div>";
+      }).join("");
+
+      return '<details class="unit" open><summary>' +
+        '<span class="caret">▾</span>' +
+        sw("unit", u.unit, stateFromRoll(uRoll), false) +
+        "<span>" + esc(u.label || u.unit) + "</span><span class=\"spacer\"></span>" +
+        '<span class="count">' + (items.length - lockedHere) + " of " + items.length + " open</span>" +
+        "</summary>" + body + "</details>";
+    }).join("");
+
+    document.getElementById("board").innerHTML = html ||
+      '<div class="card muted">This course has no columns yet, so there is nothing to assign.</div>';
+  }
+
+  // ── Writes ────────────────────────────────────────────────────────────────
+  //  A mixed switch settles everything under it OPEN on the first click, because
+  //  the destructive direction should never be the one you get by accident.
+  document.getElementById("board").addEventListener("click", function (ev) {
+    var host = ev.target.closest ? ev.target.closest(".sw") : null;
+    if (!host || host.classList.contains("busy")) return;
+    ev.preventDefault();
+
+    var kind = host.getAttribute("data-kind");
+    var parts = host.getAttribute("data-key").split("|");
+    var wasMixed = host.classList.contains("mixed");
+    var open = wasMixed ? true : !host.classList.contains("on");
+
+    var body = { course: state.doc.course, unit: parts[0], open: open };
+    if (kind === "lesson" || kind === "activity") body.lesson = parts[1];
+    if (kind === "activity") body.activity_type = parts[2];
+
+    host.classList.add("busy");
+    api("/api/teacher/classes/" + encodeURIComponent(state.code) + "/gate", "POST", body)
+      .then(function () {
+        toast((open ? "Assigned " : "Locked ") + (kind === "unit" ? parts[0] : parts.slice(1).join(" ")));
+        return load();
+      })
+      .catch(onErr)
+      .then(function () { host.classList.remove("busy"); });
+  });
+
+  document.getElementById("classSel").addEventListener("change", function (e) {
+    state.code = e.target.value; state.course = null;
+    var c = state.classes.filter(function (x) { return x.class_code === state.code; })[0];
+    var cs = document.getElementById("courseSel");
+    if (c && c.course === "solo") {
+      cs.style.display = ""; cs.innerHTML = ["ap-csa", "ap-csp", "ap-cybersecurity"]
+        .map(function (x) { return '<option value="' + x + '">' + x + "</option>"; }).join("");
+      state.course = cs.value;
+    } else { cs.style.display = "none"; }
+    load().catch(onErr);
+  });
+  document.getElementById("courseSel").addEventListener("change", function (e) {
+    state.course = e.target.value; load().catch(onErr);
+  });
+  document.getElementById("refreshBtn").addEventListener("click", function () { load().catch(onErr); });
+
+  if (!token()) {
+    document.getElementById("board").innerHTML =
+      '<div class="card">Sign in from the Command Center first, then reload this page.</div>';
+  } else {
+    loadClasses().then(load).catch(onErr);
+  }
+})();
+</script>
+</body>
+</html>
