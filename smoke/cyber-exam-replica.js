@@ -139,12 +139,29 @@ ok('the rendered body is clean on the shared content rules',
 //  happened once in this repo. The second call is what makes it non-vacuous.
 const verifier = require('../scripts/verify-cyber-exam-replica-live.js');
 {
-  const onNew = verifier.check(nb, `<title>${gen.SEO_TITLE}</title>`, null);
-  const onLive = verifier.check(liveBody, '<title>AP Cybersecurity Practice Set | 40 MCQ + 3 FRQ</title>', null);
-  ok('every assertion the live verifier will make holds against the rendered body',
+  //  The verifier reads the RENDERED document as well as the body, so the offline
+  //  stand-in has to be a rendered document and not just a title tag. The theme
+  //  prints the Shopify Title field as an h1 above the body, which is the part
+  //  this suite was blind to until 2026-09-06: it reported 17 of 17 while the
+  //  page served two contradicting h1s.
+  const render = (titleField, seoTitle, b) =>
+    `<title>${seoTitle}</title><h1 class="theme">${titleField}</h1>${b}`;
+  const NEW_TITLE = 'AP Cybersecurity Practice Exam';
+  const OLD_TITLE = 'AP Cybersecurity Practice Set | 40 MCQ + 3 FRQ | APCSExamPrep.com';
+
+  const onNew = verifier.check(nb, render(NEW_TITLE, gen.SEO_TITLE, nb), null);
+  const onLive = verifier.check(liveBody,
+    render(OLD_TITLE, 'AP Cybersecurity Practice Set | 40 MCQ + 3 FRQ', liveBody), null);
+  ok('every assertion the live verifier will make holds against the rendered page',
     onNew.fails.length === 0, onNew.fails.join('; '));
-  ok('and 13 of its 17 fail against the body it replaces, so none of them is decoration',
-    onLive.fails.length === 13, `${onLive.fails.length} failed on the live body`);
+  ok('and 15 of its 19 fail against the page it replaces, so none of them is decoration',
+    onLive.fails.length === 15, `${onLive.fails.length} failed on the live page`);
+
+  //  The two chrome checks specifically: the body alone cannot satisfy them, so a
+  //  correct body under a stale Title still has to fail.
+  const staleChrome = verifier.check(nb, render(OLD_TITLE, gen.SEO_TITLE, nb), null);
+  ok('a correct body under a stale page Title still fails, which is the defect that shipped',
+    staleChrome.fails.length === 2, `${staleChrome.fails.length} failed`);
 }
 
 ok('the SEO title states the new shape, since the old one embedded the count',

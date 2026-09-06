@@ -29,7 +29,7 @@
       "kind": "suite",
       "name": "the render, the item bank and the sheet, with the live verifier run offline",
       "command": "npm run --silent smoke:cyberexamreplica",
-      "expect": "OK - 39 checks, 17 mutations, every one caught by the rule that claims it"
+      "expect": "OK - 40 checks, 17 mutations, every one caught by the rule that claims it"
     },
     {
       "kind": "suite",
@@ -96,12 +96,22 @@
       "find": "  ok('the page serves 60 scored cards, where it served 40', cards.length === 60, cards.length);",
       "replace": "  ok('the page serves 60 scored cards, where it served 40', cards.length >= 0, cards.length);",
       "command": "npm run --silent smoke:cyberexamreplica",
-      "expect_failure": "and 13 of its 17 fail against the body it replaces"
+      "expect_failure": "and 15 of its 19 fail against the page it replaces"
+    },
+    {
+      "kind": "mutation",
+      "name": "soften the chrome check and a stale page Title becomes invisible again",
+      "_why": "This is the exact state the verifier was in on 2026-09-06, when it reported 17 of 17 on a page whose first heading announced the old shape. The body/chrome split is right for LINKS, because an anchor the theme puts on every page proves nothing about one page; it is exactly wrong for COUNTS, because chrome is where a stale count reaches the most readers.",
+      "file": "scripts/verify-cyber-exam-replica-live.js",
+      "find": "    const OLD_SHAPE = /40 MCQ \\+ 3 FRQ|Practice Set \\| 40|40 MCQ and 3 free/i;",
+      "replace": "    const OLD_SHAPE = /a string no page contains zzzz/i;",
+      "command": "npm run --silent smoke:cyberexamreplica",
+      "expect_failure": "a correct body under a stale page Title still fails"
     },
     {
       "kind": "live",
       "name": "the storefront serves the replica, and the SERP package came through the MERGE",
-      "_why": "Measured against the served page on 2026-09-04, before any import: 13 of these 17 assertions FAILED. The page serves 40 cards not 60, its h1 reads 'Practice Set', its title reads '40 MCQ + 3 FRQ', and its body states 27 counts the new bank cannot justify. The four that already passed are preservation checks, which are supposed to hold on both sides: the closing CTA, the scoring script, the resources grid and the schema blocks being present at all. A MERGE republishes the whole body, so a generator bug takes the breadcrumb with it, and 60 questions shipped without the breadcrumb is not a success.",
+      "_why": "Measured against the served page on 2026-09-04, before any import: 13 of these 17 assertions FAILED. The page serves 40 cards not 60, its h1 reads 'Practice Set', its title reads '40 MCQ + 3 FRQ', and its body states 27 counts the new bank cannot justify. The four that already passed are preservation checks, which are supposed to hold on both sides: the closing CTA, the scoring script, the resources grid and the schema blocks being present at all. A MERGE republishes the whole body, so a generator bug takes the breadcrumb with it, and 60 questions shipped without the breadcrumb is not a success. UPDATED 2026-09-06: two chrome checks were added after this verifier reported 17 of 17 on a page serving TWO contradicting h1s. Every check it had read the extracted BODY, and the theme renders the Shopify Title field as an h1 above it; that field still said 'Practice Set | 40 MCQ + 3 FRQ'. The live check is 17 passed and 2 failed until imports/2026-09-06/cyber-exam-title-pages.csv lands.",
       "command": "node scripts/verify-cyber-exam-replica-live.js",
       "expect": "the replica is live, and the SERP package and page furniture came through it"
     }
