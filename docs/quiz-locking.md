@@ -246,6 +246,24 @@ it at CSA would show a locked quiz still serving, which is the feature reporting
 honestly rather than a bug. And it writes real rows to a real class, so it wants
 a test class or a quiet hour rather than a live period.
 
+**RUN AGAINST PRODUCTION 2026-09-06, 12 passed 0 failed**, on class CYBER-Q9JG
+(a class named TEST, roster of synthetic students). That closes the claim the
+offline suites could not make. What it established, in the order it matters:
+
+- a single unit-scope write locked every quiz in Unit 1, and the render path
+  answered `locked: true`, `reason: "unit-closed"`, `questions: null`. The
+  questions were never put on the wire, which is the only kind of lock that
+  survives View Source.
+- opening lesson 1.1 inside the locked unit reopened 1.1 and left 1.2 shut, so
+  the precedence ladder behaves in production exactly as the suite asserts.
+- the teacher board reported the unit as `mixed`, agreeing with what the student
+  was actually served.
+- cleanup left zero gate rows, verified independently afterwards: all five Unit 1
+  quizzes serve 5 questions each and `GET /gates` returns an empty list.
+
+The same run printed 19 unenforceable columns in that one unit, which is the
+`lock_enforceable` field earning its place rather than a defect.
+
 `smoke:gatescopemutation` breaks thirteen rules one at a time and requires the
 suite to go red FOR THAT RULE. Per rule, not in aggregate: "the suite went red"
 is not evidence that the rule you meant to test does anything, and a mutation
