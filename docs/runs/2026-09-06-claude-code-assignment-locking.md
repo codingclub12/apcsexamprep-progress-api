@@ -115,14 +115,36 @@ checked directly: `smoke:quizgate` (20), `smoke:admingates` (43),
 `smoke:gbagree` (26), `smoke:admingbpage` (21), `smoke:teacheradmin` (45),
 `smoke:canvas` (101), `smoke:encoding`, `smoke:volumepaths`.
 
+## Shipped and observed live
+
+Merged as `76941e4` and deployed. Production reported that commit at 21:11 and
+`/teacher/assignments` answered `200` with 18765 bytes carrying the switch
+markup, the `noforce` class and the unenforceable-locks banner. That URL `404`'d
+before the deploy, so it is an assertion that could not have passed on the old
+build, which is the property this repo's own first deploy-gate manifest lacked.
+
+`deploy-gates/2026-09-06-assignment-locking.json` carries it: three suites, four
+mutations (including putting the render path back on equality SQL, which the old
+code would have failed), and the live check. Three independent kinds, run after
+the deploy rather than only before it.
+
+**The gate refused its own first manifest, twice, and both refusals were mine.**
+The live check first looked for the string `sw mixed`, which the page builds at
+runtime by concatenation and which therefore appears nowhere in what the server
+sends. Then it pinned the commit sha `76941e4`, and production had moved to
+`da18644` within the hour, so that check would have been permanently unrunnable
+by anyone re-deriving this gate later. A live assertion has to be both false
+before the deploy AND durable afterwards, and the sha is only the first.
+
 ## Still open
 
-- **Nothing here has been observed in production.** Every number above is an
-  offline suite. The live check belongs to a session that is not this one, and it
-  needs a teacher JWT: create a gate at unit scope on a real class, then confirm
+- **The ENDPOINT half is still unobserved in production.** The board page is
+  live and checked; the gate routes are not, because every one of them is
+  fail-closed behind a teacher JWT this session does not hold, and the `401` they
+  return proves the fence rather than the feature. The check a credentialed
+  session should run: create a gate at unit scope on a real class, then confirm
   `GET /api/quiz/...` answers `locked: true` with `reason: "unit-closed"` for a
-  student in it. `GET /api/teacher/classes/:code/gates` needs the teacher
-  credential and this session holds only `COMMAND_READ_TOKEN` and `TODO_KEY`.
+  student in it, and that opening one lesson inside it reopens only that lesson.
 - **The theme-side teacher Command Center does not link `/teacher/assignments`
   yet.** That is theme work, in the other repo, against
   `claude/site-linking-audit-yhufjk`. Until it lands the page is reachable only

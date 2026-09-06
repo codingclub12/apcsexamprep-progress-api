@@ -1,0 +1,68 @@
+{
+  "change": "assignments lock and unlock at unit, lesson and activity scope, and the gradebook says which of those locks the server can actually enforce",
+  "_context": "activity_gates already existed but a row could only name ONE assignment, so locking a unit meant a row per activity plus a new row whenever a lesson was added. The scopes are wildcards in the two columns the table already has, so the real change is a resolution ORDER plus the SQL at both enforcement points, which matched lesson and activity_type by equality and therefore could not see a wildcard row at all.",
+  "_live_note": "The live check asserts /teacher/assignments serves the switch markup. That URL 404'd before this deploy, so it cannot pass on the old build, which is the property /api/health lacked when this gate's own first manifest was written. It is also DURABLE: it keeps meaning the same thing every time it is re-run, which a pinned commit sha does not. The first draft pinned 76941e4 and production had already moved to da18644 within the hour, so that check would have been permanently unrunnable by anyone re-deriving this gate. Production WAS confirmed serving 76941e4 at 21:11 on 2026-09-06, which is the point-in-time record; the durable claim is the one below. The markers are chosen from what the SERVER sends, not from what the browser ends up with: the first draft looked for 'sw mixed', which the page builds at runtime by concatenation and which therefore appears nowhere in the source. The gate refused it, which is the gate working. 'sw.mixed .track' is the CSS rule for the three-state switch, 'noforce' the class for a lock the server cannot enforce, and 'cannot be enforced' the banner text, so all six are literals only this build emits. The endpoint half of the change cannot be checked from here: every gate route is fail-closed behind a teacher JWT this session does not hold, and a 401 proves the fence, not the feature.",
+  "_expect_failure_note": "Every expect_failure carries the literal [FAIL] prefix. The gate only checks the string appears in the mutated run's output, and an assertion NAME appears on the pass line too, so naming the assertion alone would prove it ran rather than that it went red.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the scopes, the ladder, both enforcement points, the contract and the shipped page",
+      "command": "npm run --silent smoke:gatescope",
+      "expect": "68 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the gate suite that existed before, unchanged and still green",
+      "command": "npm run --silent smoke:quizgate",
+      "expect": "20 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the operator gate view, which moved onto the same ladder",
+      "command": "npm run --silent smoke:admingates",
+      "expect": "43 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THE OLD CODE WOULD HAVE FAILED: put the render path back on equality SQL and a unit lock becomes invisible to it",
+      "file": "routes/quiz.js",
+      "find": "  WHERE class_id = ? AND course = ? AND unit = ?\n`);",
+      "replace": "  WHERE class_id = ? AND course = ? AND unit = ? AND lesson != '*'\n`);",
+      "command": "npm run --silent smoke:gatescope",
+      "expect_failure": "[FAIL] render: a UNIT-scope lock closes the quiz"
+    },
+    {
+      "kind": "mutation",
+      "name": "reverse the specificity ladder and a wider scope outranks a narrower one",
+      "file": "lib/activity-gate.js",
+      "find": "const SCOPES = ['activity', 'lesson', 'unit-activity', 'unit'];",
+      "replace": "const SCOPES = ['unit', 'unit-activity', 'lesson', 'activity'];",
+      "command": "npm run --silent smoke:gatescope",
+      "expect_failure": "[FAIL] lesson beats unit: the opened lesson is open"
+    },
+    {
+      "kind": "mutation",
+      "name": "report every lock enforceable, so a padlock over a page-body quiz reads as protection",
+      "file": "lib/gradebook-contract.js",
+      "find": "    it.lock_enforceable = bankKeys.has(`${it.unit}|${it.lesson_ref}|${it.native_activity}`);",
+      "replace": "    it.lock_enforceable = true;",
+      "command": "npm run --silent smoke:gatescope",
+      "expect_failure": "[FAIL] contract: a lock on a page-body quiz is reported as NOT enforceable"
+    },
+    {
+      "kind": "mutation",
+      "name": "drop the submit-time re-check and a token minted before the lock still spends",
+      "file": "routes/quiz.js",
+      "find": "      const gRows = gateStmt.all(req.student.class_id, course, unit);",
+      "replace": "      const gRows = [];",
+      "command": "npm run --silent smoke:gatescope",
+      "expect_failure": "[FAIL] submit: a token minted before the unit lock is refused"
+    },
+    {
+      "kind": "live",
+      "name": "the assignment board is on the wire, carrying switch markup that 404'd before this deploy",
+      "command": "node -e \"const cp=require('child_process');const b=cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/teacher/assignments',{encoding:'utf8',maxBuffer:8e6});for(const m of ['sw.mixed .track','data-kind=','lock_enforceable','stateFromRoll','cannot be enforced','noforce']){if(!b.includes(m))throw new Error('live page is missing '+m);}console.log('LIVE BOARD SERVES THE SWITCHES '+b.length+' bytes');\"",
+      "expect": "LIVE BOARD SERVES THE SWITCHES"
+    }
+  ]
+}
