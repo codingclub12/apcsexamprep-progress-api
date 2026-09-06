@@ -3,8 +3,20 @@
 //  SMOKE: the AP Networking Command Center file-gate sheet.
 //
 //  Runs entirely offline against two committed artifacts:
-//    shopify/page-snapshots/ap-networking-command-center.before-file-gate.html
-//    imports/2026-09-04d/networking-command-center-pages.csv
+//    shopify/page-snapshots/ap-networking-command-center.body-before-file-gate.html
+//    imports/2026-09-04e/networking-command-center-pages-FIX.csv
+//
+//  ── BOTH OF THOSE CHANGED ON 2026-09-04, AND THE REASON IS THE BUG ──────────
+//  This suite first pinned the RENDERED page snapshot and the sheet built from
+//  it. That sheet was wrong: Shopify's Body HTML field holds only the fragment
+//  the theme drops inside its rte wrapper, so importing a rendered page nests a
+//  whole document inside the page. It did, and the live page ran at 761,823
+//  bytes with three heads and two BreadcrumbList blocks until it was corrected.
+//  See docs/runs/2026-09-04-claude-code-networking-cc-body-nesting.md.
+//
+//  The rendered snapshot is KEPT, as a negative fixture. Section 7 requires the
+//  generator to refuse it. That turns the artifact that caused the incident
+//  into the thing that proves the guard against it is real.
 //
 //  ── WHY THIS EXISTS AS A SUITE AND NOT ONLY AS A SCRIPT ─────────────────────
 //  scripts/verify-networking-cc-sheet.js needs the live page and a generated
@@ -39,9 +51,13 @@ const MANIFEST = require('../seed/networking-teacher-files.json');
 const pf = require('../scripts/matrixify-preflight');
 
 const SNAP = path.join(__dirname, '..', 'shopify', 'page-snapshots',
+  'ap-networking-command-center.body-before-file-gate.html');
+// The rendered page the body was extracted from. Never a generator input; kept
+// so section 7 can prove the generator refuses one.
+const RENDERED = path.join(__dirname, '..', 'shopify', 'page-snapshots',
   'ap-networking-command-center.before-file-gate.html');
-const SHEET = path.join(__dirname, '..', 'imports', '2026-09-04d',
-  'networking-command-center-pages.csv');
+const SHEET = path.join(__dirname, '..', 'imports', '2026-09-04e',
+  'networking-command-center-pages-FIX.csv');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -146,6 +162,28 @@ console.log('5. Running the generator twice cannot double-apply');
   let refused = null;
   try { gate.build(sheetBody); } catch (e) { refused = e.message; }
   ok('  an already-gated body is refused', !!refused && /gated already/.test(refused), refused);
+}
+
+console.log('6. The body snapshot is a FRAGMENT, not a document');
+{
+  for (const tell of ['<!doctype', '<html', '<head>', '</body>', '</html>']) {
+    ok(`  snapshot has no ${JSON.stringify(tell)}`, !src.toLowerCase().includes(tell.toLowerCase()));
+    ok(`  sheet body has no ${JSON.stringify(tell)}`, !sheetBody.toLowerCase().includes(tell.toLowerCase()));
+  }
+  ok('  snapshot is the ~50 KB body, not the ~400 KB render',
+     src.length > 40000 && src.length < 60000, src.length);
+}
+
+console.log('7. The generator refuses a RENDERED page, which is what caused the incident');
+{
+  const rendered = fs.readFileSync(RENDERED, 'utf8');
+  ok('  the rendered fixture really is a whole document',
+     /<!doctype/i.test(rendered) && /<html[\s>]/i.test(rendered) && rendered.length > 300000, rendered.length);
+  let refused = null;
+  try { gate.build(rendered); } catch (e) { refused = e.message; }
+  ok('  build() refuses it', !!refused, 'ACCEPTED, which is the 2026-09-04 bug');
+  ok('  and the refusal names extract-live-body.js so the fix is obvious',
+     !!refused && /extract-live-body\.js/.test(refused), refused);
 }
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed\n');
