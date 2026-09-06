@@ -272,7 +272,11 @@ function main(argv) {
   }
 
   const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
-  const csv = [['Handle', 'Command', 'Title', 'Body HTML'].join(',')]
+  //  The header is quoted like every other line. Unquoted is valid CSV and
+  //  Matrixify reads it either way, but scripts/matrixify-preflight.js refuses a
+  //  sheet with a partially quoted file, and a generator whose output cannot
+  //  pass this repo's own import gate is a generator nobody runs the gate on.
+  const csv = [['Handle', 'Command', 'Title', 'Body HTML'].map(cell).join(',')]
     .concat(rows.map((r) => [cell(r.handle), cell('UPDATE'), cell(r.title), cell(r.body)].join(',')))
     .join('\r\n') + '\r\n';
   fs.writeFileSync(out, '﻿' + csv);

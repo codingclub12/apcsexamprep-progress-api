@@ -393,7 +393,11 @@ const resolved = (lesson, activity) => gate.resolveScopedGate(rowsFor(), CLS, le
       createElement: () => el('c'), addEventListener() {}, body: el('body'),
     },
     window: { addEventListener() {} },
-    localStorage: { getItem: (k) => (k === 'apcs_teacher_token' ? TT : null), setItem() {}, removeItem() {} },
+    // The key the Command Center and the gradebook page actually write. If the
+    // page stops reading it, the board renders signed-out and every assertion
+    // below goes red, which is the point: a token key is exactly the kind of
+    // string that drifts silently.
+    localStorage: { getItem: (k) => (k === 'apcse_teacher_token' ? TT : null), setItem() {}, removeItem() {} },
     fetch: (url, opt) => {
       if (opt && opt.method === 'POST') posted.push({ url, body: JSON.parse(opt.body) });
       const body = url.indexOf('/assignments') > -1 ? boardDoc

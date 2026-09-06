@@ -190,7 +190,28 @@ padlock means anything.
 ## Teacher UI
 
 `/teacher/assignments`, served from this repo, teacher JWT read from
-`localStorage` exactly as `/teacher/change-password` does. Switches at unit,
+`localStorage` under `apcse_teacher_token`.
+
+**Two things about that, both found on 2026-09-06 and both load bearing.**
+
+The key is `apcse_teacher_token`, with an "e". The board shipped reading
+`apcs_teacher_token` and `teacher_token`, and NOTHING writes either of those.
+The Command Center and `shopify/cyber-dashboard.html` both write and read
+`apcse_teacher_token`, checked against the live page bodies. A token key is a
+bare string shared across three pages on two origins, so
+`smoke:gatescopemutation` now breaks it on purpose and requires the board to
+render signed-out.
+
+**And `localStorage` is origin-scoped, which decides where this page can live.**
+The Command Center is served from `www.apcsexamprep.com` and writes the token
+there. This page is served from `progress.apcsexamprep.com`. A plain link
+between them lands every teacher on "sign in first" with no way through, because
+the second origin cannot read the first one's storage, and nothing sets a
+parent-domain cookie to bridge it. So the board reaches teachers the way
+`/pages/cyber-dashboard` already does: as a SHOPIFY PAGE, same origin as the
+Command Center, calling this API across the network rather than reading its
+storage. The copy under `public/` stays the source and the page body is
+generated from it. Switches at unit,
 lesson and assignment level: green is assigned, grey is locked, half-filled means
 the things under it disagree. An inherited switch is drawn in italics, so setting
 it explicitly reads as the pin that it is.
