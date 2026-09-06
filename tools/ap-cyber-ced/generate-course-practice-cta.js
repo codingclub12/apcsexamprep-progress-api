@@ -52,6 +52,10 @@ const MCQ = bank.items.length;
 //  no-op rather than a second copy of the band.
 const MARK = '<!-- apcs-course-practice-cta -->';
 
+//  A link inside the first few body anchors is above the fold on a laptop; one
+//  at 52 of 52 is not, and that distinction is the whole change on this page.
+const TOP_ANCHORS = 4;
+
 const CARD = 'color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;'
   + 'font-weight:700!important;text-decoration:none!important;';
 
@@ -95,12 +99,110 @@ const PAGES = [
 
 `,
   },
+  {
+    //  ── THE CONCEPT LAYER, WHICH NEEDS EDITS RATHER THAN A BAND ────────────
+    //  This page already has a quick-nav pill row directly under its hero, so a
+    //  band beneath it would be a second navigation strip saying the same thing.
+    //  The pill row is the right surface and it needs two changes, neither of
+    //  which is an insertion of a block:
+    //
+    //    the practice hub was linked at anchor 52 of 52, the very bottom, by
+    //    lib/link-block.js, and appears nowhere near the top
+    //
+    //    the row's one practice pill reads "Practice" and points at
+    //    ap-cybersecurity-practice-questions, which serves FIFTEEN questions,
+    //    measured 2026-09-06: 15 data-qid cards, 60 options, and the page says
+    //    "15 question" itself. So the single practice link a reader sees at the
+    //    top of the concept index goes to the smallest practice surface on the
+    //    site while the hub sits at the bottom.
+    //
+    //  Neither new label states a count. "15-Question Sampler" would be true
+    //  today and is exactly the kind of hardcoded number that put "40 MCQ +
+    //  3 FRQ" on a live page for two days, so the label describes the shape and
+    //  lets the page it links to state its own size.
+    handle: 'ap-cybersecurity-topics',
+    edits: [
+      [
+        '<a class="solid" href="/pages/ap-cybersecurity-complete-course-guide">Course Hub</a>',
+        '<a class="solid" href="/pages/ap-cybersecurity-complete-course-guide">Course Hub</a>\n'
+        + `      <a class="solid" href="/pages/${HUB}">Practice Hub</a>`,
+      ],
+      [
+        '<a href="/pages/ap-cybersecurity-practice-questions">Practice</a>',
+        '<a href="/pages/ap-cybersecurity-practice-questions">Quick Sampler</a>',
+      ],
+    ],
+  },
 ];
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  EDITS MODE, for a page whose right surface is one it already has.
+//
+//  The band model above inserts a block before a unique anchor. That is wrong
+//  for a page that already carries a navigation row: the fix belongs IN the row,
+//  not in a second strip under it. So a page may instead declare `edits`, a list
+//  of [from, to] pairs.
+//
+//  The invariant is the counterpart of the exact-split assertion: every `from`
+//  must match EXACTLY ONCE, and undoing every substitution must reproduce the
+//  live body character for character. A stray change anywhere else fails that
+//  reversal, which is what makes this as tight as the insertion path rather than
+//  a looser cousin of it.
+// ─────────────────────────────────────────────────────────────────────────────
+function buildEdited(page, live) {
+  const missed = [];
+  for (const [from] of page.edits) {
+    const n = live.split(from).length - 1;
+    if (n !== 1) missed.push(`matched ${n} times, expected 1: ${JSON.stringify(from.slice(0, 70))}`);
+  }
+  if (missed.length) {
+    throw new Error(`${page.handle}: ${missed.length} of ${page.edits.length} edits do not match `
+      + `the live body:\n  ${missed.join('\n  ')}`);
+  }
+
+  let body = live;
+  for (const [from, to] of page.edits) body = body.replace(from, to);
+  if (body === live) throw new Error(`${page.handle}: the edits changed nothing, so this is a no-op`);
+
+  //  Reverse every substitution. Anything the edits did NOT declare survives the
+  //  reversal as a difference, and this throws.
+  let back = body;
+  for (const [from, to] of page.edits) back = back.replace(to, from);
+  if (back !== live) {
+    throw new Error(`${page.handle}: undoing the declared edits does not reproduce the live body, `
+      + 'so something else changed');
+  }
+
+  //  Same structural floor as the band path.
+  const bal = (s) => (s.match(/<div\b/gi) || []).length - (s.match(/<\/div>/gi) || []).length;
+  if (bal(body) !== bal(live)) {
+    throw new Error(`${page.handle}: div balance changed, ${bal(live)} in and ${bal(body)} out`);
+  }
+  for (const tag of ['<style', '<script']) {
+    const c = (s) => (s.split(tag).length - 1);
+    if (c(body) !== c(live)) throw new Error(`${page.handle}: the ${tag}> count changed`);
+  }
+  //  ORDINAL, NOT EXISTENTIAL, and the first draft of this line got it wrong for
+  //  the third time in one session. It asserted that the result LINKS the
+  //  practice hub, which was already true of this page from anchor 52 of 52, so
+  //  the mutation written to break it could not go red. The whole point of the
+  //  edit is WHERE the link is, so that is what gets asserted.
+  const at = (s) => [...s.matchAll(/href="[^"]*\/pages\/([^"'#?]+)/g)]
+    .map((m) => m[1]).indexOf(HUB);
+  const after = at(body);
+  if (after < 0 || after >= TOP_ANCHORS) {
+    throw new Error(`${page.handle}: the practice hub is at anchor `
+      + `${after < 0 ? 'nowhere' : after + 1} after the edits, not inside the first ${TOP_ANCHORS}`);
+  }
+  return body;
+}
 
 function buildBody(page, live) {
   if (typeof live !== 'string' || !live.trim()) {
     throw new Error(`${page.handle}: the stored body is empty. An empty Body HTML cell erases the live page.`);
   }
+  if (page.edits) return buildEdited(page, live);
+
   if (live.includes(MARK)) {
     throw new Error(`${page.handle} already carries the practice band, so this would be a second copy`);
   }
@@ -151,10 +253,26 @@ function buildBody(page, live) {
   return body;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  `handles` selects which pages go in the sheet, and it exists for a reason
+//  that cost this project a scare on board 238.
+//
+//  The two course-page fixtures are PRE-IMPORT snapshots. Regenerating from them
+//  reproduces the rows that already landed on 2026-09-04, and shipping those
+//  again in a new sheet would republish a body captured before the import, so
+//  anything either page has gained since would be silently reverted. A MERGE
+//  writes the whole Body HTML and does not care that the bytes are two days old.
+//
+//  So the offline suite builds every page, because the fixtures are a consistent
+//  set and the assertions about them are a record of what the change did, and a
+//  SHEET is only ever emitted for the handles this pass is actually changing.
+// ─────────────────────────────────────────────────────────────────────────────
 function generate(opts = {}) {
   const rows = [];
   const built = [];
+  const wanted = opts.handles ? new Set(opts.handles) : null;
   for (const page of PAGES) {
+    if (wanted && !wanted.has(page.handle)) continue;
     const file = path.join(opts.bodies, `${page.handle}.html`);
     if (!fs.existsSync(file)) {
       throw new Error(`no stored body at ${file}. Fetch it before generating:`
@@ -182,7 +300,9 @@ if (require.main === module) {
   const arg = (n) => { const i = argv.indexOf(n); return i === -1 ? null : argv[i + 1]; };
   const bodies = arg('--bodies') || 'smoke/fixtures/live-bodies';
   const outDir = arg('--out-dir');
-  const r = generate({ bodies });
+  const only = arg('--handles');
+  const outName = arg('--out-name') || 'cyber-course-practice-cta-pages.csv';
+  const r = generate({ bodies, handles: only ? only.split(',') : null });
   for (const b of r.built) {
     const grew = Buffer.byteLength(b.body) - Buffer.byteLength(b.live);
     console.log(`${b.handle.padEnd(38)} ${Buffer.byteLength(b.live)} -> ${Buffer.byteLength(b.body)} bytes (+${grew})`);
@@ -191,7 +311,7 @@ if (require.main === module) {
   console.log('parse-back: clean');
   if (outDir) {
     fs.mkdirSync(outDir, { recursive: true });
-    const out = path.join(outDir, 'cyber-course-practice-cta-pages.csv');
+    const out = path.join(outDir, outName);
     fs.writeFileSync(out, r.csv);
     console.log(`wrote ${out} (${Buffer.byteLength(r.csv)} bytes, ${r.rows.length} rows)`);
   } else {
