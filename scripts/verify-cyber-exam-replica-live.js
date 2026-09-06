@@ -137,6 +137,33 @@ function check(body, rendered, log = console.log) {
     && (body.match(/<script/g) || []).length >= 2);
   ok('the answered counter is out of 60', body.includes('<strong id="peAnswered">0</strong> / 60'));
 
+  // ── THE CHROME ZONE, WHICH EVERY CHECK ABOVE IS BLIND TO ──────────────────
+  //  Added 2026-09-06 after this verifier reported 17 of 17 on a page that was
+  //  serving TWO contradicting h1s. Everything above reads the extracted body,
+  //  and the theme renders the Shopify Title field as an h1 ABOVE it. That field
+  //  still said "AP Cybersecurity Practice Set | 40 MCQ + 3 FRQ", so the page
+  //  announced the old shape in its first heading, in the theme's own breadcrumb
+  //  schema, and in the nav sub-label on every page of the site.
+  //
+  //  The body/chrome split is right for LINKS: an assertion that a page links
+  //  something, satisfied by an anchor the theme puts on all 400 pages, proves
+  //  nothing. It is exactly wrong for COUNTS, because chrome is where a stale
+  //  count reaches the most readers. So this check reads the whole rendered
+  //  document, and it is narrow on purpose: only this page's own old shape, not
+  //  every number in the nav, because the nav legitimately carries counts for
+  //  other pages and a broad scan here produced 16 false positives.
+  if (rendered) {
+    const OLD_SHAPE = /40 MCQ \+ 3 FRQ|Practice Set \| 40|40 MCQ and 3 free/i;
+    ok('the rendered page states the old shape nowhere, chrome included',
+      !OLD_SHAPE.test(rendered),
+      (rendered.match(OLD_SHAPE) || [''])[0]);
+    const h1s = [...rendered.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/g)]
+      .map((m) => m[1].replace(/<[^>]+>/g, '').trim());
+    ok('every h1 on the page names the exam the same way',
+      h1s.length > 0 && h1s.every((h) => /Practice Exam/i.test(h) && !/Practice Set/i.test(h)),
+      JSON.stringify(h1s));
+  }
+
   return { pass, fails };
 }
 
