@@ -38,6 +38,39 @@ time, onto the server render path:
 A quiz that has not been through those steps can still be given a gate row. It
 just will not be protected, and nobody should be told otherwise.
 
+### AP CSA is the same migration and a different starting point
+
+Cyber pages grade themselves from `data-correct`. CSA lesson pages grade
+themselves from `data-answer` and then REPORT the number they arrived at, through
+`shopify/apcs-reporter.js` to `POST /api/progress/attempt`, which writes the
+`attempts` table against a `course_manifest` row. So a CSA lesson quiz leaks its
+key exactly the same way, and additionally the server never sees an answer at
+all: it is told a score. (`POST /api/student/score` against `quiz_answer_bank` is
+a third path, used by the five `ap-csa-course-*` pages in
+`seed/csa-answer-bank.js` and by CSP and Cyber. It is not the one the Unit 1
+lesson pages use, and an earlier note in this repo said it was.)
+
+Neither of those is `quiz_bank`, so step 2 is what makes the gate real for CSA
+too. It does not orphan the gradebook column: `lib/gradebook-contract.js` keys
+columns by `unit-1/1.1/quiz` and normalises `attempts` and `progress` onto the
+same one, measured on a scratch database with three students scored each way.
+
+Lesson 1.1 is the pilot and both steps are written:
+
+- step 1, `seed/csa-unit-1-web-quizzes.js`, Parts A and B moved verbatim
+- step 2, `scripts/csa-11-quiz-mount-csv.js`, a Matrixify sheet that swaps the
+  3,602 bytes of MCQ markup for the mount and adds the mount script
+
+Step 2 deletes a span out of the middle of a 103KB body, which is the shape of
+the /pages/join incident, so `smoke/csa-quiz-mount.js` mutation tests every rule
+in it. That found a hole worth repeating here: a body carrying the span TWICE
+passes the length check, the byte-for-byte round trip AND the answer-count drop,
+because `replace()` takes the first occurrence and the duplicate supplies the two
+attributes the count expected to lose. The result would ship the questions and
+their keys unchanged. Anything doing this for lessons 1.2 through 1.15 needs both
+the occurrence count and the direct "is the span still in the result" check, not
+one of them.
+
 ## The two questions that look like one
 
 `key_releases` already existed and is easy to confuse with this.

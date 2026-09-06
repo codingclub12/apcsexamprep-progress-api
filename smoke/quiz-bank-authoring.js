@@ -37,12 +37,20 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 
 const express = require('express');
 const db = require('../db');
-const { seedQuizBank } = require('../scripts/seed-quiz-bank');
-// Every bank the seed script loads, so adding a lesson never breaks this suite.
-const SOURCES = [
-  ...require('../seed/cyber-unit-1-web-quizzes'),
-];
+// SOURCES comes from the seed script itself. This file used to re-declare it,
+// under a comment promising that adding a lesson would never break the suite,
+// and adding one broke it immediately.
+const { seedQuizBank, SOURCES: ALL_SOURCES } = require('../scripts/seed-quiz-bank');
+// Scoped to the course this suite drives. `lesson` alone stopped being unique
+// the moment a second course seeded a lesson '1.1', so a lookup by lesson
+// returned the wrong pack and the totals counted banks this suite never
+// touches. Course plus unit is the key; the seed's own list is still the source.
+const SOURCES = ALL_SOURCES.filter(p => p.location.course === 'ap-cybersecurity' && p.location.unit === 'unit-1');
 const TOTAL = SOURCES.reduce((n, p) => n + p.questions.length, 0);
+// The seed inserts every source in the repo, so an assertion about ITS return
+// value is global while everything else here is scoped to this course. Keeping
+// the two apart is the whole reason the totals drifted when CSA arrived.
+const ALL_TOTAL = ALL_SOURCES.reduce((n, p) => n + p.questions.length, 0);
 
 const COURSE = 'ap-cybersecurity';
 const UNIT = 'unit-1';
@@ -84,8 +92,8 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
 
   console.log('\n-- 3. seed, then check the rendered payload --');
   const first = seedQuizBank();
-  ok(`first seed inserts every source question (${TOTAL} across ${SOURCES.length} locations)`,
-    first.inserted === first.total && first.total === TOTAL, { first, TOTAL });
+  ok(`first seed inserts every source question (${ALL_TOTAL} across ${ALL_SOURCES.length} locations)`,
+    first.inserted === first.total && first.total === ALL_TOTAL, { first, ALL_TOTAL });
 
   for (const pack of SOURCES) {
     const r = await get(`/api/quiz/${COURSE}/${UNIT}/${pack.location.lesson}/quiz`);

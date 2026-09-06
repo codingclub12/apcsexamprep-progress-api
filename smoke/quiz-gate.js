@@ -32,15 +32,23 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 const express = require('express');
 const db = require('../db');
 const { signTeacherToken, signStudentToken } = require('../utils');
-const { seedQuizBank } = require('../scripts/seed-quiz-bank');
-// Derived, not hardcoded: a new lesson bank must not fail this suite.
-const WEB_PACKS = require('../seed/cyber-unit-1-web-quizzes');
+const { seedQuizBank, SOURCES } = require('../scripts/seed-quiz-bank');
+// Derived from the seed's OWN source list, not a copy of it. This file used to
+// re-declare the list and went red the first time a bank was added, which is the
+// failure mode a hand-maintained duplicate always has.
+// Scoped to the course this suite drives. `lesson` alone stopped being unique
+// the moment a second course seeded a lesson '1.1', so a lookup by lesson
+// returned the wrong pack and the totals counted banks this suite never
+// touches. Course plus unit is the key; the seed's own list is still the source.
+const WEB_PACKS = SOURCES.filter(p => p.location.course === 'ap-cybersecurity' && p.location.unit === 'unit-1');
 // The lesson this suite drives end to end. Derived so a content change to the
 // bank cannot turn the GATE suite red for a reason that has nothing to do with gating.
 const N11 = WEB_PACKS.find(p => p.location.lesson === '1.1').questions.length;
-const BANK_TOTAL = [
-  ...require('../seed/cyber-unit-1-web-quizzes'),
-].reduce((n, p) => n + p.questions.length, 0);
+const BANK_TOTAL = WEB_PACKS.reduce((n, p) => n + p.questions.length, 0);
+// The seed inserts every source in the repo, so an assertion about ITS return
+// value is global while everything else here is scoped to this course. Keeping
+// the two apart is the whole reason the totals drifted when CSA arrived.
+const ALL_TOTAL = SOURCES.reduce((n, p) => n + p.questions.length, 0);
 
 const COURSE = 'ap-cybersecurity';
 const UNIT = 'unit-1';
@@ -81,7 +89,7 @@ const setGate = (lesson, open) => call('POST', `/api/teacher/classes/${CODE}/gat
 
 (async () => {
   const seeded = seedQuizBank();
-  ok(`bank seeds ${BANK_TOTAL} questions across every seeded location`, seeded.total === BANK_TOTAL, { seeded, BANK_TOTAL });
+  ok(`bank seeds ${ALL_TOTAL} questions across every seeded location`, seeded.total === ALL_TOTAL, { seeded, ALL_TOTAL });
 
   // 1) An untouched class keeps working.
   let r = await call('GET', quiz('1.1'), null, ST);

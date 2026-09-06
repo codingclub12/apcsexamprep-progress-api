@@ -53,6 +53,9 @@ const SOURCES = [
   // see that file's header for why. The bundle-derived bank that briefly held 1.1
   // and 1.2 was deleted on 2026-08-27, which retires its rows (active = 0).
   ...require('../seed/cyber-unit-1-web-quizzes'),
+  //  AP CSA lesson 1.1, moved off the page body on 2026-09-06. Same rule: the
+  //  CSA teacher bundle's own Bell Ringer and Quiz are not seeded here.
+  ...require('../seed/csa-unit-1-web-quizzes'),
 ];
 
 const insert = db.prepare(`
@@ -137,4 +140,9 @@ if (require.main === module) {
   process.exit(0);
 }
 
-module.exports = { seedQuizBank };
+//  SOURCES is exported so a suite can derive its expected totals from the same
+//  list the seed actually loads. smoke/quiz-gate.js and smoke/quiz-bank-authoring.js
+//  each kept their own copy of it, both commented "adding a lesson never breaks
+//  this suite", and both went red the first time a lesson was added. A comment
+//  cannot keep two lists in step; one list can.
+module.exports = { seedQuizBank, SOURCES };

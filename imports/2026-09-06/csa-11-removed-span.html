@@ -1,0 +1,41 @@
+<h3>Part A: Identify Sara’s first error</h3>
+  <div class="apcs-ex" data-type="mcq" data-answer="B">
+    <div class="apcs-ex-stem">When IntelliJ refused to start Sara’s program and underlined a line in red, what kind of error was Sara hitting?</div>
+    <div class="apcs-predict-gate">Predict first: what is the only error type that prevents a program from running at all? Then read the options.</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> A logic error, because the program is producing the wrong result.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> A syntax error, because the compiler refused to compile the code and flagged a specific line.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> A run-time error, because the IDE detected it before execution.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> An exception, because the IDE handled it before the program ran.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>B.</strong> The defining feature is that the program never ran. The IDE underlined a line in red and refused to compile, which is what happens with a syntax error. A is wrong because logic errors only show up after the program runs and produces wrong output. C is wrong because run-time errors happen during execution, not before it starts. D is wrong because exceptions are a specific kind of run-time error, again something that surfaces while the program is executing.
+    </div>
+  </div>
+
+  <h3>Part B: Identify Sara’s second error</h3>
+  <div class="apcs-ex" data-type="mcq" data-answer="A">
+    <div class="apcs-ex-stem">After Sara fixed her first error, the program ran, printed six names, and then crashed with <code>NullPointerException</code>. Which classification best describes this second error?</div>
+    <div class="apcs-predict-gate">Predict first: the compiler accepted this code, but execution stopped mid-program. Which category fits?</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> An exception, which is a type of run-time error caused by an unexpected condition the compiler could not detect.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> A logic error, because the program ran for a while and then stopped.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> A syntax error, because the compiler should have caught it before execution.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> A compilation warning, because the IDE permitted the program to start but then halted it.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>A.</strong> <code>NullPointerException</code> is a specific type of run-time error caused by an unexpected condition (a null value being used where an object was expected) that the compiler could not detect in advance. Every exception is a run-time error. B is wrong because a logic error means wrong output, not a crash. C is wrong because the compiler does not detect this kind of problem; the code is syntactically valid. D is wrong because Java does not have a notion of a “compilation warning” that halts execution mid-program.
+    </div>
+  </div>
+
+  
