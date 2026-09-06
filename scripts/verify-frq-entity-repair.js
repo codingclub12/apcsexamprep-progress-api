@@ -16,6 +16,21 @@
 //  committed beside the sheet before the import, which is what makes it a
 //  prediction rather than a description.
 //
+//  ---- AND IT MUST NOT CALL A CACHE A FAILURE -------------------------------
+//  The first cut of this file did exactly that. /pages/<handle>.json comes
+//  through Shopify's page cache and lagged the real import by about a minute on
+//  2026-09-06, serving the pre-import body AND the pre-import updated_at
+//  together, so the timestamp confirmed the stale body instead of exposing it.
+//  This reported a successful import as 5 failures and the operator re-imported
+//  on that advice.
+//
+//  A disagreement now has to say WHICH it is. The rendered page has a different
+//  cache, so it is the freshness authority: if the json is behind it, this exits
+//  STALE (code 2) and says to wait, rather than FAILED (code 1). Cloudflare
+//  rewrites the address in the rendered copy, so the comparison goes through
+//  decodeCfEmails rather than a substring search that could only ever say
+//  "absent".
+//
 //  Pure ASCII source, no em-dashes, per repo convention.
 // ---------------------------------------------------------------------------
 const fs = require('fs');
@@ -33,6 +48,24 @@ const sha = (s) => crypto.createHash('sha256').update(s, 'utf8').digest('hex');
 function main() {
   const predicted = JSON.parse(fs.readFileSync(PRED, 'utf8'))[HANDLE];
   const live = sf.pageBody(HANDLE).body_html;
+
+  //  Freshness first, and from a cache that is not this one. If the rendered
+  //  page already carries the address the json says is missing, the json is
+  //  behind and nothing below it is worth reporting.
+  if (live !== predicted) {
+    const rendered = sf.page('/pages/' + HANDLE).body;
+    const addresses = sf.decodeCfEmails(rendered);
+    const renderedHasIt = addresses.indexOf(ADDRESS) !== -1
+      || rendered.indexOf(ADDRESS) !== -1;
+    if (renderedHasIt && live.indexOf(ADDRESS) === -1) {
+      console.log('STALE, not failed.');
+      console.log('  The rendered page already carries ' + ADDRESS + ', so the import landed.');
+      console.log('  /pages/' + HANDLE + '.json is still serving a cached pre-import body');
+      console.log('  (its updated_at comes from the same stale response, so it agrees with it).');
+      console.log('  Wait a minute and run this again. Do NOT re-import on the strength of this.');
+      process.exit(2);
+    }
+  }
   const problems = [];
   const ok = (label, cond, detail) => {
     console.log((cond ? '  [PASS] ' : '  [FAIL] ') + label + (detail ? '  ' + detail : ''));

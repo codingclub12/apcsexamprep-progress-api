@@ -63,6 +63,38 @@ decode as `&lt;`, parses as a text `<`, and is stored as `&lt;`.
 The other hazard below is still real and different: an entity a script needs to
 still BE an entity afterwards.
 
+## The read you verify with can be a minute behind
+
+`/pages/<handle>.json` is served through Shopify's own page cache. Its etag says
+so: `page_cache:<id>:PageDetailsController:<hash>`. A query string does not bust
+it, because the cache keys on the path.
+
+Measured 2026-09-06: an import landed at 21:51:33Z and that endpoint served the
+PRE-import body for about a minute afterwards. The trap is the second half.
+`updated_at` is the obvious way to ask "did my write land", and it arrives inside
+the same stale response, so it agrees with the stale body instead of exposing it.
+A verifier saw an old body and an old timestamp corroborating each other and
+reported that a successful import had not run. The operator re-imported on that
+advice.
+
+The two read paths have OPPOSITE defects, which is why neither alone settles it:
+
+| | `pages/x.json` | rendered page |
+|---|---|---|
+| freshness | can lag ~1 min | current |
+| fidelity | the stored bytes | Cloudflare rewrites addresses |
+
+So use the json for bytes you will write back, and the rendered page to prove
+those bytes are current. `lib/storefront-fetch.js` has `pageBodySettled()` for
+the cheap version (poll until it stops moving) and `decodeCfEmails()` for reading
+an address out of the rendered copy, without which a live check on a page
+carrying an address can only ever say "absent".
+
+**A disagreement must say which it is.** Never report "the import did not land"
+from the json alone. `scripts/verify-frq-entity-repair.js` exits 2 STALE rather
+than 1 FAILED when the rendered page already shows the change, and its harness
+proves all three exits are reachable.
+
 ## Verify a body rewrite by comparing the WHOLE body
 
 Predict the stored result before importing, commit the prediction, and diff the
