@@ -1,0 +1,564 @@
+﻿"Handle","Command","Body HTML"
+"ap-cyber-unit-1-frq-practice","MERGE","<!-- AP Cyber Unit 1 FRQ Practice: Credential Compromise at a Public Library | original scenario, CED-format (14 pts / 50 min) -->
+<style>
+#cfrq{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:920px!important;margin:0 auto!important;padding:0 16px 60px!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;line-height:1.6!important;}
+#cfrq *,#cfrq *::before,#cfrq *::after{box-sizing:border-box!important;margin:0;padding:0;}
+#cfrq p{margin:0 0 14px 0!important;font-size:16px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#cfrq h1,#cfrq h2,#cfrq h3,#cfrq h4{margin:0 0 12px 0!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.25!important;font-weight:800!important;}
+#cfrq strong{font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#cfrq code{font-family:'Consolas','Monaco',monospace!important;background:#F5F0FF!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;padding:1px 6px!important;border-radius:4px!important;font-size:14px!important;}
+
+/* HEADER */
+#cfrq .hd{background:#1E1B4B!important;border-radius:16px!important;padding:32px 28px!important;margin:8px 0 22px 0!important;}
+#cfrq .hd .eyebrow{display:inline-block!important;font-size:12px!important;font-weight:700!important;letter-spacing:1.5px!important;text-transform:uppercase!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;margin-bottom:12px!important;}
+#cfrq .hd h1{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-size:30px!important;margin-bottom:10px!important;}
+#cfrq .hd p{color:#c7d2fe!important;-webkit-text-fill-color:#c7d2fe!important;font-size:15px!important;margin:0!important;}
+#cfrq .meta{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-top:16px!important;}
+#cfrq .chip{background:rgba(255,255,255,.12)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-size:12px!important;font-weight:700!important;padding:5px 12px!important;border-radius:20px!important;}
+
+/* TIMER */
+#cfrq .timer{display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:12px!important;padding:16px 20px!important;margin-bottom:22px!important;}
+#cfrq .clock{font-family:'Consolas','Monaco',monospace!important;font-size:34px!important;font-weight:800!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;letter-spacing:1px!important;min-width:120px!important;}
+#cfrq .clock.warn{color:#dc2626!important;-webkit-text-fill-color:#dc2626!important;}
+#cfrq .tlabel{font-size:13px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;flex:1 1 140px!important;}
+#cfrq button{font-family:inherit!important;cursor:pointer!important;border:none!important;border-radius:8px!important;font-weight:700!important;font-size:14px!important;padding:10px 18px!important;}
+#cfrq .btn-go{background:#6B21A8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#cfrq .btn-2{background:#ffffff!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;border:1px solid #c4b5fd!important;}
+
+/* CALLOUTS */
+#cfrq .box{border-radius:12px!important;padding:18px 20px!important;margin:0 0 22px 0!important;}
+#cfrq .box.info{background:#eff6ff!important;border-left:4px solid #3b82f6!important;}
+#cfrq .box.tip{background:#FFF7ED!important;border-left:4px solid #E8A020!important;}
+#cfrq .box.tip h4{color:#9a3412!important;-webkit-text-fill-color:#9a3412!important;}
+#cfrq .box.tip p,#cfrq .box.tip li{color:#7c2d12!important;-webkit-text-fill-color:#7c2d12!important;}
+#cfrq .box.terms{background:#F0FDF4!important;border-left:4px solid #15803D!important;}
+#cfrq .box.terms h4{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#cfrq .box.terms li{color:#166534!important;-webkit-text-fill-color:#166534!important;font-size:14px!important;margin:0 0 7px 22px!important;}
+#cfrq .box.terms b{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+/* SECTION TITLES */
+#cfrq .sec-t{font-size:13px!important;font-weight:800!important;letter-spacing:1.5px!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;margin:34px 0 18px 0!important;}
+
+/* SOURCE CARDS */
+#cfrq .src{border:1px solid #e5e7eb!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:16px!important;}
+#cfrq .src .src-h{background:#1E1B4B!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-weight:700!important;font-size:14px!important;padding:10px 16px!important;}
+#cfrq .src .src-b{padding:14px 16px!important;background:#ffffff!important;}
+#cfrq .src .src-b p{margin:0 0 8px 0!important;font-size:14px!important;}
+#cfrq pre.log{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:14px 16px!important;border-radius:8px!important;overflow-x:auto!important;font-family:'Consolas','Monaco',monospace!important;font-size:12.5px!important;line-height:1.6!important;white-space:pre!important;}
+#cfrq .mail{border:1px solid #e5e7eb!important;border-radius:8px!important;overflow:hidden!important;}
+#cfrq .mail .mrow{display:flex!important;gap:10px!important;padding:6px 12px!important;border-bottom:1px solid #f1f5f9!important;font-size:13.5px!important;}
+#cfrq .mail .mrow .k{font-weight:700!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;min-width:60px!important;}
+#cfrq .mail .mrow .v{color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;word-break:break-word!important;}
+#cfrq .mail .mbody{padding:12px!important;background:#fcfcff!important;font-size:14px!important;}
+#cfrq .mail .mbody p{font-size:14px!important;}
+
+/* TABLES */
+#cfrq table.fw,#cfrq table.ports{width:100%!important;border-collapse:collapse!important;font-size:13px!important;margin-top:4px!important;}
+#cfrq table.fw th,#cfrq table.ports th{background:#EDE9FE!important;color:#4c1d95!important;-webkit-text-fill-color:#4c1d95!important;font-weight:700!important;padding:8px 8px!important;text-align:left!important;border:1px solid #ddd6fe!important;font-size:12px!important;}
+#cfrq table.fw td,#cfrq table.ports td{padding:7px 8px!important;border:1px solid #eef2ff!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;}
+#cfrq table.fw tr:nth-child(even) td,#cfrq table.ports tr:nth-child(even) td{background:#FAFAFF!important;}
+#cfrq table.fw td.deny{color:#dc2626!important;-webkit-text-fill-color:#dc2626!important;font-weight:700!important;}
+#cfrq table.fw td.allow{color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:700!important;}
+#cfrq table.ports td.ins{color:#dc2626!important;-webkit-text-fill-color:#dc2626!important;font-weight:700!important;}
+#cfrq table.ports td.sec{color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:700!important;}
+
+/* QUESTION PARTS */
+#cfrq .part{border:1px solid #e5e7eb!important;border-radius:12px!important;padding:20px 22px!important;margin-bottom:18px!important;background:#ffffff!important;}
+#cfrq .part .ph{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:12px!important;margin-bottom:10px!important;}
+#cfrq .part .ph h3{margin:0!important;font-size:19px!important;}
+#cfrq .pts{background:#6B21A8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-size:12px!important;font-weight:800!important;padding:4px 12px!important;border-radius:20px!important;white-space:nowrap!important;}
+#cfrq .sub{margin:12px 0 6px 0!important;font-size:15px!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;font-weight:600!important;}
+#cfrq textarea{width:100%!important;min-height:80px!important;border:1px solid #cbd5e1!important;border-radius:8px!important;padding:10px 12px!important;font-family:inherit!important;font-size:14px!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;line-height:1.5!important;resize:vertical!important;background:#fff!important;}
+#cfrq textarea:focus{outline:2px solid #c4b5fd!important;border-color:#6B21A8!important;}
+
+/* MODEL / SCORING ACCORDION */
+#cfrq .reveal-bar{display:flex!important;gap:10px!important;flex-wrap:wrap!important;align-items:center!important;margin:6px 0 18px 0!important;}
+#cfrq .model{margin-top:12px!important;border:1px dashed #c4b5fd!important;border-radius:8px!important;background:#FBF8FF!important;overflow:hidden!important;}
+#cfrq .model[hidden]{display:none!important;}
+#cfrq .model .mh{font-weight:800!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:.5px!important;padding:10px 14px!important;background:#F5F0FF!important;}
+#cfrq .model .mb{padding:12px 14px!important;}
+#cfrq .model .mb p{font-size:14px!important;margin:0 0 8px 0!important;}
+#cfrq .crit{display:flex!important;align-items:flex-start!important;gap:10px!important;padding:8px 10px!important;background:#F0FDF4!important;border:1px solid #bbf7d0!important;border-radius:7px!important;margin:8px 0!important;}
+#cfrq .crit input{margin-top:3px!important;width:16px!important;height:16px!important;accent-color:#15803D!important;flex:0 0 auto!important;cursor:pointer!important;}
+#cfrq .crit label{font-size:13.5px!important;color:#166534!important;-webkit-text-fill-color:#166534!important;cursor:pointer!important;}
+#cfrq .crit label b{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#cfrq .miss{font-size:13px!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;background:#fef2f2!important;border-left:3px solid #ef4444!important;padding:8px 12px!important;border-radius:4px!important;margin-top:8px!important;}
+#cfrq .miss b{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+
+/* SCORE PANEL */
+#cfrq .score{position:sticky!important;bottom:0!important;z-index:5!important;background:#1E1B4B!important;border-radius:12px!important;padding:14px 20px!important;margin-top:24px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;flex-wrap:wrap!important;}
+#cfrq .score .lbl{color:#c7d2fe!important;-webkit-text-fill-color:#c7d2fe!important;font-size:13px!important;font-weight:600!important;}
+#cfrq .score .num{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-size:26px!important;font-weight:800!important;font-family:'Consolas','Monaco',monospace!important;}
+#cfrq .score .band{font-size:13px!important;font-weight:700!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;}
+
+/* NAV */
+#cfrq .nav{display:flex!important;justify-content:space-between!important;gap:12px!important;flex-wrap:wrap!important;margin-top:28px!important;}
+#cfrq a.nbtn,#cfrq a.nbtn:link,#cfrq a.nbtn:visited{display:inline-block!important;padding:12px 22px!important;background:#6B21A8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;border-radius:8px!important;font-weight:700!important;font-size:14px!important;}
+#cfrq a.nbtn.ghost,#cfrq a.nbtn.ghost:link,#cfrq a.nbtn.ghost:visited{background:#ffffff!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;border:1px solid #c4b5fd!important;}
+
+@media (max-width:680px){
+  #cfrq .hd h1{font-size:24px!important;}
+  #cfrq .clock{font-size:28px!important;}
+  #cfrq table.fw,#cfrq table.ports{font-size:11.5px!important;}
+  #cfrq pre.log{font-size:11px!important;}
+}
+</style>
+
+<div id=""cfrq"" data-course=""ap-cybersecurity"" data-activity=""frq"" data-lesson-id=""unit-1-frq"">
+
+  <div class=""hd"">
+    <span class=""eyebrow"">AP Cybersecurity Unit 1 · Free-Response Practice</span>
+    <h1>Credential Compromise at a Public Library</h1>
+    <p>Unit 1 in the real exam format: several sources from one incident, five parts, fourteen points. Covers social engineering, password attacks, public network risk, and AI on both sides of the fight.</p>
+    <div class=""meta"">
+      <span class=""chip"">14 points</span>
+      <span class=""chip"">50 minutes suggested</span>
+      <span class=""chip"">Unit 1 · Topics 1.1 to 1.5</span>
+      <span class=""chip"">Parts A to E</span>
+    </div>
+  </div>
+
+  <div class=""timer"">
+    <div class=""clock"" id=""clk"">50:00</div>
+    <div class=""tlabel"">Run the 50-minute clock to practice under real timing. Write your responses, then reveal the model answers and self-score out of 14.</div>
+    <button class=""btn-go"" id=""tStart"" type=""button"">Start</button>
+    <button class=""btn-2"" id=""tPause"" type=""button"">Pause</button>
+    <button class=""btn-2"" id=""tReset"" type=""button"">Reset</button>
+  </div>
+
+  <div class=""box info"">
+    <p style=""margin:0;""><strong>How this question works.</strong> Every answer must be grounded in the sources below. The task verbs are precise: <strong>Identify</strong> means state the concept or the evidence, <strong>Describe</strong> means give the process or outcome, <strong>Explain</strong> means give reasons backed by specific evidence, and <strong>Determine</strong> means apply reasoning to the sources to reach a result. When a part says “include specific entries” or “include the network name,” you lose the point without it.</p>
+  </div>
+
+  <div class=""sec-t"">The Scenario</div>
+  <p>The Riverton Public Library offers free Wi-Fi to the public and issues staff accounts for the catalog system at <code>catalog.rivertonlib.org</code>. On March 12 a librarian, <strong>D. Alvarez</strong>, reported that patron records had been altered. The sources below were collected during the investigation. Alvarez works two days a week from the Third Street Cafe next door. Use the sources to answer Parts A through E.</p>
+
+  <div class=""box tip"">
+    <h4>Read the red-flag reference first</h4>
+    <p style=""margin:0;"">Part B asks you to name a social engineering technique and cite the evidence for it. The reference below lists the techniques in the Unit 1 framework and the signal each one leaves behind. Several appear in the message in Source 1, so be precise about which one you are claiming.</p>
+  </div>
+
+  <div class=""src"">
+    <div class=""src-h"">Reference · Social Engineering Techniques and Their Signals</div>
+    <div class=""src-b"">
+      <table class=""ports"">
+        <tr>
+<th>Technique</th>
+<th>What the adversary does</th>
+<th>Signal it leaves</th>
+</tr>
+        <tr>
+<td>Phishing</td>
+<td>Mass message impersonating a trusted sender</td>
+<td class=""ins"">Lookalike domain, link mismatch</td>
+</tr>
+        <tr>
+<td>Spear phishing</td>
+<td>Message tailored to one named target</td>
+<td class=""ins"">Real name, role, and internal details</td>
+</tr>
+        <tr>
+<td>Pretexting</td>
+<td>Invents a believable situation to justify the ask</td>
+<td class=""ins"">A story explaining why the rules bend</td>
+</tr>
+        <tr>
+<td>Baiting</td>
+<td>Dangles something desirable</td>
+<td class=""ins"">Free item, prize, found USB drive</td>
+</tr>
+        <tr>
+<td>Urgency and authority</td>
+<td>Pressures the target to act before thinking</td>
+<td class=""ins"">Deadlines, threats, a boss’s name</td>
+</tr>
+        <tr>
+<td>Evil twin</td>
+<td>Runs a rogue access point with a trusted name</td>
+<td class=""ins"">Duplicate SSID, different MAC address</td>
+</tr>
+      </table>
+    </div>
+  </div>
+
+  <div class=""sec-t"">The Sources</div>
+
+  <div class=""src"">
+    <div class=""src-h"">Source 1 · Message received by D. Alvarez, March 10, 8:52 a.m.</div>
+    <div class=""src-b"">
+      <div class=""mail"">
+        <div class=""mrow"">
+<span class=""k"">From</span><span class=""v"">IT Help Desk &lt;helpdesk@rivertonl1b.org&gt;</span>
+</div>
+        <div class=""mrow"">
+<span class=""k"">To</span><span class=""v"">d.alvarez@rivertonlib.org</span>
+</div>
+        <div class=""mrow"">
+<span class=""k"">Subject</span><span class=""v"">Action required: catalog access expires today</span>
+</div>
+        <div class=""mrow"">
+<span class=""k"">Link</span><span class=""v"">Displayed text: <code>catalog.rivertonlib.org/login</code>   Actual target: <code>rivertonl1b-secure.net/verify</code></span>
+</div>
+        <div class=""mbody"">
+          <p>Hi Dana,</p>
+          <p>Following up on the catalog migration you discussed at Monday’s branch meeting. Because you are one of the two staff with editor rights on the patron database, your account is in the first migration group.</p>
+          <p>Your credentials must be re-verified before 5:00 p.m. today or editor access will be suspended and reissued through the county office, which takes about three weeks. I know you have the summer reading deadline, so I wanted to get you sorted first.</p>
+          <p style=""margin:0;"">Sign in here to confirm: <code>catalog.rivertonlib.org/login</code><br>Thanks,<br>Marcus Bell, IT Help Desk</p>
+        </div>
+      </div>
+      <p style=""margin:8px 0 0 0;""><em>Investigator note: the message contains no spelling or grammar errors. The library has no employee named Marcus Bell. A branch meeting did take place on Monday and the agenda is posted publicly on the library website.</em></p>
+    </div>
+  </div>
+
+  <div class=""src"">
+    <div class=""src-h"">Source 2 · Riverton Library Staff Security Policy</div>
+    <div class=""src-b"">
+      <p>1. Staff passwords must be at least 10 characters and are changed once per year.</p>
+      <p>2. Staff must not reuse a library password on any personal account.</p>
+      <p>3. Staff may access the catalog system from any location, including public Wi-Fi, provided the browser shows a padlock.</p>
+      <p>4. Suspicious messages must be reported to the branch manager within one business day.</p>
+      <p style=""margin:0;"">5. Editor rights to the patron database are granted to a maximum of two staff per branch.</p>
+    </div>
+  </div>
+
+  <div class=""src"">
+    <div class=""src-h"">Source 3 · Catalog Authentication Log</div>
+    <div class=""src-b"">
+<pre class=""log""> 1  Mar 10 08:58:14  d.alvarez  LOGIN SUCCESS  src=203.0.113.40  geo=Riverton     agent=Chrome/Win
+ 2  Mar 10 09:31:02  d.alvarez  LOGIN SUCCESS  src=198.51.100.23 geo=Riverton     agent=Chrome/Win
+ 3  Mar 11 02:07:45  d.alvarez  LOGIN FAILED   src=192.0.2.181   geo=Unknown      agent=python-requests
+ 4  Mar 11 02:07:46  d.alvarez  LOGIN FAILED   src=192.0.2.181   geo=Unknown      agent=python-requests
+ 5  Mar 11 02:07:48  d.alvarez  LOGIN SUCCESS  src=192.0.2.181   geo=Unknown      agent=python-requests
+ 6  Mar 11 02:09:11  d.alvarez  RECORD EDIT    src=192.0.2.181   table=patrons    rows=1,204
+ 7  Mar 11 02:22:56  d.alvarez  EXPORT         src=192.0.2.181   table=patrons    rows=1,204
+ 8  Mar 11 08:40:33  d.alvarez  LOGIN SUCCESS  src=203.0.113.40  geo=Riverton     agent=Chrome/Win</pre>
+    </div>
+  </div>
+
+  <div class=""src"">
+    <div class=""src-h"">Source 4 · Wireless Survey, Third Street Cafe, March 10</div>
+    <div class=""src-b"">
+      <table class=""ports"">
+        <tr>
+<th>SSID</th>
+<th>MAC address (BSSID)</th>
+<th>Security</th>
+<th>Signal</th>
+<th>First seen</th>
+</tr>
+        <tr>
+<td>ThirdStreetCafe</td>
+<td>A4:2B:8C:11:07:D1</td>
+<td class=""sec"">WPA2</td>
+<td>-62 dBm</td>
+<td>Mar 02</td>
+</tr>
+        <tr>
+<td>ThirdStreetCafe</td>
+<td>66:F0:19:4E:B2:07</td>
+<td class=""ins"">Open, no password</td>
+<td>-38 dBm</td>
+<td>Mar 10</td>
+</tr>
+        <tr>
+<td>RivertonLib-Public</td>
+<td>C8:3A:35:0A:91:44</td>
+<td class=""ins"">Open, no password</td>
+<td>-71 dBm</td>
+<td>Jan 14</td>
+</tr>
+      </table>
+      <p style=""margin:8px 0 0 0;""><em>Investigator note: Alvarez confirmed connecting to the strongest ThirdStreetCafe network on the morning of March 10 and signing in to the catalog from the cafe.</em></p>
+    </div>
+  </div>
+
+  <div class=""src"">
+    <div class=""src-h"">Source 5 · AI Anomaly Detection Alert, generated March 11, 02:08</div>
+    <div class=""src-b"">
+<pre class=""log"">ALERT ID  : ANM-4471
+ACCOUNT   : d.alvarez
+CONFIDENCE: 0.94
+BASELINE  : signs in 07:30-18:00 local, Riverton, Chrome on Windows
+OBSERVED  : sign-in 02:07 local, unrecognized network, client string python-requests
+FLAGS     : off-hours access; scripted client; first use of this source address;
+            bulk export 1,204 rows (baseline max 40 rows)
+ACTION    : alert written to queue. No automatic account action configured.</pre>
+    </div>
+  </div>
+
+  <div class=""sec-t"">The Question</div>
+
+  <div class=""reveal-bar"">
+    <button class=""btn-go"" id=""revealAll"" type=""button"">Reveal all model responses</button>
+    <button class=""btn-2"" id=""hideAll"" type=""button"">Hide all</button>
+  </div>
+
+  <div class=""part"">
+    <div class=""ph"">
+<h3>Part A</h3>
+<span class=""pts"">2 points</span>
+</div>
+    <p>Consider the staff security policy in Source 2.</p>
+    <div class=""sub"">i. Explain how one part of the policy helps protect staff accounts.</div>
+    <textarea placeholder=""Type your response to A(i)...""></textarea>
+    <div class=""sub"">ii. Explain how one rule in the policy could be modified to make staff accounts more secure. Include a specific example.</div>
+    <textarea placeholder=""Type your response to A(ii)...""></textarea>
+    <button class=""btn-2 mtog"" type=""button"">Show model response &amp; scoring</button>
+    <div class=""model"" hidden>
+      <div class=""mh"">Model Response &amp; Scoring · Part A</div>
+      <div class=""mb"">
+        <p><b>A(i).</b> Policy 2 forbids reusing a library password on any personal account. This protects staff because when an unrelated site is breached and its password list is leaked, that stolen password will not open the catalog system, so a credential-stuffing attempt fails. (Policy 5, capping editor rights at two staff per branch, is also acceptable: it limits how many accounts an adversary can target to reach the patron database.)</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cA1""><label for=""cA1""><b>+1</b> Names a specific policy item and explains the protection it provides with a reason.</label>
+</div>
+        <p style=""margin-top:12px;""><b>A(ii).</b> Policy 1 could be strengthened by requiring multifactor authentication in addition to the password. For example, requiring a one-time code from an authenticator app means the credentials captured in Source 1 would not have been enough to sign in at 02:07 on March 11. (Also acceptable: rewrite Policy 3, since a padlock only proves the connection is encrypted, not that the site is genuine, so it should require a VPN or forbid catalog access from open networks entirely.)</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cA2""><label for=""cA2""><b>+1</b> Describes a concrete modification to a stated policy rule and gives a specific example of the improvement.</label>
+</div>
+        <div class=""miss"">
+<b>Common miss:</b> Inventing a brand-new policy instead of modifying an existing one. A(ii) asks you to modify a rule that is already there.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class=""part"">
+    <div class=""ph"">
+<h3>Part B</h3>
+<span class=""pts"">2 points</span>
+</div>
+    <p>Consider the message in Source 1.</p>
+    <div class=""sub"">i. Identify the social engineering technique used in the message.</div>
+    <textarea placeholder=""Type your response to B(i)...""></textarea>
+    <div class=""sub"">ii. Describe the evidence in the message that indicates the technique named in B(i). Include specific details from the message.</div>
+    <textarea placeholder=""Type your response to B(ii)...""></textarea>
+    <button class=""btn-2 mtog"" type=""button"">Show model response &amp; scoring</button>
+    <div class=""model"" hidden>
+      <div class=""mh"">Model Response &amp; Scoring · Part B</div>
+      <div class=""mb"">
+        <p><b>B(i).</b> Spear phishing. (Pretexting is also acceptable if the evidence in B(ii) supports it, since the message invents a migration story to justify the request.)</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cB1""><label for=""cB1""><b>+1</b> Names spear phishing, or names pretexting with supporting evidence.</label>
+</div>
+        <p style=""margin-top:12px;""><b>B(ii).</b> The message is aimed at one named person using details specific to her. It addresses Dana by first name, references Monday’s branch meeting, and states that she is one of only two staff with editor rights, which matches Policy 5. It also creates urgency with a 5:00 p.m. deadline and the threat of a three-week suspension. The sender domain <code>rivertonl1b.org</code> substitutes the digit 1 for the letter i in the real domain, and the displayed link text <code>catalog.rivertonlib.org/login</code> does not match the actual target <code>rivertonl1b-secure.net/verify</code>.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cB2""><label for=""cB2""><b>+1</b> Cites specific tailored details (name, meeting, editor rights) or the lookalike domain and link mismatch as the evidence.</label>
+</div>
+        <div class=""miss"">
+<b>Teaching point:</b> The absence of spelling and grammar errors is not evidence that a message is safe. A generative AI model can produce fluent, personalized text at scale, so “it looked professional” is no longer a defense. Judge the domain, the link target, and the request itself.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class=""part"">
+    <div class=""ph"">
+<h3>Part C</h3>
+<span class=""pts"">3 points</span>
+</div>
+    <p>Consider the wireless survey in Source 4.</p>
+    <div class=""sub"">i. Identify the evidence in the survey that indicates a rogue access point. Include the network name.</div>
+    <textarea placeholder=""Type your response to C(i)...""></textarea>
+    <div class=""sub"">ii. Explain how connecting to that access point could expose the catalog credentials of a staff member.</div>
+    <textarea placeholder=""Type your response to C(ii)...""></textarea>
+    <div class=""sub"">iii. Describe one practice a staff member could follow on a public network that would reduce this risk.</div>
+    <textarea placeholder=""Type your response to C(iii)...""></textarea>
+    <button class=""btn-2 mtog"" type=""button"">Show model response &amp; scoring</button>
+    <div class=""model"" hidden>
+      <div class=""mh"">Model Response &amp; Scoring · Part C</div>
+      <div class=""mb"">
+        <p><b>C(i).</b> Two access points broadcast the same SSID, ThirdStreetCafe, with different MAC addresses. The legitimate one, A4:2B:8C:11:07:D1, uses WPA2 and has been seen since March 02. The second, 66:F0:19:4E:B2:07, is open with no password, appeared for the first time on March 10, and has a much stronger signal at -38 dBm. A duplicate SSID that is newer, open, and closer is an evil twin.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cC1""><label for=""cC1""><b>+1</b> Names ThirdStreetCafe and cites the duplicate SSID with a different MAC, plus at least one of: open security, first seen March 10, stronger signal.</label>
+</div>
+        <p style=""margin-top:12px;""><b>C(ii).</b> All traffic from a device on that access point passes through equipment the adversary controls, putting them in the middle of the connection. They can present a fake catalog sign-in page, or strip the connection down to unencrypted HTTP, so the username and password Alvarez types are captured before the traffic ever reaches the real catalog server. Because the network is open, there is no encryption between her device and the access point at all.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cC2""><label for=""cC2""><b>+1</b> Explains that the adversary sits in the middle of the traffic and can capture or intercept credentials.</label>
+</div>
+        <p style=""margin-top:12px;""><b>C(iii).</b> Use a VPN so all traffic is encrypted end to end even on an untrusted network, which means an evil twin sees only ciphertext. (Also acceptable: use a phone’s cellular hotspot instead of public Wi-Fi; verify the network with staff before connecting; disable automatic reconnection to open networks.)</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cC3""><label for=""cC3""><b>+1</b> Describes a specific, realistic public-network practice that reduces the risk.</label>
+</div>
+        <div class=""miss"">
+<b>Common miss:</b> Answering C(i) with “the open network is suspicious” alone. The evidence that makes it rogue is the duplicate SSID with a different MAC address, not merely that it is open.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class=""part"">
+    <div class=""ph"">
+<h3>Part D</h3>
+<span class=""pts"">3 points</span>
+</div>
+    <p>Consider the authentication log in Source 3.</p>
+    <div class=""sub"">i. Determine the row at which the account was first used by the adversary rather than by Alvarez. Explain the evidence for your choice.</div>
+    <textarea placeholder=""Type your response to D(i)...""></textarea>
+    <div class=""sub"">ii. Describe the impact of the actions taken on rows 6 and 7.</div>
+    <textarea placeholder=""Type your response to D(ii)...""></textarea>
+    <div class=""sub"">iii. Explain why the two failed attempts on rows 3 and 4 do not indicate a brute-force attack.</div>
+    <textarea placeholder=""Type your response to D(iii)...""></textarea>
+    <button class=""btn-2 mtog"" type=""button"">Show model response &amp; scoring</button>
+    <div class=""model"" hidden>
+      <div class=""mh"">Model Response &amp; Scoring · Part D</div>
+      <div class=""mb"">
+        <p><b>D(i).</b> Row 3. From row 3 onward the source address is 192.0.2.181 with an unknown geolocation and a client string of python-requests, while every genuine Alvarez session uses a Riverton address and Chrome on Windows. The 02:07 timestamp is also far outside her working hours. Row 3 is the adversary’s first attempt; row 5 is where they succeed.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cD1""><label for=""cD1""><b>+1</b> Identifies row 3 (accept row 5 if the student argues first successful adversary use) and cites the changed source address, the scripted client, or the off-hours timestamp.</label>
+</div>
+        <p style=""margin-top:12px;""><b>D(ii).</b> Row 6 modifies 1,204 rows in the patrons table, so the integrity of the patron records is destroyed; the library can no longer trust that any patron record is accurate. Row 7 exports all 1,204 rows, so confidentiality is lost as well: the adversary now holds a copy of the personal data of every patron in that table.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cD2""><label for=""cD2""><b>+1</b> Describes both the integrity impact of the edit and the confidentiality impact of the export, or describes one in depth with the row count cited.</label>
+</div>
+        <p style=""margin-top:12px;""><b>D(iii).</b> A brute-force attack is many rapid guesses working through a large number of candidate passwords. Here there are only two failures before success, one second apart. That pattern fits an adversary who already holds the credentials and is retrying a small error, which matches the phishing capture in Source 1, rather than guessing the password from scratch.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cD3""><label for=""cD3""><b>+1</b> Explains that two attempts is far too few to be password guessing and links the success to already-stolen credentials.</label>
+</div>
+        <div class=""miss"">
+<b>Common miss:</b> Assuming any failed login means brute force. The number of attempts is the whole distinction; read the volume before naming the attack.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class=""part"">
+    <div class=""ph"">
+<h3>Part E</h3>
+<span class=""pts"">4 points</span>
+</div>
+    <p>Consider the AI anomaly detection alert in Source 5.</p>
+    <div class=""sub"">i. Identify the specific observations the system compared against its baseline to raise the alert.</div>
+    <textarea placeholder=""Type your response to E(i)...""></textarea>
+    <div class=""sub"">ii. Explain why the alert did not prevent the data export, using the ACTION line.</div>
+    <textarea placeholder=""Type your response to E(ii)...""></textarea>
+    <div class=""sub"">iii. Describe one change to the automated system that would have halted this incident in real time.</div>
+    <textarea placeholder=""Type your response to E(iii)...""></textarea>
+    <div class=""sub"">iv. Explain one risk of configuring the automated system to take that action on its own.</div>
+    <textarea placeholder=""Type your response to E(iv)...""></textarea>
+    <button class=""btn-2 mtog"" type=""button"">Show model response &amp; scoring</button>
+    <div class=""model"" hidden>
+      <div class=""mh"">Model Response &amp; Scoring · Part E</div>
+      <div class=""mb"">
+        <p><b>E(i).</b> The system holds a baseline of Alvarez signing in between 07:30 and 18:00 from Riverton using Chrome on Windows. It observed a 02:07 sign-in, an unrecognized network, and a python-requests client, and it flagged a bulk export of 1,204 rows against a baseline maximum of 40. Each observation is a departure from the learned pattern, which is why confidence reached 0.94.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cE1""><label for=""cE1""><b>+1</b> Identifies at least two specific baseline-versus-observed comparisons (time, location or network, client string, export volume).</label>
+</div>
+        <p style=""margin-top:12px;""><b>E(ii).</b> The ACTION line states that the alert was written to a queue and that no automatic account action was configured. Detection and response are separate things: the system correctly recognized the anomaly at 02:08, one minute before the record edit at 02:09, but it was only able to record a notice for a human to read later. With no analyst on duty at 2 a.m., nothing stopped the session.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cE2""><label for=""cE2""><b>+1</b> Explains that the system only alerted rather than acted, citing the ACTION line or the absence of automatic response.</label>
+</div>
+        <p style=""margin-top:12px;""><b>E(iii).</b> Configure the system to act on a high-confidence alert instead of only logging it: automatically suspend the session and require re-authentication with a second factor, or block the source address and freeze bulk exports on the account until a human reviews it. At 0.94 confidence and one minute before the first edit, an automated session termination would have prevented both the edit and the export.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cE3""><label for=""cE3""><b>+1</b> Describes a specific automated response (session termination, forced re-authentication, source block, export freeze) tied to the alert.</label>
+</div>
+        <p style=""margin-top:12px;""><b>E(iv).</b> Automated action on a model’s judgment produces false positives. A librarian legitimately working late, travelling, or running an approved end-of-year export could trip the same flags and be locked out of the catalog with no way to work and no analyst available to reverse it. Aggressive automation trades availability for confidentiality and integrity, so the confidence threshold and the severity of the action have to be tuned deliberately.</p>
+        <div class=""crit"">
+<input type=""checkbox"" data-pts=""1"" id=""cE4""><label for=""cE4""><b>+1</b> Explains the false-positive risk and its cost to legitimate users or availability.</label>
+</div>
+        <div class=""miss"">
+<b>Common miss:</b> In E(iv), describing a benefit of automation instead of a risk. The part asks what could go wrong when the machine decides on its own.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class=""score"">
+    <div>
+<span class=""lbl"">Your self-scored total</span><br><span class=""num"" id=""scoreNum"">0 / 14</span>
+</div>
+    <div class=""band"" id=""scoreBand"">Check the criteria you earned as you review.</div>
+  </div>
+
+  <div class=""box tip"" style=""margin-top:24px;"">
+    <h4>Exam tips that move the needle</h4>
+    <p>Budget the clock: with 14 points in 50 minutes you have roughly 3 to 4 minutes per point. Do not write a paragraph where a sentence earns the point.</p>
+    <p>Quote the source. Almost every part rewards citing a specific row, MAC address, domain, or timestamp. Vague answers that could apply to any incident do not score.</p>
+    <p style=""margin:0;"">Match the verb. Identify and Determine want a short, direct result. Explain wants a reason tied to evidence. Describe wants the process or outcome. Answering the wrong verb is the most common way to lose points you actually knew.</p>
+  </div>
+
+  <div class=""box terms"">
+    <h4>Key terms in this question</h4>
+    <ul style=""list-style:disc;margin:0;padding-left:4px;"">
+      <li>
+<b>Spear phishing:</b> a message tailored to one named target using real details about their role or schedule.</li>
+      <li>
+<b>Evil twin:</b> a rogue access point broadcasting a trusted SSID, identifiable by a duplicate name with a different MAC address.</li>
+      <li>
+<b>Credential capture:</b> harvesting a username and password through a fake sign-in page rather than guessing them.</li>
+      <li>
+<b>Baseline:</b> the normal pattern of behavior an anomaly detection system learns and measures new activity against.</li>
+      <li>
+<b>Detection versus response:</b> noticing an event and acting on it are separate capabilities; an alert with no configured action stops nothing.</li>
+    </ul>
+  </div>
+
+  <div class=""nav"">
+    <a class=""nbtn ghost"" href=""/pages/ap-cybersecurity-unit-1-introduction-to-security"">← Unit 1 study guide</a>
+    <a class=""nbtn"" href=""/pages/ap-cyber-unit-1-project"">Unit 1 project →</a>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var root=document.getElementById('cfrq');
+  if(!root) return;
+
+  // ---- Timer (counts down from 50:00) ----
+  var TOTAL=50*60, remain=TOTAL, tick=null;
+  var clk=root.querySelector('#clk');
+  function paint(){
+    var m=Math.floor(remain/60), s=remain%60;
+    clk.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    if(remain<=300){clk.classList.add('warn');}else{clk.classList.remove('warn');}
+  }
+  function start(){
+    if(tick) return;
+    tick=setInterval(function(){
+      remain--; if(remain<=0){remain=0; paint(); clearInterval(tick); tick=null; clk.textContent='00:00'; return;}
+      paint();
+    },1000);
+  }
+  function pause(){ if(tick){clearInterval(tick); tick=null;} }
+  function reset(){ pause(); remain=TOTAL; paint(); }
+  var bS=root.querySelector('#tStart'), bP=root.querySelector('#tPause'), bR=root.querySelector('#tReset');
+  if(bS) bS.addEventListener('click',start);
+  if(bP) bP.addEventListener('click',pause);
+  if(bR) bR.addEventListener('click',reset);
+  paint();
+
+  // ---- Per-part model toggles ----
+  root.querySelectorAll('.mtog').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var panel=btn.nextElementSibling;
+      if(!panel) return;
+      var open=!panel.hasAttribute('hidden');
+      if(open){panel.setAttribute('hidden','');btn.textContent='Show model response & scoring';}
+      else{panel.removeAttribute('hidden');btn.textContent='Hide model response & scoring';}
+    });
+  });
+  function setAll(show){
+    root.querySelectorAll('.model').forEach(function(p){
+      if(show)p.removeAttribute('hidden'); else p.setAttribute('hidden','');
+    });
+    root.querySelectorAll('.mtog').forEach(function(b){
+      b.textContent=(show?'Hide':'Show')+' model response & scoring';
+    });
+  }
+  var rAll=root.querySelector('#revealAll'), hAll=root.querySelector('#hideAll');
+  if(rAll) rAll.addEventListener('click',function(){setAll(true);});
+  if(hAll) hAll.addEventListener('click',function(){setAll(false);});
+
+  // ---- Self-score tally ----
+  var num=root.querySelector('#scoreNum'), band=root.querySelector('#scoreBand');
+  function tally(){
+    var t=0;
+    root.querySelectorAll('.crit input[type=checkbox]').forEach(function(c){ if(c.checked) t+=parseInt(c.getAttribute('data-pts'),10)||0; });
+    num.textContent=t+' / 14';
+    var msg;
+    if(t===0) msg='Check the criteria you earned as you review.';
+    else if(t<=6) msg='Keep going. Re-read the sources and cite specifics.';
+    else if(t<=9) msg='Solid. Tighten evidence to push higher.';
+    else if(t<=11) msg='Strong. This is competitive-5 territory.';
+    else msg='Excellent. Full command of the question.';
+    band.textContent=msg;
+  }
+  root.querySelectorAll('.crit input[type=checkbox]').forEach(function(c){ c.addEventListener('change',tally); });
+  tally();
+})();
+</script>"

@@ -88,6 +88,20 @@ const mojibake = require('../lib/mojibake.js');
 //  Built from code points so this file stays pure ASCII. These are the byte
 //  sequences a UTF-8 bullet, dash or emoji turns into when read as Latin-1.
 const EMOJI = /[\u{1F300}-\u{1FAFF}]/gu;
+//  The columns this store's sheets actually use. Not the whole Matrixify
+//  vocabulary, and it does not need to be: the rule below only fires on a column
+//  that RESEMBLES one of these, so an unlisted column is simply not near-missed.
+const KNOWN_COLUMNS = [
+  'ID', 'Handle', 'Command', 'Title', 'Body HTML', 'Published', 'Published At',
+  'Template Suffix', 'Author', 'Tags', 'Vendor', 'Type', 'Row #', 'Top Row',
+  'Blog: Handle', 'Blog: ID', 'Blog: Title',
+  //  In use by sheets already in imports/: redirects carry Path and Target, the
+  //  SEO sheets carry these two spellings alongside the metafield form.
+  'Path', 'Target', 'SEO Title', 'SEO Description',
+];
+const normColumn = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, '');
+const KNOWN_BY_NORM = new Map(KNOWN_COLUMNS.map((c) => [normColumn(c), c]));
+
 const SHEET_NAMES = /(page|product|blog[-_ ]?post|article|collection|customer|order|smart[-_ ]?collection|redirect|metafield)/i;
 
 //  Independent of every generator in this repo, on purpose.
@@ -152,6 +166,34 @@ function preflight(path, opts) {
   const header = rows[0];
   const body = rows.slice(1);
   const col = (n) => header.indexOf(n);
+
+  //  -- A NEAR MISS IS WORSE THAN AN UNKNOWN COLUMN --------------------------
+  //  Matrixify IGNORES a column it does not recognise. It does not complain, so
+  //  a sheet whose body column is spelled Body_HTML imports cleanly and changes
+  //  nothing, and reads as shipped afterwards.
+  //
+  //  Worse, it goes quiet HERE too, and that is what makes it a rule rather than
+  //  a note. Every body check below is guarded on col('Body HTML') !== -1: the
+  //  blank-body refusal, the cell size cap, the mojibake scan and the script
+  //  compile. Miss the name and all four skip themselves, so the file passes
+  //  with "script blocks ok: 0" and the word "clear". Measured 2026-09-06 on a
+  //  real 40K page body: every content rule vacuously green.
+  //
+  //  Same shape as the storefront 403 in lib/storefront-fetch.js. A check that
+  //  cannot see its subject must refuse, never pass quietly.
+  //
+  //  Only a NEAR miss is refused. An unrecognised column that resembles nothing
+  //  is usually a metafield, which is why "Metafield: global.title_tag [string]"
+  //  has to keep passing.
+  for (const h of header) {
+    const raw = String(h).trim();
+    if (KNOWN_COLUMNS.indexOf(raw) !== -1) continue;
+    const near = KNOWN_BY_NORM.get(normColumn(raw));
+    if (!near) continue;
+    problems.push(`column ${JSON.stringify(raw)} is a near miss for ${JSON.stringify(near)}. `
+      + 'Matrixify ignores a column it does not recognise, so this sheet would import as a '
+      + 'silent no-op, and every rule in here that keys on that column skips itself.');
+  }
 
   const QUOTED = /^"(?:[^"]|"")*"(?:,"(?:[^"]|"")*")*$/;
   const lines = raw.replace(/^\uFEFF/, '').split('\r\n').filter(Boolean);
