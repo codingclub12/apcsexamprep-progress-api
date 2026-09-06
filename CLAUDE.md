@@ -101,6 +101,25 @@ What does NOT follow, so this stays as small as the decision itself:
 - This is about these two tokens. It is not a general licence to leave a
   credential in place after exposing it.
 
+**The TEACHER ACCOUNT PASSWORD is now covered by the same decision.** Stated
+2026-09-06, in Tanner's words, "not worried about the password rotations", after
+it was pasted into a session transcript so an agent could run the live
+assignment-lock check. Do not raise it again, do not open a board task for it,
+and do not put it in a run note's open items.
+
+That extends the decision; it does not extend the reasoning. The password is
+UNLIKE the two tokens in three ways, and a session should know them rather than
+assume the cases are identical: it has a working self-service rotation path
+(`/teacher/change-password` while signed in, or the forgot-password flow), it is
+the credential for a real account rather than a machine key, and it opens every
+class and roster on that account. None of that changes whose decision it is.
+
+What follows for a session is small and practical. A credential still must never
+be PRINTED, and a session must never ASK for one: the live verification script
+reads them from the environment for exactly that reason, and needs only a class
+code and a student name from a human. If a check cannot run without a password,
+say so and stop rather than inviting one into the transcript.
+
 The session's container must also be able to REACH the board:
 `progress.apcsexamprep.com` has to be in the environment's Custom allowed
 domains, or every session opens with DIGEST UNREACHABLE no matter which
