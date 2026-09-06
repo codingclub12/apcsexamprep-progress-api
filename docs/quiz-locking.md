@@ -232,6 +232,20 @@ to spend after close.
 teacher API, the contract, and a block asserting that everything which worked
 before still does, reason strings included.
 
+`scripts/verify-assignment-lock-live.sh` is the LIVE check, and it is the one
+the offline suites cannot make: it drives a real class through a real teacher
+token and a real student token, and asserts what the student is actually served.
+Twelve assertions covering the baseline, a one-call unit lock, the reason string,
+questions never reaching the wire, a lesson beating its unit, and the board
+agreeing with the render path. It cleans up its own gate rows in a trap, so an
+early failure does not leave a class locked.
+
+Two things it insists on. It must run against AP Cybersecurity Unit 1, because
+those five quizzes are the only locations on the server render path, and pointing
+it at CSA would show a locked quiz still serving, which is the feature reporting
+honestly rather than a bug. And it writes real rows to a real class, so it wants
+a test class or a quiet hour rather than a live period.
+
 `smoke:gatescopemutation` breaks thirteen rules one at a time and requires the
 suite to go red FOR THAT RULE. Per rule, not in aggregate: "the suite went red"
 is not evidence that the rule you meant to test does anything, and a mutation
