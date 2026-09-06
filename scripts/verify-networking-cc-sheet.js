@@ -119,8 +119,19 @@ console.log('5. Nothing else moved');
 // full diff, because a full diff of 398 KB is not readable output.
 const grew = Buffer.byteLength(body) - Buffer.byteLength(src);
 ok('  body grew only by the gate code (under 3 KB)', grew > 0 && grew < 3072, grew + ' bytes');
-for (const marker of ['anet-wrap', 'function matButton', 'function siteButton', 'BreadcrumbList', 'apcse_teacher_token']) {
+// These are markers of the PAGE BODY. BreadcrumbList used to be in this list and
+// was removed on 2026-09-04: it is theme-level structured data that lives in the
+// rendered document, never in Shopify's Body HTML field. It only ever passed
+// because the sheet being checked wrongly contained the whole rendered page, so
+// the assertion was confirming the bug rather than catching it.
+for (const marker of ['anet-wrap', 'function matButton', 'function siteButton', 'apcse_teacher_token']) {
   ok(`  still carries ${JSON.stringify(marker)}`, body.includes(marker));
+}
+// And the positive form of the same lesson: a body that carries document
+// furniture is a rendered page, not a fragment, and must never be imported.
+for (const tell of ['<!doctype', '<html', '<head>', '</body>', '</html>']) {
+  ok(`  body does NOT contain ${JSON.stringify(tell)} (it is a fragment, not a document)`,
+     !body.toLowerCase().includes(tell.toLowerCase()));
 }
 // The student-facing render path must be untouched.
 ok('  siteButton is byte identical',

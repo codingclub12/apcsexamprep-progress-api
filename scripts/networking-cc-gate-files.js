@@ -136,6 +136,41 @@ function build(body) {
     throw new Error('this body already carries data-file links, so it has been gated already');
   }
 
+  // ── A PAGE BODY IS A FRAGMENT, NEVER A DOCUMENT ───────────────────────────
+  //  This check exists because its absence cost a live page on 2026-09-04.
+  //  The first version of this script took its input straight from
+  //  lib/storefront-fetch.js, which returns the RENDERED page: theme chrome,
+  //  <head>, Shopify's own scripts, the lot. Shopify's Body HTML field holds
+  //  only the fragment the theme drops inside its rte wrapper. Importing the
+  //  rendered page as the body nests a whole document inside the page, and the
+  //  theme then wraps it again.
+  //
+  //  It imported without complaint and every functional check passed, because
+  //  the gate transformation genuinely worked. What it left was a page of
+  //  761,823 bytes where 407,265 had been: three <head> elements, three
+  //  <body> elements, two BreadcrumbList blocks and six copies of the theme
+  //  runtime. The real body is 50,162 bytes.
+  //
+  //  scripts/extract-live-body.js is the tool that pulls the fragment out of a
+  //  rendered page, and CLAUDE.md already said the CSV generators go through
+  //  it. This refusal is here so that reading the convention is not the only
+  //  thing standing between a rendered page and a live import.
+  const DOCUMENT_TELLS = [
+    ['<!doctype', /<!doctype/i],
+    ['<html', /<html[\s>]/i],
+    ['<head>', /<head[\s>]/i],
+    ['</body>', /<\/body>/i],
+    ['</html>', /<\/html>/i],
+  ];
+  const tells = DOCUMENT_TELLS.filter(([, re]) => re.test(body)).map(([n]) => n);
+  if (tells.length) {
+    throw new Error(
+      `this looks like a RENDERED PAGE rather than a Shopify Body HTML fragment (found ${tells.join(', ')}). `
+      + 'Extract the body first: node scripts/extract-live-body.js <rendered.html> <body.html>, '
+      + 'then pass that with --from. Importing a rendered page nests a whole document inside the page.',
+    );
+  }
+
   // Record the student links BEFORE any edit, so survival is checked against
   // what was actually there rather than against an expectation.
   const studentBefore = body.match(/s[dg]:"https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/view"/g) || [];
