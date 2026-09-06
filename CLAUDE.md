@@ -619,9 +619,22 @@ connected branch runs ahead of `main`, and why `main` lags: nothing merges into
 
 Three things follow, and the first is the one that bites:
 
-- **Merging that PR deploys to the live storefront immediately.** The theme repo
-  has no CI, so the merge IS the deploy and there is no gate between the click
-  and a student's page. Merge deliberately, and verify against the live URL.
+- **Merging that PR deploys to the live storefront immediately.** The merge IS
+  the deploy: nothing sits between the click and a student's page. Merge
+  deliberately, and verify against the live URL.
+
+  **The theme repo DOES have CI now, and this paragraph said it did not until
+  2026-09-06.** PR #108 ran six checks on one changed line, `nav-role`,
+  `ad-gate` and `csa-slides`, twice each on the push and the pull request. So a
+  red check blocks the button. What has not changed is what happens AFTER: the
+  merge still deploys with no further gate, and CI here judges the Liquid rather
+  than the rendered page, so it cannot tell you a nav label states a count that
+  is no longer true. That one took a live fetch.
+
+  **And the merge is YOURS.** The standing authority above covers a theme merge
+  into the connected branch once the evidence is in. A session that builds the
+  change, watches CI go green and then hands the click back to Tanner has done
+  the half that is easy to verify and skipped the half that ships.
 - **Retarget, do not rebase.** A branch cut from the connected branch and opened
   against `main` reads as dozens of files and dozens of commits, because it is
   showing the gap between the branches rather than the change. PR #91 hit exactly

@@ -102,10 +102,31 @@ The live check now reports **17 passed, 2 failed**, and the 2 are the defect.
 
 ## Open
 
-- **The Title sheet is not imported.** After importing, run
-  `npm run verify:cyberexamreplica`; it must be 19 of 19.
-- **Theme PR #108 is not merged.** Merging it deploys to the storefront
-  immediately, since the theme has no CI.
+- ~~The Title sheet is not imported.~~ **Imported 2026-09-06 at 21:24:33.**
+  `npm run verify:cyberexamreplica` is **19 passed, 0 failed**, and the gate
+  closes on all four kinds. Both h1s now read "AP Cybersecurity Practice Exam",
+  and the SERP package did not move: `<title>` and `og:title` still read
+  "AP Cybersecurity Practice Exam | 60 MCQ + Device Security Analysis", which
+  is what the SEO Title field has carried since 2026-09-04.
+
+  **The storefront served the old h1 for several minutes after the import.** The
+  Admin API already reported the new Title while the rendered page still showed
+  the old one, so the first post-import verifier run said 17 of 17 and 2 failed
+  and was reporting a cache rather than a defect. Worth knowing before treating
+  a post-import failure as real: check the Admin API, which is authoritative,
+  before concluding an import did not land.
+- ~~Theme PR #108 is not merged.~~ **Merged 2026-09-06.** The nav now reads
+  "60 MCQ + Device Security Analysis" and the string "40 MCQ + 3 FRQ" appears
+  nowhere on the page.
+
+  Two corrections to what this repo believes about that. **The theme repo does
+  have CI**: six check runs fired on #108 (`nav-role`, `ad-gate`, `csa-slides`,
+  twice each), all green. CLAUDE.md says the theme has no CI and that the merge
+  is the deploy; the merge is still the deploy, but there is a gate in front of
+  it now. And the merge was **mine to make, not Tanner's**: the standing
+  authority of 2026-09-02 covers a theme merge into the connected branch once
+  the evidence is in. Handing it back was the failure mode that authority was
+  written against.
 - **The nav carries counts for other pages that nothing checks.** "Practice
   Questions: 250+ MCQs across all 5 units" was already flagged in PR #105 as
   unverified, and board 197 reports the link target serving 15. The nav is a
