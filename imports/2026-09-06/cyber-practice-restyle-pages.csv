@@ -1,0 +1,457 @@
+﻿"Handle","Command","Body HTML"
+"ap-cybersecurity-unit-1-practice","MERGE","
+<style>
+#apcs-cyber-u1-practice{all:initial!important;display:block!important;font-family:Georgia,serif!important;color:#1E1B4B!important;background:#fff!important;line-height:1.65!important;-webkit-font-smoothing:antialiased!important}
+#apcs-cyber-u1-practice *{box-sizing:border-box!important;font-family:Georgia,serif!important}
+#apcs-cyber-u1-practice .phero{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:36px 24px 30px!important;text-align:center!important;border-radius:0 0 12px 12px!important}
+#apcs-cyber-u1-practice .phero-badge{display:inline-block!important;background:rgba(168,85,247,.25)!important;border:1px solid rgba(168,85,247,.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;margin:0 0 14px!important}
+#apcs-cyber-u1-practice .crumb{font-size:13px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0 0 14px!important}
+#apcs-cyber-u1-practice .crumb a{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;text-decoration:none!important}
+#apcs-cyber-u1-practice .crumb a:hover{text-decoration:underline!important}
+#apcs-cyber-u1-practice .crumb span{margin:0 6px!important;color:#8B7BB8!important;-webkit-text-fill-color:#8B7BB8!important}
+#apcs-cyber-u1-practice .phero h1{font-size:clamp(22px,4vw,34px)!important;font-weight:700!important;line-height:1.25!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px!important}
+#apcs-cyber-u1-practice .phero .lede{font-size:15px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0!important;max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
+#apcs-cyber-u1-practice .pwrap{max-width:860px!important;margin:0 auto!important;padding:22px 20px 8px!important}
+#apcs-cyber-u1-practice .pwrap p{margin:0 0 18px!important;font-size:16px!important;color:#374151!important;-webkit-text-fill-color:#374151!important}
+#apcs-cyber-u1-practice .grp{border:1px solid #DDD6FE!important;border-radius:12px!important;padding:16px 18px!important;margin:0 0 14px!important;background:#F5F0FF!important}
+#apcs-cyber-u1-practice .grp h2{margin:0 0 3px!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcs-cyber-u1-practice .grp .why{margin:0 0 13px!important;font-size:15px!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important}
+#apcs-cyber-u1-practice .chips{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:0!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u1-practice .chips li{margin:0!important}
+#apcs-cyber-u1-practice .chips a{display:inline-block!important;padding:6px 13px!important;border:1px solid #C4B5FD!important;border-radius:999px!important;background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u1-practice .chips a:hover{background:#EDE9FE!important;border-color:#8B5CF6!important}
+#apcs-cyber-u1-practice .grp--exam{background:#FFF7ED!important;border-color:#FDBA74!important}
+#apcs-cyber-u1-practice .grp--exam h2{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u1-practice .grp--exam .why{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u1-practice .grp--exam .chips a{border-color:#FDBA74!important;color:#9A3412!important;-webkit-text-fill-color:#9A3412!important}
+#apcs-cyber-u1-practice .grp--exam .chips a:hover{background:#FFEDD5!important;border-color:#EA580C!important}
+#apcs-cyber-u1-practice h2.onward-h{font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:26px 0 8px!important}
+#apcs-cyber-u1-practice .onward{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 8px!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u1-practice .onward li{margin:0!important}
+#apcs-cyber-u1-practice .onward a{display:inline-block!important;padding:8px 15px!important;border-radius:8px!important;background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u1-practice .onward a:hover{background:#581c87!important}
+#apcs-cyber-u1-practice .onward a.alt{background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;border:1px solid #C4B5FD!important}
+#apcs-cyber-u1-practice .onward a.alt:hover{background:#EDE9FE!important}
+@media (max-width:600px){#apcs-cyber-u1-practice .phero{padding:26px 16px 22px!important}#apcs-cyber-u1-practice .pwrap{padding:18px 14px 8px!important}}
+</style>
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""BreadcrumbList"",
+  ""itemListElement"": [
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 1,
+      ""name"": ""Home"",
+      ""item"": ""https://www.apcsexamprep.com/""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 2,
+      ""name"": ""AP Cybersecurity"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 3,
+      ""name"": ""Practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 4,
+      ""name"": ""Unit 1 practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-practice""
+    }
+  ]
+}
+</script>
+<div id=""apcs-cyber-u1-practice"">
+<div class=""phero"">
+<div class=""phero-badge"">Unit 1 &bull; Practice</div>
+<nav class=""crumb"" aria-label=""Breadcrumb""><a href=""/pages/ap-cybersecurity-topics"">AP Cybersecurity</a><span>&rsaquo;</span><a href=""/pages/ap-cybersecurity-practice"">Practice</a><span>&rsaquo;</span>Unit 1</nav>
+<h1>AP Cybersecurity Unit 1 Practice: Introduction to Cybersecurity</h1>
+<p class=""lede"">Every piece of practice for Unit 1, in one place: 26 quizzes, exercises, labs and exams, in the order you should meet them. Unit 1 covers CED topics 1.1, 1.2, 1.3, 1.4, 1.5.</p>
+</div>
+<div class=""pwrap"">
+<p>Work down the page. The quizzes and exercises are short enough to do between lessons, the labs take a class period, and the practice exam at the end is worth saving until the rest is done.</p>
+<div class=""grp""><h2>Lesson quizzes</h2><p class=""why"">One short auto-scored quiz per lesson. Do these as you go, not the night before.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-1-lesson-1-quiz"">Lesson 1 quiz</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-2-quiz"">Lesson 2 quiz</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-3-quiz"">Lesson 3 quiz</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-4-quiz"">Lesson 4 quiz</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-5-quiz"">Lesson 5 quiz</a></li></ul></div>
+<div class=""grp""><h2>Exercises</h2><p class=""why"">Two per lesson. Shorter than a quiz and aimed at one idea each.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-1-lesson-1-exercise-1"">Lesson 1 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-1-exercise-2"">Lesson 1 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-2-exercise-1"">Lesson 2 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-2-exercise-2"">Lesson 2 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-3-exercise-1"">Lesson 3 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-3-exercise-2"">Lesson 3 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-4-exercise-1"">Lesson 4 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-4-exercise-2"">Lesson 4 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-5-exercise-1"">Lesson 5 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-5-exercise-2"">Lesson 5 exercise 2</a></li></ul></div>
+<div class=""grp""><h2>Labs</h2><p class=""why"">Hands-on work in a real terminal. The free-response question asks you to set permissions and firewall rules, so the typing is the practice.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-1-lesson-1-lab"">Lesson 1 lab</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-2-lab"">Lesson 2 lab</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-2-terminal-lab"">Lesson 2 terminal lab</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-3-lab"">Lesson 3 lab</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-4-lab"">Lesson 4 lab</a></li><li><a href=""/pages/ap-cyber-unit-1-lesson-5-lab"">Lesson 5 lab</a></li></ul></div>
+<div class=""grp""><h2>Case file</h2><p class=""why"">One scenario with several sources to read against each other.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-1-case-file-1"">Unit 1 case file</a></li></ul></div>
+<div class=""grp""><h2>Scenario practice</h2><p class=""why"">Short scenarios that ask what you would do and why.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-1-scenario-practice"">Unit 1 scenario practice</a></li></ul></div>
+<div class=""grp""><h2>Free-response practice</h2><p class=""why"">Device Security Analysis sets in the format the exam actually uses.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-1-frq-practice"">Unit 1 FRQ practice</a></li></ul></div>
+<div class=""grp grp--exam""><h2>Unit practice exam</h2><p class=""why"">Twenty questions over the whole unit, and it tells you the answer as soon as you check one. These are not the questions on the test your teacher grades. That one is a separate set of items, written so that working through this page cannot spoil it. Save this until the rest of the unit is done.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-1-exam"">Unit 1 exam</a></li></ul></div>
+<div class=""grp""><h2>Project</h2><p class=""why"">A longer build you can put in front of a teacher.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-1-project"">Unit 1 project</a></li></ul></div>
+<h2 class=""onward-h"">Keep going</h2>
+<ul class=""onward"">
+<li><a href=""/pages/ap-cybersecurity-unit-1-introduction-to-security"">Study Unit 1</a></li>
+<li><a href=""/pages/ap-cybersecurity-practice"">All AP Cybersecurity practice</a></li>
+<li><a class=""alt"" href=""/pages/ap-cybersecurity-complete-course-guide"">Full course guide</a></li>
+<li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-1-social-engineering"">Unit 1: Social engineering</a></li><li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-1-password-attacks"">Unit 1: Password attacks</a></li><li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-1-wireless-security"">Unit 1: Wireless security</a></li><li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-1-ai-driven-threats"">Unit 1: AI driven threats</a></li><li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-1-ai-cyber-defense"">Unit 1: AI cyber defense</a></li>
+</ul>
+</div>
+</div>"
+"ap-cybersecurity-unit-2-practice","MERGE","
+<style>
+#apcs-cyber-u2-practice{all:initial!important;display:block!important;font-family:Georgia,serif!important;color:#1E1B4B!important;background:#fff!important;line-height:1.65!important;-webkit-font-smoothing:antialiased!important}
+#apcs-cyber-u2-practice *{box-sizing:border-box!important;font-family:Georgia,serif!important}
+#apcs-cyber-u2-practice .phero{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:36px 24px 30px!important;text-align:center!important;border-radius:0 0 12px 12px!important}
+#apcs-cyber-u2-practice .phero-badge{display:inline-block!important;background:rgba(168,85,247,.25)!important;border:1px solid rgba(168,85,247,.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;margin:0 0 14px!important}
+#apcs-cyber-u2-practice .crumb{font-size:13px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0 0 14px!important}
+#apcs-cyber-u2-practice .crumb a{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;text-decoration:none!important}
+#apcs-cyber-u2-practice .crumb a:hover{text-decoration:underline!important}
+#apcs-cyber-u2-practice .crumb span{margin:0 6px!important;color:#8B7BB8!important;-webkit-text-fill-color:#8B7BB8!important}
+#apcs-cyber-u2-practice .phero h1{font-size:clamp(22px,4vw,34px)!important;font-weight:700!important;line-height:1.25!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px!important}
+#apcs-cyber-u2-practice .phero .lede{font-size:15px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0!important;max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
+#apcs-cyber-u2-practice .pwrap{max-width:860px!important;margin:0 auto!important;padding:22px 20px 8px!important}
+#apcs-cyber-u2-practice .pwrap p{margin:0 0 18px!important;font-size:16px!important;color:#374151!important;-webkit-text-fill-color:#374151!important}
+#apcs-cyber-u2-practice .grp{border:1px solid #DDD6FE!important;border-radius:12px!important;padding:16px 18px!important;margin:0 0 14px!important;background:#F5F0FF!important}
+#apcs-cyber-u2-practice .grp h2{margin:0 0 3px!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcs-cyber-u2-practice .grp .why{margin:0 0 13px!important;font-size:15px!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important}
+#apcs-cyber-u2-practice .chips{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:0!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u2-practice .chips li{margin:0!important}
+#apcs-cyber-u2-practice .chips a{display:inline-block!important;padding:6px 13px!important;border:1px solid #C4B5FD!important;border-radius:999px!important;background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u2-practice .chips a:hover{background:#EDE9FE!important;border-color:#8B5CF6!important}
+#apcs-cyber-u2-practice .grp--exam{background:#FFF7ED!important;border-color:#FDBA74!important}
+#apcs-cyber-u2-practice .grp--exam h2{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u2-practice .grp--exam .why{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u2-practice .grp--exam .chips a{border-color:#FDBA74!important;color:#9A3412!important;-webkit-text-fill-color:#9A3412!important}
+#apcs-cyber-u2-practice .grp--exam .chips a:hover{background:#FFEDD5!important;border-color:#EA580C!important}
+#apcs-cyber-u2-practice h2.onward-h{font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:26px 0 8px!important}
+#apcs-cyber-u2-practice .onward{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 8px!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u2-practice .onward li{margin:0!important}
+#apcs-cyber-u2-practice .onward a{display:inline-block!important;padding:8px 15px!important;border-radius:8px!important;background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u2-practice .onward a:hover{background:#581c87!important}
+#apcs-cyber-u2-practice .onward a.alt{background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;border:1px solid #C4B5FD!important}
+#apcs-cyber-u2-practice .onward a.alt:hover{background:#EDE9FE!important}
+@media (max-width:600px){#apcs-cyber-u2-practice .phero{padding:26px 16px 22px!important}#apcs-cyber-u2-practice .pwrap{padding:18px 14px 8px!important}}
+</style>
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""BreadcrumbList"",
+  ""itemListElement"": [
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 1,
+      ""name"": ""Home"",
+      ""item"": ""https://www.apcsexamprep.com/""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 2,
+      ""name"": ""AP Cybersecurity"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 3,
+      ""name"": ""Practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 4,
+      ""name"": ""Unit 2 practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-2-practice""
+    }
+  ]
+}
+</script>
+<div id=""apcs-cyber-u2-practice"">
+<div class=""phero"">
+<div class=""phero-badge"">Unit 2 &bull; Practice</div>
+<nav class=""crumb"" aria-label=""Breadcrumb""><a href=""/pages/ap-cybersecurity-topics"">AP Cybersecurity</a><span>&rsaquo;</span><a href=""/pages/ap-cybersecurity-practice"">Practice</a><span>&rsaquo;</span>Unit 2</nav>
+<h1>AP Cybersecurity Unit 2 Practice: Securing Physical Spaces</h1>
+<p class=""lede"">Every piece of practice for Unit 2, in one place: 23 quizzes, exercises, labs and exams, in the order you should meet them. Unit 2 covers CED topics 2.1, 2.2, 2.3, 2.4.</p>
+</div>
+<div class=""pwrap"">
+<p>Work down the page. The quizzes and exercises are short enough to do between lessons, the labs take a class period, and the practice exam at the end is worth saving until the rest is done.</p>
+<div class=""grp""><h2>Lesson quizzes</h2><p class=""why"">One short auto-scored quiz per lesson. Do these as you go, not the night before.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-2-lesson-1-quiz"">Lesson 1 quiz</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-2-quiz"">Lesson 2 quiz</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-3-quiz"">Lesson 3 quiz</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-4-quiz"">Lesson 4 quiz</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-5-quiz"">Lesson 5 quiz</a></li></ul></div>
+<div class=""grp""><h2>Exercises</h2><p class=""why"">Two per lesson. Shorter than a quiz and aimed at one idea each.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-2-lesson-1-exercise-1"">Lesson 1 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-1-exercise-2"">Lesson 1 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-2-exercise-1"">Lesson 2 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-2-exercise-2"">Lesson 2 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-3-exercise-1"">Lesson 3 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-3-exercise-2"">Lesson 3 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-4-exercise-1"">Lesson 4 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-4-exercise-2"">Lesson 4 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-5-exercise-1"">Lesson 5 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-5-exercise-2"">Lesson 5 exercise 2</a></li></ul></div>
+<div class=""grp""><h2>Labs</h2><p class=""why"">Hands-on work in a real terminal. The free-response question asks you to set permissions and firewall rules, so the typing is the practice.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-2-lesson-1-lab"">Lesson 1 lab</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-2-lab"">Lesson 2 lab</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-3-lab"">Lesson 3 lab</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-4-lab"">Lesson 4 lab</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-4-terminal-lab"">Lesson 4 terminal lab</a></li><li><a href=""/pages/ap-cyber-unit-2-lesson-5-lab"">Lesson 5 lab</a></li></ul></div>
+<div class=""grp""><h2>Case file</h2><p class=""why"">One scenario with several sources to read against each other.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-2-case-file-2"">Unit 2 case file</a></li></ul></div>
+<div class=""grp grp--exam""><h2>Unit practice exam</h2><p class=""why"">Twenty questions over the whole unit, and it tells you the answer as soon as you check one. These are not the questions on the test your teacher grades. That one is a separate set of items, written so that working through this page cannot spoil it. Save this until the rest of the unit is done.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-2-exam"">Unit 2 exam</a></li></ul></div>
+<h2 class=""onward-h"">Keep going</h2>
+<ul class=""onward"">
+<li><a href=""/pages/ap-cybersecurity-unit-2-securing-spaces"">Study Unit 2</a></li>
+<li><a href=""/pages/ap-cybersecurity-practice"">All AP Cybersecurity practice</a></li>
+<li><a class=""alt"" href=""/pages/ap-cybersecurity-complete-course-guide"">Full course guide</a></li>
+<li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-2-cyber-foundations"">Unit 2: Cyber foundations</a></li><li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-2-physical-vulnerabilities"">Unit 2: Physical vulnerabilities</a></li><li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-2-protecting-physical-spaces"">Unit 2: Protecting physical spaces</a></li><li><a class=""alt"" href=""/pages/ap-cybersecurity-unit-2-detecting-physical-attacks"">Unit 2: Detecting physical attacks</a></li>
+</ul>
+</div>
+</div>"
+"ap-cybersecurity-unit-3-practice","MERGE","
+<style>
+#apcs-cyber-u3-practice{all:initial!important;display:block!important;font-family:Georgia,serif!important;color:#1E1B4B!important;background:#fff!important;line-height:1.65!important;-webkit-font-smoothing:antialiased!important}
+#apcs-cyber-u3-practice *{box-sizing:border-box!important;font-family:Georgia,serif!important}
+#apcs-cyber-u3-practice .phero{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:36px 24px 30px!important;text-align:center!important;border-radius:0 0 12px 12px!important}
+#apcs-cyber-u3-practice .phero-badge{display:inline-block!important;background:rgba(168,85,247,.25)!important;border:1px solid rgba(168,85,247,.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;margin:0 0 14px!important}
+#apcs-cyber-u3-practice .crumb{font-size:13px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0 0 14px!important}
+#apcs-cyber-u3-practice .crumb a{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;text-decoration:none!important}
+#apcs-cyber-u3-practice .crumb a:hover{text-decoration:underline!important}
+#apcs-cyber-u3-practice .crumb span{margin:0 6px!important;color:#8B7BB8!important;-webkit-text-fill-color:#8B7BB8!important}
+#apcs-cyber-u3-practice .phero h1{font-size:clamp(22px,4vw,34px)!important;font-weight:700!important;line-height:1.25!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px!important}
+#apcs-cyber-u3-practice .phero .lede{font-size:15px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0!important;max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
+#apcs-cyber-u3-practice .pwrap{max-width:860px!important;margin:0 auto!important;padding:22px 20px 8px!important}
+#apcs-cyber-u3-practice .pwrap p{margin:0 0 18px!important;font-size:16px!important;color:#374151!important;-webkit-text-fill-color:#374151!important}
+#apcs-cyber-u3-practice .grp{border:1px solid #DDD6FE!important;border-radius:12px!important;padding:16px 18px!important;margin:0 0 14px!important;background:#F5F0FF!important}
+#apcs-cyber-u3-practice .grp h2{margin:0 0 3px!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcs-cyber-u3-practice .grp .why{margin:0 0 13px!important;font-size:15px!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important}
+#apcs-cyber-u3-practice .chips{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:0!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u3-practice .chips li{margin:0!important}
+#apcs-cyber-u3-practice .chips a{display:inline-block!important;padding:6px 13px!important;border:1px solid #C4B5FD!important;border-radius:999px!important;background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u3-practice .chips a:hover{background:#EDE9FE!important;border-color:#8B5CF6!important}
+#apcs-cyber-u3-practice .grp--exam{background:#FFF7ED!important;border-color:#FDBA74!important}
+#apcs-cyber-u3-practice .grp--exam h2{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u3-practice .grp--exam .why{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u3-practice .grp--exam .chips a{border-color:#FDBA74!important;color:#9A3412!important;-webkit-text-fill-color:#9A3412!important}
+#apcs-cyber-u3-practice .grp--exam .chips a:hover{background:#FFEDD5!important;border-color:#EA580C!important}
+#apcs-cyber-u3-practice h2.onward-h{font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:26px 0 8px!important}
+#apcs-cyber-u3-practice .onward{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 8px!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u3-practice .onward li{margin:0!important}
+#apcs-cyber-u3-practice .onward a{display:inline-block!important;padding:8px 15px!important;border-radius:8px!important;background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u3-practice .onward a:hover{background:#581c87!important}
+#apcs-cyber-u3-practice .onward a.alt{background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;border:1px solid #C4B5FD!important}
+#apcs-cyber-u3-practice .onward a.alt:hover{background:#EDE9FE!important}
+@media (max-width:600px){#apcs-cyber-u3-practice .phero{padding:26px 16px 22px!important}#apcs-cyber-u3-practice .pwrap{padding:18px 14px 8px!important}}
+</style>
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""BreadcrumbList"",
+  ""itemListElement"": [
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 1,
+      ""name"": ""Home"",
+      ""item"": ""https://www.apcsexamprep.com/""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 2,
+      ""name"": ""AP Cybersecurity"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 3,
+      ""name"": ""Practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 4,
+      ""name"": ""Unit 3 practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-3-practice""
+    }
+  ]
+}
+</script>
+<div id=""apcs-cyber-u3-practice"">
+<div class=""phero"">
+<div class=""phero-badge"">Unit 3 &bull; Practice</div>
+<nav class=""crumb"" aria-label=""Breadcrumb""><a href=""/pages/ap-cybersecurity-topics"">AP Cybersecurity</a><span>&rsaquo;</span><a href=""/pages/ap-cybersecurity-practice"">Practice</a><span>&rsaquo;</span>Unit 3</nav>
+<h1>AP Cybersecurity Unit 3 Practice: Securing Networks</h1>
+<p class=""lede"">Every piece of practice for Unit 3, in one place: 31 quizzes, exercises, labs and exams, in the order you should meet them. Unit 3 covers CED topics 3.1, 3.2, 3.3, 3.4, 3.5.</p>
+</div>
+<div class=""pwrap"">
+<p>Work down the page. The quizzes and exercises are short enough to do between lessons, the labs take a class period, and the practice exam at the end is worth saving until the rest is done.</p>
+<div class=""grp""><h2>Lesson quizzes</h2><p class=""why"">One short auto-scored quiz per lesson. Do these as you go, not the night before.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-3-lesson-1-quiz"">Lesson 1 quiz</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-2-quiz"">Lesson 2 quiz</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-3-quiz"">Lesson 3 quiz</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-4-quiz"">Lesson 4 quiz</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-5-quiz"">Lesson 5 quiz</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-6-quiz"">Lesson 6 quiz</a></li></ul></div>
+<div class=""grp""><h2>Exercises</h2><p class=""why"">Two per lesson. Shorter than a quiz and aimed at one idea each.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-3-lesson-1-exercise-1"">Lesson 1 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-1-exercise-2"">Lesson 1 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-2-exercise-1"">Lesson 2 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-2-exercise-2"">Lesson 2 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-1"">Lesson 3 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-2"">Lesson 3 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-4-exercise-1"">Lesson 4 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-4-exercise-2"">Lesson 4 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-5-exercise-1"">Lesson 5 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-5-exercise-2"">Lesson 5 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-6-exercise-1"">Lesson 6 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-6-exercise-2"">Lesson 6 exercise 2</a></li></ul></div>
+<div class=""grp""><h2>Labs</h2><p class=""why"">Hands-on work in a real terminal. The free-response question asks you to set permissions and firewall rules, so the typing is the practice.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-3-lesson-1-lab"">Lesson 1 lab</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-2-lab"">Lesson 2 lab</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-3-lab"">Lesson 3 lab</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-4-lab"">Lesson 4 lab</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-5-lab"">Lesson 5 lab</a></li><li><a href=""/pages/ap-cyber-unit-3-lesson-6-lab"">Lesson 6 lab</a></li></ul></div>
+<div class=""grp""><h2>Extra labs</h2><p class=""why"">Longer investigations that pull a whole unit together.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-3-lab-log-analysis"">Lab: log analysis</a></li><li><a href=""/pages/ap-cyber-unit-3-lab-packet-capture"">Lab: packet capture</a></li><li><a href=""/pages/ap-cyber-unit-3-lab-port-mapping"">Lab: port mapping</a></li></ul></div>
+<div class=""grp""><h2>Case file</h2><p class=""why"">One scenario with several sources to read against each other.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-3-case-file-3"">Unit 3 case file</a></li></ul></div>
+<div class=""grp""><h2>Scenario practice</h2><p class=""why"">Short scenarios that ask what you would do and why.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-3-scenario-practice"">Unit 3 scenario practice</a></li></ul></div>
+<div class=""grp grp--exam""><h2>Unit practice exam</h2><p class=""why"">Twenty questions over the whole unit, and it tells you the answer as soon as you check one. These are not the questions on the test your teacher grades. That one is a separate set of items, written so that working through this page cannot spoil it. Save this until the rest of the unit is done.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-3-exam"">Unit 3 exam</a></li></ul></div>
+<div class=""grp""><h2>Project</h2><p class=""why"">A longer build you can put in front of a teacher.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-3-project"">Unit 3 project</a></li></ul></div>
+<h2 class=""onward-h"">Keep going</h2>
+<ul class=""onward"">
+<li><a href=""/pages/ap-cybersecurity-unit-3-securing-networks"">Study Unit 3</a></li>
+<li><a href=""/pages/ap-cybersecurity-practice"">All AP Cybersecurity practice</a></li>
+<li><a class=""alt"" href=""/pages/ap-cybersecurity-complete-course-guide"">Full course guide</a></li>
+<li><a class=""alt"" href=""/pages/ap-cyber-unit-3-lesson-1"">Unit 3 lesson 1</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-3-lesson-2"">Unit 3 lesson 2</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-3-lesson-3"">Unit 3 lesson 3</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-3-lesson-4"">Unit 3 lesson 4</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-3-lesson-5"">Unit 3 lesson 5</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-3-lesson-6"">Unit 3 lesson 6</a></li>
+</ul>
+</div>
+</div>"
+"ap-cybersecurity-unit-4-practice","MERGE","
+<style>
+#apcs-cyber-u4-practice{all:initial!important;display:block!important;font-family:Georgia,serif!important;color:#1E1B4B!important;background:#fff!important;line-height:1.65!important;-webkit-font-smoothing:antialiased!important}
+#apcs-cyber-u4-practice *{box-sizing:border-box!important;font-family:Georgia,serif!important}
+#apcs-cyber-u4-practice .phero{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:36px 24px 30px!important;text-align:center!important;border-radius:0 0 12px 12px!important}
+#apcs-cyber-u4-practice .phero-badge{display:inline-block!important;background:rgba(168,85,247,.25)!important;border:1px solid rgba(168,85,247,.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;margin:0 0 14px!important}
+#apcs-cyber-u4-practice .crumb{font-size:13px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0 0 14px!important}
+#apcs-cyber-u4-practice .crumb a{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;text-decoration:none!important}
+#apcs-cyber-u4-practice .crumb a:hover{text-decoration:underline!important}
+#apcs-cyber-u4-practice .crumb span{margin:0 6px!important;color:#8B7BB8!important;-webkit-text-fill-color:#8B7BB8!important}
+#apcs-cyber-u4-practice .phero h1{font-size:clamp(22px,4vw,34px)!important;font-weight:700!important;line-height:1.25!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px!important}
+#apcs-cyber-u4-practice .phero .lede{font-size:15px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0!important;max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
+#apcs-cyber-u4-practice .pwrap{max-width:860px!important;margin:0 auto!important;padding:22px 20px 8px!important}
+#apcs-cyber-u4-practice .pwrap p{margin:0 0 18px!important;font-size:16px!important;color:#374151!important;-webkit-text-fill-color:#374151!important}
+#apcs-cyber-u4-practice .grp{border:1px solid #DDD6FE!important;border-radius:12px!important;padding:16px 18px!important;margin:0 0 14px!important;background:#F5F0FF!important}
+#apcs-cyber-u4-practice .grp h2{margin:0 0 3px!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcs-cyber-u4-practice .grp .why{margin:0 0 13px!important;font-size:15px!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important}
+#apcs-cyber-u4-practice .chips{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:0!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u4-practice .chips li{margin:0!important}
+#apcs-cyber-u4-practice .chips a{display:inline-block!important;padding:6px 13px!important;border:1px solid #C4B5FD!important;border-radius:999px!important;background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u4-practice .chips a:hover{background:#EDE9FE!important;border-color:#8B5CF6!important}
+#apcs-cyber-u4-practice .grp--exam{background:#FFF7ED!important;border-color:#FDBA74!important}
+#apcs-cyber-u4-practice .grp--exam h2{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u4-practice .grp--exam .why{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u4-practice .grp--exam .chips a{border-color:#FDBA74!important;color:#9A3412!important;-webkit-text-fill-color:#9A3412!important}
+#apcs-cyber-u4-practice .grp--exam .chips a:hover{background:#FFEDD5!important;border-color:#EA580C!important}
+#apcs-cyber-u4-practice h2.onward-h{font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:26px 0 8px!important}
+#apcs-cyber-u4-practice .onward{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 8px!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u4-practice .onward li{margin:0!important}
+#apcs-cyber-u4-practice .onward a{display:inline-block!important;padding:8px 15px!important;border-radius:8px!important;background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u4-practice .onward a:hover{background:#581c87!important}
+#apcs-cyber-u4-practice .onward a.alt{background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;border:1px solid #C4B5FD!important}
+#apcs-cyber-u4-practice .onward a.alt:hover{background:#EDE9FE!important}
+@media (max-width:600px){#apcs-cyber-u4-practice .phero{padding:26px 16px 22px!important}#apcs-cyber-u4-practice .pwrap{padding:18px 14px 8px!important}}
+</style>
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""BreadcrumbList"",
+  ""itemListElement"": [
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 1,
+      ""name"": ""Home"",
+      ""item"": ""https://www.apcsexamprep.com/""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 2,
+      ""name"": ""AP Cybersecurity"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 3,
+      ""name"": ""Practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 4,
+      ""name"": ""Unit 4 practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-4-practice""
+    }
+  ]
+}
+</script>
+<div id=""apcs-cyber-u4-practice"">
+<div class=""phero"">
+<div class=""phero-badge"">Unit 4 &bull; Practice</div>
+<nav class=""crumb"" aria-label=""Breadcrumb""><a href=""/pages/ap-cybersecurity-topics"">AP Cybersecurity</a><span>&rsaquo;</span><a href=""/pages/ap-cybersecurity-practice"">Practice</a><span>&rsaquo;</span>Unit 4</nav>
+<h1>AP Cybersecurity Unit 4 Practice: Securing Devices</h1>
+<p class=""lede"">Every piece of practice for Unit 4, in one place: 22 quizzes, exercises, labs and exams, in the order you should meet them. Unit 4 covers CED topics 4.1, 4.2, 4.3, 4.4.</p>
+</div>
+<div class=""pwrap"">
+<p>Work down the page. The quizzes and exercises are short enough to do between lessons, the labs take a class period, and the practice exam at the end is worth saving until the rest is done.</p>
+<div class=""grp""><h2>Lesson quizzes</h2><p class=""why"">One short auto-scored quiz per lesson. Do these as you go, not the night before.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-4-lesson-1-quiz"">Lesson 1 quiz</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-2-quiz"">Lesson 2 quiz</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-3-quiz"">Lesson 3 quiz</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-4-quiz"">Lesson 4 quiz</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-5-quiz"">Lesson 5 quiz</a></li></ul></div>
+<div class=""grp""><h2>Exercises</h2><p class=""why"">Two per lesson. Shorter than a quiz and aimed at one idea each.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-4-lesson-1-exercise-1"">Lesson 1 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-1-exercise-2"">Lesson 1 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-2-exercise-1"">Lesson 2 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-2-exercise-2"">Lesson 2 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-3-exercise-1"">Lesson 3 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-3-exercise-2"">Lesson 3 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-4-exercise-1"">Lesson 4 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-4-exercise-2"">Lesson 4 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-5-exercise-1"">Lesson 5 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-5-exercise-2"">Lesson 5 exercise 2</a></li></ul></div>
+<div class=""grp""><h2>Labs</h2><p class=""why"">Hands-on work in a real terminal. The free-response question asks you to set permissions and firewall rules, so the typing is the practice.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-4-lesson-1-lab"">Lesson 1 lab</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-2-lab"">Lesson 2 lab</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-3-lab"">Lesson 3 lab</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-4-lab"">Lesson 4 lab</a></li><li><a href=""/pages/ap-cyber-unit-4-lesson-5-lab"">Lesson 5 lab</a></li></ul></div>
+<div class=""grp""><h2>Case file</h2><p class=""why"">One scenario with several sources to read against each other.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-4-case-file-4"">Unit 4 case file</a></li></ul></div>
+<div class=""grp grp--exam""><h2>Unit practice exam</h2><p class=""why"">Twenty questions over the whole unit, and it tells you the answer as soon as you check one. These are not the questions on the test your teacher grades. That one is a separate set of items, written so that working through this page cannot spoil it. Save this until the rest of the unit is done.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-4-exam"">Unit 4 exam</a></li></ul></div>
+<h2 class=""onward-h"">Keep going</h2>
+<ul class=""onward"">
+<li><a href=""/pages/ap-cybersecurity-unit-4-securing-devices"">Study Unit 4</a></li>
+<li><a href=""/pages/ap-cybersecurity-practice"">All AP Cybersecurity practice</a></li>
+<li><a class=""alt"" href=""/pages/ap-cybersecurity-complete-course-guide"">Full course guide</a></li>
+<li><a class=""alt"" href=""/pages/ap-cyber-unit-4-lesson-1"">Unit 4 lesson 1</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-4-lesson-2"">Unit 4 lesson 2</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-4-lesson-3"">Unit 4 lesson 3</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-4-lesson-4"">Unit 4 lesson 4</a></li>
+</ul>
+</div>
+</div>"
+"ap-cybersecurity-unit-5-practice","MERGE","
+<style>
+#apcs-cyber-u5-practice{all:initial!important;display:block!important;font-family:Georgia,serif!important;color:#1E1B4B!important;background:#fff!important;line-height:1.65!important;-webkit-font-smoothing:antialiased!important}
+#apcs-cyber-u5-practice *{box-sizing:border-box!important;font-family:Georgia,serif!important}
+#apcs-cyber-u5-practice .phero{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:36px 24px 30px!important;text-align:center!important;border-radius:0 0 12px 12px!important}
+#apcs-cyber-u5-practice .phero-badge{display:inline-block!important;background:rgba(168,85,247,.25)!important;border:1px solid rgba(168,85,247,.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;margin:0 0 14px!important}
+#apcs-cyber-u5-practice .crumb{font-size:13px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0 0 14px!important}
+#apcs-cyber-u5-practice .crumb a{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;text-decoration:none!important}
+#apcs-cyber-u5-practice .crumb a:hover{text-decoration:underline!important}
+#apcs-cyber-u5-practice .crumb span{margin:0 6px!important;color:#8B7BB8!important;-webkit-text-fill-color:#8B7BB8!important}
+#apcs-cyber-u5-practice .phero h1{font-size:clamp(22px,4vw,34px)!important;font-weight:700!important;line-height:1.25!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px!important}
+#apcs-cyber-u5-practice .phero .lede{font-size:15px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0!important;max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
+#apcs-cyber-u5-practice .pwrap{max-width:860px!important;margin:0 auto!important;padding:22px 20px 8px!important}
+#apcs-cyber-u5-practice .pwrap p{margin:0 0 18px!important;font-size:16px!important;color:#374151!important;-webkit-text-fill-color:#374151!important}
+#apcs-cyber-u5-practice .grp{border:1px solid #DDD6FE!important;border-radius:12px!important;padding:16px 18px!important;margin:0 0 14px!important;background:#F5F0FF!important}
+#apcs-cyber-u5-practice .grp h2{margin:0 0 3px!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcs-cyber-u5-practice .grp .why{margin:0 0 13px!important;font-size:15px!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important}
+#apcs-cyber-u5-practice .chips{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:0!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u5-practice .chips li{margin:0!important}
+#apcs-cyber-u5-practice .chips a{display:inline-block!important;padding:6px 13px!important;border:1px solid #C4B5FD!important;border-radius:999px!important;background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u5-practice .chips a:hover{background:#EDE9FE!important;border-color:#8B5CF6!important}
+#apcs-cyber-u5-practice .grp--exam{background:#FFF7ED!important;border-color:#FDBA74!important}
+#apcs-cyber-u5-practice .grp--exam h2{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u5-practice .grp--exam .why{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#apcs-cyber-u5-practice .grp--exam .chips a{border-color:#FDBA74!important;color:#9A3412!important;-webkit-text-fill-color:#9A3412!important}
+#apcs-cyber-u5-practice .grp--exam .chips a:hover{background:#FFEDD5!important;border-color:#EA580C!important}
+#apcs-cyber-u5-practice h2.onward-h{font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:26px 0 8px!important}
+#apcs-cyber-u5-practice .onward{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 8px!important;padding:0!important;list-style:none!important}
+#apcs-cyber-u5-practice .onward li{margin:0!important}
+#apcs-cyber-u5-practice .onward a{display:inline-block!important;padding:8px 15px!important;border-radius:8px!important;background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-size:15px!important}
+#apcs-cyber-u5-practice .onward a:hover{background:#581c87!important}
+#apcs-cyber-u5-practice .onward a.alt{background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;border:1px solid #C4B5FD!important}
+#apcs-cyber-u5-practice .onward a.alt:hover{background:#EDE9FE!important}
+@media (max-width:600px){#apcs-cyber-u5-practice .phero{padding:26px 16px 22px!important}#apcs-cyber-u5-practice .pwrap{padding:18px 14px 8px!important}}
+</style>
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""BreadcrumbList"",
+  ""itemListElement"": [
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 1,
+      ""name"": ""Home"",
+      ""item"": ""https://www.apcsexamprep.com/""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 2,
+      ""name"": ""AP Cybersecurity"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 3,
+      ""name"": ""Practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice""
+    },
+    {
+      ""@type"": ""ListItem"",
+      ""position"": 4,
+      ""name"": ""Unit 5 practice"",
+      ""item"": ""https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-5-practice""
+    }
+  ]
+}
+</script>
+<div id=""apcs-cyber-u5-practice"">
+<div class=""phero"">
+<div class=""phero-badge"">Unit 5 &bull; Practice</div>
+<nav class=""crumb"" aria-label=""Breadcrumb""><a href=""/pages/ap-cybersecurity-topics"">AP Cybersecurity</a><span>&rsaquo;</span><a href=""/pages/ap-cybersecurity-practice"">Practice</a><span>&rsaquo;</span>Unit 5</nav>
+<h1>AP Cybersecurity Unit 5 Practice: Securing Applications and Data</h1>
+<p class=""lede"">Every piece of practice for Unit 5, in one place: 27 quizzes, exercises, labs and exams, in the order you should meet them. Unit 5 covers CED topics 5.1, 5.2, 5.3, 5.4, 5.5, 5.6.</p>
+</div>
+<div class=""pwrap"">
+<p>Work down the page. The quizzes and exercises are short enough to do between lessons, the labs take a class period, and the practice exam at the end is worth saving until the rest is done.</p>
+<div class=""grp""><h2>Lesson quizzes</h2><p class=""why"">One short auto-scored quiz per lesson. Do these as you go, not the night before.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-5-lesson-1-quiz"">Lesson 1 quiz</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-2-quiz"">Lesson 2 quiz</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-3-quiz"">Lesson 3 quiz</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-4-quiz"">Lesson 4 quiz</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-5-quiz"">Lesson 5 quiz</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-6-quiz"">Lesson 6 quiz</a></li></ul></div>
+<div class=""grp""><h2>Exercises</h2><p class=""why"">Two per lesson. Shorter than a quiz and aimed at one idea each.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1"">Lesson 1 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2"">Lesson 1 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1"">Lesson 2 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2"">Lesson 2 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1"">Lesson 3 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2"">Lesson 3 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1"">Lesson 4 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2"">Lesson 4 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"">Lesson 5 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2"">Lesson 5 exercise 2</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1"">Lesson 6 exercise 1</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2"">Lesson 6 exercise 2</a></li></ul></div>
+<div class=""grp""><h2>Labs</h2><p class=""why"">Hands-on work in a real terminal. The free-response question asks you to set permissions and firewall rules, so the typing is the practice.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-5-lesson-1-lab"">Lesson 1 lab</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-2-lab"">Lesson 2 lab</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-3-lab"">Lesson 3 lab</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-4-lab"">Lesson 4 lab</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-5-lab"">Lesson 5 lab</a></li><li><a href=""/pages/ap-cyber-unit-5-lesson-6-lab"">Lesson 6 lab</a></li></ul></div>
+<div class=""grp""><h2>Case file</h2><p class=""why"">One scenario with several sources to read against each other.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-5-case-file-5"">Unit 5 case file</a></li></ul></div>
+<div class=""grp grp--exam""><h2>Unit practice exam</h2><p class=""why"">Twenty questions over the whole unit, and it tells you the answer as soon as you check one. These are not the questions on the test your teacher grades. That one is a separate set of items, written so that working through this page cannot spoil it. Save this until the rest of the unit is done.</p><ul class=""chips""><li><a href=""/pages/ap-cyber-unit-5-exam"">Unit 5 exam</a></li><li><a href=""/pages/ap-cyber-unit-5-practice-exam"">Unit 5 practice exam</a></li></ul></div>
+<h2 class=""onward-h"">Keep going</h2>
+<ul class=""onward"">
+<li><a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Study Unit 5</a></li>
+<li><a href=""/pages/ap-cybersecurity-practice"">All AP Cybersecurity practice</a></li>
+<li><a class=""alt"" href=""/pages/ap-cybersecurity-complete-course-guide"">Full course guide</a></li>
+<li><a class=""alt"" href=""/pages/ap-cyber-unit-5-lesson-1"">Unit 5 lesson 1</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-5-lesson-2"">Unit 5 lesson 2</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-5-lesson-3"">Unit 5 lesson 3</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-5-lesson-4"">Unit 5 lesson 4</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-5-lesson-5"">Unit 5 lesson 5</a></li><li><a class=""alt"" href=""/pages/ap-cyber-unit-5-lesson-6"">Unit 5 lesson 6</a></li>
+</ul>
+</div>
+</div>"

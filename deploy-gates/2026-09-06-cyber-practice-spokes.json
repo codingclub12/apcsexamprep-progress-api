@@ -1,0 +1,145 @@
+{
+  "change": "the five cyber practice spokes stop calling the unit exam 'the full unit test', and get the course's own look instead of a second design system",
+  "_context": [
+    "Three questions from Tanner about /pages/ap-cybersecurity-unit-1-practice.",
+    "The third one, whether the linking is any good, needed no change: all 35",
+    "internal links answer 200, the asset list matches the canonical data, and the",
+    "page is reachable from the umbrella and from the unit study page. The other",
+    "two did.",
+    "",
+    "1. THE EXAM CARD SAID SOMETHING FALSE. It read 'Unit exam' / 'The full unit",
+    "test, once you have done the rest'. The online unit exam is not the",
+    "instrument a teacher grades: docs/cyber-unit1-bundle-vs-online.md and",
+    "docs/cyber-unit-tests-availability.md compared all five against the paper",
+    "bundle item by item, zero shared items, highest similarity 0.24. Re-measured",
+    "2026-09-06 against the five server-side lesson quizzes as well: zero exact",
+    "stems, highest token overlap 0.15. So it earns a place on a practice page,",
+    "and the sentence was false in the direction that costs a teacher.",
+    "",
+    "2. 'NOT STYLED' HAS A MECHANISM AND IT IS ONE LINE OF THEME CSS. The theme",
+    "sets html{font-size:calc(var(--font-body-scale) * 62.5%)}, so every rem in",
+    "these bodies rendered at about ten pixels. The lede asked for 1.05rem and got",
+    "10.5px while the paragraph under it, having no font-size, inherited 16px, so",
+    "the page's summary line was smaller than its body text. Valid CSS, parses,",
+    "serves, wrong by a factor the stylesheet never mentions.",
+    "",
+    "Measured on the live bodies the same day: ucnav, the purple unit rail, appears",
+    "29 times on ap-cyber-unit-1-exam and 52 on a lesson quiz, and zero times on",
+    "any of the five spokes. So did Georgia and the gradient hero.",
+    "",
+    "3. THE ONLY STRUCTURED DATA ON THE PAGE NAMED THE WRONG COURSE. The theme",
+    "emits one BreadcrumbList per page with AP Computer Science A hardcoded as",
+    "item 2. Every real cyber page answers it with its own; these five carried",
+    "none, so the CSA claim stood unopposed on an AP Cybersecurity page.",
+    "",
+    "WHY THE LIVE CHECK IS NOT ABOUT THIS DEPLOY. Merging ships the repo to",
+    "Railway, and nothing here is on the server render path: this is a generator,",
+    "a checker, a smoke suite, a verifier, a run note and a CSV. The pages change",
+    "when the Matrixify sheet is imported, which is a separate human step. So the",
+    "live check below closes on the IMPORT rather than on the deploy, and saying",
+    "otherwise would be the same defect as a live check asserting something that",
+    "was already true."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the spoke bodies, the sheet, and thirteen mutations one rule at a time",
+      "command": "npm run --silent smoke:cyberpracticerestyle",
+      "expect": "80 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the sibling package still validates, including the four mutations this branch nearly disabled",
+      "_why": "Adding a class to the Keep going heading made four of its sixteen mutations match nothing, and the suite reported four RULES as missed. The anchor is class-tolerant now and an inert case fails as itself.",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect": "every one caught by the rule that claims it"
+    },
+    {
+      "kind": "suite",
+      "name": "the sheet clears the Matrixify preflight",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-06/cyber-practice-restyle-pages.csv",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation reaches the same conclusions from the raw CSV and the live bodies",
+      "_why": "Python, sharing no code with the generator: its own CSV reader, its own idea of what the page should say, and no import of the JS spec or of spokeBody. The link-loss guard in particular is re-derived by set difference on the two raw files rather than from what the generator believed it preserved. Proved not hollow by mutating the SHEET five ways (unmark the exam card, put a rem back, restore the false claim, name the CSA hub, drop a link); all five go red.",
+      "command": "python3 scripts/cyber-practice-restyle-rederive.py",
+      "expect": "OK - 82 checks re-derived from the sheet and the live bodies, independently of the generator"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WAS ACTUALLY HOLLOW: test for the class as a substring instead of on the element",
+      "_why": "This is how the check shipped in its first cut. Every one of these bodies defines .grp--exam in its own stylesheet a few hundred bytes above the card, so includes('grp--exam') is true whether or not the div carries the modifier. Stripping it off the element left the suite green. Caught in the same hour it was written, which is the only reason it is a comment rather than a live defect.",
+      "file": "tools/ap-cyber-ced/generate-practice-restyle.js",
+      "find": "    if (!/class=\"grp grp--exam\"/.test(next)) {",
+      "replace": "    if (!next.includes('grp--exam')) {",
+      "command": "npm run --silent smoke:cyberpracticerestyle",
+      "expect_failure": "\"exam card not marked apart\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop refusing a MERGE that drops a link the live page has",
+      "_why": "The single most costly thing this sheet could do. A MERGE republishes the whole Body HTML cell, so a link that is not in the new body stops existing on the live page, silently.",
+      "file": "tools/ap-cyber-ced/generate-practice-restyle.js",
+      "find": "  const lost = [...before].filter((h) => !after.has(h));",
+      "replace": "  const lost = [];",
+      "command": "npm run --silent smoke:cyberpracticerestyle",
+      "expect_failure": "\"link loss\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop requiring the sentence that says the exam is a different instrument",
+      "_why": "The point of the change. Without this the card can go back to reading like the graded test and nothing notices.",
+      "file": "tools/ap-cyber-ced/generate-practice-restyle.js",
+      "find": "    if (!/not the questions on the test your teacher grades/.test(next)) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:cyberpracticerestyle",
+      "expect_failure": "\"exam disclaimer removed\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop refusing rem, the thing that made the page look unstyled",
+      "_why": "Invisible in review: rem is valid CSS and the 62.5% root is in the theme rather than in this body, so the only way to catch a regression is mechanically.",
+      "file": "tools/ap-cyber-ced/generate-practice-restyle.js",
+      "find": "  const rems = [...next.matchAll(/[\\d.]+rem/g)].map((m) => m[0]);",
+      "replace": "  const rems = [];",
+      "command": "npm run --silent smoke:cyberpracticerestyle",
+      "expect_failure": "\"rem sneaks back in\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "let the page name the CSA course in its own breadcrumb",
+      "_why": "The defect being fixed, pointed back at itself: a spoke that emits a BreadcrumbList naming ap-csa-exam-prep is worse than emitting none, because it agrees with the theme's wrong claim in the page's own voice.",
+      "file": "tools/ap-cyber-ced/generate-practice-restyle.js",
+      "find": "  if (/ap-csa-exam-prep/.test(next)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberpracticerestyle",
+      "expect_failure": "\"breadcrumb names the CSA course\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "let a mutation that changes no bytes count as a passing rule",
+      "_why": "The sibling suite's failure mode this branch hit. Four of its mutations spliced against a literal heading tag, the heading grew a class, the replacements matched nothing, and four RULES were reported as missed. A mutation that does not mutate has to fail as itself, because that finding and a hollow rule send you to opposite ends of the repo. The gate refused the first version of THIS check, correctly: as a bare `if` in the loop the guard was unreachable, since every case does mutate, so deleting it changed no verdict. It is a named function asserted both ways now, which is what makes it breakable.",
+      "file": "smoke/cyber-practice-hub.js",
+      "find": "  return JSON.stringify(rows) !== before;",
+      "replace": "  return true;",
+      "command": "npm run --silent smoke:cyberpractice",
+      "expect_failure": "didMutate sees a no-op"
+    },
+    {
+      "kind": "live",
+      "name": "the five spokes serve the new body, after the Matrixify import",
+      "_why": "DEFERRED UNTIL THE IMPORT, not until the deploy: nothing in this change is on the server render path. Measured before the import: 5 passed, 36 failed. The 36 are exactly what the import flips. The 5 that pass are the asset-link counts, which are true on both sides and are the no-loss guard rather than the change.",
+      "command": "node scripts/verify-cyber-practice-spokes-live.js",
+      "expect": "cyber practice spokes, live"
+    }
+  ],
+  "not_covered": [
+    "Whether the five unit exams should be public practice or premium assessment. Board 228 noindexed them on tier-3 reasoning, and the spoke is indexed, links straight to them, and calls the set 'Free and auto-scored'. That is a positioning decision and this pass deliberately did not make it. Labelling them honestly is right under either answer.",
+    "The Unit 3 exam key. Answering B twenty times scores 16 of 20 and there is no D anywhere in the key. Found 2026-09-01, unchanged on the body served today, and a different page from the ones this sheet touches.",
+    "The theme's head BreadcrumbList, which names AP Computer Science A on every page of every course. Theme work, and board 148 owns the neighbouring liquid problem.",
+    "The em-dashes in the exam pages' own hero copy. Those are page bodies this package does not own; rewriting them is its own sheet.",
+    "Whether the restyle helps. The spokes went live 2026-09-04, board 227 is already watching them for practice-keyword cannibalisation, and there is no baseline for a look."
+  ]
+}
