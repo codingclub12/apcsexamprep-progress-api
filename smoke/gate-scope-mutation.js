@@ -194,6 +194,17 @@ const MUTATIONS = [
       'legacy row: reason string unchanged'],
   },
   {
+    // The key is a bare string shared across three pages on two origins, which
+    // is exactly the kind of thing that drifts without anyone noticing. It
+    // already had: the board shipped reading apcs_teacher_token, and nothing
+    // writes that.
+    name: 'the board stops reading the token key the Command Center writes',
+    file: 'page',
+    find: '      return localStorage.getItem("apcse_teacher_token") ||',
+    repl: '      return localStorage.getItem("apcs_teacher_token") ||',
+    must: ['page: it rendered a board'],
+  },
+  {
     name: 'the page collapses mixed into one of the settled states',
     file: 'page',
     find: '      if (roll.state === "none") return "on";\n      return "mixed";',

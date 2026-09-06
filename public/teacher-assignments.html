@@ -147,9 +147,15 @@
   // The theme's Command Center signs the teacher in and leaves the token here.
   // Both key names are read because two pages in this repo already read both and
   // a page that picks one of them silently signs half the teachers out.
+  // apcse_teacher_token is the key the Command Center and the gradebook page
+  // ACTUALLY write, checked against both live page bodies on 2026-09-06. Note
+  // the "e": apcs_teacher_token is a different string and is written by nothing.
+  // The other two are kept as fallbacks and cost nothing, but the first one is
+  // the one that finds a token.
   function token() {
     try {
-      return localStorage.getItem("apcs_teacher_token") ||
+      return localStorage.getItem("apcse_teacher_token") ||
+             localStorage.getItem("apcs_teacher_token") ||
              localStorage.getItem("teacher_token") || "";
     } catch (e) { return ""; }
   }
