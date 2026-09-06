@@ -110,10 +110,80 @@ Two of my own mistakes, both in the test rather than the code:
   TEXT of the correct option now, and a deliberately wrong submission is asserted
   to score 0, or the correct one proves nothing.
 
+## Step 2, written the same session
+
+`scripts/csa-11-quiz-mount-csv.js` swaps the 3,602 bytes carrying the two MCQ
+blocks for the mount container the cyber quizzes already use, and appends the
+mount script. 103,181 bytes down to 99,806, `data-answer` 9 to 7, preflight clear
+with the original body handed over for the round trip.
+
+The span is held as a file, `imports/2026-09-06/csa-11-removed-span.html`, rather
+than as a pattern. A regex over 103KB of hand-authored markup is how the wrong
+thing gets deleted, and the thing being deleted here sits between two headings
+that both have to survive.
+
+Three things stay, each for a reason worth writing down. The scenario paragraph:
+Part C asks the student to explain Jordan's remaining bug, so removing the setup
+would orphan it. Part C itself: its textarea is submitted nowhere, so it is not a
+graded column and must not become one under the no-free-text rule.
+`data-item-id="1.1-quiz"`: `apcs-reporter.js` returns early on `if (!exs.length)`,
+so with no `.apcs-ex` children it will not fire, and removing the attribute would
+be an unforced change to markup other things may read.
+
+### The gradebook column survives the move, checked before writing any of it
+
+`attempts` and `progress` are different tables, so the real question was whether
+1.1 would simply go dark for teachers. It does not.
+`lib/gradebook-contract.js` keys columns by `unit-1/1.1/quiz` and normalises both
+sources onto it. Three students on a scratch database, one scored each way:
+
+    attempts 2/2   ->  earned 2, possible 2, pct 100, source "attempts"
+    progress 100%  ->  earned 2, possible 2, pct 100, source "progress"
+    progress  50%  ->  earned 1, possible 2, pct  50, source "progress"
+
+Same column, same manifest denominator, `class_avg_pct` 83.3 across the three.
+
+### Nothing in this repo would have caught a 3.5KB mistake
+
+`lib/live-body-guard.js` has a `contentLoss` check and the real removal returned
+zero findings from it. It is not broken, it is coarse. Measured: nothing on a
+2,036 byte deletion, 36 entries on a two-thirds one. So the generator's own
+round trip is the load-bearing guard here, and it had to be proven able to go red
+rather than assumed to be.
+
+### The mutation run found a hole rather than a hollow assertion
+
+`smoke/csa-quiz-mount.js` mutation tests every rule. Eleven source mutations, all
+red for their own rule. One case is the reason this section exists:
+
+**A body carrying the span TWICE passes every check.** `replace()` takes the
+first occurrence, so the length is right. Swapping the mount back for the span
+returns the original byte for byte. The answer count still drops by exactly 2,
+because the surviving duplicate supplies the two attributes the count expected to
+lose. Every rule green, and the questions and their keys still on the page.
+
+`replaceSpan`'s occurrence count was the only thing in front of that, so `build()`
+now also asserts the span is absent from the result. Two independent guards on the
+one thing the file exists to do.
+
+`verifyReplacement` came out of `replaceSpan` for the same reason `verifyInsertion`
+came out of `splice`: a suite that can only call `replaceSpan` cannot hand it a
+corrupted body, and the mutation that matters transposes two bytes without
+changing the length, which no length check can see.
+
+### And the mutation harness itself was wrong first
+
+`if (hits !== 1)` appears twice in `lib/page-section-insert.js`. The first run
+patched the copy in `splice()`, left `replaceSpan` untouched, and reported the
+occurrence rule hollow. The harness refuses a mutation pattern that is not unique
+in its file now. This is the third time in two days that a check aimed at the
+wrong string reported a confident, wrong result, and all three were caught by
+looking at exit codes rather than at messages.
+
 ## What is still open
 
-- **Step 2 for 1.1 has not been written.** Until the page body changes, the leak
-  and the decoration both remain.
+- **The import has not run.** The sheet is generated and preflight-clear, and
+  until it is imported the leak on 1.1 is live and the lock is still decoration.
 - **Thirteen more Unit 1 quizzes**, then 121 CFUs, then units 2 to 4. Each quiz
   needs its page read: the parts, the answer letters and the feedback all live in
   the body and none of it is derivable from this repo.
