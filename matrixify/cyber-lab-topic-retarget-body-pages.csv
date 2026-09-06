@@ -1,0 +1,106 @@
+﻿"Handle","Command","Body HTML"
+"ap-cyber-unit-2-lesson-4-terminal-lab","MERGE","<div class=""lab-page"">
+<style>
+.lab-page{max-width:1200px;margin:0 auto;font-family:Georgia,serif;color:#1F2937}
+.lab-page h1{font-family:""DM Serif Display"",Georgia,serif;font-size:33px;line-height:1.2;
+color:#1E1B4B;font-weight:400;margin:0 0 14px}
+.lab-page .lab-page-lede{font-size:18px;line-height:1.65;color:#4B5563;margin:0 0 14px;
+max-width:74ch}
+.lab-page p{font-size:16.5px;line-height:1.7;margin:0 0 14px;max-width:74ch}
+.lab-page a{color:#6B21A8}
+.lab-page .lab-page-note{background:#F0FDF4;border:1px solid #BBF7D0;
+border-left:4px solid #15803D;padding:13px 17px;border-radius:0 10px 10px 0;margin:18px 0 26px}
+.lab-page .lab-sib{background:#F5F0FF;border:1px solid #e9d5ff;border-radius:14px;
+margin:38px 0 0;padding:22px 24px;max-width:900px}
+.lab-page .lab-sib h2{font-family:""DM Serif Display"",Georgia,serif;font-size:24px;
+color:#1E1B4B;font-weight:400;margin:0 0 8px}
+.lab-page .lab-sib-list{list-style:none;padding:0;margin:14px 0 16px}
+.lab-page .lab-sib-list li{background:#fff;border:1px solid #e9d5ff;border-radius:11px;
+padding:12px 15px;margin:0 0 9px}
+.lab-page .lab-sib-list a{font-family:""DM Serif Display"",Georgia,serif;font-size:17px;
+text-decoration:none}
+.lab-page .lab-sib-focus{display:block;font-family:""DM Sans"",system-ui,sans-serif;
+font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+color:#7C3AED;margin-top:5px}
+.apcs-offline{border:1px solid #e3c9c9;background:#fdf6f6;border-radius:8px;padding:15px 17px;margin:8px 0;}.apcs-offline p{margin:0 0 9px;line-height:1.55;}.apcs-offline p:last-child{margin-bottom:0;}.apcs-offline .apcs-offline-h{font-weight:700;}
+</style>
+<h1>Read the badge log</h1>
+<p class=""lab-page-lede"">A week of badge swipes from a building nobody has audited since March. Three of the oddities in it are attacks. Two are not, and telling them apart is the lab.</p>
+<p>Everything runs in this page. The log, the door reference and the badge list are simulated, so read them in any order and as many times as you need.</p>
+<p>Finding something strange in a log is the easy half. A person working late and a badge used at 02:47 are both unusual, and only one of them is a problem. Decide what makes the difference before you decide which rows to flag.</p>
+<p class=""lab-page-note"">This one is practice. It checks your work on the page and records nothing.</p>
+<div id=""apcs-lab-2-4-lab""><p id=""apcs-lab-2-4-lab-loading"">Loading the lab...</p></div>
+<script>window.APCS_LAB={base:""https://progress.apcsexamprep.com""};</script>
+<script>
+(function(){
+  var MID=""apcs-lab-2-4-lab"",SID=""apcs-lab-2-4-lab-loading"";
+  var shown=false;
+  function fallback(){
+    if(shown)return;shown=true;
+    var el=document.getElementById(MID);
+    if(el)el.innerHTML=""<div class=\""apcs-offline\""><p class=\""apcs-offline-h\"">This lab could not be loaded.</p><p>The practice service is not responding right now. This is on our side, not yours, and it is usually brief.</p><p>Nothing you have written is affected. These are self-scored and nothing you type is ever sent anywhere, so there is no work to lose.</p><p>Reload in a minute, or <a href=\""https://www.apcsexamprep.com/pages/ap-cybersecurity-labs\"">browse the other labs</a>, which keeps working while this is down.</p></div>"";
+  }
+  window.APCSPageFallback=window.APCSPageFallback||{};
+  window.APCSPageFallback[MID]=fallback;
+  window.APCSPageGo=window.APCSPageGo||{};
+  window.APCSPageGo[MID]=function(){
+    var el=document.getElementById(MID);
+    if(!el)return;
+    if(!window[""APCSLab""]){fallback();return;}
+    var p;
+    try{p=window[""APCSLab""].mountById(el,""ap-cybersecurity"",""2.4-lab"");}
+    catch(e){fallback();return;}
+    if(p&&typeof p.catch===""function""){shown=false;p.catch(fallback);}
+  };
+  setTimeout(function(){if(document.getElementById(SID))fallback();},12000);
+})();
+</script>
+<script src=""https://progress.apcsexamprep.com/lab-player.js"" onerror=""window.APCSPageFallback['apcs-lab-2-4-lab']()""></script>
+<script>window.APCSPageGo[""apcs-lab-2-4-lab""]();</script>
+<div class=""lab-sib"">
+<h2>More hands-on practice</h2>
+<p>The other labs in this course:</p>
+<ul class=""lab-sib-list"">
+<li>
+<a href=""https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-2-terminal-lab"">Find the tournament code</a><span class=""lab-sib-focus"">Topic 4.3</span>
+</li>
+</ul>
+<p>All of them: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-labs"">the terminal labs hub</a>. The exam asks you to write commands in its free-response question, and <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice"">AP Cybersecurity practice</a> puts the labs, the multiple choice and the free response in one place.</p>
+</div>
+</div>"
+"ap-cybersecurity-labs","MERGE","<div class=""ph-page"">
+<style>.ph-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:16px 0 30px;}.ph-grid>.ph-card{flex:1 1 330px;max-width:508px;}@media (max-width:760px){.ph-grid>.ph-card{flex:1 1 100%;max-width:none;}}.ph-card{display:block;position:relative;background:#F5F0FF;border:1px solid #e9d5ff;border-radius:14px;padding:18px 20px 46px;text-decoration:none!important;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}.ph-card:hover{transform:translateY(-2px);border-color:#A855F7;box-shadow:0 6px 20px rgba(107,33,168,.14);}.ph-card-focus{display:block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7C3AED;margin:0 0 7px;}.ph-card-title{display:block;font-family:""DM Serif Display"",Georgia,serif;font-size:20px;line-height:1.25;color:#1E1B4B;margin:0 0 9px;}.ph-card-blurb{display:block;font-family:Georgia,serif;font-size:15px;line-height:1.55;color:#4B5563;margin:0 0 12px;}.ph-card-meta{position:absolute;left:20px;right:20px;bottom:16px;font-family:""DM Sans"",system-ui,sans-serif;font-size:12.5px;color:#6B7280;}.ph-card-go{position:absolute;right:18px;bottom:14px;font-family:""DM Sans"",system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6B21A8;}.ph-pill{display:inline-block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin:0 7px 0 0;vertical-align:1px;}.ph-pill-intro{background:#DCFCE7;color:#15803D;}.ph-pill-core{background:#EDE9FE;color:#6B21A8;}.ph-pill-stretch{background:#FEF3C7;color:#B45309;}.ph-empty{font-family:Georgia,serif;font-size:15px;color:#6B7280;font-style:italic;margin:12px 0 24px;}</style>
+<style>.ph-page{max-width:900px;margin:0 auto;font-family:Georgia,serif;color:#1F2937;}.ph-page p{font-size:16.5px;line-height:1.7;max-width:72ch;margin:0 0 14px;}.ph-page h2{font-family:""DM Serif Display"",Georgia,serif;font-size:27px;color:#1E1B4B;margin:38px 0 6px;font-weight:400;}.ph-page a{color:#6B21A8;}.ph-hero{background:linear-gradient(135deg,#2E1065 0%,#6B21A8 62%,#7C3AED 100%);border-radius:18px;padding:40px 34px 34px;margin:0 0 26px;text-align:center;color:#fff;}.ph-hero h1{font-family:""DM Serif Display"",Georgia,serif;font-size:40px;line-height:1.15;color:#fff;margin:0 0 12px;font-weight:400;}.ph-eyebrow{display:inline-block;font-family:""DM Sans"",system-ui,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E9D5FF;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 16px;margin:0 0 16px;}.ph-hero p{font-size:17px;line-height:1.6;color:#EDE9FE;max-width:64ch;margin:0 auto;}.ph-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:26px auto 0;max-width:640px;}@media (max-width:640px){.ph-stats{grid-template-columns:1fr 1fr;}}.ph-stat b{display:block;font-family:""DM Serif Display"",Georgia,serif;font-size:26px;color:#fff;font-weight:400;line-height:1.1;}.ph-stat span{display:block;font-family:""DM Sans"",system-ui,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C4B5FD;margin-top:5px;}.ph-note{background:#F0FDF4;border:1px solid #BBF7D0;border-left:4px solid #15803D;border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0 28px;}.ph-note p{margin:0;font-size:15.5px;}.ph-band{background:#F5F0FF;border:1px solid #e9d5ff;border-radius:14px;padding:22px 24px;margin:30px 0 0;}.ph-band h2{margin-top:0;}.ph-band p:last-child{margin-bottom:0;}.ph-page table{border-collapse:separate;border-spacing:0;width:100%;margin:14px 0 20px;font-family:Georgia,serif;font-size:15px;border:1px solid #e9d5ff;border-radius:12px;overflow:hidden;}.ph-page th{background:#F5F0FF;font-family:""DM Sans"",system-ui,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#6B21A8;text-align:left;padding:11px 14px;}.ph-page td{padding:11px 14px;border-top:1px solid #F3E8FF;vertical-align:top;line-height:1.55;}.ph-page td:first-child{font-family:""DM Serif Display"",Georgia,serif;font-size:19px;color:#6B21A8;width:52px;}</style>
+<div class=""ph-hero"">
+<div class=""ph-eyebrow"">Hands on, in the browser</div>
+<h1>AP Cybersecurity Terminal Labs</h1>
+<p>A real terminal, a pretend machine behind it, and a job to do. No install, no virtual machine, and no account needed to try one.</p>
+<div class=""ph-stats"">
+<div class=""ph-stat"">
+<b>2</b><span>labs</span>
+</div>
+<div class=""ph-stat"">
+<b>30 min</b><span>of practice</span>
+</div>
+<div class=""ph-stat"">
+<b>14</b><span>checks to tick</span>
+</div>
+<div class=""ph-stat"">
+<b>Free</b><span>no account</span>
+</div>
+</div>
+</div>
+<p>Each lab drops you into a filesystem with a brief and checks your work as you go. You navigate, read logs, inspect permissions and run commands, which is the same work the exam's free-response question asks you to reason about in writing.</p>
+<div class=""ph-note""><p>Part C of the AP Cybersecurity free-response asks students to <strong>write a chmod command</strong>. Write is a CED task verb. These labs are practice for a graded part of the exam, not an extra.</p></div>
+<h2>The labs</h2>
+<div data-practice-course=""ap-cybersecurity"" data-practice-kind=""labs""><div class=""ph-grid"">
+<a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-2-terminal-lab""><span class=""ph-card-focus"">Unit 4</span><span class=""ph-card-title"">Find the tournament code</span><span class=""ph-card-blurb"">Hunt a file through a shared machine with nothing but a terminal, then work out who else could read it. Free AP Cybersecurity Topic 4.3 practice lab.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-intro"">Practice</span>Topic 4.3 · 10 min · 6 checks</span><span class=""ph-card-go"">Open →</span></a><a class=""ph-card"" href=""https://www.apcsexamprep.com/pages/ap-cyber-unit-2-lesson-4-terminal-lab""><span class=""ph-card-focus"">Unit 2</span><span class=""ph-card-title"">Read the badge log</span><span class=""ph-card-blurb"">A week of badge swipes: three real attacks, two innocent oddities. Work the log with grep and tell them apart. Free AP Cybersecurity Topic 2.4 lab.</span><span class=""ph-card-meta""><span class=""ph-pill ph-pill-intro"">Practice</span>Topic 2.4 · 20 min · 8 checks</span><span class=""ph-card-go"">Open →</span></a>
+</div></div>
+<div class=""ph-band"">
+<h2>Where these fit</h2>
+<p>Labs cover the doing. For the writing, the <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-practice"">Device Security Analysis practice sets</a> put the same evidence in front of you in the exam's own format. For the multiple-choice half, use the <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice-exam"">practice exam</a>.</p>
+<p>Everything practice on one page: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-practice"">AP Cybersecurity practice</a>. Course content by unit: <a href=""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"">the complete course guide</a>.</p>
+</div>
+<script>window.APCS_PRACTICE={base:""https://progress.apcsexamprep.com""};</script>
+<script src=""https://progress.apcsexamprep.com/practice-hub.js""></script>
+</div>"
