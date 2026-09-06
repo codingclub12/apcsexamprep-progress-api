@@ -1,0 +1,108 @@
+{
+  "change": "the concept index reaches the practice hub from its quick nav instead of from anchor 52 of 52",
+  "_context": [
+    "The last of the three cyber entry pages. The two course pages were fixed on",
+    "2026-09-04 and 06; this is the concept layer.",
+    "",
+    "Measured on the served body 2026-09-06:",
+    "",
+    "    ap-cybersecurity-topics   52 anchors   practice hub at 52 of 52",
+    "",
+    "and a second thing the measurement turned up that the board item did not",
+    "predict. The page has a quick-nav pill row directly under its hero, and that",
+    "row's ONE practice pill reads 'Practice' and points at",
+    "ap-cybersecurity-practice-questions. That page serves FIFTEEN questions,",
+    "verified independently on the live body: 15 data-qid cards, 60 options, and",
+    "the page states '15 question' itself, which is what board 197 reported.",
+    "",
+    "So the single practice link a reader saw at the top of the concept index went",
+    "to the smallest practice surface on the site, while the hub that reaches every",
+    "quiz, lab, unit exam, the free response sets, the daily question and the five",
+    "unit spokes sat at the very bottom. Both halves are fixed here: a Practice Hub",
+    "pill goes into the row beside Course Hub, and the sampler pill is relabelled",
+    "Quick Sampler so the two are distinguishable.",
+    "",
+    "NEITHER NEW LABEL STATES A COUNT. '15-Question Sampler' would be true today,",
+    "and is exactly the kind of hardcoded number that kept '40 MCQ + 3 FRQ' on a",
+    "live page for two days after the page stopped being that. The label describes",
+    "the shape and lets the page it links to state its own size.",
+    "",
+    "THE GENERATOR GREW A SECOND MODE RATHER THAN A THIRD COPY. The band model",
+    "inserts a block before a unique anchor, which is wrong for a page that already",
+    "has a navigation row: the fix belongs IN the row, not in a second strip under",
+    "it. So a page may now declare `edits` instead, and the invariant is the",
+    "counterpart of the exact-split assertion: every `from` matches exactly once,",
+    "and undoing every substitution must reproduce the live body character for",
+    "character. Anything the edits did not declare survives that reversal as a",
+    "difference and throws."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "both modes, the ordinal claim on all three pages, and the sheet",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect": "OK - 45 checks, 11 mutations, every one caught by the rule that claims it"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation parses the topics sheet back and agrees, by diff",
+      "_why": "Python, sharing no code with the generator. It re-derives the ordinal claim, requires the diff to be under 400 characters, requires exactly one anchor added, requires the new pill to sit inside the quick-nav row rather than a second strip, and requires that nothing in the changed region states a question count.",
+      "command": "python3 scripts/cyber-course-cta-rederive.py imports/2026-09-06/cyber-topics-practice-nav-pages.csv smoke/fixtures/live-bodies",
+      "expect": "OK - 15 checks re-derived from the sheet by diff, independently of the generator"
+    },
+    {
+      "kind": "rederive",
+      "name": "and the course-page sheet it shares a generator with still re-derives",
+      "command": "python3 scripts/cyber-course-cta-rederive.py",
+      "expect": "OK - 35 checks re-derived from the sheet by diff, independently of the generator"
+    },
+    {
+      "kind": "suite",
+      "name": "the sheet clears the Matrixify preflight",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-06/cyber-topics-practice-nav-pages.csv",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED THREE TIMES: make the guard existential instead of ordinal",
+      "_why": "The first draft of the edits-mode guard asserted that the result LINKS the practice hub. That was already true of this page, from anchor 52 of 52, so the mutation written to break it could not go red and I nearly shipped a hollow check for the third time in one session. The guard is ordinal now, and this mutation is what proves it: relabel the sampler pill WITHOUT adding the hub pill, and the hub stays at the bottom while every existential check still passes.",
+      "file": "tools/ap-cyber-ced/generate-course-practice-cta.js",
+      "find": "  if (after < 0 || after >= TOP_ANCHORS) {",
+      "replace": "  if (after < 0) {",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect_failure": "MUTATION: edits that relabel but leave the hub at the bottom are refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop requiring each edit anchor to match exactly once",
+      "_why": "An anchor that matches twice means the page moved under us and there is no way to know which occurrence was meant. Guessing is how an edit lands in the middle of something.",
+      "file": "tools/ap-cyber-ced/generate-course-practice-cta.js",
+      "find": "    if (n !== 1) missed.push(`matched ${n} times, expected 1: ${JSON.stringify(from.slice(0, 70))}`);",
+      "replace": "    if (false) missed.push('');",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect_failure": "MUTATION: an edit whose anchor matches twice is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "make buildEdited change something the edits did not declare",
+      "_why": "This is the edits-mode counterpart of the exact-split assertion, and it is what makes this path as tight as the insertion path rather than a looser cousin. The first mutation written for it simply deleted the check, and the gate correctly refused: the suite computes the reversal itself, so deleting the generator's copy proved nothing. Reaching it takes a buildEdited that changes something undeclared, which is the defect the guard exists for.",
+      "file": "tools/ap-cyber-ced/generate-course-practice-cta.js",
+      "find": "  for (const [from, to] of page.edits) body = body.replace(from, to);",
+      "replace": "  for (const [from, to] of page.edits) body = body.replace(from, to);\n  body = body.replace('cyt-card', 'x');",
+      "command": "npm run --silent smoke:cyberctacourse",
+      "expect_failure": "undoing the declared edits does not reproduce the live body"
+    },
+    {
+      "kind": "live",
+      "name": "the concept index reaches the practice hub from the top, and kept its cards",
+      "_why": "Measured before the import: 15 passed, 3 failed. The 3 are this change, and they are ordinal and label assertions rather than presence, because the page already linked the hub from the bottom. The 12 that pass are the two course pages, unchanged, which is what proves this sheet did not disturb them.",
+      "command": "node scripts/verify-cyber-course-practice-live.js",
+      "expect": "the practice hub is at the top of the course, and both pages came through intact"
+    }
+  ],
+  "not_covered": [
+    "Whether Quick Sampler is the right label. It is accurate and cannot go stale, which is what a check can settle; whether it reads well to a student is a judgement.",
+    "The 15-question sampler itself. The nav dropdown still advertises it as '250+ MCQs across all 5 units', which is false and is board 197. That is a theme change on a different surface and is not widened into this sheet.",
+    "The nav remains a content surface with no validator. This pass fixed one page's quick nav, not the site nav."
+  ]
+}

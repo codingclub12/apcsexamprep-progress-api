@@ -62,8 +62,9 @@ const byHandle = new Map(built.built.map((b) => [b.handle, b]));
     hubAt(b.body) === 0 && anchorsOf(b.body).length === 249,
     `${hubAt(b.body) + 1} of ${anchorsOf(b.body).length}`);
 }
-ok('both pages also link the full practice exam',
-  built.built.every((b) => b.body.includes(`/pages/${gen.EXAM}`)));
+ok('both course pages also link the full practice exam',
+  built.built.filter((b) => !gen.PAGES.find((p) => p.handle === b.handle).edits)
+    .every((b) => b.body.includes(`/pages/${gen.EXAM}`)));
 
 // ── nothing is lost ─────────────────────────────────────────────────────────
 //  Not a list of markers that must survive: that is what the first draft used,
@@ -71,7 +72,7 @@ ok('both pages also link the full practice exam',
 //  This is the property that actually holds the guarantee, and that a future
 //  edit to buildBody could break: the live body must survive as an exact split
 //  with the block between, character for character on both sides.
-for (const b of built.built) {
+for (const b of built.built.filter((x) => !gen.PAGES.find((p) => p.handle === x.handle).edits)) {
   const at = b.live.indexOf(gen.PAGES.find((p) => p.handle === b.handle).before);
   const block = b.body.slice(at, b.body.length - (b.live.length - at));
   ok(`${b.handle}: the result is the live body split in two with one block between`,
@@ -82,7 +83,7 @@ for (const b of built.built) {
 }
 
 // ── markup only: no stylesheet and no script moves ──────────────────────────
-for (const b of built.built) {
+for (const b of built.built.filter((x) => !gen.PAGES.find((p) => p.handle === x.handle).edits)) {
   const count = (s, t) => s.split(t).length - 1;
   ok(`${b.handle}: no style or script block was added, removed or edited`,
     count(b.body, '<style') === count(b.live, '<style')
@@ -111,10 +112,13 @@ ok('the course guide band is built from that page\'s own announcement class',
 // ── the count is derived from the item bank, not typed ─────────────────────
 const bank = require('../config/cyber-exam-items.json');
 ok('the copy states the bank\'s own question count', gen.MCQ === bank.items.length, gen.MCQ);
-ok('and both bands say it', built.built.every((b) => b.body.includes(`${bank.items.length} multiple choice`)));
+ok('and both bands say it',
+  built.built.filter((b) => !gen.PAGES.find((p) => p.handle === b.handle).edits)
+    .every((b) => b.body.includes(`${bank.items.length} multiple choice`)));
 
 // ── content rules on what this pass authored ───────────────────────────────
-const authored = gen.PAGES.map((p) => p.block()).join('\n');
+const authored = gen.PAGES.filter((p) => p.block).map((p) => p.block()).join('\n')
+  + gen.PAGES.filter((p) => p.edits).flatMap((p) => p.edits.map(([, to]) => to)).join('\n');
 ok('the authored bands carry no em-dash, no EK code, no fabricated weighting and no mojibake',
   rules.ruleEmDash(authored, 'body').length === 0
   && rules.ruleEkCodes(authored).length === 0
@@ -125,7 +129,7 @@ ok('the authored bands carry no em-dash, no EK code, no fabricated weighting and
 
 // ── the sheet ──────────────────────────────────────────────────────────────
 const sheet = parseCsv(built.csv);
-ok('two rows, one per course page', sheet.rows.length === 2, sheet.rows.length);
+ok('three rows: two course pages and the concept index', sheet.rows.length === 3, sheet.rows.length);
 ok('both are MERGE', sheet.rows.every((r) => r.Command === 'MERGE'));
 ok('the sheet carries Body HTML only, so no other column is blanked',
   gen.HEADER.join(',') === 'Handle,Command,Body HTML', gen.HEADER.join(','));
@@ -133,6 +137,39 @@ ok('neither Body HTML cell is empty, which under MERGE erases the page',
   sheet.rows.every((r) => r['Body HTML'].length > 15000));
 ok('the sheet round-trips through CSV with no drift',
   sheet.rows.every((r) => r['Body HTML'] === byHandle.get(r.Handle).body));
+
+
+// ── the concept index, which is edits rather than a band ────────────────────
+//  It already had a quick-nav pill row under its hero, so the fix belongs IN
+//  that row. Two things were wrong: the practice hub was anchor 52 of 52, and
+//  the row's one practice pill read "Practice" and pointed at the sampler.
+{
+  const b = byHandle.get('ap-cybersecurity-topics');
+  const P = gen.PAGES.find((p) => p.handle === 'ap-cybersecurity-topics');
+  ok('the topics hub linked the practice hub dead last, 52 of 52',
+    hubAt(b.live) === 51 && anchorsOf(b.live).length === 52,
+    `${hubAt(b.live) + 1} of ${anchorsOf(b.live).length}`);
+  ok('and now links it second of 53, in the quick nav under the hero',
+    hubAt(b.body) === 1 && anchorsOf(b.body).length === 53,
+    `${hubAt(b.body) + 1} of ${anchorsOf(b.body).length}`);
+  ok('the new pill sits inside the quick-nav row, not in a second strip',
+    /<div class="cyt-nav">[\s\S]{0,400}\/pages\/ap-cybersecurity-practice"/.test(b.body));
+  ok('the sampler pill no longer reads just "Practice", which named the wrong page',
+    b.live.includes('>Practice</a>') && !b.body.includes('>Practice</a>')
+    && b.body.includes('>Quick Sampler</a>'));
+  ok('neither new label states a question count, so neither can go stale',
+    P.edits.every(([, to]) => !/\d+[- ]question|\d+\s*MCQ/i.test(to)));
+  ok('undoing the declared edits reproduces the live body exactly',
+    (() => {
+      let back = b.body;
+      for (const [from, to] of P.edits) back = back.replace(to, from);
+      return back === b.live;
+    })());
+  ok('no stylesheet or script was touched',
+    b.body.match(/<style[\s\S]*?<\/style>/g).join('') === b.live.match(/<style[\s\S]*?<\/style>/g).join('')
+    && (b.body.match(/<script/g) || []).length === (b.live.match(/<script/g) || []).length);
+  ok('exactly one anchor was added', anchorsOf(b.body).length - anchorsOf(b.live).length === 1);
+}
 
 // ── mutations ──────────────────────────────────────────────────────────────
 console.log();
@@ -174,6 +211,31 @@ refuse('MUTATION: a band that links only one of the two practice pages is refuse
 refuse('MUTATION: a missing stored body file is refused',
   () => gen.generate({ bodies: path.join(FIXTURES, 'nope') }), /no stored body/);
 
+
+//  ── edits mode ────────────────────────────────────────────────────────────
+const TOPICS = gen.PAGES.find((p) => p.handle === 'ap-cybersecurity-topics');
+const liveTopics = fs.readFileSync(path.join(FIXTURES, 'ap-cybersecurity-topics.html'), 'utf8');
+
+refuse('MUTATION: an edit whose anchor matches nothing is refused',
+  () => gen.buildBody({ ...TOPICS, edits: [['a string this page does not contain', 'x']] }, liveTopics),
+  /matched 0 times/);
+
+refuse('MUTATION: an edit whose anchor matches twice is refused',
+  () => gen.buildBody({ ...TOPICS, edits: [['</a>', 'x']] }, liveTopics),
+  /matched \d+ times/);
+
+refuse('MUTATION: edits that change nothing are refused as a no-op',
+  () => gen.buildBody({ ...TOPICS, edits: [['>Practice</a>', '>Practice</a>']] }, liveTopics),
+  /changed nothing|no-op/);
+
+//  Relabelling the sampler pill WITHOUT adding the hub pill leaves the hub where
+//  it was, at anchor 52 of 52. The guard is ordinal, so it fires. An existential
+//  "does it link the hub" check would not: that was already true from the bottom,
+//  which is the third time in this session that distinction has mattered.
+refuse('MUTATION: edits that relabel but leave the hub at the bottom are refused',
+  () => gen.buildBody({ ...TOPICS, edits: [TOPICS.edits[1]] }, liveTopics),
+  /not inside the first \d+/);
+
 //  The count must come from the bank. Stub the bank smaller, re-require the
 //  generator, and the copy has to move with it. A typed 60 would not.
 {
@@ -186,7 +248,7 @@ refuse('MUTATION: a missing stored body file is refused',
     delete require.cache[genPath];
     const stubbed = require(genPath);
     derived = stubbed.MCQ === 41
-      && stubbed.PAGES.every((p) => p.block().includes('41 multiple choice'));
+      && stubbed.PAGES.filter((p) => p.block).every((p) => p.block().includes('41 multiple choice'));
   } finally {
     require.cache[bankPath].exports = real;
     delete require.cache[genPath];
@@ -202,4 +264,4 @@ if (fails.length) {
   for (const f of fails) console.log(`  - ${f}`);
   process.exit(1);
 }
-console.log(`OK - ${pass} checks, 7 mutations, every one caught by the rule that claims it`);
+console.log(`OK - ${pass} checks, 11 mutations, every one caught by the rule that claims it`);

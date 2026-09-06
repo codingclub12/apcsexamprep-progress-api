@@ -47,15 +47,15 @@ fixtures = Path(sys.argv[2] if len(sys.argv) > 2
 raw = sheet_path.read_bytes()
 ok('the sheet is written with a BOM', raw.startswith(b'\xef\xbb\xbf'))
 rows = list(csv.DictReader(raw.decode('utf-8-sig').splitlines(True)))
-ok('two rows, one per course page', len(rows) == 2, len(rows))
+ok('every row targets a page this pass changes', 1 <= len(rows) <= 3, len(rows))
 ok('both are MERGE', all(r['Command'] == 'MERGE' for r in rows))
 ok('the sheet has no column but Handle, Command and Body HTML, so none is blanked',
    all(list(r.keys()) == ['Handle', 'Command', 'Body HTML'] for r in rows),
    list(rows[0].keys()))
-ok('it targets the two course entry pages',
-   sorted(r['Handle'] for r in rows)
-   == ['ap-cybersecurity', 'ap-cybersecurity-complete-course-guide'],
-   [r['Handle'] for r in rows])
+KNOWN = {'ap-cybersecurity', 'ap-cybersecurity-complete-course-guide',
+         'ap-cybersecurity-topics'}
+ok('every handle is one of the three cyber entry pages',
+   all(r['Handle'] in KNOWN for r in rows), [r['Handle'] for r in rows])
 
 bank = json.loads((ROOT / 'config/cyber-exam-items.json').read_text(encoding='utf-8'))
 mcq = len(bank['items'])
@@ -66,7 +66,13 @@ mcq = len(bank['items'])
 EXPECTED_BEFORE = {
     'ap-cybersecurity': None,                              # absent
     'ap-cybersecurity-complete-course-guide': 'last',      # 247 of 247
+    'ap-cybersecurity-topics': 'last',                     # 52 of 52
 }
+#  The concept index is edited rather than banded: its quick-nav row already
+#  existed, so the fix belongs in it. The diff is therefore not one insertion,
+#  and this script checks the property that matters on both shapes instead.
+EDITS_MODE = {'ap-cybersecurity-topics'}
+TOP_N = 4
 
 for row in rows:
     h = row['Handle']
@@ -86,6 +92,37 @@ for row in rows:
 
     ok(f'{h}: the new body links it inside the first {TOP_N} anchors',
        0 <= at_new < TOP_N, f'{at_new + 1} of {len(a_new)}')
+
+    if h in EDITS_MODE:
+        # -- edits mode: the diff is small and every part of it is declared ----
+        sm = difflib.SequenceMatcher(None, live, new, autojunk=False)
+        changed = [(tag, i1, i2, j1, j2) for tag, i1, i2, j1, j2 in sm.get_opcodes()
+                   if tag != 'equal']
+        ok(f'{h}: the diff is small, a pill and a label rather than a rewrite',
+           sum(j2 - j1 for _t, _a, _b, j1, j2 in changed) < 400,
+           sum(j2 - j1 for _t, _a, _b, j1, j2 in changed))
+        ok(f'{h}: exactly one anchor was added', len(a_new) - len(a_live) == 1,
+           len(a_new) - len(a_live))
+        ok(f'{h}: the new pill is inside the quick-nav row, not a second strip',
+           re.search(r'<div class="cyt-nav">[\s\S]{0,400}/pages/ap-cybersecurity-practice"', new)
+           is not None)
+        ok(f'{h}: the pill that named the sampler "Practice" is gone',
+           '>Practice</a>' in live and '>Practice</a>' not in new
+           and '>Quick Sampler</a>' in new)
+        ok(f'{h}: the sampler is still linked, just labelled for what it is',
+           'ap-cybersecurity-practice-questions' in new)
+        ok(f'{h}: no new text states a question count that could go stale',
+           not re.search(r'>\s*\d+[- ]?(?:question|MCQ)', new[:len(new)]) or
+           not any(re.search(r'\d+[- ]?(?:question|MCQ)', new[j1:j2], re.I)
+                   for _t, _a, _b, j1, j2 in changed))
+        ok(f'{h}: no stylesheet or script was touched',
+           re.findall(r'<style[\s\S]*?</style>', new) == re.findall(r'<style[\s\S]*?</style>', live)
+           and re.findall(r'<script[\s\S]*?</script>', new)
+           == re.findall(r'<script[\s\S]*?</script>', live))
+        ok(f'{h}: div tags still balance',
+           len(re.findall(r'<div\b', new)) - len(re.findall(r'</div>', new))
+           == len(re.findall(r'<div\b', live)) - len(re.findall(r'</div>', live)))
+        continue
 
     # -- nothing deleted, by diff ---------------------------------------------
     sm = difflib.SequenceMatcher(None, live, new, autojunk=False)
