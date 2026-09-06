@@ -34,9 +34,75 @@ return String(s).split(A).join(A + 'amp;').split('<').join(A + 'lt;');
 `scripts/page-body-csv.js` refuses to build a sheet for a page that carries an
 entity as a JS string literal, so this cannot ship again silently.
 
-Entities in ordinary markup are fine: a `&rarr;` in a button decodes to the
-arrow that was meant. The hazard is only an entity a script needs to still BE an
-entity afterwards.
+Entities in ordinary markup are MOSTLY fine: a `&rarr;` in a button decodes to
+the arrow that was meant.
+
+**`&lt;` and `&gt;` are the exception, and this sentence used to say they were
+not.** They do not decode to a character, they decode to SYNTAX. On 2026-09-06 a
+sheet round-tripped this page body unchanged except for one removed attribute:
+
+```
+sent   : IT Help Desk &lt;helpdesk@rivertonl1b.org&gt;
+stored : IT Help Desk <helpdesk></helpdesk>
+```
+
+The decode produced `<helpdesk@rivertonl1b.org>`, the parser read it as a tag
+with `@rivertonl1b.org` as an attribute, dropped the attribute and closed the
+element. The address was deleted. That page is a phishing exercise and the
+lookalike domain is the question, so this was not cosmetic: `rivertonl1b.org`
+with a 1 for the l, against the real `rivertonlib.org` three lines above it.
+
+The transform, derived by diffing one 40825 character import against its result,
+is DECODE ONCE, PARSE AS HTML, RE-SERIALIZE. That is why `&amp;` survives (10 of
+10 did: it decodes to `&`, which serializes back to `&amp;`) while `&lt;` does
+not.
+
+So to keep a literal `<` in displayed text, send `&amp;lt;`. It survives the one
+decode as `&lt;`, parses as a text `<`, and is stored as `&lt;`.
+
+The other hazard below is still real and different: an entity a script needs to
+still BE an entity afterwards.
+
+## The read you verify with can be a minute behind
+
+`/pages/<handle>.json` is served through Shopify's own page cache. Its etag says
+so: `page_cache:<id>:PageDetailsController:<hash>`. A query string does not bust
+it, because the cache keys on the path.
+
+Measured 2026-09-06: an import landed at 21:51:33Z and that endpoint served the
+PRE-import body for about a minute afterwards. The trap is the second half.
+`updated_at` is the obvious way to ask "did my write land", and it arrives inside
+the same stale response, so it agrees with the stale body instead of exposing it.
+A verifier saw an old body and an old timestamp corroborating each other and
+reported that a successful import had not run. The operator re-imported on that
+advice.
+
+The two read paths have OPPOSITE defects, which is why neither alone settles it:
+
+| | `pages/x.json` | rendered page |
+|---|---|---|
+| freshness | can lag ~1 min | current |
+| fidelity | the stored bytes | Cloudflare rewrites addresses |
+
+So use the json for bytes you will write back, and the rendered page to prove
+those bytes are current. `lib/storefront-fetch.js` has `pageBodySettled()` for
+the cheap version (poll until it stops moving) and `decodeCfEmails()` for reading
+an address out of the rendered copy, without which a live check on a page
+carrying an address can only ever say "absent".
+
+**A disagreement must say which it is.** Never report "the import did not land"
+from the json alone. `scripts/verify-frq-entity-repair.js` exits 2 STALE rather
+than 1 FAILED when the rendered page already shows the change, and its harness
+proves all three exits are reachable.
+
+## Verify a body rewrite by comparing the WHOLE body
+
+Predict the stored result before importing, commit the prediction, and diff the
+whole thing afterwards. A marker check cannot see damage it was not told to look
+for, and a body rewrite can damage anything. The gate for that same import
+asserted two markers, printed LIVE CLEAN, and reported four independent kinds
+agreeing, on a page that had just lost the address.
+`scripts/verify-frq-entity-repair.js` is the shape that would have caught it.
 
 ## What Shopify also does, harmlessly
 
