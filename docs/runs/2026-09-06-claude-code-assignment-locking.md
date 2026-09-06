@@ -138,7 +138,16 @@ before the deploy AND durable afterwards, and the sha is only the first.
 
 ## Still open
 
-- **The ENDPOINT half is still unobserved in production.** The board page is
+- ~~The ENDPOINT half is still unobserved in production.~~ **CLOSED the same
+  day.** `scripts/verify-assignment-lock-live.sh` ran against production on class
+  CYBER-Q9JG (named TEST, synthetic roster) with a real teacher token and a real
+  student token: 12 passed, 0 failed. A unit-scope write locked every Unit 1 quiz
+  with `reason: "unit-closed"` and `questions: null`; opening lesson 1.1 reopened
+  only 1.1; the board reported `mixed`, agreeing with what the student was served.
+  Cleanup left zero gate rows, confirmed independently afterwards. The paragraph
+  below is kept as the record of what was outstanding and how it was closed.
+
+- **What was outstanding, for the record.** The board page is
   live and checked; the gate routes are not, because every one of them is
   fail-closed behind a teacher JWT this session does not hold, and the `401` they
   return proves the fence rather than the feature. The check a credentialed
