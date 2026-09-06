@@ -34,9 +34,43 @@ return String(s).split(A).join(A + 'amp;').split('<').join(A + 'lt;');
 `scripts/page-body-csv.js` refuses to build a sheet for a page that carries an
 entity as a JS string literal, so this cannot ship again silently.
 
-Entities in ordinary markup are fine: a `&rarr;` in a button decodes to the
-arrow that was meant. The hazard is only an entity a script needs to still BE an
-entity afterwards.
+Entities in ordinary markup are MOSTLY fine: a `&rarr;` in a button decodes to
+the arrow that was meant.
+
+**`&lt;` and `&gt;` are the exception, and this sentence used to say they were
+not.** They do not decode to a character, they decode to SYNTAX. On 2026-09-06 a
+sheet round-tripped this page body unchanged except for one removed attribute:
+
+```
+sent   : IT Help Desk &lt;helpdesk@rivertonl1b.org&gt;
+stored : IT Help Desk <helpdesk></helpdesk>
+```
+
+The decode produced `<helpdesk@rivertonl1b.org>`, the parser read it as a tag
+with `@rivertonl1b.org` as an attribute, dropped the attribute and closed the
+element. The address was deleted. That page is a phishing exercise and the
+lookalike domain is the question, so this was not cosmetic: `rivertonl1b.org`
+with a 1 for the l, against the real `rivertonlib.org` three lines above it.
+
+The transform, derived by diffing one 40825 character import against its result,
+is DECODE ONCE, PARSE AS HTML, RE-SERIALIZE. That is why `&amp;` survives (10 of
+10 did: it decodes to `&`, which serializes back to `&amp;`) while `&lt;` does
+not.
+
+So to keep a literal `<` in displayed text, send `&amp;lt;`. It survives the one
+decode as `&lt;`, parses as a text `<`, and is stored as `&lt;`.
+
+The other hazard below is still real and different: an entity a script needs to
+still BE an entity afterwards.
+
+## Verify a body rewrite by comparing the WHOLE body
+
+Predict the stored result before importing, commit the prediction, and diff the
+whole thing afterwards. A marker check cannot see damage it was not told to look
+for, and a body rewrite can damage anything. The gate for that same import
+asserted two markers, printed LIVE CLEAN, and reported four independent kinds
+agreeing, on a page that had just lost the address.
+`scripts/verify-frq-entity-repair.js` is the shape that would have caught it.
 
 ## What Shopify also does, harmlessly
 
