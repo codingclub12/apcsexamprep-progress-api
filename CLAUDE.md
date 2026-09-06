@@ -749,10 +749,36 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   positive marker the challenge cannot fake. A negative assertion can never pass
   because the fetch quietly failed. `smoke:storefront` scans every
   `scripts/verify-*-live.js` and fails if one sends a User-Agent again.
-  Twenty eight other scripts still spoof one. The CSV generators go through
-  `scripts/extract-live-body.js`, which throws on the challenge body, so they
-  fail loudly rather than writing a sheet from it. The SWEEPS will report the
-  whole site as broken until they are moved over.
+  **The five site sweeps moved over on 2026-09-06, board 172, and what was found
+  on the way matters more than the migration.** `link-graph`, `site-crawl`,
+  `empty-page-sweep`, `cyber-unit-sweep` and `csp-exercise-2-live-status` all
+  fetch through the module now, and `smoke:storefront` section 6 names them so a
+  sixth cannot quietly grow its own fetch. 26 scripts still spoof a UA, mostly
+  cyber CSV generators reading `/pages/<handle>.json`.
+
+  **The bot management has RELAXED again, and the prediction this paragraph used
+  to make is retired.** It said the sweeps "will report the whole site as broken
+  until they are moved over". Measured 2026-09-06 across all five of their own
+  User-Agent strings against three paths: 15 of 15 answered 200. So the
+  storefront has now been in three states in four days, scripted-client
+  challenged, browser challenged, neither challenged.
+
+  That is the argument FOR the one door rather than against it. The header is not
+  a control surface this repo owns, its correct value has flipped twice in a
+  week, and a wrong value produces a plausible false report rather than an error.
+  What the module contributes is not a better User-Agent, it is `looksReal()`: a
+  POSITIVE marker a challenge cannot fake, which cannot go stale the way a list
+  of challenge phrases can.
+
+  The sweep that needed it most was `csp-exercise-2-live-status`, which had no
+  challenge guard at all. Its two assertions are `body.includes(WRAPPER)` and a
+  count of `mcq-item`, and BOTH read false on an interstitial, so a challenge
+  served with a 200 would have been reported as 35 pages that lost their wrapper
+  and serve zero questions. That is the same sentence `verify-csp-applied-cards-live`
+  produced about 17 correct pages on 2026-09-03.
+
+  The CSV generators go through `scripts/extract-live-body.js`, which throws on
+  the challenge body, so they fail loudly rather than writing a sheet from it.
 - Any page set larger than about three ships as four things: canonical data, a
   generator, a validator, and a Matrixify sheet. Hand-authoring structurally
   identical pages is how drift enters, and the drift is never in the page you are

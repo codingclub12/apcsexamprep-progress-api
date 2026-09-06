@@ -15,10 +15,30 @@
 //  back a list of pages to publish OVER pages that already exist, and each of
 //  those would be a silent rewrite of a live body rather than a publish.
 //
-//  So: one request at a time, a real browser User-Agent, a pause between pages,
-//  and only 200 and 404 are ever treated as answers. Anything else is retried,
-//  and a handle that never resolves is reported UNRESOLVED and refuses the run
-//  rather than being guessed at in either direction.
+//  So: one request at a time, a pause between pages, and only 200 and 404 are
+//  ever treated as answers. Anything else is retried, and a handle that never
+//  resolves is reported UNRESOLVED and refuses the run rather than being
+//  guessed at in either direction.
+//
+//  ── AND A 200 IS NOT ALWAYS THE PAGE ────────────────────────────────────────
+//  This paragraph used to say "a real browser User-Agent", which was true of
+//  the storefront that existed when it was written and became the bug on
+//  2026-09-03, when bot management inverted and started challenging the spoof.
+//  It has since relaxed again, so the spoof works today. That is the argument
+//  FOR this change rather than against it: the header is not a control surface
+//  this repo owns, it has flipped twice in four days, and the flip is silent.
+//
+//  What makes the flip expensive here is the shape of the two assertions
+//  below. They are `body.includes(WRAPPER)` and a count of `mcq-item`, and BOTH
+//  read false on an interstitial, so a challenge served with a 200 would be
+//  reported as 35 pages that lost their wrapper and serve zero questions.
+//  verify-csp-applied-cards-live said exactly that about all 17 Applied
+//  Challenge pages on 2026-09-03. All 17 were fine.
+//
+//  So every fetch goes through lib/storefront-fetch.js, which sends no
+//  User-Agent and proves a body is a rendered page on a positive marker the
+//  challenge cannot fake, before this file is allowed to believe anything
+//  about it.
 //
 //  ── WHAT "LIVE" MEANS HERE ──────────────────────────────────────────────────
 //  A Shopify 404 still returns a full themed document, 300 KB of it, so byte
@@ -40,11 +60,10 @@
 // -----------------------------------------------------------------------------
 
 const fs = require('fs');
+const sf = require('../lib/storefront-fetch');
 const { allPages } = require('../lib/csp-course-pages');
 
-const STORE = 'https://www.apcsexamprep.com';
-const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
-  + ' (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
+const STORE = sf.STORE;
 const DELAY_MS = 1200;
 const ATTEMPTS = 4;
 
@@ -82,12 +101,17 @@ function linkTargets(pages) {
 async function fetchOnce(handle) {
   const at = new Date().toISOString();
   try {
-    const res = await fetch(`${STORE}/pages/${handle}`, {
-      headers: { 'user-agent': UA, accept: 'text/html' },
-      redirect: 'follow',
-    });
-    const body = await res.text();
-    return { at, status: res.status, bytes: Buffer.byteLength(body), body };
+    const r = sf.raw(`/pages/${handle}`);
+    //  A 404 here is an ANSWER, and a themed 404 carries the storefront markers
+    //  like any other rendered page, so only a 200 is worth asking about. On a
+    //  200 that is not the page, report status 0 with the reason: that sends it
+    //  down the retry path and, if it never clears, out as UNRESOLVED. Which is
+    //  the correct verdict. "The store would not show me this page" is not the
+    //  same fact as "this page does not exist", and folding the first into the
+    //  second is what would put a live body under a publish.
+    const why = r.code === '200' ? sf.refusal(r) : null;
+    if (why) return { at, status: 0, bytes: r.body.length, body: '', error: why };
+    return { at, status: Number(r.code), bytes: Buffer.byteLength(r.body), body: r.body };
   } catch (e) {
     return { at, status: 0, bytes: 0, body: '', error: String(e.message || e) };
   }
@@ -149,7 +173,7 @@ async function cmdProbe(argv) {
   }
 
   process.stderr.write(`\n  probing ${handles.length} handle(s), single threaded, `
-    + `${delay}ms apart, browser UA\n\n`);
+    + `${delay}ms apart, through lib/storefront-fetch.js\n\n`);
   const rows = await probe(handles, delay);
 
   const isX2 = new Set(pages.map((p) => p.handle));

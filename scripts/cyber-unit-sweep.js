@@ -37,22 +37,35 @@ const { chromium } = require('../smoke/node_modules/playwright');
 const tg = require('../lib/cyber-thin-gate');
 const cg = require('../lib/cyber-cite-gate');
 
-const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
-  + '(KHTML, like Gecko) Chrome/126.0 Safari/537.36';
+const sf = require('../lib/storefront-fetch');
+
 const EXEC = process.env.CHROMIUM_EXEC || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
-const BASE = (process.env.STORE_ORIGIN || 'https://www.apcsexamprep.com').replace(/\/+$/, '');
+const BASE = sf.STORE;
 const EK = /\b(?:EK )?\d\.\d\.[A-C](?:\.\d)?\b/g;
 
 //  json:true means a leading '<' is a Cloudflare challenge and worth retrying.
 //  The sitemap is XML and always starts with '<', so that test must not be
 //  applied to it: the first version of this retried the sitemap four times and
 //  reported it unreadable.
+//
+//  THAT LEFT THE XML PATH WITH NO CHALLENGE GUARD AT ALL, which is the hole
+//  this migration closes. A challenge body also starts with '<', so on the
+//  sitemap it passed the only check there was; the regex below it then matched
+//  nothing and the sweep reported a site with zero pages in it. The fetch goes
+//  through lib/storefront-fetch.js now, so there is no User-Agent to be judged
+//  on, and the challenge is recognised by that module's own pattern on BOTH
+//  paths rather than by a second copy of the test living here.
+//
+//  looksReal() is deliberately not used. Neither endpoint is an HTML page: the
+//  marker test would refuse a sitemap and a page JSON alike, and a guard that
+//  refuses every correct answer gets removed within a day.
 const get = async (url, { json = true, tries = 4 } = {}) => {
   for (let a = 0; a < tries; a++) {
     try {
-      const r = await fetch(url, { headers: { 'User-Agent': UA, Accept: json ? 'application/json' : '*/*' } });
-      const t = await r.text();
-      if (!r.ok) return { status: r.status };
+      const r = sf.raw(url, { timeout: 30 });
+      if (r.code !== '200') return { status: r.code };
+      const t = r.body;
+      if (sf.CHALLENGE.test(t)) { await new Promise((s) => setTimeout(s, 1500)); continue; }
       if (json && t.trimStart().startsWith('<')) { await new Promise((s) => setTimeout(s, 1500)); continue; }
       return { text: t };
     } catch (e) { await new Promise((s) => setTimeout(s, 1500)); }
