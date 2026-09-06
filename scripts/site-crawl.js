@@ -77,13 +77,22 @@
 const fs = require('fs');
 const C = require('../lib/site-crawl');
 
-const STORE = (process.env.STORE_ORIGIN || 'https://www.apcsexamprep.com').replace(/\/+$/, '');
+const sf = require('./../lib/storefront-fetch');
+
+const STORE = sf.STORE;
 const API = (process.env.APCS_BASE || 'https://progress.apcsexamprep.com').replace(/\/+$/, '');
 
-// A browser-ish agent. scripts/live-pages-dump.js records why: the storefront
-// serves a challenge to obviously scripted clients, and a challenge page fails
-// every downstream check with a confusing message rather than a clear one.
-const UA = 'Mozilla/5.0 (compatible; apcse-nightly-crawl/1.0) Chrome/120.0.0.0 Safari/537.36';
+// THE USER-AGENT IS GONE, and the comment that used to sit here is the reason
+// it had to go. It said the storefront "serves a challenge to obviously
+// scripted clients", which was true when it was written, inverted on
+// 2026-09-03 so that the spoof was the thing being challenged, and has since
+// relaxed again. Three states in four days.
+//
+// A header this repo does not control, whose correct value flips without
+// warning and whose wrong value produces a plausible false report rather than
+// an error, is not something each crawler should be guessing at. So the fetch
+// goes through lib/storefront-fetch.js, which sends none and decides whether a
+// body is a page on a marker the challenge cannot fake.
 
 // ── ARGUMENTS ────────────────────────────────────────────────────────────────
 const argv = process.argv.slice(2);
@@ -134,20 +143,24 @@ async function fetchOnce(url, method = 'GET') {
   // of single-hop redirects that are entirely correct; it is the CHAINS that
   // cost latency on a school network, so the count is what gets recorded.
   for (let hop = 0; hop < 6; hop++) {
+    //  Through the one door, with follow:false so the hops stay countable. A
+    //  HEAD body is the response headers rather than the page, which is exactly
+    //  why it was already being discarded below.
     let r;
     try {
-      r = await fetch(current, { headers: { 'User-Agent': UA, 'Accept-Language': 'en-US,en;q=0.9' }, redirect: 'manual', method });
+      r = sf.raw(current, { follow: false, method });
     } catch (e) {
       return { status: 0, html: '', ms: Date.now() - started, redirects, error: e.message, finalUrl: current };
     }
     requests += 1;
-    if (r.status >= 300 && r.status < 400 && r.headers.get('location')) {
+    const status = Number(r.code);
+    if (status >= 300 && status < 400 && r.redirectUrl) {
       redirects += 1;
-      current = new URL(r.headers.get('location'), current).toString();
+      current = new URL(r.redirectUrl, current).toString();
       continue;
     }
-    const html = method === 'HEAD' ? '' : await r.text();
-    return { status: r.status, html, ms: Date.now() - started, redirects, finalUrl: current };
+    const html = method === 'HEAD' ? '' : r.body;
+    return { status, html, ms: Date.now() - started, redirects, finalUrl: current };
   }
   return { status: 0, html: '', ms: Date.now() - started, redirects, error: 'redirect loop', finalUrl: current };
 }

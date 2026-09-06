@@ -120,5 +120,27 @@ const libSrc = fs.readFileSync(path.join(__dirname, '..', 'lib', 'storefront-fet
 ok(!/Mozilla\/5\.0/.test(libSrc),
   '5.4 and the shared fetch itself sends none, which is the whole point');
 
+// ── 6. the sweeps are held to the same rule as the verifiers ─────────────────
+//  Section 5 scanned verify-*-live.js only, which is how five site sweeps kept
+//  their own fetch and their own spoofed User-Agent for three days after the
+//  incident that retired the practice. They are named rather than pattern
+//  matched: a sweep is not identifiable from its filename, and a scan that
+//  cannot say what it expected to find is a scan that silently covers nothing.
+console.log('\n6. the site sweeps go through the one door too');
+const SWEEPS = ['link-graph.js', 'site-crawl.js', 'empty-page-sweep.js',
+  'cyber-unit-sweep.js', 'csp-exercise-2-live-status.js'];
+for (const f of SWEEPS) {
+  const p = path.join(dir, f);
+  ok(fs.existsSync(p), '6.1 ' + f + ' is still where this guard expects it',
+    'renamed or deleted, so this row was checking nothing');
+  if (!fs.existsSync(p)) continue;
+  const src = fs.readFileSync(p, 'utf8');
+  const code = src.replace(/^\s*\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+  ok(!/User-Agent/i.test(code) && !/Mozilla\/5\.0/.test(code),
+    '6.2 ' + f + ' sends no User-Agent of its own');
+  ok(/require\(['"][^'"]*storefront-fetch['"]\)/.test(code),
+    '6.3 ' + f + ' fetches through lib/storefront-fetch.js');
+}
+
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

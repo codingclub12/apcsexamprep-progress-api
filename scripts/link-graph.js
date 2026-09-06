@@ -27,8 +27,9 @@ const fs = require('fs');
 const G = require('../lib/link-graph');
 const C = require('../lib/site-crawl');
 
-const STORE = (process.env.STORE_ORIGIN || 'https://www.apcsexamprep.com').replace(/\/+$/, '');
-const UA = 'Mozilla/5.0 (compatible; apcse-link-graph/1.0) Chrome/120.0.0.0 Safari/537.36';
+const sf = require('../lib/storefront-fetch');
+
+const STORE = sf.STORE;
 
 const argv = process.argv.slice(2);
 const flag = (n) => argv.includes('--' + n);
@@ -60,22 +61,24 @@ async function fetchOnce(url) {
   let redirects = 0;
   let current = url;
   for (let hop = 0; hop < 6; hop++) {
+    //  follow:false because the hops are counted here, deliberately. curl's -L
+    //  would collapse a chain into one answer and the chain length is half of
+    //  what this crawl records. redirectUrl is the next hop, which is what
+    //  r.headers.get('location') used to supply.
     let r;
     try {
-      r = await fetch(current, {
-        headers: { 'User-Agent': UA, 'Accept-Language': 'en-US,en;q=0.9' },
-        redirect: 'manual',
-      });
+      r = sf.raw(current, { follow: false });
     } catch (e) {
       return { status: 0, html: '', ms: Date.now() - started, redirects, error: e.message, finalUrl: current };
     }
     requests += 1;
-    if (r.status >= 300 && r.status < 400 && r.headers.get('location')) {
+    const status = Number(r.code);
+    if (status >= 300 && status < 400 && r.redirectUrl) {
       redirects += 1;
-      current = new URL(r.headers.get('location'), current).toString();
+      current = new URL(r.redirectUrl, current).toString();
       continue;
     }
-    return { status: r.status, html: await r.text(), ms: Date.now() - started, redirects, finalUrl: current };
+    return { status, html: r.body, ms: Date.now() - started, redirects, finalUrl: current };
   }
   return { status: 0, html: '', ms: Date.now() - started, redirects, error: 'redirect loop', finalUrl: current };
 }

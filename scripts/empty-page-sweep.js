@@ -31,10 +31,9 @@
 const fs = require('fs');
 const { extract } = require('./extract-live-body');
 const C = require('../lib/site-crawl');
+const sf = require('../lib/storefront-fetch');
 
-const STORE = (process.env.STORE_ORIGIN || 'https://www.apcsexamprep.com').replace(/\/+$/, '');
-const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
-  + '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+const STORE = sf.STORE;
 
 const argv = process.argv.slice(2);
 const opt = (n, d) => {
@@ -101,23 +100,34 @@ async function main() {
     if (Date.now() > deadline) { console.error('wall clock reached at ' + handle); break; }
     if (strikes >= 6) { console.error('throttled six times, stopping at ' + handle); break; }
 
-    let res, html;
+    //  Through the one door: no User-Agent, and follow:false because a redirect
+    //  is a finding here rather than something to chase. redirectUrl is what
+    //  res.headers.get('location') used to give, without needing headers back.
+    let res, html, status;
     try {
-      res = await fetch(`${STORE}/pages/${handle}`, { headers: { 'User-Agent': UA }, redirect: 'manual' });
-      html = await res.text();
+      res = sf.raw(`/pages/${handle}`, { follow: false });
+      html = res.body;
+      status = Number(res.code);
     } catch (e) {
       fs.writeSync(fd, JSON.stringify({ handle, outcome: 'http', status: 0, why: e.message }) + '\n');
       await sleep(delay); continue;
     }
 
-    if (res.status === 429 || res.status === 503 || C.looksLikeChallenge(html, res.status)) {
+    //  Two tests, and they are not redundant. looksLikeChallenge reads SHAPE, a
+    //  small body carrying interstitial phrases, and it is what decides to back
+    //  off. refusal() reads a POSITIVE marker the challenge cannot fake, so it
+    //  also catches a 200 that is not a page for a reason nobody has seen yet.
+    //  A phrase list can go stale without saying so; the marker cannot.
+    const notThePage = status === 200 ? sf.refusal(res) : null;
+    if (status === 429 || status === 503 || notThePage || C.looksLikeChallenge(html, status)) {
       strikes++; clean = 0; delay = Math.min(delay * 2, 30000);
-      console.error(`throttled ${res.status} on ${handle}, delay now ${delay}ms`);
+      console.error(`throttled ${status} on ${handle}${notThePage ? ' (' + notThePage + ')' : ''}`
+        + `, delay now ${delay}ms`);
       await sleep(delay); continue;                       // retried on the next run
     }
-    if (res.status !== 200) {
-      fs.writeSync(fd, JSON.stringify({ handle, outcome: 'http', status: res.status,
-        location: res.headers.get('location') || null }) + '\n');
+    if (status !== 200) {
+      fs.writeSync(fd, JSON.stringify({ handle, outcome: 'http', status,
+        location: res.redirectUrl || null }) + '\n');
       clean++; await sleep(delay); continue;
     }
     clean++;
