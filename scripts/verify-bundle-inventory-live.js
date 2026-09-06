@@ -94,12 +94,35 @@ for (const p of pages) {
       console.log('  the stored body is byte-identical to the pre-import snapshot, so nothing was changed or damaged');
     }
   } else {
-    //  Imported. Now the assertion that matters: exactly the block, nothing else.
-    const bad = ins.verifyInsertion(before, g.BLOCK, body);
+    //  Imported. Now the assertion that matters, and it is NOT byte equality.
+    //
+    //  Shopify REFORMATTS HTML on save. Measured on the 2026-09-06 import of
+    //  these two sheets: the stored bodies came back 2 and 3 bytes longer than
+    //  the sheets sent, and the entire delta was newlines, "<li><strong>"
+    //  becoming "<li>\n<strong>". Every non-whitespace character was identical
+    //  and in the same order on both pages.
+    //
+    //  So byte equality is the right assertion BEFORE an import, where it proves
+    //  the sheet cannot delete anything, and it is simply wrong afterwards. The
+    //  first cut of this file used it in both places and reported NOT LANDED on
+    //  two pages that had imported perfectly.
+    //
+    //  What is asserted instead still catches the failure this guard exists for,
+    //  a list item silently deleted three screens below the edit:
+    //
+    //    every non-whitespace character identical, in order
+    //    the authored section present intact
+    //    the original body recovered exactly once the block is removed
+    //
+    //  Whitespace is the only thing tolerated, because whitespace between tags
+    //  is the only thing that does not change what a reader sees.
+    const bad = ins.verifyAfterImport(before, g.BLOCK, body);
     if (bad.length) {
-      for (const b of bad) problems.push(`${p.key}: the body is NOT the pre-import body plus the block. ${b}`);
+      for (const x of bad) problems.push(`${p.key}: ${x}`);
     } else {
-      console.log(`  stored body is exactly the pre-import body plus the block, byte for byte`);
+      const ws = body.length - (before.length + g.BLOCK.length);
+      console.log(`  content is exactly the pre-import body plus the block`
+        + (ws ? `, plus ${ws} byte(s) of whitespace Shopify added on save` : ', byte for byte'));
     }
   }
 

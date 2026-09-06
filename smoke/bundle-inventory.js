@@ -125,5 +125,51 @@ for (const { id, g } of PAGES) {
   else console.log('  the real block passes its own checks');
 }
 
+
+//  ── THE POST-IMPORT CHECK, WHICH IS DELIBERATELY LOOSER ────────────────────
+//  verifyAfterImport tolerates whitespace because Shopify reformats HTML on
+//  save. Loosening a guard is exactly when it has to be proved it still bites,
+//  so these cases assert BOTH directions: whitespace-only differences pass, and
+//  every content change is still caught.
+console.log('\npost-import check');
+for (const { id, g } of PAGES) {
+  const A = g.ANCHOR, B = g.BLOCK;
+  const BEFORE = bodyFor(A);
+  const LANDED = BEFORE.replace(A, () => B + A);
+
+  const expectPass = (name, body) => {
+    cases++;
+    const probs = ins.verifyAfterImport(BEFORE, B, body);
+    if (probs.length) { console.error(`  FALSE ALARM on ${id}: ${name}: ${probs.join(' | ').slice(0,110)}`); failed++; }
+    else console.log(`  passes, correctly: ${id} ${name}`);
+  };
+  const expectFail = (name, body, want) => {
+    cases++;
+    const probs = ins.verifyAfterImport(BEFORE, B, body);
+    if (!probs.length) { console.error(`  MISSED on ${id}: ${name}`); failed++; }
+    else if (!probs.some((x) => x.includes(want))) {
+      console.error(`  CAUGHT BY THE WRONG RULE on ${id}: ${name}`);
+      console.error(`    wanted ${JSON.stringify(want)}, got: ${probs.join(' | ').slice(0,140)}`);
+      failed++;
+    } else console.log(`  caught, for its own reason: ${id} ${name}`);
+  };
+
+  //  Must PASS: the real Shopify behaviour.
+  expectPass('an exact landing', LANDED);
+  expectPass('newlines inserted the way Shopify does it',
+    LANDED.replace('<li><strong>', () => '<li>\n<strong>'));
+  expectPass('whitespace collapsed and re-expanded all over',
+    LANDED.replace(/\n/g, () => '\n  '));
+
+  //  Must FAIL: anything that changes what a reader sees.
+  expectFail('a list item deleted elsewhere, the /pages/join failure',
+    LANDED.replace('<li>Create Task scaffolding</li>', () => ''), 'non-whitespace characters');
+  expectFail('a word altered with the length preserved',
+    LANDED.replace('Every purchase also includes', () => 'Every purchase also lncludes'), 'does not return the pre-import body');
+  expectFail('the section missing entirely', BEFORE, 'non-whitespace characters');
+  expectFail('extra content smuggled in',
+    LANDED + '<p>Buy now for $999</p>', 'non-whitespace characters');
+}
+
 if (failed) { console.error(`\n${failed} of ${cases} cases did not behave as required.`); process.exit(1); }
 console.log(`\nall ${cases} cases across ${PAGES.length} pages behaved as required`);
