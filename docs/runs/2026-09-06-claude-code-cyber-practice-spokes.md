@@ -108,10 +108,23 @@ casing the one string.
 
     parse-back     5 rows, MERGE, Body HTML only, clean
     preflight      clear to import
-    mutation       13 of 13 red, each by the rule that claims it
+    mutation       13 of 13 red in the suite, each by the rule that claims it
+    rederive       82 checks, Python, no shared code with the generator
     live (pre)     36 of 41 assertions fail, exactly the ones the import flips
-    offline suite  202 of 203 green; csakitstyle needs python-pptx, absent here
+    offline suite  205 of 206 green; csakitstyle needs python-pptx, absent here
                    and absent before this branch
+    deploy gate    --pre passes on three kinds: suite, rederive, mutation
+
+`deploy-gates/2026-09-06-cyber-practice-spokes.json`. The live check in it is
+deferred until the IMPORT rather than until the deploy, and that distinction is
+written into the manifest: merging ships a generator, a checker, a suite, a
+verifier and a CSV to Railway, none of which is on the server render path. The
+pages change when the sheet is imported.
+
+The rederive is a second implementation in Python with its own CSV reader and no
+import of the generator or the JS spec. Proved not hollow by mutating the SHEET
+itself five ways, unmark the exam card, put a rem back, restore the false claim,
+name the CSA hub, drop a link; all five go red.
 
 `imports/2026-09-06/cyber-practice-restyle-pages.csv` is generated, preflighted
 and not imported. Importing is Tanner's, once, in MERGE mode. Then
@@ -130,6 +143,22 @@ mutation and the first one caught in the same hour it was written.
 The other was a link-loss mutation that also tripped the coverage rule, because
 it removed an asset chip. A mutation that fires two rules cannot tell you which
 one is doing the work, so it removes a "Keep going" link instead.
+
+### The gate refused twice before it passed, and both refusals were right
+
+The first run failed all six mutation checks with "the suite went red, but NOT
+for" the assertion each one named. That is the guard-subsumption test doing its
+job: I had written the `expect_failure` strings from the suite's PASS message
+rather than from its red output, so every mutation was going red for a real
+reason and none of them proved the rule it aimed at.
+
+The sixth was a different and better catch: "the suite still PASSED with the
+guard broken, so it does not test it." The inert-mutation guard I had just added
+to the sibling suite was a bare `if` inside the mutation loop, and every case in
+that loop does mutate, so the branch never ran and deleting it changed no
+verdict. A guard no test can reach is decoration however true it is. It is a
+named `didMutate` now, asserted in both directions, which is what makes it
+breakable and therefore worth having.
 
 ### And the new heading broke four mutations in the sibling suite
 

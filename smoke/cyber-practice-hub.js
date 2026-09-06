@@ -379,6 +379,27 @@ const MUTATIONS = [
   },
 ];
 
+//  A MUTATION THAT MUTATES NOTHING IS NOT A PASSING RULE, IT IS A BROKEN CASE.
+//  The two findings send you to opposite ends of the repo: a hollow rule is a
+//  bug in the validator, an inert mutation is a bug in this file. Four cases
+//  here spent an afternoon looking like the first while being the second.
+//
+//  IT IS A NAMED FUNCTION SO IT CAN BE TESTED, and that is not incidental. As a
+//  bare `if` inside the loop it was unreachable: every case below does mutate,
+//  so the branch never ran, and deleting it changed no verdict. The deploy gate
+//  refused exactly that, with "the suite still PASSED with the guard broken".
+//  A guard no test can reach is decoration however true it is.
+function didMutate(before, rows) {
+  return JSON.stringify(rows) !== before;
+}
+
+//  Both directions, because a didMutate that always returns true would let an
+//  inert case through and one that always returns false would fail every real
+//  mutation. Neither is caught by asserting one side.
+ok('didMutate sees a real change', didMutate('[]', [{ a: 1 }]));
+ok('didMutate sees a no-op, which is the case the loop below can never produce',
+  !didMutate(JSON.stringify([{ a: 1 }]), [{ a: 1 }]));
+
 const caughtBy = {};
 let missed = 0;
 let inert = 0;
@@ -387,12 +408,7 @@ for (const m of MUTATIONS) {
   const rows = fresh.rows.map((r) => ({ ...r }));
   const before = JSON.stringify(rows);
   m.apply(rows);
-  //  A MUTATION THAT MUTATES NOTHING IS NOT A PASSING RULE, IT IS A BROKEN CASE.
-  //  Reported as itself, and loudly, because the two findings send you to
-  //  opposite ends of the repo: a hollow rule is a bug in the validator, an
-  //  inert mutation is a bug in this file. Four cases here spent one afternoon
-  //  looking like the first while being the second.
-  if (JSON.stringify(rows) === before) {
+  if (!didMutate(before, rows)) {
     inert += 1;
     console.log(`  ${m.rule.padEnd(3)} ${m.label.padEnd(62)} INERT   (the mutation changed no bytes,`
       + ' so its anchor no longer matches the generated sheet)');
