@@ -318,6 +318,46 @@ console.log('\n8. EMOJI: carried is not the same as introduced');
     has(other, /raw emoji/), other.problems);
 }
 
+console.log('\n8. A near-miss column name, which goes quiet in both directions');
+{
+  //  -- WHY THIS IS A REFUSAL AND NOT A NOTE ---------------------------------
+  //  Matrixify ignores a column it does not recognise, without complaining, so
+  //  a sheet spelled Body_HTML imports cleanly and changes nothing.
+  //
+  //  The second half is what makes it dangerous. Every body rule in the
+  //  preflight is guarded on col('Body HTML') !== -1, so a missed name skips the
+  //  blank-body refusal, the size cap, the mojibake scan and the script compile
+  //  all at once. Measured 2026-09-06 against a real 40K page body: the file
+  //  came back "clear to import" with "script blocks ok: 0", every content rule
+  //  vacuously green. Same shape as the storefront 403 in lib/storefront-fetch.js.
+  const near = preflight(write('nearmiss-pages.csv', ['Handle', 'Command', 'Body_HTML'],
+    [['a', 'MERGE', '<p>x</p>']]));
+  ok('  Body_HTML is refused as a near miss', has(near, /near miss for "Body HTML"/), near.problems);
+  ok('  and the message says the import would be a silent no-op',
+    has(near, /silent no-op/), near.problems);
+
+  //  Each spelling INDEPENDENTLY, because a rule that only catches underscores
+  //  is not the rule this claims to be.
+  const spaced = preflight(write('nearmiss2-pages.csv', ['Handle', 'Command', 'Body  HTML'],
+    [['a', 'MERGE', '<p>x</p>']]));
+  ok('  a doubled space is refused too', has(spaced, /near miss for "Body HTML"/), spaced.problems);
+  const cased = preflight(write('nearmiss3-pages.csv', ['handle', 'Command', 'Body HTML'],
+    [['a', 'MERGE', '<p>x</p>']]));
+  ok('  a lowercased Handle is refused too', has(cased, /near miss for "Handle"/), cased.problems);
+
+  //  -- THE HALF THAT MUST STAY QUIET ----------------------------------------
+  //  An unrecognised column that resembles nothing is usually a metafield, and
+  //  refusing those would reject every SEO sheet this store has ever imported.
+  const meta = preflight(write('meta-pages.csv',
+    ['Handle', 'Command', 'Metafield: global.title_tag [string]'],
+    [['a', 'MERGE', 'A title']]));
+  ok('  a metafield column is NOT a near miss', !has(meta, /near miss/), meta.problems);
+  const seo = preflight(write('seo-pages.csv', ['Handle', 'Command', 'SEO Title'],
+    [['a', 'MERGE', 'A title']]));
+  ok('  and neither is a column this store really uses',
+    !has(seo, /near miss/), seo.problems);
+}
+
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

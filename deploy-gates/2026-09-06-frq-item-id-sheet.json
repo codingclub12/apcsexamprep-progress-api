@@ -1,0 +1,64 @@
+{
+  "change": "strip data-item-id from ap-cyber-unit-1-frq-practice, and close the preflight hole that found",
+  "_context": "The nightly site audit has called this page a P0 since 2026-08-28: it carries data-item-id and loads no apcs-score-reporter.js. The reporter is not the fix. trailingActivity('ap-cyber-unit-1-frq-practice') returns 'lesson' because utils.js fires the frq alias on h.endsWith('-frq') and this handle ends '-practice', and pageFromHandle() returns null, so the server resolves the handle to nothing. There is no manifest row and no denominator column for it, and the page is self-scored free response anyway: 'reveal the model answers and self-score out of 14'. The attribute is the defect.",
+  "_second_change": "Building the sheet found a hole in scripts/matrixify-preflight.js. A sheet whose body column is spelled Body_HTML came back 'clear to import' with 'script blocks ok: 0', because every body rule is guarded on col('Body HTML') !== -1 and they all skipped themselves. Matrixify ignores a column it does not recognise, so that import would have been a silent no-op that read as shipped. Same shape as the storefront 403 in lib/storefront-fetch.js: a check that cannot see its subject must refuse, never pass quietly.",
+  "_expect_failure_note": "Every expect_failure carries the literal [FAIL] prefix, because an assertion NAME appears on the pass line too, so naming it alone would prove it ran rather than that it went red.",
+
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the preflight, now with the near-miss column rule",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "65 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the two other suites that drive the preflight, unchanged by this",
+      "command": "sh -c 'npm run --silent smoke:networkingccgate && npm run --silent smoke:cyberpractice'",
+      "expect": "every one caught by the rule that claims it"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation, in Python, rebuilds the sheet's claim from the raw artifact",
+      "command": "python3 scripts/verify-frq-item-id-sheet.py",
+      "expect": "RE-DERIVED OK",
+      "_why": "The generator writes the sheet and then checks it with a parser it wrote for the purpose, which only proves the two halves agree. This reads the committed before-body and the CSV with Python's own csv module, knows nothing about the generator, and asserts the EQUALITY (body == before minus the attribute) rather than searching for the attribute's absence, which would pass on a body that lost other things too. It also pins six markers that must survive, because a rewrite that dropped the wrapper or the self-score copy would satisfy every other check here."
+    },
+    {
+      "kind": "mutation",
+      "name": "the near-miss rule must REFUSE, not merely notice",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "    problems.push(`column ${JSON.stringify(raw)} is a near miss for ${JSON.stringify(near)}. `",
+      "replace": "    if (false) problems.push(`column ${JSON.stringify(raw)} is a near miss for ${JSON.stringify(near)}. `",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "[FAIL]   Body_HTML is refused as a near miss"
+    },
+    {
+      "kind": "mutation",
+      "name": "and it must stay QUIET on a column that resembles nothing",
+      "_why": "The opposite failure is just as expensive and much likelier to be shipped, because it looks like caution. Refusing every unrecognised column would reject every SEO and metafield sheet this store has imported. Checked separately against all 41 sheets in the repo: zero new refusals.",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "    if (!near) continue;",
+      "replace": "    const near2 = near || 'Body HTML'; if (!near2) continue;",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "[FAIL]   a metafield column is NOT a near miss"
+    },
+    {
+      "kind": "mutation",
+      "name": "the normalizer has to reach case and spacing, not just underscores",
+      "_why": "A rule that catches only Body_HTML is not the rule this claims to be. Asserted independently of the underscore case above, so a normalizer that regressed to one spelling cannot hide behind the other going red.",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "const normColumn = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, '');",
+      "replace": "const normColumn = (s) => String(s).replace(/_/g, ' ');",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "[FAIL]   a lowercased Handle is refused too"
+    },
+    {
+      "kind": "live",
+      "name": "after the import, the live page serves no data-item-id",
+      "command": "sh -c 'node -e \"const sf=require(\\\"./lib/storefront-fetch.js\\\");const b=sf.pageBody(\\\"ap-cyber-unit-1-frq-practice\\\").body_html;const n=(b.match(/data-item-id/g)||[]).length;if(n)throw new Error(\\\"still \\\"+n+\\\" data-item-id on the live page: the sheet was not imported\\\");if(!/data-lesson-id=.unit-1-frq./.test(b))throw new Error(\\\"data-lesson-id went too: the import removed more than the attribute\\\");console.log(\\\"LIVE CLEAN: 0 data-item-id, wrapper and lesson id intact, \\\"+b.length+\\\" chars\\\")\"'",
+      "expect": "LIVE CLEAN",
+      "_why": "False before this import and true after: the page carried exactly one data-item-id when the sheet was cut, measured, sha256 94b7d914157bd454afd6fdc51d6085b6caaece109ba3e8f3cc12e2bcab831a9b. It also asserts data-lesson-id SURVIVED, so a body truncated by a bad import cannot pass this by having lost everything. Cannot run until Tanner imports the sheet, so --pre defers it."
+    }
+  ]
+}
