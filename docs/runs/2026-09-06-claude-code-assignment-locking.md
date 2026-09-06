@@ -127,10 +127,31 @@ checked directly: `smoke:quizgate` (20), `smoke:admingates` (43),
   yet.** That is theme work, in the other repo, against
   `claude/site-linking-audit-yhufjk`. Until it lands the page is reachable only
   by typing the URL.
-- **How many live columns are lockable at all** is unmeasured. The count is
-  `quiz_bank` locations against `course_manifest` graded columns, and the answer
-  decides whether this feature is mostly real or mostly decoration today. Worth a
-  board task on its own.
+- **How many columns are lockable at all: measured, and the answer is five.**
+  Seeded a throwaway database from this repo's own seed scripts and counted the
+  server render path against the graded columns:
+
+  | | locations |
+  |---|---|
+  | `quiz_bank`, the server render path | 5 |
+  | graded `course_manifest` columns | 757 |
+  | overlap | 0 |
+
+  All five are AP Cybersecurity Unit 1 quizzes, lessons 1.1 through 1.5, from
+  `seed/cyber-unit-1-web-quizzes.js`. The 757 are CSA 411, intro-java 286,
+  networking 59, cyber 1, and the zero overlap is because cyber's manifest rows
+  come from a different seed than `seed-manifest.js`.
+
+  So a teacher locking a CSA unit today gets a switch that flips, a padlock that
+  draws, and no protection whatsoever, and that is exactly why `lock_enforceable`
+  exists and why `gates.locked_but_unenforceable` names the columns instead of
+  counting them. The named list IS the migration queue.
+
+  **This is a repo measurement, not a production observation.** Production's
+  `quiz_bank` may hold locations these seed files do not, since a bank row can be
+  added without a seed script. Re-derive it against production with
+  `GET /api/admin/class/:id/gates`, which lists exactly the activities driven by
+  `quiz_bank`, before treating the number five as live truth. Board task 248.
 - Scheduled open/close windows and per-student exceptions are still deliberately
   not built. Reasons are in `docs/quiz-locking.md`.
 - Due dates remain out of scope. Locking says what a class can reach right now,
