@@ -72,6 +72,20 @@ const auth = spec('ap-cybersecurity', '1.2-auth-lab');
 const perm = spec('ap-cybersecurity', '1.2-lab');
 const badge = spec('ap-cybersecurity', '2.4-lab');
 
+//  Both handles, by HTTP status alone. A redirect is the whole point here, so
+//  this deliberately does not follow it: lib/storefront-fetch refuses a body
+//  that is not a rendered page, and a 301 has no body to judge.
+function status(path) {
+  try {
+    const r = require('child_process').execFileSync('curl',
+      ['-s', '-o', '/dev/null', '-w', '%{http_code}', '--max-time', '30',
+       'https://www.apcsexamprep.com' + path], { encoding: 'utf8' });
+    return r.trim();
+  } catch (e) { return 'error'; }
+}
+const newHandleCode = status('/pages/ap-cyber-unit-4-lesson-3-terminal-lab');
+const oldHandleCode = status('/pages/ap-cyber-unit-1-lesson-2-terminal-lab');
+
 const want = [
   // ── FALSE BEFORE THIS DEPLOY ──────────────────────────────────────────────
   ['the Unit 1 auth lab spec is served at all (404 before this deploy)',
@@ -102,12 +116,28 @@ const want = [
   // ── TRUE BEFORE, AND A DEPLOY THAT BROKE THEM WOULD BE WORSE ──────────────
   ['the permissions lab keeps item_id 1.2-lab, so recorded attempts stay attached',
     () => perm.json && perm.json.item_id === '1.2-lab'],
-  ['and keeps its live handle, because renaming one is a human action',
-    () => perm.json && perm.json.page_handle === 'ap-cyber-unit-1-lesson-2-terminal-lab'],
+  //  Renamed 2026-09-06 on Tanner's explicit instruction, which is the stated
+  //  exception to the NEVER_AUTO rule. pageUpdate with redirectNewHandle:true,
+  //  so there was no 404 window.
+  //
+  //  This used to assert perm.json.page_handle, which is THIS REPO'S OWN config
+  //  read back through the API. That is the repo agreeing with itself and would
+  //  have stayed green through any rename. What matters to a student is the URL,
+  //  so both halves of the rename are asserted against the live storefront.
+  ['the permissions lab serves at its new Unit 4 handle',
+    () => newHandleCode === '200'],
+  ['and the old handle 301s rather than 404ing, so every inbound link survives',
+    () => oldHandleCode === '301'],
   ['the badge log at 2.4 was not in scope and still serves',
     () => badge.code === '200' && badge.json && badge.json.lesson_id === '2.4'],
-  ['both cyber labs are still ungraded, so neither adds a lone denominator',
-    () => auth.json && perm.json && auth.json.graded === false && perm.json.graded === false],
+  //  This asserted BOTH cyber labs ungraded and went red on 2026-09-04, when the
+  //  auth lab was deliberately graded for Michelle's class. The assertion was
+  //  correct when written and nobody updated it with the change that broke it.
+  //  Stated per lab now, so grading one does not silently invalidate the other.
+  ['the auth log lab is graded, which is what makes it reach the gradebook',
+    () => auth.json && auth.json.graded === true],
+  ['the permissions lab is still ungraded, so it adds no lone denominator',
+    () => perm.json && perm.json.graded === false],
 ];
 
 console.log('');

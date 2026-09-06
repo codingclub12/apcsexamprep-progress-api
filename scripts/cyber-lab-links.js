@@ -16,7 +16,7 @@
 //  WHAT IT WILL NOT DO
 //    - touch ap-cyber-unit-1-lesson-2-lab. That handle is ALREADY a 62 KB
 //      graded lab (Password Attack Simulation) and has nothing to do with this
-//      one. The terminal lab ships as ap-cyber-unit-1-lesson-2-terminal-lab and
+//      one. The terminal lab ships as ap-cyber-unit-4-lesson-3-terminal-lab and
 //      is linked ALONGSIDE it, never over it. This is checked, not remembered:
 //      a link that would replace the existing Lab row is a refusal.
 //    - run against a body that is not the page it expects

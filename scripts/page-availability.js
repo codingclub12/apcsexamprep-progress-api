@@ -68,7 +68,7 @@ const PAGES = [
   //  down. What it no longer does is depend on whether a teacher somewhere
   //  happens to have that lab open tonight, which was never a fact about
   //  availability.
-  { handle: 'ap-cyber-unit-1-lesson-2-terminal-lab', why: 'a terminal lab',
+  { handle: 'ap-cyber-unit-4-lesson-3-terminal-lab', why: 'a terminal lab',
     mounts: '/api/labs/ap-cybersecurity/1.2-lab',
     expect: (j) => Array.isArray(j.checks) || j.locked === true },
 ];
