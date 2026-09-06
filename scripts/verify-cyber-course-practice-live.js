@@ -69,10 +69,31 @@ async function main() {
     const anchors = anchorsOf(b);
     const at = anchors.indexOf(gen.HUB);
 
-    ok(`${page.handle}: the band is on the page`, b.includes(gen.MARK));
+    //  The ordinal claim is the same for both kinds of page, and it is the only
+    //  assertion that distinguishes this change from what was already true: the
+    //  course guide linked the hub from 247 of 247 and the concept index from
+    //  52 of 52, so a presence check passes on both without anything happening.
     ok(`${page.handle}: the practice hub is inside the first ${TOP_N} anchors, not at the bottom`,
       at >= 0 && at < TOP_N,
       at < 0 ? 'absent' : `${at + 1} of ${anchors.length}`);
+
+    if (page.edits) {
+      //  The concept index gets edits to the quick-nav row it already had, not a
+      //  band, so there is no marker to look for. What there is instead: the new
+      //  pill must be inside that row, and the pill that named the sampler
+      //  "Practice" must be gone, because two links called the same thing when
+      //  one of them is fifteen questions is the defect this half fixes.
+      ok(`${page.handle}: the practice hub pill is inside the quick-nav row`,
+        /<div class="cyt-nav">[\s\S]{0,400}\/pages\/ap-cybersecurity-practice"/.test(b));
+      ok(`${page.handle}: the sampler pill no longer reads just "Practice"`,
+        !b.includes('>Practice</a>') && b.includes('>Quick Sampler</a>'));
+      ok(`${page.handle}: the concept cards survived`,
+        (b.match(/cyt-card|cyt-nav/g) || []).length > 10);
+      await sleep(1600);
+      continue;
+    }
+
+    ok(`${page.handle}: the band is on the page`, b.includes(gen.MARK));
     //  Scoped to the BAND, not to the page. Both pages already linked the
     //  practice exam from the bottom before this change, so a page-wide
     //  presence check passes pre-import and proves nothing. This is the same
