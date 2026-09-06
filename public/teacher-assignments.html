@@ -97,6 +97,10 @@
            padding:9px 15px; border-radius:9px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .18s ease; z-index:20; }
   #toast.show { opacity:1; }
 </style>
+<!-- Product analytics. Inert unless POSTHOG_API_KEY is set on the server.
+     Every page under public/ carries this; smoke:posthog fails the build if one
+     does not. -->
+<script src="/posthog-init.js"></script>
 </head>
 <body>
 <div class="wrap">
