@@ -11,22 +11,44 @@ where the SERVER hands out the questions, and that was five columns out of 762.
 
 ## CSA is a bigger job than "move some questions", and the reason is structural
 
-CSA does not merely keep its questions in the page. It scores through a
-different system than the one the lock enforces in.
+CSA does not merely keep its questions in the page. It scores through a system
+other than the one the lock enforces in, and there are three of them in play:
 
-    System A   GET /api/quiz/...          quiz_bank          questions AND keys   lock enforced
-    System B   POST /api/student/score    quiz_answer_bank   keys only            lock cannot bite
+    GET /api/quiz/...            quiz_bank    questions AND keys   lock enforced
+    POST /api/progress/attempt   attempts     no keys server side  lock cannot bite
+    POST /api/student/score      progress     keys only            lock cannot bite
 
-Every CSA quiz reports through System B. So migrating a CSA quiz is not a content
-move, it is moving that quiz onto the other scoring system. That is why this
-starts with one lesson rather than fourteen, and it is the fact most likely to be
-missed by anyone scoping the remaining 757.
+Migrating a CSA quiz is therefore not a content move, it is moving that quiz onto
+the first row. That is why this starts with one lesson rather than fourteen, and
+it is the fact most likely to be missed by anyone scoping the remaining 757.
+
+**Correction, same day.** The first version of this section said "Every CSA quiz
+reports through System B", naming `POST /api/student/score` and
+`quiz_answer_bank`. That is wrong for 1.1 and wrong as a general claim about CSA.
+CSA has two report paths and the lesson pages are on the one this note did not
+name:
+
+- `ap-csa-lesson-*`, which is all fifteen Unit 1 lesson pages including 1.1, is
+  driven by `shopify/apcs-reporter.js` and posts to `POST /api/progress/attempt`.
+  That writes the `attempts` table and is gated by `course_manifest`, where 1.1
+  is `1.1-quiz` worth 2 points. No key is stored server side at all: the page
+  grades itself and reports a number.
+- `POST /api/student/score` against `quiz_answer_bank` is the path for the five
+  `ap-csa-course-*` pages named in `seed/csa-answer-bank.js`, all of them Unit 2
+  and Unit 4. 1.1 is not among them.
+
+The conclusion held, which is why the sentence survived a read: neither path is
+`quiz_bank`, so a gate row against `1.1-quiz` protects nothing until step 2
+lands. But the table matters to anyone scoping the rest, because the two paths
+write different ones, and "keys only" was the wrong description of a path that
+stores no key.
 
 ## What the live page was doing
 
-`ap-csa-lesson-1-1-intro-algorithms`, 103,181 bytes, carries **ten `data-answer`
-attributes**: six CFUs, one code exercise, and both MCQ parts of the Tier 3
-mastery challenge. View Source is the answer key for the lesson. The gate is not
+`ap-csa-lesson-1-1-intro-algorithms`, 103,181 bytes, carries **nine `data-answer`
+attributes**, two of which are the MCQ parts of the Tier 3 mastery challenge and
+the rest CFU widgets. (An earlier draft said ten. Counted against the fetched
+body: nine.) View Source is the answer key for the lesson. The gate is not
 the only thing this migration fixes, and on current evidence it is not even the
 more urgent one.
 

@@ -140,4 +140,9 @@ if (require.main === module) {
   process.exit(0);
 }
 
-module.exports = { seedQuizBank };
+//  SOURCES is exported so a suite can derive its expected totals from the same
+//  list the seed actually loads. smoke/quiz-gate.js and smoke/quiz-bank-authoring.js
+//  each kept their own copy of it, both commented "adding a lesson never breaks
+//  this suite", and both went red the first time a lesson was added. A comment
+//  cannot keep two lists in step; one list can.
+module.exports = { seedQuizBank, SOURCES };

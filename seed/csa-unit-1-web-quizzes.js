@@ -5,7 +5,7 @@
 //  WHY THIS FILE EXISTS
 //  A lock is only real where the SERVER hands out the questions. Every AP CSA
 //  lesson page today carries its own questions AND its own answers: the live
-//  body of ap-csa-lesson-1-1-intro-algorithms ships ten `data-answer` attributes,
+//  body of ap-csa-lesson-1-1-intro-algorithms ships nine `data-answer` attributes,
 //  so View Source is the whole answer key for that lesson. A gate row can be
 //  written against `1.1-quiz` right now and it protects nothing, because the
 //  browser has the instrument before any code of ours runs.
@@ -18,11 +18,29 @@
 //  is still decoration, and nobody should be told otherwise.
 //
 //  CSA SCORES THROUGH A DIFFERENT SYSTEM, WHICH IS THE REAL SIZE OF THIS JOB
-//  CSA quizzes report through POST /api/student/score against quiz_answer_bank,
-//  which owns ANSWERS but not QUESTIONS. Lock enforcement lives in routes/quiz.js
-//  against quiz_bank, which owns both. So migrating a CSA quiz is not a content
-//  move, it is moving that quiz onto the other scoring system. That is why this
-//  starts with one lesson rather than all fourteen.
+//  Lock enforcement lives in routes/quiz.js against quiz_bank, which owns the
+//  questions AND the keys. Nothing in AP CSA is on it today, so migrating a CSA
+//  quiz is not a content move: it is moving that quiz onto the system where a
+//  lock can bite. That is why this starts with one lesson rather than all
+//  fourteen.
+//
+//  WHICH SYSTEM 1.1 IS ON, CHECKED RATHER THAN ASSUMED. An earlier draft of this
+//  header said "CSA quizzes report through POST /api/student/score against
+//  quiz_answer_bank" and that is wrong for this lesson and wrong as a general
+//  claim. CSA has two report paths and 1.1 is on the other one:
+//
+//    ap-csa-lesson-*   shopify/apcs-reporter.js  -> POST /api/progress/attempt
+//                      writes `attempts`, gated by course_manifest. 1.1 sits here,
+//                      as item_id `1.1-quiz` worth 2 points.
+//    ap-csa-course-*   the tracker's score path   -> POST /api/student/score
+//                      writes `progress`, keys from quiz_answer_bank. Five pages
+//                      only, all Unit 2 and Unit 4: seed/csa-answer-bank.js names
+//                      them and 1.1 is not among them.
+//
+//  The conclusion the wrong sentence supported still holds, which is why it
+//  survived a read: neither path is quiz_bank, so a gate row against `1.1-quiz`
+//  protects nothing until step 2 lands. But a session scoping the remaining
+//  lessons needs the right table, because the two paths land in different ones.
 //
 //  PROVENANCE, AND THE RULE IT OBEYS
 //  These two questions are the Parts A and B already published in the Tier 3 AP
