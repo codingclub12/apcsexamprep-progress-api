@@ -56,7 +56,35 @@ const KIND = {
   case_file: { label: 'Case file', blurb: 'One scenario with several sources to read against each other.' },
   scenario: { label: 'Scenario practice', blurb: 'Short scenarios that ask what you would do and why.' },
   frq: { label: 'Free-response practice', blurb: 'Device Security Analysis sets in the format the exam actually uses.' },
-  exam: { label: 'Unit exam', blurb: 'The full unit test, once you have done the rest.' },
+  exam: {
+    label: 'Unit practice exam',
+    //  THE LABEL AND THE BLURB BOTH HAVE TO SAY "PRACTICE", AND THAT IS THE POINT.
+    //
+    //  This card used to read "Unit exam" / "The full unit test, once you have
+    //  done the rest", on a page a student reaches without logging in. Two
+    //  separate things are wrong with that sentence and only one of them is
+    //  about wording.
+    //
+    //  The site's online unit exam is NOT the instrument a teacher grades.
+    //  docs/cyber-unit1-bundle-vs-online.md compared them item by item: the
+    //  paper Unit 1 Test is 22 MCQ plus 3 FRQ, the online one is 20 MCQ, zero
+    //  shared items, highest similarity 0.24. docs/cyber-unit-tests-availability.md
+    //  closed Units 2 through 5 the same way. Measured again on 2026-09-06
+    //  against the five lesson quizzes in seed/cyber-unit-1-web-quizzes.js:
+    //  zero exact stems, highest token overlap 0.15. So calling it "the full
+    //  unit test" is not a shorthand, it is false, and it is false in the
+    //  direction that costs a teacher: a student who reads that sentence
+    //  believes they have seen the test they are about to sit.
+    //
+    //  And it grades itself in the browser. Units 1 and 2 carry
+    //  ANSWERS = {"e1":"B",...} in the page body; 4 and 5 pass the letter and
+    //  the rationale as arguments to checkMCQ() on every option. Whatever else
+    //  this page is, it is not something to sit under exam conditions, so the
+    //  card says so rather than leaving a student to find out.
+    blurb: 'Twenty questions over the whole unit, and it tells you the answer as soon as you check one. '
+      + 'These are not the questions on the test your teacher grades. That one is a separate set of items, '
+      + 'written so that working through this page cannot spoil it. Save this until the rest of the unit is done.',
+  },
   project: { label: 'Project', blurb: 'A longer build you can put in front of a teacher.' },
 };
 
@@ -82,8 +110,16 @@ function labelFor(handle) {
   if (named) return `Lab: ${named[2].replace(/-/g, ' ')}`;
   const rest = /^ap-cyber-unit-(\d)-(.+)$/.exec(handle);
   if (rest) {
-    const t = rest[2].replace(/-/g, ' ');
-    return `Unit ${rest[1]} ${t}`;
+    //  Initialisms get their capitals; nothing else is touched. This branch is
+    //  what produces the FRQ, scenario, exam and project cards, and without the
+    //  caps pass the live Unit 1 page said "Unit 1 frq practice", which reads as
+    //  a handle somebody forgot to finish rather than as a link label.
+    //
+    //  Deliberately NOT sentenceCase, which is the slug branch's helper: that
+    //  one capitalises the first word, and here the first word is already "Unit",
+    //  so it would only turn "exam" into "Exam" and leave the label capitalised
+    //  in the middle. Two labels, two rules, and this is the smaller one.
+    return `Unit ${rest[1]} ${capsOnly(rest[2].replace(/-/g, ' '))}`;
   }
   //  Units 1 and 2 keep slug handles for their lesson pages, so the label comes
   //  from the slug. Sentence case, because "unit 1 social engineering" in a
@@ -96,36 +132,135 @@ function labelFor(handle) {
 
 //  Initialisms the site writes in capitals. Everything else takes a leading
 //  capital and is otherwise left as authored.
-const CAPS = new Set(['ai', 'vpn', 'mfa', 'dns', 'ddos', 'sql', 'xss', 'ids', 'ips', 'siem', 'mac', 'iot']);
+const CAPS = new Set(['ai', 'vpn', 'mfa', 'dns', 'ddos', 'sql', 'xss', 'ids', 'ips', 'siem', 'mac', 'iot', 'frq']);
+function capsOnly(text) {
+  return String(text).split(' ').map((w) => (CAPS.has(w.toLowerCase()) ? w.toUpperCase() : w)).join(' ');
+}
 function sentenceCase(text) {
-  const words = String(text).split(' ').map((w) => (CAPS.has(w.toLowerCase()) ? w.toUpperCase() : w));
+  const words = capsOnly(text).split(' ');
   if (!words.length) return text;
   words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
   return words.join(' ');
 }
 
+//  ── THE COURSE'S OWN DESIGN SYSTEM, NOT A SECOND ONE ───────────────────────
+//  These five pages shipped in a look nothing else on AP Cybersecurity uses: a
+//  system sans-serif on white, hairline grey cards, small blue pill links.
+//  Every other cyber page (lesson, quiz, exercise, lab, exam) opens with a
+//  purple gradient hero in Georgia and carries the #ucnav unit rail. Measured
+//  2026-09-06 on the live bodies: ucnav appears 29 times on ap-cyber-unit-1-exam
+//  and 52 on a lesson quiz, and zero times on any of the five practice spokes.
+//
+//  The effect is not "slightly different". A student clicking from the unit
+//  study page to its practice page lands somewhere that does not look like the
+//  same course, and the largest thing on the practice page was the theme's
+//  contact form, because the content ended above the fold.
+//
+//  So the tokens below are LIFTED from the live exam body rather than invented:
+//  the gradient, the badge, the Georgia stack, #1E1B4B on #F5F0FF over #DDD6FE,
+//  and the #6b21a8 link purple. A sixth opinion about what purple means is
+//  exactly the drift the canonical-data rule exists to stop.
+//
+//  ── WHY !important AND -webkit-text-fill-color ─────────────────────────────
+//  Neither is decoration and both are copied from the pages that already work.
+//  The body lands inside the theme's .rte wrapper, whose own rules are specific
+//  enough to win against a plain declaration, and Safari and iOS honour
+//  -webkit-text-fill-color over color, which is how a link on this theme ends up
+//  rendering in the theme's blue no matter what color says.
+//
+//  ── EVERY LENGTH IS px, AND rem IS A TRAP ON THIS THEME ────────────────────
+//  layout/theme.liquid sets html{font-size:calc(var(--font-body-scale) * 62.5%)},
+//  so 1rem is about 10px here, not 16px. The body this replaces was authored in
+//  rem against a 16px assumption, which is most of why it read as unstyled: the
+//  card heading asked for 1.05rem and rendered at 10.5px, and the lede asked for
+//  1.05rem while the paragraph under it, having no font-size at all, inherited
+//  the container's 16px. So the page's summary line was SMALLER than the body
+//  text below it, and nothing about the CSS looked wrong.
+//
+//  Nothing catches this. It is valid CSS, it parses, it serves, and it is only
+//  wrong by a factor the stylesheet never mentions. The cyber pages that look
+//  right are in px throughout for the same reason, so this is in px throughout,
+//  and a rem inside this block should be read as a bug.
+//
+//  The #ucnav rail is deliberately NOT reproduced here. It is inlined per page
+//  with its own script, and a hand-copied sixth instance is a maintenance debt
+//  with no owner. The hero's breadcrumb and the Keep going row carry the same
+//  navigation as real anchors.
 const CSS = (id) => `
 <style>
-#${id}{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1a1a2e;line-height:1.6}
-#${id} *{box-sizing:border-box}
-#${id} h1{font-size:1.9rem;line-height:1.25;margin:0 0 .5rem;font-weight:800}
-#${id} h2{font-size:1.25rem;margin:2rem 0 .25rem;font-weight:700}
-#${id} p{margin:.5rem 0 1rem}
-#${id} .lede{font-size:1.05rem;color:#3c3c57}
-#${id} .crumb{font-size:.85rem;color:#5a5a78;margin:0 0 1rem}
-#${id} .crumb a{color:#2b4a8b;text-decoration:none}
-#${id} .grp{border:1px solid #e2e2ee;border-radius:10px;padding:1rem 1.1rem;margin:0 0 1rem;background:#fbfbfe}
-#${id} .grp h3{margin:0 0 .2rem;font-size:1.05rem;font-weight:700}
-#${id} .grp .why{margin:0 0 .7rem;font-size:.92rem;color:#4a4a66}
-#${id} .chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:0;padding:0;list-style:none}
-#${id} .chips li{margin:0}
-#${id} .chips a{display:inline-block;padding:.32rem .7rem;border:1px solid #ccd;border-radius:999px;background:#fff;color:#2b4a8b;text-decoration:none;font-size:.88rem}
-#${id} .chips a:hover{background:#eef2fb}
-#${id} .onward{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.2rem 0 0;padding:0;list-style:none}
-#${id} .onward li{margin:0}
-#${id} .onward a{display:inline-block;padding:.5rem .9rem;border-radius:8px;background:#2b4a8b;color:#fff;text-decoration:none;font-size:.92rem}
-#${id} .onward a.alt{background:#fff;color:#2b4a8b;border:1px solid #2b4a8b}
+#${id}{all:initial!important;display:block!important;font-family:Georgia,serif!important;color:#1E1B4B!important;background:#fff!important;line-height:1.65!important;-webkit-font-smoothing:antialiased!important}
+#${id} *{box-sizing:border-box!important;font-family:Georgia,serif!important}
+#${id} .phero{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:36px 24px 30px!important;text-align:center!important;border-radius:0 0 12px 12px!important}
+#${id} .phero-badge{display:inline-block!important;background:rgba(168,85,247,.25)!important;border:1px solid rgba(168,85,247,.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;margin:0 0 14px!important}
+#${id} .crumb{font-size:13px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0 0 14px!important}
+#${id} .crumb a{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;text-decoration:none!important}
+#${id} .crumb a:hover{text-decoration:underline!important}
+#${id} .crumb span{margin:0 6px!important;color:#8B7BB8!important;-webkit-text-fill-color:#8B7BB8!important}
+#${id} .phero h1{font-size:clamp(22px,4vw,34px)!important;font-weight:700!important;line-height:1.25!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px!important}
+#${id} .phero .lede{font-size:15px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin:0!important;max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
+#${id} .pwrap{max-width:860px!important;margin:0 auto!important;padding:22px 20px 8px!important}
+#${id} .pwrap p{margin:0 0 18px!important;font-size:16px!important;color:#374151!important;-webkit-text-fill-color:#374151!important}
+#${id} .grp{border:1px solid #DDD6FE!important;border-radius:12px!important;padding:16px 18px!important;margin:0 0 14px!important;background:#F5F0FF!important}
+#${id} .grp h2{margin:0 0 3px!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#${id} .grp .why{margin:0 0 13px!important;font-size:15px!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important}
+#${id} .chips{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:0!important;padding:0!important;list-style:none!important}
+#${id} .chips li{margin:0!important}
+#${id} .chips a{display:inline-block!important;padding:6px 13px!important;border:1px solid #C4B5FD!important;border-radius:999px!important;background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;text-decoration:none!important;font-size:15px!important}
+#${id} .chips a:hover{background:#EDE9FE!important;border-color:#8B5CF6!important}
+#${id} .grp--exam{background:#FFF7ED!important;border-color:#FDBA74!important}
+#${id} .grp--exam h2{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#${id} .grp--exam .why{color:#7C2D12!important;-webkit-text-fill-color:#7C2D12!important}
+#${id} .grp--exam .chips a{border-color:#FDBA74!important;color:#9A3412!important;-webkit-text-fill-color:#9A3412!important}
+#${id} .grp--exam .chips a:hover{background:#FFEDD5!important;border-color:#EA580C!important}
+#${id} h2.onward-h{font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:26px 0 8px!important}
+#${id} .onward{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 8px!important;padding:0!important;list-style:none!important}
+#${id} .onward li{margin:0!important}
+#${id} .onward a{display:inline-block!important;padding:8px 15px!important;border-radius:8px!important;background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-size:15px!important}
+#${id} .onward a:hover{background:#581c87!important}
+#${id} .onward a.alt{background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;border:1px solid #C4B5FD!important}
+#${id} .onward a.alt:hover{background:#EDE9FE!important}
+@media (max-width:600px){#${id} .phero{padding:26px 16px 22px!important}#${id} .pwrap{padding:18px 14px 8px!important}}
 </style>`;
+
+//  ── THE PAGE SUPPLIES ITS OWN BREADCRUMB SCHEMA, AND IT HAS TO ─────────────
+//  The theme emits ONE BreadcrumbList into every page head and its second item
+//  is hardcoded to AP Computer Science A. Read on the live storefront
+//  2026-09-06, in the head of ap-cyber-unit-1-exam and of every practice spoke:
+//
+//      Home -> https://apcsexamprep.com/
+//      AP Computer Science A -> https://apcsexamprep.com/pages/ap-csa-exam-prep
+//      <this page>
+//
+//  Every real cyber page answers that with a correct BreadcrumbList of its own
+//  in the BODY, so the wrong one is not the only thing a crawler reads. The five
+//  practice spokes carried none, which left the theme's claim unopposed: the
+//  only structured data on an AP Cybersecurity practice page said its parent was
+//  the CSA course. This emits the same block the exam pages already carry.
+//
+//  It does not FIX the theme, and it should not pretend to. The head tag is
+//  theme work and belongs with board 148, which owns the other half of the same
+//  liquid problem.
+function breadcrumbJsonLd(s) {
+  const u = spec.umbrella();
+  const crumbs = [
+    ['Home', `${STORE}/`],
+    ['AP Cybersecurity', `${STORE}/pages/${u.course_guide}`],
+    ['Practice', `${STORE}/pages/${u.handle}`],
+    [`Unit ${s.unit_no} practice`, `${STORE}/pages/${s.handle}`],
+  ];
+  const json = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map(([name, item], i) => ({
+      '@type': 'ListItem', position: i + 1, name, item,
+    })),
+  };
+  //  No </script> can appear inside a script element, and a handle or a unit
+  //  name is the kind of thing that grows an angle bracket the day nobody is
+  //  looking. Escaped rather than trusted.
+  const text = JSON.stringify(json, null, 2).replace(/</g, '\\u003c');
+  return `<script type="application/ld+json">\n${text}\n</script>`;
+}
 
 function spokeBody(s) {
   const u = spec.umbrella();
@@ -136,7 +271,16 @@ function spokeBody(s) {
       const chips = s.assets[k]
         .map((h) => `<li><a href="/pages/${esc(h)}">${esc(labelFor(h))}</a></li>`)
         .join('');
-      return `<div class="grp"><h3>${esc(KIND[k].label)}</h3>`
+      //  The exam block is marked off rather than filed in the row with the
+      //  quizzes. Tanner's rule, 2026-09-06: a unit test does not belong on a
+      //  practice page unless it is a different instrument from the graded one,
+      //  and if it is, the page has to say so where a student will read it. It
+      //  is different (see KIND.exam), so it stays and it is coloured apart.
+      const mod = k === 'exam' ? ' grp--exam' : '';
+      //  h2, not h3. The old body went h1 straight to h3 and then put its only
+      //  h2 at the very bottom, so the outline read as one section with eight
+      //  orphaned subheadings under nothing.
+      return `<div class="grp${mod}"><h2>${esc(KIND[k].label)}</h2>`
         + `<p class="why">${esc(KIND[k].blurb)}</p>`
         + `<ul class="chips">${chips}</ul></div>`;
     })
@@ -150,19 +294,25 @@ function spokeBody(s) {
 
   const total = s.asset_count;
   return `${CSS(id)}
+${breadcrumbJsonLd(s)}
 <div id="${id}">
-<p class="crumb"><a href="/pages/${esc(u.topics_hub)}">AP Cybersecurity</a> &rsaquo; <a href="/pages/${esc(u.handle)}">Practice</a> &rsaquo; Unit ${s.unit_no}</p>
+<div class="phero">
+<div class="phero-badge">Unit ${s.unit_no} &bull; Practice</div>
+<nav class="crumb" aria-label="Breadcrumb"><a href="/pages/${esc(u.topics_hub)}">AP Cybersecurity</a><span>&rsaquo;</span><a href="/pages/${esc(u.handle)}">Practice</a><span>&rsaquo;</span>Unit ${s.unit_no}</nav>
 <h1>AP Cybersecurity Unit ${s.unit_no} Practice: ${esc(s.unit_name)}</h1>
 <p class="lede">Every piece of practice for Unit ${s.unit_no}, in one place: ${total} quizzes, exercises, labs and exams, in the order you should meet them. Unit ${s.unit_no} covers CED topics ${esc(s.topics.join(', '))}.</p>
-<p>Work down the page. The quizzes and exercises are short enough to do between lessons, the labs take a class period, and the unit exam is worth saving until the rest is done.</p>
+</div>
+<div class="pwrap">
+<p>Work down the page. The quizzes and exercises are short enough to do between lessons, the labs take a class period, and the practice exam at the end is worth saving until the rest is done.</p>
 ${groups}
-<h2>Keep going</h2>
+<h2 class="onward-h">Keep going</h2>
 <ul class="onward">
 <li><a href="/pages/${esc(s.unit_study_page)}">Study Unit ${s.unit_no}</a></li>
 <li><a href="/pages/${esc(u.handle)}">All AP Cybersecurity practice</a></li>
 <li><a class="alt" href="/pages/${esc(u.course_guide)}">Full course guide</a></li>
 ${course}
 </ul>
+</div>
 </div>`;
 }
 

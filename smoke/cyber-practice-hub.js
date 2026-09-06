@@ -261,16 +261,29 @@ console.log('\n  mutations (a green mutation run is a FAILED check)\n');
 //  Each mutation edits the generated sheet and names the rule that must fire.
 //  Independence is enforced: the named rule must go red, and the report says so
 //  even when another rule also fires.
+//  ── WHERE A MUTATION INJECTS, AND WHY IT IS NOT A LITERAL TAG ──────────────
+//  Four of these used to splice against the literal string "<h2>Keep going</h2>".
+//  On 2026-09-06 the spoke body gained a class on that heading, the four
+//  replacements matched nothing, and the suite reported four rules as MISSED
+//  with "nothing fired". The rules were fine. The mutations had silently
+//  stopped being mutations, and the message pointed at the wrong half.
+//
+//  So the anchor is a regex that survives an attribute, and applyMutation below
+//  refuses a case that changed no bytes. A mutation that does not mutate must
+//  fail as itself rather than as a hollow rule, because those two findings send
+//  you to opposite ends of the repo.
+const KEEP_GOING = /<h2[^>]*>Keep going<\/h2>/;
+
 const MUTATIONS = [
   {
     rule: 'R1', label: 'an EK code in student-visible text',
     apply: (rows) => { rows[0]['Body HTML'] = rows[0]['Body HTML']
-      .replace('<h2>Keep going</h2>', '<p>This covers 1.1.C.2 and 1.1.C.3.</p><h2>Keep going</h2>'); },
+      .replace(KEEP_GOING, (h) => `<p>This covers 1.1.C.2 and 1.1.C.3.</p>${h}`); },
   },
   {
     rule: 'R2', label: 'a fabricated per-unit exam weighting',
     apply: (rows) => { rows[0]['Body HTML'] = rows[0]['Body HTML']
-      .replace('<h2>Keep going</h2>', '<p>This unit is about 20 to 25% of the exam.</p><h2>Keep going</h2>'); },
+      .replace(KEEP_GOING, (h) => `<p>This unit is about 20 to 25% of the exam.</p>${h}`); },
   },
   {
     rule: 'R3', label: 'an em-dash in a student-visible column',
@@ -285,7 +298,7 @@ const MUTATIONS = [
   {
     rule: 'R6', label: 'an internal link to a handle that does not exist',
     apply: (rows) => { rows[0]['Body HTML'] = rows[0]['Body HTML']
-      .replace('<h2>Keep going</h2>', '<p><a href="/pages/ap-cybersecurity-unit-1-exam">Unit 1 exam</a></p><h2>Keep going</h2>'); },
+      .replace(KEEP_GOING, (h) => `<p><a href="/pages/ap-cybersecurity-unit-1-exam">Unit 1 exam</a></p>${h}`); },
   },
   {
     rule: 'R7', label: 'SINGLE-pass mojibake, the depth seen on live pages',
@@ -319,7 +332,7 @@ const MUTATIONS = [
     apply: (rows) => {
       const other = spec.spoke(2).assets.quiz[0];
       rows[0]['Body HTML'] = rows[0]['Body HTML']
-        .replace('<h2>Keep going</h2>', `<p><a href="/pages/${other}">Quiz</a></p><h2>Keep going</h2>`);
+        .replace(KEEP_GOING, (h) => `<p><a href="/pages/${other}">Quiz</a></p>${h}`);
     },
   },
   {
@@ -368,10 +381,23 @@ const MUTATIONS = [
 
 const caughtBy = {};
 let missed = 0;
+let inert = 0;
 for (const m of MUTATIONS) {
   const fresh = buildSheet(bodies);
   const rows = fresh.rows.map((r) => ({ ...r }));
+  const before = JSON.stringify(rows);
   m.apply(rows);
+  //  A MUTATION THAT MUTATES NOTHING IS NOT A PASSING RULE, IT IS A BROKEN CASE.
+  //  Reported as itself, and loudly, because the two findings send you to
+  //  opposite ends of the repo: a hollow rule is a bug in the validator, an
+  //  inert mutation is a bug in this file. Four cases here spent one afternoon
+  //  looking like the first while being the second.
+  if (JSON.stringify(rows) === before) {
+    inert += 1;
+    console.log(`  ${m.rule.padEnd(3)} ${m.label.padEnd(62)} INERT   (the mutation changed no bytes,`
+      + ' so its anchor no longer matches the generated sheet)');
+    continue;
+  }
   const csv = writeCsv(rows, HEADER);
   const report = validate(parseCsv(csv), {
     specs: fresh.specs,
@@ -396,6 +422,8 @@ console.log();
 const proven = Object.keys(caughtBy).sort();
 ok(`every mutated rule went red independently: ${proven.map((r) => `${r} x${caughtBy[r]}`).join(', ')}`,
   missed === 0, `${missed} mutation(s) not caught by the rule that claims them`);
+ok(`all ${MUTATIONS.length} mutations actually mutated something`,
+  inert === 0, `${inert} case(s) changed no bytes, so they proved nothing about the rule they name`);
 
 //  The regression that motivated the flatten fix. A stylesheet is not text a
 //  student reads, and R2 must not report a gradient as an exam weighting.
