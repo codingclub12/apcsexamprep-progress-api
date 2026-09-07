@@ -237,3 +237,88 @@ The terminal behaves identically and nothing is posted, so a teacher can walk a
 lab without writing an attempt into their own gradebook. That is the one thing
 the JuiceMind lab UI does that we had no equivalent for: every other reporter in
 this repo treats a teacher walking a page as a student attempt.
+
+## The cache is part of the enforcement path
+
+A teacher closed a lab, the gradebook showed it shut, and their students kept
+opening it. Four things were wrong and the fourth is the one worth remembering.
+
+The first three were ordinary: `routes/labs.js` never consulted `activity_gates`
+at all, the gradebook counted only `quiz_bank` when deciding whether a lock was
+enforceable so it called every lab lock decorative, and the gate was asked about
+the activity named `lab` while the spec calls itself `terminal-lab`.
+
+The fourth is that `public/lab-player.js` fetched the spec with no `Authorization`
+header. That is the one that made the other three moot: the server cannot apply a
+per-class gate to a request it cannot attribute to a student, so a correct route
+and a correct gradebook still handed out the lab. Fixed, and pinned by
+`npm run smoke:labplayertoken`.
+
+Then the fix shipped and the lab still did not lock, because **the player is the
+file that decides whether the token is sent, so a stale copy of it silently turns
+the gate off.** The deploy was correct, `/api/health` reported the new commit, and
+the CDN served the previous player for hours.
+
+### What the CDN actually does, measured
+
+Do not reason about this from the route source. Measured 2026-09-07 against four
+paths on this origin, cache key busted so every response came from us:
+
+| path | route asks for | client receives |
+|---|---|---|
+| `/lab-player.js` | `max-age=3600` | `max-age=14400` |
+| `/practice-hub.js` | `max-age=3600` | `max-age=14400` |
+| `/api/intro-java/player.js` | `max-age=86400, immutable` | unchanged |
+| `/lab/:course/:item` | `no-store` | unchanged |
+
+So it is not rewriting every header. It raises a SHORT `max-age` on a cacheable
+asset to its own four hour browser TTL and leaves a longer one alone, and it
+leaves `no-store` alone because that response is never in the cacheable class.
+
+Two things follow, and the first cost a deploy:
+
+- **`max-age=0, must-revalidate` does not work here.** It is shorter than four
+  hours, so it is inflated to `max-age=14400` exactly like the `3600` it would
+  replace, and the route reads as fixed while nothing changes. That value was
+  written, reviewed, passed CI and was one merge from shipping before the table
+  above was measured.
+- **A purge does not reach a browser.** The header delivered to students was
+  `max-age=14400`, so every student who opened a lab page in the preceding four
+  hours has the old player pinned locally. Purging the CDN clears the edge and
+  those browsers keep serving themselves the broken file until it expires.
+
+`/lab-player.js` is `no-store` now, which is the one value in that table that
+arrived intact. It costs one 40KB origin fetch per lab page load across seven
+pages.
+
+### The version-the-URL answer, and why it is not taken yet
+
+`no-store` fixes staleness by refusing to cache. Versioning the URL fixes it by
+changing the key: `/lab-player.js?v=<build>` has no cached copy anywhere, at the
+edge or in a browser, so a deploy reaches every student on their next page load
+and the file can then be cached for a day.
+
+It is the better answer and it is not a deploy. The `<script src>` is baked into
+the seven lab page bodies by `scripts/lab-pages-csv.js`, so changing it means
+regenerating those bodies and importing a Matrixify sheet. Worth doing the next
+time those pages are regenerated for another reason.
+
+`/api/intro-java/player.js` has the same latent bug and a worse version of it:
+`max-age=86400, immutable`, unversioned. `immutable` tells a browser not to
+revalidate at all, so a change to `greenfoot-player.js` can take a day to reach a
+student and cannot be purged out of a browser at all. Nothing has gone wrong there
+yet because that file changes rarely.
+
+### The spec endpoint had the same bug one hop out
+
+`GET /api/labs/:course/:item_id` answers with the spec for one student and
+`locked: true` for another in a class that has closed it, and it inherited
+`public, max-age=300` from the `cors()` helper on the OPEN branch. That was true
+when every answer was the same and stopped being true when the gate landed. Any
+shared cache on the path, and a school proxy is exactly that, could have handed
+one class's open spec to a student whose teacher had shut it.
+
+It is `no-store` with `Vary: Authorization` on both branches now. Both branches
+matters: marking only the locked answer `no-store` leaves the open spec cacheable,
+which is the entire leak, because a cache never holds the lock, it holds the thing
+the lock was meant to withhold.

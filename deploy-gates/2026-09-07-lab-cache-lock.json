@@ -1,0 +1,79 @@
+{
+  "change": "the lab player and the lab spec endpoint stop being cacheable, so a CDN or a school proxy cannot serve a copy that predates a teacher's lock",
+  "_context": "The gate itself shipped on 2026-09-06 and a teacher still watched a closed lab open. The player is the file that decides whether the student token is sent at all, so a stale copy of it silently turns the gate off: the server cannot apply a per-class lock to a request it cannot attribute to a student. The deploy was correct and /api/health reported the new commit while the edge served the previous player for hours.",
+  "_the_near_miss": "The first fix for this was 'public, max-age=0, must-revalidate'. It was written, reviewed, passed CI and was one merge from shipping. It is a no-op. Measured against four paths on this origin with the cache key busted: /lab-player.js asked 3600 and delivered 14400, /practice-hub.js asked 3600 and delivered 14400, /api/intro-java/player.js asked 86400 immutable and was left alone, /lab/:course/:item asked no-store and was left alone. The CDN raises a SHORT max-age on a cacheable asset to its own four hour browser TTL and leaves a longer one alone. max-age=0 is shorter than four hours, so it would have been inflated exactly like the 3600 it replaced and the route would have read as fixed while changing nothing. no-store is the one value in that table that arrives intact, because it leaves the cacheable class rather than competing on TTL.",
+  "_live_note": "The live check reads the header the EDGE DELIVERED, not the header the route asked for. That distinction is the entire finding above: asserting the route's intent proves nothing about what a student's browser was told. Run against the build live at 12:40 on 2026-09-07 the script failed 5 of 6, so none of these assertions can pass on the old deploy. It is durable rather than pinned to a sha: it keeps meaning the same thing on every re-run. NOTE that a passing run still does not mean every student has the fix. The header previously delivered was max-age=14400, so browsers that loaded a lab page in the preceding four hours hold the old player locally and a CDN purge does not reach them.",
+  "_expect_failure_note": "Every expect_failure carries the literal [FAIL] prefix, because an assertion NAME appears on the pass line too and would prove only that it ran.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the player sends its token, a closed lab reads as closed, and neither response may be cached",
+      "command": "npm run --silent smoke:labplayertoken",
+      "expect": "13 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the lab gate itself, unchanged by this pass and still green",
+      "command": "npm run --silent smoke:labgate",
+      "expect": "18 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE NEAR MISS AS A MUTATION: ask for must-revalidate, which the CDN inflates to four hours anyway",
+      "file": "routes/labs.js",
+      "find": "  res.set('Cache-Control', 'no-store');\n  res.type('application/javascript');",
+      "replace": "  res.set('Cache-Control', 'public, max-age=0, must-revalidate');\n  res.type('application/javascript');",
+      "command": "npm run --silent smoke:labplayertoken",
+      "expect_failure": "[FAIL]   the player is served no-store"
+    },
+    {
+      "kind": "mutation",
+      "name": "give the player a cacheable lifetime again, so an edge can outlive a lock",
+      "file": "routes/labs.js",
+      "find": "  res.set('Cache-Control', 'no-store');\n  res.type('application/javascript');",
+      "replace": "  res.set('Cache-Control', 'public, max-age=3600');\n  res.type('application/javascript');",
+      "command": "npm run --silent smoke:labplayertoken",
+      "expect_failure": "[FAIL]   the player is served no-store"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE SUBTLE HALF: mark only the LOCKED answer no-store, leaving the open spec cacheable, which is the entire leak",
+      "file": "routes/labs.js",
+      "find": "  res.set('Cache-Control', 'no-store');\n  res.append('Vary', 'Authorization');\n  if (!gate.open) {\n    return res.json({",
+      "replace": "  res.append('Vary', 'Authorization');\n  if (!gate.open) {\n    res.set('Cache-Control', 'no-store');\n    return res.json({",
+      "command": "npm run --silent smoke:labplayertoken",
+      "expect_failure": "[FAIL]   and sets it BEFORE the locked branch, so it covers both answers"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop declaring that the spec varies by credential, so a cache may key on the URL alone",
+      "file": "routes/labs.js",
+      "find": "  res.append('Vary', 'Authorization');",
+      "replace": "",
+      "command": "npm run --silent smoke:labplayertoken",
+      "expect_failure": "[FAIL]   it sets Vary: Authorization"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ROOT CAUSE, kept as a mutation: the player stops sending its token when asking for a lab",
+      "file": "public/lab-player.js",
+      "find": "      token ? { headers: { Authorization: \"Bearer \" + token } } : undefined)",
+      "replace": "      undefined)",
+      "command": "npm run --silent smoke:labplayertoken",
+      "expect_failure": "[FAIL]   and carried Authorization"
+    },
+    {
+      "kind": "suite",
+      "_why_suite": "the battery IS a mutation run, but it patches its own targets, so it has no file/find for the gate to apply. It is declared as a suite because that is the shape the gate can execute; the five hand-written mutations above carry the mutation kind.",
+      "name": "the whole battery, seventeen mutations, each required to go red for its OWN assertion",
+      "command": "npm run --silent smoke:labgatemutation",
+      "expect": "88 passed, 0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "the DELIVERED Cache-Control is no-store and the served player carries the token, neither of which was true before this deploy",
+      "command": "bash scripts/verify-lab-player-live.sh",
+      "expect": "6 passed, 0 failed"
+    }
+  ]
+}

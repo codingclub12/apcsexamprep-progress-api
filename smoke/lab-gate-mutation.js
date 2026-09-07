@@ -58,6 +58,59 @@ const MUTATIONS = [
     must: ['and carried Authorization'],
   },
   {
+    //  A stale player cannot send a token, and a gate that never sees one stands
+    //  down. An edge cache is therefore part of the enforcement path.
+    name: 'the player gets a cacheable lifetime again, so an edge can outlive a lock',
+    file: 'route',
+    suite: 'player',
+    find: "  res.set('Cache-Control', 'no-store');\n  res.type('application/javascript');",
+    repl: "  res.set('Cache-Control', 'public, max-age=3600');\n  res.type('application/javascript');",
+    must: ['the player is served no-store'],
+  },
+  {
+    //  The mutation that matters most, because it is the fix I nearly shipped.
+    //  'max-age=0, must-revalidate' LOOKS like the careful answer and is not:
+    //  measured live, this origin asked for 3600 and the client received 14400,
+    //  because the CDN raises any short max-age on a cacheable asset to its own
+    //  four hour browser TTL. So a guard that accepts any small lifetime would
+    //  have passed while the lock stayed broken. It has to demand no-store.
+    name: 'the player asks for must-revalidate, which the CDN inflates to four hours anyway',
+    file: 'route',
+    suite: 'player',
+    find: "  res.set('Cache-Control', 'no-store');\n  res.type('application/javascript');",
+    repl: "  res.set('Cache-Control', 'public, max-age=0, must-revalidate');\n  res.type('application/javascript');",
+    must: ['the player is served no-store'],
+  },
+  {
+    //  Same bug one hop out: a shared cache keeping a credential-varying spec.
+    name: 'the spec endpoint goes back to public, max-age=300 on the open branch',
+    file: 'route',
+    suite: 'player',
+    find: "  res.set('Cache-Control', 'no-store');\n  res.append('Vary', 'Authorization');",
+    repl: "  res.append('Vary', 'Authorization');",
+    must: ['the spec route sets no-store'],
+  },
+  {
+    //  Vary is the header that tells a cache the answer depends on the token.
+    name: 'the spec endpoint stops declaring that it varies by credential',
+    file: 'route',
+    suite: 'player',
+    find: "  res.append('Vary', 'Authorization');",
+    repl: '',
+    must: ['it sets Vary: Authorization'],
+  },
+  {
+    //  The subtle half. Marking ONLY the locked answer no-store leaves the open
+    //  spec cacheable, which is the entire leak: the cache never holds a lock,
+    //  it holds the thing the lock was meant to withhold.
+    name: 'only the LOCKED branch is no-store, so the open spec stays cacheable',
+    file: 'route',
+    suite: 'player',
+    find: "  res.set('Cache-Control', 'no-store');\n  res.append('Vary', 'Authorization');\n  if (!gate.open) {\n    return res.json({",
+    repl: "  res.append('Vary', 'Authorization');\n  if (!gate.open) {\n    res.set('Cache-Control', 'no-store');\n    return res.json({",
+    must: ['and sets it BEFORE the locked branch, so it covers both answers'],
+  },
+  {
     name: 'the player sends a token even when signed out, killing teacher preview',
     file: 'player',
     suite: 'player',
