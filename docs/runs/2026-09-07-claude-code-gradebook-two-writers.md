@@ -115,6 +115,50 @@ Against a fixture reproducing her class it reports
 and reports nothing for the two-writer case, because the carrier rule removed
 the disagreement rather than papering over it.
 
+## What the new check found in its first sixty seconds
+
+Deployed as `7a3902f`. The boot seed reported `corrected: 1`, so the stale 8 moved
+to 15 in production, and `/api/health` answered with a `prices` block for the
+first time. It immediately named 23 columns and 400 students, 9 of them cyber:
+
+    1.4  exercise-1   priced 25   students served 24    90 students
+    1.4  exercise-2   priced 25   students served 24    77 students
+    1.1  exercise-2   priced 15   students served 8     61 students
+    1.5  exercise-1   priced 4    students served 24    46 students
+    1.5  exercise-2   priced 4    students served 24    45 students
+    1.4  lab          priced 30   students served 24    36 students
+    1.5  lab          priced 30   students served 24    20 students
+    1.1  quiz         priced 5    students served 9      4 students
+    1.2  quiz         priced 5    students served 12     3 students
+
+The 1.1 exercise-2 row is the correction working rather than a defect: 61
+students sat the 8 question version and their work is out of 8, permanently and
+correctly. A column holding two generations of a page does not agree with itself,
+and that is the honest state to report.
+
+The rest is new, and larger than what was reported. 1.5 exercise-1 is priced 4
+while 46 students were served 24, which is Michelle's Exercise 2 complaint with
+ten times the students behind it.
+
+Worth naming: the crude extraction earlier in this session hinted that 1.5 lab
+read /24 against an authored 30, and it was refused as evidence because the same
+extraction window was picking up "3 Parts . 24 pts" badges from neighbouring
+markup. The ledger now says the same thing from a completely different source,
+the students' own submissions. That is the re-derivation the deploy gate asks
+for, arriving by accident.
+
+Board #272. It is deliberately NOT fixed here: each column needs a per-page read
+to decide which generation is current, and a bulk re-price off one number is
+exactly how the 8 got into the table in the first place.
+
+## The gate refused the first post-deploy run, and it was right
+
+The live check asserted that 1.1 exercise-2 would stop being reported once the
+price was corrected. That was wrong: 61 students' work really is out of 8, so
+the column still disagrees and should. The assertion was replaced with what the
+deploy actually made true, which is that production now reports the column as
+authored 15 and the boot seed corrected exactly one row. Both were false before.
+
 ## Her other question, answered from live state rather than from memory
 
 She locked all quizzes and Unit Tests and asked what students see. Measured
@@ -171,10 +215,9 @@ That is board #248 stated in one page's markup.
 - **Units 2-5 were not swept** for the same shape, and the sweep costs 60+ page
   fetches. The `prices` block on /api/health will now name any of them that are
   actually recording, which is cheaper and better targeted.
-- **Unit 1 denominators beyond 1.1 were not re-measured.** A crude extraction
-  suggested 1.5 lab might read /24 against an authored 30, but the extraction
-  window also picked up "3 Parts . 24 pts" badges from neighbouring markup, so
-  it is not evidence. Re-pricing a column off a bad read is exactly what put an
-  8 there in the first place. Needs a per-page read.
+- **Unit 1 denominators beyond 1.1 are wrong, and now measured.** Board #272,
+  with the ledger's own numbers above. Each still needs a per-page read to
+  decide which generation of the page is current; the ledger says what students
+  were served, not which number is right going forward.
 - **The Unit Tests are ungated and ship their answer key.** Not new, and bigger
   than this pass.
