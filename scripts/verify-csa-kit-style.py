@@ -230,6 +230,21 @@ def main():
                   if any(c.get('hidden') for c in it.get('sampleCases', []))]
         ok('no hidden auto-grader case is exported to print', not hidden, hidden[:4])
 
+    # ── 8. the printed docs may not claim what the kit cannot know ──────────
+    print('8. A printed document never claims the items match the lesson page')
+    src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            'csa_kit', 'notes.py'), encoding='utf-8').read()
+    # Strip comments: the rule is explained in one, and a check that its own
+    # explanation trips is a check nobody keeps.
+    code = '\n'.join(l for l in src.splitlines() if not l.lstrip().startswith('#'))
+    claims = [c for c in ('The same questions', 'the same questions',
+                          'These same questions', 'identical questions')
+              if c in code]
+    ok('the quiz header makes no identity claim about the lesson page',
+       not claims, claims)
+    ok('it still points the teacher at the online practice',
+       'auto-graded at apcsexamprep.com/pages/' in code)
+
     print()
     if FAILED:
         print(f'{len(FAILED)} FAILED: ' + '; '.join(FAILED))
