@@ -26,6 +26,12 @@ COURSE="${COURSE:-ap-cybersecurity}"
 UNIT="${UNIT:-unit-1}"
 L_OPEN="${L_OPEN:-1.1}"    # the lesson we reopen inside the locked unit
 L_SHUT="${L_SHUT:-1.2}"    # a lesson that must STAY locked
+#  A lab, which reaches students by a DIFFERENT route than a quiz. Gating it was
+#  missed entirely until a teacher reported labs opening while the gradebook said
+#  they were shut, so it is checked here rather than assumed to follow the quiz.
+LAB_ITEM="${LAB_ITEM:-1.2-auth-lab}"
+LAB_LESSON="${LAB_LESSON:-1.2}"
+LAB_ACT="${LAB_ACT:-terminal-lab}"
 
 for v in TEACHER_EMAIL TEACHER_PASSWORD CLASS_CODE STUDENT_NAME STUDENT_PIN; do
   if [ -z "${!v:-}" ]; then echo "missing $v"; exit 2; fi
@@ -52,13 +58,18 @@ clear_gate () { curl -sS --max-time 25 -X DELETE "$API/api/teacher/classes/$CLAS
              -H 'Content-Type: application/json' -H "Authorization: Bearer $TT" -d "$1"; }
 quiz ()  { curl -sS --max-time 25 -H "Authorization: Bearer $ST" \
              "$API/api/quiz/$COURSE/$UNIT/$1/quiz"; }
+lab ()   { curl -sS --max-time 25 ${1:+-H "Authorization: Bearer $1"} \
+             "$API/api/labs/$COURSE/$LAB_ITEM"; }
 
 cleanup () {
-  echo; echo "5. CLEANUP: removing every gate row this script wrote"
+  echo; echo "6. CLEANUP: removing every gate row this script wrote"
   clear_gate "{\"course\":\"$COURSE\",\"unit\":\"$UNIT\",\"lesson\":\"$L_OPEN\"}" >/dev/null
+  clear_gate "{\"course\":\"$COURSE\",\"unit\":\"$UNIT\",\"lesson\":\"$LAB_LESSON\",\"activity_type\":\"$LAB_ACT\"}" >/dev/null
   clear_gate "{\"course\":\"$COURSE\",\"unit\":\"$UNIT\"}" >/dev/null
   local after; after=$(quiz "$L_OPEN" | jqr "['locked']")
   ok "both lessons are reachable again" "$([ "$after" = "False" ] && echo 1 || echo 0)" "locked=$after"
+  local labafter; labafter=$(lab "$ST" | jqr ".get('locked')")
+  ok "and the lab is reachable again" "$([ "$labafter" != "True" ] && echo 1 || echo 0)" "locked=$labafter"
   echo; echo "  $pass passed, $fail failed"
 }
 trap cleanup EXIT
@@ -87,7 +98,30 @@ ok "and serves its questions again"       "$([ "${QN:-0}" -gt 0 ] 2>/dev/null &&
 ok "$L_SHUT is STILL locked"              "$([ "$(quiz "$L_SHUT" | jqr "['locked']")" = "True" ] && echo 1 || echo 0)"
 
 # ── 4. the board agrees with what the student got ────────────────────────────
-echo; echo "4. THE BOARD REPORTS THE SAME THING"
+echo; echo "4. A LAB IS A DIFFERENT ROUTE, AND IT WAS THE ONE THAT LEAKED"
+#  routes/labs.js served every spec to everyone and never read activity_gates.
+#  The gradebook switch wrote a row that nothing on that path consulted, so the
+#  lock was real in the database and imaginary to a student.
+#  The unit is still closed from section 2, and the lab sits under it. That is
+#  worth asserting rather than tripping over: a unit-scope close has to reach a
+#  lab, and the first draft of this section read it as a failed baseline.
+B=$(lab "$ST"); LK=$(echo "$B" | jqr ".get('locked')")
+ok "a UNIT-scope close already reaches the lab" "$([ "$LK" = "True" ] && echo 1 || echo 0)" "locked=$LK"
+
+#  Now clear back to nothing and drive the lab on its own.
+clear_gate "{\"course\":\"$COURSE\",\"unit\":\"$UNIT\",\"lesson\":\"$L_OPEN\"}" >/dev/null
+clear_gate "{\"course\":\"$COURSE\",\"unit\":\"$UNIT\"}" >/dev/null
+B=$(lab "$ST"); LK=$(echo "$B" | jqr ".get('locked')")
+ok "baseline: with the unit cleared the lab is open" "$([ "$LK" != "True" ] && echo 1 || echo 0)" "locked=$LK"
+gate "{\"course\":\"$COURSE\",\"unit\":\"$UNIT\",\"lesson\":\"$LAB_LESSON\",\"activity_type\":\"$LAB_ACT\",\"open\":false}" >/dev/null
+B=$(lab "$ST"); LK=$(echo "$B" | jqr ".get('locked')"); BR=$(echo "$B" | jqr ".get('brief') is not None")
+ok "a closed lab is refused to the signed-in student" "$([ "$LK" = "True" ] && echo 1 || echo 0)" "locked=$LK"
+ok "and the spec is not on the wire"                  "$([ "$BR" = "False" ] && echo 1 || echo 0)" "brief_present=$BR"
+#  The route is public on purpose. That must survive the gate.
+B=$(lab ""); LK=$(echo "$B" | jqr ".get('locked')")
+ok "an anonymous visitor still gets it, so preview survives" "$([ "$LK" != "True" ] && echo 1 || echo 0)" "locked=$LK"
+
+echo; echo "5. THE BOARD REPORTS THE SAME THING"
 BD=$(curl -sS --max-time 25 -H "Authorization: Bearer $TT" "$API/api/teacher/classes/$CLASS_CODE/assignments?course=$COURSE")
 UST=$(echo "$BD" | python3 -c "
 import sys,json;d=json.load(sys.stdin)
