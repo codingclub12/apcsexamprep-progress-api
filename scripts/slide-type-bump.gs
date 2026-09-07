@@ -115,12 +115,28 @@
 // ---------------------------------------------------------------------------
 
 // Sizes below the floor and at or above the ceiling are never touched.
+// The size no body text may end up below, set by Tanner on 2026-09-07 after
+// complaints about AP Cyber decks projected in a classroom. He named 12pt as
+// the size people were complaining about and 14 as the bar.
+//
+// THIS IS A DIFFERENT OBJECTIVE FROM THE ONE THIS FILE WAS BUILT FOR, and the
+// difference is why the shipped ladders missed it. proposeLadder_ solved for a
+// strictly increasing ladder with no collisions under an 18pt ceiling, and hit
+// that target exactly: 91 tests green. Nothing in it ever asked where the
+// BOTTOM landed, so cyber's 12pt landed at 13.5 and the complaint survived the
+// fix. Cyber uses 13 distinct sizes in the band; 13 distinct tiers at 0.5pt
+// steps starting at 14 would need a top landing of 20pt, so a floor and a
+// strictly increasing 13-tier ladder cannot both hold under an 18pt ceiling.
+// The tiers below the floor are the ones that give: nobody can tell 10pt from
+// 13.5pt from the back of a room, so the hierarchy they encode is not doing
+// any work there, while the hierarchy from 14 up is preserved untouched.
+var LADDER_TARGET_FLOOR = 14;
+
 var LADDER_FLOOR = 10;
 var LADDER_CEILING = 18;
 
 // The lift proposeLadder_() aims for at the floor, tapering to nothing at the
 // ceiling. Only used to BUILD a ladder, never to apply one.
-var MAX_LIFT = 2.5;
 
 // One ladder per course, built by proposeLadder_() from a full census of the
 // decks. Both are strictly increasing by construction and asserted so by
@@ -144,32 +160,32 @@ var MAX_LIFT = 2.5;
 // is the intended default for a course nobody has measured.
 var LADDERS = {
   'ap-csp': {
-    '10': 12.5,
-    '10.5': 13,
-    '11': 13.5,
+    '10': 14,
+    '10.5': 14,
+    '11': 14,
     '12': 14,
-    '12.5': 14.5,
-    '13': 15,
-    '14': 15.5,
-    '14.5': 16,
-    '15': 16.5,
-    '16': 17,
-    '17': 17.5
+    '12.5': 14,
+    '13': 14,
+    '14': 14,
+    '14.5': 14.5,
+    '15': 15,
+    '16': 16,
+    '17': 17
   },
   'ap-cybersecurity': {
-    '10': 11.5,
-    '10.5': 12,
-    '11': 12.5,
-    '11.5': 13,
-    '12': 13.5,
+    '10': 14,
+    '10.5': 14,
+    '11': 14,
+    '11.5': 14,
+    '12': 14,
     '12.5': 14,
-    '13': 14.5,
-    '13.5': 15,
-    '14': 15.5,
-    '15': 16,
-    '16': 16.5,
-    '16.5': 17,
-    '17': 17.5
+    '13': 14,
+    '13.5': 14,
+    '14': 14,
+    '15': 15,
+    '16': 16,
+    '16.5': 16.5,
+    '17': 17
   }
 };
 
@@ -548,7 +564,10 @@ function bumpedSize_(s, course) {
   if (s === null || s === undefined) return null;
   if (s < LADDER_FLOOR || s >= LADDER_CEILING) return null;
   var ladder = ladderFor_(course), k = sizeKey_(s);
-  return Object.prototype.hasOwnProperty.call(ladder, k) ? ladder[k] : null;
+  if (!Object.prototype.hasOwnProperty.call(ladder, k)) return null;
+  // A size at or above the floor maps to itself. Returning it would count a
+  // no-op as a write and inflate the moved-run total; null means leave it.
+  return ladder[k] === s ? null : ladder[k];
 }
 
 /** True for a size the course's ladder should describe and does not. */
@@ -573,15 +592,16 @@ function unknownSize_(s, course) {
  * inversion the whole exercise exists to avoid. So this returns null and lets
  * the caller try a smaller lift instead.
  */
-function buildLadder_(sizes, lift) {
+function buildLadder_(sizes, floor) {
   var out = [], prev = null;
   for (var i = 0; i < sizes.length; i++) {
     var s = sizes[i];
-    var raw = s + lift * (LADDER_CEILING - s) / (LADDER_CEILING - LADDER_FLOOR);
-    var t = Math.round(raw * 2) / 2;
-    if (t < s) t = s;
-    if (prev !== null && t <= prev) t = prev + 0.5;
-    if (t >= LADDER_CEILING) return null;
+    var t = s < floor ? floor : s;
+    // Non-decreasing, never inverted. Two sources may share a landing (that is
+    // the deliberate collapse below the floor); a LATER source may never land
+    // below an earlier one, which is the bug that made the arithmetic version
+    // unusable and is still forbidden.
+    if (prev !== null && t < prev) return null;
     out.push([s, t]);
     prev = t;
   }
@@ -589,24 +609,29 @@ function buildLadder_(sizes, lift) {
 }
 
 /**
- * Build a strictly increasing ladder from the sizes a corpus actually uses.
+ * Build a ladder from the sizes a corpus actually uses, floored.
  *
- * Tries the full MAX_LIFT first and backs off a quarter point at a time until
- * the ladder fits under the ceiling. That is what makes this safe to point at
- * a course nobody has measured yet: a vocabulary denser than AP CSP's simply
- * gets a gentler lift rather than a broken hierarchy. The search always
- * terminates, because a lift of zero maps every size to itself and the sources
- * are already distinct and sorted.
+ * There is no lift search any more. The old one tried MAX_LIFT and backed off a
+ * quarter point at a time until a tapered lift stopped colliding with itself,
+ * and backing off is precisely how cyber's 12pt came to land at 13.5 and stay
+ * unreadable. A rule that maps everything under the floor TO the floor cannot
+ * collide with itself, so it is total: every vocabulary yields a ladder, and
+ * every landing clears the floor by construction rather than by search.
+ *
+ * What it gives up is distinct tiers below the floor. That is the intended
+ * trade: nobody can tell 10pt from 13.5pt from the back of a room, so the
+ * hierarchy those tiers encode is not doing any work there, while the hierarchy
+ * from the floor up is preserved untouched.
  */
 function proposeLadder_(sizes) {
   var inRange = sizes
     .filter(function (s) { return s >= LADDER_FLOOR && s < LADDER_CEILING; })
     .sort(function (a, b) { return a - b; });
-  for (var k = Math.round(MAX_LIFT * 4); k >= 0; k--) {
-    var out = buildLadder_(inRange, k / 4);
-    if (out) return out;
-  }
-  return [];
+  // No search any more. The floor rule is total: it always produces a
+  // non-decreasing ladder, so there is nothing to back off from. The old
+  // lift search existed because the taper collided with itself; a rule that
+  // maps everything under the floor to the floor cannot.
+  return buildLadder_(inRange, LADDER_TARGET_FLOOR);
 }
 
 // ---------------------------------------------------------------------------
