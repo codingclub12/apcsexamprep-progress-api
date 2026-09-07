@@ -96,10 +96,17 @@
     },
     {
       "kind": "live",
-      "name": "and the stale price on 1.1 exercise-2 is gone from it",
-      "_why": "The boot correction runs on deploy. Before it, the same endpoint would report authored 8 against observed 15 for that column.",
-      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const p=JSON.parse(s).prices||{};const hit=(p.worst||[]).find(w=>w.lesson==='1.1'&&w.activity_type==='exercise-2');console.log(hit?'STILL STALE '+JSON.stringify(hit):'1.1 exercise-2 agrees');})\"",
-      "expect": "1.1 exercise-2 agrees"
+      "name": "and the re-price landed: 1.1 exercise-2 is authored 15 in production",
+      "_why": "The boot correction moves the stored row from 8 to 15. Before this deploy the value was 8 and there was no endpoint that would say so.",
+      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const p=JSON.parse(s).prices||{};const r=(p.worst||[]).find(w=>w.lesson==='1.1'&&w.activity_type==='exercise-2');console.log(r?('1.1 exercise-2 authored '+r.authored):'1.1 exercise-2 not reported');})\"",
+      "expect": "1.1 exercise-2 authored 15"
+    },
+    {
+      "kind": "live",
+      "name": "and the boot seed says it corrected exactly one stale row",
+      "_why": "A correction that silently did nothing looks identical to one that ran. The seed block reports the count, and it was absent entirely before this deploy.",
+      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const c=((JSON.parse(s).seed||{}).seeds||{}).cyber_denominators||{};console.log('cyber_denominators corrected='+c.corrected);})\"",
+      "expect": "cyber_denominators corrected=1"
     }
   ]
 }
