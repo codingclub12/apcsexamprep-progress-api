@@ -99,6 +99,19 @@ const SPEC = { course: 'ap-cybersecurity', item_id: '1.2-lab', title: 'T', brief
   ok('  and never says the lab could not be loaded',
     !/could not be loaded/i.test(node.textContent), node.textContent);
 
+  console.log('\n4. The route must not let an edge cache outlive a lock');
+  //  The deploy on 2026-09-07 was correct and the edge served the previous
+  //  player for hours, so a teacher who had closed a lab still watched it open.
+  //  This file decides whether the token is sent at all, so a stale copy
+  //  silently disables the gate. max-age=0 with must-revalidate still lets the
+  //  copy be stored and reused; it just has to ask first, and the ETag makes
+  //  that a 304.
+  const routeSrc = fs.readFileSync(path.join(__dirname, '..', 'routes', 'labs.js'), 'utf8');
+  const block = routeSrc.slice(routeSrc.indexOf("router.get('/lab-player.js'"));
+  const cc = (block.match(/Cache-Control', '([^']*)'/) || [])[1];
+  ok('  the player is served must-revalidate', /must-revalidate/.test(cc || ''), cc);
+  ok('  and with no cacheable lifetime of its own', /max-age=0/.test(cc || ''), cc);
+
   console.log(`\n  ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);
 })().catch((e) => { console.log('  [FAIL] the suite threw: ' + e.message); process.exit(1); });

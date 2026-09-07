@@ -226,9 +226,26 @@ router.get('/lab/:course/:item_id', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'lab.html'));
 });
 
+//  ALWAYS REVALIDATE. This file is the enforcement point for a teacher's lock:
+//  it decides whether the token that lets the server recognise a student is
+//  sent at all. A stale copy silently disables the gate, and on 2026-09-07 that
+//  is exactly what happened. The fix deployed, production reported the new
+//  commit, and the edge kept serving the previous player for hours, so a teacher
+//  who had closed a lab still watched it open and the deploy looked done.
+//
+//  max-age=0 with must-revalidate does not mean "do not cache". The copy is
+//  still stored and still reused; the client just asks first, and sendFile's
+//  ETag makes the answer a 304 of a few bytes when nothing changed. For a 40KB
+//  file loaded once per lab that is the right trade, and an hour of silently
+//  serving a build that cannot enforce anything is not.
+//
+//  It was max-age=3600 and the edge answered with 14400, which is worth knowing
+//  rather than assuming this header is the last word: the origin proposes and
+//  the CDN disposes. Verify with scripts/verify-lab-player-live.sh after a
+//  deploy rather than trusting either.
 router.get('/lab-player.js', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
-  res.set('Cache-Control', 'public, max-age=3600');
+  res.set('Cache-Control', 'public, max-age=0, must-revalidate');
   res.type('application/javascript');
   res.sendFile(path.join(__dirname, '..', 'public', 'lab-player.js'));
 });

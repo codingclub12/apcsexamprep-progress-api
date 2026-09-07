@@ -58,6 +58,16 @@ const MUTATIONS = [
     must: ['and carried Authorization'],
   },
   {
+    //  A stale player cannot send a token, and a gate that never sees one stands
+    //  down. An edge cache is therefore part of the enforcement path.
+    name: 'the player gets a cacheable lifetime again, so an edge can outlive a lock',
+    file: 'route',
+    suite: 'player',
+    find: "  res.set('Cache-Control', 'public, max-age=0, must-revalidate');",
+    repl: "  res.set('Cache-Control', 'public, max-age=3600');",
+    must: ['the player is served must-revalidate'],
+  },
+  {
     name: 'the player sends a token even when signed out, killing teacher preview',
     file: 'player',
     suite: 'player',
