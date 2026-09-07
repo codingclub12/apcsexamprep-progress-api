@@ -86,6 +86,12 @@ def build_deck(t, day, edition, path):
     m = day['misconception']
     d.misconception(m['heading'], m['think'], m['truth'], m.get('note'))
     d.vocabulary(t['vocab'])
+    # Optional, and it has to stay optional: Units 2 to 4 carry no lesson_page
+    # data, so requiring it here would break 38 topics to serve 15.
+    lp = day.get('lesson_page')
+    if lp:
+        d.on_the_lesson_page(lp['intro'], lp['activities'],
+                             '/pages/' + t['handle'], lp.get('note'))
     d.discussion(day['discussion'], note=' '.join(day.get('notes', [])[:1]))
     d.end_of_day(day['learned'], day['up_next'], day['extra'])
     d.save(path)
