@@ -38,7 +38,7 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { resolveScopedGate, lockedForAnyClass } = require('../lib/activity-gate');
+const { resolveAliasGate, lockedForAnyClass } = require('../lib/activity-gate');
 const labs = require('../lib/lab-spec');
 const answerKey = require('../lib/lab-answer-key');
 const entitlements = require('../lib/entitlements');
@@ -144,8 +144,6 @@ const LAB_ALIASES = (spec) => {
   const own = spec.item_type || 'terminal-lab';
   return own === 'lab' ? ['lab'] : [own, 'lab'];
 };
-const SCOPE_RANK = { activity: 0, lesson: 1, 'unit-activity': 2, unit: 3 };
-const rankOf = (g) => (g.scope ? SCOPE_RANK[g.scope] : 9);   // no scope = class default, widest
 
 //  Returns { open, reason }. Another course and a spec that names no unit or
 //  lesson resolve OPEN: a gate needs a location, and refusing without one would
@@ -178,18 +176,10 @@ function labGate(req, spec) {
   const unit = spec.unit, lesson = spec.lesson_id;
   if (!unit || !lesson) return { open: true, reason: 'unlocatable-spec' };
   const rows = labGateStmt.all(cls.id, spec.course, unit);
-  let best = null;
-  for (const act of LAB_ALIASES(spec)) {
-    const g = resolveScopedGate(rows, cls, lesson, act);
-    //  Same tie-break as lib/activity-gate.js lockedForAnyClass, on purpose:
-    //  narrower wins, and a tie goes to the CLOSING row. Without the second
-    //  clause the winner was decided by the order LAB_ALIASES happens to return,
-    //  so a teacher closing the Lab column while a stale 'terminal-lab' row sat
-    //  open would have watched their click do nothing. One opinion about
-    //  precedence, in both paths, rather than two that agree by luck.
-    if (!best || rankOf(g) < rankOf(best) || (rankOf(g) === rankOf(best) && !g.open && best.open)) best = g;
-  }
-  return best;
+  //  The ladder itself lives in lib/activity-gate.js so routes/analysis.js runs
+  //  the same one. It was inline here until 2026-09-07 and a second caller is
+  //  exactly the moment a duplicated precedence rule starts to drift.
+  return resolveAliasGate(rows, cls, lesson, LAB_ALIASES(spec));
 }
 
 router.get('/api/labs/:course/:item_id', (req, res) => {
