@@ -519,12 +519,28 @@ class Deck:
         example wide, where each half has a slide to itself.
         """
         lines = code.split('\n')
-        if len(lines) <= SINGLE_SLIDE_LINES and len(output) <= SINGLE_SLIDE_OUTPUT:
+        if len(lines) > SINGLE_SLIDE_LINES:
+            self._worked_wide(heading, code, notice, output, caption, note)
+        elif len(output) <= SINGLE_SLIDE_OUTPUT:
             self._worked_compact(heading, code, notice, output, caption, note)
         else:
-            self._worked_wide(heading, code, notice, output, caption, note)
+            # ---- THE PANEL THAT SHOULD LOSE THE ARGUMENT --------------------
+            # A short program with a long OUTPUT used to go WIDE, which put the
+            # annotations on a different slide from the code they annotate.
+            # Measured 2026-09-07: 74 of 76 worked examples in Units 2 to 4 are
+            # wide, and 12 of those are wide for THIS reason alone, their
+            # programs being well inside the single-slide limit.
+            #
+            # When something has to move to a second slide, it should be the
+            # OUTPUT rather than the notes. A teacher reads "what to notice"
+            # against the line it describes; the output is a result they can
+            # hold in their head or flip to. Keeping the notes beside the code
+            # is the property that matters, so the output is what gives.
+            self._worked_compact(heading, code, notice, [], caption, note,
+                                 output_on_next=True)
+            self._worked_output_slide(heading, output)
 
-    def _worked_compact(self, heading, code, notice, output, caption, note):
+    def _worked_compact(self, heading, code, notice, output, caption, note, output_on_next=False):
         s = self._new()
         self._head(s, 'WORKED EXAMPLE', heading)
         # The panels start straight under the heading and run to the footer, so
@@ -542,21 +558,45 @@ class Deck:
         self._code(s, 0.94, 2.79, 6.67, ch, code, size)
         _text(s, 0.80, 1.74 + card_h - 0.34, 6.95, 0.28, caption, size=T_CAPTION, color=MUTED)
 
-        self._card(s, 8.38, 1.74, 4.40, 3.26, 'WHAT TO NOTICE')
+        # With the OUTPUT card gone the notes get the whole right column, which
+        # is what lets a three-note example keep its notes beside the code.
+        notice_h = 5.10 if output_on_next else 3.26
+        notice_bottom = 6.84 if output_on_next else 5.00
+        self._card(s, 8.38, 1.74, 4.40, notice_h, 'WHAT TO NOTICE')
         y = 1.74 + CARD_TEXT_DY
         for item in notice:
-            h = _must_fit('worked-example note', item, 3.62, T_BODY_MIN, 5.00 - 0.12 - y, 1.12)
+            h = _must_fit('worked-example note', item, 3.62, T_BODY_MIN, notice_bottom - 0.12 - y, 1.12)
             _text(s, 8.62, y, 0.20, h, '\u2022', size=T_BODY_MIN, color=ACCENT)
             _text(s, 8.88, y, 3.62, h, item, size=T_BODY_MIN, color=BODY, line=1.12)
             y += h + 0.13
 
-        self._card(s, 8.38, 5.18, 4.40, 1.66, 'OUTPUT', GREEN_TINT, GREEN)
-        y = 5.18 + CARD_TEXT_DY
-        for line in output:
-            _text(s, 8.62, y, 3.88, 0.28, line, size=T_OUTPUT, font=MONO, color=BODY)
-            y += T_OUTPUT * 1.15 / 72.0
+        if not output_on_next:
+            self._card(s, 8.38, 5.18, 4.40, 1.66, 'OUTPUT', GREEN_TINT, GREEN)
+            y = 5.18 + CARD_TEXT_DY
+            for line in output:
+                _text(s, 8.62, y, 3.88, 0.28, line, size=T_OUTPUT, font=MONO, color=BODY)
+                y += T_OUTPUT * 1.15 / 72.0
         self._foot(s)
-        self._note(s, note or 'A complete, runnable program. The annotations are on the next slide.')
+        if output_on_next:
+            self._note(s, note or 'A complete, runnable program, with its annotations. '
+                                  'The output it prints is on the next slide.')
+        else:
+            self._note(s, note or 'A complete, runnable program. The annotations are on the next slide.')
+
+    def _worked_output_slide(self, heading, output):
+        """Just the OUTPUT, when it is too long to sit beside the program."""
+        s = self._new()
+        self._head(s, 'WORKED EXAMPLE', heading, 'What the program on the previous slide prints.')
+        self._card(s, MARGIN, 2.10, CONTENT_W, 4.20, 'OUTPUT', GREEN_TINT, GREEN)
+        y = 2.10 + CARD_TEXT_DY
+        for line in output:
+            _must_fit('worked-example output', line, CONTENT_W - 0.60, T_OUTPUT_WIDE,
+                      6.30 - 0.12 - y, 1.15)
+            _text(s, MARGIN + 0.30, y, CONTENT_W - 0.60, 0.30, line,
+                  size=T_OUTPUT_WIDE, font=MONO, color=BODY)
+            y += T_OUTPUT_WIDE * 1.15 / 72.0
+        self._foot(s)
+        self._note(s, 'The output of the program on the previous slide.')
 
     def _worked_wide(self, heading, code, notice, output, caption, note):
         # Slide one: the program, full width, two columns.
