@@ -1,0 +1,63 @@
+{
+  "change": "repair the false complete-and-runnable claims in the AP CSA Unit 1 teacher bundle",
+  "_context": "The caption 'Complete and runnable as shown.' appears 28 times across the 56 Unit 1 decks and is TRUE on 2 of them. The speaker note making the same promise is true on 7 of 27. The first version of the repair script did a find-and-replace on the caption text, which would have turned nine true statements into hedges. It now decides per slide by writing that slide's code to a file and asking javac.",
+  "_the_real_defect": "The split is invisible, which is worse than the caption. On the '2. USING IT' slides both halves declare the same class: one slide is 'public class Geometry' holding area and perimeter, the next is 'public class Geometry' holding only main, which calls Geometry.area. A student who types the second slide gets 'cannot find symbol'. Union the members and it compiles and runs, so the programs are right and only the presentation is wrong.",
+  "_reproducibility": "This gate is NOT runnable from a fresh clone, and that is deliberate rather than an oversight. This repository is public and the decks are the paid teacher bundle, so they are not committed. Every command below needs the 56 decks present at the path given as UNIT1. That is a real limit on this manifest: a future session cannot re-run it without the artifacts, and must not read a stale PASS here as evidence about decks it has not seen.",
+  "_no_live_check": "This change ships no server behaviour. Nothing under scripts/ or docs/ is read by the running container, so there is no live assertion that could be false before the deploy and true after, and inventing one would be the decoration this gate exists to refuse. mutation plus rederive carry it.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the offline suites this change could plausibly trip",
+      "command": "sh -c 'npm run --silent smoke:encoding && npm run --silent smoke:volumepaths && npm run --silent smoke:storefront'",
+      "expect": "54 passed, 0 failed / nothing the server reads is hidden by the volume / 61 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second reader recompiles every code panel and asserts the surviving claims are true",
+      "command": "python3 scripts/verify-csa-unit1-decks.py \"$UNIT1\"",
+      "expect": "files 56  slides 924 / surviving TRUE captions: 2   surviving TRUE notes: 7 / FAILURES: 0",
+      "_why": "The repair script decides what to edit and then reports what it edited, which only proves it agrees with itself. This one knows nothing about the repair: it re-reads all 56 decks, identifies code panels by the Courier New font rather than by guessing at content, compiles each one, and FAILS if any surviving 'complete and runnable' claim sits on code that does not run. It asserts the claim's truth rather than the string's absence, so a repair that hedged the two true captions would fail it too."
+    },
+    {
+      "kind": "rederive",
+      "name": "the printed OUTPUT panels match what Java actually prints",
+      "command": "python3 scripts/verify-csa-unit1-outputs.py \"$UNIT1\"",
+      "expect": "14 of 15 programs assemble and run; 12 of 14 OUTPUT panels match exactly",
+      "_why": "Unions the class members across each Day 1 deck's code slides, runs the result, and diffs against the OUTPUT panel the deck shows. This is the check that proved the programs are correct and only the presentation was wrong. The two non-matches are the decks being right and the comparison being naive: 1.11 prints Math.random() and the deck says 'a different number from 1 to 6 on each run' instead of pinning a value, and 1.1 splits its three output lines across three text boxes. 1.8 has no main and the deck says so on the slide."
+    },
+    {
+      "kind": "mutation",
+      "name": "the compile check must GATE the edits, not decorate them",
+      "file": "scripts/repair-csa-unit1-decks.py",
+      "find": "    m = DECL.search(code)\n    if not m:\n        return 'NOT_COMPILABLE'",
+      "replace": "    return 'RUNS'  # MUTANT\n    m = DECL.search(code)\n    if not m:\n        return 'NOT_COMPILABLE'",
+      "command": "python3 scripts/repair-csa-unit1-decks.py \"$UNIT1\" --dry-run",
+      "expect_failure": "0 edits",
+      "_why": "With the compile check forced to call every claim true, the 58 caption/heading/note edits go to zero. That is what proves the check is load-bearing rather than advisory."
+    },
+    {
+      "kind": "mutation",
+      "name": "and it must OVERRIDE a caption rule that is wrong",
+      "file": "scripts/repair-csa-unit1-decks.py",
+      "find": "    (re.compile(r'^THE (COMPLETE )?PROGRAM, PART 1$'),",
+      "replace": "    (re.compile(r'^THE COMPLETE PROGRAM$'), 'MUTANT CAPTION'),\n    (re.compile(r'^THE (COMPLETE )?PROGRAM, PART 1$'),",
+      "command": "python3 scripts/repair-csa-unit1-decks.py \"$UNIT1\" --dry-run",
+      "expect_failure": "MUTANT CAPTION",
+      "_why": "This is the mutation that settles it, and it is the one worth keeping. The caption table is deliberately widened to match the slides whose claim is TRUE, instructing the script to edit them. The compile check refuses every one: zero MUTANT CAPTION lines appear. So the check holds exactly where it matters, which is when the caption rule is wrong.",
+      "_expect_failure_note": "expect_failure here is the mutant caption's own text appearing in the edit list. Its ABSENCE is the pass. Recorded this way because the run is a dry-run report rather than a suite with assertions, so there is no [FAIL] line to name."
+    },
+    {
+      "kind": "mutation",
+      "name": "the one that came back GREEN, kept because the reading matters",
+      "file": "scripts/repair-csa-unit1-decks.py",
+      "find": "    return 'RUNS' if rr.returncode == 0 else 'NOT_RUNNABLE'",
+      "replace": "    return 'NOT_RUNNABLE'  # MUTANT",
+      "command": "python3 scripts/repair-csa-unit1-decks.py \"$UNIT1\" --dry-run",
+      "expect_failure": "(none: this mutation does NOT go red, and that is the finding)",
+      "_why": "Forcing the compile check to call every claim false changes nothing: still 58 edits, and the true-claim slides still untouched. That looks like a hollow guard and was called one before it was checked. It is not. Those slides are headed 'THE COMPLETE PROGRAM', which matches no caption rule, so the heading table excludes them independently of the compile check. Two rules spare them, which is defence in depth.",
+      "_lesson": "The fault was in the test, not the guard. This mutation asks whether the compile check is SUFFICIENT on its own; the question worth asking is whether it holds when the other rule fails, and that needs the widened-caption-table mutation above. A green mutation run is a failed check only once you have established it was testing the thing you meant."
+    }
+  ],
+  "_result": "60 edits across 15 of 56 decks: 26 captions, 12 headings, 20 speaker notes, 2 rejoined println lines. Code panels byte-identical except the two intentional joins, slide counts unchanged at 924, every edited deck backed up beside itself as <name>.orig.pptx.",
+  "_out_of_scope": "The split itself and the type size. Unit 1 sits at 13pt body copy and predates the 14pt floor from #583. That is the rebuild, board 255."
+}
