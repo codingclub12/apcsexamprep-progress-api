@@ -15,7 +15,8 @@
       "kind": "suite",
       "name": "the lab gate itself, unchanged by this pass and still green",
       "command": "npm run --silent smoke:labgate",
-      "expect": "18 passed, 0 failed"
+      "expect": "24 passed, 0 failed",
+      "_count_note": "was 18 when this gate was written. The anonymous-bypass fix later the same day (585) added the bypass assertions and the half that must not regress, so the suite grew. The number is the CURRENT one on purpose: a gate whose expect string drifts is a gate nobody can re-derive."
     },
     {
       "kind": "mutation",
@@ -65,9 +66,10 @@
     {
       "kind": "suite",
       "_why_suite": "the battery IS a mutation run, but it patches its own targets, so it has no file/find for the gate to apply. It is declared as a suite because that is the shape the gate can execute; the five hand-written mutations above carry the mutation kind.",
-      "name": "the whole battery, seventeen mutations, each required to go red for its OWN assertion",
+      "name": "the whole lab battery, twenty-one mutations, each required to go red for its OWN assertion",
       "command": "npm run --silent smoke:labgatemutation",
-      "expect": "88 passed, 0 failed"
+      "expect": "108 passed, 0 failed",
+      "_count_note": "was 88 across 17 mutations. 585 added four more: the bypass, the overcorrection that takes the public layer dark, the same-scope tie, and the per-class resolution."
     },
     {
       "kind": "live",
