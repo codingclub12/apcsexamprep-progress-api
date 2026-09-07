@@ -189,7 +189,9 @@ const MUTATIONS = [
   },
   {
     name: 'the widest answer wins instead of the narrowest, so a unit close outranks an explicit open',
-    file: 'route',
+    //  The ladder moved into lib/activity-gate.js on 2026-09-07 so routes/
+    //  analysis.js could run the same one. Same mutation, new home.
+    file: 'gatelib',
     find: '    if (!best || rankOf(g) < rankOf(best) || (rankOf(g) === rankOf(best) && !g.open && best.open)) best = g;',
     repl: '    if (!best || rankOf(g) > rankOf(best)) best = g;',
     must: ['reopening the Lab column inside a closed unit reopens the lab'],

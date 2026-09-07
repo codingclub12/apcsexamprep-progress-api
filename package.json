@@ -260,7 +260,12 @@
     "cyber:ctacourse": "node tools/ap-cyber-ced/generate-course-practice-cta.js",
     "verify:cyberctacourse": "node scripts/verify-cyber-course-practice-live.js",
     "smoke:anongatererederive": "node smoke/anon-gate-rederive.js",
-    "verify:anongate": "node scripts/verify-anon-gate-live.js"
+    "verify:anongate": "node scripts/verify-anon-gate-live.js",
+    "smoke:analysisparity": "node smoke/analysis-parity.js",
+    "analysis:extract": "node scripts/extract-analysis-spec.js",
+    "smoke:analysisgate": "node smoke/analysis-gate.js",
+    "smoke:analysismutation": "node smoke/analysis-mutation.js",
+    "verify:analysis": "node scripts/verify-analysis-live.js"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,93 @@
+{
+  "change": "the AP Cyber 1.1 phishing lab moves off the Shopify page body and onto the server, so a teacher's lock can actually withhold it and the answer key stops being in View Source",
+  "_context": "Tanner locked the 1.1 Lab column, opened the page as a student, and found it open. That was not the lock failing. The four email specimens, the six answer fields, the grader AND the answer key all lived in the page body, so the browser had the whole activity before any server code ran and senderKey was readable in View Source. The gradebook already knew, and drew that padlock as unenforceable.",
+  "_what_moved": "config/analysis/ap-cybersecurity-1.1-lab.json holds the activity and the key. routes/analysis.js serves it through the same gate routes/labs.js uses, key-stripped, and grades submissions. The page becomes a mount point. 21232 bytes of activity, grader and answer key leave the page body.",
+  "_nothing_is_retyped": "Every string in the spec is PARSED out of the authored page by scripts/extract-analysis-spec.js, including the grading thresholds and the feedback sentences, because retyping is how two copies drift. Running it with --check proves the committed spec still matches the page. It also caught that backup/ap-cyber-unit-1-lesson-1-lab.html is STALE: its field 4 is Attack Classification with phishing/spear options, and the live page replaced it with Victim Impact Category. Extracting from the backup produced a spec whose answer was a value no dropdown offers, and the spec validator refused it.",
+  "_the_pii_line": "Four of the six fields are free text, so a student's prose now reaches the server. It is graded in transit by lib/analysis-grade.js and discarded when the response is written: never stored, never logged, never placed in an attempt's detail. That is the contract graded code already runs under, so it is NOT a new PII exception. detailForStorage() returns per-field booleans and points only, and a mutation proves the suite notices if the response starts echoing what was typed.",
+  "_live_note": "verify-analysis-live.js needs no credential: everything it asserts is what an anonymous visitor sees, which is the request a student makes in a private window. It checks BOTH halves, because they fail independently: the API can be serving correctly while the page still carries the old copy, in which case nothing is locked and the key is still readable. Run against production before this shipped it fails on the first assertion, because /api/analysis 404s there.",
+  "_expect_failure_note": "Every expect_failure carries the literal [FAIL] prefix, because an assertion NAME appears on the pass line too and would prove only that it ran.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the activity is withheld when closed, from signed-in and signed-out alike, and the key is never on the wire",
+      "command": "npm run --silent smoke:analysisgate",
+      "expect": "29 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "THE SCORE DOES NOT MOVE: the page's own grader, executed from the fixture, and the server grader agree on 600 generated submissions",
+      "command": "npm run --silent smoke:analysisparity",
+      "expect": "2 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the committed spec still matches the authored page, string for string",
+      "command": "node scripts/extract-analysis-spec.js --check",
+      "expect": "spec matches the authored page"
+    },
+    {
+      "kind": "suite",
+      "name": "the rebuilt page body keeps every piece of prose it is supposed to keep",
+      "command": "node scripts/analysis-page-body.js --check",
+      "expect": "the activity, the answer key and the grader are no longer in the page"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE REASON ANY OF THIS EXISTS: the answer key goes back on the wire",
+      "file": "lib/analysis-spec.js",
+      "find": "  out.specimens = spec.specimens.map((sp) => {\n    const s = {};\n    for (const k of OUT_SPECIMEN) if (sp[k] !== undefined) s[k] = sp[k];\n    return s;\n  });",
+      "replace": "  out.specimens = spec.specimens;",
+      "command": "npm run --silent smoke:analysisgate",
+      "expect_failure": "[FAIL]   senderKey is withheld"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE LOCK: the route stops consulting the gate on render",
+      "file": "routes/analysis.js",
+      "find": "  const gate = gateFor(req, spec);\n  //  A closed activity answers 200",
+      "replace": "  const gate = { open: true, reason: \"self-study\" };\n  //  A closed activity answers 200",
+      "command": "npm run --silent smoke:analysisgate",
+      "expect_failure": "[FAIL]   the signed-in student is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE PII LINE: the grade response echoes what the student typed",
+      "file": "routes/analysis.js",
+      "find": "  res.json({ locked: false, ...result });",
+      "replace": "  res.json({ locked: false, ...result, submitted: req.body && req.body.responses });",
+      "command": "npm run --silent smoke:analysisgate",
+      "expect_failure": "[FAIL]   the response never echoes what they typed"
+    },
+    {
+      "kind": "mutation",
+      "name": "SCORING DRIFT: the text matcher becomes case sensitive, so a real student's grade moves",
+      "file": "lib/analysis-grade.js",
+      "find": "  const lower = String(input).toLowerCase();",
+      "replace": "  const lower = String(input);",
+      "command": "npm run --silent smoke:analysisparity",
+      "expect_failure": "[FAIL] every generated submission scores identically"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE PADLOCK LIES AGAIN: the gradebook forgets analysis activities are server-served",
+      "file": "lib/gradebook-contract.js",
+      "find": "  for (const l of labLocations().concat(analysisLocations())) {",
+      "replace": "  for (const l of labLocations()) {",
+      "command": "npm run --silent smoke:analysisgate",
+      "expect_failure": "[FAIL]   and the lock is now ENFORCEABLE, which is the whole point of the migration"
+    },
+    {
+      "kind": "suite",
+      "_why_suite": "the battery IS a mutation run but patches its own targets, so it has no file/find for the gate to apply. The five hand-written mutations above carry the mutation kind.",
+      "name": "the whole analysis battery, fourteen mutations, each required to go red for its OWN assertion",
+      "command": "npm run --silent smoke:analysismutation",
+      "expect": "73 passed, 0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "the API serves it, the key is off the page, and the page mounts the player",
+      "command": "node scripts/verify-analysis-live.js",
+      "expect": "0 failed"
+    }
+  ]
+}

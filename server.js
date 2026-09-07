@@ -95,6 +95,7 @@ app.use('/api/todo', require('./routes/todo'));
 // specs are public author content; the grade still goes through the student
 // JWT on POST /api/progress/attempt like every other reporter.
 app.use(require('./routes/labs'));
+app.use(require('./routes/analysis'));
 
 // Device Security Analysis practice. Mounted at the root for the same reason
 // labs are: it owns paths in two namespaces, /api/frq for the specs and
