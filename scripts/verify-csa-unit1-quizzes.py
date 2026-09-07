@@ -58,7 +58,8 @@ def read_quiz(path):
             continue
         m = QNUM.match(t)
         if m and not OPT.match(t):
-            cur = {'stem': m.group(2), 'options': [], 'why': None, 'brs': 0}
+            cur = {'stem': m.group(2), 'options': [], 'why': None, 'brs': 0,
+                   'marked': []}
             qs.append(cur)
             continue
         if cur is None:
@@ -67,6 +68,10 @@ def read_quiz(path):
         if m:
             cur['options'].append(m.group(2))
             cur['brs'] += p._p.xml.count('<w:br')
+            r = p.runs[0] if p.runs else None
+            marked = bool(r is not None and (r.font.bold or
+                          (r.font.color is not None and r.font.color.rgb is not None)))
+            cur['marked'].append(marked)
             continue
         if t.startswith('Why:'):
             cur['why'] = t[4:].strip()
@@ -117,6 +122,18 @@ def main():
                 got = [o for o in qk['options']]
                 if src['options'][src['answer_index']].split('\n')[0][:30] not in ' | '.join(got):
                     fails.append((w, 'the correct option is not among the printed options'))
+            # 8. the key marks exactly one option, and it is the graded one.
+            #    Text extraction cannot see this: the mark is bold plus the
+            #    accent colour, so a key that lost it still reads correctly as
+            #    plain text while being useless to the teacher holding it.
+            nmark = sum(qk['marked'])
+            if nmark != 1:
+                fails.append((w, 'the key marks %d options as correct' % nmark))
+            elif src is not None and qk['marked'].index(True) != src['answer_index']:
+                fails.append((w, 'the key marks the wrong option'))
+            if any(qs['marked']):
+                fails.append((w, 'the STUDENT edition highlights an option'))
+
             # 7. multi-line options keep real breaks
             if src is not None:
                 nl = sum(o.count('\n') for o in src['options'])

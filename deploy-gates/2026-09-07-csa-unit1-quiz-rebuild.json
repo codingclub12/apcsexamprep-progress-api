@@ -2,10 +2,8 @@
   "change": "rebuild the AP CSA Unit 1 topic quizzes from the live lesson pages",
   "_context": "All fifteen shipped quizzes print their multiple-choice stems with NO ANSWER OPTIONS. Topic 1.7 question 1 reads 'Which of these is a behavior?' and stops, while the teacher key says 'Answer: C' of a list that is not on the page. Items 4 to 7 read 'Explain why this is wrong: <misconception heading>', and those headings hold the TRUE rule, so the sheet asks a student to refute 'A constructor has no return type' and 'String immutability'. Confirmed by reading all fifteen, not a sample.",
   "_why_rebuild_not_repair": "The options were never in the documents, so there is nothing to recover. They are on the lesson pages, where the same students meet the auto-graded version. This is a REPLACEMENT: the page's items are not the old key's items, so the old keys do not carry over.",
-
   "_reproducibility": "The build and the two verifiers need the live storefront and a deck directory. The extraction step is committed as JSON-producing and can be re-run; the decks and the built quizzes are not committed, because this repository is public and they are the paid bundle.",
   "_no_live_check": "Ships no server behaviour. The live storefront is an INPUT here rather than the thing under test.",
-
   "checks": [
     {
       "kind": "suite",
@@ -50,10 +48,40 @@
       "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QMUT4\"",
       "expect_failure": "multi-line options lost their line breaks",
       "_measured": "2 failures, and the second is 'two options identical once printed'. Both are true consequences of the same damage and each names a real defect."
+    },
+    {
+      "kind": "live",
+      "name": "every quiz renders, and the page a teacher holds is the one intended",
+      "command": "soffice --headless --convert-to pdf --outdir \"$OUT\" \"$QUIZDIR\"/*/Quiz/*.docx",
+      "expect": "30 PDFs, 2 to 4 pages each, no document empty and no option line missing",
+      "_why": "The first version of this gate said the look could not be checked, because libreoffice-writer was absent from the container: no libswlo.so while Impress's libsdlo.so was present, which is why the deck render gate worked and this could not. It is installed now, so the claim is retired rather than left standing. All 30 render; the multi-line options on 1.3 print as four visibly distinct outputs, which is the thing text extraction cannot confirm.",
+      "_not_live_deploy": "Named 'live' because it observes the produced artifact rather than the generator's own report. This change ships no server behaviour, so there is no deployed system to observe."
+    },
+    {
+      "kind": "mutation",
+      "name": "the key must mark exactly one option",
+      "_how": "Clear every mark in one key.",
+      "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QMUT7\"",
+      "expect_failure": "the key marks 0 options as correct",
+      "_why": "Text extraction cannot see this. The mark is bold plus the accent colour, so a key that lost it still reads correctly as plain text while being useless to the teacher holding it."
+    },
+    {
+      "kind": "mutation",
+      "name": "and it must be the option the live page grades",
+      "_how": "Clear the real answer's bold AND its colour, then mark exactly one wrong option.",
+      "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QMUT8\"",
+      "expect_failure": "the key marks the wrong option",
+      "_why": "Written as its own mutation because the first attempt did not reach this branch: clearing bold alone left the accent colour behind, so the count rule fired first and the branch under test never ran. A mutation caught by a different rule proves nothing about the rule you meant to test."
+    },
+    {
+      "kind": "mutation",
+      "name": "the student edition must highlight nothing",
+      "_how": "Bold one option in a student copy.",
+      "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QMUT6\"",
+      "expect_failure": "the STUDENT edition highlights an option",
+      "_why": "A bolded option on the student sheet gives the answer away without a single word changing."
     }
   ],
-
-  "_not_checked": "How the page LOOKS. libreoffice-writer is not installed in this container: there is no libswlo.so while Impress's libsdlo.so is present, which is why the deck render gate works and a docx render cannot. A trivial one-paragraph python-docx file fails to convert here too, so the failure says nothing about these documents. These are structural checks on the file and must not be read as a visual proof.",
   "_excluded_items": "Two live items are excluded and named in the build report rather than dropped silently. 1.3 #8 offers two options that differ only by a trailing newline, invisible once printed, so it is unanswerable on paper even though it is arguable on screen. 1.7 #3 carries no rationale on the page, so the key would have a blank Why.",
   "_result": "88 questions across 15 topics, every one with at least three options, a distinct-options check, and a rationale in the key."
 }
