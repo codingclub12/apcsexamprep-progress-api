@@ -31,7 +31,7 @@ const { resolveMode, retryAllowedFor } = require('../retry-policy');
 const { verifyStudentToken, newId, COURSES } = require('../utils');
 const { rollupScore } = require('../scoring');
 const { buildOrder, readOrder, sample } = require('../lib/quiz-order');
-const { resolveScopedGate } = require('../lib/activity-gate');
+const { resolveScopedGate, lockedForAnyClass } = require('../lib/activity-gate');
 const wire = require('../lib/wire-log');
 
 // ── PREPARED STATEMENTS (module scope, reused) ────────────────────────────────
@@ -64,6 +64,13 @@ const gateClassStmt = db.prepare(
 const gateStmt = db.prepare(`
   SELECT lesson, activity_type, open FROM activity_gates
   WHERE class_id = ? AND course = ? AND unit = ?
+`);
+
+// Every class's rows for one location, for the anonymous case. Carries class_id,
+// which the per-class query above has no use for.
+const anyGateStmt = db.prepare(`
+  SELECT class_id, lesson, activity_type, open FROM activity_gates
+  WHERE course = ? AND unit = ?
 `);
 
 const priorEventsStmt = db.prepare(`
@@ -252,10 +259,22 @@ router.get('/:course/:unit/:lesson/:activity_type', renderStudent, (req, res) =>
     // both self-study here: gating them would lock someone out of practice their
     // teacher never intended to control. Same test the submit path uses to
     // decide mode, so render and submit cannot disagree.
+    //
+    // ANONYMOUS IS NOT AUTOMATICALLY SELF-STUDY, changed 2026-09-07. It was, and
+    // that made every lock one click wide: signing out, or opening the same page
+    // in incognito, handed over a quiz the teacher had closed. A quiz NO class
+    // has closed is still served to anyone and still indexable, because the
+    // public practice layer is the SEO engine and gating it would be a strategic
+    // loss. Only a quiz carrying an explicit closing row is withheld, on the
+    // reasoning that the public copy and the assigned copy are the same bytes.
     const sCls = req.student ? gateClassStmt.get(req.student.class_id) : null;
     const gcls = sCls && sCls.course === course ? sCls : null;
     const gateRows = gcls ? gateStmt.all(gcls.id, course, unit) : [];
-    const gate = resolveScopedGate(gateRows, gcls, lesson, activity_type);
+    let gate = resolveScopedGate(gateRows, gcls, lesson, activity_type);
+    if (gate.open && !gcls) {
+      const hit = lockedForAnyClass(anyGateStmt.all(course, unit), lesson, activity_type);
+      if (hit.locked) gate = { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope };
+    }
     if (!gate.open) {
       return res.json({
         course, unit, lesson, activity_type,

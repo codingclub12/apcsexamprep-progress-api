@@ -88,8 +88,11 @@ const MUTATIONS = [
   {
     name: 'the lesson-versus-unit-activity tie decided by row order instead',
     file: 'gate',
-    find: '    if (rank < bestRank) { best = row; bestRank = rank; }',
-    repl: '    if (best === null) { best = row; bestRank = rank; }',
+    //  Anchored with the two lines that follow, because lockedForAnyClass runs
+    //  the same ladder and the bare line now appears twice in this file. The
+    //  mutation is about pickGateRow, so the anchor has to name pickGateRow.
+    find: '    if (rank < bestRank) { best = row; bestRank = rank; }\n  }\n  return best;',
+    repl: '    if (best === null) { best = row; bestRank = rank; }\n  }\n  return best;',
     // All three, and the middle one is the reason this case exists. The first
     // assertion once passed under this very mutation because the lesson row
     // happened to come back from SQL first, so the suite was asserting the

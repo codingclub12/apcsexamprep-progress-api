@@ -1,0 +1,92 @@
+{
+  "change": "a lab or quiz that some class has closed is no longer served to a request with no token, so signing out or opening incognito stops being a way past a teacher's lock",
+  "_context": "The gate has always answered 'is this open for MY class'. A request with no token has no class, so resolveGate returned self-study and the item was served in full. The teacher who reported the original lab bug found this by checking her own fix in incognito. Measured against production the same day: all 7 authored labs, and an AP Cyber Unit 1 quiz, were served complete to an anonymous request with locked absent or false.",
+  "_the_rule_and_why_it_is_narrow": "Refusing anonymous OUTRIGHT would close the bypass and take the public practice layer offline, which CLAUDE.md calls a strategic loss rather than a security win. So only an item carrying an explicit CLOSING gate row for at least one class is withheld; an item nobody has closed is still served to anyone and still indexable. The rule reads gate ROWS ONLY and never a class default, because a class switched to locked-by-default has expressed a posture about its own students, not a judgement that every quiz on the site should leave the public index.",
+  "_two_bugs_this_found_in_its_own_implementation": "First, the anonymous path asked about each lab alias in turn and refused on the first close, which ignored an explicit reopen on the other name. Second, and only found by the generated rederive, a TIE between two same-scope rows was broken by alias order: a teacher closing the Lab column while a stale terminal-lab row sat open would have watched their click do nothing, which is the exact complaint that started this thread. A tie now goes to the CLOSING row, in both the anonymous and the signed-in path, so there is one opinion about precedence rather than two that agreed by luck.",
+  "_live_note": "verify-anon-gate-live.js reads live state it does not control. If no teacher has anything closed at the moment it runs, there is nothing for the rule to refuse and the script says UNPROVEN rather than passing. Its four assertions are therefore a GUARD, not the proof: they fail if the public practice layer goes dark, if a refusal does not name the anonymous rule, or if a refused lab puts its spec on the wire anyway. The rederive kind carries the positive evidence here, which is why it is present.",
+  "_expect_failure_note": "Every expect_failure carries the literal [FAIL] prefix, because an assertion NAME appears on the pass line too and would prove only that it ran.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the lab gate, now including the bypass and the half that must not regress",
+      "command": "npm run --silent smoke:labgate",
+      "expect": "24 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the quiz path, which had the identical hole",
+      "command": "npm run --silent smoke:gatescope",
+      "expect": "70 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the gate suite that existed before, unchanged and still green",
+      "command": "npm run --silent smoke:quizgate",
+      "expect": "20 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "A SECOND IMPLEMENTATION of the rule, set arithmetic rather than a ladder, agreeing across 4000 generated cases",
+      "command": "npm run --silent smoke:anongatererederive",
+      "expect": "6 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE BYPASS ITSELF: anonymous goes back to being automatically self-study",
+      "file": "routes/labs.js",
+      "find": "  if (!stu) {\n    if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };",
+      "replace": "  if (!stu) {\n    return { open: true, reason: 'self-study' };\n    // eslint-disable-next-line no-unreachable\n    if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };",
+      "command": "npm run --silent smoke:labgate",
+      "expect_failure": "[FAIL]   signing out no longer opens a closed lab"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE OVERCORRECTION: anonymous is refused EVERY lab, taking the public practice layer offline",
+      "file": "lib/activity-gate.js",
+      "find": "  return { locked: false, reason: null, scope: null };",
+      "replace": "  return { locked: true, reason: 'closed-for-activity', scope: 'activity' };",
+      "command": "npm run --silent smoke:labgate",
+      "expect_failure": "[FAIL]   but a lab NO class has closed is still served anonymously"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE TIE-BREAK the rederive found: a same-scope tie goes to the OPEN row, so a stale alias row beats a fresh close",
+      "file": "lib/activity-gate.js",
+      "find": "      if (rank < bestRank || (rank === bestRank && closes && !bestCloses)) {",
+      "replace": "      if (rank < bestRank) {",
+      "command": "npm run --silent smoke:anongatererederive",
+      "expect_failure": "[FAIL] the two implementations agree on every case"
+    },
+    {
+      "kind": "mutation",
+      "name": "the anonymous rule scans for any closing row instead of resolving per class, withholding a lab nobody closed",
+      "file": "lib/activity-gate.js",
+      "find": "      const row = pickGateRow(classRows, lesson, act);",
+      "replace": "      const row = classRows.find((r) => r.open === 0 || r.open === false) || null;",
+      "command": "npm run --silent smoke:labgate",
+      "expect_failure": "[FAIL]   and anonymous resolves those two rows too, rather than seeing one close"
+    },
+    {
+      "kind": "mutation",
+      "name": "the quiz render path stops consulting the anonymous rule, so signing out reopens every quiz",
+      "file": "routes/quiz.js",
+      "find": "    if (gate.open && !gcls) {",
+      "replace": "    if (false && gate.open && !gcls) {",
+      "command": "npm run --silent smoke:gatescope",
+      "expect_failure": "[FAIL] signed out, a quiz inside a locked unit is no longer served"
+    },
+    {
+      "kind": "suite",
+      "_why_suite": "the battery IS a mutation run but patches its own targets, so it has no file/find for the gate to apply. The five hand-written mutations above carry the mutation kind.",
+      "name": "the whole lab battery, twenty-one mutations, each required to go red for its OWN assertion",
+      "command": "npm run --silent smoke:labgatemutation",
+      "expect": "108 passed, 0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "GUARD, not proof: the public layer is not dark, refusals name the anonymous rule, and no refused lab leaks its spec",
+      "command": "node scripts/verify-anon-gate-live.js",
+      "expect": "4 passed, 0 failed"
+    }
+  ]
+}

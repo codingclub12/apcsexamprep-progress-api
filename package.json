@@ -258,7 +258,9 @@
     "smoke:assistantstudent": "node smoke/assistant-student.js",
     "smoke:cyberctacourse": "node smoke/cyber-course-practice-cta.js",
     "cyber:ctacourse": "node tools/ap-cyber-ced/generate-course-practice-cta.js",
-    "verify:cyberctacourse": "node scripts/verify-cyber-course-practice-live.js"
+    "verify:cyberctacourse": "node scripts/verify-cyber-course-practice-live.js",
+    "smoke:anongatererederive": "node smoke/anon-gate-rederive.js",
+    "verify:anongate": "node scripts/verify-anon-gate-live.js"
   },
   "keywords": [],
   "author": "",

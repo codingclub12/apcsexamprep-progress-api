@@ -242,9 +242,28 @@ const resolved = (lesson, activity) => gate.resolveScopedGate(rowsFor(), CLS, le
   r = await call('GET', quizUrl('1.2'), null, ST);
   ok('render: the rest of the locked unit is still closed', r.body && r.body.locked === true, r.body && r.body.locked);
 
-  // Self-study has no teacher to open anything and must never be gated.
+  //  Self-study, and the line that moved on 2026-09-07.
+  //
+  //  It used to read "self-study is untouched by a unit lock", and that was the
+  //  bypass: 1.2 is inside the locked unit, so a student who signed out was
+  //  handed the quiz their teacher had just closed. A teacher found it by
+  //  testing her own lock in incognito.
+  //
+  //  The rule now distinguishes the two halves that were being conflated. A quiz
+  //  SOME class has closed is withheld from anyone with no token. A quiz nobody
+  //  has closed is still served to everyone, which is the half that keeps the
+  //  public practice layer public and is asserted immediately below rather than
+  //  assumed.
   r = await call('GET', quizUrl('1.2'));
-  ok('self-study is untouched by a unit lock', r.body && r.body.locked === false, r.body && r.body.locked);
+  ok('signed out, a quiz inside a locked unit is no longer served',
+    r.body && r.body.locked === true, r.body && r.body.reason);
+  ok('and the refusal names the anonymous rule',
+    r.body && /^anonymous-/.test(r.body.reason || ''), r.body && r.body.reason);
+  //  1.1 was explicitly reopened above, so no class has it closed.
+  r = await call('GET', quizUrl('1.1'));
+  ok('while a quiz no class has closed is still served signed out',
+    r.body && r.body.locked === false && r.body.questions && r.body.questions.length === 2,
+    r.body && r.body.reason);
 
   // ═══ 3. THE TEACHER API ════════════════════════════════════════════════════
   wipeGates();
