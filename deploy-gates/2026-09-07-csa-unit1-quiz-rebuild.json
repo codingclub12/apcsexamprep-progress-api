@@ -1,0 +1,59 @@
+{
+  "change": "rebuild the AP CSA Unit 1 topic quizzes from the live lesson pages",
+  "_context": "All fifteen shipped quizzes print their multiple-choice stems with NO ANSWER OPTIONS. Topic 1.7 question 1 reads 'Which of these is a behavior?' and stops, while the teacher key says 'Answer: C' of a list that is not on the page. Items 4 to 7 read 'Explain why this is wrong: <misconception heading>', and those headings hold the TRUE rule, so the sheet asks a student to refute 'A constructor has no return type' and 'String immutability'. Confirmed by reading all fifteen, not a sample.",
+  "_why_rebuild_not_repair": "The options were never in the documents, so there is nothing to recover. They are on the lesson pages, where the same students meet the auto-graded version. This is a REPLACEMENT: the page's items are not the old key's items, so the old keys do not carry over.",
+
+  "_reproducibility": "The build and the two verifiers need the live storefront and a deck directory. The extraction step is committed as JSON-producing and can be re-run; the decks and the built quizzes are not committed, because this repository is public and they are the paid bundle.",
+  "_no_live_check": "Ships no server behaviour. The live storefront is an INPUT here rather than the thing under test.",
+
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the kit's own house style, including the new section 8",
+      "command": "python3 scripts/verify-csa-kit-style.py --kit \"$KIT\"",
+      "expect": "kit house style is clean."
+    },
+    {
+      "kind": "rederive",
+      "name": "the built quizzes checked against the extraction, not against the builder",
+      "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QUIZDIR\"",
+      "expect": "topics 15   questions 88 / FAILURES: 0",
+      "_why": "Reads the DOCUMENTS and cross-checks each key's marked answer against the answer the live page grades on, so a generator agreeing with itself does not pass. It also asserts the student edition leaks no rationale and that a multi-line option keeps real <w:br/> elements."
+    },
+    {
+      "kind": "mutation",
+      "name": "the missing-options defect, which is the one that shipped",
+      "_how": "Delete every option paragraph from one built quiz.",
+      "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QMUT\"",
+      "expect_failure": "prints 0 options",
+      "_measured": "6 failures across 1.4, one per question."
+    },
+    {
+      "kind": "mutation",
+      "name": "a stem that asks a student to refute a true statement",
+      "_how": "Rewrite one stem as 'Explain why this is wrong: A constructor has no return type'.",
+      "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QMUT2\"",
+      "expect_failure": "stem asks the student to refute a true statement"
+    },
+    {
+      "kind": "mutation",
+      "name": "the answer key leaking into the student edition",
+      "_how": "Insert a Why line into a student quiz.",
+      "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QMUT3\"",
+      "expect_failure": "the STUDENT edition carries a rationale"
+    },
+    {
+      "kind": "mutation",
+      "name": "flattening a multi-line option, which is invisible and fatal",
+      "_why": "1.3 question 1 offers four OUTPUTS that differ only in where the line breaks fall: 'Status:\\nOK\\nDone' against 'Status: OK\\nDone' against 'Status:\\nOKDone'. Collapsing whitespace turns three distinct choices into one string. The first draft of the extractor did exactly this and a duplicate-option check was the only thing that caught it.",
+      "_how": "Collapse the whitespace in one question's options.",
+      "command": "python3 scripts/verify-csa-unit1-quizzes.py \"$ITEMS\" \"$QMUT4\"",
+      "expect_failure": "multi-line options lost their line breaks",
+      "_measured": "2 failures, and the second is 'two options identical once printed'. Both are true consequences of the same damage and each names a real defect."
+    }
+  ],
+
+  "_not_checked": "How the page LOOKS. libreoffice-writer is not installed in this container: there is no libswlo.so while Impress's libsdlo.so is present, which is why the deck render gate works and a docx render cannot. A trivial one-paragraph python-docx file fails to convert here too, so the failure says nothing about these documents. These are structural checks on the file and must not be read as a visual proof.",
+  "_excluded_items": "Two live items are excluded and named in the build report rather than dropped silently. 1.3 #8 offers two options that differ only by a trailing newline, invisible once printed, so it is unanswerable on paper even though it is arguable on screen. 1.7 #3 carries no rationale on the page, so the key would have a blank Why.",
+  "_result": "88 questions across 15 topics, every one with at least three options, a distinct-options check, and a rationale in the key."
+}
