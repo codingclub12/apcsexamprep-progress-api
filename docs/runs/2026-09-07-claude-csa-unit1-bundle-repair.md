@@ -220,13 +220,81 @@ in "decide whether the class compiles". That is the same failure mode in
 miniature: the word is not the thing.
 
 
+## A seventh class, and this one is a criterion rather than a bug
+
+Tanner, reading the rebuilt exercises: the bundle should not tell a teacher how
+to run their class. No "give students 10 minutes to complete x", no "5 min class
+discussion". Informational rather than directional. Something like "Next step"
+is fine; choreography is not.
+
+Nothing was broken. Every timing was accurate and every staging note was
+sensible. It is a decision about what the product is, which is why it is worth
+recording as its own class: a guide that prescribes pacing is a lesson plan, and
+a teacher who already has a lesson plan is being told their job.
+
+Theme PR #111, merged as bcee9e0. Two halves.
+
+The renderer, which reaches every unit:
+
+    segmentHeading   stops printing minutes at all
+    Lesson Map       the Time column becomes In order, which is what the map's
+                     own masthead already claimed it was
+    labels           "Stop and think, then assign homework" becomes "Wrap up and
+                     homework"; "Worked example at the board" loses the board
+    FRQ set          "How to run one" becomes "About these questions", and its
+                     four bullets become facts rather than a procedure
+
+The minutes stay in the spec and validate() still sums them against a 60 minute
+period. They are a check on our authoring, not an instruction to a teacher, and
+that distinction is the whole reason they did not simply get deleted.
+
+The prose, 121 fields across all 53 specs. 83 online intros go from "Move to the
+live lesson page. Students work X, then Y" to "The Topic N lesson page has X and
+Y". 31 tasks lose a grouping clause. 39 bell ringers and worked examples lose the
+choreography and keep the substance:
+
+    before   Put this on the board and ask the class to label every line with
+             the building block it belongs to before anyone traces it.
+    after    Every line here belongs to one of the three building blocks, and
+             all three appear in eight lines.
+
+The answers, the common wrong turns, and what each item is testing all stayed.
+Those are facts about the lesson.
+
+`validateVoice` in `lib/spec.js` pins it and both builders run it. Its markers
+are narrow on purpose, and the reason is the failure this run keeps producing: a
+first draft flagged 98 fields and a good fraction were wrong, because "the whole
+class" is Java in topics 3.3 and 3.8, "two variables give four rows" is not
+pacing, and "several items ask for the printed output" describes an item rather
+than instructing anyone. All three are asserted as negative cases in the
+mutation set.
+
+    suite     53 specs validate, 0 failures
+    rederive  every rendered document re-read from word/document.xml and from
+              the pptx: Unit 2.1's 13 documents and its 24 teacher slides, and
+              all 60 Unit 1 exercise files. 0 timings, 0 directional lines
+    mutation  pacing, grouping and staging each broken alone and red for its own
+              reason, plus the three negative cases. Control clean.
+
+**What this does NOT reach, and it is the larger half.** Unit 1's teacher guides,
+lesson maps, discussion documents, guided notes and quizzes were built months ago
+by a different generator and are not regenerable from anything in this repo. The
+1.1 teacher guide alone carries 14 printed timings and staging notes like "Do it
+live. Take a student-suggested process, number the steps, then deliberately swap
+two and ask what breaks." All 15 are like that, and they are in the teacher's
+hands now. Only Unit 1's exercises could be fixed, because those are the four
+documents `build-exercises.js` owns. Fixing the rest is the full-spec rebuild,
+board 255, and it is now the blocker on two separate criteria rather than one.
+
 ## Still open
 
 - **The exercise keys reaching the Drive.** The 60 rebuilt files are with Tanner
-  as a zip, v3, md5 7751af9fe247375e13ad7aee603967b9. Until they are dropped over the Supplements folders, the teacher's
+  as a zip, v4, md5 504a3ff11df6dd41433ef086efdc5825. Until they are dropped over the Supplements folders, the teacher's
   exercises still contain no code. `scripts/repair-csa-unit1-exercise-keys.py`
   and its guard stay useful for any bundle built before #109 and are no longer
   the fix for this one.
+- **The other 11 Unit 1 documents per lesson**, which still print timings and
+  staging. Same blocker as below: they need full lesson specs.
 - **The rebuild, board 255.** All four passes here are repairs. The kit fixes
   every one of these at the source and removes 61 slides from Unit 1's Day 1
   decks, but Unit 1 has no content in `scripts/csa_kit/` at all: the 38 topics
