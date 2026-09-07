@@ -1,0 +1,63 @@
+{
+  "change": "repair the authored teaching content in the AP CSA Unit 1 bundle",
+  "_context": "The first Unit 1 pass fixed what a machine can check: a caption promising a runnable program over code that does not compile. This is what reading all fifteen topics found underneath it, and none of it is derivable, which is why every replacement is authored.",
+  "_the_four": "One, the break-it rationale is a single string used on all thirty NOW BREAK IT slides and is true of about three of them; it sits under 'Move the total line above the boxes line' and under 'Open the block comment and never close it'. Two, 1.6 and 1.15 name a statement their own program does not contain: 1.6 says steps += 3 on a program whose statements are steps *= 3 and steps += 10, and 1.15 says to change a String comparison on a program that compares nothing. Three, 1.10 says swapping the arguments changes the perimeter but not the area, and both methods are commutative so it changes neither. Four, of thirteen misconception panels one is already right, five hold the TRUE RULE copied from the heading above them, and six name the topic instead of stating a belief.",
+
+  "_reproducibility": "Not runnable from a fresh clone. This repository is public and the decks are the paid bundle, so they are not committed and every command needs them present at UNIT1. A future session must not read a stale PASS here as evidence about decks it has not seen.",
+  "_no_live_check": "Ships no server behaviour. Nothing under scripts/ or docs/ is read by the running container, so no assertion could be false before the deploy and true after. mutation plus rederive carry it.",
+
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the offline suites this change could trip",
+      "command": "npm run --silent smoke:encoding",
+      "expect": "54 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second reader checks the four claims against the decks themselves",
+      "command": "python3 scripts/verify-csa-unit1-teaching-content.py \"$UNIT1\"",
+      "expect": "decks 56   break-it slides 30   misconception panels 26 / FAILURES: 0",
+      "_why": "Written against the artifact rather than against the repair, so a repair that agrees with itself still has to get past it. Rule 2 does not match the two known-bad cases by name: it parses the ORIGINAL side out of 'Write A instead of B' and 'Change A to B' and requires that side to be present in the deck's own code panels, so a third one would fail too. Only the original side is checked, because the replacement is absent by definition."
+    },
+    {
+      "kind": "rederive",
+      "name": "the first pass still holds after the second",
+      "command": "python3 scripts/verify-csa-unit1-decks.py \"$UNIT1\"",
+      "expect": "surviving TRUE captions: 2   surviving TRUE notes: 7 / FAILURES: 0"
+    },
+    {
+      "kind": "mutation",
+      "name": "all four rules must fire, and fire INDEPENDENTLY, on the unrepaired decks",
+      "_how": "Restore every deck from its .orig.pptx and run the verifier.",
+      "command": "python3 scripts/verify-csa-unit1-teaching-content.py \"$UNIT1_ORIGINAL\"",
+      "expect_failure": "FAILURES: 60",
+      "_measured": "30 shared rationale, 24 misconception, 4 break-it naming a missing statement, 2 false 1.10 annotation. The counts match the edit counts of the repair exactly, per rule, which is what independence means here: no rule is being carried by another going red first."
+    },
+    {
+      "kind": "mutation",
+      "name": "rule 2 must catch the METHOD-CALL case, not only the assignment case",
+      "_why": "This is a correction rather than a hypothetical. The first version of rule 2 matched an assignment-shaped statement, so it caught 1.6's 'steps += 3' and MISSED 1.15's '.equals()' entirely: two of the four instances, reported as a clean pass on the half it could not see. The same shape as every other hollow guard in this repo. Parsing the original side out of the sentence catches both.",
+      "file": "scripts/verify-csa-unit1-teaching-content.py",
+      "find": "                    m = re.search(r'\\\\binstead of\\\\s+(.+?)\\\\s*\\\\.?$', change)",
+      "replace": "                    m = None if True else re.search(r'\\\\binstead of\\\\s+(.+?)\\\\s*\\\\.?$', change)",
+      "command": "python3 scripts/verify-csa-unit1-teaching-content.py \"$UNIT1_ORIGINAL\"",
+      "expect_failure": "FAILURES: 58",
+      "_note": "58 rather than 60: the two 1.15 instances go undetected. A drop in the failure count is the signal, because the mutation makes the verifier see LESS."
+    },
+    {
+      "kind": "mutation",
+      "name": "the belief must be targeted by SHAPE POSITION, and the verifier must say so",
+      "_why": "The bug that actually shipped in the first run of the repair. Targeting the belief by matching the heading text also matches the slide heading it was copied from, and overwrites BOTH. The repeat test alone reports that as 'the belief still repeats the heading', which is true and misleading: the heading is gone. Comparing against the pre-repair deck sitting beside it as .orig.pptx names the real damage.",
+      "file": "scripts/repair-csa-unit1-teaching-content.py",
+      "find": "            label = next((k for k, sh in enumerate(shapes)",
+      "replace": "            label = None if True else next((k for k, sh in enumerate(shapes)",
+      "command": "python3 scripts/verify-csa-unit1-teaching-content.py \"$UNIT1\"",
+      "expect_failure": "the slide heading was overwritten",
+      "_measured": "The full text-matching mutant produces 88 edits instead of 64, think 48 instead of 24, and the verifier goes red with 48 failures naming each overwritten heading: 'Math methods return double' became 'Math.pow(2, 10) gives an int, because I ...'."
+    }
+  ],
+
+  "_result": "64 edits across the bundle: why 30, think 24, change 4, happens 4, notice 2. Both roles, because both decks carry these panels. 26 misconception panels checked, every heading intact and every belief distinct from it, and zero surviving instances of any of the four defects.",
+  "_out_of_scope": "The split code and the type size. Unit 1 sits at 13pt body copy and predates the 14pt floor from #583. That is the rebuild, board 255."
+}
