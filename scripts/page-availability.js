@@ -55,8 +55,22 @@ const PAGES = [
   { handle: 'ap-cybersecurity-labs', why: 'the labs hub', optional: true },
   { handle: 'ap-cybersecurity-frq-library-kiosk', why: 'a Device Security Analysis set',
     mounts: '/api/frq/ap-cybersecurity/dsa-library-kiosk', expect: (j) => !!j.parts },
+  //  A LOCKED LAB IS A HEALTHY LAB. This check fetches the spec ANONYMOUSLY, and
+  //  since 2026-09-07 an anonymous request for a lab some class has closed is
+  //  answered `{locked:true, lab:null}` rather than with the spec, on purpose:
+  //  before that, signing out was a way past every teacher's lock. So the old
+  //  expectation, "checks is an array", started reading a working endpoint as an
+  //  outage the first night after that shipped, and the sweep went red at 14:00
+  //  with nothing actually wrong.
+  //
+  //  It still catches a real break. The endpoint has to answer one of the two
+  //  legitimate shapes; anything else, including a 200 carrying neither, is
+  //  down. What it no longer does is depend on whether a teacher somewhere
+  //  happens to have that lab open tonight, which was never a fact about
+  //  availability.
   { handle: 'ap-cyber-unit-1-lesson-2-terminal-lab', why: 'a terminal lab',
-    mounts: '/api/labs/ap-cybersecurity/1.2-lab', expect: (j) => Array.isArray(j.checks) },
+    mounts: '/api/labs/ap-cybersecurity/1.2-lab',
+    expect: (j) => Array.isArray(j.checks) || j.locked === true },
 ];
 
 // Endpoints checked once, independently of any page.
