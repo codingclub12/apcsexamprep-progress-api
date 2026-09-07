@@ -1,0 +1,54 @@
+{
+  "change": "rebuild the AP CSA Unit 1 guided notes from the decks",
+  "_context": "Every note-taking prompt in the shipped student notes is cut at exactly 60 characters with no regard for where a word ends. Students are handed 'Classes in Java libraries are grouped into packages. A packa ______' and 'The short version for now: a primitive holds the value itsel ______'. Confirmed on 1.2, 1.3 and 1.7 and systematic in all three. The notes also close with an exit ticket whose multiple-choice questions have no options and whose key says 'Answer: C' of a list nobody printed, the same defect as the shipped quizzes.",
+  "_why_rebuild": "The kit cuts at a word boundary and its notes carry no exit ticket, so rebuilding fixes both defects at once. Nothing is retyped or invented: the section prose on the slides is the same prose the notes truncate and it is there in full, vocabulary comes from the deck, the handle from lib/csa-nav.js, and the fill-in-the-blank section from the kit's own vocabulary derivation.",
+  "_ordering": "The decks must go through both repair passes first. This reads what is on the slides, so a deck still carrying a false caption would hand that text straight to the notes.",
+
+  "_reproducibility": "Needs the decks present. They are not committed: this repository is public and they are the paid bundle.",
+  "_no_live_check": "Ships no server behaviour.",
+
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the repo's own offline guards",
+      "command": "npm run --silent smoke:encoding",
+      "expect": "54 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the documents checked against the decks, not against the builder",
+      "command": "python3 scripts/verify-csa-unit1-notes.py \"$NOTES\" \"$DECKS\"",
+      "expect": "files 56   prompts 664 / FAILURES: 0",
+      "_why": "The deck is the oracle. The prose is on the slides in full, so the character following a prompt says whether the cut landed inside a word. The builder cannot satisfy this by agreeing with itself."
+    },
+    {
+      "kind": "live",
+      "name": "a rebuilt notes page renders",
+      "command": "soffice --headless --convert-to pdf --outdir \"$OUT\" \"$NOTES\"/*/Guided_Notes/*.docx",
+      "expect": "3 pages, vocabulary table and prompts intact",
+      "_note": "Named live because it observes the produced artifact rather than the generator's report. Rendering revealed the acronym bug below, which no text check had flagged."
+    },
+    {
+      "kind": "mutation",
+      "name": "the character-per-line bug, which is the one that happened",
+      "_why": "build_notes wants (name, [idea, idea, ...]). The extractor joins a section's slides into one string for its own report, and passing that straight through makes the builder iterate CHARACTERS. The first run wrote 56 files reading 'A', 'l', 'i', 'b', 'r', 'a', 'r', 'y' one per line. Nothing but looking at the output caught it.",
+      "file": "scripts/build-csa-unit1-notes.py",
+      "find": "            sections = [(name, _ideas(text))",
+      "replace": "            sections = list(r['days'][0].get('sections') or [])  # MUTANT\n            _unused = [(name, _ideas(text))",
+      "command": "python3 scripts/verify-csa-unit1-notes.py \"$NMUT1\" \"$DECKS\"",
+      "expect_failure": "prompt is a fragment",
+      "_measured": "45021 prompts instead of 664, and 44965 failures. The prompt COUNT is the tell: a builder that has started emitting characters produces two orders of magnitude too many.",
+      "_harness_note": "The mutant must be run from scripts/, not from a temp directory. The first attempt failed on ModuleNotFoundError for csa_kit, which is red for the wrong reason and proves nothing."
+    },
+    {
+      "kind": "mutation",
+      "name": "and a prompt cut mid-word must still be caught",
+      "_how": "Re-truncate one repaired prompt back to 'packages. A packa'.",
+      "command": "python3 scripts/verify-csa-unit1-notes.py \"$NMUT2\" \"$DECKS\"",
+      "expect_failure": "prompt ends mid-word"
+    }
+  ],
+
+  "_also_fixed": "The extractor title-cased vocabulary terms taken from the slide's capitals, which turned API into 'Api' and IDE into 'Ide' on the vocabulary table of every rebuilt packet. Only rendering the page surfaced it. Acronyms are now a named list rather than a heuristic, because IDE and API are indistinguishable from short words by shape.",
+  "_result": "56 notes documents across 15 topics and 28 days, 664 prompts, every one ending on a whole word and no exit ticket anywhere."
+}

@@ -66,6 +66,16 @@ def slide_data(sl):
         out['notes'] = sl.notes_slide.notes_text_frame.text or ''
     return out
 
+#  Acronyms the CSA vocabulary actually uses. Kept as a list rather than a
+#  heuristic: "IDE" and "API" are indistinguishable from short words by shape.
+ACRONYMS = {'API', 'IDE', 'JVM', 'ASCII', 'HTML', 'CSS', 'SQL', 'AP', 'CED'}
+
+
+def _term(t):
+    words = [w for w in t.split() if w]
+    return ' '.join(w.upper() if w.upper() in ACRONYMS else w.title() for w in words)
+
+
 def body_of(code):
     i = code.find('{')
     if i < 0: return None
@@ -144,7 +154,11 @@ def extract(path):
         elif 'KEY VOCABULARY' in H:
             terms = [h for h in s['heads'] if h != 'KEY VOCABULARY']
             defs = T[2:] if len(T) > 2 else []
-            d['vocab'] = [(t.title(), defs[i]) for i, t in enumerate(terms) if i < len(defs)]
+            #  The slide gives the term in caps, so title() is right for a word
+            #  and wrong for an acronym: it turned API into "Api" and IDE into
+            #  "Ide", which then printed that way on the vocabulary table of
+            #  every rebuilt notes packet.
+            d['vocab'] = [(_term(t), defs[i]) for i, t in enumerate(terms) if i < len(defs)]
         elif 'CHECK YOUR UNDERSTANDING' in H:
             day['discussion'] = [t for t in T[1:] if not t.isdigit()]
         elif 'END OF DAY' in H:
