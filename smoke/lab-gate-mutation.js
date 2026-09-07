@@ -20,6 +20,7 @@ const SUITE = path.join(__dirname, 'lab-gate.js');
 const FILES = {
   route: path.join(ROOT, 'routes', 'labs.js'),
   contract: path.join(ROOT, 'lib', 'gradebook-contract.js'),
+  player: path.join(ROOT, 'public', 'lab-player.js'),
 };
 const ORIGINAL = {};
 for (const [k, p] of Object.entries(FILES)) ORIGINAL[k] = fs.readFileSync(p, 'utf8');
@@ -37,7 +38,56 @@ function runSuite() {
   return { code: r.status, failed: [...out.matchAll(/^\s*\[FAIL\] (.+?)(?:  \{|  \[|  "|$)/gm)].map((m) => m[1].trim()), out };
 }
 
+const PLAYER_SUITE = path.join(__dirname, 'lab-player-token.js');
+function runPlayerSuite() {
+  const r = spawnSync(process.execPath, [PLAYER_SUITE], { cwd: ROOT, encoding: 'utf8' });
+  const out = (r.stdout || '') + (r.stderr || '');
+  return { code: r.status, failed: [...out.matchAll(/^\s*\[FAIL\] (.+?)(?:  \{|  \[|$)/gm)].map((m) => m[1].trim()), out };
+}
+
 const MUTATIONS = [
+  {
+    //  THE ONE THAT MADE EVERY OTHER FIX MOOT. The route and the gradebook were
+    //  both correct and a closed lab still opened, because the player asked for
+    //  the spec anonymously.
+    name: 'THE ROOT CAUSE: the player stops sending its token when asking for a lab',
+    file: 'player',
+    suite: 'player',
+    find: '      token ? { headers: { Authorization: "Bearer " + token } } : undefined)',
+    repl: '      undefined)',
+    must: ['and carried Authorization'],
+  },
+  {
+    name: 'the player sends a token even when signed out, killing teacher preview',
+    file: 'player',
+    suite: 'player',
+    find: '    try { token = conf.getToken() || ""; } catch (e) { token = ""; }',
+    repl: '    try { token = conf.getToken() || "anon"; } catch (e) { token = "anon"; }',
+    must: ['with no Authorization header at all'],
+  },
+  {
+    name: 'a locked lab is reported to the student as broken rather than closed',
+    file: 'player',
+    suite: 'player',
+    find: '        if (spec && spec.locked) {',
+    repl: '        if (false) {',
+    must: ['it says the teacher has not opened it'],
+  },
+  {
+    //  A teacher closes the Lab column; the spec calls itself terminal-lab.
+    name: 'THE NAME MISMATCH: only the spec\'s own activity type is resolved',
+    file: 'route',
+    find: "  return own === 'lab' ? ['lab'] : [own, 'lab'];",
+    repl: "  return [own];",
+    must: ['closing the "lab" column closes a terminal-lab spec'],
+  },
+  {
+    name: 'the widest answer wins instead of the narrowest, so a unit close outranks an explicit open',
+    file: 'route',
+    find: '    if (!best || rankOf(g) < rankOf(best)) best = g;',
+    repl: '    if (!best || rankOf(g) > rankOf(best)) best = g;',
+    must: ['reopening the Lab column inside a closed unit reopens the lab'],
+  },
   {
     name: 'THE REPORTED BUG: the route serves every lab without consulting the gate',
     file: 'route',
@@ -93,7 +143,10 @@ console.log('\n  BASELINE (unmutated)');
 const base = runSuite();
 ok('the suite is green before anything is mutated', base.code === 0, { code: base.code, failed: base.failed.slice(0, 4) });
 if (base.code !== 0) { console.log(base.out.slice(-1800)); process.exit(1); }
-const names = [...base.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim());
+const basePlayer = runPlayerSuite();
+ok('the player suite is green before anything is mutated', basePlayer.code === 0, basePlayer.failed.slice(0, 3));
+const names = [...base.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim())
+  .concat([...basePlayer.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim()));
 for (const m of MUTATIONS) for (const w of m.must) {
   ok(`the suite has an assertion starting "${w.slice(0, 46)}"`, names.some((n) => n.startsWith(w)));
 }
@@ -106,7 +159,7 @@ try {
     ok('  the patch target is present exactly once', hits === 1, { file: m.file, hits });
     if (hits !== 1) continue;
     fs.writeFileSync(FILES[m.file], src.replace(m.find, m.repl));
-    const r = runSuite();
+    const r = (m.suite === 'player') ? runPlayerSuite() : runSuite();
     restore();
     ok('  the suite goes RED', r.code !== 0, { code: r.code, failed: r.failed });
     ok('  it failed an assertion rather than crashing', r.failed.length > 0, { tail: r.out.slice(-260) });
