@@ -381,6 +381,12 @@ app.get('/api/health', (req, res) => {
   // and counts only, no student or class, so the zero-PII posture holds.
   const reporters = healthIntegrity.reporterIntegrity();
   if (reporters) body.reporters = reporters;
+  // Whether a column is priced at the number its students were actually served.
+  // A teacher found the first two of these by reading her own gradebook and
+  // emailing about it, which is the detector this replaces. Courses, lessons and
+  // two totals, so the zero-PII posture holds.
+  const prices = healthIntegrity.priceIntegrity();
+  if (prices) body.prices = prices;
   // What every boot seed did on this container: ran, wrote how many rows, or
   // threw and what it said. Author-content counts only, same terms as the two
   // blocks above. A seed that fails is silent by construction otherwise, and a

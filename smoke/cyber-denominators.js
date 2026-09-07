@@ -31,7 +31,7 @@ const express = require('express');
 const db = require('../db');
 const { signTeacherToken } = require('../utils');
 const {
-  seedCyberDenominators, POINTS, MEASURED_UNPRICEABLE, EXAM_UNPRICEABLE,
+  seedCyberDenominators, POINTS, CORRECTIONS, MEASURED_UNPRICEABLE, EXAM_UNPRICEABLE,
 } = require('../scripts/seed-cyber-denominators');
 
 let pass = 0, fail = 0;
@@ -48,7 +48,21 @@ console.log('1. Per-lesson values, as the pages state them');
 {
   ok('  1.1 exercise-1 is out of 7 (seven red flags)', POINTS['1.1|exercise-1'] === 7, POINTS['1.1|exercise-1']);
   ok('  2.1 exercise-1 is out of 6, NOT 7', POINTS['2.1|exercise-1'] === 6, POINTS['2.1|exercise-1']);
-  ok('  1.1 exercise-2 is out of 8', POINTS['1.1|exercise-2'] === 8, POINTS['1.1|exercise-2']);
+  //  RE-PRICED 8 -> 15 on 2026-09-07. This assertion pinned 8 against the page
+  //  that shipped with an 8 entry ANSWERS[]; that page was rebuilt to 15
+  //  questions and this number did not follow it, which is what a teacher saw as
+  //  a header reading /8 over cells out of 15. Read off the live body that day:
+  //  `var Q` holds 15 question objects across three parts and check() sets the
+  //  score to pts + ' / ' + Q.length.
+  ok('  1.1 exercise-2 is out of 15, matching the rebuilt page',
+    POINTS['1.1|exercise-2'] === 15, POINTS['1.1|exercise-2']);
+  //  And the correction that moves a container's existing row states the value
+  //  it replaces, so it can never be mistaken for a fresh measurement.
+  {
+    const c = (CORRECTIONS || []).find((x) => x.key === '1.1|exercise-2');
+    ok('  the move from 8 is recorded as a correction, not a silent edit',
+      !!c && c.from === 8 && c.to === 15, c);
+  }
   ok('  1.5 exercise-1 is out of 4', POINTS['1.5|exercise-1'] === 4, POINTS['1.5|exercise-1']);
 
   // Units 4 and 5 are covered by the full scan, and 4.4, a lesson the course

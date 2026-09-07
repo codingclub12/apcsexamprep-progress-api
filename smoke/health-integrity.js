@@ -204,6 +204,58 @@ console.log('\n6b. The reporter gap: graded work finished that never reports a s
   ok('  it clears itself once the page starts reporting', after && after.ok === true, after);
 }
 
+console.log('\n6b. A column priced at one number while students were served another');
+{
+  // The teacher's report of 2026-09-07, as data. She read both of these off her
+  // own gradebook and emailed about them, which is the detector this replaces.
+  const denom = db.prepare(`INSERT OR REPLACE INTO course_denominators
+    (course, unit, lesson, activity_type, possible) VALUES (?,?,?,?,?)`);
+  //  Two more students in the existing fixture class, because "how many
+  //  students were served the other number" is one of the assertions.
+  const stu = db.prepare(`INSERT INTO students (id,class_id,display_name,pin_hash)
+    VALUES (?, 'c-rep', ?, 'x')`);
+  stu.run('s-p1', 'S2');
+  stu.run('s-p2', 'S3');
+  const ev = db.prepare(`INSERT INTO score_events
+    (id,student_id,class_id,course,unit,lesson,activity_type,item,points,max_points)
+    VALUES (?,?,?,'ap-cybersecurity','unit-1',?,?,?,?,?)`);
+
+  //  Ex 2: priced 8, page rebuilt to 15 questions. Two students sat the new one.
+  denom.run('ap-cybersecurity', 'unit-1', '2.1', 'exercise-2', 8);
+  ev.run('pe-1', 's-p1', 'c-rep', '2.1', 'exercise-2', 'score', 12, 15);
+  ev.run('pe-2', 's-p2', 'c-rep', '2.1', 'exercise-2', 'score', 9, 15);
+
+  //  Ex 1: priced 7, and correct. One run, reported by BOTH writers, which is
+  //  the case that used to read as 14 and must not be reported as a conflict now.
+  denom.run('ap-cybersecurity', 'unit-1', '2.2', 'exercise-1', 7);
+  ev.run('pe-3', 's-p1', 'c-rep', '2.2', 'exercise-1', 'redflags', 7, 7);
+  ev.run('pe-4', 's-p1', 'c-rep', '2.2', 'exercise-1', 'score', 7, 7);
+
+  //  A lesson visit priced by mistake is not a graded column and never a
+  //  conflict, the same line the block above draws.
+  denom.run('ap-cybersecurity', 'unit-1', '2.3', 'lesson', 10);
+  ev.run('pe-5', 's-p1', 'c-rep', '2.3', 'lesson', 'score', 3, 4);
+
+  integrity.resetCache();
+  const p = integrity.priceIntegrity({ force: true });
+  ok('  the stale price is detected', p && p.columns >= 1, p);
+  const e2 = p && p.worst.find((w) => w.lesson === '2.1' && w.activity_type === 'exercise-2');
+  ok('  it names both numbers, not just that they differ',
+    e2 && e2.authored === 8 && e2.observed === 15, e2);
+  ok('  and how many students were served the other one', e2 && e2.students === 2, e2);
+  ok('  ok is false while any column disagrees', p && p.ok === false, p);
+  ok('  two writers on one run are NOT a conflict, because the carrier is dropped',
+    p && !p.worst.some((w) => w.lesson === '2.2'), p && p.worst);
+  ok('  and a lesson visit is never a priced column',
+    p && !p.worst.some((w) => w.activity_type === 'lesson'), p && p.worst);
+
+  // Correcting the price closes it, with no edit to this file.
+  denom.run('ap-cybersecurity', 'unit-1', '2.1', 'exercise-2', 15);
+  integrity.resetCache();
+  const after = integrity.priceIntegrity({ force: true });
+  ok('  re-pricing the column clears it', after && !after.worst.some((w) => w.lesson === '2.1'), after);
+}
+
 console.log('\n7. It degrades to absent, never to a wrong answer');
 {
   // Drop the table the query depends on. A liveness probe must not 500 because
@@ -213,6 +265,13 @@ console.log('\n7. It degrades to absent, never to a wrong answer');
   const r = integrity.codeSeedIntegrity({ force: true });
   ok('  an unmeasurable state returns null, not a throw', r === null, r);
   ok('  and never returns a cheerful ok:true', !(r && r.ok === true), r);
+
+  // Same for the price block, on its own table.
+  db.exec('DROP TABLE course_denominators');
+  integrity.resetCache();
+  const p = integrity.priceIntegrity({ force: true });
+  ok('  an unmeasurable price comparison returns null too', p === null, p);
+  ok('  and does not claim the prices agree', !(p && p.ok === true), p);
 }
 
 console.log(`\n${pass} passed, ${fail} failed\n`);

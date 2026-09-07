@@ -1,0 +1,105 @@
+{
+  "change": "one run reported by two writers was summed, so a 7 point exercise read 14 out of 14 and carried double weight in the points grade",
+  "_context": [
+    "A teacher reported it, which is the detector this replaces. Her four students",
+    "all read 14/14 on AP Cyber 1.1 Exercise 1 under a column header of /7.",
+    "The page posts its own score as item 'redflags' and assets/apcs-score-reporter.js",
+    "scrapes the same panel and posts item 'score' through APCS_saveLessonScore.",
+    "Every reader of score_events sums per distinct item, so the pair doubled.",
+    "The percentage survived because both halves doubled; the points did not.",
+    "Same file also re-prices 1.1 exercise-2 from 8 to 15, measured off the live",
+    "page body, and adds a /api/health block that reports a column priced at one",
+    "number while its students were served another."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the measured case, reproduced and repaired through the real routes",
+      "command": "npm run --silent smoke:carrier",
+      "expect": "14 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "a corrected price reaches a container whose row already exists, and regrades nobody",
+      "command": "npm run --silent smoke:denomcorrections",
+      "expect": "12 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the new health block sees the stale price and not the two-writer case",
+      "command": "npm run --silent smoke:healthintegrity",
+      "expect": "42 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation, in JavaScript over raw rows, reaches the same cells",
+      "_why": "The rule is SQL, and a suite written against that SQL agrees with it by construction. This one never touches the statements: it reads score_events with a plain SELECT, groups in memory and applies the rule by hand over generated activities.",
+      "command": "npm run --silent smoke:carrierrederive",
+      "expect": "two implementations, identical"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: the reader sums the carrier beside the page's own item",
+      "_why": "This is the exact state production was in when the teacher wrote. It must go red.",
+      "file": "lib/gradebook-contract.js",
+      "find": "  ) WHERE rn = 1 AND ${keepItemSql('item', 'has_named')}",
+      "replace": "  ) WHERE rn = 1",
+      "command": "npm run --silent smoke:carrier",
+      "expect_failure": "exercise-1 is 7 out of 7, not 14 out of 14"
+    },
+    {
+      "kind": "mutation",
+      "name": "the blunt fix: exclude the carrier outright and a one-writer page loses its grade",
+      "_why": "This is the fix somebody reaches for next. AP Cyber 1.1 Exercise 2 records 12 out of 15 through the carrier and nothing else. Both directions have to go red or the rule is only half tested.",
+      "file": "lib/gradebook-contract.js",
+      "find": "WHERE se.class_id = ? AND se.course = ? AND se.item <> '${LESSON_SCORE_ITEM}'",
+      "replace": "WHERE se.class_id = ? AND se.course = ? AND se.item <> '${LESSON_SCORE_ITEM}' AND se.item <> '${REPORTER_TOTAL_ITEM}'",
+      "command": "npm run --silent smoke:carrier",
+      "expect_failure": "exercise-2 keeps 12 out of 15"
+    },
+    {
+      "kind": "mutation",
+      "name": "the re-pricing proposal observes the doubled total again",
+      "_why": "POST /api/admin/denominators/adopt AUTHORS from these numbers, so an unfixed 14 could be written in as the official price of a 7 point exercise. That is a real regrade, not a reporting artifact.",
+      "file": "lib/admin-denominators.js",
+      "find": "  ) WHERE ${keepItemSql('item', 'has_named')}",
+      "replace": "  )",
+      "command": "npm run --silent smoke:carrier",
+      "expect_failure": "every observed total for exercise-1 is 7"
+    },
+    {
+      "kind": "mutation",
+      "name": "a correction that applies whatever the stored row says",
+      "_why": "The condition is what stops a correction clobbering a value an operator authored by hand, which is the whole reason the boot seed is insert-or-ignore.",
+      "file": "scripts/seed-cyber-denominators.js",
+      "find": "      AND possible = @from`);",
+      "replace": "`);",
+      "command": "npm run --silent smoke:denomcorrections",
+      "expect_failure": "an operator value of 12 survives the seed"
+    },
+    {
+      "kind": "mutation",
+      "name": "the whole battery, per rule, one call site at a time",
+      "_why": "Five mutations, each required to redden its OWN assertion. A mutation that reddens a neighbour is reported as a failure, because that is how a hollow guard passes.",
+      "file": "smoke/reporter-carrier.js",
+      "find": "  ok('  exercise-1 is 7 out of 7, not 14 out of 14',",
+      "replace": "  ok('  DISARMED, this assertion no longer checks anything', true || ",
+      "command": "npm run --silent smoke:carriermutation",
+      "expect_failure": "and it is THIS assertion that breaks: exercise-1 is 7 out of 7"
+    },
+    {
+      "kind": "live",
+      "name": "production reports whether a column is priced at what its students were served",
+      "_why": "/api/health carried no `prices` key before this deploy, measured 2026-09-07 against commit 7ef7ca3. It cannot pass by accident.",
+      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health",
+      "expect": "\"prices\""
+    },
+    {
+      "kind": "live",
+      "name": "and the stale price on 1.1 exercise-2 is gone from it",
+      "_why": "The boot correction runs on deploy. Before it, the same endpoint would report authored 8 against observed 15 for that column.",
+      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const p=JSON.parse(s).prices||{};const hit=(p.worst||[]).find(w=>w.lesson==='1.1'&&w.activity_type==='exercise-2');console.log(hit?'STILL STALE '+JSON.stringify(hit):'1.1 exercise-2 agrees');})\"",
+      "expect": "1.1 exercise-2 agrees"
+    }
+  ]
+}
