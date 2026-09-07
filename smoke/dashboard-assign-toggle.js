@@ -92,9 +92,13 @@ const CYBER = {
     units: {
       'unit-1': { label: 'Unit 1', lessons: ['1.1', '1.2'], activities: ['lesson', 'quiz'] },
       'unit-2': { label: 'Unit 2', lessons: ['2.1'], activities: ['lesson', 'quiz'] },
+      //  unit-3 exists only to hold a LOCKED and ENFORCEABLE column. unit-2 has
+      //  to stay fully open for the assertion about an open unit, and unit-1 is
+      //  already carrying the mixed case, so neither could take this one.
+      'unit-3': { label: 'Unit 3', lessons: ['3.1'], activities: ['quiz'] },
     },
   },
-  denominators: { '1.1|quiz': 5, '1.2|quiz': 5, '2.1|quiz': 5 },
+  denominators: { '1.1|quiz': 5, '1.2|quiz': 5, '2.1|quiz': 5, '3.1|quiz': 5 },
   summary: [{
     student: { id: 'stu1', name: 'Test Student', ref: '', last_active: null },
     units: {}, detail: { 'unit-1': { '1.1': { quiz: { score: 80 } } } },
@@ -114,16 +118,23 @@ const GATES = {
     { unit: 'unit-1', lesson_ref: '1.2', native_activity: 'lesson', locked: true, lock_enforceable: false },
     { unit: 'unit-1', lesson_ref: '1.2', native_activity: 'quiz', locked: true, lock_enforceable: false },
     { unit: 'unit-2', lesson_ref: '2.1', native_activity: 'quiz', locked: false, lock_enforceable: true },
+    //  LOCKED AND ENFORCEABLE, the combination this fixture lacked and Tanner's
+    //  real class has: a quiz the server does withhold, beside a lab it cannot.
+    //  Without a column in this state the "count only the UNENFORCEABLE ones"
+    //  rule is untestable, because counting every locked column gives the same
+    //  answer. The mutation battery proved exactly that and this row is the fix.
+    { unit: 'unit-3', lesson_ref: '3.1', native_activity: 'quiz', locked: true, lock_enforceable: true },
   ],
   gates: {
     quiz_lock_default: 0,
-    units: [{ key: 'unit-1', state: 'mixed' }, { key: 'unit-2', state: 'none' }],
+    units: [{ key: 'unit-1', state: 'mixed' }, { key: 'unit-2', state: 'none' }, { key: 'unit-3', state: 'all' }],
     lessons: [
       { key: 'unit-1|1.1', state: 'none' },   // fully open lesson
       { key: 'unit-1|1.2', state: 'all' },    // fully locked lesson
       { key: 'unit-2|2.1', state: 'none' },
+      { key: 'unit-3|3.1', state: 'all' },
     ],
-    rows: [], locked_items: 2, locked_but_unenforceable: ['unit-1/1.2/lesson', 'unit-1/1.2/quiz'],
+    rows: [], locked_items: 3, locked_but_unenforceable: ['unit-1/1.2/lesson', 'unit-1/1.2/quiz'],
   },
 };
 //  The page's OWN loadGates does the mapping, driven through a stubbed fetch.
@@ -149,6 +160,7 @@ function render() {
   T.model = T.buildModel(CYBER);
   nodes['gb-table'] = undefined;    // fresh capture
   nodes['gb-unitpanel'] = undefined;
+  nodes['gb-calcnote'] = undefined;
   T.renderGrid();
   try { T.renderUnitFilter(); } catch (e) { /* panel needs model.units; grid is what matters here */ }
   return el('gb-table').innerHTML;
@@ -193,6 +205,28 @@ ok('  a locked column is always visible, never hover-only',
   /class='lk nf'[^>]*toggleGate\(event,'col','unit-1','1\.2','quiz'\)/.test(h)
   && !/class='lk[^']*hov'[^>]*toggleGate\(event,'col','unit-1','1\.2','quiz'\)/.test(h));
 ok('  no switch markup survives anywhere', !/class='gsw/.test(h) && !/class='gsw/.test(pan));
+
+//  THE SIGNAL HAS TO SURVIVE A PHONE. Added 2026-09-07 after Tanner locked the
+//  1.1 Lab, took a student account to the page, found it open, and reported the
+//  lab lock as broken. It was not broken: that activity keeps its questions in
+//  the Shopify page body, so the browser has them before any server code runs,
+//  and the gradebook knew. It signalled it by tinting one padlock emoji against
+//  another and by a title tooltip, and a touch screen can perceive neither.
+//  THE LINE A TEACHER ACTUALLY READS. The glyph and the aria-label are on the
+//  control; this is plain text in the caveat row under the header, which is the
+//  one place the count survives a phone, greyscale and colour blindness at once.
+const note = () => (el('gb-calcnote').textContent || '');
+ok('  the caveat line counts the locks that cannot be enforced',
+  /2 locked columns cannot be enforced/.test(note()), note());
+ok('  and says WHY, in a teacher\'s words rather than a code word',
+  /questions in the page/.test(note()) && /students can still open them/.test(note()), note());
+
+ok('  the marked control carries a warning GLYPH, not only a colour filter',
+  (h.match(/<span class='lk nf'[^>]*>[^<]*\u26A0/g) || []).length === 2,
+  (h.match(/<span class='lk nf'[^>]*>[^<]*/g) || []).slice(0, 2));
+ok('  and its aria-label carries the reason, not just "Not assigned"',
+  (h.match(/<span class='lk nf'[^>]*>/g) || []).every((x) => /aria-label='[^']*Cannot be enforced/.test(x)),
+  (h.match(/<span class='lk nf'[^>]*>/g) || [])[0]);
 
 console.log('\n2. It never says "locked" where a teacher reads it');
 //  `locked` on this page means "submitted as final". The availability control

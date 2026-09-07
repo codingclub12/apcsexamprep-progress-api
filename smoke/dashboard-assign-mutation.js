@@ -73,6 +73,37 @@ const MUTATIONS = [
     must: ['a thrown request is caught inside loadGates, not propagated'],
   },
   {
+    //  The three channels that were invisible on a phone. Each is mutated on its
+    //  own, because they are three different ways of saying the same thing and a
+    //  suite that only checked one would go green while a teacher still could
+    //  not tell a real lock from a decorative one.
+    name: 'the caveat line stops counting the locks that cannot be enforced',
+    find: "+(nfCols?('  |  '+nfCols+' locked column'",
+    repl: "+(false?('  |  '+nfCols+' locked column'",
+    must: ['the caveat line counts the locks that cannot be enforced'],
+  },
+  {
+    name: 'the warning glyph goes away, leaving only the colour filter',
+    find: "+(lying?'\\u26A0':'')",
+    repl: "+''",
+    must: ['the marked control carries a warning GLYPH, not only a colour filter'],
+  },
+  {
+    name: 'the aria-label drops the reason, so a screen reader hears only "Not assigned"',
+    find: "aria-label='\"+this.esc(label+': '+t)+\"'",
+    repl: "aria-label='\"+this.esc(label+': '+what)+\"'",
+    must: ['and its aria-label carries the reason, not just "Not assigned"'],
+  },
+  {
+    //  The count must come from the CONTRACT, not from whether a column happens
+    //  to be locked. Counting every locked column would put a warning on the
+    //  quiz lock the server really does enforce.
+    name: 'the caveat counts every locked column, warning about ones that DO enforce',
+    find: 'return !!(gi&&gi.locked&&gi.lock_enforceable===false);',
+    repl: 'return !!(gi&&gi.locked);',
+    must: ['the caveat line counts the locks that cannot be enforced'],
+  },
+  {
     name: 'switches render on columns the contract has never heard of',
     find: 'const it=this.colItem(c);',
     repl: 'const it=this.colItem(c)||{locked:false,lock_enforceable:true};',
