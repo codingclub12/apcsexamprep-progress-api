@@ -46,7 +46,19 @@ const POINTS = {
 
   // ── 1.1 ────────────────────────────────────────────
   '1.1|exercise-1': 7,        // foundCount reads / 7
-  '1.1|exercise-2': 8,        // ANSWERS[] has 8 entries
+  // RE-PRICED 2026-09-07 from 8 to 15, because the PAGE changed and this did not.
+  // A teacher reported the column: header /8, cells out of 15. Read off the live
+  // body that day: `var Q` holds 15 question objects across three parts, the
+  // score bar renders "0 / 15" in three places, and check() sets the score to
+  // pts + ' / ' + Q.length. The 8 was correct for the version it was measured
+  // against; that page was rebuilt and nothing here noticed.
+  //
+  // This does not regrade anybody. score_events carries earned and max_points
+  // per submission and gradebook-contract SOURCE B prices an attempted cell from
+  // the ledger, so a student who sat the 8 question version still reads 5 out of
+  // 8 (smoke/denominator-safety.js pins that in both directions). What moves is
+  // the column header and the price of work nobody has attempted yet.
+  '1.1|exercise-2': 15,       // `var Q` has 15 entries, score bar reads "0 / 15"
   // Re-priced twice on 2026-08-26/27, and the second move is the one that sticks.
   // It briefly read 9, matching the teacher bundle's Quiz_KEY.docx, until the rule
   // landed that bundle instruments stay offline: an online quiz that copies the
@@ -343,6 +355,49 @@ function buildRows() {
   });
 }
 
+//  CORRECTIONS: a value this file MEASURED WRONG, or measured against a page
+//  that has since been rebuilt.
+//
+//  The boot seed is insert-or-ignore, deliberately, so that a value an operator
+//  authored by hand is never clobbered. The cost of that is real and was paid on
+//  2026-09-07: 1.1 exercise-2 was priced 8 against a page that had been rebuilt
+//  to 15 questions, the corrected number could be committed here and would still
+//  never reach a running container, and the fix waited on somebody remembering
+//  to run this with --update in a Railway shell.
+//
+//  So a correction names the value it is replacing, and applies ONLY while the
+//  stored row still equals that value. A hand edit since then wins and is left
+//  alone, which keeps the safety the ignore mode was protecting. Idempotent:
+//  once applied, `from` no longer matches and it is a no-op forever.
+const CORRECTIONS = [
+  { key: '1.1|exercise-2', from: 8, to: 15,
+    why: 'the page was rebuilt to 15 questions; read off the live body 2026-09-07' },
+];
+
+function applyCorrections() {
+  //  ONE guard, and it is in the WHERE clause. An earlier draft read the row
+  //  first and then wrote it under the same condition, which reads as careful
+  //  and is worse: with two guards, breaking either one changes nothing, so no
+  //  test can tell whether either works. The deploy gate said so, on this exact
+  //  function. `possible = @from` is the whole rule, it is atomic, and `changes`
+  //  already reports whether it applied.
+  const write = db.prepare(`UPDATE course_denominators SET possible = @to
+    WHERE course = @course AND lesson = @lesson AND activity_type = @activity_type
+      AND possible = @from`);
+  const applied = [];
+  for (const c of CORRECTIONS) {
+    const [lesson, activity_type] = c.key.split('|');
+    //  The correction must agree with the table above, or the two are two
+    //  opinions about one column and a re-run would flip it back and forth.
+    if (POINTS[c.key] !== c.to) {
+      throw new Error(`correction for ${c.key} says ${c.to}, POINTS says ${POINTS[c.key]}`);
+    }
+    const r = write.run({ course: COURSE, lesson, activity_type, from: c.from, to: c.to });
+    if (r.changes) applied.push(c.key);
+  }
+  return applied;
+}
+
 function seedCyberDenominators({ update = false, dryRun = false } = {}) {
   const rows = buildRows();
   const existing = new Set(
@@ -369,7 +424,13 @@ function seedCyberDenominators({ update = false, dryRun = false } = {}) {
     return n;
   })(rows);
 
-  return { total: rows.length, changed, would_add: wouldAdd.length, mode: update ? 'update' : 'ignore' };
+  //  Corrections run in both modes. Under --update the rows above have already
+  //  written the new value, so this is a no-op; under the boot seed's ignore
+  //  mode it is the only thing that moves a stale row.
+  const corrected = applyCorrections();
+
+  return { total: rows.length, changed, would_add: wouldAdd.length,
+    corrected: corrected.length, mode: update ? 'update' : 'ignore' };
 }
 
 if (require.main === module) {
@@ -381,10 +442,12 @@ if (require.main === module) {
     console.log(`cyber denominators DRY RUN: ${r.would_add} of ${r.total} would be written`);
     for (const x of r.rows) console.log(`  ${x.lesson.padEnd(6)} ${x.activity_type.padEnd(12)} out of ${x.possible}`);
   } else {
-    console.log(`cyber denominators: ${r.changed} of ${r.total} rows written (mode: ${r.mode})`);
+    console.log(`cyber denominators: ${r.changed} of ${r.total} rows written (mode: ${r.mode})`
+      + (r.corrected ? `, ${r.corrected} stale row(s) corrected` : ''));
   }
 }
 
 module.exports = {
-  seedCyberDenominators, buildRows, POINTS, MEASURED_UNPRICEABLE, EXAM_UNPRICEABLE,
+  seedCyberDenominators, buildRows, applyCorrections, POINTS, CORRECTIONS,
+  MEASURED_UNPRICEABLE, EXAM_UNPRICEABLE,
 };

@@ -47,18 +47,69 @@ const { resolveMode, retryAllowedFor } = require('./retry-policy');
 //     /quiz paths behaving on deploy exactly as they did before.
 const LESSON_SCORE_ITEM = 'lesson-score';
 
+// THE SECOND RESERVED ITEM NAME, and it is reserved for the same reason.
+//
+// assets/apcs-score-reporter.js does not post a score itself. It scrapes the
+// number the page displays and hands the pair to window.APCS_saveLessonScore in
+// apcs-tracker.js, which posts it under this item. So a row named 'score' is a
+// pair for the WHOLE ACTIVITY, exactly like a lesson-score row, and unlike
+// 'redflags' or 'q3' it is not one graded item inside the activity.
+//
+// WHY IT CANNOT SIMPLY BE EXCLUDED THE WAY 'lesson-score' IS
+// On most pages it is the ONLY writer, and there it is the grade. AP Cyber 1.1
+// Exercise 2 records 12 out of 15 through this item and nothing else. Excluding
+// it would delete that grade.
+//
+// So the rule is narrower: a page that reports for ITSELF has already said what
+// the run was worth, and the scraped carrier is the same run counted a second
+// time. When named items exist, they win and the carrier is dropped; when the
+// carrier is alone, it is the grade.
+//
+// THE MEASURED CASE, 2026-09-07, reported by a teacher rather than by a check.
+// ap-cyber-unit-1-lesson-1-exercise-1 carries both writers: the page body posts
+// item 'redflags' out of FLAGS.length, and the reporter scrapes #finalScore
+// ("7 out of 7 red flags found") and posts item 'score'. Summing them gave a
+// gradebook cell of 14 out of 14 under a column header of /7. The percentage
+// survived, because both halves doubled, but the points did not: that column
+// contributed 14 of a student's 29 graded points, so one exercise weighed twice
+// what the teacher priced it at.
+const REPORTER_TOTAL_ITEM = 'score';
+
+// The rule as SQL, in two fragments, so the readers that sum this ledger cannot
+// drift into separate opinions about it. gradebook-contract.js (what every view
+// reads), this file (what progress.score is written from),
+// admin-denominators.js (what the re-pricing proposal is derived from) and
+// health-integrity.js (what /api/health reports about a column's price) all use
+// these. The third matters most: POST /api/admin/denominators/adopt AUTHORS
+// from those numbers, so an unfixed observed maximum of 14 could have been
+// written into course_denominators as the official total for a 7 point
+// exercise. That is the same trap the LESSON_SCORE_ITEM exclusion above was
+// added to close.
+
+/** 1 when this activity carries a page-named item beside the scraped carrier. */
+function namedItemFlagSql(itemExpr, partitionBy) {
+  const over = partitionBy ? `PARTITION BY ${partitionBy}` : '';
+  return `MAX(CASE WHEN ${itemExpr} <> '${REPORTER_TOTAL_ITEM}' THEN 1 ELSE 0 END) OVER (${over})`;
+}
+
+/** Keep every named item, and the carrier only when it is the sole reporter. */
+function keepItemSql(itemExpr, flagCol) {
+  return `(${itemExpr} <> '${REPORTER_TOTAL_ITEM}' OR ${flagCol} = 0)`;
+}
+
 const rollupAggStmt = db.prepare(`
   SELECT
     COALESCE(SUM(best_points), 0) AS earned,
     COALESCE(SUM(item_max),   0)  AS possible,
     COUNT(*)                      AS items
   FROM (
-    SELECT item, MAX(points) AS best_points, MAX(max_points) AS item_max
+    SELECT item, MAX(points) AS best_points, MAX(max_points) AS item_max,
+      ${namedItemFlagSql('item', '')} AS has_named
     FROM score_events
     WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
       AND item <> '${LESSON_SCORE_ITEM}'
     GROUP BY item
-  )
+  ) WHERE ${keepItemSql('item', 'has_named')}
 `);
 const rollupEventsStmt = db.prepare(`
   SELECT COUNT(*) n FROM score_events
@@ -76,12 +127,13 @@ const rollupFirstAggStmt = db.prepare(`
     COALESCE(SUM(max_points), 0) AS possible,
     COUNT(*)                     AS items
   FROM (
-    SELECT points, max_points,
-      ROW_NUMBER() OVER (PARTITION BY item ORDER BY created_at ASC, rowid ASC) AS rn
+    SELECT item, points, max_points,
+      ROW_NUMBER() OVER (PARTITION BY item ORDER BY created_at ASC, rowid ASC) AS rn,
+      ${namedItemFlagSql('item', '')} AS has_named
     FROM score_events
     WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
       AND item <> '${LESSON_SCORE_ITEM}'
-  ) WHERE rn = 1
+  ) WHERE rn = 1 AND ${keepItemSql('item', 'has_named')}
 `);
 
 // One row, one lookup: the class policy plus the student's personal override.
@@ -110,4 +162,5 @@ function rollupScore(studentId, course, unit, lesson, activity_type) {
            retry_allowed: retryOn };
 }
 
-module.exports = { rollupScore, retryOnFor, LESSON_SCORE_ITEM };
+module.exports = { rollupScore, retryOnFor, LESSON_SCORE_ITEM,
+  REPORTER_TOTAL_ITEM, namedItemFlagSql, keepItemSql };

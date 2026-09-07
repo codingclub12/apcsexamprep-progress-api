@@ -39,6 +39,44 @@ the argument for checking the neighbours of every report.
 
 ---
 
+## Michelle
+
+- Course: AP Cybersecurity, class CYBER-T5KR. Founding cohort teacher, running
+  Unit 1 with a live class right now.
+- Earlier: the 1.1 Lab column was 27 of 32 blank because the lab's Check buttons
+  were invisible (run note 2026-09-03, cyber-lab11-palette), and the auth-log lab
+  had no submit button and no gradebook column (board #198, #201). Both fixed;
+  her 2026-09-07 email opens by confirming the labs now show and submit.
+- Wrote: 2026-09-07. Three things.
+  1. Thanks, the labs work.
+  2. She locked every quiz and Unit Test, saw the "can't be enforced" note, and
+     asked what a student sees on a locked page. Assumed she unlocks and then
+     assigns the link.
+  3. "1.1 Ex 1 is out of 7 but scores are out of 14? Ex 2 is out of 8, but
+     scores show out of 15?"
+- Replied: NOTHING SENT as of 2026-09-07. Draft at
+  docs/inbox/drafts/2026-09-07-michelle-locks-and-scores.md, every claim checked
+  live that day and the check named beside it.
+- What the draft claims, and must stay consistent with:
+  - Her five Unit 1 lesson quiz locks are REAL and hold against a signed-out or
+    incognito student. Measured, unauthenticated, against production.
+  - Her Unit Test locks do nothing, and the unit test pages carry their
+    questions and answer key in the page source. She was told to treat the link
+    itself as the lock and hand it out on test day. Same for Units 2 to 5.
+  - No date was given for moving the unit tests onto the server.
+  - 1.1 Ex 1 was double counted, the percentages her students saw were always
+    right, the Points column and letter grade will move slightly when the fix
+    deploys, and nobody has to redo anything.
+  - 1.1 Ex 2 is out of 15 and the header was stale. A student who sat the older
+    8 question version keeps 5 out of 8 and is not rescaled.
+- Reported scope: 2 columns in one lesson. Actual scope: 1 page in Unit 1 has
+  two writers (all 20 Unit 1 activity pages swept, one hit), and 1 stale price
+  confirmed. Units 2 to 5 not swept; /api/health `prices` now reports the shape
+  without a sweep. Ratio: 2 reported, 2 confirmed, unknown beyond Unit 1, which
+  is itself worth stating rather than rounding to "fixed".
+
+---
+
 ## The ratio, so far
 
 | reporter | reported | actually affected |
