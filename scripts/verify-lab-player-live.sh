@@ -23,7 +23,10 @@ API="${API_BASE:-https://progress.apcsexamprep.com}"
 TMP=$(mktemp)
 trap 'rm -f "$TMP"' EXIT
 
-curl -sS --max-time 25 -o "$TMP" "$API/lab-player.js" || { echo "could not fetch the player"; exit 2; }
+HDR=$(mktemp)
+trap 'rm -f "$TMP" "$HDR"' EXIT
+
+curl -sS --max-time 25 -D "$HDR" -o "$TMP" "$API/lab-player.js" || { echo "could not fetch the player"; exit 2; }
 p=0; f=0
 ok(){ if [ "$2" = 1 ]; then p=$((p+1)); echo "  [PASS] $1"; else f=$((f+1)); echo "  [FAIL] $1"; fi; }
 has(){ grep -qF "$1" "$TMP" && echo 1 || echo 0; }
@@ -43,6 +46,28 @@ ok "a closed lab reads as closed to the student" \
    "$(has 'Your teacher has not opened this lab yet.')"
 ok "and the real load-error path still exists for real errors" \
    "$(has 'This lab could not be loaded. ')"
+
+#  The header, read from what the EDGE actually delivered rather than from the
+#  route source. The distinction is the whole point of checking it here: on
+#  2026-09-07 the route asked for max-age=3600 and the client received 14400,
+#  because the CDN raises a short max-age on a cacheable asset to its own four
+#  hour browser TTL. So asserting the route's intent proves nothing about what a
+#  student's browser was told; only the delivered header does.
+cc=$(grep -i '^cache-control' "$HDR" | tr -d '\r' | sed 's/^[Cc]ache-[Cc]ontrol: *//')
+echo
+echo "  delivered Cache-Control: ${cc:-none}"
+ok "the delivered header is no-store" \
+   "$(echo "$cc" | grep -qi 'no-store' && echo 1 || echo 0)"
+#  A max-age of ANY size is a failure, not a near miss: anything under four hours
+#  gets inflated, so a small number here means the lock can go stale again.
+ok "and it carries no max-age the CDN could inflate" \
+   "$(echo "$cc" | grep -qi 'max-age' && echo 0 || echo 1)"
+
+#  Was this actually served fresh? A HIT on the old object is how the previous
+#  deploy read as shipped while students kept the broken player.
+cfs=$(grep -i '^cf-cache-status' "$HDR" | tr -d '\r' | sed 's/^[^:]*: *//')
+age=$(grep -i '^age:' "$HDR" | tr -d '\r' | sed 's/^[^:]*: *//')
+echo "  cf-cache-status: ${cfs:-none}   age: ${age:-0}"
 
 echo
 echo "  $p passed, $f failed"

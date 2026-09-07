@@ -173,8 +173,24 @@ router.get('/api/labs/:course/:item_id', (req, res) => {
   //  survives View Source.
   const gate = labGate(req, spec);
   cors(res);
+  //  This response varies by credential: the same URL answers with the spec for
+  //  one student and locked:true for another in a class that has closed it. The
+  //  cors() helper above marks it public, max-age=300, which was true when every
+  //  answer was the same and stopped being true the moment the gate landed.
+  //  Left as it was, any shared cache on the path, and a school proxy is exactly
+  //  that, could hand one class's open spec to a student whose teacher had shut
+  //  it. That is the same failure the player's own cache header caused on
+  //  2026-09-07, one hop further out, and it would have been much harder to see.
+  //  no-store on BOTH branches, so the locked and open answers are indistinguishable
+  //  to a cache rather than differing in a way it might act on.
+  //
+  //  Vary is APPENDED, never set. The CORS layer already put Vary: Origin on
+  //  this response and res.set would replace it, quietly dropping a header
+  //  another layer deliberately added. Checked against the live response before
+  //  changing it: it carries Vary: Origin and Vary: accept-encoding.
+  res.set('Cache-Control', 'no-store');
+  res.append('Vary', 'Authorization');
   if (!gate.open) {
-    res.set('Cache-Control', 'no-store');
     return res.json({
       course: req.params.course, item_id: req.params.item_id,
       locked: true, reason: gate.reason, lab: null,
@@ -226,26 +242,41 @@ router.get('/lab/:course/:item_id', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'lab.html'));
 });
 
-//  ALWAYS REVALIDATE. This file is the enforcement point for a teacher's lock:
-//  it decides whether the token that lets the server recognise a student is
-//  sent at all. A stale copy silently disables the gate, and on 2026-09-07 that
-//  is exactly what happened. The fix deployed, production reported the new
-//  commit, and the edge kept serving the previous player for hours, so a teacher
-//  who had closed a lab still watched it open and the deploy looked done.
+//  NEVER CACHED, and the reason is measured rather than assumed.
 //
-//  max-age=0 with must-revalidate does not mean "do not cache". The copy is
-//  still stored and still reused; the client just asks first, and sendFile's
-//  ETag makes the answer a 304 of a few bytes when nothing changed. For a 40KB
-//  file loaded once per lab that is the right trade, and an hour of silently
-//  serving a build that cannot enforce anything is not.
+//  This file decides whether the student token is sent at all, so a stale copy
+//  silently disables the lab gate. On 2026-09-07 the deploy was correct and the
+//  edge served the previous player anyway, so a teacher who had closed a lab
+//  watched it stay open.
 //
-//  It was max-age=3600 and the edge answered with 14400, which is worth knowing
-//  rather than assuming this header is the last word: the origin proposes and
-//  the CDN disposes. Verify with scripts/verify-lab-player-live.sh after a
-//  deploy rather than trusting either.
+//  The obvious fix does not work here. Measured that day against four paths on
+//  this origin, with the cache key busted so every response came from us:
+//
+//    /lab-player.js             asked 3600            delivered 14400
+//    /practice-hub.js           asked 3600            delivered 14400
+//    /api/intro-java/player.js  asked 86400 immutable delivered 86400 immutable
+//    /lab/:course/:item         asked no-store        delivered no-store
+//
+//  So the CDN is not rewriting every header. It raises a SHORT max-age on a
+//  cacheable asset to its own 4 hour browser TTL and leaves a longer one alone.
+//  'max-age=0, must-revalidate' is shorter than four hours, so it would have
+//  been inflated to 14400 exactly like the 3600 it replaced, and this route
+//  would have read as fixed while changing nothing.
+//
+//  no-store is the one value in that table that arrived intact, because it
+//  takes the response out of the cacheable class entirely rather than competing
+//  on TTL. It costs one 40KB origin fetch per lab page load, on seven pages.
+//
+//  A cheaper answer exists and is deliberately not taken yet: version the URL
+//  and cache it for a day. That needs the seven lab page bodies regenerated and
+//  imported, so it is a sheet rather than a deploy. See docs/lab-contract.md.
+//
+//  Whatever this line says, the origin proposes and the CDN disposes. Check what
+//  was DELIVERED with scripts/verify-lab-player-live.sh after a deploy rather
+//  than trusting the source, which is the mistake that cost this route a cycle.
 router.get('/lab-player.js', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
-  res.set('Cache-Control', 'public, max-age=0, must-revalidate');
+  res.set('Cache-Control', 'no-store');
   res.type('application/javascript');
   res.sendFile(path.join(__dirname, '..', 'public', 'lab-player.js'));
 });

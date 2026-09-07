@@ -103,14 +103,49 @@ const SPEC = { course: 'ap-cybersecurity', item_id: '1.2-lab', title: 'T', brief
   //  The deploy on 2026-09-07 was correct and the edge served the previous
   //  player for hours, so a teacher who had closed a lab still watched it open.
   //  This file decides whether the token is sent at all, so a stale copy
-  //  silently disables the gate. max-age=0 with must-revalidate still lets the
-  //  copy be stored and reused; it just has to ask first, and the ETag makes
-  //  that a 304.
+  //  silently disables the gate.
+  //
+  //  The assertion is no-store SPECIFICALLY, and a short max-age is a failure
+  //  rather than a near miss. Measured against the live origin that day: this
+  //  path asked for 3600 and the client received 14400, because the CDN raises
+  //  a short max-age on a cacheable asset to its own 4 hour browser TTL. Any
+  //  lifetime below four hours therefore reads as fixed and changes nothing.
+  //  no-store was the one value that arrived intact, because it leaves the
+  //  cacheable class rather than competing on TTL.
   const routeSrc = fs.readFileSync(path.join(__dirname, '..', 'routes', 'labs.js'), 'utf8');
   const block = routeSrc.slice(routeSrc.indexOf("router.get('/lab-player.js'"));
   const cc = (block.match(/Cache-Control', '([^']*)'/) || [])[1];
-  ok('  the player is served must-revalidate', /must-revalidate/.test(cc || ''), cc);
-  ok('  and with no cacheable lifetime of its own', /max-age=0/.test(cc || ''), cc);
+  ok('  the player is served no-store', /(^|[\s,])no-store([\s,]|$)/.test(cc || ''), cc);
+  ok('  and carries no max-age a CDN could inflate', !/max-age/.test(cc || ''), cc);
+
+  console.log('\n5. The spec endpoint varies by credential, so no cache may keep it');
+  //  Same bug one hop out. GET /api/labs/:course/:item answers with the spec for
+  //  one student and locked:true for another, and it used to inherit
+  //  'public, max-age=300' from the cors() helper on the OPEN branch only. A
+  //  shared cache, which is what a school proxy is, could then serve one class's
+  //  open spec to a student whose teacher had closed it.
+  //  Anchored on the GATE path, not on the whole route. The 404 branch above it
+  //  is already no-store, so slicing from the route start let that one satisfy
+  //  this assertion and the mutation battery caught it passing on code where the
+  //  open spec was fully cacheable.
+  const specAll = routeSrc.slice(
+    routeSrc.indexOf("router.get('/api/labs/:course/:item_id'"),
+    routeSrc.indexOf("router.get('/api/labs/:course/:item_id/key'"));
+  const gateIdx = specAll.indexOf('const gate = labGate');
+  const spec = specAll.slice(gateIdx);
+  ok('  the spec route sets no-store on the gate path',
+    /Cache-Control', 'no-store'/.test(spec), 'not set');
+  ok('  it sets Vary: Authorization', /(set|append)\('Vary', 'Authorization'\)/.test(spec), 'not set');
+  //  The point is that BOTH answers are no-store. If only the locked branch were,
+  //  the open spec would still be cacheable and the leak would remain. Compared
+  //  against the BRANCH, not against 'locked: true': a no-store moved inside the
+  //  branch still precedes that string, so the earlier form of this check could
+  //  never fail. The battery proved it hollow.
+  const branchIdx = spec.indexOf('if (!gate.open)');
+  const noStoreIdx = spec.indexOf("'Cache-Control', 'no-store'");
+  ok('  and sets it BEFORE the locked branch, so it covers both answers',
+    noStoreIdx !== -1 && branchIdx !== -1 && noStoreIdx < branchIdx,
+    `no-store at ${noStoreIdx}, branch at ${branchIdx}`);
 
   console.log(`\n  ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);
