@@ -214,3 +214,87 @@ than it buys.
 - Board 258 goes to `needs_verification`. I cannot verify my own work, and this
   one especially: the thing to check is a teacher locking a lab and then failing
   to reach it in a private window.
+
+---
+
+# The third finding: the gradebook knew, and could not say so on a phone
+
+**Board:** 260. Reported by Tanner with two screenshots: signed in as a student
+in CYBER-Q9JG, on topic 1.1, with the Lab column padlocked in the gradebook and
+the lab content on screen anyway.
+
+This one is not a regression and not the same bug, and establishing that took
+four measurements rather than an opinion.
+
+## The 1.1 Lab is not a lab
+
+`config/labs/` holds three AP Cybersecurity terminal labs: 1.2, 1.2-auth and
+2.4. **There is no 1.1 lab.** What topic 1.1 has is a Shopify page,
+`ap-cyber-unit-1-lesson-1-lab`, and measured against the live storefront:
+
+- 435KB, carrying all four email specimens directly in the page body
+- it does not load `/lab-player.js` and never calls `/api/labs`
+- it reports through `apcs-score-reporter.js` against `data-lesson-id="1.1-lab"`
+
+So the browser holds the questions before any server code runs, and no gate on
+this side can withhold them. That is board 248's category, not the bypass fixed
+in 585. The three real terminal labs do lock, and the live sweep shows exactly
+that: 3 of 7 refused to a signed-out visitor, the 4 nobody locked still open.
+
+## The part that was actually broken
+
+`lock_enforceable` was already false for that column, because `labLocations()`
+is built from `lab-spec.all()` and a page-body activity is not in it. The
+gradebook had the right answer the whole time. It expressed it twice:
+
+- `.lk.nf { filter: sepia(1) saturate(6) hue-rotate(-15deg) }`, which is one
+  padlock emoji tinted against another
+- a `title` tooltip reading "Cannot be enforced: this activity keeps its
+  questions in the page, so students can still reach them"
+
+A touch screen cannot open a tooltip, and two tinted emoji are not a
+distinction at phone size. The standalone board at `/teacher/assignments` had
+solved this already, with a dashed border, a warning glyph and a banner counting
+the unenforceable locks. The gradebook, which is the surface a teacher actually
+uses, had none of it.
+
+So the signal now runs on three channels that fail independently:
+
+1. `⚠` beside the padlock. Shape, not colour, so it survives greyscale.
+2. The reason moved into `aria-label`, so a screen reader reads it.
+3. A count in the grey caveat line under the header, which is plain text and was
+   already visible in Tanner's own screenshot.
+
+## Two things caught while shipping it
+
+**The fixture could not tell the rule from a simpler wrong rule.** The mutation
+"count every locked column instead of only the unenforceable ones" went GREEN,
+because every locked column in the fixture happened to be unenforceable. Tanner's
+real class is the counterexample: a locked quiz the server does withhold beside a
+locked lab it cannot. `unit-3` exists in the fixture now purely to hold that
+combination, and the mutation goes red.
+
+**The sheet generator refused the first attempt, correctly.** The glyph was
+written as the HTML entity `&#9888;` inside a JavaScript string literal, and
+`scripts/page-body-csv.js` knows that Shopify decodes entities on import, so it
+would have arrived as a raw character and stopped being what was reviewed. It is
+`⚠` now, matching the padlock escapes beside it. Worth noting that this
+check exists at all: the failure would have been invisible in every repo-side
+test, because the corruption happens in Shopify's importer.
+
+## Evidence
+
+- `smoke:dashassign` 39/39, `smoke:dashassignmutation` 67/67 across 14 mutations
+- sheet parsed back and diffed: body byte-identical to source, 107057 = 107057,
+  all three channels present after the round trip
+- `matrixify-preflight --expect-command UPDATE`: clear to import
+
+## Still open
+
+- **The sheet needs a human to import it.** One page, `cyber-dashboard`.
+- The wording on a locked page-body activity still tells the student "your
+  teacher has not opened this" in the one case the server CAN refuse it, which
+  is wrong for a member of the public who has no teacher. Cosmetic, noted in the
+  585 section, unchanged here.
+- Board 260 goes to needs_verification. The check is to open the gradebook on a
+  phone and see the count in the caveat line without hovering anything.
