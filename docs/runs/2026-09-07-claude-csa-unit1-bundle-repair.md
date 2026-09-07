@@ -106,12 +106,90 @@ is the general gradebook carrying a legacy handle from when the site was
 Cyber-only, and /pages/teacher-dashboard does not exist. Not a defect, and
 renaming a handle is NEVER_AUTO anyway.
 
+## Correction, and the fifth defect class
+
+The "Still open" list above is wrong about the exercise keys, and the way it is
+wrong is worth more than the fix.
+
+The doubled labels are real, but they are not in the files the purchaser has.
+They were in an unreleased rebuild. Two Drive keys read live, topic 1.1 and topic
+1.3, both modified 2026-07-31, print their labels once:
+
+    If it compiles, it works: Successful compilation means the code follows
+    Java's rules, nothing more.
+
+No Exercise_1_KEY anywhere in the Drive has been modified since 2026-08-15, so
+nothing newer was ever uploaded. What those live files DO carry is the defect
+that matters: no code at all. Topic 1.3's key is six prose bullets telling a
+teacher to "work the eight Tier 2 AP practice items" on the live page, and two
+misconceptions. The rebuilt key for the same topic carries real Java in a code
+font, a predict item, a read-and-analyze item, answers and a why for each.
+
+So the fix was not the one in #597 at all. `teacher-bundle/build-exercises.js`
+in the theme repo already existed to re-cut all 30 Unit 1 exercises, its own
+header says it was written because they hold zero lines of code, and it had
+never been run out to the teacher. It also introduced the doubling: 60 of 60
+Unit 1 misconceptions open their `explain` by restating their `name`, against 0
+of 152 in units 2 to 4, and the renderer prints `name: explain`.
+
+Reading that data turned up two more of the same slip, both worse than the one
+that was being chased:
+
+- **Four names cut mid-identifier.** They had been derived by splitting `explain`
+  at the first period, and `Math.random`, `Math.pow` and `(int)(Math.random()`
+  contain periods. The labels read `Math:`, `(int)(Math:` and
+  `Argument order in Math:`.
+- **Two names carrying their own colon**, which the renderer doubles:
+  `Trap distractor: Math.round ...: These are real Java methods`.
+
+The docx repair in #597 would have fixed neither. Its length guard skips a
+four-character label, and its regex refuses a label containing a colon, so the
+two ugliest labels in the set are exactly the two it steps around.
+
+Theme PR #109, merged to `claude/site-linking-audit-yhufjk` as 227ecb5. Names are
+re-derived from the first sentence of each `explain` rather than retyped,
+splitting on sentence punctuation followed by whitespace so `Math.pow` and `1.0`
+survive. That rule reproduces 56 of the 60 existing names byte for byte and the 4
+it does not reproduce are the 4 truncated ones, which is what says the rule is
+right rather than merely plausible. `validateMisconceptions` in `lib/spec.js`
+pins all three rules and both builders run it.
+
+Evidence, three kinds:
+
+    suite     38 specs in units 2 to 4 still validate, 0 failures
+    rederive  a second reader parsing word/document.xml straight from the 30
+              rebuilt keys: 150 bullets, 116 doubled before, 0 after, 0 labels
+              carrying their own colon, 0 unbalanced brackets
+    mutation  each rule broken alone and required to go red for its own reason:
+              restatement, truncated name, unbalanced bracket, colon. Control
+              builds clean.
+
+Blast radius measured rather than assumed: comparing the pre-fix build to the
+shipped one, 30 files changed and all 30 are KEY files. The 30 STUDENT files are
+identical, because only the key prints the "What to look for" section.
+
+Rendered 1.5 and 1.11 through LibreOffice and read the section off the page. The
+two reworded labels are the ones no text check can judge.
+
+The zip of all 60 files went to Tanner. Dropping it over the 15
+`Lesson_*/Supplements` folders is the only step left, and it is his: the Drive
+API here creates files rather than replacing their contents, so doing it from a
+session would leave a customer-facing folder holding two of everything.
+
+**What this is an instance of.** A repair script aimed at the wrong artifact. The
+doubled labels were found by reading a generator's output and assumed to describe
+the shipped files, and nobody read a shipped file until now. One `read_file_content`
+call, which returns text rather than the base64 that made this feel expensive,
+settled it. The rule that keeps costing this project is the same one every time:
+verify against the live system, not against the thing that stands in for it.
+
 ## Still open
 
-- **The exercise keys.** The repair and its guard are in #597. Applying it needs
-  the 30 key files, and pulling binaries through a session's context one at a
-  time is slow enough that it is better done from a local copy of the Drive
-  folder: `python3 scripts/repair-csa-unit1-exercise-keys.py <folder>`.
+- **The exercise keys reaching the Drive.** The 60 rebuilt files are with Tanner
+  as a zip. Until they are dropped over the Supplements folders, the teacher's
+  exercises still contain no code. `scripts/repair-csa-unit1-exercise-keys.py`
+  and its guard stay useful for any bundle built before #109 and are no longer
+  the fix for this one.
 - **The rebuild, board 255.** All four passes here are repairs. The kit fixes
   every one of these at the source and removes 61 slides from Unit 1's Day 1
   decks, but Unit 1 has no content in `scripts/csa_kit/` at all: the 38 topics
