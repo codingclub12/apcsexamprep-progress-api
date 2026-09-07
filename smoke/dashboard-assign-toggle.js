@@ -147,10 +147,13 @@ async function loadGates(doc, mode) {
 function render() {
   T.data = CYBER;
   T.model = T.buildModel(CYBER);
-  nodes['gb-table'] = undefined; // fresh capture
+  nodes['gb-table'] = undefined;    // fresh capture
+  nodes['gb-unitpanel'] = undefined;
   T.renderGrid();
+  try { T.renderUnitFilter(); } catch (e) { /* panel needs model.units; grid is what matters here */ }
   return el('gb-table').innerHTML;
 }
+const panelHtml = () => el('gb-unitpanel').innerHTML;
 
 let h = '';
 (async () => {
@@ -158,47 +161,67 @@ console.log('\n1. The switches render from the contract');
 await loadGates(GATES);
 h = render();
 ok('  the grid rendered', h.length > 400, h.length);
-ok('  unit-2, fully open, draws an ON unit switch',
-  /class='gsw gsw-u on'[^>]*onclick="TCDash\.toggleGate\(event,'unit','unit-2'/.test(h), h.match(/gsw gsw-u[^']*'/g));
-ok('  unit-1, half open, draws a MIXED unit switch',
-  /class='gsw gsw-u mix'[^>]*onclick="TCDash\.toggleGate\(event,'unit','unit-1'/.test(h));
+// The unit row is GONE from the grid: it was a third header row above a dense
+// table, spent on a handful of controls. Unit scope moved to the filter panel.
+ok('  the grid has no unit row at all',
+  !/toggleGate\(event,'unit',/.test(h), (h.match(/toggleGate\(event,'[a-z]+'/g) || []).slice(0, 6));
+const pan = panelHtml();
+ok('  the unit filter panel carries a unit padlock instead',
+  /toggleGate\(event,'unit','unit-1'/.test(pan) && /toggleGate\(event,'unit','unit-2'/.test(pan), pan.slice(0, 240));
+ok('  unit-2, fully open, reads assigned',
+  /class='lk open'[^>]*toggleGate\(event,'unit','unit-2'/.test(pan));
+ok('  unit-1, half open, reads partly assigned',
+  /class='lk mix'[^>]*toggleGate\(event,'unit','unit-1'/.test(pan));
+// The padlock must sit OUTSIDE the label, or clicking it also toggles which
+// units are on screen.
+ok('  the unit padlock is not inside the filter checkbox label',
+  !/<label>[^<]*<input[^>]*>[^<]*<span class='lk/.test(pan) && /<\/label><span class='lk/.test(pan), pan.slice(0, 200));
 // The column groups are LESSONS. A switch there must write LESSON scope: one
 // that wrote unit scope would lock a whole unit from above a single lesson's
 // columns, which is what the first version of this did.
-ok('  a lesson group draws a LESSON-scope switch, never a unit one',
+ok('  a lesson group draws a LESSON-scope control, never a unit one',
   /toggleGate\(event,'lesson','unit-1','1\.1',''\)/.test(h)
   && !/toggleGate\(event,'unit','unit-1','1\.1'/.test(h));
-ok('  a fully locked lesson group draws an OFF switch',
-  /class='gsw'[^>]*toggleGate\(event,'lesson','unit-1','1\.2',''\)/.test(h));
-ok('  the unit row spans its lessons rather than duplicating one per lesson',
-  (h.match(/toggleGate\(event,'unit',/g) || []).length === 2,
-  (h.match(/toggleGate\(event,'unit','[^']*'/g) || []));
-ok('  an open column draws an ON switch',
-  /class='gsw on'[^>]*onclick="TCDash\.toggleGate\(event,'col','unit-1','1\.1','quiz'\)"/.test(h));
-ok('  a locked column draws an OFF switch',
-  /class='gsw nf'[^>]*onclick="TCDash\.toggleGate\(event,'col','unit-1','1\.2','quiz'\)"/.test(h));
+ok('  a fully locked lesson group reads not assigned',
+  /class='lk'[^>]*toggleGate\(event,'lesson','unit-1','1\.2',''\)/.test(h));
+// An OPEN column's padlock is hidden until its header is hovered, so a hundred
+// open columns cost no width. A LOCKED one is always visible: that is the whole
+// point of the glyph.
+ok('  an open column carries the hover-only class',
+  /class='lk open hov'[^>]*toggleGate\(event,'col','unit-1','1\.1','quiz'\)/.test(h));
+ok('  a locked column is always visible, never hover-only',
+  /class='lk nf'[^>]*toggleGate\(event,'col','unit-1','1\.2','quiz'\)/.test(h)
+  && !/class='lk[^']*hov'[^>]*toggleGate\(event,'col','unit-1','1\.2','quiz'\)/.test(h));
+ok('  no switch markup survives anywhere', !/class='gsw/.test(h) && !/class='gsw/.test(pan));
 
 console.log('\n2. It never says "locked" where a teacher reads it');
 //  `locked` on this page means "submitted as final". The availability control
 //  must not reuse the word, in a title, a label, or visible text.
-const sw = h.match(/<span class='gsw[^>]*>/g) || [];
+const sw = (h.match(/<span class='lk[^>]*>/g) || []).concat(pan.match(/<span class='lk[^>]*>/g) || []);
 ok('  every switch carries an Assigned / Not assigned title',
   sw.length > 0 && sw.every((s) => /title='(Assigned|Not assigned|Partly assigned)/.test(s)), sw.slice(0, 2));
 ok('  no switch says "lock" in its title or label',
   sw.every((s) => !/lock/i.test(s.replace(/toggleGate\([^)]*\)/, ''))), sw.filter((s) => /lock/i.test(s)).slice(0, 2));
 
 console.log('\n3. An unenforceable lock says so, on the control');
-const nf = h.match(/<span class='gsw nf'[^>]*>/g) || [];
+const nf = h.match(/<span class='lk nf'[^>]*>/g) || [];
 // Both of 1.2's columns are locked and unenforceable.
 ok('  every locked-and-unenforceable column is marked', nf.length === 2, nf.length);
 ok('  and the title explains the questions are in the page',
   nf.every((x) => /Cannot be enforced/.test(x)), nf[0]);
 ok('  an ENFORCEABLE locked column is not marked',
-  !/class='gsw nf'[^>]*'unit-1','1\.1'/.test(h));
+  !/class='lk nf'[^>]*'unit-1','1\.1'/.test(h));
 // 1.1 lesson is OPEN and unenforceable. Marking it would outline roughly 750 of
 // 757 columns on this site and the warning would become wallpaper.
+// Read the class list and test for BOTH tokens, rather than pattern-matching a
+// position in it. The first version required nf at the END of the attribute,
+// and the hover class is appended after it, so the check could never fail. The
+// mutation battery is what surfaced that.
+const classesOf = (html) => (html.match(/<span class='([^']*)'/g) || [])
+  .map((m) => m.slice("<span class='".length, -1).split(/\s+/));
 ok('  an OPEN column is never marked, even when it could not be enforced',
-  !/class='gsw on nf'/.test(h) && !/class='gsw nf on'/.test(h));
+  !classesOf(h).some((c) => c.indexOf('open') > -1 && c.indexOf('nf') > -1),
+  classesOf(h).filter((c) => c.indexOf('nf') > -1));
 
 console.log('\n4. No switch on a column the contract does not know');
 //  2.1 lesson has a gradebook column but no contract item.
@@ -210,7 +233,7 @@ console.log('\n5. A failed availability fetch never blanks the gradebook');
 await loadGates(null, 'http');   // the endpoint answers 500
 const bare = render();
 ok('  the grid still renders with no gates document', bare.length > 400, bare.length);
-ok('  and draws no switches at all', !/class='gsw/.test(bare));
+ok('  and draws no padlocks at all', !/class='lk/.test(bare));
 ok('  the student row survived', /Test Student/.test(bare));
 
 //  The assertion IS that nothing escapes: loadGates owns the failure, so a
@@ -221,7 +244,7 @@ ok('  a thrown request is caught inside loadGates, not propagated',
   escaped === null, escaped && escaped.message);
 const thrown = render();
 ok('  and the grid still renders after one', thrown.length > 400, thrown.length);
-ok('  with no switches drawn', !/class='gsw/.test(thrown));
+ok('  with no padlocks drawn', !/class='lk/.test(thrown));
 
 console.log('\n6. Toggling writes the right gate target');
 let sent = null;

@@ -8,18 +8,37 @@
 //    GET /lab/:course/:item_id          the standalone player page
 //    GET /lab-player.js                 the player, loadable cross origin
 //
-//  Public on purpose. A lab spec is author content: a brief, a pretend
-//  filesystem and a list of checks. It carries no student data, and gating it
-//  behind the student JWT would mean a teacher could not preview a lab and an
-//  anonymous visitor could not try one, for no gain. The GRADE is what needs
-//  auth, and that goes through POST /api/progress/attempt exactly like every
-//  other reporter.
+//  Public on purpose, with ONE exception added 2026-09-07. A lab spec is author
+//  content: a brief, a pretend filesystem and a list of checks. It carries no
+//  student data, and gating it behind the student JWT would mean a teacher could
+//  not preview a lab and an anonymous visitor could not try one, for no gain.
+//  The GRADE is what needs auth, and that goes through POST /api/progress/attempt
+//  exactly like every other reporter.
+//
+//  THE EXCEPTION: a teacher who has closed a lab for their class.
+//  A teacher reported labs opening for their students while the gradebook showed
+//  them shut, and they were right. This route served every spec to everyone and
+//  never consulted activity_gates at all, so the switch in the gradebook wrote a
+//  row that nothing on this path ever read.
+//
+//  The fix keeps the paragraph above true. The token is OPTIONAL and stays
+//  optional: no token is still anonymous self-study and still gets the lab, so
+//  teacher preview and public practice are untouched. What changes is that a
+//  SIGNED-IN student whose own class has closed this lab is refused, which is
+//  the only case the teacher was ever asking about.
+//
+//  It inherits the same limit every gate on this site has, and it is worth
+//  stating rather than discovering: a student who signs out can still open the
+//  lab, exactly as they can still open a closed quiz. The gate answers "is this
+//  open for my class", not "can this be reached by anybody".
 //
 //  No em-dashes, per repo convention.
 // ─────────────────────────────────────────────────────────────────────────────
 const path = require('path');
 const express = require('express');
 const router = express.Router();
+const db = require('../db');
+const { resolveScopedGate } = require('../lib/activity-gate');
 const labs = require('../lib/lab-spec');
 const answerKey = require('../lib/lab-answer-key');
 const entitlements = require('../lib/entitlements');
@@ -78,13 +97,64 @@ router.get('/api/labs', (req, res) => {
   });
 });
 
+// ── AVAILABILITY ─────────────────────────────────────────────────────────────
+//  TOLERANT resolution, the same shape routes/quiz.js uses on its render path:
+//  an absent or unverifiable token degrades to anonymous rather than 401ing,
+//  because this route releases no key and attributes nothing, so an anonymous
+//  caller gets exactly what a signed-out visitor already gets.
+function labStudent(req) {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (!token) return null;
+  let payload;
+  try { payload = verifyStudentToken(token); } catch (e) { return null; }
+  if (!payload || payload.role !== 'student' || !payload.id) return null;
+  return db.prepare('SELECT id, class_id FROM students WHERE id = ?').get(payload.id) || null;
+}
+
+const labClassStmt = db.prepare('SELECT id, course, quiz_lock_default FROM classes WHERE id = ?');
+//  Every gate row that could cover this unit. Narrowed by the resolver, not by
+//  SQL, because a gate may be written at unit, lesson or activity scope and an
+//  equality match cannot see the wildcard rows a teacher writes when they close
+//  a whole unit.
+const labGateStmt = db.prepare(
+  'SELECT lesson, activity_type, open FROM activity_gates WHERE class_id = ? AND course = ? AND unit = ?'
+);
+
+//  Returns { open, reason }. Anonymous, another course, and a spec that names no
+//  unit or lesson all resolve OPEN: a gate needs a class and a location, and
+//  refusing without both would lock people out of practice nobody closed.
+function labGate(req, spec) {
+  const stu = labStudent(req);
+  if (!stu) return { open: true, reason: 'self-study' };
+  const cls = labClassStmt.get(stu.class_id);
+  if (!cls || cls.course !== spec.course) return { open: true, reason: 'self-study' };
+  const unit = spec.unit, lesson = spec.lesson_id, activity = spec.item_type || 'terminal-lab';
+  if (!unit || !lesson) return { open: true, reason: 'unlocatable-spec' };
+  const rows = labGateStmt.all(cls.id, spec.course, unit);
+  return resolveScopedGate(rows, cls, lesson, activity);
+}
+
 router.get('/api/labs/:course/:item_id', (req, res) => {
   const spec = labs.get(req.params.course, req.params.item_id);
   if (!spec) {
     res.set('Cache-Control', 'no-store');
     return res.status(404).json({ error: `No lab '${req.params.item_id}' for ${req.params.course}` });
   }
+  //  A closed lab answers 200 with no spec rather than 404, so the player can
+  //  tell "your teacher has not opened this" apart from "this lab does not
+  //  exist", which are very different things to put in front of a student. The
+  //  spec is simply never put on the wire, which is the only kind of lock that
+  //  survives View Source.
+  const gate = labGate(req, spec);
   cors(res);
+  if (!gate.open) {
+    res.set('Cache-Control', 'no-store');
+    return res.json({
+      course: req.params.course, item_id: req.params.item_id,
+      locked: true, reason: gate.reason, lab: null,
+    });
+  }
   res.json(labs.forBrowser(spec));
 });
 

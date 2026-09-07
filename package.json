@@ -16,6 +16,8 @@
     "availability": "node scripts/page-availability.js",
     "practicehubs": "node scripts/cyber-practice-hubs-csv.js",
     "smoke:labs": "node smoke/labs.js",
+    "smoke:labgate": "node smoke/lab-gate.js",
+    "smoke:labgatemutation": "node smoke/lab-gate-mutation.js",
     "smoke:claimguard": "node smoke/claim-guard.js",
     "smoke:storefront": "node smoke/storefront-fetch.js",
     "smoke:csanewline": "node smoke/csa-newline-repair.js",
