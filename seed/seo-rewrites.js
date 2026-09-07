@@ -185,6 +185,28 @@ const PAGES = [
     description: 'Build custom AP Computer Science Principles practice tests by Big Idea and topic, from a full question bank aligned to the May 2027 exam. Free, no signup.',
     why: 'stale year in the description',
   },
+
+  // Found by the 2026-09-07 daily crawl, shard 6/7. Same scraped-description
+  // defect as the 2026-09-05 batch: breadcrumb and nav text landing in the
+  // SEO Description field instead of authored copy.
+  {
+    handle: 'ap-csa-lesson-4-2-introduction-to-using-data-sets',
+    title: 'AP CSA Lesson 4.2: Introduction to Using Data Sets',
+    description: 'AP CSA Lesson 4.2 introduces data sets: rows as records and columns as attributes, why one variable is not enough, and what a program can do with tabular data.',
+    why: 'description was scraped breadcrumb and nav text',
+  },
+  {
+    handle: 'ap-csa-lesson-4-4-traversing-arrays',
+    title: 'AP CSA Lesson 4.4: Traversing Arrays',
+    description: 'AP CSA Lesson 4.4 covers traversing arrays: standard and enhanced for loops, modifying elements, reverse and partial traversal, and avoiding off by one errors.',
+    why: 'description was scraped breadcrumb and nav text',
+  },
+  {
+    handle: 'ap-csa-lesson-4-5-algorithms-with-arrays',
+    title: 'AP CSA Lesson 4.5: Algorithms with Arrays',
+    description: 'AP CSA Lesson 4.5 builds standard array algorithms: minimum and maximum, sum and average, linear search by boolean and by index, and frequency counts.',
+    why: 'description was scraped breadcrumb and nav text',
+  },
 ];
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
