@@ -183,10 +183,47 @@ call, which returns text rather than the base64 that made this feel expensive,
 settled it. The rule that keeps costing this project is the same one every time:
 verify against the live system, not against the thing that stands in for it.
 
+## A sixth class, found by generating the student copy and reading it
+
+The rebuilt exercises fix the missing code, and they were still wrong in a way
+the key never shows. Exercise 1 closes with a "Then, online" block whose intro
+is the teacher's staging note, and it was printing on both copies, so a student
+handout read:
+
+    Move the class to the live lesson page (Unit 1 Link Sheet, row 1.1).
+    Students run the Hello, AP CSA editor exercise, then intentionally break it
+    twice.
+
+Theme PR #110, merged as cec8ecd. Key only now. The task bullets under it are
+imperative and student-readable, so they stay on both.
+
+**The measurement was wrong first, and in the shape this project keeps hitting.**
+A keyword scan of the spec data said Unit 1 was 15 of 15 teacher-voice and units
+2 to 4 were 0 of 68. That is the same split as the three defects above, so it
+read as a fourth instance of one unit's bad authoring and was easy to believe.
+Unit 2.1's intro says "Students work the building-block identification exercise"
+and "lands in your gradebook"; the scan was looking for the string "Link Sheet".
+Generating the docx and reading it, 1.1 and 2.1 were both printing the note to
+the student. A check satisfied by something other than what it is checking, for
+the ninth time today, and this time it was mine.
+
+    before   the intro is on 15 of 15 STUDENT copies, 15 of 15 keys
+    after    0 of 15 STUDENT, still 15 of 15 keys
+    unit 2   2.1's student copy loses the note and keeps all 4 task bullets
+    radius   45 of 60 files change: the 30 keys plus the 15 Exercise 1 student
+             copies. Exercise 2 has no online block.
+
+Two Unit 1 task bullets really were misaddressed and are reworded, 1.2's "the
+class decides which of" and 1.7's "before students write it". Three others that
+a keyword scan flags are fine, because "the class" there is the Java class, as
+in "decide whether the class compiles". That is the same failure mode in
+miniature: the word is not the thing.
+
+
 ## Still open
 
 - **The exercise keys reaching the Drive.** The 60 rebuilt files are with Tanner
-  as a zip. Until they are dropped over the Supplements folders, the teacher's
+  as a zip, v3, md5 7751af9fe247375e13ad7aee603967b9. Until they are dropped over the Supplements folders, the teacher's
   exercises still contain no code. `scripts/repair-csa-unit1-exercise-keys.py`
   and its guard stay useful for any bundle built before #109 and are no longer
   the fix for this one.
