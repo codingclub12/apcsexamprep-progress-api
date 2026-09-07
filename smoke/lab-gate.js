@@ -135,7 +135,29 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   ok('  so it is not named as an unenforceable lock',
     !gb.gates.locked_but_unenforceable.includes(item && item.item_key), gb.gates.locked_but_unenforceable);
 
-  console.log('\n6. The known limit, asserted rather than discovered');
+  console.log('\n6. THE NAME A TEACHER CLICKS: the Lab column, not terminal-lab');
+  //  The gradebook column a teacher sees for a lesson is the course config's
+  //  'lab'. The spec declares 'terminal-lab'. Closing the column a teacher
+  //  actually has must close the lab, or the control is decorative.
+  run('DELETE FROM activity_gates WHERE class_id = ?', 'c1');
+  await setGate({ lesson: LAB.lesson_id, activity_type: 'lab', open: false });
+  r = await call('GET', URL, null, ST);
+  ok('  closing the "lab" column closes a terminal-lab spec', r.body && r.body.locked === true, r.body);
+  //  And the reverse still works, so the spec's own name is not lost.
+  run('DELETE FROM activity_gates WHERE class_id = ?', 'c1');
+  await setGate({ lesson: LAB.lesson_id, activity_type: ACT, open: false });
+  r = await call('GET', URL, null, ST);
+  ok('  closing the spec\'s own activity type still closes it', r.body && r.body.locked === true, r.body);
+  //  An explicit open on either name beats a unit-wide close, because that is
+  //  what a teacher means by reopening one thing inside a closed unit.
+  run('DELETE FROM activity_gates WHERE class_id = ?', 'c1');
+  await setGate({ open: false });                                   // whole unit shut
+  await setGate({ lesson: LAB.lesson_id, activity_type: 'lab', open: true });
+  r = await call('GET', URL, null, ST);
+  ok('  reopening the Lab column inside a closed unit reopens the lab',
+    r.body && !r.body.locked, r.body && r.body.reason);
+
+  console.log('\n7. The known limit, asserted rather than discovered');
   r = await call('GET', URL);
   ok('  a signed-OUT student still reaches a closed lab, exactly as with a quiz',
     r.status === 200 && !r.body.locked,

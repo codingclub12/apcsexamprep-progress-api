@@ -777,12 +777,37 @@
   // ── fetch a spec and mount it ────────────────────────────────────────────
   function mountById(container, course, itemId, opts) {
     var conf = cfg();
-    return fetch((conf.base || "") + "/api/labs/" + encodeURIComponent(course) + "/" + encodeURIComponent(itemId))
+    //  THE TOKEN GOES ON THIS FETCH, and it did not until 2026-09-07.
+    //  The player already held one and sent it when submitting a grade, but
+    //  asked for the spec anonymously. The server cannot tell an enrolled
+    //  student from a visitor without it, so every lab resolved as self-study
+    //  and a teacher who closed one watched it open anyway. That was the whole
+    //  of the reported bug: the gate was right and was never given the identity
+    //  it needed to act on.
+    //
+    //  It stays OPTIONAL on the server. A signed-out visitor sends nothing and
+    //  still gets the lab, which is what keeps teacher preview and public
+    //  practice working.
+    var token = "";
+    try { token = conf.getToken() || ""; } catch (e) { token = ""; }
+    return fetch((conf.base || "") + "/api/labs/" + encodeURIComponent(course) + "/" + encodeURIComponent(itemId),
+      token ? { headers: { Authorization: "Bearer " + token } } : undefined)
       .then(function (r) {
         if (!r.ok) throw new Error("lab " + course + "/" + itemId + " not found");
         return r.json();
       })
-      .then(function (spec) { return mount(container, spec, opts); })
+      .then(function (spec) {
+        //  A closed lab answers 200 with locked:true and no spec, so this is a
+        //  normal response to render, not an error to throw on. Saying "could
+        //  not be loaded" about a lab a teacher deliberately closed would send
+        //  the student to support instead of to their teacher.
+        if (spec && spec.locked) {
+          container.textContent = "Your teacher has not opened this lab yet.";
+          container.setAttribute("data-apcs-lab-locked", "1");
+          return null;
+        }
+        return mount(container, spec, opts);
+      })
       .catch(function (e) {
         container.textContent = "This lab could not be loaded. " + e.message;
         throw e;

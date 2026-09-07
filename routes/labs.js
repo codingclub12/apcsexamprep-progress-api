@@ -121,6 +121,26 @@ const labGateStmt = db.prepare(
   'SELECT lesson, activity_type, open FROM activity_gates WHERE class_id = ? AND course = ? AND unit = ?'
 );
 
+//  THE NAME A TEACHER CLICKS IS NOT THE NAME THE SPEC CARRIES.
+//  A lab spec declares item_type 'terminal-lab'. The course config declares the
+//  per-lesson activity as 'lab', and THAT is the gradebook column a teacher sees
+//  and closes. The two names exist for a denominator collision documented in
+//  CLAUDE.md, not because a teacher thinks of them as two things. Resolving only
+//  the spec's own name meant a teacher closed the Lab column, a row was written
+//  for 'lab', the lab asked about 'terminal-lab', nothing matched, and the lab
+//  opened. Reported 2026-09-07.
+//
+//  So both names are resolved and the NARROWER answer wins, using the same
+//  ladder as everything else rather than a second opinion about precedence. An
+//  explicit open on either column therefore still beats a unit-wide close, which
+//  is what a teacher means when they reopen one thing inside a closed unit.
+const LAB_ALIASES = (spec) => {
+  const own = spec.item_type || 'terminal-lab';
+  return own === 'lab' ? ['lab'] : [own, 'lab'];
+};
+const SCOPE_RANK = { activity: 0, lesson: 1, 'unit-activity': 2, unit: 3 };
+const rankOf = (g) => (g.scope ? SCOPE_RANK[g.scope] : 9);   // no scope = class default, widest
+
 //  Returns { open, reason }. Anonymous, another course, and a spec that names no
 //  unit or lesson all resolve OPEN: a gate needs a class and a location, and
 //  refusing without both would lock people out of practice nobody closed.
@@ -129,10 +149,15 @@ function labGate(req, spec) {
   if (!stu) return { open: true, reason: 'self-study' };
   const cls = labClassStmt.get(stu.class_id);
   if (!cls || cls.course !== spec.course) return { open: true, reason: 'self-study' };
-  const unit = spec.unit, lesson = spec.lesson_id, activity = spec.item_type || 'terminal-lab';
+  const unit = spec.unit, lesson = spec.lesson_id;
   if (!unit || !lesson) return { open: true, reason: 'unlocatable-spec' };
   const rows = labGateStmt.all(cls.id, spec.course, unit);
-  return resolveScopedGate(rows, cls, lesson, activity);
+  let best = null;
+  for (const act of LAB_ALIASES(spec)) {
+    const g = resolveScopedGate(rows, cls, lesson, act);
+    if (!best || rankOf(g) < rankOf(best)) best = g;
+  }
+  return best;
 }
 
 router.get('/api/labs/:course/:item_id', (req, res) => {
