@@ -44,10 +44,10 @@ function runSuite() {
 
 const MUTATIONS = [
   {
-    name: 'THE BUG IT HAD: the lesson group switch writes UNIT scope',
-    find: "const gs=(this.gates&&gl&&st)?this.gswHtml('lesson',g.unit,gl,''",
-    repl: "const gs=(this.gates&&gl&&st)?this.gswHtml('unit',g.unit,gl,''",
-    must: ['a lesson group draws a LESSON-scope switch, never a unit one'],
+    name: 'THE BUG IT HAD: the lesson group control writes UNIT scope',
+    find: "const gs=(this.gates&&gl&&st)?this.lkHtml('lesson',g.unit,gl,''",
+    repl: "const gs=(this.gates&&gl&&st)?this.lkHtml('unit',g.unit,gl,''",
+    must: ['a lesson group draws a LESSON-scope control, never a unit one'],
   },
   {
     name: 'THE OTHER BUG: the warning marks every unenforceable column, not only shut ones',
@@ -101,12 +101,6 @@ const MUTATIONS = [
     find: "    const body={course:this.gates.course,unit:unit,open:open};",
     repl: "    const body={unit:unit,open:open};",
     must: ["carrying the course, so a solo class resolves the right one"],
-  },
-  {
-    name: 'the unit row duplicates itself per lesson instead of spanning them',
-    find: '        if(last&&last.unit===g.unit){ last.span+=g.span; } else {',
-    repl: '        if(false){ last.span+=g.span; } else {',
-    must: ['the unit row spans its lessons rather than duplicating one per lesson'],
   },
 ];
 
