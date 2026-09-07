@@ -85,6 +85,17 @@ const TT = signTeacherToken({ id: 't1', email: 't@s.org' });
 const ST = signStudentToken({ id: 's1', class_id: 'c1' });
 const OTHER = signStudentToken({ id: 's2', class_id: 'c2' });
 const URL = `/api/labs/${LAB.course}/${LAB.item_id}`;
+
+//  A SECOND authored lab that nothing in this file ever closes. It is what keeps
+//  the anonymous rule honest: without it, "anonymous is refused" could be a
+//  blanket refusal of every lab to every signed-out visitor, which would take the
+//  public practice layer offline and pass this suite. Picked from real authored
+//  specs, and in a different LESSON so a unit-wide close in one section cannot
+//  reach it by accident.
+const OPEN_LAB = labSpec.all().find((s) => s.course === LAB.course && s.unit
+  && s.lesson_id && s.item_id !== LAB.item_id && s.lesson_id !== LAB.lesson_id);
+if (!OPEN_LAB) { console.log('need a second cyber lab in another lesson; nothing to test'); process.exit(1); }
+const OPEN_URL = `/api/labs/${OPEN_LAB.course}/${OPEN_LAB.item_id}`;
 const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { course: LAB.course, unit: LAB.unit, ...b }, TT);
 
 (async () => {
@@ -102,9 +113,19 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   ok('  and the spec is NOT on the wire', r.body && r.body.lab === null && !r.body.brief && !r.body.steps, Object.keys(r.body || {}));
   ok('  it is a 200, so the player can say "not opened yet" rather than "missing"', r.status === 200, r.status);
 
-  console.log('\n3. What must stay true: the lab is still public');
+  console.log('\n3. What must stay true: a lab nobody closed is still public');
+  //  Anonymous is refused THIS lab, because a class has closed it. That is the
+  //  2026-09-07 change: it used to be served, which made the lock one click wide.
   r = await call('GET', URL);
-  ok('  an anonymous visitor still gets it, so teacher preview survives', r.status === 200 && !r.body.locked, r.body && r.body.locked);
+  ok('  an anonymous visitor is refused a lab some class has closed',
+    r.status === 200 && r.body.locked === true, r.body && r.body.reason);
+  ok('  and the spec is NOT on the wire for them either',
+    r.body && r.body.lab === null && !r.body.brief, Object.keys(r.body || {}));
+  //  The half that must not regress. Public practice pays for this feature, so a
+  //  lab NO class has closed stays open and indexable to anyone.
+  r = await call('GET', OPEN_URL);
+  ok('  but a lab NO class has closed is still served anonymously',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
   //  c2 carries a CLOSED row for this exact lab, so if the course check went
   //  away this student would be refused a lab their own teacher never closed.
   run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open) VALUES ('c2',?,?,?,?,0)`,
@@ -112,7 +133,13 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   r = await call('GET', URL, null, OTHER);
   ok('  a student in another course is unaffected', r.status === 200 && !r.body.locked, r.body && r.body.locked);
   r = await call('GET', URL, null, 'not-a-real-token');
-  ok('  a junk token degrades to anonymous rather than 401ing', r.status === 200 && !r.body.locked, r.status);
+  //  Still no 401: a junk token is treated as anonymous, not as an error. What
+  //  changed is what anonymous GETS for a closed lab, not whether it is refused
+  //  with a status code, so the page still renders "not opened" rather than
+  //  "could not be loaded".
+  ok('  a junk token degrades to anonymous rather than 401ing', r.status === 200, r.status);
+  ok('  and lands on the anonymous rule, not on a class rule',
+    r.body && r.body.locked === true && /^anonymous-/.test(r.body.reason || ''), r.body && r.body.reason);
 
   console.log('\n4. The scopes reach labs, not just the exact activity');
   run('DELETE FROM activity_gates WHERE class_id = ?', 'c1');
@@ -150,18 +177,48 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   ok('  closing the spec\'s own activity type still closes it', r.body && r.body.locked === true, r.body);
   //  An explicit open on either name beats a unit-wide close, because that is
   //  what a teacher means by reopening one thing inside a closed unit.
-  run('DELETE FROM activity_gates WHERE class_id = ?', 'c1');
+  //  Every row, not just c1's. Section 3 deliberately left a CLOSED row on c2 to
+  //  keep its cross-course assertion from being hollow, and that row is a real
+  //  close on this lab, so the anonymous check below would fire on it and prove
+  //  nothing about the two rows this section is actually about.
+  run('DELETE FROM activity_gates');
   await setGate({ open: false });                                   // whole unit shut
   await setGate({ lesson: LAB.lesson_id, activity_type: 'lab', open: true });
   r = await call('GET', URL, null, ST);
   ok('  reopening the Lab column inside a closed unit reopens the lab',
     r.body && !r.body.locked, r.body && r.body.reason);
-
-  console.log('\n7. The known limit, asserted rather than discovered');
+  //  The SAME setup, asked anonymously. c1 holds a closing UNIT row and an
+  //  opening LESSON row at once, so for c1 this lab is OPEN and therefore no
+  //  class has closed it. The anonymous rule has to RESOLVE those two rows the
+  //  way the per-class path does; if it scans for any open=0 row instead, it
+  //  withholds from the public a lab nobody actually closed. That is the whole
+  //  reason lockedForAnyClass groups by class rather than filtering.
   r = await call('GET', URL);
-  ok('  a signed-OUT student still reaches a closed lab, exactly as with a quiz',
-    r.status === 200 && !r.body.locked,
-    'this is the gate answering "open for my class", not "reachable by anyone"');
+  ok('  and anonymous resolves those two rows too, rather than seeing one close',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
+
+  console.log('\n7. THE BYPASS, closed 2026-09-07');
+  //  This section asserted the OPPOSITE until today, as a known limit: the gate
+  //  answered "open for my class" and a signed-out student walked past it. The
+  //  teacher who reported the original lab bug found this by checking her own
+  //  fix in incognito, which is the test I should have run first.
+  //
+  //  The rule is deliberately narrow. Signing out no longer opens a lab that a
+  //  class has closed; it still opens every lab nobody has closed, which is what
+  //  keeps the public practice layer public.
+  //  Section 6 ends with this lab REOPENED, so close it again here rather than
+  //  inheriting a state from above. A section whose premise is set somewhere
+  //  else is one edit away from asserting nothing.
+  run('DELETE FROM activity_gates');
+  await setGate({ lesson: LAB.lesson_id, activity_type: ACT, open: false });
+  r = await call('GET', URL);
+  ok('  signing out no longer opens a closed lab',
+    r.status === 200 && r.body.locked === true, r.body && r.body.reason);
+  ok('  and the refusal names the anonymous rule, so an operator can tell which fired',
+    r.body && /^anonymous-/.test(r.body.reason || ''), r.body && r.body.reason);
+  r = await call('GET', OPEN_URL);
+  ok('  a lab nobody closed is still open signed out',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
 
   console.log(`\n  ${pass} passed, ${fail} failed`);
   server.close();

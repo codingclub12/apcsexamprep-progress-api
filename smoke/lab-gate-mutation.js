@@ -20,6 +20,7 @@ const SUITE = path.join(__dirname, 'lab-gate.js');
 const FILES = {
   route: path.join(ROOT, 'routes', 'labs.js'),
   contract: path.join(ROOT, 'lib', 'gradebook-contract.js'),
+  gatelib: path.join(ROOT, 'lib', 'activity-gate.js'),
   player: path.join(ROOT, 'public', 'lab-player.js'),
 };
 const ORIGINAL = {};
@@ -36,6 +37,13 @@ function runSuite() {
   const r = spawnSync(process.execPath, [SUITE], { cwd: ROOT, encoding: 'utf8' });
   const out = (r.stdout || '') + (r.stderr || '');
   return { code: r.status, failed: [...out.matchAll(/^\s*\[FAIL\] (.+?)(?:  \{|  \[|  "|$)/gm)].map((m) => m[1].trim()), out };
+}
+
+const REDERIVE_SUITE = path.join(__dirname, 'anon-gate-rederive.js');
+function runRederiveSuite() {
+  const r = spawnSync(process.execPath, [REDERIVE_SUITE], { cwd: ROOT, encoding: 'utf8' });
+  const out = (r.stdout || '') + (r.stderr || '');
+  return { code: r.status, failed: [...out.matchAll(/^\s*\[FAIL\] (.+?)(?:  \{|  \[|$)/gm)].map((m) => m[1].trim()), out };
 }
 
 const PLAYER_SUITE = path.join(__dirname, 'lab-player-token.js');
@@ -56,6 +64,51 @@ const MUTATIONS = [
     find: '      token ? { headers: { Authorization: "Bearer " + token } } : undefined)',
     repl: '      undefined)',
     must: ['and carried Authorization'],
+  },
+  {
+    //  The tie-break, which a generated rederive found and no fixture had. Drop
+    //  the closing-row preference and the winner is decided by whichever alias
+    //  LAB_ALIASES happens to return first, so a teacher closing the Lab column
+    //  while a stale terminal-lab row sits open watches their click do nothing.
+    name: 'a same-scope tie goes to the OPEN row again, so a stale alias row beats a fresh close',
+    file: 'gatelib',
+    suite: 'rederive',
+    find: '      if (rank < bestRank || (rank === bestRank && closes && !bestCloses)) {',
+    repl: '      if (rank < bestRank) {',
+    must: ['the two implementations agree on every case'],
+  },
+  {
+    //  THE BYPASS. Restore the old "no token means self-study" and a student
+    //  who signs out walks past every lock on the site.
+    name: 'THE BYPASS: anonymous goes back to being automatically self-study',
+    file: 'route',
+    suite: 'gate',
+    find: "  if (!stu) {\n    if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };",
+    repl: "  if (!stu) {\n    return { open: true, reason: 'self-study' };\n    // eslint-disable-next-line no-unreachable\n    if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };",
+    must: ['signing out no longer opens a closed lab'],
+  },
+  {
+    //  THE OTHER HALF, and the one a careless fix breaks. Refusing anonymous
+    //  outright closes the bypass AND takes the public practice layer offline,
+    //  which is the trade Tanner explicitly did not choose. A suite that only
+    //  asserts "anonymous is refused" goes green on this.
+    name: 'anonymous is refused EVERY lab, taking the public practice layer offline',
+    file: 'gatelib',
+    suite: 'gate',
+    find: '  return { locked: false, reason: null, scope: null };',
+    repl: "  return { locked: true, reason: 'closed-for-activity', scope: 'activity' };",
+    must: ['a lab nobody closed is still open signed out'],
+  },
+  {
+    //  The per-class resolution is what stops one class's closing UNIT row from
+    //  withholding a lab that same class reopened at lesson scope. Scanning for
+    //  any open=0 row instead would refuse the public a lab nobody closed.
+    name: 'the anonymous rule trusts any closing row instead of resolving per class',
+    file: 'gatelib',
+    suite: 'gate',
+    find: '      const row = pickGateRow(classRows, lesson, act);',
+    repl: '      const row = classRows.find((r) => r.open === 0 || r.open === false) || null;',
+    must: ['and anonymous resolves those two rows too, rather than seeing one close'],
   },
   {
     //  A stale player cannot send a token, and a gate that never sees one stands
@@ -137,7 +190,7 @@ const MUTATIONS = [
   {
     name: 'the widest answer wins instead of the narrowest, so a unit close outranks an explicit open',
     file: 'route',
-    find: '    if (!best || rankOf(g) < rankOf(best)) best = g;',
+    find: '    if (!best || rankOf(g) < rankOf(best) || (rankOf(g) === rankOf(best) && !g.open && best.open)) best = g;',
     repl: '    if (!best || rankOf(g) > rankOf(best)) best = g;',
     must: ['reopening the Lab column inside a closed unit reopens the lab'],
   },
@@ -163,11 +216,14 @@ const MUTATIONS = [
     must: ['and the spec is NOT on the wire'],
   },
   {
+    //  Anonymous is now refused a CLOSED lab, deliberately. What must still be
+    //  true is that it gets an OPEN one, so this mutation refuses everything and
+    //  the suite has to notice the public practice layer going dark.
     name: 'the token stops being optional, so teacher preview and public practice die',
     file: 'route',
-    find: '  if (!stu) return { open: true, reason: \'self-study\' };',
-    repl: '  if (!stu) return { open: false, reason: \'no-token\' };',
-    must: ['an anonymous visitor still gets it, so teacher preview survives'],
+    find: "    return { open: true, reason: 'self-study' };\n  }\n  const cls = labClassStmt.get(stu.class_id);",
+    repl: "    return { open: false, reason: 'no-token' };\n  }\n  const cls = labClassStmt.get(stu.class_id);",
+    must: ['but a lab NO class has closed is still served anonymously'],
   },
   {
     name: 'the gate reaches across courses, locking a class that never closed anything',
@@ -198,8 +254,13 @@ ok('the suite is green before anything is mutated', base.code === 0, { code: bas
 if (base.code !== 0) { console.log(base.out.slice(-1800)); process.exit(1); }
 const basePlayer = runPlayerSuite();
 ok('the player suite is green before anything is mutated', basePlayer.code === 0, basePlayer.failed.slice(0, 3));
+//  The rederive suite prints only FAILURES, so its assertion names never appear
+//  in a green run and the startsWith scan below cannot see them. Listed here
+//  rather than parsed, and the mutation itself still proves the assertion fires.
+const REDERIVE_NAMES = ['the two implementations agree on every case'];
 const names = [...base.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim())
-  .concat([...basePlayer.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim()));
+  .concat([...basePlayer.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim()))
+  .concat(REDERIVE_NAMES);
 for (const m of MUTATIONS) for (const w of m.must) {
   ok(`the suite has an assertion starting "${w.slice(0, 46)}"`, names.some((n) => n.startsWith(w)));
 }
@@ -212,7 +273,9 @@ try {
     ok('  the patch target is present exactly once', hits === 1, { file: m.file, hits });
     if (hits !== 1) continue;
     fs.writeFileSync(FILES[m.file], src.replace(m.find, m.repl));
-    const r = (m.suite === 'player') ? runPlayerSuite() : runSuite();
+    const r = m.suite === 'player' ? runPlayerSuite()
+      : m.suite === 'rederive' ? runRederiveSuite()
+        : runSuite();
     restore();
     ok('  the suite goes RED', r.code !== 0, { code: r.code, failed: r.failed });
     ok('  it failed an assertion rather than crashing', r.failed.length > 0, { tail: r.out.slice(-260) });

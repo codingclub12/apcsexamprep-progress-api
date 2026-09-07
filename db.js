@@ -240,6 +240,15 @@ db.exec(`
     PRIMARY KEY (class_id, course, unit, lesson, activity_type)
   );
 
+  -- The anonymous availability rule (2026-09-07) asks "has ANY class closed this
+  -- item", so it queries by (course, unit) with no class_id. The primary key
+  -- above leads with class_id and cannot serve that: the planner said
+  -- SCAN activity_gates, on a path that now runs for every signed-out lab and
+  -- quiz render. Additive index, no migration. It costs nothing on a table this
+  -- small today; the point is that it stays cheap as classes multiply.
+  CREATE INDEX IF NOT EXISTS idx_activity_gates_course_unit
+    ON activity_gates(course, unit);
+
   -- N-of-M randomization config. A row says "serve serve_count random questions
   -- out of the pool of M in quiz_bank for this activity." serve_count is chosen
   -- server-side and carried in the signed order_token, so a student can never ask

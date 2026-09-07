@@ -38,7 +38,7 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { resolveScopedGate } = require('../lib/activity-gate');
+const { resolveScopedGate, lockedForAnyClass } = require('../lib/activity-gate');
 const labs = require('../lib/lab-spec');
 const answerKey = require('../lib/lab-answer-key');
 const entitlements = require('../lib/entitlements');
@@ -121,6 +121,12 @@ const labGateStmt = db.prepare(
   'SELECT lesson, activity_type, open FROM activity_gates WHERE class_id = ? AND course = ? AND unit = ?'
 );
 
+//  Every class's rows for this location, for the anonymous case below. Carries
+//  class_id, which the per-class query above does not need.
+const labAnyGateStmt = db.prepare(
+  'SELECT class_id, lesson, activity_type, open FROM activity_gates WHERE course = ? AND unit = ?'
+);
+
 //  THE NAME A TEACHER CLICKS IS NOT THE NAME THE SPEC CARRIES.
 //  A lab spec declares item_type 'terminal-lab'. The course config declares the
 //  per-lesson activity as 'lab', and THAT is the gradebook column a teacher sees
@@ -141,12 +147,32 @@ const LAB_ALIASES = (spec) => {
 const SCOPE_RANK = { activity: 0, lesson: 1, 'unit-activity': 2, unit: 3 };
 const rankOf = (g) => (g.scope ? SCOPE_RANK[g.scope] : 9);   // no scope = class default, widest
 
-//  Returns { open, reason }. Anonymous, another course, and a spec that names no
-//  unit or lesson all resolve OPEN: a gate needs a class and a location, and
-//  refusing without both would lock people out of practice nobody closed.
+//  Returns { open, reason }. Another course and a spec that names no unit or
+//  lesson resolve OPEN: a gate needs a location, and refusing without one would
+//  lock people out of practice nobody closed.
+//
+//  ANONYMOUS IS NO LONGER AUTOMATICALLY OPEN, and that changed on 2026-09-07.
+//  It used to return self-study for anyone without a token, which made the lock
+//  one click wide: a student who signed out, or opened the same page in
+//  incognito, was handed a lab their teacher had closed. The teacher who
+//  reported the original bug found this one too, by checking her own fix.
+//
+//  A lab NOBODY has closed is still served anonymously and still indexable. Only
+//  a lab carrying an explicit closing row for some class is withheld, because
+//  the public copy and the assigned copy are the same bytes.
 function labGate(req, spec) {
+  const unitAny = spec.unit, lessonAny = spec.lesson_id;
   const stu = labStudent(req);
-  if (!stu) return { open: true, reason: 'self-study' };
+  if (!stu) {
+    if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };
+    const anyRows = labAnyGateStmt.all(spec.course, unitAny);
+    //  Both names in ONE call. Asking about each in turn and refusing on the
+    //  first close ignores an explicit reopen on the other name, which is exactly
+    //  what a teacher means by reopening one lab inside a closed unit.
+    const hit = lockedForAnyClass(anyRows, lessonAny, LAB_ALIASES(spec));
+    if (hit.locked) return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope };
+    return { open: true, reason: 'self-study' };
+  }
   const cls = labClassStmt.get(stu.class_id);
   if (!cls || cls.course !== spec.course) return { open: true, reason: 'self-study' };
   const unit = spec.unit, lesson = spec.lesson_id;
@@ -155,7 +181,13 @@ function labGate(req, spec) {
   let best = null;
   for (const act of LAB_ALIASES(spec)) {
     const g = resolveScopedGate(rows, cls, lesson, act);
-    if (!best || rankOf(g) < rankOf(best)) best = g;
+    //  Same tie-break as lib/activity-gate.js lockedForAnyClass, on purpose:
+    //  narrower wins, and a tie goes to the CLOSING row. Without the second
+    //  clause the winner was decided by the order LAB_ALIASES happens to return,
+    //  so a teacher closing the Lab column while a stale 'terminal-lab' row sat
+    //  open would have watched their click do nothing. One opinion about
+    //  precedence, in both paths, rather than two that agree by luck.
+    if (!best || rankOf(g) < rankOf(best) || (rankOf(g) === rankOf(best) && !g.open && best.open)) best = g;
   }
   return best;
 }

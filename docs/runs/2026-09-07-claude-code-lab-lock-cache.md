@@ -123,3 +123,94 @@ purpose:
   a student and cannot be purged out of a browser. Nothing has broken there
   because that file changes rarely. Folded into 241.
 - I cannot verify my own work. 256 goes to `needs_verification`.
+
+---
+
+# The second finding: signing out walked past every lock
+
+**Board:** 258. Reported by Tanner an hour after the cache fix merged, in four
+words: "Lab still reachable even in incognito mode."
+
+It was not the cache. Measured against production the same minute: all seven
+authored labs served their full spec to a request with no token, and an AP Cyber
+Unit 1 quiz returned `locked: false` with five questions. `routes/quiz.js` line
+181 says it plainly, `if (!token) { req.student = null; return { ok: true }; }`,
+and a request with no student has no class, so `resolveGate` returned
+`self-study` and the item went out.
+
+So the gate was doing exactly what it said and what it said was not enough. It
+answers "is this open for MY class". Incognito has no class. Every lock on the
+site was one click wide, and the teacher found it by testing her own fix, which
+is the test I should have run first.
+
+## The rule, and why it is the narrow one
+
+Tanner chose: refuse anonymous only for items a teacher has actually locked.
+
+An item nobody has closed is still served to anyone and still indexable, because
+the public practice layer is the SEO engine and gating it would be a strategic
+loss rather than a security win. An item carrying an explicit closing row for at
+least one class is withheld from anyone with no token, on the reasoning that the
+public copy and the assigned copy are the same bytes, so leaving one open leaves
+both open.
+
+`lockedForAnyClass` reads gate ROWS ONLY and never a class default. A class
+switched to locked-by-default has expressed a posture about its own students, not
+a judgement that every quiz on the site should leave the public index, and
+letting a default reach in there would de-index the site the first time one
+teacher flipped that switch.
+
+## Two bugs in my own implementation, and only one of them had a fixture
+
+**The alias loop.** The first version asked about each lab alias in turn and
+refused on the first close. A class holding a closing UNIT row plus an opening
+`lab` row would refuse, because `terminal-lab` matched only the unit row. The
+per-class path already resolved narrowest-across-aliases; my anonymous path did
+not. The suite caught it once I wrote the fixture.
+
+**The tie, which no fixture would have found.** Two rows at the same scope for
+the same lesson, one closing `lab` and one opening `terminal-lab`, is a
+contradiction, and both implementations resolved it by accident: mine by alias
+order, the rederive by row order. The generated rederive found it in 4000 cases.
+
+A tie now goes to the CLOSING row, in the anonymous path AND the signed-in path,
+so there is one opinion about precedence rather than two that agreed by luck. It
+is also the right answer on the merits: a teacher closing the Lab column while a
+stale `terminal-lab` row sits open is precisely the complaint that started this
+whole thread, and "open wins" would mean their click did nothing.
+
+The rederive also went red on states the database cannot hold. `activity_gates`
+is `PRIMARY KEY (class_id, course, unit, lesson, activity_type)`, so one class
+cannot have the same key both open and closed; the generator was inventing that
+and the two implementations broke the impossible tie differently. A generator
+that ignores the schema reports bugs that do not exist, which costs more trust
+than it buys.
+
+## Evidence
+
+- `smoke:labgate` 24/24, `smoke:gatescope` 70/70, `smoke:quizgate` 20/20
+- `smoke:anongatererederive` 6/6: a SECOND implementation, set arithmetic rather
+  than a ladder, agreeing on 4000 generated cases, and required to have seen both
+  answers so a run where everything came out the same way cannot pass
+- `smoke:labgatemutation` 108/108 across 21 mutations
+- `deploy-gates/2026-09-07-anon-gate-bypass.json` passes `--pre` with THREE kinds
+  agreeing: suite, rederive, mutation
+
+## Still open
+
+- **The live check can report UNPROVEN and does.** `verify-anon-gate-live.js`
+  reads state it does not control: if no teacher has anything closed when it
+  runs, there is nothing for the rule to refuse and no run of it can show the
+  bypass closed. It says so rather than passing. Its four assertions are a guard
+  against the worse failure, the public layer going dark, and the positive
+  evidence is the rederive.
+- **A member of the public who opens a locked lab now reads "Your teacher has not
+  opened this lab yet."** They have no teacher. Cosmetically wrong, and the
+  alternative is handing over the lab, so it stands until someone writes a second
+  string for the anonymous case.
+- **Until the edge cache clears, that message does not even render.** The stale
+  player predates the `locked` branch, so it will try to mount a spec with no
+  brief and no checks. Resolves with the cache, around 16:16 UTC.
+- Board 258 goes to `needs_verification`. I cannot verify my own work, and this
+  one especially: the thing to check is a teacher locking a lab and then failing
+  to reach it in a private window.
