@@ -701,6 +701,55 @@ class Deck:
         self._foot(s)
         self._note(s, note)
 
+    # ── on the lesson page ──────────────────────────────────────────
+    def on_the_lesson_page(self, intro, activities, handle, note=None):
+        """The slide that walks a class from the projector to the graded site work.
+
+        This is the only slide in the deck that points at the product. Unit 1's
+        older decks carry one and the kit had no way to emit it, so regenerating
+        Unit 1 without this would have deleted the funnel slide from 28 decks to
+        make them match Units 2 to 4, which never had it. Adding the slide type
+        was the cheaper direction: it lets Unit 1 keep what it has and lets the
+        other three units gain it later from a data edit.
+
+        activities is a list of strings, each one thing a student does. The
+        handle is the lesson page they all live on, printed under each item the
+        way the authored decks print it, because a teacher reads one row at a
+        time and should not have to look elsewhere for the address.
+        """
+        s = self._new()
+        self._head(s, 'ON THE LESSON PAGE', 'Your turn', intro)
+        # The card height is DERIVED from how many activities there are and how
+        # much room is left above the footer, rather than fixed. Fixing it is
+        # what made the first draft of this method unbuildable at three items:
+        # three cards plus the auto-graded strip ran past CONTENT_BOTTOM, and a
+        # PowerPoint text frame does not clip, so it would have printed over the
+        # footer instead of failing.
+        y = 2.30
+        strip_h = 0.32
+        gap = 0.16
+        room = CONTENT_BOTTOM - y - strip_h - gap
+        n = max(1, len(activities))
+        card_h = min(1.60, (room - gap * (n - 1)) / n)
+        for i, item in enumerate(activities, 1):
+            self._card(s, MARGIN, y, CONTENT_W, card_h, None)
+            _text(s, MARGIN + 0.30, y + 0.30, 0.60, 0.60, str(i), size=T_NUMERAL, font=DISPLAY,
+                  bold=True, color=ACCENT)
+            h = _must_fit('lesson-page activity', item, CONTENT_W - 1.40, T_BODY,
+                          card_h - 0.30 - 0.34, 1.18)
+            _text(s, MARGIN + 1.00, y + 0.30, CONTENT_W - 1.40, h, item,
+                  size=T_BODY, color=BODY, line=1.18)
+            _text(s, MARGIN + 1.00, y + card_h - 0.34, CONTENT_W - 1.40, 0.26, handle,
+                  size=T_CAPTION, font=MONO, color=MUTED)
+            y += card_h + gap
+        # Green, because it makes the same promise the OUTPUT panel does: this
+        # part is already true rather than something the teacher has to set up.
+        _text(s, MARGIN, y, CONTENT_W, strip_h,
+              'AUTO-GRADED: Scores land in your gradebook as students work.',
+              size=T_BODY_SM, bold=True, color=GREEN)
+        self._foot(s)
+        self._note(s, note or 'On the live lesson page, auto-graded into your gradebook.')
+
     # ── end of day ───────────────────────────────────────────────────────────
     def end_of_day(self, learned, up_next, extra, note=None):
         s = self._new()
