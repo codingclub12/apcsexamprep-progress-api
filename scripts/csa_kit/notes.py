@@ -202,7 +202,12 @@ def build_quiz(path, topic, title, handle, questions, key_edition):
     if not key_edition:
         _p(doc, 'Name: ' + '_' * 30 + '     Score: ____ / ' + str(len(questions)),
            size=11, space_after=4)
-    _p(doc, f'The same questions are auto-graded at apcsexamprep.com/pages/{handle}',
+    #  NOT "the same questions". The kit authors these items and never reads the
+    #  lesson page, so it cannot know whether they match, and measured on
+    #  2026-09-07 they do not: the live 1.6 page serves eight CFU items, none of
+    #  which is one of these six, and 2.1 is the same story. A teacher checks a
+    #  claim like that in thirty seconds by opening the page.
+    _p(doc, f'More practice on this topic is auto-graded at apcsexamprep.com/pages/{handle}',
        size=9.5, color=MUTED, space_after=12)
 
     for i, q in enumerate(questions, 1):
