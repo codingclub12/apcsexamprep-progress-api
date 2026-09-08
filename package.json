@@ -16,6 +16,8 @@
     "availability": "node scripts/page-availability.js",
     "practicehubs": "node scripts/cyber-practice-hubs-csv.js",
     "smoke:labs": "node smoke/labs.js",
+    "verify:lablock": "node scripts/verify-lab-lock-live.js",
+    "rederive:lablock": "python3 scripts/rederive-lab-lock.py",
     "smoke:labgate": "node smoke/lab-gate.js",
     "smoke:labplayertoken": "node smoke/lab-player-token.js",
     "smoke:labgatemutation": "node smoke/lab-gate-mutation.js",
