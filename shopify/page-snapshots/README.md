@@ -207,3 +207,18 @@ which existed for sixteen of the eighteen topics and were reachable from
 nowhere on the site.
 
 Rollback path for the import that raises Big Idea 3 to 70 links.
+
+## Cyber Command Center, before the quiz answer key panel
+
+`cyber-command-center.before-quiz-answer-keys.html` is the body of
+`/pages/cyber-command-center` as the Admin API returned it, `updatedAt`
+2026-09-04T03:48:40Z, 69,733 bytes. This is the rollback target for
+`matrixify/cyber-cc-quiz-answer-keys-pages.csv`, which adds an Answer key button
+beside each of 19 quiz links.
+
+It is also the INPUT the sheet is generated from, which is why the sheet can be
+checked rather than trusted: `scripts/verify-cc-quiz-key-sheet.js` re-reads the
+CSV, cuts the injected region out, undoes the two extended lines, and requires
+what is left to equal this file byte for byte. Regenerating the sheet against a
+fresher body means snapshotting that body first and pointing both at it. See
+`docs/runs/2026-09-08-claude-code-cyber-cc-quiz-answer-keys.md`.

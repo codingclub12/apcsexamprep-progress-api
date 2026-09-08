@@ -152,14 +152,14 @@
       "kind": "rederive",
       "name": "the crosswalk derived a second way, from the CED rather than from the questions",
       "_why": "lib/cyber-cc-quiz-keys.js answers by matching bank stems against the page. lib/cyber-quiz-lesson.js answers from config/cyber-topics.json cross-checked against the page h1, and never looks at a question. Two methods, no shared input beyond the handle. Where both can answer they must agree, and all five of Unit 3's off-by-one rows are among them. The taxonomy cannot answer for Unit 1 and most of Unit 2, whose handles it does not know on pages printing no topic number; those are reported unconfirmed rather than guessed.",
-      "command": "node scripts/rederive-cc-quiz-keys.js /tmp/cc-live.html",
+      "command": "node scripts/rederive-cc-quiz-keys.js shopify/page-snapshots/cyber-command-center.before-quiz-answer-keys.html",
       "expect": "15 rows confirmed by both methods"
     },
     {
       "kind": "rederive",
       "name": "the sheet re-read as a CSV rebuilds the page it was generated from, byte for byte",
       "_why": "Generation is not evidence that generation worked; the CSP sheet lost 90 bytes a page while every semantic check passed. This cuts the injected region out of the parsed-back body, undoes the two extended lines, and requires what is left to equal the input exactly. It found two defects on its first run: a stray newline left outside the region, and a div-count assertion that was too strict to be true.",
-      "command": "node scripts/verify-cc-quiz-key-sheet.js /tmp/cc-live.html /tmp/cc-quizkey.csv",
+      "command": "node scripts/verify-cc-quiz-key-sheet.js shopify/page-snapshots/cyber-command-center.before-quiz-answer-keys.html matrixify/cyber-cc-quiz-answer-keys-pages.csv",
       "expect": "27 passed, 0 failed"
     },
     {

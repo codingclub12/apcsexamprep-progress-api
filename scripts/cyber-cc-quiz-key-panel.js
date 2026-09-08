@@ -302,7 +302,11 @@ function main(argv) {
 
   const header = ['Handle', 'Command', 'Title', 'Body HTML', 'Published', 'Published At'];
   const row = [CC_HANDLE, 'MERGE', 'AP Cybersecurity Command Center', body, 'TRUE', PUBLISHED_AT];
-  fs.writeFileSync(outPath, '﻿' + header.map(csvCell).join(',') + '\n' + row.map(csvCell).join(',') + '\n', 'utf8');
+  //  CRLF row terminators and a BOM, matching every sheet in matrixify/ and what
+  //  scripts/matrixify-preflight.js expects. Bare newlines inside the quoted body
+  //  cell are untouched and are why QUOTE_ALL is not optional.
+  fs.writeFileSync(outPath,
+    '﻿' + [header.map(csvCell).join(','), row.map(csvCell).join(',')].join('\r\n') + '\r\n', 'utf8');
 
   console.log(`  wrote ${outPath}`);
   console.log(`  body ${before.length} -> ${body.length} bytes (+${body.length - before.length})`);
