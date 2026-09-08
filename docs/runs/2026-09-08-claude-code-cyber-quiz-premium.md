@@ -92,6 +92,21 @@ signed out:
 The third line is the one that matters, because the first two are also true of a
 page that failed to render.
 
+## The rollback is staged, so the import timing is a smaller decision
+
+Tanner asked whether to import mid school day. The honest answer is that the
+risk is low and asymmetric rather than zero, so the thing worth building was not
+an argument, it was the undo.
+
+`matrixify/cyber-cc-quiz-answer-keys-ROLLBACK-pages.csv` is one MERGE row
+carrying the body the page has right now. Checked rather than assumed: parsed
+back as a CSV, its Body HTML cell is byte identical to what the Admin API serves,
+69,733 bytes, and the committed snapshot equals the live body too, so the forward
+sheet was generated from what is actually there. Preflight clear.
+
+The page has not been touched since 2026-09-04T03:48:40Z, so neither sheet is
+racing an edit somebody else made.
+
 ## Still open
 
 - The sheet is not imported. `matrixify/cyber-cc-quiz-answer-keys-pages.csv`,
