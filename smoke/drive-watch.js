@@ -95,6 +95,29 @@ check('slugs are unique, or one snapshot overwrites another', () => {
   assert.strictEqual(new Set(s).size, s.length);
 });
 
+//  Run 1 failed on both of these, so they are pinned rather than trusted.
+const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'scripts', 'drive-watch.js'), 'utf8');
+
+check('downloads go through usercontent with confirm, not uc?export=download', () => {
+  assert.ok(/drive\.usercontent\.google\.com\/download\?id=\$\{id\}&export=download&confirm=t/.test(src),
+    'FILE_DL is not the usercontent endpoint');
+  assert.ok(!/drive\.google\.com\/uc\?export=download/.test(src),
+    'the old uc endpoint is still in use; it serves a virus-scan page for .js and returns 2443 bytes of HTML');
+});
+
+check('a transient 503 is retried rather than failing the bundle', () => {
+  assert.ok(/RETRY_STATUS/.test(src), 'no retry set');
+  for (const code of [408, 429, 500, 502, 503, 504]) {
+    assert.ok(new RegExp(`\\b${code}\\b`).test(src.split('const RETRY_STATUS')[1].split(']')[0]),
+      `${code} is not retried`);
+  }
+  assert.ok(/attempt\s*<=\s*RETRIES/.test(src), 'no retry loop');
+});
+
+check('a 404 is NOT retried, or a deleted file costs five round trips', () => {
+  assert.ok(/if \(!RETRY_STATUS\.has\(r\.status\)\) throw last;/.test(src));
+});
+
 console.log();
 if (failed) { console.log(`${failed} FAILED`); process.exit(1); }
 console.log('all passed, 0 failed');

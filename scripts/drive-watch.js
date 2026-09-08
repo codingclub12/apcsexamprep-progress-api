@@ -45,7 +45,26 @@ const CONFIG = path.join(ROOT, 'config', 'drive-bundles.json');
 const SNAPDIR = path.join(ROOT, 'docs', 'drive-snapshot');
 
 const FOLDER_VIEW = (id) => `https://drive.google.com/embeddedfolderview?id=${id}#list`;
-const FILE_DL = (id) => `https://drive.google.com/uc?export=download&id=${id}`;
+
+//  drive.usercontent.google.com with confirm=t, NOT drive.google.com/uc.
+//
+//  The first real run proved why. uc?export=download served Google's "Virus
+//  scan warning" page instead of Unit_1_Test_FRQ_sandbox.js, 2443 bytes of HTML
+//  where 3519 bytes of JavaScript should be, because Drive will not scan a .js
+//  and asks a human to confirm. This endpoint returns the file, and it is
+//  byte-exact against the Drive API for ordinary documents too (38177 for a
+//  .docx, 75191 for a .pptx), so it is one path for every file rather than a
+//  special case for the awkward ones.
+const FILE_DL = (id) => `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`;
+
+//  Google rate-limits a datacenter IP walking a thousand files. Run 1 took a
+//  503 after 33 downloads and gave up, which is the right instinct and the
+//  wrong threshold: a transient 503 is not a bundle that cannot be read. Retry
+//  the retryable statuses, and let anything else fail immediately.
+const RETRY_STATUS = new Set([408, 429, 500, 502, 503, 504]);
+const RETRIES = 4;
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Google renders this when a shared folder really has no children. Its presence
 // is what separates "empty" from "we could not read this".
@@ -72,9 +91,21 @@ function classify(href) {
 }
 
 async function get(url, asBuffer) {
-  const r = await fetch(url, { redirect: 'follow' });
-  if (!r.ok) throw new Error(`${r.status} ${r.statusText} for ${url}`);
-  return asBuffer ? Buffer.from(await r.arrayBuffer()) : r.text();
+  let last;
+  for (let attempt = 0; attempt <= RETRIES; attempt++) {
+    if (attempt) await sleep(500 * 2 ** attempt);
+    let r;
+    try {
+      r = await fetch(url, { redirect: 'follow' });
+    } catch (e) {
+      last = e;
+      continue;
+    }
+    if (r.ok) return asBuffer ? Buffer.from(await r.arrayBuffer()) : r.text();
+    last = new Error(`${r.status} ${r.statusText} for ${url}`);
+    if (!RETRY_STATUS.has(r.status)) throw last;
+  }
+  throw new Error(`${last.message} (gave up after ${RETRIES + 1} attempts)`);
 }
 
 async function listFolder(id, label) {
@@ -116,6 +147,10 @@ async function walk(id, label, prefix, files, opts) {
       //  document. Hashing it would record a stable-looking digest for a file
       //  nobody can open, which is the exact failure this watcher exists to
       //  catch, so it is fatal rather than quiet.
+      //
+      //  This is not hypothetical. It fired on the first real run, on the one
+      //  .js file in the preview bundle, and it is the reason FILE_DL above
+      //  points at usercontent rather than uc.
       if (buf.slice(0, 15).toString('latin1').trim().toLowerCase().startsWith('<!doctype html')
         || buf.slice(0, 6).toString('latin1').toLowerCase() === '<html>') {
         throw new Error(`${p}: download returned HTML, not a document (${buf.length} bytes)`);
