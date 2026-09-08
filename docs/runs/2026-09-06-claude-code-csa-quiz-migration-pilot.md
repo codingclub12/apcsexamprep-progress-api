@@ -182,8 +182,8 @@ looking at exit codes rather than at messages.
 
 ## What is still open
 
-- **The import has not run.** The sheet is generated and preflight-clear, and
-  until it is imported the leak on 1.1 is live and the lock is still decoration.
+- ~~The import has not run.~~ **It ran on 2026-09-07, and 1.1 is done.** See
+  below.
 - **Thirteen more Unit 1 quizzes**, then 121 CFUs, then units 2 to 4. Each quiz
   needs its page read: the parts, the answer letters and the feedback all live in
   the body and none of it is derivable from this repo.
@@ -191,3 +191,59 @@ looking at exit codes rather than at messages.
   hold locations no seed script created. `GET /api/admin/class/:id/gates` lists
   exactly the activities driven by `quiz_bank` and needs the admin key, which no
   session has had. Until that runs, the migration queue is an estimate.
+
+## The import landed 2026-09-07, and lesson 1.1 is finished
+
+`scripts/verify-csa-11-mount-live.js` reports all 21 assertions passing, having
+reported 11 failures before. Live body 99,805 bytes, `updated_at`
+2026-09-07T23:33:00-05:00.
+
+The one byte between 99,805 live and the 99,806 the generator predicted is
+whitespace, and it was proven rather than waved through: 87,014 non-whitespace
+characters on both sides, identical and in order. Shopify reformats HTML on save,
+which is why byte equality is the right assertion BEFORE an import and the wrong
+one after.
+
+What is true now that was not on 2026-09-06:
+
+    the two mastery-challenge keys      gone from the page source
+    data-answer attributes              9 -> 7
+    GET /api/quiz/ap-csa/unit-1/1.1/quiz  404 -> 200, two questions, no key
+    a gate row on 1.1-quiz              enforceable rather than decorative
+
+Part C, the scenario paragraph and `data-item-id="1.1-quiz"` all survived.
+
+### What the student actually sees, read out of the deployed asset
+
+The mount script was fetched from the CDN and read rather than assumed about,
+because the page now depends on it and nothing in this repo tests it. 8,436
+bytes, and every branch is handled: a `locked` response renders "This quiz is not
+open yet. Your teacher opens it when the class is ready to take it", an empty or
+malformed question list renders a distinct error, a 403 on submit renders its
+own, and a `data-apcs-quiz-ready` flag makes a double mount impossible. A 404 is
+the one silent path, deliberately, so a page carrying a mount for a location with
+no bank shows nothing rather than an error.
+
+### The two things NOT established
+
+**No browser has rendered this page from here.** Chromium cannot reach the
+storefront from this container: the proxy tunnel closes mid-exchange on
+apcsexamprep.com:443, 1,758 bytes out and 39 back, which is consistent with the
+bot management the storefront-fetch module exists to work around. So the bytes
+are verified, the API is verified and the asset is verified, but "a student loads
+the page and sees two questions" is inference from those three rather than an
+observation.
+
+**The lock has not been observed biting on production.** Its enforcement is
+proven offline by `smoke/csa-quiz-bank.js`, including that a unit-scope lock
+closes 1.1 and opening the lesson reopens it, but writing a real gate row needs
+teacher or admin credentials no session has had.
+
+### The seven remaining data-answer attributes are the CFUs
+
+They are not leftovers from this migration, they are the next piece of work. The
+mastery quiz is off the page; the six CFU widgets on 1.1 still grade themselves
+in the browser and still ship their keys. That is the 121-CFU line in the queue
+below, and it is a larger job than the quizzes because there is no server-side
+CFU render path at all yet.
+

@@ -55,7 +55,11 @@ too. It does not orphan the gradebook column: `lib/gradebook-contract.js` keys
 columns by `unit-1/1.1/quiz` and normalises `attempts` and `progress` onto the
 same one, measured on a scratch database with three students scored each way.
 
-Lesson 1.1 is the pilot and both steps are written:
+**Lesson 1.1 is DONE as of 2026-09-07**, and it is the first activity in AP CSA
+where a gate row is load-bearing rather than decorative. The page serves the
+mount, `GET /api/quiz/ap-csa/unit-1/1.1/quiz` answers with two questions and no
+key, and `scripts/verify-csa-11-mount-live.js` passes all 21 assertions having
+failed 11 of them beforehand. Both steps:
 
 - step 1, `seed/csa-unit-1-web-quizzes.js`, Parts A and B moved verbatim
 - step 2, `scripts/csa-11-quiz-mount-csv.js`, a Matrixify sheet that swaps the
