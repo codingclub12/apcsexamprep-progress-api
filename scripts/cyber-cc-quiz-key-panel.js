@@ -15,18 +15,38 @@
 //  token at all. If this markup carried the key, publishing it would publish the
 //  answers, and this page is public HTML.
 //
-//  ── THE GATE IS STATE.entitled, NOT unlocked ───────────────────────────────
-//  Lesson materials use `STATE.entitled || unitFree(u)`, so Unit 1 shows its
-//  Drive links to a signed-out visitor. That is a presentation rule about links
-//  which are public-by-link anyway. A key served from the API is real access
-//  control, and a free PREVIEW of Unit 1 is not a reason to hand out its
-//  answers, so this gates on entitlement alone. renderResources() on this same
-//  page already draws that line for the course-level documents.
+//  ── THE WHOLE QUIZ IS PREMIUM, IN BOTH PLACES ──────────────────────────────
+//  Tanner, 2026-09-08: "lock the quiz all together. Student and teacher. Free
+//  preview is fine with just the slides and other supplementals."
 //
-//  An unentitled teacher still sees a locked chip rather than nothing, which is
-//  the funnel signal the locked units already give, and it means the button
-//  never renders in a state where clicking it can only fail. The lab key panel
-//  does render such a button on Unit 1, and that wart is not copied here.
+//  So three things move off `unlocked` and onto `STATE.entitled`: the teacher
+//  quiz document in the materials row, the student quiz link in the pages row,
+//  and the answer key. Everything else in a free unit stays exactly as it is:
+//  the deck, the guided notes, the supplements, the teacher guide, the lesson
+//  page, the scenarios, the terminal lab and the Question of the Day. A teacher
+//  previewing Unit 1 still gets a full lesson to teach from; what they do not
+//  get is the instrument or its key.
+//
+//  Why the whole quiz and not just the key: an assessment a prospective buyer
+//  can hand out is an assessment their students can find, and the free preview
+//  exists to sell the course rather than to furnish one unit of it. The key
+//  alone would have been the smaller half of that.
+//
+//  ── WHAT THIS IS AND IS NOT ────────────────────────────────────────────────
+//  Presentation gating, on two of the three, and saying so matters. The Drive
+//  quiz document is shared "anyone with the link", and the student quiz page is
+//  a public Shopify page; hiding both from this hub stops them being PUBLISHED
+//  to a visitor who has not paid, and does not make either private to somebody
+//  holding the URL already. The answer key is different in kind: it is refused
+//  server-side by a credential check, so that one is access control.
+//
+//  Making the student quiz itself refuse an unentitled reader is board 258 and
+//  276 territory, not a Command Center edit.
+//
+//  An unentitled visitor sees a locked chip rather than nothing, which is the
+//  funnel signal the locked units already give, and it means no button renders
+//  in a state where clicking it can only fail. The lab key panel does render
+//  such a button on Unit 1, and that wart is not copied here.
 //
 //  ── WHICH ROWS GET ONE ──────────────────────────────────────────────────────
 //  Not "every row with a bank". lib/cyber-cc-quiz-keys.js has the reasoning and
@@ -109,14 +129,17 @@ function panelCode(byLesson) {
   return '  ' + MARK + '\n'
     + '  var QUIZKEY = ' + JSON.stringify(byLesson) + ';\n'
     + '\n'
+    + '  // One predicate, three call sites: the teacher quiz doc, the student quiz\n'
+    + '  // link, and the key. A quiz is premium even inside a FREE unit, so this is\n'
+    + '  // STATE.entitled and never `unlocked`. Everything else in a free unit keeps\n'
+    + '  // the unitFree() treatment it already had.\n'
+    + '  function quizOpen(){ return !!STATE.entitled; }\n'
+    + '\n'
     + '  // The button holds a location. The key itself is fetched, gated, on click.\n'
-    + '  // Gated on entitlement rather than on `unlocked`: a free Unit 1 preview is\n'
-    + '  // not a reason to hand out answers, and a button that can only fail is worse\n'
-    + '  // than a locked one that explains itself.\n'
     + '  function quizKeyButton(l, destKey){\n'
     + '    if(destKey !== "quiz") return "";\n'
     + '    var k = QUIZKEY[l.id]; if(!k) return "";\n'
-    + '    if(!STATE.entitled) return \'<span class="mat disabled" title="The answer key is part of the teacher bundle">\'\n'
+    + '    if(!quizOpen()) return \'<span class="mat disabled" title="The answer key is part of the teacher bundle">\'\n'
     + '      + \'<span class="m-ico">&#128274;</span>Answer key</span>\';\n'
     + '    return \'<button class="mat quiz-key-btn" title="Open the answer key for this quiz"\'\n'
     + '      + \' data-qk-course="\'+esc(k.course)+\'" data-qk-unit="\'+esc(k.unit)+\'"\'\n'
@@ -186,14 +209,35 @@ function panelCode(byLesson) {
     + '  ' + END + '\n\n';
 }
 
-//  ── the two anchors inside studentSection ──────────────────────────────────
-//  Extended, never rewritten. That function's label holds a middle dot and a
-//  clipboard emoji; reproducing them here would route two non-ASCII characters
+//  ── the anchors ────────────────────────────────────────────────────────────
+//  Extended, never rewritten. studentSection's label holds a middle dot and a
+//  clipboard emoji; reproducing it here would route two non-ASCII characters
 //  through this file for no reason, and this script asserts it writes none.
+//
+//  The first pair is the gate. `unlocked` is `STATE.entitled || unitFree(u)`,
+//  so on a free unit it is true for a signed-out visitor and the quiz link is
+//  published to them. Narrowing it per destination is what locks the quiz while
+//  leaving the lesson page, the scenarios and the terminal lab exactly as they
+//  were. The same one-line narrowing is applied to the teacher quiz DOCUMENT in
+//  matButton, which is the other half of "student and teacher".
+const GATE_ANCHOR = `      var url = s[d[0]]; if(!url) return '';`;
+const GATE_AFTER = `      var url = s[d[0]]; if(!url) return '';\n`
+  + `      var open = d[0]==="quiz" ? quizOpen() : unlocked;`;
+
 const LOCKED_ANCHOR = `      if(!unlocked) return '<span class="mat disabled">'+d[1]+'</span>';`;
-const LOCKED_AFTER = `      if(!unlocked) return '<span class="mat disabled">'+d[1]+'</span>'+quizKeyButton(l,d[0]);`;
+const LOCKED_AFTER = `      if(!open) return '<span class="mat disabled">'+d[1]+'</span>'+quizKeyButton(l,d[0]);`;
 const OPEN_ANCHOR = `data-copy="'+esc(url)+'">\u{1F4CB}</button></span>';`;
 const OPEN_AFTER = `data-copy="'+esc(url)+'">\u{1F4CB}</button></span>'+quizKeyButton(l,d[0]);`;
+
+//  The teacher quiz document. matButton takes the material, so the narrowing
+//  reads off mat.key rather than a destination string.
+const MAT_ANCHOR = `  function matButton(l, mat, unlocked){\n`
+  + `    var url = (l.mats && l.mats[mat.key]) ? l.mats[mat.key] : l.folder;\n`
+  + `    if(!unlocked || !url){`;
+const MAT_AFTER = `  function matButton(l, mat, unlocked){\n`
+  + `    var url = (l.mats && l.mats[mat.key]) ? l.mats[mat.key] : l.folder;\n`
+  + `    if(mat.key === "quiz") unlocked = quizOpen();\n`
+  + `    if(!unlocked || !url){`;
 
 function patch(body, byLesson) {
   if (!body.includes('var STU = {')) throw new Error('this is not the cyber command center body');
@@ -227,11 +271,17 @@ function patch(body, byLesson) {
   once(body, fnAnchor);
   let out = body.replace(fnAnchor, panelCode(byLesson) + fnAnchor);
 
+  once(out, GATE_ANCHOR);
+  out = out.replace(GATE_ANCHOR, GATE_AFTER);
+
   once(out, LOCKED_ANCHOR);
   out = out.replace(LOCKED_ANCHOR, LOCKED_AFTER);
 
   once(out, OPEN_ANCHOR);
   out = out.replace(OPEN_ANCHOR, OPEN_AFTER);
+
+  once(out, MAT_ANCHOR);
+  out = out.replace(MAT_ANCHOR, MAT_AFTER);
 
   return { body: out, changed: true };
 }
@@ -318,4 +368,4 @@ if (require.main === module) {
   catch (e) { console.error('REFUSED: ' + e.message); process.exit(1); }
 }
 
-module.exports = { patch, panelCode, MARK, END, LOCKED_ANCHOR, OPEN_ANCHOR };
+module.exports = { patch, panelCode, MARK, END, GATE_ANCHOR, LOCKED_ANCHOR, OPEN_ANCHOR, MAT_ANCHOR };

@@ -590,6 +590,7 @@
 
   function matButton(l, mat, unlocked){
     var url = (l.mats && l.mats[mat.key]) ? l.mats[mat.key] : l.folder;
+    if(mat.key === ""quiz"") unlocked = quizOpen();
     if(!unlocked || !url){
       return '<span class=""mat disabled""><span class=""m-ico"">'+mat.ico+'</span>'+mat.label+'</span>';
     }
@@ -692,14 +693,17 @@
   /* apcs-quiz-key panel */
   var QUIZKEY = {""1.1"":{""course"":""ap-cybersecurity"",""unit"":""unit-1"",""lesson"":""1.1"",""activity_type"":""quiz""},""1.2"":{""course"":""ap-cybersecurity"",""unit"":""unit-1"",""lesson"":""1.2"",""activity_type"":""quiz""},""2.1"":{""course"":""ap-cybersecurity"",""unit"":""unit-2"",""lesson"":""2.1"",""activity_type"":""quiz"",""serve_count"":0},""2.2"":{""course"":""ap-cybersecurity"",""unit"":""unit-2"",""lesson"":""2.2"",""activity_type"":""quiz"",""serve_count"":0},""2.4"":{""course"":""ap-cybersecurity"",""unit"":""unit-2"",""lesson"":""2.4"",""activity_type"":""quiz"",""serve_count"":0},""3.1"":{""course"":""ap-cybersecurity"",""unit"":""unit-3"",""lesson"":""3.1a"",""activity_type"":""quiz"",""serve_count"":0},""3.2"":{""course"":""ap-cybersecurity"",""unit"":""unit-3"",""lesson"":""3.1b"",""activity_type"":""quiz"",""serve_count"":0},""3.3"":{""course"":""ap-cybersecurity"",""unit"":""unit-3"",""lesson"":""3.2"",""activity_type"":""quiz"",""serve_count"":0},""3.4"":{""course"":""ap-cybersecurity"",""unit"":""unit-3"",""lesson"":""3.3"",""activity_type"":""quiz"",""serve_count"":0},""3.5"":{""course"":""ap-cybersecurity"",""unit"":""unit-3"",""lesson"":""3.4"",""activity_type"":""quiz"",""serve_count"":0},""4.2"":{""course"":""ap-cybersecurity"",""unit"":""unit-4"",""lesson"":""4.2"",""activity_type"":""quiz"",""serve_count"":0},""4.3"":{""course"":""ap-cybersecurity"",""unit"":""unit-4"",""lesson"":""4.3"",""activity_type"":""quiz"",""serve_count"":0},""4.4"":{""course"":""ap-cybersecurity"",""unit"":""unit-4"",""lesson"":""4.4"",""activity_type"":""quiz"",""serve_count"":0},""5.1"":{""course"":""ap-cybersecurity"",""unit"":""unit-5"",""lesson"":""5.1"",""activity_type"":""quiz"",""serve_count"":0},""5.2"":{""course"":""ap-cybersecurity"",""unit"":""unit-5"",""lesson"":""5.2"",""activity_type"":""quiz"",""serve_count"":0},""5.3"":{""course"":""ap-cybersecurity"",""unit"":""unit-5"",""lesson"":""5.3"",""activity_type"":""quiz"",""serve_count"":0},""5.4"":{""course"":""ap-cybersecurity"",""unit"":""unit-5"",""lesson"":""5.4"",""activity_type"":""quiz"",""serve_count"":0},""5.5"":{""course"":""ap-cybersecurity"",""unit"":""unit-5"",""lesson"":""5.5"",""activity_type"":""quiz"",""serve_count"":0},""5.6"":{""course"":""ap-cybersecurity"",""unit"":""unit-5"",""lesson"":""5.6"",""activity_type"":""quiz"",""serve_count"":0}};
 
+  // One predicate, three call sites: the teacher quiz doc, the student quiz
+  // link, and the key. A quiz is premium even inside a FREE unit, so this is
+  // STATE.entitled and never `unlocked`. Everything else in a free unit keeps
+  // the unitFree() treatment it already had.
+  function quizOpen(){ return !!STATE.entitled; }
+
   // The button holds a location. The key itself is fetched, gated, on click.
-  // Gated on entitlement rather than on `unlocked`: a free Unit 1 preview is
-  // not a reason to hand out answers, and a button that can only fail is worse
-  // than a locked one that explains itself.
   function quizKeyButton(l, destKey){
     if(destKey !== ""quiz"") return """";
     var k = QUIZKEY[l.id]; if(!k) return """";
-    if(!STATE.entitled) return '<span class=""mat disabled"" title=""The answer key is part of the teacher bundle"">'
+    if(!quizOpen()) return '<span class=""mat disabled"" title=""The answer key is part of the teacher bundle"">'
       + '<span class=""m-ico"">&#128274;</span>Answer key</span>';
     return '<button class=""mat quiz-key-btn"" title=""Open the answer key for this quiz""'
       + ' data-qk-course=""'+esc(k.course)+'"" data-qk-unit=""'+esc(k.unit)+'""'
@@ -773,7 +777,8 @@
     var dests = [ ['page','Lesson page'], ['quiz','Quiz'], ['ex1','Scenario 1'], ['ex2','Scenario 2'], ['termlab','Terminal Lab'] ];
     var out = dests.map(function(d){
       var url = s[d[0]]; if(!url) return '';
-      if(!unlocked) return '<span class=""mat disabled"">'+d[1]+'</span>'+quizKeyButton(l,d[0]);
+      var open = d[0]===""quiz"" ? quizOpen() : unlocked;
+      if(!open) return '<span class=""mat disabled"">'+d[1]+'</span>'+quizKeyButton(l,d[0]);
       return '<span class=""stu-pair""><a class=""mat site"" href=""'+esc(url)+'"" target=""_blank"" rel=""noopener"">'+d[1]+' '+ARROW+'</a>'
         + '<button class=""mat copy mini"" title=""Copy this link to assign to students"" data-copy=""'+esc(url)+'"">📋</button></span>'+quizKeyButton(l,d[0]);
     }).join('');
