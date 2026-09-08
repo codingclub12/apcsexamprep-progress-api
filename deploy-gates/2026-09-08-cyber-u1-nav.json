@@ -76,8 +76,9 @@
     {
       "kind": "suite",
       "name": "the census, the repair, the invariants and nine mutations one rule at a time",
-      "command": "npm run --silent smoke:cyberu1nav",
-      "expect": "26 passed, 0 failed"
+      "command": "node scripts/gate-suite-floor.js cyberu1nav 26",
+      "expect": "GATE OK",
+      "_why": "A floor rather than the exact 26, per scripts/gate-suite-floor.js. The post-deploy run of the lab lock gate refused a correct deploy over smoke:storefront reading 93 where its manifest pinned 90, because main had gained a verifier while the pull request was open. This gate is not satisfied until its live check runs after the Matrixify import, so it has exactly that window open. Matching \", 0 failed\" instead would be worse: a suite that stopped running its assertions reports zero failures too, and this repo has found three hollow guards that way."
     },
     {
       "kind": "suite",
