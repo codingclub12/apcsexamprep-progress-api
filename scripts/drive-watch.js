@@ -61,8 +61,27 @@ const FILE_DL = (id) => `https://drive.usercontent.google.com/download?id=${id}&
 //  503 after 33 downloads and gave up, which is the right instinct and the
 //  wrong threshold: a transient 503 is not a bundle that cannot be read. Retry
 //  the retryable statuses, and let anything else fail immediately.
+//
+//  Five rather than four, because DOWNLOAD_LIMIT below asks Google for six
+//  files at a time instead of one. Backoff is 1s, 2s, 4s, 8s, 16s.
 const RETRY_STATUS = new Set([408, 429, 500, 502, 503, 504]);
-const RETRIES = 4;
+const RETRIES = 5;
+
+//  How many files to download at once.
+//
+//  Run 2 walked both bundles serially in 19m07s against the job's 30 minute
+//  cap, because a bundle is ~960 downloads and each one is about a second of
+//  waiting on Google. Eleven minutes of margin on a weekly job whose runtime is
+//  set by somebody else's latency is thin: a slow Monday spends it, and the run
+//  is then CANCELLED rather than failed, which is the shape that reads as
+//  nothing being wrong. The same thing happened to the offline suite on
+//  2026-09-03 and the pull request was simply unmergeable with nothing red.
+//
+//  Six rather than twenty. The limit here is Google's patience, not ours: run 1
+//  took a 503 after 33 downloads at a concurrency of ONE, so the retry budget
+//  above is doing the real work either way and there is nothing to gain by
+//  making it work harder.
+const DOWNLOAD_LIMIT = 6;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -132,39 +151,90 @@ function decodeEntities(s) {
     .replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 }
 
-async function walk(id, label, prefix, files, opts) {
+//  Run up to `limit` of `worker` at a time, and stop handing out work the
+//  moment one of them throws. Fail-fast matters here: an unreadable bundle is
+//  already a failed run, and spending another minute downloading the rest of it
+//  only delays the report.
+async function pool(items, limit, worker) {
+  let cursor = 0;
+  let stop = false;
+  const runners = [];
+  for (let i = 0; i < Math.min(limit, items.length); i++) {
+    runners.push((async () => {
+      for (;;) {
+        if (stop) return;
+        const idx = cursor++;
+        if (idx >= items.length) return;
+        try {
+          await worker(items[idx], idx);
+        } catch (e) {
+          stop = true;
+          throw e;
+        }
+      }
+    })());
+  }
+  await Promise.all(runners);
+}
+
+//  Download one file, prove it is a file, and record its digest.
+async function hashInto(job, files) {
+  const buf = await get(FILE_DL(job.id), true);
+  //  A download that comes back as a web page is Google refusing, not a
+  //  document. Hashing it would record a stable-looking digest for a file
+  //  nobody can open, which is the exact failure this watcher exists to
+  //  catch, so it is fatal rather than quiet.
+  //
+  //  This is not hypothetical. It fired on the first real run, on the one
+  //  .js file in the preview bundle, and it is the reason FILE_DL above
+  //  points at usercontent rather than uc.
+  if (buf.slice(0, 15).toString('latin1').trim().toLowerCase().startsWith('<!doctype html')
+    || buf.slice(0, 6).toString('latin1').toLowerCase() === '<html>') {
+    throw new Error(`${job.path}: download returned HTML, not a document (${buf.length} bytes)`);
+  }
+  files[job.path] = {
+    id: job.id,
+    bytes: buf.length,
+    sha256: crypto.createHash('sha256').update(buf).digest('hex'),
+  };
+  process.stderr.write('.');
+}
+
+//  Walking is what discovers the tree, so it stays serial and depth-first: each
+//  folder listing tells us what to ask for next. Downloading is not like that.
+//  No file's bytes depend on any other file's, so the downloads are collected
+//  here and run together afterwards by hashPending().
+async function walk(id, label, prefix, files, opts, pending) {
   const entries = await listFolder(id, label);
   entries.sort((a, b) => a.name.localeCompare(b.name));
   for (const e of entries) {
     const p = prefix ? `${prefix}/${e.name}` : e.name;
     if (e.kind === 'folder') {
-      await walk(e.id, p, p, files, opts);
+      await walk(e.id, p, p, files, opts, pending);
     } else if (e.kind === 'native') {
       files[p] = { id: e.id, native: true };
     } else if (opts.hash) {
-      const buf = await get(FILE_DL(e.id), true);
-      //  A download that comes back as a web page is Google refusing, not a
-      //  document. Hashing it would record a stable-looking digest for a file
-      //  nobody can open, which is the exact failure this watcher exists to
-      //  catch, so it is fatal rather than quiet.
-      //
-      //  This is not hypothetical. It fired on the first real run, on the one
-      //  .js file in the preview bundle, and it is the reason FILE_DL above
-      //  points at usercontent rather than uc.
-      if (buf.slice(0, 15).toString('latin1').trim().toLowerCase().startsWith('<!doctype html')
-        || buf.slice(0, 6).toString('latin1').toLowerCase() === '<html>') {
-        throw new Error(`${p}: download returned HTML, not a document (${buf.length} bytes)`);
-      }
-      files[p] = {
-        id: e.id,
-        bytes: buf.length,
-        sha256: crypto.createHash('sha256').update(buf).digest('hex'),
-      };
-      process.stderr.write('.');
+      pending.push({ path: p, id: e.id });
     } else {
       files[p] = { id: e.id };
     }
   }
+}
+
+async function hashPending(pending, files) {
+  await pool(pending, DOWNLOAD_LIMIT, (job) => hashInto(job, files));
+}
+
+//  Key order is not information about the bundle, and once downloads run
+//  concurrently it is COMPLETION order, which reshuffles every week. Written
+//  out as-is, the snapshot file would change on every run while its contents
+//  were identical, the workflow would open a "a teacher bundle changed" pull
+//  request every Monday, and the report inside it would say byte-identical.
+//  A watcher that cries every week is a watcher nobody reads.
+function sortFiles(files) {
+  const out = {};
+  for (const k of Object.keys(files).sort()) out[k] = files[k];
+  return out;
 }
 
 function loadSnapshot(slug) {
@@ -181,7 +251,19 @@ function diff(before, after) {
   const changed = [...b].filter((k) => a.has(k)
     && before.files[k].sha256 && after.files[k].sha256
     && before.files[k].sha256 !== after.files[k].sha256).sort();
-  return { added, removed, changed };
+  //  A handout converted to a Google Doc keeps its name and loses its digest,
+  //  so `changed` cannot see it: that test needs a sha256 on BOTH sides. It is
+  //  a real change to what a teacher downloads, and without this it would be
+  //  invisible to the diff and therefore to the write gate below.
+  const retyped = [...b].filter((k) => a.has(k)
+    && Boolean(before.files[k].native) !== Boolean(after.files[k].native)).sort();
+  return { added, removed, changed, retyped };
+}
+
+//  Did anything about the BUNDLE move? Deliberately not "did the file we write
+//  differ", which is the question that made this watcher cry wolf.
+function bundleMoved(d) {
+  return Boolean(d.added.length || d.removed.length || d.changed.length || d.retyped.length);
 }
 
 async function main() {
@@ -204,8 +286,10 @@ async function main() {
 
   for (const b of bundles) {
     let files = {};
+    const pending = [];
     try {
-      await walk(b.folder_id, b.name, '', files, { hash: !listOnly });
+      await walk(b.folder_id, b.name, '', files, { hash: !listOnly }, pending);
+      await hashPending(pending, files);
       process.stderr.write('\n');
     } catch (e) {
       failed += 1;
@@ -219,12 +303,22 @@ async function main() {
       slug: b.slug,
       name: b.name,
       folder_id: b.folder_id,
+      //  The date this CONTENT was first seen, not the date we last looked.
+      //  Those are different questions and only one of them belongs in a file
+      //  that is diffed: a "last looked" stamp rewrites itself every run, so
+      //  the file is dirty every week whatever the bundle did, and the workflow
+      //  opens "a teacher bundle changed" over a report saying byte-identical.
+      //  That is not hypothetical. ced-watch does exactly this, and its PR #591
+      //  sat open saying "nothing changed (15 sources)" in its own body.
+      //  When we last looked is already recorded where it costs nothing: the
+      //  job summary, and last_seen_at on the board's drive/drive-watch check.
       captured: new Date().toISOString().slice(0, 10),
       file_count: Object.keys(files).length,
-      files,
+      files: sortFiles(files),
     };
     const before = loadSnapshot(b.slug);
     const d = diff(before, after);
+    if (before && !bundleMoved(d)) after.captured = before.captured;
 
     if (listOnly) {
       report.push(`### ${b.name}\n\n${after.file_count} files.\n`);
@@ -234,7 +328,7 @@ async function main() {
     if (!before) {
       report.push(`### ${b.name}\n\nFirst capture: ${after.file_count} files. Nothing to compare yet.\n`);
       dirty = true;
-    } else if (d.added.length || d.removed.length || d.changed.length) {
+    } else if (bundleMoved(d)) {
       dirty = true;
       const lines = [`### ${b.name}`, ''];
       if (d.changed.length) {
@@ -252,13 +346,24 @@ async function main() {
         d.removed.slice(0, 40).forEach((k) => lines.push(`- ${k}`));
         lines.push('');
       }
+      if (d.retyped.length) {
+        lines.push(`**${d.retyped.length} converted between an uploaded file and a Google doc**`, '');
+        d.retyped.slice(0, 40).forEach((k) => lines.push(`- ${k}`));
+        lines.push('');
+      }
       report.push(lines.join('\n'));
     } else {
       report.push(`### ${b.name}\n\nByte-identical to the last capture. ${after.file_count} files.\n`);
     }
 
-    fs.writeFileSync(path.join(SNAPDIR, `${b.slug}.json`),
-      JSON.stringify(after, null, 1) + '\n');
+    //  Do not touch the file when the bundle did not move. Rewriting identical
+    //  content and trusting the bytes to come out the same is a check satisfied
+    //  by something other than what it is checking; the workflow keys its pull
+    //  request on `git status`, so serialization drift alone would open one.
+    if (!before || bundleMoved(d)) {
+      fs.writeFileSync(path.join(SNAPDIR, `${b.slug}.json`),
+        JSON.stringify(after, null, 1) + '\n');
+    }
   }
 
   process.stdout.write(`# Drive bundle watch\n\n${report.join('\n')}\n`);
@@ -278,4 +383,7 @@ if (require.main === module) {
   });
 }
 
-module.exports = { classify, listFolder, decodeEntities, diff, EMPTY_MARKERS, ENTRY };
+module.exports = {
+  classify, listFolder, decodeEntities, diff, EMPTY_MARKERS, ENTRY,
+  pool, sortFiles, DOWNLOAD_LIMIT, bundleMoved,
+};

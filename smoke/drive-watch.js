@@ -26,6 +26,16 @@ function check(name, fn) {
   }
 }
 
+//  The pool is the one thing here that can only be tested by running it.
+const asyncChecks = [];
+function checkAsync(name, fn) {
+  asyncChecks.push(async () => {
+    try { await fn(); console.log(`  [PASS] ${name}`); } catch (e) {
+      failed++; console.log(`  [FAIL] ${name}: ${e.message}`);
+    }
+  });
+}
+
 check('classify: a folder href', () => {
   assert.strictEqual(w.classify('https://drive.google.com/drive/folders/1abc'), 'folder');
 });
@@ -118,6 +128,156 @@ check('a 404 is NOT retried, or a deleted file costs five round trips', () => {
   assert.ok(/if \(!RETRY_STATUS\.has\(r\.status\)\) throw last;/.test(src));
 });
 
-console.log();
-if (failed) { console.log(`${failed} FAILED`); process.exit(1); }
-console.log('all passed, 0 failed');
+//  ── THE DOWNLOAD POOL, AND THE ORDERING IT BREAKS ──────────────────────────
+//   Measured on the real bundles: 19m07s serial against a 30 minute job cap,
+//   3m46s at a concurrency of six. It costs the one property the snapshot had
+//   been getting for free, that files were recorded in walk order, so these
+//   pin both halves.
+
+check('sortFiles: the same files in a different order serialize identically', () => {
+  const a = { 'z/deck.pptx': { sha256: '3' }, 'a/quiz.docx': { sha256: '1' }, 'm/key.docx': { sha256: '2' } };
+  const b = { 'a/quiz.docx': { sha256: '1' }, 'z/deck.pptx': { sha256: '3' }, 'm/key.docx': { sha256: '2' } };
+  assert.strictEqual(
+    JSON.stringify(w.sortFiles(a), null, 1),
+    JSON.stringify(w.sortFiles(b), null, 1),
+    'completion order reaches the snapshot file, so it churns every week and the PR cries wolf',
+  );
+  assert.deepStrictEqual(Object.keys(w.sortFiles(a)), ['a/quiz.docx', 'm/key.docx', 'z/deck.pptx']);
+});
+
+check('sortFiles keeps every entry, rather than sorting some away', () => {
+  const f = {};
+  for (let i = 0; i < 50; i++) f[`f${i}`] = { sha256: String(i) };
+  const out = w.sortFiles(f);
+  assert.strictEqual(Object.keys(out).length, 50);
+  assert.deepStrictEqual(out.f7, { sha256: '7' });
+});
+
+checkAsync('pool visits every item exactly once, whatever the finishing order', async () => {
+  const items = Array.from({ length: 47 }, (_, i) => i);
+  const seen = [];
+  await w.pool(items, 6, async (n) => {
+    await new Promise((r) => setTimeout(r, (n * 7) % 11));
+    seen.push(n);
+  });
+  assert.strictEqual(seen.length, 47, 'not every item ran');
+  assert.deepStrictEqual([...seen].sort((x, y) => x - y), items, 'an item ran twice or not at all');
+});
+
+checkAsync('pool never runs more than its limit at once', async () => {
+  let live = 0;
+  let peak = 0;
+  await w.pool(Array.from({ length: 40 }, (_, i) => i), 6, async () => {
+    live += 1;
+    peak = Math.max(peak, live);
+    await new Promise((r) => setTimeout(r, 5));
+    live -= 1;
+  });
+  assert.ok(peak <= 6, `ran ${peak} at once against a limit of 6`);
+  assert.ok(peak > 1, 'the pool never actually overlapped, so the limit proves nothing');
+});
+
+//  Read this one before changing it. The obvious version of it is hollow, and
+//  it was hollow here first: Promise.all rejects the instant one runner throws,
+//  so a count taken at that moment is small whether or not the pool actually
+//  stopped. The other runners are still going. So the count has to be taken
+//  AFTER giving them long enough to have chewed through everything left, and
+//  what it proves is that they did not.
+checkAsync('pool stops handing out work once one job throws', async () => {
+  const LIMIT = 6;
+  let started = 0;
+  const err = await w.pool(Array.from({ length: 400 }, (_, i) => i), LIMIT, async (n) => {
+    started += 1;
+    await new Promise((r) => setTimeout(r, 1));
+    if (n === 3) throw new Error('boom');
+  }).then(() => null, (e) => e);
+  assert.ok(err, 'a throwing job did not reject the pool');
+  assert.strictEqual(err.message, 'boom');
+
+  const atThrow = started;
+  await new Promise((r) => setTimeout(r, 300));
+  assert.ok(started <= atThrow + LIMIT,
+    `kept handing out work after the failure: ${atThrow} started at the throw, ${started} once it drained`);
+  assert.ok(started < 400, `ran the whole list anyway: ${started} of 400`);
+});
+
+check('the limit is a small number, or the watcher is the reason Drive rate limits it', () => {
+  assert.ok(Number.isInteger(w.DOWNLOAD_LIMIT) && w.DOWNLOAD_LIMIT >= 2 && w.DOWNLOAD_LIMIT <= 10,
+    `DOWNLOAD_LIMIT is ${w.DOWNLOAD_LIMIT}`);
+});
+
+check('the snapshot is written through sortFiles, not from the raw walk order', () => {
+  assert.ok(/files: sortFiles\(files\)/.test(src),
+    'main still serializes files in insertion order');
+});
+
+//  ── CRYING WOLF ────────────────────────────────────────────────────────────
+//   A watcher that opens "a teacher bundle changed" every week over a report
+//   saying byte-identical teaches everyone to close it unread, and then it is
+//   worse than nothing because it looks like cover. This is not a risk someone
+//   imagined: the sibling watcher does it, and ced-watch PR #591 sat open
+//   saying "nothing changed (15 sources)" in its own body.
+
+check('a run that finds nothing does not restamp captured', () => {
+  assert.ok(/if \(before && !bundleMoved\(d\)\) after\.captured = before\.captured;/.test(src),
+    'captured is restamped every run, so the file is dirty every week whatever the bundle did');
+});
+
+check('a run that finds nothing does not rewrite the snapshot at all', () => {
+  assert.ok(/if \(!before \|\| bundleMoved\(d\)\) \{\s*\n\s*fs\.writeFileSync/.test(src),
+    'the snapshot is written unconditionally, so serialization drift alone opens a PR');
+});
+
+check('bundleMoved is false for an identical bundle and true for each kind of change', () => {
+  const none = { added: [], removed: [], changed: [], retyped: [] };
+  assert.strictEqual(w.bundleMoved(none), false, 'an unchanged bundle would open a PR');
+  for (const k of ['added', 'removed', 'changed', 'retyped']) {
+    assert.strictEqual(w.bundleMoved({ ...none, [k]: ['x'] }), true, `${k} does not count as a change`);
+  }
+});
+
+check('a handout converted to a Google doc is a change, not an invisible one', () => {
+  const before = { files: { 'U1/Quiz.docx': { id: '1a', sha256: 'abc', bytes: 10 } } };
+  const after = { files: { 'U1/Quiz.docx': { id: '1a', native: true } } };
+  const d = w.diff(before, after);
+  assert.deepStrictEqual(d.changed, [], 'changed needs a digest on both sides, so it cannot see this');
+  assert.deepStrictEqual(d.retyped, ['U1/Quiz.docx'],
+    'a file that stopped being downloadable is invisible to the diff and to the write gate');
+  assert.strictEqual(w.bundleMoved(d), true);
+});
+
+check('the reverse conversion counts too', () => {
+  const before = { files: { 'U1/Deck': { id: '1a', native: true } } };
+  const after = { files: { 'U1/Deck': { id: '1a', sha256: 'abc', bytes: 10 } } };
+  assert.deepStrictEqual(w.diff(before, after).retyped, ['U1/Deck']);
+});
+
+check('a native file that stays native is still not a change', () => {
+  const before = { files: { 'U1/Deck': { id: '1a', native: true } } };
+  const after = { files: { 'U1/Deck': { id: '1a', native: true } } };
+  const d = w.diff(before, after);
+  assert.deepStrictEqual(d.retyped, [], 'every native file would report as retyped every week');
+  assert.strictEqual(w.bundleMoved(d), false);
+});
+
+//  A plain file records no `native` key at all, so the retype test compares
+//  undefined against undefined and the coercion looks like decoration. It stops
+//  looking like decoration the moment a snapshot spells the absence out, which a
+//  hand-edit or a format change can do at any time: without the coercion,
+//  `native: false` against a missing key reads as a conversion, and every plain
+//  file in the bundle reports as retyped on the week the format moves.
+check('an explicit native:false and an absent one are the same file', () => {
+  const before = { files: { 'U1/Quiz.docx': { id: '1a', sha256: 'abc', native: false } } };
+  const after = { files: { 'U1/Quiz.docx': { id: '1a', sha256: 'abc' } } };
+  const d = w.diff(before, after);
+  assert.deepStrictEqual(d.retyped, [],
+    'absent and false must mean the same thing, or a format change reports the whole bundle as converted');
+  assert.strictEqual(w.bundleMoved(d), false);
+});
+
+(async () => {
+  for (const fn of asyncChecks) await fn();
+  console.log();
+  if (failed) { console.log(`${failed} FAILED`); process.exit(1); }
+  console.log('all passed, 0 failed');
+})();
