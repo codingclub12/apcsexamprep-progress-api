@@ -118,6 +118,42 @@ Those pages would have asked for `/api/quiz/ap-cybersecurity/unit-1/3.3/quiz`, g
 a 404 and rendered nothing where the quiz used to be. Assertion 3 checks the unit
 and the course now, and the mutation goes red.
 
+## After the deploy
+
+Merged as 9bc4004. Railway served it and the boot seed converged:
+
+    9bc4004  total=112  inserted=85  updated=27  retired=0
+
+`retired=0` is the load-bearing number there. Converging is destructive to any
+location this file owns that stops appearing in it, so a dropped bank would have
+shown up as retirements rather than as an error.
+
+**One live check failed, and it was the CHECK that was wrong.** It asserted that
+an anonymous request receives five questions from each of the seventeen. Every one
+answered `200 {"locked":true,"reason":"anonymous-closed-for-lesson"}` instead,
+which is the anonymous gate working: an anonymous caller who GOT five questions
+would be the defect, and closing that hole is what PR #585 was for. The loopback
+rehearsal passed only because a throwaway database has no classes, so it had no
+gate rows and nothing to lock.
+
+That is the same shape as the assertion this repo keeps re-learning: a check that
+cannot pass against a correct production is not a weak check, it is a check
+pointed at the wrong thing. Rehearsing it offline hid that, because the offline
+fixture lacked the very state the assertion depended on.
+
+The corrected one asserts what is anonymously visible and still false yesterday.
+`routes/quiz.js:249` looks the bank up BEFORE the gate and 404s an empty one, and
+the locked response still reports `pool: rows.length`. So `pool` proves the bank
+landed without needing a student token:
+
+    pool5=17/17 missing=0 leaked=0
+
+It is false before the deploy in both directions: these locations 404'd entirely,
+and the wrong reading of the handle would have put unit 3's pools on 3.2 to 3.5
+rather than 3.1a to 3.4.
+
+Gate satisfied on three independent kinds: suite, mutation, live.
+
 ## Still open
 
 - The Matrixify sheet is NOT imported. It is a human action and MERGE has no undo.
