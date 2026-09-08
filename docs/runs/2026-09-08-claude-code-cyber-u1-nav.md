@@ -141,9 +141,14 @@ byte-identical sheet from the fixtures and from live, md5
   that second run passes.
 - **Units 2 to 5 were never looked at.** Only Unit 1 rails were read. The same
   three defects could sit in any of them and nothing here says otherwise.
-- **`ap-cyber-unit-1-lesson-2-terminal-lab`** answers 200 with a 4510 byte body
-  where every other activity page is 32KB to 75KB. The practice hub links it and
-  the rail does not. Looks like a shell; not investigated.
+- **`ap-cyber-unit-1-lesson-2-terminal-lab` is not a shell, and my first reading of
+  it was wrong.** I measured a 4510 byte body and called it suspicious. It 301s to
+  `ap-cyber-unit-4-lesson-3-terminal-lab`, so I was following a redirect and
+  measuring a Unit 4 page. The handle was renamed on 2026-09-06 on Tanner's
+  explicit instruction (commit de5b360), and the Unit 1 practice hub is one of the
+  seven pages still naming the old one. It is already row 7 of
+  `matrixify/cyber-lab-handle-repoint-pages.csv`, pending import, so there is
+  nothing here for this branch to do. The rail never linked it either way.
 - **Tooltip wording is inconsistent across the unit.** The 10 repaired pages carry
   the CED titles, the 18 correct ones carry site nicknames, so 1.3 reads "Public
   Wi-Fi Dangers" on most pages and "Best Practices for Public Networks" on the
