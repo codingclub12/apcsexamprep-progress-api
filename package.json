@@ -272,7 +272,8 @@
     "smoke:analysisgate": "node smoke/analysis-gate.js",
     "smoke:analysismutation": "node smoke/analysis-mutation.js",
     "verify:analysis": "node scripts/verify-analysis-live.js",
-    "smoke:exercisekeys": "node smoke/exercise-key-labels.js"
+    "smoke:exercisekeys": "node smoke/exercise-key-labels.js",
+    "sweep:delivery": "node scripts/activity-delivery-sweep.js"
   },
   "keywords": [],
   "author": "",
