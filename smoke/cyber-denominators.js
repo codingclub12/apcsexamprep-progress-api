@@ -63,7 +63,27 @@ console.log('1. Per-lesson values, as the pages state them');
     ok('  the move from 8 is recorded as a correction, not a silent edit',
       !!c && c.from === 8 && c.to === 15, c);
   }
-  ok('  1.5 exercise-1 is out of 4', POINTS['1.5|exercise-1'] === 4, POINTS['1.5|exercise-1']);
+  //  RE-PRICED 2026-09-08 from 4 to 24. This assertion pinned the 4 while 46
+  //  students were being shown their work out of 4 on a page that had served
+  //  them 24 points of it. The page's own updateTotals sums every part into the
+  //  element the score reporter scrapes, and that renders "/ 24 pts".
+  ok('  1.5 exercise-1 is out of 24, matching what the page scores',
+    POINTS['1.5|exercise-1'] === 24, POINTS['1.5|exercise-1']);
+  //  All six of the 1.4 and 1.5 activity columns land on the same 24, and that
+  //  uniformity is the point: they are one page template with one score panel.
+  //  A stray value here means somebody re-priced one of them off a single read.
+  for (const k of ['1.4|exercise-1', '1.4|exercise-2', '1.4|lab',
+                   '1.5|exercise-1', '1.5|exercise-2', '1.5|lab']) {
+    ok(`  ${k} is out of 24`, POINTS[k] === 24, POINTS[k]);
+  }
+  //  And every one of them is recorded as a correction naming the value it
+  //  replaced, so none can be mistaken for an original measurement.
+  for (const k of ['1.4|exercise-1', '1.4|exercise-2', '1.4|lab',
+                   '1.5|exercise-1', '1.5|exercise-2', '1.5|lab']) {
+    const c = (CORRECTIONS || []).find((x) => x.key === k);
+    ok(`  ${k} carries a correction with a from value`,
+      !!c && c.to === 24 && c.from !== 24, c);
+  }
 
   // Units 4 and 5 are covered by the full scan, and 4.4, a lesson the course
   // config was missing entirely, is authored too.

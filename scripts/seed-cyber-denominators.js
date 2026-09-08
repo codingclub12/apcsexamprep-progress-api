@@ -105,15 +105,36 @@ const POINTS = {
   // real item points.
 
   // ── 1.4 ────────────────────────────────────────────
-  '1.4|exercise-1': 25,       // score readout reads 0 / 25
-  '1.4|exercise-2': 25,       // score readout reads 0 / 25
-  '1.4|lab': 30,              // score readout reads 0 / 30
+  // RE-PRICED 2026-09-08, all three, from 25/25/30 to 24. See the 1.5 note below:
+  // same measurement, same three agreeing sources, same day.
+  '1.4|exercise-1': 24,       // badge "3 Parts . 24 pts", updateTotals sums parts 1-3 into finalScore, panel renders "/ 24 pts"
+  '1.4|exercise-2': 24,       // same shape, "/ 24 pts" panel
+  '1.4|lab': 24,              // labTotal sums all parts, rendered "/ 24 pts"
   '1.4|quiz': 5,              // ANSWERS{} has 5 keys
 
   // ── 1.5 ────────────────────────────────────────────
-  '1.5|exercise-1': 4,        // score readout reads 0 / 4
-  '1.5|exercise-2': 4,        // score readout reads 0 / 4
-  '1.5|lab': 30,              // score readout reads 0 / 30
+  // RE-PRICED 2026-09-08 from 4/4/30 to 24, and the 4 is the worst number this
+  // table has carried: 46 students were being shown their work out of 4 while
+  // the page had served them 24 points of it.
+  //
+  // Found by /api/health prices, not by a person: the block added on 2026-09-07
+  // compares the authored price against what students were actually served, and
+  // named these six columns on its first live read. Nobody had reported them.
+  //
+  // THREE SOURCES AGREE, which is the bar this table needs after the 1.1
+  // exercise-2 mistake was authored off one bad read:
+  //   the page's own badge          "3 Parts . 24 pts"
+  //   the page's own arithmetic     updateTotals/upd sum EVERY part into the
+  //                                 element the reporter scrapes, rendered "/ 24"
+  //   the students' own submissions 24 in the ledger, across 314 students on the
+  //                                 six columns
+  // The middle one is what the earlier crude sweep got wrong. It read "/ 24" out
+  // of neighbouring markup and could not tell a PART total from a WHOLE one, so
+  // it was refused as evidence. Reading the routine that writes the scraped
+  // element is what settles it.
+  '1.5|exercise-1': 24,       // badge "3 Parts . 24 pts", panel renders "/ 24 pts"
+  '1.5|exercise-2': 24,       // same shape, "/ 24 pts" panel
+  '1.5|lab': 24,              // upd() sums scores[1..4] into labTotal, rendered "/ 24"
   '1.5|quiz': 5,              // ANSWERS{} has 5 keys
 
   // ── 2.1 ────────────────────────────────────────────
@@ -372,6 +393,16 @@ function buildRows() {
 const CORRECTIONS = [
   { key: '1.1|exercise-2', from: 8, to: 15,
     why: 'the page was rebuilt to 15 questions; read off the live body 2026-09-07' },
+  //  The six below were named by /api/health prices on its first live read,
+  //  2026-09-07, and measured against the live pages the next morning. Each
+  //  page's own routine sums every part into the element the score reporter
+  //  scrapes, and that element renders out of 24 on all six.
+  { key: '1.4|exercise-1', from: 25, to: 24, why: 'panel renders / 24 pts; 90 students recorded 24' },
+  { key: '1.4|exercise-2', from: 25, to: 24, why: 'panel renders / 24 pts; 77 students recorded 24' },
+  { key: '1.4|lab',        from: 30, to: 24, why: 'labTotal renders / 24 pts; 36 students recorded 24' },
+  { key: '1.5|exercise-1', from: 4,  to: 24, why: 'panel renders / 24 pts; 46 students recorded 24' },
+  { key: '1.5|exercise-2', from: 4,  to: 24, why: 'panel renders / 24 pts; 45 students recorded 24' },
+  { key: '1.5|lab',        from: 30, to: 24, why: 'labTotal renders / 24 pts; 20 students recorded 24' },
 ];
 
 function applyCorrections() {

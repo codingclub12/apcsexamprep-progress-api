@@ -93,6 +93,24 @@ const cell = (g, label, key) => (g.students.find((s) => s.label === label) || { 
   db.prepare(`UPDATE course_denominators SET possible = 15
     WHERE course = ? AND lesson = '1.1' AND activity_type = 'exercise-2'`).run(CY);
 
+  console.log('2b. A correction that disagrees with the table it corrects is refused');
+  {
+    // POINTS and CORRECTIONS are two statements about one column. Left free to
+    // disagree, a re-run would flip the stored value back and forth on every
+    // deploy and a teacher's gradebook would change under her each time. The
+    // throw is the guard; nothing exercised it until the deploy gate pointed
+    // out that no test ever put the two into conflict.
+    const key = '1.5|exercise-1';
+    const was = seed.POINTS[key];
+    seed.POINTS[key] = was + 1;          // now it disagrees with its correction
+    let threw = null;
+    try { seed.applyCorrections(); } catch (e) { threw = e.message; }
+    seed.POINTS[key] = was;
+    ok('  a POINTS value that contradicts its correction throws', !!threw, threw);
+    ok('  and the message names the column and both numbers',
+      !!threw && threw.includes(key) && threw.includes(String(was)), threw);
+  }
+
   console.log('3. The corrected price is what a column header reads');
   const reg = await post('/api/teacher/register', {
     email: 'denom.corrections@example.org', password: 'a-long-enough-password',
