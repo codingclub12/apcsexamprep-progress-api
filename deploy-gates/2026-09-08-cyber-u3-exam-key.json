@@ -1,0 +1,136 @@
+{
+  "change": "the AP Cyber Unit 3 exam key stops being guessable: options are permuted so the key balances, and not one question changes its answer",
+  "_context": [
+    "THE DEFECT. Read off the live body 2026-09-08, unchanged since",
+    "docs/cyber-unit-tests-availability.md found it on 09-01:",
+    "",
+    "    BBBCCBBBBBCBBBABBBBB    A:1  B:16  C:3  D:0   longest run 5",
+    "",
+    "Answering B twenty times scores 16 of 20, which is 80 percent, without",
+    "reading a stem. D is never correct, so one option in four is dead on every",
+    "item. No individual question is mis-keyed: this is a distribution defect,",
+    "which is why the fix moves options rather than touching content.",
+    "",
+    "THE FIX IS A PERMUTATION AND NOTHING ELSE. Each question's four options are",
+    "reordered and the key follows them. The invariant, asserted by re-parsing",
+    "the rewritten body from scratch rather than trusting the rewriter: for all",
+    "twenty questions the option TEXT that was correct before is the option text",
+    "that is correct after, and the same four options are offered. Everything",
+    "outside the option lists and the CORR array is byte-identical. 12 of 20",
+    "questions had the correct answer's position moved.",
+    "",
+    "Three properties of this page make that safe, all checked on the live body",
+    "before any code was written: EXPS is per question rather than per option,",
+    "so no rationale is bound to a position; no stem, option or explanation names",
+    "a letter (zero matches for 'option A', '(B)', 'answer C', 'the first",
+    "option' and four more patterns across 38 KB); and the handler resolves by",
+    "index at click time, so nothing stores a letter.",
+    "",
+    "THE FIRST TARGET KEY THIS TOOL PRODUCED WAS WORSE THAN THE BUG. A greedy",
+    "balanced schedule generated ABCDABCDABCDABCDABCD: 5/5/5/5, longest run 1,",
+    "best single-letter score 5/20, and it passes a count-and-run audit",
+    "perfectly. A student who spots the cycle scores 20/20 rather than 16/20.",
+    "Greedy tie-breaking on a uniform budget IS a cycle generator; that was not",
+    "bad luck. So audit() gained a periodicity test, the generator became a",
+    "seeded shuffle that must pass that same audit, and the cycle is now one of",
+    "the mutations below. This is the CDACDA hole in CLAUDE.md, rediscovered by",
+    "walking into it.",
+    "",
+    "WHY THE LIVE CHECK CLOSES ON THE IMPORT AND NOT ON THE DEPLOY. Merging ships",
+    "a rewriter, a suite, a verifier and a CSV to Railway, none of it on the",
+    "server render path. The page changes when the Matrixify sheet is imported."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the defect, the fix, the invariant, the sheet, and nine mutations one rule at a time",
+      "command": "npm run --silent smoke:cyberu3examkey",
+      "expect": "35 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the repo's own exam-key checker, written months before this fix, agrees",
+      "_why": "scripts/one-off/verify-exam-key.js is the tool that FOUND this defect, months before the fix, and it shares no code with the rewriter: it re-reads the key off the handlers, cross-checks it against the CORR array, and applies its own caps. Run against the live body it reports FAIL with 3 defects (guessable-key:3). Run against the body this rewriter produces it reports PASS, 20/20 questions clean. This check is the second of those, because the gate's suite kind requires a command to succeed; the first is quoted in the run note and reproduced by pointing the same command at the fixture.",
+      "command": "node tools/ap-cyber-ced/rebalance-exam-key.js --body smoke/fixtures/live-bodies/ap-cyber-unit-3-exam.html --out .work/u3-fixed.html && node scripts/one-off/verify-exam-key.js .work/u3-fixed.html",
+      "expect": "PASS - 20/20 questions clean"
+    },
+    {
+      "kind": "suite",
+      "name": "the sheet clears the Matrixify preflight",
+      "_why": "--carrying supplies the live body so the preflight can prove the one emoji on the page was already there rather than introduced. Without it the preflight refuses, correctly: with no original, the safe reading of a raw emoji is that a generator added it.",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-08/cyber-u3-exam-key-pages.csv --carrying smoke/fixtures/u3-exam-carrying.json",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation in Python reaches the same conclusions from the raw CSV and the raw live body",
+      "_why": "Its own CSV reader, its own regexes, its own arithmetic, and no import of the rewriter. It re-derives both halves: that the shipped key is balanced, run-limited and non-periodic, and that all twenty questions keep the same correct option text and the same four options. Proved not hollow by mutating the SHEET four ways (a perfect cycle in both the handlers and CORR, an edited stem, an edited explanation, a changed answer); all four go red, each by its own rule.",
+      "command": "python3 scripts/cyber-u3-exam-key-rederive.py",
+      "expect": "OK - 20 checks re-derived from the sheet and the live body, independently of the rewriter"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE I ACTUALLY SHIPPED: drop the periodicity test and a perfect cycle passes",
+      "_why": "This is the state the tool was in when it first ran, and it emitted ABCDABCDABCDABCDABCD. Counts and runs cannot see a cycle, so without this test the audit calls the most guessable possible key clean.",
+      "file": "tools/ap-cyber-ced/rebalance-exam-key.js",
+      "find": "  if (worstLag.rate > LIMITS.maxLagMatch) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberu3examkey",
+      "expect_failure": "\"a perfect cycle, which passes every count-and-run check\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop noticing that a letter is never the answer",
+      "_why": "The half of the live defect that is not about scoring: with D dead on all twenty items, the exam is really a three-option exam and every student's guess is 33% rather than 25%.",
+      "file": "tools/ap-cyber-ced/rebalance-exam-key.js",
+      "find": "    if (c < LIMITS.minPerLetter) problems.push(`${LETTERS[i]} is never correct, so one option in four is dead on every item`);",
+      "replace": "    if (false) problems.push('');",
+      "command": "npm run --silent smoke:cyberu3examkey",
+      "expect_failure": "\"a dead letter\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop checking that the correct option TEXT survived the permutation",
+      "_why": "The single most costly thing this change could do. A permutation that re-keys a question changes the right answer on a live exam and nothing on the page would look wrong.",
+      "file": "tools/ap-cyber-ced/rebalance-exam-key.js",
+      "find": "    if (textBefore !== textAfter) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:cyberu3examkey",
+      "expect_failure": "\"the rewrite changes which option is correct\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop refusing a Cloudflare-rewritten body",
+      "_why": "The rendered page carries seven __cf_email__ markers, all in the theme's contact form, outside the rte body. The guard has to fire on the EXTRACTED body: checking the rendered page refuses a body that is fine, and checking nothing imports a rewrite and makes it permanent.",
+      "file": "tools/ap-cyber-ced/rebalance-exam-key.js",
+      "find": "  if (!CF_REWRITE.test(body || '')) return null;",
+      "replace": "  return null;\n  // eslint-disable-next-line no-unreachable\n  if (!CF_REWRITE.test(body || '')) return null;",
+      "command": "npm run --silent smoke:cyberu3examkey",
+      "expect_failure": "\"a Cloudflare-rewritten body is offered for import\" was not caught at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "stop requiring data-idx to match the handler index",
+      "_why": "If those two disagree, what a student clicks is not what gets graded, and the page looks perfectly normal while doing it.",
+      "file": "tools/ap-cyber-ced/rebalance-exam-key.js",
+      "find": "      if (o.dataIdx !== i) problems.push(`q${q.n} option ${i} has data-idx ${o.dataIdx}`);",
+      "replace": "      if (false) problems.push('');",
+      "command": "npm run --silent smoke:cyberu3examkey",
+      "expect_failure": "\"data-idx stops matching the handler index, so a click is graded as a different option\" was not caught at all"
+    },
+    {
+      "kind": "live",
+      "name": "the live exam key is no longer guessable, after the Matrixify import",
+      "_why": "DEFERRED UNTIL THE IMPORT, not until the deploy. Measured before it: 4 passed, 6 failed. The 6 are exactly what the import flips. The 4 that pass are the structural guards (twenty questions, four options, data-idx matches, handlers agree with CORR), which are true on both sides on purpose: they are the no-damage check rather than the change, and a fix that breaks one of them would be worse than the bug.",
+      "command": "node scripts/verify-cyber-u3-exam-key-live.js",
+      "expect": "cyber unit 3 exam key, live"
+    }
+  ],
+  "not_covered": [
+    "Whether any of the twenty questions is a GOOD question, or whether its keyed answer is the right one. This change moves options and asserts the keyed text did not change; it takes no view on whether that text was correct to begin with. scripts/one-off/verify-exam-key.js checks that the key is among the options offered and that no distractor explanation sits on the correct answer, and both pass, but neither is a content review.",
+    "The other four unit exams. Units 1, 2, 4 and 5 were audited on 2026-09-01 and their keys are fine (max 6 or 7 of one letter, longest run 2 or less). They are not touched here and their shapes differ: 1 and 2 use a var ANSWERS object, 4 and 5 pass the letter into checkMCQ.",
+    "The two key shapes verify-exam-key.js still cannot read: var DATA={...} and var sel={...}, both on lesson quizzes, both named in that script's header. A page it cannot recognise is skipped, and a silent skip is how this defect shipped in the first place.",
+    "Whether these five unit exams should be public practice or premium assessment at all. Board 228 noindexed them; the practice spoke links them and calls the set free. That is a positioning decision and not a patch.",
+    "That the exam grades itself in the browser. The key sits in the page body either way, so a determined student reads it from View Source rather than guessing. Rebalancing raises the floor for the casual case; only moving the page onto the server render path closes it, which is docs/quiz-locking.md."
+  ]
+}
