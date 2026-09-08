@@ -69,6 +69,13 @@ the argument for checking the neighbours of every report.
     deploys, and nobody has to redo anything.
   - 1.1 Ex 2 is out of 15 and the header was stale. A student who sat the older
     8 question version keeps 5 out of 8 and is not rescaled.
+- **DECIDED 2026-09-08 by Tanner: she is NOT told about the other columns.**
+  The check built off her email found six more priced wrong in her own course,
+  1.4 and 1.5, including one where 46 students were shown their work out of 4.
+  He read the finding and said to fix them rather than write about them. So the
+  draft above stands as written, its "the next one gets caught here" line
+  included, and a future session must not helpfully volunteer the rest. Fixed
+  under board #272; nobody was regraded and no student saw a score change.
 - Reported scope: 2 columns in one lesson. Actual scope: 1 page in Unit 1 has
   two writers (all 20 Unit 1 activity pages swept, one hit), and 1 stale price
   confirmed. Units 2 to 5 not swept; /api/health `prices` now reports the shape
