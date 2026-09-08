@@ -183,8 +183,15 @@ db.exec(`
   -- the browser. The render endpoint returns prompt + options only; correct_index
   -- and explanation are released to the client at submit time subject to the
   -- release rule. This is author content, not student input, so it is not PII.
-  -- Seeded manually via scripts/seed-quiz-bank.js (never on boot), so a fresh
-  -- deploy stays empty and every page not yet migrated keeps its existing flow.
+  -- Seeded by scripts/seed-quiz-bank.js, which server.js RUNS ON BOOT as the
+  -- 'quiz_bank' boot seed, converging the table onto seed/ on every deploy.
+  -- This comment said "never on boot" until 2026-09-08 and had been wrong for
+  -- long enough to matter: a session planning a migration read it, concluded a
+  -- merge could not change what production serves, and nearly published the
+  -- wrong order of operations to do it in. Checked against /api/health, which
+  -- reports the seed's own result: {"ok":true,"inserted":0,"updated":27}.
+  -- A page not yet migrated still keeps its existing flow, because a bank with
+  -- no mount pointing at it is simply never fetched.
   CREATE TABLE IF NOT EXISTS quiz_bank (
     qid           TEXT PRIMARY KEY,   -- stable per-question id, e.g. 'ap-cybersecurity:unit-1:1.1:quiz#1'
     course        TEXT NOT NULL,      -- 'ap-cybersecurity' | 'ap-csa' | 'ap-csp'

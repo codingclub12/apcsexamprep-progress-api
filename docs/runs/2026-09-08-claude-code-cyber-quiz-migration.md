@@ -123,6 +123,29 @@ and the course now, and the mutation goes red.
 - The Matrixify sheet is NOT imported. It is a human action and MERGE has no undo.
   Until it lands, the pages still carry their keys and these banks change nothing
   a student sees.
+
+## The order these two land in, checked rather than assumed
+
+The merge has to come FIRST and the imports second, and both halves of that were
+worth verifying because the repo disagreed with itself about one of them.
+
+`db.js` said the quiz bank is "seeded manually (never on boot), so a fresh deploy
+stays empty". `scripts/seed-quiz-bank.js` said "a deploy already does it". The
+second is right: `server.js:270` runs it as the `quiz_bank` boot seed, and
+production's own `/api/health` reports the result, `{"ok":true,"inserted":0,
+"updated":27}`. So merging IS what puts the banks live, and the stale comment is
+fixed in this pass.
+
+The other direction is worse than a wrong badge. The mount script wraps its
+entire render in `if (r.status !== 404)`, so a page that mounts before its bank
+exists shows NOTHING where the quiz used to be. Importing first would take
+seventeen quizzes off the site until someone noticed.
+
+So: merge, let Railway deploy and the boot seed converge, then import both
+sheets. Between those two steps seventeen columns report `lock_enforceable: true`
+while their pages still ship keys, which is a lie the gradebook tells for as long
+as the gap lasts. Keep the gap short. It is the lesser of the two, because the
+alternative is students staring at an empty page.
 - **The banks and the sheet have to land together.** Seeding alone makes
   `lock_enforceable` read TRUE for seventeen columns while the page still renders
   its own questions, which is a worse lie than the current honest warning.
