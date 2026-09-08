@@ -188,5 +188,86 @@ const tags = (re) => (html.match(re) || []).length;
 ok('  its tags balance', tags(/<(p|ul|li|b|span|h3)\b/g) === tags(/<\/(p|ul|li|b|span|h3)>/g),
   { open: tags(/<(p|ul|li|b|span|h3)\b/g), close: tags(/<\/(p|ul|li|b|span|h3)>/g) });
 
+console.log('9. The quiz is premium in BOTH places, and nothing else in a free unit is');
+//  Tanner, 2026-09-08: "lock the quiz all together. Student and teacher. Free
+//  preview is fine with just the slides and other supplementals."
+//
+//  The gate the page ships with is `unlocked` = STATE.entitled || unitFree(u),
+//  which is TRUE for a signed-out visitor on Unit 1. So this runs the PATCHED
+//  functions in exactly that state: unlocked true, entitled false. Reading the
+//  generator's source would not prove this; the two functions live in the page
+//  and only the patched body has them.
+const fs = require('fs');
+const SNAP = require('path').join(__dirname, '..', 'shopify', 'page-snapshots',
+  'cyber-command-center.before-quiz-answer-keys.html');
+const patched = panel.patch(fs.readFileSync(SNAP, 'utf8'),
+  { '1.1': loc('unit-1', '1.1') }).body;
+
+//  Lift the two gating functions out of the patched page and run them beside
+//  the panel's own code, which is where quizOpen and quizKeyButton live.
+const grab = (name) => (patched.match(new RegExp('  function ' + name + '[\\s\\S]*?\\n  \\}'))
+  || [null])[0];
+const matSrc = grab('matButton'), stuSrc = grab('studentSection');
+ok('  both gating functions were found in the patched body', !!matSrc && !!stuSrc);
+
+const STU_FIXTURE = {
+  '1.1': { page: '/pages/lesson', quiz: '/pages/quiz', ex1: '/pages/s1', ex2: '/pages/s2', termlab: '/pages/lab' },
+};
+const LESSON = {
+  id: '1.1',
+  mats: { deck: 'https://d/deck', notes: 'https://d/notes', quiz: 'https://d/quiz', supp: 'https://d/supp', guide: 'https://d/guide' },
+};
+const MATERIALS = [
+  { key: 'deck', label: 'Slide Deck', ico: 'D' }, { key: 'notes', label: 'Guided Notes', ico: 'N' },
+  { key: 'quiz', label: 'Quiz', ico: 'Q' }, { key: 'supp', label: 'Supplements', ico: 'S' },
+  { key: 'guide', label: 'Teacher Guide', ico: 'G' },
+];
+
+//  entitled decides the quiz; unlocked stays true throughout, which is the whole
+//  point: a signed-out visitor on the FREE unit is exactly the case that was
+//  handing the quiz out.
+//  The panel must be built for the lesson under test: quizKeyButton looks the
+//  row up in QUIZKEY, so reusing section 8's map (which keys 3.4) renders no key
+//  for 1.1 and the two key assertions below fail for the fixture's reason rather
+//  than the code's. That is what happened on the first run.
+const CODE_11 = panel.panelCode({ '1.1': loc('unit-1', '1.1') });
+const render = (entitled) => new Function('esc', 'STATE', 'document', 'CFG', 'labKeyStyles',
+  'fetch', 'STU', 'ARROW', 'MATERIALS', 'LESSON',
+  CODE_11 + '\n' + matSrc + '\n' + stuSrc
+  + '\n; return { mats: MATERIALS.map(function(m){ return matButton(LESSON, m, true); }).join(""),'
+  + '   student: studentSection(LESSON, true) };')(
+  esc, { entitled, token: 't' }, { addEventListener: noop, getElementById: () => null },
+  { API: 'https://progress.apcsexamprep.com' }, noop, noop, STU_FIXTURE, '>', MATERIALS, LESSON);
+
+const anon = render(false);
+//  A material reads as OPEN when it rendered an <a>, LOCKED when it rendered a
+//  disabled span. Checked by label so a change to one cannot pass as another.
+const openMat = (html, label) => new RegExp('<a class="mat"[^>]*>[^<]*<span class="m-ico">[^<]*</span>' + label).test(html);
+ok('  free unit, signed out: the Slide Deck is still open', openMat(anon.mats, 'Slide Deck'), anon.mats.slice(0, 160));
+ok('  the Guided Notes are still open', openMat(anon.mats, 'Guided Notes'));
+ok('  the Supplements are still open', openMat(anon.mats, 'Supplements'));
+ok('  the Teacher Guide is still open', openMat(anon.mats, 'Teacher Guide'));
+ok('  but the teacher Quiz document is LOCKED', !openMat(anon.mats, 'Quiz'),
+  (anon.mats.match(/[^>]*Quiz[^<]*/) || [''])[0]);
+ok('  and its Drive url is not published to an unentitled visitor',
+  !anon.mats.includes('https://d/quiz'), anon.mats.includes('https://d/quiz'));
+
+ok('  the student Lesson page is still open', /<a class="mat site"[^>]*>Lesson page/.test(anon.student));
+ok('  Scenario 1 and 2 are still open',
+  /<a class="mat site"[^>]*>Scenario 1/.test(anon.student) && /<a class="mat site"[^>]*>Scenario 2/.test(anon.student));
+ok('  the Terminal Lab is still open', /<a class="mat site"[^>]*>Terminal Lab/.test(anon.student));
+ok('  but the student Quiz link is LOCKED', /<span class="mat disabled">Quiz<\/span>/.test(anon.student),
+  anon.student.slice(0, 240));
+ok('  and its url is not published either', !anon.student.includes('/pages/quiz'), anon.student);
+ok('  the answer key shows as a locked chip beside it, not a button',
+  /mat disabled[^>]*answer key/i.test(anon.student) && !/quiz-key-btn/.test(anon.student), anon.student.slice(0, 300));
+
+const paid = render(true);
+ok('  an entitled teacher gets the teacher Quiz document', openMat(paid.mats, 'Quiz'), paid.mats);
+ok('  and the student Quiz link', /<a class="mat site"[^>]*>Quiz /.test(paid.student), paid.student.slice(0, 240));
+ok('  and the answer key as a real button', /quiz-key-btn/.test(paid.student));
+ok('  every other material is open for them too',
+  ['Slide Deck', 'Guided Notes', 'Supplements', 'Teacher Guide'].every((m) => openMat(paid.mats, m)));
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

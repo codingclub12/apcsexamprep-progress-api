@@ -85,12 +85,23 @@ function main(argv) {
   const endMark = '  ' + E + '\n\n';
   const end = after.indexOf(endMark) + endMark.length;
   ok('  the region is found', start > 0 && end > start, { start, end });
-  //  Cut the region out and undo the two line extensions. What is left must be
-  //  the input, byte for byte. This is the whole assertion: a reflow anywhere
-  //  in the other 69 KB shows up here as a mismatch.
-  const rebuilt = (after.slice(0, start) + after.slice(end))
-    .replace(`'</span>'+quizKeyButton(l,d[0]);`, `'</span>';`)
-    .replace(`</button></span>'+quizKeyButton(l,d[0]);`, `</button></span>';`);
+  //  Cut the region out and undo the four line edits. What is left must be the
+  //  input, byte for byte. This is the whole assertion: a reflow anywhere in the
+  //  other 69 KB shows up here as a mismatch. Each undo is listed rather than
+  //  done by a loose regex, so an edit this script does not know about fails the
+  //  comparison instead of being quietly normalized away.
+  const UNDO = [
+    // the two quizKeyButton call sites
+    [`'</span>'+quizKeyButton(l,d[0]);`, `'</span>';`],
+    [`</button></span>'+quizKeyButton(l,d[0]);`, `</button></span>';`],
+    // the student-quiz gate
+    [`\n      var open = d[0]==="quiz" ? quizOpen() : unlocked;`, ``],
+    [`      if(!open) return '<span class="mat disabled">'`, `      if(!unlocked) return '<span class="mat disabled">'`],
+    // the teacher-quiz gate
+    [`    if(mat.key === "quiz") unlocked = quizOpen();\n`, ``],
+  ];
+  let rebuilt = after.slice(0, start) + after.slice(end);
+  for (const [from, to] of UNDO) rebuilt = rebuilt.replace(from, to);
   ok('  the rest of the body is byte-identical to the input', rebuilt === before,
     rebuilt === before ? null : { beforeLen: before.length, rebuiltLen: rebuilt.length,
       firstDiff: (() => { for (let i = 0; i < Math.max(before.length, rebuilt.length); i++)
@@ -145,8 +156,16 @@ function main(argv) {
     !map['2.3'] && !map['3.6'] && !map['4.1'], { '2.3': map['2.3'], '3.6': map['3.6'], '4.1': map['4.1'] });
 
   console.log('6. The gate is entitlement, not the free-unit preview');
-  ok('  the button checks STATE.entitled', /if\(!STATE\.entitled\) return/.test(injected));
-  ok('  and never checks unlocked', !/quizKeyButton[\s\S]{0,400}unlocked/.test(injected));
+  ok('  one predicate decides every quiz surface', /function quizOpen\(\)\{ return !!STATE\.entitled; \}/.test(injected));
+  ok('  and it never consults unlocked', !/quizOpen[\s\S]{0,120}unlocked/.test(injected));
+  //  The other half of "student and teacher": both call sites in the page body,
+  //  not just the key. smoke:cyberquizkeys section 9 runs them; this only checks
+  //  the sheet carries them, which is the half a CSV can be asked about.
+  ok('  the teacher quiz document is routed through it',
+    after.includes('if(mat.key === "quiz") unlocked = quizOpen();'), null);
+  ok('  the student quiz link is routed through it',
+    after.includes('var open = d[0]==="quiz" ? quizOpen() : unlocked;'), null);
+  ok('  and no OTHER destination is', !/d\[0\]==="(page|ex1|ex2|termlab)"/.test(after));
   ok('  the key is fetched with the teacher bearer',
     /Authorization:"Bearer "\+STATE\.token/.test(injected));
   ok('  from the gated key endpoint', /\/api\/quiz\/"/.test(injected) && /"\/key"/.test(injected));
