@@ -278,7 +278,9 @@
     "verify:analysis": "node scripts/verify-analysis-live.js",
     "smoke:exercisekeys": "node smoke/exercise-key-labels.js",
     "sweep:delivery": "node scripts/activity-delivery-sweep.js",
-    "smoke:cyberu1nav": "node smoke/cyber-u1-nav.js"
+    "smoke:cyberu1nav": "node smoke/cyber-u1-nav.js",
+    "smoke:quizkey": "node smoke/quiz-answer-key.js",
+    "smoke:cyberquizkeys": "node smoke/cyber-cc-quiz-keys.js"
   },
   "keywords": [],
   "author": "",
