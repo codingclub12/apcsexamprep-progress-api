@@ -1,0 +1,388 @@
+﻿"Handle","Command","Body HTML"
+"ap-cyber-unit-3-exam","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+#u3exam{all:initial!important;display:block!important;font-family:'Georgia',serif!important;
+color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;
+background:#fff!important;line-height:1.6!important;max-width:860px!important;margin:0 auto!important;padding:0 0 40px!important;}
+#u3exam *{box-sizing:border-box!important;}
+#u3exam .hero{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#7C3AED 100%)!important;
+color:#fff!important;-webkit-text-fill-color:#fff!important;padding:36px 28px 28px!important;
+border-radius:0!important;margin:0 -20px!important;}
+#u3exam .hero-badge{display:inline-block!important;background:#A855F7!important;
+color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;
+font-weight:700!important;letter-spacing:.05em!important;padding:4px 12px!important;
+border-radius:20px!important;margin-bottom:12px!important;text-transform:uppercase!important;}
+#u3exam .hero-title{font-size:26px!important;font-weight:700!important;color:#fff!important;
+-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;line-height:1.3!important;}
+#u3exam .hero-sub{font-size:14px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;
+margin:0!important;}
+#u3exam .breadcrumb{padding:12px 0 0!important;font-size:12px!important;color:#6B7280!important;
+-webkit-text-fill-color:#6B7280!important;}
+#u3exam .breadcrumb a{color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;text-decoration:none!important;}
+#u3exam .body{padding:0 4px!important;}
+#u3exam h2{font-size:20px!important;font-weight:700!important;color:#1E1B4B!important;
+-webkit-text-fill-color:#1E1B4B!important;margin:28px 0 10px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:6px!important;}
+#u3exam h3{font-size:16px!important;font-weight:700!important;color:#6B21A8!important;
+-webkit-text-fill-color:#6B21A8!important;margin:20px 0 8px!important;}
+#u3exam p{font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;
+margin:0 0 14px!important;}
+#u3exam ul,#u3exam ol{font-size:15px!important;color:#1E1B4B!important;
+-webkit-text-fill-color:#1E1B4B!important;margin:0 0 14px!important;padding-left:24px!important;}
+#u3exam li{margin-bottom:6px!important;}
+#u3exam .obj-box{background:#F5F0FF!important;border-left:4px solid #6B21A8!important;
+padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 24px!important;}
+#u3exam .obj-box p{margin:0 0 8px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u3exam .obj-box ul{margin:0!important;}
+#u3exam .concept-card{background:#F9FAFB!important;border:1px solid #E5E7EB!important;
+border-radius:8px!important;padding:18px 20px!important;margin:0 0 16px!important;}
+#u3exam .concept-card h3{margin-top:0!important;}
+#u3exam .exam-trap{background:#FEF2F2!important;border-left:4px solid #EF4444!important;
+padding:14px 18px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important;}
+#u3exam .exam-trap strong{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#u3exam .key-terms-box{background:#EDE9FE!important;border-radius:8px!important;
+padding:16px 20px!important;margin:24px 0!important;}
+#u3exam .key-terms-box h3{color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;font-size:14px!important;text-transform:uppercase!important;letter-spacing:.05em!important;}
+#u3exam .key-terms-box dl{margin:0!important;}
+#u3exam .key-terms-box dt{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;}
+#u3exam .key-terms-box dd{margin:0 0 8px!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u3exam .visual-card-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;gap:14px!important;margin:16px 0 24px!important;}
+#u3exam .v-card{background:#1E1B4B!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+border-radius:10px!important;padding:18px!important;}
+#u3exam .v-card h4{color:#A855F7!important;-webkit-text-fill-color:#A855F7!important;
+font-size:13px!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin:0 0 8px!important;}
+#u3exam .v-card p{color:#E2E8F0!important;-webkit-text-fill-color:#E2E8F0!important;font-size:13px!important;margin:0!important;}
+#u3exam .compare-table{width:100%!important;border-collapse:collapse!important;margin:16px 0 24px!important;font-size:14px!important;}
+#u3exam .compare-table th{background:#1E1B4B!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+padding:10px 14px!important;text-align:left!important;}
+#u3exam .compare-table td{padding:9px 14px!important;border-bottom:1px solid #E5E7EB!important;
+color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;vertical-align:top!important;}
+#u3exam .compare-table tr:nth-child(even) td{background:#F9FAFB!important;}
+/* -- CFU STYLES -- */
+#u3exam .cfu-section{margin:32px 0 0!important;}
+#u3exam .cfu-section h2{border-color:#6B21A8!important;}
+#u3exam .cfu-item{background:#fff!important;border:1px solid #E5E7EB!important;
+border-radius:10px!important;padding:18px 20px!important;margin:0 0 14px!important;}
+#u3exam .cfu-item.correct{border-color:#16A34A!important;background:#F0FDF4!important;}
+#u3exam .cfu-item.incorrect{border-color:#DC2626!important;background:#FEF2F2!important;}
+#u3exam .cfu-q{font-size:15px!important;font-weight:700!important;color:#1E1B4B!important;
+-webkit-text-fill-color:#1E1B4B!important;margin:0 0 12px!important;}
+#u3exam .cfu-q .qnum{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin-right:6px!important;}
+#u3exam .cfu-opts{list-style:none!important;padding:0!important;margin:0 0 10px!important;}
+#u3exam .cfu-opts li{padding:8px 14px!important;border:1px solid #E5E7EB!important;
+border-radius:6px!important;margin-bottom:6px!important;cursor:pointer!important;font-size:14px!important;
+color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;transition:background .15s!important;}
+#u3exam .cfu-opts li:hover{background:#F5F0FF!important;border-color:#A855F7!important;}
+#u3exam .cfu-opts li.selected{background:#EDE9FE!important;border-color:#7C3AED!important;}
+#u3exam .cfu-opts li.opt-correct{background:#DCFCE7!important;border-color:#16A34A!important;}
+#u3exam .cfu-opts li.opt-wrong{background:#FEE2E2!important;border-color:#DC2626!important;}
+#u3exam .cfu-feedback{font-size:13px!important;padding:10px 14px!important;border-radius:6px!important;
+margin-top:8px!important;display:none!important;line-height:1.5!important;}
+#u3exam .cfu-feedback.show{display:block!important;}
+#u3exam .cfu-feedback.fb-correct{background:#DCFCE7!important;color:#14532D!important;-webkit-text-fill-color:#14532D!important;border-left:3px solid #16A34A!important;}
+#u3exam .cfu-feedback.fb-wrong{background:#FEE2E2!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;border-left:3px solid #DC2626!important;}
+#u3exam .cfu-input{width:100%!important;padding:8px 12px!important;border:1px solid #E5E7EB!important;
+border-radius:6px!important;font-size:14px!important;font-family:'Georgia',serif!important;
+color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;margin-bottom:8px!important;}
+#u3exam .cfu-check-btn{background:#7C3AED!important;color:#fff!important;
+-webkit-text-fill-color:#fff!important;border:none!important;padding:8px 18px!important;
+border-radius:6px!important;font-size:13px!important;cursor:pointer!important;font-family:'Georgia',serif!important;font-weight:700!important;}
+#u3exam .cfu-check-btn:hover{background:#6B21A8!important;opacity:1!important;}
+#u3exam .match-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin-bottom:8px!important;}
+#u3exam .match-term{padding:8px 12px!important;background:#F5F0FF!important;border-radius:6px!important;font-size:14px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u3exam .match-select{padding:7px 10px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;font-size:14px!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;background:#fff!important;width:100%!important;}
+#u3exam .score-panel{background:#F5F0FF!important;border:2px solid #A855F7!important;
+border-radius:10px!important;padding:20px!important;text-align:center!important;margin:24px 0!important;display:none!important;}
+#u3exam .score-panel.show{display:block!important;}
+#u3exam .score-num{font-size:36px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u3exam .score-label{font-size:14px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin:4px 0 0!important;}
+#u3exam .submit-cfu-btn{display:block!important;width:100%!important;background:#6B21A8!important;
+color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:14px!important;
+border-radius:8px!important;font-size:15px!important;font-weight:700!important;cursor:pointer!important;
+font-family:'Georgia',serif!important;margin:16px 0!important;}
+#u3exam .submit-cfu-btn:hover{background:#7C3AED!important;opacity:1!important;}
+/* -- BOTTOM NAV -- */
+#u3exam .ucnav{display:flex!important;gap:10px!important;justify-content:space-between!important;
+align-items:center!important;padding:20px 0 0!important;border-top:1px solid #E5E7EB!important;margin-top:32px!important;}
+#u3exam .ucnav a{display:inline-block!important;padding:10px 20px!important;border-radius:8px!important;
+font-size:14px!important;font-weight:700!important;text-decoration:none!important;font-family:'Georgia',serif!important;}
+#u3exam a.ucnav-prev:link,#u3exam a.ucnav-prev:visited{background:#F9FAFB!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;border:1px solid #E5E7EB!important;}
+#u3exam a.ucnav-next:link,#u3exam a.ucnav-next:visited{background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u3exam a.ucnav-next:hover{background:#7C3AED!important;opacity:1!important;}
+#u3exam a.ucnav-prev:hover{background:#EDE9FE!important;opacity:1!important;}
+#u3exam .ucnav-hub{font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;text-align:center!important;}
+#u3exam .ucnav-hub a{color:#A855F7!important;-webkit-text-fill-color:#A855F7!important;text-decoration:none!important;font-size:13px!important;}
+</style>
+<div id=""u3exam"" data-lesson-id=""3.exam"">
+<p class=""breadcrumb"">
+  <a href=""/pages/ap-cybersecurity-complete-course-guide"">AP Cybersecurity Course</a> ›
+  Unit 3: Securing Networks › Unit Exam
+</p>
+<div class=""hero"">
+  <span class=""hero-badge"">Unit 3 • Final Exam</span>
+  <h1 class=""hero-title"">Unit 3 Exam: Securing Networks</h1>
+  <p class=""hero-sub"">20 questions • All 6 lessons • Predict before you click</p>
+</div>
+<div class=""body"">
+<div class=""obj-box"">
+  <p>🎓 Exam Overview</p>
+  <ul>
+    <li>
+<strong>20 MCQ</strong> — 4 options each, one correct</li>
+    <li>
+<strong>Topics:</strong> Network fundamentals, attacks, firewalls, segmentation, IDS/IPS/SIEM, secure protocols</li>
+    <li>
+<strong>Format:</strong> Matches AP Cybersecurity exam style — scenario-based, predict-first</li>
+    <li>
+<strong>Strategy:</strong> Predict the answer before reading options. Eliminate obviously wrong distractors first.</li>
+  </ul>
+</div>
+<div class=""cfu-item"" id=""u3exam-q1"">
+<p class=""cfu-q""><span class=""qnum"">1.</span> A Vantex analyst identifies that port 23 is open on a critical server. Which action reflects BOTH attack surface reduction AND the principle of least privilege?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,1,0,0)"" data-idx=""0"">Close port 23 entirely and use SSH (port 22) with key-pair authentication instead</li>
+<li onclick=""qzu3exam(this,1,1,0)"" data-idx=""1"">Configure Telnet to require a stronger password</li>
+<li onclick=""qzu3exam(this,1,2,0)"" data-idx=""2"">Move the server to the DMZ where Telnet is more appropriate</li>
+<li onclick=""qzu3exam(this,1,3,0)"" data-idx=""3"">Add a firewall rule permitting only the admin subnet to use port 23</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq1""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q2"">
+<p class=""cfu-q""><span class=""qnum"">2.</span> At which OSI layer does a switch make forwarding decisions based on MAC address tables?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,2,0,1)"" data-idx=""0"">Layer 1 (Physical)</li>
+<li onclick=""qzu3exam(this,2,1,1)"" data-idx=""1"">Layer 2 (Data Link)</li>
+<li onclick=""qzu3exam(this,2,2,1)"" data-idx=""2"">Layer 3 (Network)</li>
+<li onclick=""qzu3exam(this,2,3,1)"" data-idx=""3"">Layer 4 (Transport)</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq2""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q3"">
+<p class=""cfu-q""><span class=""qnum"">3.</span> Vantex runs a port scan on a newly deployed server and finds 14 open ports. After hardening, only 3 remain. A junior analyst says ‘closing those ports just makes things less convenient.’ Which rebuttal is MOST accurate?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,3,0,2)"" data-idx=""0"">The analyst is correct — open ports do not contribute to risk unless they have known CVEs</li>
+<li onclick=""qzu3exam(this,3,1,2)"" data-idx=""1"">Closing ports only reduces risk if the closed services had known vulnerabilities</li>
+<li onclick=""qzu3exam(this,3,2,2)"" data-idx=""2"">Each open port is a potential entry point for attack; 11 fewer ports means 11 fewer attack vectors to monitor, patch, and defend</li>
+<li onclick=""qzu3exam(this,3,3,2)"" data-idx=""3"">Port hardening only matters for internet-facing servers, not internal systems</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq3""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q4"">
+<p class=""cfu-q""><span class=""qnum"">4.</span> Vantex detects that all traffic from Finance workstations is routing through an unknown device before reaching the gateway. The most likely attack and its primary CIA impact is:</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,4,0,2)"" data-idx=""0"">DNS spoofing — targeting Availability</li>
+<li onclick=""qzu3exam(this,4,1,2)"" data-idx=""1"">DDoS — targeting Availability</li>
+<li onclick=""qzu3exam(this,4,2,2)"" data-idx=""2"">ARP poisoning enabling MitM — primarily targeting Confidentiality of intercepted traffic</li>
+<li onclick=""qzu3exam(this,4,3,2)"" data-idx=""3"">Packet sniffing — targeting Integrity of routing tables</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq4""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q5"">
+<p class=""cfu-q""><span class=""qnum"">5.</span> A SYN flood sends thousands of TCP SYN packets to Vantex's web server without completing the handshake. The server runs out of memory for half-open connections. This attack PRIMARILY targets:</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,5,0,3)"" data-idx=""0"">Confidentiality — the attacker reads SYN packet contents</li>
+<li onclick=""qzu3exam(this,5,1,3)"" data-idx=""1"">Integrity — the SYN packets corrupt the TCP state table permanently</li>
+<li onclick=""qzu3exam(this,5,2,3)"" data-idx=""2"">Authentication — SYN packets bypass login controls</li>
+<li onclick=""qzu3exam(this,5,3,3)"" data-idx=""3"">Availability — the server cannot serve legitimate users when connection tables are exhausted</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq5""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q6"">
+<p class=""cfu-q""><span class=""qnum"">6.</span> Which combination of controls BEST prevents both ARP poisoning and DNS spoofing on Vantex's internal network?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,6,0,1)"" data-idx=""0"">Stateful firewall + IDS</li>
+<li onclick=""qzu3exam(this,6,1,1)"" data-idx=""1"">Dynamic ARP Inspection (DAI) on switches + DNSSEC validation on DNS resolver</li>
+<li onclick=""qzu3exam(this,6,2,1)"" data-idx=""2"">HTTPS everywhere + WPA3 on Wi-Fi</li>
+<li onclick=""qzu3exam(this,6,3,1)"" data-idx=""3"">Port-based ACLs + packet filtering</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq6""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q7"">
+<p class=""cfu-q""><span class=""qnum"">7.</span> A firewall ACL has these rules in order: (1) Permit TCP any to 10.0.1.5 port 443. (2) Deny TCP 10.20.0.0/16 to 10.0.1.5. (3) Deny all. A host at 10.20.5.10 tries to connect to port 443 on 10.0.1.5. What happens?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,7,0,0)"" data-idx=""0"">Rule 1 permits it because rule 1 matches first and first-match wins</li>
+<li onclick=""qzu3exam(this,7,1,0)"" data-idx=""1"">Rule 2 denies it because the source is in 10.20.0.0/16</li>
+<li onclick=""qzu3exam(this,7,2,0)"" data-idx=""2"">Rule 3 denies it as the default</li>
+<li onclick=""qzu3exam(this,7,3,0)"" data-idx=""3"">Rules 1 and 2 conflict, so traffic is permitted by default</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq7""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q8"">
+<p class=""cfu-q""><span class=""qnum"">8.</span> Vantex's DMZ web server is compromised. The attacker tries to pivot to the internal HR database (192.168.10.50). Which DMZ design principle DIRECTLY limits this lateral movement?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,8,0,0)"" data-idx=""0"">The firewall between DMZ and internal network denies all traffic initiated from the DMZ to the internal network</li>
+<li onclick=""qzu3exam(this,8,1,0)"" data-idx=""1"">The DMZ web server uses HTTPS which prevents internal connections</li>
+<li onclick=""qzu3exam(this,8,2,0)"" data-idx=""2"">The web server's antivirus detects and blocks internal connection attempts</li>
+<li onclick=""qzu3exam(this,8,3,0)"" data-idx=""3"">The HR database's password prevents unauthorized access from the DMZ</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq8""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q9"">
+<p class=""cfu-q""><span class=""qnum"">9.</span> Vantex creates Finance (VLAN 10) and Guest (VLAN 20) on the same switch but does not configure inter-VLAN routing. A guest device tries to access a Finance server. What prevents this?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,9,0,3)"" data-idx=""0"">The Finance server's firewall blocks guest IPs</li>
+<li onclick=""qzu3exam(this,9,1,3)"" data-idx=""1"">The switch physically blocks cross-VLAN cables</li>
+<li onclick=""qzu3exam(this,9,2,3)"" data-idx=""2"">The guest device does not have a DNS entry for the Finance server</li>
+<li onclick=""qzu3exam(this,9,3,3)"" data-idx=""3"">VLANs are isolated broadcast domains — without inter-VLAN routing, the guest device cannot communicate with any device outside VLAN 20</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq9""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q10"">
+<p class=""cfu-q""><span class=""qnum"">10.</span> Micro-segmentation is deployed at Vantex such that each server is in its own security zone with default-deny rules. An attacker who compromises the Payments server attempts to access the HR database. Which statement is TRUE?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,10,0,2)"" data-idx=""0"">The attacker can pivot freely since both servers are on the internal network</li>
+<li onclick=""qzu3exam(this,10,1,2)"" data-idx=""1"">Micro-segmentation only restricts external connections, not internal server-to-server traffic</li>
+<li onclick=""qzu3exam(this,10,2,2)"" data-idx=""2"">The attacker is blocked unless there is an explicit firewall rule permitting Payments-to-HR traffic</li>
+<li onclick=""qzu3exam(this,10,3,2)"" data-idx=""3"">The HR database's own authentication prevents the pivot</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq10""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q11"">
+<p class=""cfu-q""><span class=""qnum"">11.</span> Vantex's IPS blocks a large batch of legitimate database queries, causing a finance report to fail. Investigation shows the queries matched an anomaly rule (5x normal volume due to quarter-end processing). This is a:</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,11,0,2)"" data-idx=""0"">True positive — the database was under attack during quarter-end</li>
+<li onclick=""qzu3exam(this,11,1,2)"" data-idx=""1"">False negative — the IPS missed the real attack</li>
+<li onclick=""qzu3exam(this,11,2,2)"" data-idx=""2"">False positive — the IPS blocked legitimate traffic based on anomaly detection</li>
+<li onclick=""qzu3exam(this,11,3,2)"" data-idx=""3"">True negative — no attack occurred and the IPS correctly allowed the traffic</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq11""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q12"">
+<p class=""cfu-q""><span class=""qnum"">12.</span> Vantex's SIEM correlates these events across 3 hours: 200 unique user accounts with 1 failed login each, all from IP 198.51.100.100. No single-account threshold is exceeded. Which rule would have caught this?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,12,0,1)"" data-idx=""0"">Per-account threshold: alert on 5+ failed logins per account in 5 minutes</li>
+<li onclick=""qzu3exam(this,12,1,1)"" data-idx=""1"">Aggregate rule: alert if a single source IP attempts authentication on more than 20 distinct accounts within 1 hour</li>
+<li onclick=""qzu3exam(this,12,2,1)"" data-idx=""2"">Anomaly rule: alert if any user logs in from a new country</li>
+<li onclick=""qzu3exam(this,12,3,1)"" data-idx=""3"">Signature rule: alert on known SQL injection strings in login requests</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq12""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q13"">
+<p class=""cfu-q""><span class=""qnum"">13.</span> An IDS generates an alert on real malware C2 traffic from a compromised Vantex workstation. The SOC analyst investigates 2 hours later. Which limitation does this scenario illustrate compared to an IPS?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,13,0,3)"" data-idx=""0"">The IDS signature was outdated and should have caught the traffic earlier</li>
+<li onclick=""qzu3exam(this,13,1,3)"" data-idx=""1"">The SIEM should have correlated the alert faster</li>
+<li onclick=""qzu3exam(this,13,2,3)"" data-idx=""2"">IDS cannot detect C2 traffic — only IPS can identify it</li>
+<li onclick=""qzu3exam(this,13,3,3)"" data-idx=""3"">IDS is passive — it alerts but does not block. An IPS would have dropped the C2 traffic automatically at the moment of detection, limiting exfiltration time to near zero</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq13""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q14"">
+<p class=""cfu-q""><span class=""qnum"">14.</span> Vantex switches from HTTP to HTTPS for all internal web applications. A colleague says ‘HTTPS means the sites are safe.’ Which precise correction is MOST accurate?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,14,0,1)"" data-idx=""0"">HTTPS means the site's content has been verified as safe by the CA</li>
+<li onclick=""qzu3exam(this,14,1,1)"" data-idx=""1"">HTTPS encrypts the connection between client and server and authenticates the server — it does not guarantee the site's content is benign or that the server is not malicious</li>
+<li onclick=""qzu3exam(this,14,2,1)"" data-idx=""2"">HTTPS prevents all forms of MitM attack including ARP poisoning</li>
+<li onclick=""qzu3exam(this,14,3,1)"" data-idx=""3"">HTTPS is only needed for sites handling passwords, not all internal applications</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq14""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q15"">
+<p class=""cfu-q""><span class=""qnum"">15.</span> Vantex uses site-to-site VPN between HQ and a branch office. The VPN uses IKEv1 and 3DES. What upgrade is MOST appropriate and why?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,15,0,0)"" data-idx=""0"">Upgrade to IKEv2 with AES-256-GCM — IKEv1 has known vulnerabilities and 3DES is deprecated</li>
+<li onclick=""qzu3exam(this,15,1,0)"" data-idx=""1"">Downgrade to IPsec transport mode — it is simpler than IKEv1 tunnel mode</li>
+<li onclick=""qzu3exam(this,15,2,0)"" data-idx=""2"">Add a second VPN tunnel for redundancy — 3DES is secure enough with two tunnels</li>
+<li onclick=""qzu3exam(this,15,3,0)"" data-idx=""3"">Enable split tunneling — it reduces the load on the 3DES cipher</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq15""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q16"">
+<p class=""cfu-q""><span class=""qnum"">16.</span> DNSSEC is configured on Vantex's domain. An employee's resolver validates DNSSEC. Which attack does this DIRECTLY prevent, and which does it NOT prevent?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,16,0,3)"" data-idx=""0"">Prevents: DNS query interception (privacy). Does NOT prevent: DNS cache poisoning</li>
+<li onclick=""qzu3exam(this,16,1,3)"" data-idx=""1"">Prevents: DDoS against Vantex's DNS servers. Does NOT prevent: DNS spoofing</li>
+<li onclick=""qzu3exam(this,16,2,3)"" data-idx=""2"">Prevents: Telnet-based DNS manipulation. Does NOT prevent: HTTPS certificate errors</li>
+<li onclick=""qzu3exam(this,16,3,3)"" data-idx=""3"">Prevents: DNS cache poisoning (forged responses are rejected). Does NOT prevent: an attacker reading which domains employees query</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq16""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q17"">
+<p class=""cfu-q""><span class=""qnum"">17.</span> A Vantex admin stores SSH private keys on their laptop without a passphrase. The laptop is stolen. What is the IMMEDIATE security impact?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,17,0,3)"" data-idx=""0"">No impact — SSH private keys are encrypted by the operating system by default</li>
+<li onclick=""qzu3exam(this,17,1,3)"" data-idx=""1"">The attacker must still brute-force the SSH server's password even with the private key</li>
+<li onclick=""qzu3exam(this,17,2,3)"" data-idx=""2"">The SSH server will detect and reject keys used from a new device automatically</li>
+<li onclick=""qzu3exam(this,17,3,3)"" data-idx=""3"">The attacker has immediate access to all servers the admin could reach via SSH, without needing any additional credentials</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq17""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q18"">
+<p class=""cfu-q""><span class=""qnum"">18.</span> Vantex implements the following controls: VLAN segmentation (Lesson 4), stateful firewall with default-deny (Lesson 3), IPS in the DMZ (Lesson 5), HTTPS everywhere (Lesson 6). An attacker breaches the DMZ web server via a zero-day. Which control MOST limits the blast radius?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,18,0,1)"" data-idx=""0"">HTTPS — prevents the attacker from reading intercepted traffic after breaching the server</li>
+<li onclick=""qzu3exam(this,18,1,1)"" data-idx=""1"">The stateful firewall with default-deny blocking all DMZ-to-internal traffic</li>
+<li onclick=""qzu3exam(this,18,2,1)"" data-idx=""2"">The IPS — it blocks the C2 traffic once the zero-day signature is published</li>
+<li onclick=""qzu3exam(this,18,3,1)"" data-idx=""3"">VLAN segmentation — the web server VLAN is isolated from all other VLANs</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq18""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q19"">
+<p class=""cfu-q""><span class=""qnum"">19.</span> A Vantex employee on Guest Wi-Fi (VLAN 20) launches an ARP poisoning attack to intercept Finance VLAN (VLAN 10) traffic. Which combination of controls prevents this attack?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,19,0,0)"" data-idx=""0"">Dynamic ARP Inspection on VLAN 20 + inter-VLAN firewall denying VLAN 20 to VLAN 10 + DAI on Finance VLAN</li>
+<li onclick=""qzu3exam(this,19,1,0)"" data-idx=""1"">HTTPS on all Finance applications + DNSSEC</li>
+<li onclick=""qzu3exam(this,19,2,0)"" data-idx=""2"">IDS monitoring + employee security training</li>
+<li onclick=""qzu3exam(this,19,3,0)"" data-idx=""3"">Port scanning + default-deny firewall rule</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq19""></div>
+</div>
+<div class=""cfu-item"" id=""u3exam-q20"">
+<p class=""cfu-q""><span class=""qnum"">20.</span> After completing a Unit 3 security review, Vantex's CISO asks: ‘Which single action provides the broadest improvement to Vantex's network security posture?’ Given all Unit 3 topics, which answer is MOST defensible?</p>
+<ul class=""cfu-opts"">
+<li onclick=""qzu3exam(this,20,0,2)"" data-idx=""0"">Replace all HTTP with HTTPS — encrypting traffic addresses the widest range of attacks</li>
+<li onclick=""qzu3exam(this,20,1,2)"" data-idx=""1"">Deploy an IPS in front of every server</li>
+<li onclick=""qzu3exam(this,20,2,2)"" data-idx=""2"">Implement a default-deny firewall policy with properly scoped rules — it enforces least privilege on all network traffic flows, reducing attack surface across all network zones simultaneously</li>
+<li onclick=""qzu3exam(this,20,3,2)"" data-idx=""3"">Enable DNSSEC on the primary domain</li>
+</ul>
+<div class=""cfu-feedback"" id=""fbu3examq20""></div>
+</div>
+<div class=""score-panel"" id=""score-u3exam"">
+  <div class=""score-num"" id=""snum-u3exam"">0/20</div>
+  <div class=""score-label"" id=""slbl-u3exam"">0 of 20 answered</div>
+</div>
+<div class=""ucnav"" id=""ucnav-bottom"">
+  <a href=""/pages/ap-cyber-unit-3-lesson-6-quiz"" class=""ucnav-prev"">← Lesson 3.6 Quiz</a>
+  <span class=""ucnav-hub""><a href=""/pages/ap-cybersecurity-complete-course-guide"">↩ Course Hub</a></span>
+  <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucnav-next"">Course Hub →</a>
+</div>
+</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var EXPS=['Closing port 23 eliminates the insecure protocol (attack surface reduction). Replacing with SSH using key pairs applies least privilege (encrypted, authenticated, minimal access). A firewall rule around an insecure protocol still leaves the protocol itself exposed to anyone who meets the rule.', 'Switches operate at Layer 2 (Data Link) and use MAC address tables (CAM tables) to forward frames to the correct port. Routers operate at Layer 3 using IP addresses. Port numbers are Layer 4.', 'Every open port is an attack surface entry point regardless of known CVEs. Unknown zero-days, misconfigurations, and service bugs all require an open port to be exploitable. Fewer open ports = smaller attack surface = less to defend.', 'Routing through an unknown device (unknown MAC claiming gateway IP) = ARP poisoning enabling MitM. The attacker can now read and modify Finance traffic. Primary impact: Confidentiality (traffic is intercepted) and potentially Integrity (traffic can be modified).', 'Resource exhaustion DoS targets Availability. The server\'s connection-state memory is consumed by half-open connections, preventing legitimate TCP sessions from being established. No data is stolen or corrupted — purely an availability attack.', 'DAI specifically validates ARP packets against DHCP binding tables, preventing ARP poisoning. DNSSEC validation on the resolver cryptographically verifies DNS responses, preventing cache poisoning. These are the targeted controls for each attack type respectively.', 'Rules evaluate top-to-bottom, first match wins. Rule 1 permits any source to port 443 on 10.0.1.5. 10.20.5.10 to port 443 matches rule 1 — permitted. Rule 2 is never evaluated. This is a common misconfiguration: the intended deny (rule 2) is unreachable because rule 1 is too broad.', 'The DMZ-to-internal firewall rule is the critical control. A properly configured DMZ firewall denies all outbound connections from DMZ servers to the internal network. A compromised DMZ server cannot initiate connections inward. This is the fundamental security property of a DMZ — blast radius containment.', 'VLANs create isolated broadcast domains at Layer 2. Without a router or Layer 3 switch performing inter-VLAN routing, there is no path between VLAN 10 and VLAN 20 regardless of physical connectivity. The isolation is logical, enforced by the switch\'s VLAN database.', 'Micro-segmentation applies default-deny between every zone. Without an explicit allow rule from the Payments zone to the HR zone, all traffic between them is dropped at the firewall. The attacker is contained to the Payments server\'s zone.', 'A false positive occurs when a security system blocks or alerts on legitimate activity. The quarter-end processing was expected and legitimate — the IPS anomaly rule had not accounted for seasonal volume spikes. The IPS\'s incorrect blocking is a false positive.', 'This is a low-and-slow credential stuffing attack — designed specifically to stay below per-account thresholds. An aggregate rule watching a single SOURCE IP across many accounts (not per account) detects the pattern. 200 accounts from one IP in 3 hours is unambiguous credential stuffing.', 'IDS detects and alerts; IPS detects AND blocks inline. During the 2-hour gap between IDS alert and analyst investigation, the C2 channel remained open — data continued to exfiltrate. An IPS would have blocked C2 traffic at the moment of detection, drastically reducing the attack window.', 'HTTPS provides: (1) encryption of data in transit, (2) server authentication via certificate. It does NOT certify that the site\'s content is safe or legitimate. A phishing site can have valid HTTPS. ‘Safe’ and ‘encrypted’ are different properties.', 'IKEv1 has known security weaknesses (vulnerable to attacks like ISAKMP fragmentation). 3DES was deprecated by NIST in 2017 due to SWEET32 vulnerability (birthday attack on 64-bit block ciphers). IKEv2 with AES-256-GCM (128-bit block, authenticated encryption) is the modern standard.', 'DNSSEC provides integrity verification — forged DNS responses fail the cryptographic signature check and are rejected (prevents cache poisoning). DNSSEC does NOT encrypt queries — an attacker on the network path can still see which domains are being resolved (no privacy). DNS-over-HTTPS or DNS-over-TLS provides query privacy.', 'An unencrypted SSH private key file is immediately usable. The attacker can use the stolen key to authenticate as the admin to any server that has the corresponding public key in its authorized_keys file — no password required. This is why SSH private keys MUST be protected with a passphrase (or stored in a hardware security key).', 'Once the web server is breached, HTTPS protects no internal data (attacker is ON the server). The IPS only helps after a signature update. The stateful firewall with default-deny blocking DMZ-to-internal traffic is the most direct blast-radius limiter — a compromised DMZ server cannot initiate connections to internal systems. This is the DMZ design principle: contain the breach.', 'Three controls work together: (1) DAI on both VLANs prevents ARP poisoning at the switch level (forged ARP replies are dropped). (2) Inter-VLAN firewall deny prevents any traffic from Guest VLAN reaching Finance VLAN even if ARP bypass were possible. (3) DAI on Finance VLAN prevents any rogue device on Finance VLAN from poisoning Finance hosts. Defense in depth.', 'Default-deny firewall policy with proper rules is the foundational control that underpins all others. It enforces least privilege at the network level — all traffic not explicitly permitted is blocked. This addresses attack surface (reduces exposed services), lateral movement (blocks unauthorized cross-zone traffic), and containment (limits breach propagation). HTTPS, IPS, and DNSSEC each address specific attacks; default-deny addresses all network traffic simultaneously.'];
+  var CORR=[0, 1, 2, 2, 3, 1, 0, 0, 3, 2, 2, 1, 3, 1, 0, 3, 3, 1, 0, 2];
+  var scores={};
+  window.qzu3exam=function(el,n,idx,correct){
+    var item=document.getElementById('u3exam-q'+n);
+    if(item.classList.contains('correct')||item.classList.contains('incorrect')) return;
+    var opts=item.querySelectorAll('.cfu-opts li');
+    opts.forEach(function(o){o.style.pointerEvents='none';});
+    opts[correct].classList.add('opt-correct');
+    var fb=document.getElementById('fbu3examq'+n);
+    scores[n]=(idx===correct)?1:0;
+    if(idx===correct){
+      el.classList.add('opt-correct');
+      item.classList.add('correct');
+      fb.className='cfu-feedback fb-correct show';
+      fb.innerHTML='<strong>Correct!</strong> '+EXPS[n-1];
+    } else {
+      el.classList.add('opt-wrong');
+      item.classList.add('incorrect');
+      fb.className='cfu-feedback fb-wrong show';
+      fb.innerHTML='<strong>Incorrect.</strong> '+EXPS[n-1];
+    }
+    var done=Object.keys(scores).length;
+    var earned=Object.values(scores).reduce(function(a,b){return a+b;},0);
+    var panel=document.getElementById('score-u3exam');
+    panel.classList.add('show');
+    document.getElementById('snum-u3exam').textContent=earned+'/20';
+    document.getElementById('slbl-u3exam').textContent=done+' of 20 answered';
+  };
+});
+</script>
+<div style=""background: linear-gradient(135deg, #1e3a8a 0%, #1f2937 100%); border-radius: 10px; padding: 1.75rem 2rem; margin: 2rem 0; display: block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-sizing: border-box;"">
+  <div style=""font-size: 12px; font-weight: 700; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.5rem; display: block;"">Free Tool</div>
+  <div style=""font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem; display: block; line-height: 1.3;"">AP Cybersecurity Score Calculator</div>
+  <div style=""font-size: 14px; color: #d1d5db; margin-bottom: 1.25rem; display: block; line-height: 1.6;"">Enter your MCQ and FRQ raw scores to instantly see your predicted AP grade (1–5) with personalized study tips.</div>
+  <a href=""/pages/ap-cybersecurity-score-calculator"" style=""display: inline-block; background: #fbbf24; color: #1e3a8a; padding: 12px 24px; border-radius: 6px; font-weight: 700; font-size: 14px; text-decoration: none; -webkit-text-fill-color: #1e3a8a;"">Calculate My Score →</a>
+</div>"
