@@ -144,7 +144,7 @@ No page or product rows changed.
 ## Artifact
 
 - Seed change + sheet, this repo, branch `claude/jolly-bell-vit1ra`: draft PR
-  (link below once opened).
+  https://github.com/codingclub12/apcsexamprep-progress-api/pull/619
 - Crawl output for tonight, not committed (too large, and per convention this
   is the kind of scratch artifact that stays in the scratchpad): shard 7/7,
   400/2099 URLs, 2 P0 (both live-verified false), 251 P1, 411 P2, 44 P3.
