@@ -253,6 +253,48 @@ ok('and the unmutated body is still clean, so the checks are not simply always r
   restyle.checkRow(S, LIVE, GOOD).length === 0,
   restyle.checkRow(S, LIVE, GOOD).join(' | '));
 
+// ── a rename is not a deletion, and the forgiveness for that has to stay narrow ─
+//  Rule 1 refuses a generated body that drops a link the live page carries, and
+//  until 2026-09-08 it compared link sets by string, so a repoint looked exactly
+//  like a deletion. The terminal lab moved from Topic 1.2 to Topic 4.3 and took
+//  its handle with it; Shopify holds a 301, the live hub bodies still carry the
+//  old handle because their repoint sheet has not been imported, and this rule
+//  refused a correct body.
+//
+//  config/page-renames.json closes that, and the risk in closing it is obvious:
+//  a rename table is one bad edit away from being a list of links you are allowed
+//  to delete. So the excuse is conditional on the rename's TARGET being present,
+//  and these five cases pin that shape rather than trusting the sentence above.
+//  Driven through checkRow directly with crafted bodies, so a failure here is
+//  about rule 1 and not about anything else the generator does.
+console.log('\nA RENAME IS NOT A DELETION');
+const RENAMES = require('../config/page-renames.json').renames;
+ok('config/page-renames.json carries at least one rename to test against',
+  RENAMES.length > 0, 'an empty table makes every case below vacuous');
+const RN = RENAMES[0];
+const href = (h) => `<a href="https://www.apcsexamprep.com/pages/${h}">x</a>`;
+const PROBE = { handle: 'rename-probe', assets: {} };
+const dropped = (live, next) =>
+  restyle.checkRow(PROBE, live, next).filter((r) => /would drop/.test(r));
+
+for (const [label, live, next, shouldRefuse] of [
+  ['a repoint onto the handle the old one redirects to is allowed',
+    href(RN.from), href(RN.to), false],
+  ['but deleting that same link outright is still refused',
+    href(RN.from), '<p>nothing</p>', true],
+  ['and dropping an unrelated link is still refused',
+    href('ap-cybersecurity-practice-exam'), '<p>nothing</p>', true],
+  ['keeping both handles is allowed',
+    href(RN.from), href(RN.from) + href(RN.to), false],
+  ['a rename target present does not excuse a DIFFERENT link going missing',
+    href(RN.from) + href('ap-cybersecurity-practice-exam'), href(RN.to), true],
+]) {
+  const got = dropped(live, next);
+  ok(label, (got.length > 0) === shouldRefuse,
+    'expected ' + (shouldRefuse ? 'refused' : 'allowed') + ', got '
+      + (got.length ? 'refused: ' + got[0].slice(0, 90) : 'allowed'));
+}
+
 console.log(`\n${pass} passed, ${fails.length} failed\n`);
 if (fails.length) {
   for (const f of fails) console.error(`  ${f}`);

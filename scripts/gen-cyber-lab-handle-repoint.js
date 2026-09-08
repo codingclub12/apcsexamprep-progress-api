@@ -29,8 +29,15 @@ const path = require('path');
 const sf = require('../lib/storefront-fetch');
 const { extract } = require('./extract-live-body');
 
-const OLD = 'ap-cyber-unit-1-lesson-2-terminal-lab';
-const NEW = 'ap-cyber-unit-4-lesson-3-terminal-lab';
+//  Read, not retyped. config/page-renames.json is the record of this rename and
+//  tools/ap-cyber-ced/generate-practice-restyle.js reads the same row to tell a
+//  repoint apart from a deletion. Two copies of a handle pair is how one of them
+//  gets fixed and the other does not.
+const RENAME = require('../config/page-renames.json').renames
+  .find((r) => r.to === 'ap-cyber-unit-4-lesson-3-terminal-lab');
+if (!RENAME) throw new Error('config/page-renames.json has no row for the terminal lab rename');
+const OLD = RENAME.from;
+const NEW = RENAME.to;
 const OUT = path.join(__dirname, '..', 'matrixify', 'cyber-lab-handle-repoint-pages.csv');
 
 const PAGES = [
