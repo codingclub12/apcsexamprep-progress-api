@@ -7,14 +7,15 @@
     {
       "kind": "suite",
       "name": "the labs suite, now running the locked branch rather than reading it",
-      "command": "npm run --silent smoke:labs",
-      "expect": "156 passed, 0 failed"
+      "command": "node scripts/gate-suite-floor.js labs 156",
+      "expect": "GATE OK",
+      "_why": "A floor rather than an exact count. The post-deploy run of this gate refused to ship over smoke:storefront reading 93 rather than 90, because main had gained one more live verifier and the guard covered it; the suite was green and the gate refused a correct deploy. Matching \", 0 failed\" alone would be the other mistake: a suite that quietly stopped running its assertions reports zero failures too. Green AND no smaller than when this was written."
     },
     {
       "kind": "suite",
       "name": "the storefront guard, extended in this branch and unaffected by the lab work",
-      "command": "npm run --silent smoke:storefront",
-      "expect": "90 passed, 0 failed"
+      "command": "node scripts/gate-suite-floor.js storefront 90",
+      "expect": "GATE OK"
     },
     {
       "kind": "rederive",
