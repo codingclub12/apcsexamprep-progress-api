@@ -383,6 +383,12 @@ const COLLECTIONS = [
     description: 'One-page AP Computer Science reference guides: Java syntax and methods for AP CSA, pseudocode and the 5 Big Ideas for AP CSP. Printable, for the May 2027 exams.',
     why: 'no meta description at all',
   },
+  {
+    handle: 'live-events',
+    title: 'AP CS Live Events: Bootcamps, Tutoring & Walkthroughs',
+    description: 'Live AP Computer Science instruction: FRQ bootcamps, exam bootcamps, written response walkthroughs and one-on-one tutoring for AP CSA and AP CSP students.',
+    why: 'no meta description at all; missed on 2026-09-05 when the other 7 collections were seeded',
+  },
 ];
 
 module.exports = { PAGES, PRODUCTS, COLLECTIONS };
