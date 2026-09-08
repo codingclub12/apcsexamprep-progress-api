@@ -1,0 +1,187 @@
+{
+  "change": "every cyber Command Center quiz row gains a second link, a teacher answer key served from quiz_bank behind a fail-closed endpoint, instead of the key living in the page a student can read",
+  "_context": [
+    "A quiz row on the Command Center offers one link, the student page. There is",
+    "nowhere on the hub to see the answers, so a teacher reads them out of the page",
+    "source, which is also where a student can read them.",
+    "",
+    "GET /api/quiz/:course/:unit/:lesson/:activity_type/key is the fix. It copies",
+    "the gate from routes/labs.js rather than inventing one: no token, an invalid",
+    "token, a student token, or a teacher with no live entitlement all get one",
+    "identical 403, so the route cannot be walked to find which locations carry a",
+    "bank. private, no-store, because routes/labs.js measured this CDN raising a",
+    "short max-age on a credential-varying response to its own four hour TTL.",
+    "",
+    "THE PART WORTH READING is not the endpoint, it is which rows get a button.",
+    "'Show a key wherever a bank exists' is wrong twice, and both ways are silent:",
+    "",
+    "  1. The row's number is not the bank's number. Unit 3 was renumbered onto the",
+    "     CED in the page BODIES and not in the Shopify handles, so the row shown as",
+    "     3.4 links to a page whose bank is 3.3. Keying on the row id opens a",
+    "     Segmentation key over a Firewalls quiz and nothing throws.",
+    "  2. A bank can exist and not be the quiz. Measured this day: cyber 1.3, 1.4",
+    "     and 1.5 have banks in production whose questions are NOT the ones their",
+    "     pages serve. They are re-authored quizzes waiting on the page mount",
+    "     (board 276). lock_enforceable already reads true for all three, because",
+    "     'a bank exists' is exactly what it tests, and that is not enough to",
+    "     publish a key on.",
+    "",
+    "So a button is emitted only where the page itself justifies it: it mounts that",
+    "bank, or every one of that bank's stems is on it. 19 of 25 rows qualify; the",
+    "other 6 get no button and the refusal is printed. The Matrixify sheet that adds",
+    "the buttons is a human import and is NOT part of this deploy.",
+    "",
+    "Two guards in this pass were HOLLOW until a mutation said so, and one draft",
+    "would have taken the whole Command Center down with a bare word after a",
+    "comment. All three were found by running things rather than reading them."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the key reaches an entitled teacher and nobody else, and says what the bank says",
+      "command": "npm run --silent smoke:quizkey",
+      "expect": "30 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "no row is offered a key to a quiz it is not the key to",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect": "32 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "a student-role token is accepted as a teacher",
+      "_why": "THE MUTATION THAT FOUND SOMETHING. Deleting this check first left the suite GREEN, because a real student's id is not in entitlements and the gate below refused it anyway. The role guard was being tested by accident. The suite now carries a token whose role is student and whose id is the entitled teacher's, which is the only case where the role claim is the last thing standing.",
+      "file": "routes/quiz.js",
+      "find": "  if (!payload || payload.role !== 'teacher' || !payload.id) return refuseKey(res);",
+      "replace": "  if (!payload || !payload.id) return refuseKey(res);",
+      "command": "npm run --silent smoke:quizkey",
+      "expect_failure": "refused on the ROLE alone"
+    },
+    {
+      "kind": "mutation",
+      "name": "the entitlement is not checked, so any teacher opens any course's keys",
+      "_why": "A teacher who bought CSA could read every AP Cybersecurity answer key. The fixture teacher is entitled to a DIFFERENT course, so a gate that only refuses the anonymous caller cannot pass this.",
+      "file": "routes/quiz.js",
+      "find": "  if (!entitlements.evaluateTeacherGate(payload.id, course)) return refuseKey(res);",
+      "replace": "  // entitlement check removed by mutation",
+      "command": "npm run --silent smoke:quizkey",
+      "expect_failure": "entitled to another course is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "the refusal says which reason it is, so the route can be walked",
+      "_why": "Five different refusals must be one string. A distinguishable 404 for 'no bank' turns the endpoint into a directory of which locations carry a quiz.",
+      "file": "routes/quiz.js",
+      "find": "  return res.status(403).json({ error: 'Not available.' });",
+      "replace": "  return res.status(403).json({ error: 'Not available.', at: Math.random() });",
+      "command": "npm run --silent smoke:quizkey",
+      "expect_failure": "every refusal reads the same"
+    },
+    {
+      "kind": "mutation",
+      "name": "the CDN is allowed to cache a credentialed key",
+      "_why": "routes/labs.js measured this edge inflating a short max-age to a four hour browser TTL on this origin. A cached key is one teacher's response served to the next caller.",
+      "file": "routes/quiz.js",
+      "find": "  res.set('Cache-Control', 'private, no-store');",
+      "replace": "  res.set('Cache-Control', 'public, max-age=300');",
+      "command": "npm run --silent smoke:quizkey",
+      "expect_failure": "never cached"
+    },
+    {
+      "kind": "mutation",
+      "name": "the key marks the first option correct instead of the keyed one",
+      "_why": "A key with the wrong answer is worse than no key: a teacher reads it aloud and nothing throws. The fixture's three answers sit at three different positions and the assertion compares option TEXT, because an index that matches is exactly what a reordering bug preserves.",
+      "file": "lib/quiz-answer-key.js",
+      "find": "    options: options.map((text, oi) => ({ text, correct: oi === correct })),",
+      "replace": "    options: options.map((text, oi) => ({ text, correct: oi === 0 })),",
+      "command": "npm run --silent smoke:quizkey",
+      "expect_failure": "the option text the bank keys as correct"
+    },
+    {
+      "kind": "mutation",
+      "name": "a correct_index pointing past the options renders a blank as the answer",
+      "_why": "A blank reads as 'no option is right' rather than as a bug, so this is a throw and not a degradation.",
+      "file": "lib/quiz-answer-key.js",
+      "find": "  if (!Number.isInteger(correct) || correct < 0 || correct >= options.length) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:quizkey",
+      "expect_failure": "out-of-range correct_index"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THE FEATURE RESTS ON: key the button on the row's own id",
+      "_why": "This is the obvious implementation and it is wrong for five of Unit 3's six rows. The row shown as 3.4 links to a page whose bank is 3.3, so a teacher opens Segmentation answers over a Firewalls quiz. It must go red.",
+      "file": "lib/cyber-cc-quiz-keys.js",
+      "find": "  const mount = mountLocation(pageBody);",
+      "replace": "  const mount = { course: 'ap-cybersecurity', unit: 'unit-' + lessonId.split('.')[0], lesson: lessonId, activity_type: 'quiz' };",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect_failure": "row 3.4 resolves to bank 3.3"
+    },
+    {
+      "kind": "mutation",
+      "name": "a bank that only partly matches the page is published anyway",
+      "_why": "This is the 1.3 case: a re-authored bank sharing one question with the instrument the page still serves. Four of five is a different instrument, not a near miss.",
+      "file": "lib/cyber-cc-quiz-keys.js",
+      "find": "  if (best.found < best.of) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect_failure": "a half-matching bank yields no key"
+    },
+    {
+      "kind": "mutation",
+      "name": "stems are compared with whitespace collapsed rather than removed",
+      "_why": "A SECOND MUTATION THAT FOUND SOMETHING. The first fixture for this rule was a stem broken across tags, which matches under either rule and proved nothing, so the mutation ran green over a real guard. The fixture is now the shape measured on the live 4.4 page: the bank has 'r.castellano.' and the page renders '<b>r.castellano</b>.', which strips to 'r.castellano .' Collapsing leaves a space the bank does not have and refuses an exact match.",
+      "file": "lib/cyber-cc-quiz-keys.js",
+      "find": "    .replace(/\\s+/g, '')",
+      "replace": "    .replace(/\\s+/g, ' ')",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect_failure": "punctuation sits against a tag still matches"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD HAVE TAKEN THE PAGE DOWN: close the region with a bare word",
+      "_why": "The first draft ended the injected region with MARK + ' end', emitting `/* apcs-quiz-key panel */ end`. A bare `end` is a valid expression statement, so it is NOT a syntax error and new Function() accepts it; it throws ReferenceError the instant the page's IIFE reaches it, aborting the whole Command Center render. Only executing the panel catches this, which is what section 8 does. scripts/cyber-lab-key-panel.js carried the identical bug since 2026-09-03, unshipped only because the live body predates it; fixed in the same pass.",
+      "file": "scripts/cyber-cc-quiz-key-panel.js",
+      "find": "    + '  ' + END + '\\n\\n';",
+      "replace": "    + '  ' + MARK + ' end\\n\\n';",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect_failure": "it executes in the closure the page provides"
+    },
+    {
+      "kind": "rederive",
+      "name": "the crosswalk derived a second way, from the CED rather than from the questions",
+      "_why": "lib/cyber-cc-quiz-keys.js answers by matching bank stems against the page. lib/cyber-quiz-lesson.js answers from config/cyber-topics.json cross-checked against the page h1, and never looks at a question. Two methods, no shared input beyond the handle. Where both can answer they must agree, and all five of Unit 3's off-by-one rows are among them. The taxonomy cannot answer for Unit 1 and most of Unit 2, whose handles it does not know on pages printing no topic number; those are reported unconfirmed rather than guessed.",
+      "command": "node scripts/rederive-cc-quiz-keys.js /tmp/cc-live.html",
+      "expect": "15 rows confirmed by both methods"
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet re-read as a CSV rebuilds the page it was generated from, byte for byte",
+      "_why": "Generation is not evidence that generation worked; the CSP sheet lost 90 bytes a page while every semantic check passed. This cuts the injected region out of the parsed-back body, undoes the two extended lines, and requires what is left to equal the input exactly. It found two defects on its first run: a stray newline left outside the region, and a div-count assertion that was too strict to be true.",
+      "command": "node scripts/verify-cc-quiz-key-sheet.js /tmp/cc-live.html /tmp/cc-quizkey.csv",
+      "expect": "27 passed, 0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "the key endpoint exists and refuses an anonymous caller, which it could not do yesterday",
+      "_why": "Measured before the merge: all three of these answered 404 {\"error\":\"Route not found: GET ...\"} because the route did not exist. After the deploy they answer 403. The assertion is false yesterday in both directions: 404 means no route, and a 200 would mean the gate is open and every student can read the key.",
+      "command": "for L in unit-1/1.1 unit-3/3.3 unit-5/5.1; do curl -sS --max-time 20 \"https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/$L/quiz/key\" -o /dev/null -w \"$L=%{http_code} \"; done; echo",
+      "expect": "unit-1/1.1=403 unit-3/3.3=403 unit-5/5.1=403"
+    },
+    {
+      "kind": "live",
+      "name": "every refusal is the same string, so production cannot be walked for banks",
+      "_why": "A location with a bank and a location without one must be indistinguishable to an anonymous caller. 9.9 has no bank; 5.1 has five questions. Checking only the successes would not notice the refusals had grown a reason.",
+      "command": "node -e \"(async()=>{const T=['unit-5/5.1','unit-9/9.9','unit-3/3.3'];const b=[];for(const t of T){const r=await fetch('https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/'+t+'/quiz/key');b.push(r.status+':'+JSON.stringify(await r.json().catch(()=>null)));}console.log('distinct='+new Set(b).size+' body='+b[0]);})()\"",
+      "expect": "distinct=1 body=403:{\"error\":\"Not available.\"}"
+    },
+    {
+      "kind": "live",
+      "name": "the render path is unchanged, so adding the key broke no quiz",
+      "_why": "The key route is a fifth path segment and cannot shadow the four-segment render route, but 'cannot' is what this repo keeps being wrong about. pool is anonymously visible and was 5 on all of these before the change.",
+      "command": "node -e \"(async()=>{const T=[['unit-1','1.1'],['unit-3','3.1a'],['unit-3','3.4'],['unit-5','5.6']];let n=0,leak=0;for(const [u,l] of T){const r=await fetch('https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/'+u+'/'+encodeURIComponent(l)+'/quiz');const j=await r.json().catch(()=>null);if(j&&j.pool===5)n++;if(JSON.stringify(j||{}).includes('correct_index'))leak++;}console.log('pool5='+n+'/4 leaked='+leak);})()\"",
+      "expect": "pool5=4/4 leaked=0"
+    }
+  ]
+}

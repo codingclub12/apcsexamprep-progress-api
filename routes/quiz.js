@@ -33,6 +33,9 @@ const { rollupScore } = require('../scoring');
 const { buildOrder, readOrder, sample } = require('../lib/quiz-order');
 const { resolveScopedGate, lockedForAnyClass } = require('../lib/activity-gate');
 const wire = require('../lib/wire-log');
+const entitlements = require('../lib/entitlements');
+const quizKey = require('../lib/quiz-answer-key');
+const { makeRateLimit } = require('../lib/rate-limit');
 
 // ── PREPARED STATEMENTS (module scope, reused) ────────────────────────────────
 const bankByLocationStmt = db.prepare(`
@@ -299,6 +302,97 @@ router.get('/:course/:unit/:lesson/:activity_type', renderStudent, (req, res) =>
   } catch (e) {
     console.error('Quiz render error:', e);
     res.status(500).json({ error: 'Failed to load quiz' });
+  }
+});
+
+// ── GET the teacher answer key ────────────────────────────────────────────────
+//
+//  The other half of a quiz link on the Command Center. A teacher assigning a
+//  quiz needs the stem, every option with the right one marked, and the reason,
+//  and until now the only place to get that was the page body, which is exactly
+//  where it must not be.
+//
+//  ── THE GATE ───────────────────────────────────────────────────────────────
+//  Copied deliberately from routes/labs.js rather than invented: no token, an
+//  invalid token, a STUDENT token, or a teacher with no live entitlement all
+//  receive one identical refusal, so the endpoint cannot be walked to find out
+//  which locations carry a bank. A missing bank returns the same refusal for
+//  the same reason, which is why it is checked after the credential and not
+//  before. That ordering is the opposite of the render route above, where a
+//  404 for an un-seeded location is the useful answer and there is nothing to
+//  protect.
+//
+//  Free units get no exception. Unit 1 being a free PREVIEW is a presentation
+//  rule about Drive links the Command Center prints in public HTML; a key
+//  served from here is real access control, and a preview is not a reason to
+//  hand a student the answers. Same reasoning renderResources() on that page
+//  already applies to the course-level documents.
+//
+//  ── NOT CACHED, AT ALL ─────────────────────────────────────────────────────
+//  private, no-store. The response varies by credential, and routes/labs.js
+//  records what this CDN does to a cacheable answer that varies that way: it
+//  raised a short max-age to its own four hour TTL and served one teacher's
+//  response to the next caller. no-store is the one value in that measurement
+//  that arrived intact, because it leaves the cacheable class rather than
+//  competing on TTL.
+const keyLimit = makeRateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 60,
+  message: 'Too many key requests. Please wait a few minutes and try again.',
+});
+
+const ALLOWED_KEY_ORIGINS = new Set([
+  process.env.APCS_STOREFRONT_ORIGIN || 'https://www.apcsexamprep.com',
+  'https://apcsexamprep.com',
+  'https://progress.apcsexamprep.com',
+]);
+
+// One refusal for every reason. See the gate note above.
+function refuseKey(res) {
+  return res.status(403).json({ error: 'Not available.' });
+}
+
+router.get('/:course/:unit/:lesson/:activity_type/key', keyLimit, (req, res) => {
+  res.set('Cache-Control', 'private, no-store');
+
+  const { course, unit, lesson, activity_type } = req.params;
+
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (!token) return refuseKey(res);
+
+  // The same role-agnostic verify routes/gate.js, files.js and labs.js make:
+  // one canonical secret in utils.js, and the payload's own role claim decides.
+  let payload = null;
+  try { payload = verifyStudentToken(token); } catch (e) { payload = null; }
+  if (!payload || payload.role !== 'teacher' || !payload.id) return refuseKey(res);
+  if (!entitlements.evaluateTeacherGate(payload.id, course)) return refuseKey(res);
+
+  if (!VALID_ACTIVITIES.has(activity_type)) return refuseKey(res);
+
+  const rows = bankByLocationStmt.all(course, unit, lesson, activity_type);
+  if (!rows.length) return refuseKey(res);
+
+  // Same-origin only for a credentialed read. The Command Center sends its
+  // teacher bearer from the storefront, so that one origin is named rather
+  // than wildcarded.
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_KEY_ORIGINS.has(origin)) {
+    res.set('Access-Control-Allow-Origin', origin);
+    res.set('Access-Control-Allow-Credentials', 'true');
+    res.set('Vary', 'Origin');
+  }
+
+  try {
+    const cfg = quizConfigStmt.get(course, unit, lesson, activity_type);
+    return res.json({
+      key: quizKey.build({ course, unit, lesson, activity_type }, rows, cfg),
+    });
+  } catch (e) {
+    // A malformed bank row. Say so rather than serving a key with a blank
+    // answer on it, which reads as "no correct option" instead of as a bug.
+    console.error('Quiz key build error:', e);
+    return res.status(500).json({ error: 'This key could not be built. The question bank has a bad row.' });
   }
 });
 

@@ -47,6 +47,14 @@ function labsByLesson() {
 }
 
 const MARK = '/* apcs-lab-key panel */';
+//  A COMMENT, not MARK + ' end'. That form emits `/* apcs-lab-key panel */ end`,
+//  and a bare `end` is a valid expression statement that throws ReferenceError
+//  the moment the IIFE reaches it, taking the whole Command Center render down
+//  with it. It is not a syntax error, so it survives every parse-level check.
+//  The live body predates this and closes on the bare comment, so production was
+//  never broken; the next regeneration would have been. Found 2026-09-08 by
+//  executing the generated panel rather than parsing it.
+const END = '/* apcs-lab-key panel end */';
 
 function panelCode(byLesson) {
   return '\n  ' + MARK + '\n'
@@ -148,7 +156,7 @@ function panelCode(byLesson) {
     + '    e.preventDefault();\n'
     + '    openLabKey(b.getAttribute("data-key-course"), b.getAttribute("data-key-item"));\n'
     + '  });\n'
-    + '  ' + MARK + ' end\n';
+    + '  ' + END + '\n';
 }
 
 function patch(body) {
