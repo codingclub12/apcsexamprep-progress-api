@@ -87,10 +87,10 @@
     },
     {
       "kind": "live",
-      "name": "seventeen banks are live and none of them leaks an answer key",
-      "_why": "Every one of these questions ships today in a public page body next to its key. Serving them from the bank is only an improvement if the payload withholds correct_index and explanation.",
-      "command": "node -e \"const T=[['unit-2','2.1'],['unit-2','2.2'],['unit-2','2.4'],['unit-3','3.1a'],['unit-3','3.1b'],['unit-3','3.2'],['unit-3','3.3'],['unit-3','3.4'],['unit-4','4.2'],['unit-4','4.3'],['unit-4','4.4'],['unit-5','5.1'],['unit-5','5.2'],['unit-5','5.3'],['unit-5','5.4'],['unit-5','5.5'],['unit-5','5.6']];(async()=>{let ok=0,leak=0;for(const [u,l] of T){const r=await fetch('https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/'+u+'/'+encodeURIComponent(l)+'/quiz');const j=await r.json().catch(()=>null);const qs=(j&&j.questions)||[];if(r.status===200&&qs.length===5)ok++;if(qs.some(q=>q.correct_index!==undefined||q.explanation!==undefined))leak++;}console.log('serving='+ok+'/17 leaking='+leak);})()\"",
-      "expect": "serving=17/17 leaking=0"
+      "name": "seventeen banks are live, sized 5, and anonymous gets no question from any of them",
+      "_why": "Asserted 'anonymous receives 5 questions' first, and that FAILED against a correct production: every one of the seventeen is locked for anonymous callers, which is the point of the anonymous gate shipped in #585. An anonymous caller who got five questions would be the defect. The loopback rehearsal passed only because a throwaway database has no classes and so no gate rows.\nroutes/quiz.js:249 looks the bank up BEFORE the gate and 404s an empty one, and the locked response still reports pool = rows.length. So pool is the anonymously visible proof the bank landed, and it is false before this deploy in both directions: these locations 404'd entirely, and the wrong reading of the handle would have put unit 3's pools on 3.2 to 3.5 instead of 3.1a to 3.4.",
+      "command": "node -e \"const T=[['unit-2','2.1'],['unit-2','2.2'],['unit-2','2.4'],['unit-3','3.1a'],['unit-3','3.1b'],['unit-3','3.2'],['unit-3','3.3'],['unit-3','3.4'],['unit-4','4.2'],['unit-4','4.3'],['unit-4','4.4'],['unit-5','5.1'],['unit-5','5.2'],['unit-5','5.3'],['unit-5','5.4'],['unit-5','5.5'],['unit-5','5.6']];(async()=>{let pool5=0,leaked=0,missing=0;for(const [u,l] of T){const r=await fetch('https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/'+u+'/'+encodeURIComponent(l)+'/quiz');if(r.status===404){missing++;continue;}const j=await r.json().catch(()=>null);if(j&&j.pool===5)pool5++;const qs=(j&&j.questions)||[];if(qs.length||qs.some(q=>q.correct_index!==undefined||q.explanation!==undefined))leaked++;}console.log('pool5='+pool5+'/17 missing='+missing+' leaked='+leaked);})()\"",
+      "expect": "pool5=17/17 missing=0 leaked=0"
     }
   ]
 }
