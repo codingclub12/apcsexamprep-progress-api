@@ -36,6 +36,7 @@
     "smoke:assistantdiag": "node smoke/assistant-diagnostics.js",
     "smoke:assistantkb": "node smoke/assistant-kb.js",
     "smoke:quizauthoring": "node smoke/quiz-bank-authoring.js",
+    "smoke:cyberquizlesson": "node smoke/cyber-quiz-lesson.js",
     "smoke:denomsafety": "node smoke/denominator-safety.js",
     "smoke:scoreeventsource": "node smoke/score-event-source.js",
     "smoke:ekprotect": "node smoke/ek-protection.js",
@@ -276,6 +277,7 @@
     "smoke:analysismutation": "node smoke/analysis-mutation.js",
     "verify:analysis": "node scripts/verify-analysis-live.js",
     "smoke:exercisekeys": "node smoke/exercise-key-labels.js",
+    "sweep:delivery": "node scripts/activity-delivery-sweep.js",
     "smoke:cyberu1nav": "node smoke/cyber-u1-nav.js"
   },
   "keywords": [],

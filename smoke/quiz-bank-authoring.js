@@ -56,8 +56,12 @@ const COURSE = 'ap-cybersecurity';
 const UNIT = 'unit-1';
 
 // A citation is teacher-register: an Essential Knowledge or Learning Objective
-// code, or the CED / CB shorthand for the College Board framework itself.
-const CITATION = /\bEK\b|\bLO\s*\d|\bCED\b|\bCB\b/;
+// code, a numbered CED code, or the CED / CB shorthand for the framework itself.
+// The rule is imported rather than restated. It was restated once, in the quiz
+// extractor, and that copy was narrower: it refused 2.3.B.8 and allowed "the AP
+// CED", so four unit-4 stems passed extraction carrying exactly what this suite
+// exists to catch. A pattern cannot tell you it has stopped agreeing with its twin.
+const { CITATION } = require('../lib/quiz-citation');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -85,6 +89,32 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
     ok(`lesson ${pack.location.lesson}: ${pack.questions.length} questions, 0 citations in prompts or options`,
       dirty.length === 0, dirty);
   }
+
+  console.log('\n-- 1b. the same rule, over EVERY bank this repo seeds --');
+  // Section 1 drives one course and one unit, because the render assertions
+  // below need a quiz route with pages behind it. The AUTHORING rule is not
+  // scoped that way: a citation in front of a student is the same defect in
+  // CSA, in cyber unit 5, and in whatever bank lands next. Sixteen cyber banks
+  // arrived on 2026-09-08 and not one of them was covered by anything above,
+  // which is exactly how the original defect got 27 pages deep.
+  const allDirty = [];
+  for (const pack of ALL_SOURCES) {
+    const where = `${pack.location.course}/${pack.location.unit}/${pack.location.lesson}`;
+    for (const q of pack.questions) {
+      if (CITATION.test(q.prompt)) allDirty.push({ where, qid: q.qid, field: 'prompt', text: q.prompt.slice(0, 70) });
+      q.options.forEach((o, i) => {
+        if (CITATION.test(o)) allDirty.push({ where, qid: q.qid, field: 'option ' + 'ABCDE'[i], text: String(o).slice(0, 70) });
+      });
+    }
+  }
+  ok(`${ALL_TOTAL} questions across ${ALL_SOURCES.length} locations, 0 citations in prompts or options`,
+    allDirty.length === 0, allDirty.slice(0, 10));
+  // A sweep that only ever reaches the scoped set is a duplicate of section 1
+  // wearing a wider name. This pins that it actually got past it, so trimming
+  // ALL_SOURCES later fails here rather than quietly narrowing the rule.
+  const beyondScope = ALL_SOURCES.filter(p => !(p.location.course === COURSE && p.location.unit === UNIT));
+  ok('the sweep reaches banks outside the scoped course and unit',
+    beyondScope.length > 0, { beyondScope: beyondScope.length, total: ALL_SOURCES.length });
 
   console.log('\n-- 2. explanations keep their citations (teacher-released only) --');
   const cited = SOURCES.flatMap(p => p.questions).filter(q => q.explanation && CITATION.test(q.explanation));

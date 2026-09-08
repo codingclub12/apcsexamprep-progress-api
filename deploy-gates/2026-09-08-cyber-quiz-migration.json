@@ -1,0 +1,96 @@
+{
+  "change": "seventeen cyber quiz pages move onto the server render path, and the lesson they file under stops coming from the handle",
+  "_context": [
+    "Units 2 to 5 each shipped their own answer key in the page body, so a teacher",
+    "locking a quiz locked a column and not the questions. Migrating the bank to",
+    "quiz_bank is what makes the lock enforceable; the Matrixify sheet that strips",
+    "the key from the page is a human import and is NOT part of this deploy.",
+    "",
+    "The defect worth reading is not the migration. The extractor read the lesson",
+    "out of the Shopify handle, which is right for Units 2, 4 and 5 and wrong for",
+    "every page in Unit 3: that unit was renumbered onto the Fall 2026 CED in the",
+    "page BODIES and not in the handles, so ap-cyber-unit-3-lesson-5-quiz is topic",
+    "3.4. Six banks were one lesson too high, 3.1a and 3.1b collapsed into one, and",
+    "nothing threw anywhere. It was caught by making two resolvers agree.",
+    "",
+    "A second defect came out of the same pass: smoke/quiz-bank-authoring.js and",
+    "the extractor each kept their own copy of the no-CED-citation rule, and the",
+    "extractor's was narrower. Four unit-4 stems saying 'according to the AP CED'",
+    "extracted clean. One module now, both callers."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the bank lands on the lesson the gradebook keys, agreed by two resolvers",
+      "command": "npm run --silent smoke:cyberquizlesson",
+      "expect": "13 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "no CED citation reaches a student, in ANY bank this repo seeds",
+      "command": "npm run --silent smoke:quizauthoring",
+      "expect": "41 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: read the lesson out of the handle",
+      "_why": "This is the state the extractor was in. Unit 3 files one lesson high and 3.1 collapses to a single column. It must go red.",
+      "file": "lib/cyber-quiz-lesson.js",
+      "find": "    lesson = t.lesson_ids[i >= 0 ? i : 0] || t.lesson_ids[0];",
+      "replace": "    lesson = `${unitNo}.${m[3]}`;",
+      "command": "npm run --silent smoke:cyberquizlesson",
+      "expect_failure": "{\"u3\":6,\"moved\":0}"
+    },
+    {
+      "kind": "mutation",
+      "name": "CED topic 3.1 collapses into one gradebook column",
+      "_why": "3.1 is taught over two pages and keys 3.1a and 3.1b. Pairing handle to lesson by position is what keeps them apart; take the first every time and a better score on one part masks the other.",
+      "file": "lib/cyber-quiz-lesson.js",
+      "find": "    const i = t.handles.indexOf(lessonHandle);",
+      "replace": "    const i = 0;",
+      "command": "npm run --silent smoke:cyberquizlesson",
+      "expect_failure": "{\"a\":\"3.1a\",\"b\":\"3.1a\"}"
+    },
+    {
+      "kind": "mutation",
+      "name": "a page that contradicts the taxonomy is guessed at rather than refused",
+      "_why": "One source is how the mis-filing happened. A disagreement means one of them moved, and either answer is a guess.",
+      "file": "lib/cyber-quiz-lesson.js",
+      "find": "  if (topic && printed && topic !== printed) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:cyberquizlesson",
+      "expect_failure": "a page whose h1 contradicts the taxonomy is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "a CED citation in a bank OUTSIDE the scoped course and unit",
+      "_why": "Section 1 of that suite drives ap-cybersecurity unit-1 only, so the seventeen banks added here were checked by nothing. Injecting a citation into every prompt in the new seed must be seen by the global sweep, and must NOT be seen by section 1, which is how the sweep is shown to be more than a second copy.",
+      "file": "seed/cyber-units-2-5-web-quizzes.js",
+      "find": "prompt: \"",
+      "replace": "prompt: \"According to the CED, ",
+      "command": "npm run --silent smoke:quizauthoring",
+      "expect_failure": "locations, 0 citations in prompts or options"
+    },
+    {
+      "kind": "live",
+      "name": "unit 3 serves the RENUMBERED lessons, which did not exist before this deploy",
+      "_why": "3.1b, 3.2, 3.3 and 3.4 all answered 404 in production before this change, and the handle-digit reading would have produced 3.2, 3.3, 3.4, 3.5 instead. This assertion is false yesterday in both directions.",
+      "command": "for L in 3.1a 3.1b 3.2 3.3 3.4; do curl -sS --max-time 20 \"https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/unit-3/$L/quiz\" -o /dev/null -w \"$L=%{http_code} \"; done; echo",
+      "expect": "3.1a=200 3.1b=200 3.2=200 3.3=200 3.4=200"
+    },
+    {
+      "kind": "live",
+      "name": "and 3.5 does NOT, because its page carries ten questions and was held back",
+      "_why": "A teacher bundle instrument is 9 to 24 items and every web quiz measured is 5 or 6. Over the ceiling is a refusal, so this stays 404 until a human says what that page is. A gate that only checked the successes would not notice the refusal had quietly stopped working.",
+      "command": "curl -sS --max-time 20 \"https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/unit-3/3.5/quiz\" -o /dev/null -w \"3.5=%{http_code}\\n\"",
+      "expect": "3.5=404"
+    },
+    {
+      "kind": "live",
+      "name": "seventeen banks are live and none of them leaks an answer key",
+      "_why": "Every one of these questions ships today in a public page body next to its key. Serving them from the bank is only an improvement if the payload withholds correct_index and explanation.",
+      "command": "node -e \"const T=[['unit-2','2.1'],['unit-2','2.2'],['unit-2','2.4'],['unit-3','3.1a'],['unit-3','3.1b'],['unit-3','3.2'],['unit-3','3.3'],['unit-3','3.4'],['unit-4','4.2'],['unit-4','4.3'],['unit-4','4.4'],['unit-5','5.1'],['unit-5','5.2'],['unit-5','5.3'],['unit-5','5.4'],['unit-5','5.5'],['unit-5','5.6']];(async()=>{let ok=0,leak=0;for(const [u,l] of T){const r=await fetch('https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/'+u+'/'+encodeURIComponent(l)+'/quiz');const j=await r.json().catch(()=>null);const qs=(j&&j.questions)||[];if(r.status===200&&qs.length===5)ok++;if(qs.some(q=>q.correct_index!==undefined||q.explanation!==undefined))leak++;}console.log('serving='+ok+'/17 leaking='+leak);})()\"",
+      "expect": "serving=17/17 leaking=0"
+    }
+  ]
+}
