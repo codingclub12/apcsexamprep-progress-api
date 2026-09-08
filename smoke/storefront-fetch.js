@@ -120,6 +120,54 @@ const libSrc = fs.readFileSync(path.join(__dirname, '..', 'lib', 'storefront-fet
 ok(!/Mozilla\/5\.0/.test(libSrc),
   '5.4 and the shared fetch itself sends none, which is the whole point');
 
+//  ── 5.5. and no verifier may hand-roll a storefront client at all ───────────
+//  5.3 asks whether the file MENTIONS lib/storefront-fetch.js, and a file can do
+//  that and still keep a fetch of its own beside it. verify-cyber-labs-live.js
+//  did exactly that until 2026-09-06: it went through the module for bodies and
+//  shelled out to curl for a redirect, because the module had nothing for a
+//  fetch with no body to judge. It does now, as sf.status.
+//
+//  This reads the ARGUMENT REGION of each client call rather than its line,
+//  because the url in that curl sat three lines below the word curl and any
+//  line-based rule walks straight past it. Calibrated against all three cases
+//  that exist here: the retired curl (must fire), the progress API curl in this
+//  same file (must not, different origin, not behind the bot management), and an
+//  href asserted inside a fetched body (must not, nothing is being fetched).
+const CLIENT_CALL = /\b(?:execFileSync|execSync|spawnSync|fetch|get|request)\s*\(/g;
+const STOREFRONT_HOST = /(?:^|[^.\w])(?:www\.)?apcsexamprep\.com/;
+function ownStorefrontFetches(code) {
+  const found = [];
+  let m;
+  CLIENT_CALL.lastIndex = 0;
+  while ((m = CLIENT_CALL.exec(code))) {
+    let open = m.index + m[0].length - 1, depth = 0, close = open;
+    for (; close < code.length; close++) {
+      if (code[close] === '(') depth++;
+      else if (code[close] === ')') { depth--; if (!depth) break; }
+    }
+    const args = code.slice(open, close + 1);
+    if (STOREFRONT_HOST.test(args) && !/progress\.apcsexamprep\.com/.test(args)) {
+      found.push(m[0] + ' ' + args.replace(/\s+/g, ' ').slice(0, 80));
+    }
+  }
+  return found;
+}
+//  A guard whose only evidence is a zero has not been shown to work. Fire it on
+//  the retired curl first, so 5.5's clean sweep means something.
+ok(ownStorefrontFetches(
+  "const r = require('child_process').execFileSync('curl',\n" +
+  "  ['-s', '-o', '/dev/null', '-w', '%{http_code}', '--max-time', '30',\n" +
+  "   'https://www.apcsexamprep.com' + path], { encoding: 'utf8' });").length === 1,
+  '5.5 the scan fires on the hand-rolled curl this rule was written for');
+for (const f of verifiers) {
+  const src = fs.readFileSync(path.join(dir, f), 'utf8');
+  const code = src.replace(/^\s*\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+  const own = ownStorefrontFetches(code);
+  ok(own.length === 0,
+    '5.6 ' + f + ' hand-rolls no storefront client of its own',
+    own.join('\n         '));
+}
+
 // ── 6. the sweeps are held to the same rule as the verifiers ─────────────────
 //  Section 5 scanned verify-*-live.js only, which is how five site sweeps kept
 //  their own fetch and their own spoofed User-Agent for three days after the

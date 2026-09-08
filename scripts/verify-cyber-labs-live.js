@@ -72,19 +72,15 @@ const auth = spec('ap-cybersecurity', '1.2-auth-lab');
 const perm = spec('ap-cybersecurity', '1.2-lab');
 const badge = spec('ap-cybersecurity', '2.4-lab');
 
-//  Both handles, by HTTP status alone. A redirect is the whole point here, so
-//  this deliberately does not follow it: lib/storefront-fetch refuses a body
-//  that is not a rendered page, and a 301 has no body to judge.
-function status(path) {
-  try {
-    const r = require('child_process').execFileSync('curl',
-      ['-s', '-o', '/dev/null', '-w', '%{http_code}', '--max-time', '30',
-       'https://www.apcsexamprep.com' + path], { encoding: 'utf8' });
-    return r.trim();
-  } catch (e) { return 'error'; }
-}
-const newHandleCode = status('/pages/ap-cyber-unit-4-lesson-3-terminal-lab');
-const oldHandleCode = status('/pages/ap-cyber-unit-1-lesson-2-terminal-lab');
+//  Both handles, by HTTP status alone, through the module rather than a curl of
+//  our own. This file shelled out to curl when it was written because
+//  lib/storefront-fetch.js had nothing for a fetch with no body to judge; it
+//  does now, and a second hand-rolled fetch is how the User-Agent rule got
+//  broken twenty eight times over.
+const newHandle = sf.status('/pages/ap-cyber-unit-4-lesson-3-terminal-lab');
+const oldHandle = sf.status('/pages/ap-cyber-unit-1-lesson-2-terminal-lab');
+const newHandleCode = newHandle.code;
+const oldHandleCode = oldHandle.code;
 
 const want = [
   // ── FALSE BEFORE THIS DEPLOY ──────────────────────────────────────────────
@@ -126,8 +122,11 @@ const want = [
   //  so both halves of the rename are asserted against the live storefront.
   ['the permissions lab serves at its new Unit 4 handle',
     () => newHandleCode === '200'],
-  ['and the old handle 301s rather than 404ing, so every inbound link survives',
-    () => oldHandleCode === '301'],
+  ['and the old handle 301s TO THE NEW ONE, so every inbound link survives',
+    () => oldHandleCode === '301'
+      && String(oldHandle.location || '').endsWith('/pages/ap-cyber-unit-4-lesson-3-terminal-lab')],
+  ['neither handle answer is the bot challenge wearing a status code',
+    () => !newHandle.challenged && !oldHandle.challenged],
   ['the badge log at 2.4 was not in scope and still serves',
     () => badge.code === '200' && badge.json && badge.json.lesson_id === '2.4'],
   //  This asserted BOTH cyber labs ungraded and went red on 2026-09-04, when the
