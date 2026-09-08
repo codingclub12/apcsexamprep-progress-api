@@ -265,7 +265,8 @@
     "analysis:extract": "node scripts/extract-analysis-spec.js",
     "smoke:analysisgate": "node smoke/analysis-gate.js",
     "smoke:analysismutation": "node smoke/analysis-mutation.js",
-    "verify:analysis": "node scripts/verify-analysis-live.js"
+    "verify:analysis": "node scripts/verify-analysis-live.js",
+    "sweep:delivery": "node scripts/activity-delivery-sweep.js"
   },
   "keywords": [],
   "author": "",
