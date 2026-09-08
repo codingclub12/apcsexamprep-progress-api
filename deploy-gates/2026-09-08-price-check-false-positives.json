@@ -1,0 +1,93 @@
+{
+  "change": "the price check counted a student's progress as a denominator, so fourteen of its seventeen rows were healthy work",
+  "_context": [
+    "Measured on production 2026-09-08, after the six real hits were fixed: every",
+    "remaining row was a false positive. The clearest is ap-csp bi-1 collaboration",
+    "quiz, which appeared THREE times on one healthy column, observed 1 and 3 and 5,",
+    "because three students answered 1, 3 and 5 of its 6 questions and stopped.",
+    "",
+    "The check compared the authored price against each student's own summed",
+    "max_points. That is a denominator only where a page reports its whole run in",
+    "one row under the reserved 'score' item. Where a page reports one row per",
+    "question, the sum is how far the student got.",
+    "",
+    "An alarm whose every row is healthy work is one people learn to skip, which is",
+    "the failure the reporter block next door was rewritten to avoid. The risk in",
+    "fixing it is the opposite one: two exclusions added to quiet an alarm is how an",
+    "alarm ends up never firing at all. Mutation three is aimed at exactly that."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the real mispricing still fires, and neither false-positive class does",
+      "command": "npm run --silent smoke:healthintegrity",
+      "expect": "44 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the gradebook readers of the same ledger are unmoved",
+      "command": "npm run --silent smoke:carrier",
+      "expect": "14 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation over raw rows still agrees cell for cell",
+      "command": "npm run --silent smoke:carrierrederive",
+      "expect": "two implementations, identical"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: compare every item, not just the whole-run carrier",
+      "_why": "This is the state production was in this morning. A per-question column comes back, and with it fourteen rows of healthy work.",
+      "file": "lib/health-integrity.js",
+      "find": "        WHERE item = '${REPORTER_TOTAL_ITEM}'",
+      "replace": "        WHERE item <> 'lesson-score'",
+      "command": "npm run --silent smoke:healthintegrity",
+      "expect_failure": "a PER-QUESTION column is never compared"
+    },
+    {
+      "kind": "mutation",
+      "name": "compare each student's own total instead of the column maximum",
+      "_why": "One student who abandoned a carrier page halfway would make a correct price look wrong. Different class from the one above, so it gets its own case.",
+      "file": "lib/health-integrity.js",
+      "find": "                 PARTITION BY course, unit, lesson, activity_type",
+      "replace": "                 PARTITION BY course, unit, lesson, activity_type, student_id",
+      "command": "npm run --silent smoke:healthintegrity",
+      "expect_failure": "one abandoned run does not make a correct price look wrong"
+    },
+    {
+      "kind": "mutation",
+      "name": "count every student, not only those who were served the maximum",
+      "_why": "The count is what a reader uses to judge how much of a class a row speaks for. Counting a student who abandoned the page as one who was served the full total overstates it.",
+      "file": "lib/health-integrity.js",
+      "find": "      WHERE t.possible = t.top",
+      "replace": "      WHERE 1 = 1",
+      "command": "npm run --silent smoke:healthintegrity",
+      "expect_failure": "and how many students recorded that total"
+    },
+    {
+      "kind": "mutation",
+      "name": "the alarm silenced altogether, which is what two new exclusions risk",
+      "_why": "Quieting a noisy check is one edit away from a check that never fires. The suite must go red when the REAL mispricing stops being reported, or these exclusions are unfalsifiable.",
+      "file": "lib/health-integrity.js",
+      "find": "        AND d.possible <> t.top",
+      "replace": "        AND d.possible = t.top",
+      "command": "npm run --silent smoke:healthintegrity",
+      "expect_failure": "the real mispricing is detected"
+    },
+    {
+      "kind": "live",
+      "name": "the three-row healthy column is gone from production",
+      "_why": "ap-csp bi-1 collaboration quiz is reported three times right now, observed 1, 3 and 5. It is one column and nothing is wrong with it.",
+      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const w=((JSON.parse(s).prices)||{}).worst||[];const hit=w.filter(x=>x.course==='ap-csp'&&x.lesson==='collaboration'&&x.activity_type==='quiz');console.log(hit.length?('STILL REPORTED '+JSON.stringify(hit)):'collaboration quiz not reported');})\"",
+      "expect": "collaboration quiz not reported"
+    },
+    {
+      "kind": "live",
+      "name": "and no column is reported more than once",
+      "_why": "Duplicate rows for one column were the visible shape of comparing per student. One column, one row, or the grouping is still wrong.",
+      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const w=((JSON.parse(s).prices)||{}).worst||[];const k=w.map(x=>[x.course,x.unit,x.lesson,x.activity_type].join('|'));const dup=k.filter((x,i)=>k.indexOf(x)!==i);console.log(dup.length?('DUPLICATED '+JSON.stringify(dup)):'one row per column');})\"",
+      "expect": "one row per column"
+    }
+  ]
+}
