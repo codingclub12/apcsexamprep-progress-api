@@ -1,0 +1,74 @@
+{
+  "change": "six AP Cyber 1.4 and 1.5 columns were priced at numbers their students were never served, worst of them an exercise priced 4 while 46 students were served 24",
+  "_context": [
+    "Found by /api/health prices on its first live read, 2026-09-07, not by a person.",
+    "That block was added the day before because a teacher had to read her own",
+    "gradebook carefully to notice the same shape on 1.1. Nobody reported these six.",
+    "",
+    "Three sources agree on 24 for every one of them, which is the bar this table",
+    "needs after the 1.1 exercise-2 price was authored off a single bad read:",
+    "  the page badge        \"3 Parts . 24 pts\"",
+    "  the page arithmetic   updateTotals/upd sum EVERY part into the element the",
+    "                        score reporter scrapes, and it renders \"/ 24\"",
+    "  the ledger            24, across 314 students on the six columns",
+    "",
+    "The middle source is the one an earlier crude sweep got wrong: it matched",
+    "\"/ 24\" in neighbouring markup and could not tell a PART total from a WHOLE",
+    "one, so it was refused as evidence at the time. Reading the routine that",
+    "writes the scraped element is what settles it."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the six are priced 24 and each is recorded as a correction naming what it replaced",
+      "command": "npm run --silent smoke:cyberdenoms",
+      "expect": "75 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "a correction lands on a stale row, leaves a hand edit alone, and regrades nobody",
+      "command": "npm run --silent smoke:denomcorrections",
+      "expect": "26 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "re-pricing cannot move a score already recorded",
+      "command": "npm run --silent smoke:denomsafety",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "a correction that fires whatever the stored row says",
+      "_why": "The from value is what stops a correction clobbering a price an operator authored by hand. Six new corrections make that guard carry six times the weight it did yesterday.",
+      "file": "scripts/seed-cyber-denominators.js",
+      "find": "      AND possible = @from`);",
+      "replace": "`);",
+      "command": "npm run --silent smoke:denomcorrections",
+      "expect_failure": "an operator value of 12 survives the seed"
+    },
+    {
+      "kind": "mutation",
+      "name": "a correction that disagrees with the table it corrects",
+      "_why": "POINTS and CORRECTIONS are two statements about one column. If they can disagree, a re-run flips the value back and forth forever and the gradebook changes under a teacher every deploy.",
+      "file": "scripts/seed-cyber-denominators.js",
+      "find": "    if (POINTS[c.key] !== c.to) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:denomcorrections",
+      "expect_failure": "a POINTS value that contradicts its correction throws"
+    },
+    {
+      "kind": "live",
+      "name": "production prices all six at 24, so none is still reported as disagreeing",
+      "_why": "Before this deploy /api/health named all six: 1.4 at 25/25/30, 1.5 at 4/4/30, against 24 in every case. The block reporting them is the check; it cannot pass by accident.",
+      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const w=((JSON.parse(s).prices)||{}).worst||[];const stale=w.filter(x=>x.course==='ap-cybersecurity'&&['1.4','1.5'].includes(x.lesson));console.log(stale.length?('STILL STALE '+JSON.stringify(stale)):'1.4 and 1.5 agree');})\"",
+      "expect": "1.4 and 1.5 agree"
+    },
+    {
+      "kind": "live",
+      "name": "and the boot seed says it corrected exactly the six",
+      "_why": "A correction that silently did nothing looks identical to one that ran. Six rows move on this deploy and none on the next, which is the idempotence claim measured rather than asserted.",
+      "command": "curl -sS --max-time 20 https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const c=((JSON.parse(s).seed||{}).seeds||{}).cyber_denominators||{};console.log('cyber_denominators corrected='+c.corrected);})\"",
+      "expect": "cyber_denominators corrected=6"
+    }
+  ]
+}
