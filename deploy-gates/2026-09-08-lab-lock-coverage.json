@@ -1,0 +1,86 @@
+{
+  "change": "cover the locked-lab branch of the player, which shipped on 2026-09-07 with no offline test behind it",
+  "_context": "routes/labs.js answers a closed lab 200 with {locked:true, lab:null} rather than 404, so the player can tell 'your teacher has not opened this' apart from 'this lab does not exist'. The player's branch for that landed in ab57fa7 together with the real bug it was part of (the spec fetch was anonymous, so the gate never saw the student). scripts/verify-lab-player-live.sh greps the deployed bytes for the locked message. Nothing ran the branch, and the half that breaks is invisible to a grep: the lab pages attach their offline fallback to .catch and replace the container wholesale, so a locked card drawn on a REJECTED promise is drawn and then painted over, and the student reads 'The practice service is not responding right now. Reload in a minute, or browse the other labs, which keeps working while this is down' about a lab a teacher closed on purpose. On 2026-09-08 all three AP Cybersecurity labs were closed to anonymous, so that link led to two more copies of the same card.",
+  "_why_no_live_check": "This change ships no behaviour. The branch it covers was already deployed and already correct, verified in a browser against the deployed player on 2026-09-08 (a signed-out visitor reads 'Your teacher has not opened this lab yet.', the offline card does not appear, no terminal is offered). A live assertion here would have passed yesterday, which this repo calls decoration rather than proof, so the second required kind is a rederive instead. scripts/verify-lab-lock-live.js is committed and registered as verify:lablock, but it belongs to the ONGOING watch, not to this gate: it is the check that catches the deploy where this stops being true.",
+  "_a_wrong_turn_worth_recording": "The session that wrote this first re-implemented the locked branch from scratch, having read public/lab-player.js on a branch 76 commits behind main. The file had no locked branch there. Measured against that stale copy in a browser, a signed-out student appeared to read the false outage card, and the finding was wrong. What settled it was running the DEPLOYED bytes rather than the working copy. Read the log before rebuilding, and when a check disagrees with a strong prior, suspect the instrument.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the labs suite, now running the locked branch rather than reading it",
+      "command": "npm run --silent smoke:labs",
+      "expect": "156 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the storefront guard, extended in this branch and unaffected by the lab work",
+      "command": "npm run --silent smoke:storefront",
+      "expect": "90 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation, in Python, reaches the same conclusion from the deployed bytes without running them",
+      "command": "python3 scripts/rederive-lab-lock.py",
+      "expect": "RE-DERIVED OK",
+      "_why": "smoke/labs.js and verify-lab-lock-live.js both execute the player under a DOM stub written in this repo, so a conclusion drawn only through it is the repo agreeing with itself. This reads the raw artifact in another language and asks a structural question instead: inside the spec handler, does the locked branch end in a return or a throw. It also caught its own first draft, which looked for a try/catch statement when the handler is a promise .catch and went red against a correct build."
+    },
+    {
+      "kind": "mutation",
+      "name": "the RESOLVE is what the suite actually protects, and only a mutation shows it",
+      "_why": "This is the one that matters. A player that draws the locked card and still rejects passes every assertion about what the card SAYS, and is broken on the live page because the fallback paints over it. This mutation reddens the resolve assertions and leaves every wording assertion green, which is the proof that they are independent rules rather than one rule counted twice.",
+      "file": "public/lab-player.js",
+      "find": "          return null;\n        }",
+      "replace": "          throw new Error(\"locked\");\n        }",
+      "command": "npm run --silent smoke:labs",
+      "expect_failure": "FAIL  a locked lab RESOLVES"
+    },
+    {
+      "kind": "mutation",
+      "name": "and the branch going missing entirely",
+      "file": "public/lab-player.js",
+      "find": "        if (spec && spec.locked) {\n          container.textContent = \"Your teacher has not opened this lab yet.\";\n          container.setAttribute(\"data-apcs-lab-locked\", \"1\");\n          return null;\n        }\n",
+      "replace": "",
+      "command": "npm run --silent smoke:labs",
+      "expect_failure": "FAIL  a locked lab RESOLVES"
+    },
+    {
+      "kind": "mutation",
+      "name": "the locked card borrowing the outage wording, asserted on its own rule",
+      "_why": "Independent of the resolve rules above. A card that resolves correctly and then tells the student to reload is the same wrong message by a different route.",
+      "file": "public/lab-player.js",
+      "find": "          container.textContent = \"Your teacher has not opened this lab yet.\";",
+      "replace": "          container.textContent = \"The practice service is not responding right now.\";",
+      "command": "npm run --silent smoke:labs",
+      "expect_failure": "FAIL  and reads nothing about an outage or reloading"
+    },
+    {
+      "kind": "mutation",
+      "name": "only the anonymous reason shape handled, so a signed-in lock falls through",
+      "_why": "Both shapes reach this branch by different strings. On the night this was written every live lock happened to be anonymous, so a branch that only handled that prefix would have satisfied every check run against production.",
+      "file": "public/lab-player.js",
+      "find": "        if (spec && spec.locked) {",
+      "replace": "        if (spec && spec.locked && /^anonymous-/.test(String(spec.reason || \"\"))) {",
+      "command": "npm run --silent smoke:labs",
+      "expect_failure": "FAIL  a lab closed for a signed-in student"
+    },
+    {
+      "kind": "mutation",
+      "name": "the player swallowing real failures, which would retire the outage card for real outages",
+      "_why": "The opposite overcorrection, and the likelier one, because it looks like robustness. A player that resolved on everything would pass every locked assertion above and leave a genuine outage rendering nothing.",
+      "file": "public/lab-player.js",
+      "find": "        container.textContent = \"This lab could not be loaded. \" + e.message;\n        throw e;",
+      "replace": "        container.textContent = \"This lab could not be loaded. \" + e.message;",
+      "command": "npm run --silent smoke:labs",
+      "expect_failure": "FAIL  a genuine failure still REJECTS"
+    },
+    {
+      "kind": "mutation",
+      "name": "the rederive's scan cannot pass on nothing",
+      "_why": "The hazard specific to a scanner: if the statement splitter yields an empty list, every rule that scans statements passes VACUOUSLY, and 'the locked branch does not throw or reject' comes back green against a branch that throws. That is why the emptiness assertion is in there, and this proves it is the thing holding the rest up. Six further mutations were run against the rederive out of band, through LAB_PLAYER_FILE, feeding it bytes broken six ways; each reddened its own rule and they are recorded in the run note.",
+      "file": "scripts/rederive-lab-lock.py",
+      "find": "    stmts = [x.strip() for x in body.strip(\"{} \\n\").split(\";\") if x.strip()]",
+      "replace": "    stmts = []",
+      "command": "python3 scripts/rederive-lab-lock.py",
+      "expect_failure": "FAIL  the locked branch is not empty"
+    }
+  ]
+}

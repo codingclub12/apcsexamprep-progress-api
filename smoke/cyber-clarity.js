@@ -31,7 +31,7 @@ const WP_RULE = '.wp{font-size:12px;font-weight:600;color:var(--navy)!important;
 const CC = [
   '<style>' + WP_RULE + '</style>',
   'var STU = {',
-  '  "1.2":{page:"/pages/x",termlab:"/pages/ap-cyber-unit-1-lesson-2-terminal-lab"},',
+  '  "1.2":{page:"/pages/x",termlab:"/pages/ap-cyber-unit-4-lesson-3-terminal-lab"},',
   '};',
   'var LABKEY = {"1.2":{"course":"ap-cybersecurity"}};',
   'note:"Unit 3 is taught in a flow-optimized sequence that differs from the CED\'s topic order — every lesson is tagged."',
@@ -56,7 +56,7 @@ console.log('\nTHE PACING PILLS');
   ok('a budget label explains what the numbers are', r.body.includes('Days set aside in this unit'));
   ok('the day counts still render from the data', r.body.includes("(u.labDays||0)"));
   ok('the em-dash in the Unit 3 note is gone', !r.body.includes('topic order —'));
-  ok('the terminal lab link survives', r.body.includes('termlab:"/pages/ap-cyber-unit-1-lesson-2-terminal-lab"'));
+  ok('the terminal lab link survives', r.body.includes('termlab:"/pages/ap-cyber-unit-4-lesson-3-terminal-lab"'));
   ok('the answer key panel survives', r.body.includes('LABKEY'));
   ok('a second run is a no-op, so a re-import is safe', clarity.patchPills(r.body).changed === false);
 

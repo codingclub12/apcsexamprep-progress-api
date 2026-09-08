@@ -75,15 +75,34 @@ const HEADER = ['Handle', 'Command', 'Body HTML'];
 const LINK = /href\s*=\s*["'](?:https?:\/\/[^/"']*apcsexamprep\.com)?\/pages\/([^"'#?]+)/gi;
 const linksIn = (body) => new Set([...String(body || '').matchAll(LINK)].map((m) => m[1]));
 
+//  Old handle to the handle it now redirects to. Read rather than written here,
+//  so a second rename is a data row and not another edit to this rule.
+const RENAMED_TO = Object.fromEntries(
+  require('../../config/page-renames.json').renames.map((r) => [r.from, r.to]));
+
 //  Every check that could refuse a row, in one place, so a caller cannot run
 //  the generator and skip the guard. Each returns a list of reasons.
 function checkRow(s, live, next) {
   const out = [];
 
   //  1. NO LINK MAY BE LOST. The whole point of a MERGE guard.
+  //
+  //  A RENAME IS NOT A DELETION, and this rule could not tell the difference
+  //  until 2026-09-08. The terminal lab moved from Topic 1.2 to Topic 4.3 and its
+  //  handle moved with it, through pageUpdate with redirectNewHandle, so Shopify
+  //  holds a 301 and every inbound link still resolves. The live hub bodies still
+  //  carry the old handle because their repoint sheet has not been imported yet.
+  //  So the generator emitted the new handle, this rule compared link sets by
+  //  string, and it refused a correct body for dropping a link that had in fact
+  //  been repointed at the same page.
+  //
+  //  The forgiveness is deliberately narrow: an old handle is excused ONLY when
+  //  the handle it was renamed to is present in the new body. Dropping the link
+  //  outright still fails, which is what keeps config/page-renames.json a record
+  //  of a fact rather than a list of exceptions.
   const before = linksIn(live);
   const after = linksIn(next);
-  const lost = [...before].filter((h) => !after.has(h));
+  const lost = [...before].filter((h) => !after.has(h) && !(RENAMED_TO[h] && after.has(RENAMED_TO[h])));
   if (lost.length) {
     out.push(`${s.handle} would drop ${lost.length} link(s) the live page has: ${lost.join(', ')}`);
   }
