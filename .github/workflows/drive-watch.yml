@@ -1,0 +1,206 @@
+name: Drive bundle watch
+
+# What is actually in the Drive bundles a teacher paid for.
+#
+# WHY THIS RUNS AT ALL
+#   The product ships as a Google Drive folder, and the repo had no idea what
+#   was in it. On 2026-09-08 the same Unit 1 lesson existed in two separately
+#   shared trees, one carrying four days of repairs and one still holding
+#   exercises with no code, and the only way to tell them apart was for a person
+#   to open folders one at a time. The zip being correct is not the same as the
+#   customer's folder being correct, and nothing measured the difference.
+#
+# WHY IT RUNS HERE AND NOT IN A SESSION
+#   Same reason as ced-watch.yml: Actions runners have open egress and a session
+#   goes through the agent proxy. Reading the whole bundle is also ~960 file
+#   downloads, which is a poor use of a session either way.
+#
+# IT NEEDS NO GOOGLE CREDENTIAL, AND THAT IS DELIBERATE
+#   Both bundles are shared "anyone with the link", so the watcher reads them
+#   exactly as a buyer does. A service account would authenticate past the very
+#   permission problem most likely to break a customer's copy.
+#
+# WHY THE ARTIFACT IS A PULL REQUEST
+#   Same as the CED watcher. The snapshot is committed, so git history is the
+#   record of what the customer could actually download and when, and an
+#   unacknowledged change keeps standing there rather than scrolling out of a log.
+
+on:
+  schedule:
+    # Mondays, 10:30 UTC (05:30 US Central). An hour after ced-watch so the two
+    # weekly readers do not land together, and clear of auto-dispatch at 06:00,
+    # the browser smoke at 07:00 and the board sweep at 08:00.
+    #
+    # schedule only fires from the DEFAULT BRANCH, so this does nothing until merged.
+    - cron: '30 10 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: drive-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  watch:
+    name: What is in the bundles
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Read the bundles
+        id: watch
+        run: |
+          # Not piped into tee. A pipeline reports TEE's status, which is how
+          # this workflow's sibling once shipped a dead script as a green tick.
+          set +e
+          node scripts/drive-watch.js > report.md 2> watch-err.log
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          cat report.md
+          tail -c 4000 watch-err.log >&2 || true
+
+      - name: Put the report in the job summary
+        if: always()
+        run: |
+          if [ -s report.md ]; then
+            cat report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### Drive watch produced no report"
+              echo ""
+              echo '```'
+              tail -c 2000 watch-err.log 2>/dev/null || echo "(no output at all)"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # Exit 1 means a bundle was unreadable or a folder would not parse. A green
+      # tick on a week that compared nothing is worse than no run at all.
+      - name: Fail loudly if a bundle could not be read
+        if: steps.watch.outputs.code == '1'
+        run: |
+          echo "::error title=Drive watch could not read a bundle::See the summary."
+          exit 1
+
+      # Keyed on real file changes, not on the exit code, for the same reason as
+      # ced-watch: the first run writes a whole baseline and must not re-create
+      # it every week, and an unreachable-bundle week must not open an empty PR.
+      - name: Is there anything to commit
+        id: diff
+        run: |
+          if [ -n "$(git status --porcelain -- docs/drive-snapshot)" ]; then
+            echo "dirty=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "dirty=no" >> "$GITHUB_OUTPUT"
+            echo "The bundles are byte-identical to last week. Nothing to open." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Open or update the snapshot PR
+        if: steps.diff.outputs.dirty == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH=drive-watch/snapshot
+
+          git config user.name  "drive-watch"
+          git config user.email "drive-watch@users.noreply.github.com"
+
+          # One long-lived branch, force-pushed. The interesting question is
+          # always "what is in the bundle now", never "what was in it in week 34".
+          git fetch origin "$BRANCH" || true
+          git checkout -B "$BRANCH"
+          git add docs/drive-snapshot
+          git commit \
+            -m "Drive watch: a teacher bundle changed" \
+            -m "Machine-written by scripts/drive-watch.js. The PR body carries what changed in the Drive folders a teacher can open."
+
+          git push --force-with-lease -u origin "$BRANCH"
+
+          head -c 55000 report.md > pr-body.md
+          {
+            echo ""
+            echo "---"
+            echo ""
+            echo "Opened by \`.github/workflows/drive-watch.yml\`. Merging accepts the new"
+            echo "snapshot as the baseline. Leaving it open keeps the change visible until"
+            echo "someone decides whether it was intended."
+            echo ""
+            echo "_Generated by [Claude Code](https://claude.ai/code)_"
+          } >> pr-body.md
+
+          EXISTING=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh pr edit "$EXISTING" --body-file pr-body.md
+            echo "Updated existing PR #$EXISTING." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # A missing "Allow GitHub Actions to create and approve pull requests"
+          # is a setting somebody has to tick, and the run is otherwise a
+          # complete success, so it warns and exits green with the compare link.
+          # Anything else is a real failure and still goes red. Same handling as
+          # ced-watch.yml, which learned this the hard way on its first run.
+          if err=$(gh pr create \
+              --head "$BRANCH" \
+              --title "Drive watch: a teacher bundle changed" \
+              --body-file pr-body.md \
+              --draft 2>&1); then
+            echo "Opened a new snapshot PR." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          COMPARE="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/${BRANCH}?expand=1"
+          if printf '%s' "$err" | grep -qi "not permitted to create or approve pull requests"; then
+            echo "::warning title=Drive watch could not open its PR::The snapshot is pushed to ${BRANCH}. Turn on Settings > Actions > General > Allow GitHub Actions to create and approve pull requests."
+            {
+              echo ""
+              echo "### The snapshot is saved, but the PR could not be opened"
+              echo ""
+              echo "Open it by hand: ${COMPARE}"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "::error title=Drive watch could not open its PR::${err}"
+          exit 1
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  This is the half that "connect the bundle to the command center" means.
+      #  source==drive, added to lib/command-checks.js for this. Its own source
+      #  rather than another linkcheck because the surface differs: a linkcheck
+      #  finding is a storefront page and routes to shopify, and a bundle
+      #  finding is a file in Drive. Filing one as the other sends whoever picks
+      #  it up to the wrong place. Bucket week, surface drive.
+      #
+      #  `if: always()` so it still reports after the fail-loudly step exits 1;
+      #  `job.status != 'cancelled'` so a cancelled run, which compared nothing,
+      #  reports neither pass nor fail; continue-on-error so the observer cannot
+      #  turn this red by itself; a missing TODO_KEY skips rather than fails.
+      - name: Report to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"drive\",\"check_id\":\"drive-watch\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"

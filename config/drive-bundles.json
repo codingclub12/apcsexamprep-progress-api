@@ -1,0 +1,36 @@
+{
+  "_comment": [
+    "The watch list for scripts/drive-watch.js. Every entry is a Drive folder that a",
+    "TEACHER HAS A LINK TO. That is the whole selection rule: this watches what a",
+    "customer can open, not what we meant to ship.",
+    "",
+    "WHY THIS EXISTS. On 2026-09-08 the same Unit 1 lesson existed in two separately",
+    "shared trees, one carrying the day's four repairs and one still holding",
+    "exercises with no code, and the only way to tell them apart was to open them.",
+    "A bundle that has been repaired in a zip is not a bundle that has been fixed.",
+    "",
+    "share: 'link' means anyone with the link can view, confirmed with",
+    "       get_file_permissions rather than assumed. A folder that is NOT shared",
+    "       does not belong here: watching a private draft generates diffs nobody",
+    "       needs to act on, and a watcher people ignore is worse than none.",
+    "",
+    "Do not add a folder you have not opened. Every id below was walked end to end",
+    "before it was added, and the walk is what produced docs/drive-snapshot/."
+  ],
+  "bundles": [
+    {
+      "slug": "ap-csa-teacher-bundle",
+      "name": "AP CSA Teacher Bundle",
+      "folder_id": "1HYnA1ZNByvHDBqlJGcbCT3lRC4PphbHV",
+      "share": "link",
+      "note": "The live product. Units 1 to 4, Course_Resources, Start_Here and How_To_Use_This_Course. Unit 1 received the 2026-09-07 repairs on 2026-09-08."
+    },
+    {
+      "slug": "ap-csa-unit1-course-preview",
+      "name": "AP CSA Unit 1 Course Preview_",
+      "folder_id": "1wLyRVqeMB0B2yn3UxMLPGoJfcD-FhrOV",
+      "share": "link",
+      "note": "A second, older, separately shared copy of Unit 1. Still held the pre-repair files on 2026-09-08: exercises with no code, quizzes with no answer options, notes cut mid-word. Watched because it is publicly linked, NOT because it is expected to match the bundle above. Whether it should is Tanner's call."
+    }
+  ]
+}
