@@ -206,54 +206,71 @@ console.log('\n6b. The reporter gap: graded work finished that never reports a s
 
 console.log('\n6b. A column priced at one number while students were served another');
 {
-  // The teacher's report of 2026-09-07, as data. She read both of these off her
-  // own gradebook and emailed about them, which is the detector this replaces.
+  // The teacher's report of 2026-09-07, as data, plus the two false-positive
+  // classes that made the first version of this check mostly noise. Every
+  // fixture below is a shape measured on production, not an invention.
   const denom = db.prepare(`INSERT OR REPLACE INTO course_denominators
     (course, unit, lesson, activity_type, possible) VALUES (?,?,?,?,?)`);
-  //  Two more students in the existing fixture class, because "how many
-  //  students were served the other number" is one of the assertions.
   const stu = db.prepare(`INSERT INTO students (id,class_id,display_name,pin_hash)
     VALUES (?, 'c-rep', ?, 'x')`);
-  stu.run('s-p1', 'S2');
-  stu.run('s-p2', 'S3');
+  for (const [id, nm] of [['s-p1', 'S2'], ['s-p2', 'S3'], ['s-p3', 'S4']]) stu.run(id, nm);
   const ev = db.prepare(`INSERT INTO score_events
     (id,student_id,class_id,course,unit,lesson,activity_type,item,points,max_points)
-    VALUES (?,?,?,'ap-cybersecurity','unit-1',?,?,?,?,?)`);
+    VALUES (?,?,'c-rep','ap-cybersecurity','unit-1',?,?,?,?,?)`);
 
-  //  Ex 2: priced 8, page rebuilt to 15 questions. Two students sat the new one.
-  denom.run('ap-cybersecurity', 'unit-1', '2.1', 'exercise-2', 8);
-  ev.run('pe-1', 's-p1', 'c-rep', '2.1', 'exercise-2', 'score', 12, 15);
-  ev.run('pe-2', 's-p2', 'c-rep', '2.1', 'exercise-2', 'score', 9, 15);
+  //  REAL. A whole-run carrier page: one row per student carrying the page's
+  //  own total. Priced 4, serving 24. This is 1.5 exercise-1, where 46 students
+  //  were shown their work out of 4.
+  denom.run('ap-cybersecurity', 'unit-1', '2.1', 'exercise-1', 4);
+  ev.run('pe-1', 's-p1', '2.1', 'exercise-1', 'score', 18, 24);
+  ev.run('pe-2', 's-p2', '2.1', 'exercise-1', 'score', 20, 24);
+  //  A third student abandoned this one partway, so their row carries a smaller
+  //  total. They must not be counted among the students who were served 24: the
+  //  count is what a reader uses to judge how much of a class a row speaks for.
+  ev.run('pe-2b', 's-p3', '2.1', 'exercise-1', 'score', 4, 10);
 
-  //  Ex 1: priced 7, and correct. One run, reported by BOTH writers, which is
-  //  the case that used to read as 14 and must not be reported as a conflict now.
-  denom.run('ap-cybersecurity', 'unit-1', '2.2', 'exercise-1', 7);
-  ev.run('pe-3', 's-p1', 'c-rep', '2.2', 'exercise-1', 'redflags', 7, 7);
-  ev.run('pe-4', 's-p1', 'c-rep', '2.2', 'exercise-1', 'score', 7, 7);
+  //  FALSE, class one: PER-QUESTION reporting. Three students answered 1, 3 and
+  //  5 of a 6 question quiz and stopped. Measured on ap-csp bi-1 collaboration
+  //  quiz, which produced three rows on one healthy column.
+  denom.run('ap-cybersecurity', 'unit-1', '2.2', 'quiz', 6);
+  let n = 0;
+  for (const [sid, answered] of [['s-p1', 1], ['s-p2', 3], ['s-p3', 5]]) {
+    for (let q = 1; q <= answered; q++) ev.run('pq-' + (++n), sid, '2.2', 'quiz', 'q' + q, 1, 1);
+  }
 
-  //  A lesson visit priced by mistake is not a graded column and never a
-  //  conflict, the same line the block above draws.
-  denom.run('ap-cybersecurity', 'unit-1', '2.3', 'lesson', 10);
-  ev.run('pe-5', 's-p1', 'c-rep', '2.3', 'lesson', 'score', 3, 4);
+  //  FALSE, class two: one student ABANDONED a carrier page halfway. The page
+  //  still says 24; their row must not make a correct price look wrong.
+  denom.run('ap-cybersecurity', 'unit-1', '2.3', 'exercise-1', 24);
+  ev.run('pe-3', 's-p1', '2.3', 'exercise-1', 'score', 24, 24);
+  ev.run('pe-4', 's-p2', '2.3', 'exercise-1', 'score', 5, 12);
+
+  //  A lesson visit priced by mistake is not graded work and never a conflict.
+  denom.run('ap-cybersecurity', 'unit-1', '2.4', 'lesson', 10);
+  ev.run('pe-5', 's-p1', '2.4', 'lesson', 'score', 3, 4);
 
   integrity.resetCache();
   const p = integrity.priceIntegrity({ force: true });
-  ok('  the stale price is detected', p && p.columns >= 1, p);
-  const e2 = p && p.worst.find((w) => w.lesson === '2.1' && w.activity_type === 'exercise-2');
+  const at = (lesson) => (p.worst || []).find((w) => w.lesson === lesson);
+
+  ok('  the real mispricing is detected', !!at('2.1'), p.worst);
   ok('  it names both numbers, not just that they differ',
-    e2 && e2.authored === 8 && e2.observed === 15, e2);
-  ok('  and how many students were served the other one', e2 && e2.students === 2, e2);
+    at('2.1') && at('2.1').authored === 4 && at('2.1').observed === 24, at('2.1'));
+  ok('  and how many students recorded that total', at('2.1') && at('2.1').students === 2, at('2.1'));
   ok('  ok is false while any column disagrees', p && p.ok === false, p);
-  ok('  two writers on one run are NOT a conflict, because the carrier is dropped',
-    p && !p.worst.some((w) => w.lesson === '2.2'), p && p.worst);
-  ok('  and a lesson visit is never a priced column',
-    p && !p.worst.some((w) => w.activity_type === 'lesson'), p && p.worst);
+
+  ok('  a PER-QUESTION column is never compared, however far students got',
+    !at('2.2'), at('2.2'));
+  ok('  and one abandoned run does not make a correct price look wrong',
+    !at('2.3'), at('2.3'));
+  ok('  a lesson visit is never a priced column',
+    !(p.worst || []).some((w) => w.activity_type === 'lesson'), p.worst);
+  ok('  so the only row is the real one', p.columns === 1, p.worst);
 
   // Correcting the price closes it, with no edit to this file.
-  denom.run('ap-cybersecurity', 'unit-1', '2.1', 'exercise-2', 15);
+  denom.run('ap-cybersecurity', 'unit-1', '2.1', 'exercise-1', 24);
   integrity.resetCache();
   const after = integrity.priceIntegrity({ force: true });
-  ok('  re-pricing the column clears it', after && !after.worst.some((w) => w.lesson === '2.1'), after);
+  ok('  re-pricing the column clears it', after && after.ok === true, after);
 }
 
 console.log('\n7. It degrades to absent, never to a wrong answer');

@@ -328,6 +328,100 @@ console.log('\nHUB AND COMMAND CENTER LINKS');
   }
 }
 
-console.log(`\n${pass} passed, ${fail} failed`);
-try { fs.unlinkSync(process.env.DB_PATH); } catch (e) {}
-process.exit(fail ? 1 : 0);
+// ── a closed lab must read as closed, not as an outage ───────────────────────
+//  The branch this covers already shipped, in ab57fa7 on 2026-09-07, together
+//  with the real bug it was part of: the player asked for the spec anonymously,
+//  so the server could not tell an enrolled student from a visitor and every
+//  lab resolved as self-study while a teacher watched her closed lab open.
+//  scripts/verify-lab-player-live.sh checks the deployed asset for that, and
+//  this suite is not a second opinion about it.
+//
+//  What is covered here is the property that verifier cannot see. It greps the
+//  deployed bytes for the locked message, and its own header records the first
+//  draft grepping for "Authorization" and passing against the broken build. A
+//  grep can prove a string shipped. It cannot prove mountById RESOLVES, and that
+//  is the half a regression would land on: the lab pages wrap the mount in their
+//  own offline fallback, attached to .catch, which replaces the container
+//  wholesale. A locked card drawn on a rejected promise is drawn and painted
+//  over, and the student reads "The practice service is not responding right
+//  now. Reload in a minute", about a lab a teacher closed on purpose. So this
+//  runs the player and asserts how the promise settles.
+//
+//  Measured against production 2026-09-08: all three AP Cybersecurity labs were
+//  closed to anonymous (two closed-for-activity, one closed-for-lesson) while
+//  all four AP Networking labs were open, so this path is live, not theoretical.
+console.log('\nLOCKED LABS');
+
+//  The stub's textContent is per-node, so read the tree the way a reader would.
+function renderedText(node) {
+  let out = node.textContent || '';
+  for (const c of node.children || []) out += renderedText(c);
+  return out;
+}
+//  Serve one canned body to the player's own fetch and report how mountById
+//  SETTLED. Settled, not "did it render": that is the property under test.
+async function mountWith(body, httpOk) {
+  const container = makeNode('div');
+  const attrs = {};
+  container.setAttribute = (k, v) => { attrs[k] = v; };
+  global.fetch = () => Promise.resolve({
+    ok: httpOk !== false,
+    status: httpOk === false ? 404 : 200,
+    json: () => Promise.resolve(body),
+  });
+  let rejected = null;
+  try { await APCSLab.mountById(container, 'ap-cybersecurity', '1.2-lab'); }
+  catch (e) { rejected = e; }
+  global.fetch = () => Promise.reject(new Error('smoke: no network'));
+  return { text: renderedText(container), rejected, attrs };
+}
+
+//  The words the lab pages' own offline fallback uses. A locked card carrying
+//  any of them is telling a student to reload something a reload cannot fix.
+const OUTAGE_WORDS = ['not responding', 'Reload in a minute', 'on our side'];
+
+(async () => {
+  const anon = await mountWith({ course: 'ap-cybersecurity', item_id: '1.2-lab',
+    locked: true, reason: 'anonymous-closed-for-activity', lab: null });
+  ok(anon.rejected === null,
+    'a locked lab RESOLVES, so the page fallback cannot paint over the card',
+    anon.rejected ? 'rejected with: ' + anon.rejected.message : '');
+  ok(/not open|closed/i.test(anon.text),
+    'and a student reads that the lab is not open', anon.text.slice(0, 160));
+  ok(!OUTAGE_WORDS.some((w) => anon.text.indexOf(w) !== -1),
+    'and reads nothing about an outage or reloading', anon.text.slice(0, 160));
+  ok(anon.attrs['data-apcs-lab-locked'] === '1',
+    'the container is marked locked for anything reading the rendered page');
+
+  //  Signed in and closed for their class reaches the same branch by a different
+  //  reason string. Asserted separately so a branch that only handled the
+  //  anonymous shape could not pass on the strength of the one above.
+  const student = await mountWith({ course: 'ap-cybersecurity', item_id: '1.2-lab',
+    locked: true, reason: 'closed-for-activity', lab: null });
+  ok(student.rejected === null && /not open|closed/i.test(student.text),
+    'a lab closed for a signed-in student resolves and reads the same way',
+    student.text.slice(0, 160));
+
+  //  The other half. A player that resolved on everything would pass all of the
+  //  above and quietly retire the outage card for real outages.
+  const broken = await mountWith({ error: 'no such lab' }, false);
+  ok(broken.rejected !== null,
+    'a genuine failure still REJECTS, so the page keeps its outage fallback');
+
+  //  A locked response carries no lab, so this hands the player one that wrongly
+  //  does and requires none of it through. Written with a canary rather than by
+  //  looking for words like "checks" in the normal card: a rule coupled to the
+  //  copy goes red when the copy changes, which is not what it claims to test.
+  const CANARY = 'SPEC-CONTENT-THAT-MUST-NOT-RENDER';
+  const leaky = await mountWith({ course: 'ap-cybersecurity', item_id: '1.2-lab',
+    locked: true, reason: 'anonymous-closed-for-activity', lab: null,
+    title: CANARY, est_minutes: 20, points: 8,
+    checks: [{ n: 1, label: CANARY }], hosts: { local: {} } });
+  ok(leaky.text.indexOf(CANARY) === -1,
+    'a locked response renders no lab even when one is attached to it',
+    leaky.text.slice(0, 160));
+
+  console.log(`\n${pass} passed, ${fail} failed`);
+  try { fs.unlinkSync(process.env.DB_PATH); } catch (e) {}
+  process.exit(fail ? 1 : 0);
+})();

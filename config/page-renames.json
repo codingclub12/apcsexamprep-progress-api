@@ -1,0 +1,16 @@
+{
+  "_what": "Shopify page handles that changed, and the handle each one now redirects to.",
+  "_why": "A renamed handle looks exactly like a deleted one to any check that compares link sets by string. tools/ap-cyber-ced/generate-practice-restyle.js refuses a generated body that drops a link the live page carries, which is the right rule and the whole point of a MERGE guard, and on 2026-09-08 it refused a correct body: the Unit 1 practice hub still carries the terminal lab's OLD handle, the generator emits the new one, and the rule read a repoint as a deletion. A rename is not a deletion and nothing in the repo said so.",
+  "_bounds": "This forgives a lost link ONLY when the rename's target is present in the new body. Dropping the link entirely still fails, which is what keeps this a fact rather than an escape hatch.",
+  "_lifecycle": "A row can be pruned once every live body has been repointed and the fixtures under smoke/fixtures/live-bodies/ refreshed. Leaving it costs nothing: it only ever matches a handle that is no longer authored anywhere.",
+  "renames": [
+    {
+      "from": "ap-cyber-unit-1-lesson-2-terminal-lab",
+      "to": "ap-cyber-unit-4-lesson-3-terminal-lab",
+      "at": "2026-09-07",
+      "why": "The permissions terminal lab teaches CED Topic 4.3 and was filed under Topic 1.2. Renamed through pageUpdate with redirectNewHandle, so Shopify holds a 301 and every inbound link still resolves.",
+      "sheet": "matrixify/cyber-lab-handle-repoint-pages.csv",
+      "live_bodies_repointed": false
+    }
+  ]
+}

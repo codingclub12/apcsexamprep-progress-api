@@ -41,6 +41,7 @@ const drift = fs.readFileSync(path.join(wfDir, 'deploy-drift.yml'), 'utf8');
 const board = fs.readFileSync(path.join(wfDir, 'verify-board.yml'), 'utf8');
 const autoDispatch = fs.readFileSync(path.join(wfDir, 'auto-dispatch.yml'), 'utf8');
 const cedWatch = fs.readFileSync(path.join(wfDir, 'ced-watch.yml'), 'utf8');
+const driveWatch = fs.readFileSync(path.join(wfDir, 'drive-watch.yml'), 'utf8');
 const nightlySweep = fs.readFileSync(path.join(wfDir, 'nightly-sweep.yml'), 'utf8');
 const railwayDeploy = fs.readFileSync(path.join(wfDir, 'railway-deploy.yml'), 'utf8');
 const siteAudit = fs.readFileSync(path.join(wfDir, 'site-audit.yml'), 'utf8');
@@ -136,6 +137,11 @@ console.log('\n7. The seven workflows board task 166 found silent now all reach 
 const PLAIN_REPORTERS = [
   { name: 'auto-dispatch.yml', text: autoDispatch, source: 'health', checkId: 'auto-dispatch' },
   { name: 'ced-watch.yml', text: cedWatch, source: 'linkcheck', checkId: 'ced-watch' },
+  //  Added with the workflow itself. This list is hand-maintained, so a new
+  //  reporter is invisible to section 7 until somebody adds it, and an
+  //  unwatched reporter is exactly how the seven silent workflows above
+  //  stayed silent.
+  { name: 'drive-watch.yml', text: driveWatch, source: 'drive', checkId: 'drive-watch' },
   { name: 'nightly-sweep.yml', text: nightlySweep, source: 'health', checkId: 'nightly-sweep' },
   { name: 'site-audit.yml', text: siteAudit, source: 'linkcheck', checkId: 'site-audit' },
   { name: 'smoke.yml', text: smoke, source: 'smoke', checkId: 'auth-smoke' },
