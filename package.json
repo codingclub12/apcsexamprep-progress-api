@@ -40,6 +40,7 @@
     "smoke:cyberccunit3": "node smoke/cyber-cc-unit3-relink.js",
     "smoke:cyberccunit3ced": "node smoke/cyber-cc-unit3-ced-numbers.js",
     "smoke:cyberhubunit3ced": "node smoke/cyber-hub-unit3-ced-numbers.js",
+    "verify:cyberquizmounts": "node scripts/verify-cyber-quiz-mounts.js",
     "smoke:denomsafety": "node smoke/denominator-safety.js",
     "smoke:scoreeventsource": "node smoke/score-event-source.js",
     "smoke:ekprotect": "node smoke/ek-protection.js",

@@ -1,0 +1,1203 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At"
+"ap-cyber-unit-5-lesson-1-quiz","MERGE","5.1 Quiz: Application & Data Vulnerabilities","<style>
+/* ===== UCNAV CSS ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;padding:10px 14px!important;}
+#ucnav .ucn-hub{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:13px!important;font-weight:700!important;text-decoration:none!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.25)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#ucnav .ucn-hub:hover{background:rgba(109,40,217,.45)!important;}
+#ucnav .ucn-badge{background:#6d28d9!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+#ucnav .ucn-lesson{color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;font-size:13px!important;font-weight:600!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.15)!important;user-select:none!important;transition:background .15s!important;display:inline-flex!important;align-items:center!important;gap:4px!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.35)!important;}
+#ucnav .ucn-chevron{font-size:8px!important;transition:transform .2s!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;width:100%!important;padding:4px 14px 10px!important;flex-wrap:wrap!important;gap:6px!important;}
+#ucnav .ucn-lesson.open+.ucn-steps{display:flex!important;}
+#ucnav .ucn-step{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;font-size:12px!important;text-decoration:none!important;padding:4px 10px!important;border-radius:4px!important;background:rgba(255,255,255,.08)!important;transition:background .15s!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.4)!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none;}}
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+#u5l1quiz{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;line-height:1.7!important;max-width:900px!important;margin:0 auto!important;padding:100px 18px 72px!important;}
+#u5l1quiz *{box-sizing:border-box!important;font-family:'Georgia',serif!important;}
+#u5l1quiz .hero{background:linear-gradient(135deg,#1a0840 0%,#2e1065 55%,#6B21A8 100%)!important;border-radius:18px!important;padding:36px 40px!important;margin-bottom:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l1quiz .eyebrow{font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:8px!important;display:block!important;}
+#u5l1quiz .hero h1{font-size:28px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px 0!important;line-height:1.25!important;}
+#u5l1quiz .hero p{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l1quiz .meta{margin-top:16px!important;display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
+#u5l1quiz .badge{display:inline-block!important;padding:4px 12px!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;border-radius:14px!important;}
+#u5l1quiz .instructions{background:#F5F0FF!important;border-left:4px solid #7C3AED!important;padding:18px 22px!important;border-radius:8px!important;margin-bottom:28px!important;color:#1E1B4B!important;}
+#u5l1quiz .instructions h3{margin:0 0 8px 0!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:15px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l1quiz .instructions p{margin:6px 0!important;font-size:14px!important;}
+#u5l1quiz .score-panel{position:sticky!important;top:80px!important;background:#fff!important;border:2px solid #7C3AED!important;border-radius:12px!important;padding:14px 20px!important;margin-bottom:22px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;box-shadow:0 4px 16px rgba(109,40,217,.14)!important;z-index:100!important;}
+#u5l1quiz .score-label{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l1quiz .score-num{font-size:22px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l1quiz .q-block{background:#fff!important;border:1px solid #E5E7EB!important;border-radius:12px!important;padding:24px 28px!important;margin-bottom:20px!important;box-shadow:0 2px 8px rgba(0,0,0,.04)!important;}
+#u5l1quiz .q-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;margin-bottom:10px!important;}
+#u5l1quiz .q-stem{font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px 0!important;line-height:1.65!important;}
+#u5l1quiz .q-stem strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l1quiz .predict-gate{background:#FEF3C7!important;border-left:3px solid #D97706!important;padding:10px 16px!important;border-radius:6px!important;margin-bottom:14px!important;font-size:13px!important;color:#78350F!important;-webkit-text-fill-color:#78350F!important;font-style:italic!important;}
+#u5l1quiz .opts{display:grid!important;gap:8px!important;margin-bottom:14px!important;}
+#u5l1quiz .opt-btn{display:block!important;width:100%!important;text-align:left!important;background:#F9FAFB!important;border:1.5px solid #D1D5DB!important;border-radius:8px!important;padding:12px 16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;cursor:pointer!important;transition:all .12s!important;line-height:1.55!important;}
+#u5l1quiz .opt-btn:hover{border-color:#7C3AED!important;background:#F5F0FF!important;}
+#u5l1quiz .opt-btn.correct{background:#D1FAE5!important;border-color:#059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l1quiz .opt-btn.wrong{background:#FEE2E2!important;border-color:#DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l1quiz .opt-btn.locked{cursor:not-allowed!important;opacity:.75!important;}
+#u5l1quiz .opt-letter{display:inline-block!important;font-weight:700!important;margin-right:10px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l1quiz .feedback{margin-top:14px!important;padding:14px 18px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;display:none!important;}
+#u5l1quiz .feedback.show{display:block!important;}
+#u5l1quiz .feedback.fb-correct{background:#D1FAE5!important;border-left:3px solid #059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l1quiz .feedback.fb-wrong{background:#FEE2E2!important;border-left:3px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l1quiz .feedback strong{display:block!important;margin-bottom:6px!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l1quiz .exam-tip{background:#EDE9FE!important;border-left:3px solid #6B21A8!important;border-radius:8px!important;padding:14px 18px!important;margin-top:16px!important;font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l1quiz .exam-tip strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;font-size:11px!important;letter-spacing:1px!important;display:block!important;margin-bottom:4px!important;}
+#u5l1quiz .results-panel{display:none!important;background:linear-gradient(135deg,#1a0840,#2e1065)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:32px 40px!important;margin:28px 0!important;text-align:center!important;}
+#u5l1quiz .results-panel.show{display:block!important;}
+#u5l1quiz .results-panel h2{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:24px!important;margin:0 0 8px 0!important;}
+#u5l1quiz .results-score{font-size:42px!important;font-weight:700!important;margin:12px 0!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#u5l1quiz .results-verdict{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l1quiz .nav-row{display:flex!important;justify-content:space-between!important;gap:14px!important;margin-top:28px!important;flex-wrap:wrap!important;}
+#u5l1quiz .nav-btn{flex:1!important;min-width:200px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;padding:14px 20px!important;border-radius:10px!important;text-align:center!important;font-weight:700!important;font-size:14px!important;transition:background .15s!important;}
+#u5l1quiz .nav-btn:link,#u5l1quiz .nav-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l1quiz .nav-btn:hover{background:#7C3AED!important;}
+#u5l1quiz .nav-btn.secondary{background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l1quiz .nav-btn.secondary:link,#u5l1quiz .nav-btn.secondary:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l1quiz .nav-btn.secondary:hover{background:#DDD6FE!important;}
+#u5l1quiz code{background:#F3F4F6!important;padding:2px 6px!important;border-radius:3px!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+</style>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@type"":""Quiz"",""name"":""AP Cybersecurity 5.1 Quiz: Application & Data Vulnerabilities"",""description"":""Five-question scored checkpoint covering injection, broken authentication, broken access control, and sensitive data exposure. Tests the OWASP Top 10 triage framework for AP Cyber Unit 5."",""educationalAlignment"":{""@type"":""AlignmentObject"",""alignmentType"":""assesses"",""targetName"":""AP Cybersecurity Topic 5.1""},""author"":{""@type"":""Person"",""name"":""Tanner Crow""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""},""inLanguage"":""en"",""isAccessibleForFree"":true,""numberOfQuestions"":5}
+</script>
+<div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 5</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Application &amp; Data Vulnerabilities"">5.1 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-1"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-quiz"" class=""ucn-step current"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Symmetric Cryptography"">5.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-2"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Hashing for Data Integrity"">5.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-3"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Asymmetric Cryptography &amp; PKI"">5.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-4"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Protecting Applications"">5.5 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-5"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(6);"" id=""ucn-l6"" title=""Detecting Attacks on Data &amp; Apps"">5.6 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s6"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-6"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+  </div>
+</div>
+
+<nav style=""max-width:900px;margin:0 auto;padding:12px 18px 0;font-size:13px;color:#6B7280;"">
+  <a href=""/"" style=""color:#6B21A8;text-decoration:none;"">Home</a> ›
+  <a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#6B21A8;text-decoration:none;"">AP Cybersecurity</a> ›
+  <a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"" style=""color:#6B21A8;text-decoration:none;"">Unit 5</a> ›
+  <a href=""/pages/ap-cyber-unit-5-lesson-1"" style=""color:#6B21A8;text-decoration:none;"">5.1 Lesson</a> ›
+  <span style=""color:#9CA3AF;"">Quiz</span>
+</nav>
+<div id=""u5l1quiz"">
+<div class=""hero"">
+  <span class=""eyebrow"">AP Cybersecurity · Unit 5 · Topic 5.1 · Quiz</span>
+  <h1>5.1 Checkpoint: Application &amp; Data Vulnerabilities</h1>
+  <p>Five questions. Harder than the lesson examples. Each one tests a distinction the AP exam loves to exploit: Broken Auth vs Access Control, Injection vs Sensitive Data Exposure, right-layer vs wrong-layer controls.</p>
+  <div class=""meta"">
+    <span class=""badge"">5 Questions</span>
+    <span class=""badge"">~10 min</span>
+    <span class=""badge"">Scored</span>
+    <span class=""badge"">Exam-style</span>
+  </div>
+</div>
+<div class=""instructions"">
+  <h3>How to Approach</h3>
+  <p><strong>Predict-first:</strong> read each question, commit to a category, <em>then</em> look at options. The AP exam includes plausible-sounding wrong answers precisely to catch students who let options shape their thinking.</p>
+  <p><strong>Watch for trap distractors:</strong> wrong-layer controls (firewalls for application attacks), wrong-category labels (Broken Auth vs Broken Access Control), and symptom fixes (changing passwords when sessions were stolen).</p>
+</div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-5""
+       data-lesson=""5.1""
+       data-activity=""quiz""></div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 5 · Lesson 5.1 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-1"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-1-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-5-lesson-2"">Next: 5.2 Symmetric Cryptography →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-5-lesson-1"">Lesson 5.1</a><a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Unit 5 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-5-lesson-2-quiz","MERGE","5.2 Quiz: Symmetric Cryptography","<style>
+/* ===== UCNAV CSS ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;padding:10px 14px!important;}
+#ucnav .ucn-hub{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:13px!important;font-weight:700!important;text-decoration:none!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.25)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#ucnav .ucn-hub:hover{background:rgba(109,40,217,.45)!important;}
+#ucnav .ucn-badge{background:#6d28d9!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+#ucnav .ucn-lesson{color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;font-size:13px!important;font-weight:600!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.15)!important;user-select:none!important;transition:background .15s!important;display:inline-flex!important;align-items:center!important;gap:4px!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.35)!important;}
+#ucnav .ucn-chevron{font-size:8px!important;transition:transform .2s!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;width:100%!important;padding:4px 14px 10px!important;flex-wrap:wrap!important;gap:6px!important;}
+#ucnav .ucn-lesson.open+.ucn-steps{display:flex!important;}
+#ucnav .ucn-step{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;font-size:12px!important;text-decoration:none!important;padding:4px 10px!important;border-radius:4px!important;background:rgba(255,255,255,.08)!important;transition:background .15s!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.4)!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none;}}
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+#u5l2quiz{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;line-height:1.7!important;max-width:900px!important;margin:0 auto!important;padding:100px 18px 72px!important;}
+#u5l2quiz *{box-sizing:border-box!important;font-family:'Georgia',serif!important;}
+#u5l2quiz .hero{background:linear-gradient(135deg,#1a0840 0%,#2e1065 55%,#6B21A8 100%)!important;border-radius:18px!important;padding:36px 40px!important;margin-bottom:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l2quiz .eyebrow{font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:8px!important;display:block!important;}
+#u5l2quiz .hero h1{font-size:28px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px 0!important;line-height:1.25!important;}
+#u5l2quiz .hero p{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l2quiz .meta{margin-top:16px!important;display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
+#u5l2quiz .badge{display:inline-block!important;padding:4px 12px!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;border-radius:14px!important;}
+#u5l2quiz .instructions{background:#F5F0FF!important;border-left:4px solid #7C3AED!important;padding:18px 22px!important;border-radius:8px!important;margin-bottom:28px!important;color:#1E1B4B!important;}
+#u5l2quiz .instructions h3{margin:0 0 8px 0!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:15px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l2quiz .instructions p{margin:6px 0!important;font-size:14px!important;}
+#u5l2quiz .score-panel{position:sticky!important;top:80px!important;background:#fff!important;border:2px solid #7C3AED!important;border-radius:12px!important;padding:14px 20px!important;margin-bottom:22px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;box-shadow:0 4px 16px rgba(109,40,217,.14)!important;z-index:100!important;}
+#u5l2quiz .score-label{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l2quiz .score-num{font-size:22px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l2quiz .q-block{background:#fff!important;border:1px solid #E5E7EB!important;border-radius:12px!important;padding:24px 28px!important;margin-bottom:20px!important;box-shadow:0 2px 8px rgba(0,0,0,.04)!important;}
+#u5l2quiz .q-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;margin-bottom:10px!important;}
+#u5l2quiz .q-stem{font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px 0!important;line-height:1.65!important;}
+#u5l2quiz .q-stem strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l2quiz .predict-gate{background:#FEF3C7!important;border-left:3px solid #D97706!important;padding:10px 16px!important;border-radius:6px!important;margin-bottom:14px!important;font-size:13px!important;color:#78350F!important;-webkit-text-fill-color:#78350F!important;font-style:italic!important;}
+#u5l2quiz .opts{display:grid!important;gap:8px!important;margin-bottom:14px!important;}
+#u5l2quiz .opt-btn{display:block!important;width:100%!important;text-align:left!important;background:#F9FAFB!important;border:1.5px solid #D1D5DB!important;border-radius:8px!important;padding:12px 16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;cursor:pointer!important;transition:all .12s!important;line-height:1.55!important;}
+#u5l2quiz .opt-btn:hover{border-color:#7C3AED!important;background:#F5F0FF!important;}
+#u5l2quiz .opt-btn.correct{background:#D1FAE5!important;border-color:#059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l2quiz .opt-btn.wrong{background:#FEE2E2!important;border-color:#DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l2quiz .opt-btn.locked{cursor:not-allowed!important;opacity:.75!important;}
+#u5l2quiz .opt-letter{display:inline-block!important;font-weight:700!important;margin-right:10px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l2quiz .feedback{margin-top:14px!important;padding:14px 18px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;display:none!important;}
+#u5l2quiz .feedback.show{display:block!important;}
+#u5l2quiz .feedback.fb-correct{background:#D1FAE5!important;border-left:3px solid #059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l2quiz .feedback.fb-wrong{background:#FEE2E2!important;border-left:3px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l2quiz .feedback strong{display:block!important;margin-bottom:6px!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l2quiz .exam-tip{background:#EDE9FE!important;border-left:3px solid #6B21A8!important;border-radius:8px!important;padding:14px 18px!important;margin-top:16px!important;font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l2quiz .exam-tip strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;font-size:11px!important;letter-spacing:1px!important;display:block!important;margin-bottom:4px!important;}
+#u5l2quiz .results-panel{display:none!important;background:linear-gradient(135deg,#1a0840,#2e1065)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:32px 40px!important;margin:28px 0!important;text-align:center!important;}
+#u5l2quiz .results-panel.show{display:block!important;}
+#u5l2quiz .results-panel h2{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:24px!important;margin:0 0 8px 0!important;}
+#u5l2quiz .results-score{font-size:42px!important;font-weight:700!important;margin:12px 0!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#u5l2quiz .results-verdict{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l2quiz .nav-row{display:flex!important;justify-content:space-between!important;gap:14px!important;margin-top:28px!important;flex-wrap:wrap!important;}
+#u5l2quiz .nav-btn{flex:1!important;min-width:200px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;padding:14px 20px!important;border-radius:10px!important;text-align:center!important;font-weight:700!important;font-size:14px!important;transition:background .15s!important;}
+#u5l2quiz .nav-btn:link,#u5l2quiz .nav-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l2quiz .nav-btn:hover{background:#7C3AED!important;}
+#u5l2quiz .nav-btn.secondary{background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l2quiz .nav-btn.secondary:link,#u5l2quiz .nav-btn.secondary:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l2quiz .nav-btn.secondary:hover{background:#DDD6FE!important;}
+#u5l2quiz code{background:#F3F4F6!important;padding:2px 6px!important;border-radius:3px!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l2quiz pre{background:#1a0840!important;color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;padding:14px 18px!important;border-radius:8px!important;overflow-x:auto!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;line-height:1.6!important;white-space:pre!important;margin:12px 0!important;}
+#u5l2quiz pre code{background:transparent!important;color:inherit!important;-webkit-text-fill-color:inherit!important;padding:0!important;}
+
+</style>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@type"":""Quiz"",""name"":""AP Cybersecurity 5.2 Quiz: Symmetric Cryptography"",""description"":""Five-question scored checkpoint covering symmetric cipher selection, modes of operation, key management, and AEAD integrity for AP Cyber Unit 5."",""educationalAlignment"":{""@type"":""AlignmentObject"",""alignmentType"":""assesses"",""targetName"":""AP Cybersecurity Topic 5.2""},""author"":{""@type"":""Person"",""name"":""Tanner Crow""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""},""inLanguage"":""en"",""isAccessibleForFree"":true,""numberOfQuestions"":5}
+</script>
+<div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 5</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Application &amp; Data Vulnerabilities"">5.1 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-1"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Symmetric Cryptography"">5.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-2"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-quiz"" class=""ucn-step current"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Hashing for Data Integrity"">5.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-3"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Asymmetric Cryptography &amp; PKI"">5.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-4"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Protecting Applications"">5.5 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-5"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(6);"" id=""ucn-l6"" title=""Detecting Attacks on Data &amp; Apps"">5.6 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s6"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-6"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+  </div>
+</div>
+
+<nav style=""max-width:900px;margin:0 auto;padding:12px 18px 0;font-size:13px;color:#6B7280;"">
+  <a href=""/"" style=""color:#6B21A8;text-decoration:none;"">Home</a> ›
+  <a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#6B21A8;text-decoration:none;"">AP Cybersecurity</a> ›
+  <a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"" style=""color:#6B21A8;text-decoration:none;"">Unit 5</a> ›
+  <a href=""/pages/ap-cyber-unit-5-lesson-2"" style=""color:#6B21A8;text-decoration:none;"">5.2 Lesson</a> ›
+  <span style=""color:#9CA3AF;"">Quiz</span>
+</nav>
+<div id=""u5l2quiz"">
+<div class=""hero"">
+  <span class=""eyebrow"">AP Cybersecurity · Unit 5 · Topic 5.2 · Quiz</span>
+  <h1>5.2 Checkpoint: Symmetric Cryptography</h1>
+  <p>Five exam-style questions. Each tests a distinction the AP exam loves: algorithm vs mode, symmetric vs asymmetric, confidentiality vs integrity, strong algorithm + weak key management.</p>
+  <div class=""meta"">
+<span class=""badge"">5 Questions</span><span class=""badge"">~10 min</span><span class=""badge"">Scored · Exam-style</span>
+</div>
+</div>
+<div class=""instructions"">
+  <h3>How to Approach</h3>
+  <p><strong>Predict-first:</strong> read the scenario, commit to a category (algorithm / mode / IV / key management), <em>then</em> look at options.</p>
+  <p><strong>Remember:</strong> ECB never for bulk. AES + right mode + separate keys is the recipe. 3DES/DES/RC4/MD5/SHA-1 in modern contexts = deprecated.</p>
+</div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-5""
+       data-lesson=""5.2""
+       data-activity=""quiz""></div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 5 · Lesson 5.2 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-2"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-2-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-5-lesson-3"">Next: 5.3 Hashing →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-5-lesson-2"">Lesson 5.2</a><a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Unit 5 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-5-lesson-3-quiz","MERGE","5.3 Quiz: Hashing for Data Integrity","<style>
+/* ===== UCNAV CSS ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;padding:10px 14px!important;}
+#ucnav .ucn-hub{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:13px!important;font-weight:700!important;text-decoration:none!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.25)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#ucnav .ucn-hub:hover{background:rgba(109,40,217,.45)!important;}
+#ucnav .ucn-badge{background:#6d28d9!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+#ucnav .ucn-lesson{color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;font-size:13px!important;font-weight:600!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.15)!important;user-select:none!important;transition:background .15s!important;display:inline-flex!important;align-items:center!important;gap:4px!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.35)!important;}
+#ucnav .ucn-chevron{font-size:8px!important;transition:transform .2s!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;width:100%!important;padding:4px 14px 10px!important;flex-wrap:wrap!important;gap:6px!important;}
+#ucnav .ucn-lesson.open+.ucn-steps{display:flex!important;}
+#ucnav .ucn-step{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;font-size:12px!important;text-decoration:none!important;padding:4px 10px!important;border-radius:4px!important;background:rgba(255,255,255,.08)!important;transition:background .15s!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.4)!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none;}}
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+#u5l3quiz{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;line-height:1.7!important;max-width:900px!important;margin:0 auto!important;padding:100px 18px 72px!important;}
+#u5l3quiz *{box-sizing:border-box!important;font-family:'Georgia',serif!important;}
+#u5l3quiz .hero{background:linear-gradient(135deg,#1a0840 0%,#2e1065 55%,#6B21A8 100%)!important;border-radius:18px!important;padding:36px 40px!important;margin-bottom:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l3quiz .eyebrow{font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:8px!important;display:block!important;}
+#u5l3quiz .hero h1{font-size:28px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px 0!important;line-height:1.25!important;}
+#u5l3quiz .hero p{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l3quiz .meta{margin-top:16px!important;display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
+#u5l3quiz .badge{display:inline-block!important;padding:4px 12px!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;border-radius:14px!important;}
+#u5l3quiz .instructions{background:#F5F0FF!important;border-left:4px solid #7C3AED!important;padding:18px 22px!important;border-radius:8px!important;margin-bottom:28px!important;color:#1E1B4B!important;}
+#u5l3quiz .instructions h3{margin:0 0 8px 0!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:15px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l3quiz .instructions p{margin:6px 0!important;font-size:14px!important;}
+#u5l3quiz .score-panel{position:sticky!important;top:80px!important;background:#fff!important;border:2px solid #7C3AED!important;border-radius:12px!important;padding:14px 20px!important;margin-bottom:22px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;box-shadow:0 4px 16px rgba(109,40,217,.14)!important;z-index:100!important;}
+#u5l3quiz .score-label{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l3quiz .score-num{font-size:22px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l3quiz .q-block{background:#fff!important;border:1px solid #E5E7EB!important;border-radius:12px!important;padding:24px 28px!important;margin-bottom:20px!important;box-shadow:0 2px 8px rgba(0,0,0,.04)!important;}
+#u5l3quiz .q-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;margin-bottom:10px!important;}
+#u5l3quiz .q-stem{font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px 0!important;line-height:1.65!important;}
+#u5l3quiz .q-stem strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l3quiz .predict-gate{background:#FEF3C7!important;border-left:3px solid #D97706!important;padding:10px 16px!important;border-radius:6px!important;margin-bottom:14px!important;font-size:13px!important;color:#78350F!important;-webkit-text-fill-color:#78350F!important;font-style:italic!important;}
+#u5l3quiz .opts{display:grid!important;gap:8px!important;margin-bottom:14px!important;}
+#u5l3quiz .opt-btn{display:block!important;width:100%!important;text-align:left!important;background:#F9FAFB!important;border:1.5px solid #D1D5DB!important;border-radius:8px!important;padding:12px 16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;cursor:pointer!important;transition:all .12s!important;line-height:1.55!important;}
+#u5l3quiz .opt-btn:hover{border-color:#7C3AED!important;background:#F5F0FF!important;}
+#u5l3quiz .opt-btn.correct{background:#D1FAE5!important;border-color:#059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l3quiz .opt-btn.wrong{background:#FEE2E2!important;border-color:#DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l3quiz .opt-btn.locked{cursor:not-allowed!important;opacity:.75!important;}
+#u5l3quiz .opt-letter{display:inline-block!important;font-weight:700!important;margin-right:10px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l3quiz .feedback{margin-top:14px!important;padding:14px 18px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;display:none!important;}
+#u5l3quiz .feedback.show{display:block!important;}
+#u5l3quiz .feedback.fb-correct{background:#D1FAE5!important;border-left:3px solid #059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l3quiz .feedback.fb-wrong{background:#FEE2E2!important;border-left:3px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l3quiz .feedback strong{display:block!important;margin-bottom:6px!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l3quiz .exam-tip{background:#EDE9FE!important;border-left:3px solid #6B21A8!important;border-radius:8px!important;padding:14px 18px!important;margin-top:16px!important;font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l3quiz .exam-tip strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;font-size:11px!important;letter-spacing:1px!important;display:block!important;margin-bottom:4px!important;}
+#u5l3quiz .results-panel{display:none!important;background:linear-gradient(135deg,#1a0840,#2e1065)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:32px 40px!important;margin:28px 0!important;text-align:center!important;}
+#u5l3quiz .results-panel.show{display:block!important;}
+#u5l3quiz .results-panel h2{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:24px!important;margin:0 0 8px 0!important;}
+#u5l3quiz .results-score{font-size:42px!important;font-weight:700!important;margin:12px 0!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#u5l3quiz .results-verdict{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l3quiz .nav-row{display:flex!important;justify-content:space-between!important;gap:14px!important;margin-top:28px!important;flex-wrap:wrap!important;}
+#u5l3quiz .nav-btn{flex:1!important;min-width:200px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;padding:14px 20px!important;border-radius:10px!important;text-align:center!important;font-weight:700!important;font-size:14px!important;transition:background .15s!important;}
+#u5l3quiz .nav-btn:link,#u5l3quiz .nav-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l3quiz .nav-btn:hover{background:#7C3AED!important;}
+#u5l3quiz .nav-btn.secondary{background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l3quiz .nav-btn.secondary:link,#u5l3quiz .nav-btn.secondary:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l3quiz .nav-btn.secondary:hover{background:#DDD6FE!important;}
+#u5l3quiz code{background:#F3F4F6!important;padding:2px 6px!important;border-radius:3px!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l3quiz pre{background:#1a0840!important;color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;padding:14px 18px!important;border-radius:8px!important;overflow-x:auto!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;line-height:1.6!important;white-space:pre!important;margin:12px 0!important;}
+#u5l3quiz pre code{background:transparent!important;color:inherit!important;-webkit-text-fill-color:inherit!important;padding:0!important;}
+
+</style>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@type"":""Quiz"",""name"":""AP Cybersecurity 5.3 Quiz: Hashing for Data Integrity"",""description"":""Five exam-style questions on password hashing (Argon2/bcrypt), general-purpose hashing (SHA-256), HMAC, collision resistance, and the low-entropy hashing trap for AP Cybersecurity Unit 5."",""educationalAlignment"":{""@type"":""AlignmentObject"",""alignmentType"":""assesses"",""targetName"":""AP Cybersecurity Topic 5.3""},""author"":{""@type"":""Person"",""name"":""Tanner Crow""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""},""inLanguage"":""en"",""isAccessibleForFree"":true,""numberOfQuestions"":5}
+</script>
+<div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 5</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Application &amp; Data Vulnerabilities"">5.1 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-1"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Symmetric Cryptography"">5.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-2"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Hashing for Data Integrity"">5.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-3"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-quiz"" class=""ucn-step current"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Asymmetric Cryptography &amp; PKI"">5.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-4"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Protecting Applications"">5.5 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-5"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(6);"" id=""ucn-l6"" title=""Detecting Attacks on Data &amp; Apps"">5.6 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s6"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-6"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+  </div>
+</div>
+
+<nav style=""max-width:900px;margin:0 auto;padding:12px 18px 0;font-size:13px;color:#6B7280;"">
+  <a href=""/"" style=""color:#6B21A8;text-decoration:none;"">Home</a> ›
+  <a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#6B21A8;text-decoration:none;"">AP Cybersecurity</a> ›
+  <a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"" style=""color:#6B21A8;text-decoration:none;"">Unit 5</a> ›
+  <a href=""/pages/ap-cyber-unit-5-lesson-3"" style=""color:#6B21A8;text-decoration:none;"">5.3 Lesson</a> ›
+  <span style=""color:#9CA3AF;"">Quiz</span>
+</nav>
+<div id=""u5l3quiz"">
+<div class=""hero"">
+  <span class=""eyebrow"">AP Cybersecurity · Unit 5 · Topic 5.3 · Quiz</span>
+  <h1>5.3 Checkpoint: Hashing for Data Integrity</h1>
+  <p>Five exam-style questions. Each tests a distinction the AP exam loves: hash vs encrypt, fast hash vs slow hash, plain hash vs HMAC, high-entropy vs low-entropy data, collision resistance vs pre-image resistance.</p>
+  <div class=""meta"">
+<span class=""badge"">5 Questions</span><span class=""badge"">~10 min</span><span class=""badge"">Scored · Exam-style</span>
+</div>
+</div>
+<div class=""instructions"">
+  <h3>How to Approach</h3>
+  <p><strong>Predict-first:</strong> For each scenario, categorize the use case (file integrity / password storage / API authentication / signature / low-entropy data).</p>
+  <p><strong>Remember:</strong> SHA-256 is fast (good for files, bad for passwords). bcrypt/Argon2 is slow (good for passwords). HMAC adds authenticity. Encryption reverses; hashing does not. MD5 and SHA-1 are broken.</p>
+</div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-5""
+       data-lesson=""5.3""
+       data-activity=""quiz""></div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 5 · Lesson 5.3 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-3"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-3-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-5-lesson-4"">Next: 5.4 Asymmetric Cryptography →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-5-lesson-3"">Lesson 5.3</a><a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Unit 5 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-5-lesson-4-quiz","MERGE","5.4 Quiz: Asymmetric Cryptography & PKI","<style>
+/* ===== UCNAV CSS ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;padding:10px 14px!important;}
+#ucnav .ucn-hub{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:13px!important;font-weight:700!important;text-decoration:none!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.25)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#ucnav .ucn-hub:hover{background:rgba(109,40,217,.45)!important;}
+#ucnav .ucn-badge{background:#6d28d9!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+#ucnav .ucn-lesson{color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;font-size:13px!important;font-weight:600!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.15)!important;user-select:none!important;transition:background .15s!important;display:inline-flex!important;align-items:center!important;gap:4px!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.35)!important;}
+#ucnav .ucn-chevron{font-size:8px!important;transition:transform .2s!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;width:100%!important;padding:4px 14px 10px!important;flex-wrap:wrap!important;gap:6px!important;}
+#ucnav .ucn-lesson.open+.ucn-steps{display:flex!important;}
+#ucnav .ucn-step{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;font-size:12px!important;text-decoration:none!important;padding:4px 10px!important;border-radius:4px!important;background:rgba(255,255,255,.08)!important;transition:background .15s!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.4)!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none;}}
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+#u5l4quiz{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;line-height:1.7!important;max-width:900px!important;margin:0 auto!important;padding:100px 18px 72px!important;}
+#u5l4quiz *{box-sizing:border-box!important;font-family:'Georgia',serif!important;}
+#u5l4quiz .hero{background:linear-gradient(135deg,#1a0840 0%,#2e1065 55%,#6B21A8 100%)!important;border-radius:18px!important;padding:36px 40px!important;margin-bottom:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l4quiz .eyebrow{font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:8px!important;display:block!important;}
+#u5l4quiz .hero h1{font-size:28px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px 0!important;line-height:1.25!important;}
+#u5l4quiz .hero p{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l4quiz .meta{margin-top:16px!important;display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
+#u5l4quiz .badge{display:inline-block!important;padding:4px 12px!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;border-radius:14px!important;}
+#u5l4quiz .instructions{background:#F5F0FF!important;border-left:4px solid #7C3AED!important;padding:18px 22px!important;border-radius:8px!important;margin-bottom:28px!important;color:#1E1B4B!important;}
+#u5l4quiz .instructions h3{margin:0 0 8px 0!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:15px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l4quiz .instructions p{margin:6px 0!important;font-size:14px!important;}
+#u5l4quiz .score-panel{position:sticky!important;top:80px!important;background:#fff!important;border:2px solid #7C3AED!important;border-radius:12px!important;padding:14px 20px!important;margin-bottom:22px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;box-shadow:0 4px 16px rgba(109,40,217,.14)!important;z-index:100!important;}
+#u5l4quiz .score-label{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l4quiz .score-num{font-size:22px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l4quiz .q-block{background:#fff!important;border:1px solid #E5E7EB!important;border-radius:12px!important;padding:24px 28px!important;margin-bottom:20px!important;box-shadow:0 2px 8px rgba(0,0,0,.04)!important;}
+#u5l4quiz .q-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;margin-bottom:10px!important;}
+#u5l4quiz .q-stem{font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px 0!important;line-height:1.65!important;}
+#u5l4quiz .q-stem strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l4quiz .predict-gate{background:#FEF3C7!important;border-left:3px solid #D97706!important;padding:10px 16px!important;border-radius:6px!important;margin-bottom:14px!important;font-size:13px!important;color:#78350F!important;-webkit-text-fill-color:#78350F!important;font-style:italic!important;}
+#u5l4quiz .opts{display:grid!important;gap:8px!important;margin-bottom:14px!important;}
+#u5l4quiz .opt-btn{display:block!important;width:100%!important;text-align:left!important;background:#F9FAFB!important;border:1.5px solid #D1D5DB!important;border-radius:8px!important;padding:12px 16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;cursor:pointer!important;transition:all .12s!important;line-height:1.55!important;}
+#u5l4quiz .opt-btn:hover{border-color:#7C3AED!important;background:#F5F0FF!important;}
+#u5l4quiz .opt-btn.correct{background:#D1FAE5!important;border-color:#059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l4quiz .opt-btn.wrong{background:#FEE2E2!important;border-color:#DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l4quiz .opt-btn.locked{cursor:not-allowed!important;opacity:.75!important;}
+#u5l4quiz .opt-letter{display:inline-block!important;font-weight:700!important;margin-right:10px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l4quiz .feedback{margin-top:14px!important;padding:14px 18px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;display:none!important;}
+#u5l4quiz .feedback.show{display:block!important;}
+#u5l4quiz .feedback.fb-correct{background:#D1FAE5!important;border-left:3px solid #059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l4quiz .feedback.fb-wrong{background:#FEE2E2!important;border-left:3px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l4quiz .feedback strong{display:block!important;margin-bottom:6px!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l4quiz .exam-tip{background:#EDE9FE!important;border-left:3px solid #6B21A8!important;border-radius:8px!important;padding:14px 18px!important;margin-top:16px!important;font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l4quiz .exam-tip strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;font-size:11px!important;letter-spacing:1px!important;display:block!important;margin-bottom:4px!important;}
+#u5l4quiz .results-panel{display:none!important;background:linear-gradient(135deg,#1a0840,#2e1065)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:32px 40px!important;margin:28px 0!important;text-align:center!important;}
+#u5l4quiz .results-panel.show{display:block!important;}
+#u5l4quiz .results-panel h2{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:24px!important;margin:0 0 8px 0!important;}
+#u5l4quiz .results-score{font-size:42px!important;font-weight:700!important;margin:12px 0!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#u5l4quiz .results-verdict{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l4quiz .nav-row{display:flex!important;justify-content:space-between!important;gap:14px!important;margin-top:28px!important;flex-wrap:wrap!important;}
+#u5l4quiz .nav-btn{flex:1!important;min-width:200px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;padding:14px 20px!important;border-radius:10px!important;text-align:center!important;font-weight:700!important;font-size:14px!important;transition:background .15s!important;}
+#u5l4quiz .nav-btn:link,#u5l4quiz .nav-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l4quiz .nav-btn:hover{background:#7C3AED!important;}
+#u5l4quiz .nav-btn.secondary{background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l4quiz .nav-btn.secondary:link,#u5l4quiz .nav-btn.secondary:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l4quiz .nav-btn.secondary:hover{background:#DDD6FE!important;}
+#u5l4quiz code{background:#F3F4F6!important;padding:2px 6px!important;border-radius:3px!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l4quiz pre{background:#1a0840!important;color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;padding:14px 18px!important;border-radius:8px!important;overflow-x:auto!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;line-height:1.6!important;white-space:pre!important;margin:12px 0!important;}
+#u5l4quiz pre code{background:transparent!important;color:inherit!important;-webkit-text-fill-color:inherit!important;padding:0!important;}
+
+</style>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@type"":""Quiz"",""name"":""AP Cybersecurity 5.4 Quiz: Asymmetric Cryptography & PKI"",""description"":""Five exam-style questions on asymmetric cryptography fundamentals, PKI chain of trust, certificate pinning, certificate lifecycle management, and post-quantum cryptography transition planning for AP Cyber Unit 5.4."",""educationalAlignment"":{""@type"":""AlignmentObject"",""alignmentType"":""assesses"",""targetName"":""AP Cybersecurity Topic 5.4""},""author"":{""@type"":""Person"",""name"":""Tanner Crow""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""},""inLanguage"":""en"",""isAccessibleForFree"":true,""numberOfQuestions"":5}
+</script>
+<div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 5</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Application &amp; Data Vulnerabilities"">5.1 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-1"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Symmetric Cryptography"">5.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-2"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Hashing for Data Integrity"">5.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-3"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Asymmetric Cryptography &amp; PKI"">5.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-4"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-quiz"" class=""ucn-step current"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Protecting Applications"">5.5 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-5"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(6);"" id=""ucn-l6"" title=""Detecting Attacks on Data &amp; Apps"">5.6 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s6"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-6"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+  </div>
+</div>
+
+<nav style=""max-width:900px;margin:0 auto;padding:12px 18px 0;font-size:13px;color:#6B7280;"">
+  <a href=""/"" style=""color:#6B21A8;text-decoration:none;"">Home</a> ›
+  <a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#6B21A8;text-decoration:none;"">AP Cybersecurity</a> ›
+  <a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"" style=""color:#6B21A8;text-decoration:none;"">Unit 5</a> ›
+  <a href=""/pages/ap-cyber-unit-5-lesson-4"" style=""color:#6B21A8;text-decoration:none;"">5.4 Lesson</a> ›
+  <span style=""color:#9CA3AF;"">Quiz</span>
+</nav>
+<div id=""u5l4quiz"">
+<div class=""hero"">
+  <span class=""eyebrow"">AP Cybersecurity · Unit 5 · Topic 5.4 · Quiz</span>
+  <h1>5.4 Checkpoint: Asymmetric Cryptography &amp; PKI</h1>
+  <p>Five exam-style questions on the highest-tested distinctions in this lesson: which key does what, PKI chain of trust, certificate pinning, lifecycle management, and the post-quantum transition.</p>
+  <div class=""meta"">
+<span class=""badge"">5 Questions</span><span class=""badge"">~10 min</span><span class=""badge"">Scored · Exam-style</span>
+</div>
+</div>
+<div class=""instructions"">
+  <h3>How to Approach</h3>
+  <p><strong>Predict first:</strong> For each scenario, decide what the question is really testing (which key / which validation step / which operational control).</p>
+  <p><strong>Remember the four truths:</strong> (1) public keys are public, (2) hybrid crypto is standard, (3) PKI trust fails at any broken link, (4) post-quantum migration is hybrid and ongoing.</p>
+</div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-5""
+       data-lesson=""5.4""
+       data-activity=""quiz""></div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 5 · Lesson 5.4 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-4"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-4-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-5-lesson-5"">Next: 5.5 Protecting Applications →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-5-lesson-4"">Lesson 5.4</a><a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Unit 5 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-5-lesson-5-quiz","MERGE","5.5 Exam-Style Quiz","<style>
+/* ===== UCNAV CSS (copied from canonical) ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;padding:10px 14px!important;}
+#ucnav .ucn-hub{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:13px!important;font-weight:700!important;text-decoration:none!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.25)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#ucnav .ucn-hub:hover{background:rgba(109,40,217,.45)!important;}
+#ucnav .ucn-badge{background:#6d28d9!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+#ucnav .ucn-lesson{color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;font-size:13px!important;font-weight:600!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.15)!important;user-select:none!important;transition:background .15s!important;display:inline-flex!important;align-items:center!important;gap:4px!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.35)!important;}
+#ucnav .ucn-chevron{font-size:8px!important;transition:transform .2s!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;width:100%!important;padding:4px 14px 10px!important;flex-wrap:wrap!important;gap:6px!important;}
+#ucnav .ucn-lesson.open+.ucn-steps{display:flex!important;}
+#ucnav .ucn-step{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;font-size:12px!important;text-decoration:none!important;padding:4px 10px!important;border-radius:4px!important;background:rgba(255,255,255,.08)!important;transition:background .15s!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.4)!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none;}}
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== EXERCISE PAGE WRAPPER ===== */
+#u5l5quiz{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;line-height:1.7!important;max-width:900px!important;margin:0 auto!important;padding:100px 18px 72px!important;}
+#u5l5quiz *{box-sizing:border-box!important;font-family:'Georgia',serif!important;}
+#u5l5quiz .ex-header{background:linear-gradient(135deg,#1a0840 0%,#2e1065 55%,#6B21A8 100%)!important;border-radius:18px!important;padding:36px 40px!important;margin-bottom:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l5quiz .ex-eyebrow{font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:8px!important;display:block!important;}
+#u5l5quiz .ex-header h1{font-size:28px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px 0!important;line-height:1.25!important;}
+#u5l5quiz .ex-header p{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l5quiz .ex-meta{margin-top:16px!important;display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
+#u5l5quiz .ex-badge{display:inline-block!important;padding:4px 12px!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;border-radius:14px!important;}
+#u5l5quiz .instructions{background:#F5F0FF!important;border-left:4px solid #7C3AED!important;padding:18px 22px!important;border-radius:8px!important;margin-bottom:28px!important;color:#1E1B4B!important;}
+#u5l5quiz .instructions h3{margin:0 0 8px 0!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:15px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l5quiz .instructions p{margin:6px 0!important;font-size:14px!important;}
+#u5l5quiz .score-panel{position:sticky!important;top:80px!important;background:#fff!important;border:2px solid #7C3AED!important;border-radius:12px!important;padding:14px 20px!important;margin-bottom:22px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;box-shadow:0 4px 16px rgba(109,40,217,.14)!important;z-index:100!important;}
+#u5l5quiz .score-label{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l5quiz .score-num{font-size:22px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l5quiz .q-block{background:#fff!important;border:1px solid #E5E7EB!important;border-radius:12px!important;padding:24px 28px!important;margin-bottom:20px!important;box-shadow:0 2px 8px rgba(0,0,0,.04)!important;}
+#u5l5quiz .q-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;margin-bottom:10px!important;}
+#u5l5quiz .q-stem{font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px 0!important;line-height:1.65!important;}
+#u5l5quiz .q-stem strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l5quiz .predict-gate{background:#FEF3C7!important;border-left:3px solid #D97706!important;padding:10px 16px!important;border-radius:6px!important;margin-bottom:14px!important;font-size:13px!important;color:#78350F!important;-webkit-text-fill-color:#78350F!important;font-style:italic!important;}
+#u5l5quiz .opts{display:grid!important;gap:8px!important;margin-bottom:14px!important;}
+#u5l5quiz .opt-btn{display:block!important;width:100%!important;text-align:left!important;background:#F9FAFB!important;border:1.5px solid #D1D5DB!important;border-radius:8px!important;padding:12px 16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;cursor:pointer!important;transition:all .12s!important;line-height:1.55!important;}
+#u5l5quiz .opt-btn:hover{border-color:#7C3AED!important;background:#F5F0FF!important;}
+#u5l5quiz .opt-btn.correct{background:#D1FAE5!important;border-color:#059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l5quiz .opt-btn.wrong{background:#FEE2E2!important;border-color:#DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l5quiz .opt-btn.locked{cursor:not-allowed!important;opacity:.75!important;}
+#u5l5quiz .opt-letter{display:inline-block!important;font-weight:700!important;margin-right:10px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l5quiz .feedback{margin-top:14px!important;padding:14px 18px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;display:none!important;}
+#u5l5quiz .feedback.show{display:block!important;}
+#u5l5quiz .feedback.fb-correct{background:#D1FAE5!important;border-left:3px solid #059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l5quiz .feedback.fb-wrong{background:#FEE2E2!important;border-left:3px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l5quiz .feedback strong{display:block!important;margin-bottom:6px!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l5quiz .exam-tip{background:#EDE9FE!important;border-left:3px solid #6B21A8!important;border-radius:8px!important;padding:14px 18px!important;margin-top:16px!important;font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l5quiz .exam-tip strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;font-size:11px!important;letter-spacing:1px!important;display:block!important;margin-bottom:4px!important;}
+#u5l5quiz .results-panel{display:none!important;background:linear-gradient(135deg,#1a0840,#2e1065)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:32px 40px!important;margin:28px 0!important;text-align:center!important;}
+#u5l5quiz .results-panel.show{display:block!important;}
+#u5l5quiz .results-panel h2{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:24px!important;margin:0 0 8px 0!important;}
+#u5l5quiz .results-score{font-size:42px!important;font-weight:700!important;margin:12px 0!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#u5l5quiz .results-verdict{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l5quiz .nav-row{display:flex!important;justify-content:space-between!important;gap:14px!important;margin-top:28px!important;flex-wrap:wrap!important;}
+#u5l5quiz .nav-btn{flex:1!important;min-width:200px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;padding:14px 20px!important;border-radius:10px!important;text-align:center!important;font-weight:700!important;font-size:14px!important;transition:background .15s!important;}
+#u5l5quiz .nav-btn:link,#u5l5quiz .nav-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l5quiz .nav-btn:hover{background:#7C3AED!important;}
+#u5l5quiz .nav-btn.secondary{background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l5quiz .nav-btn.secondary:link,#u5l5quiz .nav-btn.secondary:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l5quiz .nav-btn.secondary:hover{background:#DDD6FE!important;}
+#u5l5quiz code{background:#F3F4F6!important;padding:2px 6px!important;border-radius:3px!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+</style>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@type"":""Quiz"",""name"":""AP Cybersecurity 5.5 Exam-Style Quiz"",
+""description"":""Five exam-format multiple-choice questions covering defense in depth, secure coding, input validation, output encoding, authentication controls, CSP, WAF, and rate limiting. Includes spot-the-error and I/II/III multi-correct formats."",
+""educationalAlignment"":{""@type"":""AlignmentObject"",""alignmentType"":""assesses"",""targetName"":""AP Cybersecurity Topic 5.5""},
+""author"":{""@type"":""Person"",""name"":""Tanner Crow""},
+""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""},
+""inLanguage"":""en"",""isAccessibleForFree"":true,""numberOfQuestions"":5}
+</script>
+<div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 5</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Application &amp; Data Vulnerabilities"">5.1 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-1"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Symmetric Cryptography"">5.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-2"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Hashing for Data Integrity"">5.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-3"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Asymmetric Cryptography &amp; PKI"">5.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-4"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Protecting Applications"">5.5 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps open"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-5"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-quiz"" class=""ucn-step current"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(6);"" id=""ucn-l6"" title=""Detecting Attacks on Data &amp; Apps"">5.6 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s6"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-6"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+  </div>
+</div>
+
+<div id=""u5l5quiz"">
+<div class=""hero"">
+  <span class=""eyebrow"">AP Cybersecurity · Unit 5 · Topic 5.5 · Quiz</span>
+  <h1>L5.5 Exam-Style Quiz</h1>
+  <p>Five exam-format questions across all L5.5 topics: defense in depth, secure coding, input validation, output encoding, authentication and session controls, CSP, WAF, and rate limiting. Mix of spot-the-error, I/II/III multi-correct, and scenario-based stems — exactly the formats you will see on the AP exam.</p>
+  <div class=""meta"">
+    <span class=""badge"">5 Questions</span>
+    <span class=""badge"">~12 min</span>
+    <span class=""badge"">Exam Format</span>
+  </div>
+</div>
+<div class=""instructions"">
+  <h3>How to Approach These</h3>
+  <p><strong>1.</strong> Identify the OWASP category from the stem before reading options.</p>
+  <p><strong>2.</strong> For I/II/III questions, evaluate each statement independently. Do not anchor on the first true statement.</p>
+  <p><strong>3.</strong> For code questions, trace what happens line by line. Look for trusted-input-into-interpreter patterns, denylist filters, and fail-open logic.</p>
+  <p><strong>4.</strong> Prefer root-cause controls over compensating controls. Parameterized queries, MFA, encoding, and session regeneration beat WAFs, CAPTCHAs, and signature-based filters.</p>
+</div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-5""
+       data-lesson=""5.5""
+       data-activity=""quiz""></div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 5 · Lesson 5.5 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-5"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-5-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-5-lesson-6"">Next: 5.6 Detecting Attacks on Data and Applications →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-5-lesson-5"">Lesson 5.5</a><a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Unit 5 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-5-lesson-6-quiz","MERGE","Quiz: Exam-Style Detection MCQs","<style>
+/* ===== UCNAV CSS (copied from canonical) ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;padding:10px 14px!important;}
+#ucnav .ucn-hub{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:13px!important;font-weight:700!important;text-decoration:none!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.25)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#ucnav .ucn-hub:hover{background:rgba(109,40,217,.45)!important;}
+#ucnav .ucn-badge{background:#6d28d9!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+#ucnav .ucn-lesson{color:#e9d5ff!important;-webkit-text-fill-color:#e9d5ff!important;font-size:13px!important;font-weight:600!important;padding:6px 10px!important;border-radius:6px!important;background:rgba(109,40,217,.15)!important;user-select:none!important;transition:background .15s!important;display:inline-flex!important;align-items:center!important;gap:4px!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.35)!important;}
+#ucnav .ucn-chevron{font-size:8px!important;transition:transform .2s!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;width:100%!important;padding:4px 14px 10px!important;flex-wrap:wrap!important;gap:6px!important;}
+#ucnav .ucn-lesson.open+.ucn-steps{display:flex!important;}
+#ucnav .ucn-step{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;font-size:12px!important;text-decoration:none!important;padding:4px 10px!important;border-radius:4px!important;background:rgba(255,255,255,.08)!important;transition:background .15s!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited{color:#ddd6fe!important;-webkit-text-fill-color:#ddd6fe!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.4)!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none;}}
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== EXERCISE PAGE WRAPPER ===== */
+#u5l6quiz{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;line-height:1.7!important;max-width:900px!important;margin:0 auto!important;padding:100px 18px 72px!important;}
+#u5l6quiz *{box-sizing:border-box!important;font-family:'Georgia',serif!important;}
+#u5l6quiz .ex-header{background:linear-gradient(135deg,#1a0840 0%,#2e1065 55%,#6B21A8 100%)!important;border-radius:18px!important;padding:36px 40px!important;margin-bottom:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l6quiz .ex-eyebrow{font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:8px!important;display:block!important;}
+#u5l6quiz .ex-header h1{font-size:28px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px 0!important;line-height:1.25!important;}
+#u5l6quiz .ex-header p{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l6quiz .ex-meta{margin-top:16px!important;display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
+#u5l6quiz .ex-badge{display:inline-block!important;padding:4px 12px!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;border-radius:14px!important;}
+#u5l6quiz .instructions{background:#F5F0FF!important;border-left:4px solid #7C3AED!important;padding:18px 22px!important;border-radius:8px!important;margin-bottom:28px!important;color:#1E1B4B!important;}
+#u5l6quiz .instructions h3{margin:0 0 8px 0!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:15px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l6quiz .instructions p{margin:6px 0!important;font-size:14px!important;}
+#u5l6quiz .score-panel{position:sticky!important;top:80px!important;background:#fff!important;border:2px solid #7C3AED!important;border-radius:12px!important;padding:14px 20px!important;margin-bottom:22px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;box-shadow:0 4px 16px rgba(109,40,217,.14)!important;z-index:100!important;}
+#u5l6quiz .score-label{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l6quiz .score-num{font-size:22px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l6quiz .q-block{background:#fff!important;border:1px solid #E5E7EB!important;border-radius:12px!important;padding:24px 28px!important;margin-bottom:20px!important;box-shadow:0 2px 8px rgba(0,0,0,.04)!important;}
+#u5l6quiz .q-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:4px!important;letter-spacing:1px!important;margin-bottom:10px!important;}
+#u5l6quiz .q-stem{font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px 0!important;line-height:1.65!important;}
+#u5l6quiz .q-stem strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l6quiz .predict-gate{background:#FEF3C7!important;border-left:3px solid #D97706!important;padding:10px 16px!important;border-radius:6px!important;margin-bottom:14px!important;font-size:13px!important;color:#78350F!important;-webkit-text-fill-color:#78350F!important;font-style:italic!important;}
+#u5l6quiz .opts{display:grid!important;gap:8px!important;margin-bottom:14px!important;}
+#u5l6quiz .opt-btn{display:block!important;width:100%!important;text-align:left!important;background:#F9FAFB!important;border:1.5px solid #D1D5DB!important;border-radius:8px!important;padding:12px 16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;cursor:pointer!important;transition:all .12s!important;line-height:1.55!important;}
+#u5l6quiz .opt-btn:hover{border-color:#7C3AED!important;background:#F5F0FF!important;}
+#u5l6quiz .opt-btn.correct{background:#D1FAE5!important;border-color:#059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l6quiz .opt-btn.wrong{background:#FEE2E2!important;border-color:#DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l6quiz .opt-btn.locked{cursor:not-allowed!important;opacity:.75!important;}
+#u5l6quiz .opt-letter{display:inline-block!important;font-weight:700!important;margin-right:10px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l6quiz .feedback{margin-top:14px!important;padding:14px 18px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;display:none!important;}
+#u5l6quiz .feedback.show{display:block!important;}
+#u5l6quiz .feedback.fb-correct{background:#D1FAE5!important;border-left:3px solid #059669!important;color:#064E3B!important;-webkit-text-fill-color:#064E3B!important;}
+#u5l6quiz .feedback.fb-wrong{background:#FEE2E2!important;border-left:3px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#u5l6quiz .feedback strong{display:block!important;margin-bottom:6px!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:1px!important;}
+#u5l6quiz .exam-tip{background:#EDE9FE!important;border-left:3px solid #6B21A8!important;border-radius:8px!important;padding:14px 18px!important;margin-top:16px!important;font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+#u5l6quiz .exam-tip strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-transform:uppercase!important;font-size:11px!important;letter-spacing:1px!important;display:block!important;margin-bottom:4px!important;}
+#u5l6quiz .results-panel{display:none!important;background:linear-gradient(135deg,#1a0840,#2e1065)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:32px 40px!important;margin:28px 0!important;text-align:center!important;}
+#u5l6quiz .results-panel.show{display:block!important;}
+#u5l6quiz .results-panel h2{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:24px!important;margin:0 0 8px 0!important;}
+#u5l6quiz .results-score{font-size:42px!important;font-weight:700!important;margin:12px 0!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#u5l6quiz .results-verdict{font-size:15px!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;margin:0!important;}
+#u5l6quiz .nav-row{display:flex!important;justify-content:space-between!important;gap:14px!important;margin-top:28px!important;flex-wrap:wrap!important;}
+#u5l6quiz .nav-btn{flex:1!important;min-width:200px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;padding:14px 20px!important;border-radius:10px!important;text-align:center!important;font-weight:700!important;font-size:14px!important;transition:background .15s!important;}
+#u5l6quiz .nav-btn:link,#u5l6quiz .nav-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#u5l6quiz .nav-btn:hover{background:#7C3AED!important;}
+#u5l6quiz .nav-btn.secondary{background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l6quiz .nav-btn.secondary:link,#u5l6quiz .nav-btn.secondary:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#u5l6quiz .nav-btn.secondary:hover{background:#DDD6FE!important;}
+#u5l6quiz code{background:#F3F4F6!important;padding:2px 6px!important;border-radius:3px!important;font-family:'SF Mono',Consolas,monospace!important;font-size:13px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+</style>
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){
+function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper')||document.querySelector('[data-lesson-id]')||document.querySelector('[id^=""u3l""]')||document.querySelector('[id^=""u1l""]')||document.querySelector('[id^=""u2l""]');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}
+function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}
+requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);
+window.addEventListener('resize',pos,{passive:true});
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^=""u3l""]')||document.querySelector('[id^=""u1l""]')||document.querySelector('[id^=""u2l""]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^=""u3l""]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);
+var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});
+var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
+})();
+</script>
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""Quiz"",
+  ""name"": ""Quiz: Exam-Style Detection MCQs"",
+  ""description"": ""AP Cybersecurity Unit 5 Lesson 5.6 — Quiz: Exam-Style Detection MCQs. 5 items on detection, logging, and incident response."",
+  ""educationalLevel"": ""High School / AP"",
+  ""learningResourceType"": ""Practice Questions"",
+  ""author"": {
+    ""@type"": ""Person"",
+    ""name"": ""Tanner Crow""
+  },
+  ""publisher"": {
+    ""@type"": ""Organization"",
+    ""name"": ""AP Exam Prep""
+  },
+  ""datePublished"": ""2026-03-01"",
+  ""mainEntityOfPage"": {
+    ""@type"": ""WebPage"",
+    ""@id"": ""https://www.apcsexamprep.com/pages/ap-cyber-unit-5-lesson-6-quiz""
+  }
+}
+</script>
+<div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 5</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Application &amp; Data Vulnerabilities"">5.1 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-1"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-1-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Symmetric Cryptography"">5.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-2"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-2-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Hashing for Data Integrity"">5.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-3"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-3-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Asymmetric Cryptography &amp; PKI"">5.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-4"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-4-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Protecting Applications"">5.5 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps open"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-5"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-5-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(6);"" id=""ucn-l6"" title=""Detecting Attacks on Data &amp; Apps"">5.6 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s6"">
+      <a href=""/pages/ap-cyber-unit-5-lesson-6"" class=""ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-5-lesson-6-quiz"" class=""ucn-step current"">Quiz</a>
+    </div>
+  </div>
+</div>
+<div id=""apcyber-wrapper"">
+<div id=""u5l6quiz"" data-lesson-id=""5.6"">
+<div class=""ch-header"">
+  <span class=""ch-label"">AP Cybersecurity · Unit 5 · Lesson 5.6 · Quiz</span>
+  <h1>Detection &amp; IR Quiz</h1>
+  <p>Five AP-format multiple-choice questions covering the full lesson. No predict-gate — this mirrors the real exam experience. Mix of single-best-answer, I/II/III multi-correct, spot-the-error, and EXCEPT formats. Per-option feedback after submission.</p>
+  <div class=""ch-meta"">
+    <span class=""ch-badge"">5 Questions</span>
+    <span class=""ch-badge"">AP Exam Format</span>
+    <span class=""ch-badge"">~15 min</span>
+    <span class=""ch-badge"">No Predict-Gate</span>
+
+  </div>
+</div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-5""
+       data-lesson=""5.6""
+       data-activity=""quiz""></div>
+</div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 5 · Lesson 5.6 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-6"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-6-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-6-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-5-lesson-6-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cybersecurity-practice-exam"">Next: Practice Exam →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-5-lesson-6"">Lesson 5.6</a><a href=""/pages/ap-cybersecurity-unit-5-securing-applications-and-data"">Unit 5 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
