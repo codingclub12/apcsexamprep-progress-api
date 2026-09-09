@@ -14,17 +14,42 @@ His students' page said, in adjacent sentences:
 He unlocked Quiz and Lab on his 1.2 row. That Lab chip is `1.2-auth-lab`, "Read
 the login log", graded, filed at unit-1 / 1.2.
 
-His students were opening `/pages/ap-cyber-unit-1-lesson-2-lab`, which mounts
-`1.2-lab`, "Find the tournament code". The title on his screenshot is the
-tournament one, so there is no ambiguity about which lab it was.
+The page on his screenshot is `ap-cyber-unit-4-lesson-3-terminal-lab`, which
+mounts `1.2-lab`, "Find the tournament code". It is UNGRADED and the server files
+it at **unit-4 / 4.3**.
 
-`1.2-lab` is UNGRADED and the server files it at **unit-4 / 4.3**.
+**How a 1.2 URL reaches it, corrected.** My first reading of this said lesson 1.2
+LINKS to that lab. It does not, and neither does anything else: a scan of 52 live
+cyber lesson and lab pages found zero references to the handle. The path is the
+REDIRECT left by the 2026-09-06 rename:
 
 ```
-lesson 1.2 page  ->  /pages/ap-cyber-unit-1-lesson-2-lab  ->  1.2-lab
+/pages/ap-cyber-unit-1-lesson-2-terminal-lab
+   301 ->  /pages/ap-cyber-unit-4-lesson-3-terminal-lab   200, the tournament lab
+```
+
+That redirect is doing exactly what board 252 asked of it, "so the old URL 301s
+and nothing is broken". What it means in practice is that **every old 1.2 link
+still works and now delivers Unit 4's lab**. A bookmark, a handout, an LMS link
+or a teacher's own notes all land on a lab whose URL says unit 1 lesson 2, whose
+content is a Unit 4 topic, and which the gradebook files at 4.3. The redirect is
+invisible to the person following it.
+
+So the answer to "is it still showing up on 1.2" is yes, through the redirect
+rather than through a link, and that is the harder version to notice.
+
+```
+old 1.2 URL      ->  301  ->  terminal lab page  ->  1.2-lab
 1.2-lab spec     ->  unit-4 / 4.3, graded=false, "Find the tournament code"
 1.2 Lab chip     ->  1.2-auth-lab, unit-1 / 1.2, graded=true
 ```
+
+**A checking gotcha worth keeping.** `lib/storefront-fetch.pageBody()` reads
+`/pages/<handle>.json` and that endpoint does NOT follow the storefront's 301: it
+answered 404 for the old handle while the human URL served 200. A session asking
+"is this page gone" through `pageBody` alone would conclude the old link was dead
+when it is very much alive. Check the storefront URL with `redirect: 'manual'`
+when the question is about a redirect.
 
 ## Why nothing he could click would ever have worked
 
@@ -83,22 +108,25 @@ the ladder underneath it. Forty combinations now, up from thirty-five.
 
 ## Still open, and it is the half I did not fix
 
-**Lesson 1.2 links to a lab the server files at 4.3.** After this deploy his
-students can open it, which is the urgent part. But the wiring is still wrong in
-both directions:
+**The old 1.2 URL still delivers Unit 4's lab, and that is a decision rather
+than a bug.** After this deploy his students can open it, which is the urgent
+part. What is left is where that URL should point:
 
-- lesson 1.2's lab link goes to the tournament lab, while 1.2's own graded lab
-  (`1.2-auth-lab`, "Read the login log") sits on a page nothing links to from
-  there.
-- lesson 4.3 links to `/pages/ap-cyber-unit-4-lesson-3-lab`, not to the terminal
-  lab that was deliberately renamed onto `ap-cyber-unit-4-lesson-3-terminal-lab`
-  on 2026-09-06.
+- keep the 301 as it is, and every old 1.2 link keeps handing out a 4.3 lab under
+  a 1.2 address, or
+- repoint the old 1.2 URL at 1.2's own terminal lab, `1.2-auth-lab`, "Read the
+  login log", which is graded, filed at 1.2, and has a chip he can already open.
 
-So the 2026-09-06 rename moved the handle and the location, and the pages that
-point at it were never repointed. That is board 252's territory, it is a
-storefront change needing a sheet, and which lab belongs on lesson 1.2 is a
-content judgement rather than a repair.
+The second is better for anyone following an old link, and it is a live redirect
+change on the storefront, so it is Tanner's rather than mine.
 
-There is also a class of defect worth a guard: nothing today notices that a lab
-reachable from lesson X declares itself to live at lesson Y. That would have
-caught this on the day of the rename.
+The lab is also an ORPHAN now: nothing links to it from any of the 52 cyber
+lesson and lab pages, and lesson 4.3's own Lab step goes to
+`/pages/ap-cyber-unit-4-lesson-3-lab`, a different, self-contained page called
+"Lab: Field Device Triage Desk". So a lab that was deliberately moved into Unit 4
+is reachable from nowhere in Unit 4, and only from a Unit 1 redirect. That is
+board 252's territory.
+
+There is also a class of defect worth a guard: nothing notices that a live
+redirect points a lesson-N URL at content the server files under lesson M.
+
