@@ -94,6 +94,15 @@ run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s_open','
 //  The other class closes the lab. Activity scope, under the name the spec's own
 //  aliases carry, so the gate is genuinely found rather than missed for an
 //  unrelated reason.
+//  A MANIFEST ROW, because as of 2026-09-09 a lab without one is not gated at
+//  all. An ungraded lab deliberately gets no row and therefore no chip, so
+//  routes/labs.js stops gating it: a lock nobody can open is not a lock. In
+//  production this lab is graded and has its row, so seeding it here is what
+//  makes the fixture match production rather than a special case for the suite.
+//  Without it every locked assertion below passes for the wrong reason.
+run(`INSERT INTO course_manifest (course,unit,lesson_id,item_id,item_type,points)
+     VALUES (?,?,?,?,?,?)`, COURSE, UNIT, LESSON, SPEC.item_id, SPEC.item_type, SPEC.points);
+
 const ALIAS = labs.aliases(SPEC)[0];
 run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open,updated_at)
      VALUES ('c_closed',?,?,?,?,0,datetime('now'))`, COURSE, UNIT, LESSON, ALIAS);

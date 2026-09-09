@@ -122,6 +122,15 @@ const render = (lesson, activity, auth) =>
 //  so a rename cannot make this suite pass against a lab that moved.
 const LAB = labs.all().find((s) => s.course === COURSE && s.unit === UNIT && s.lesson_id === '1.2');
 if (!LAB) { console.error('no cyber lab at unit-1/1.2; this suite would not reproduce the report'); process.exit(1); }
+//  A MANIFEST ROW, because as of 2026-09-09 a lab without one is not gated at
+//  all. An ungraded lab deliberately gets no row and therefore no chip, so
+//  routes/labs.js stops gating it: a lock nobody can open is not a lock. In
+//  production this lab is graded and has its row, so seeding it here is what
+//  makes the fixture match production rather than a special case for the suite.
+//  Without it every locked assertion below passes for the wrong reason.
+run(`INSERT INTO course_manifest (course,unit,lesson_id,item_id,item_type,points)
+     VALUES (?,?,?,?,?,?)`, COURSE, UNIT, LAB.lesson_id, LAB.item_id, LAB.item_type, LAB.points);
+
 const LAB_ALIAS = labs.aliases(LAB)[0];
 const renderLab = (auth) =>
   call('GET', `/api/labs/${COURSE}/${encodeURIComponent(LAB.item_id)}`, null, auth);

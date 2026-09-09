@@ -17,6 +17,8 @@
 //
 //  THE TABLE IS WRITTEN FROM THE RULES, in one place, in this order:
 //
+//    0. a lab with no course_manifest row has no gradebook column, so no teacher
+//       has a switch for it and it is not gated at all
 //    1. a spec with no unit or lesson cannot be located, so it is open
 //    2. a valid TEACHER token is a real identity previewing their own material,
 //       and the cross-class refusal does not apply to it
@@ -77,6 +79,9 @@ function coversMe(row) {
 }
 
 function rederiveOpen(caller) {
+  const column = db.prepare('SELECT 1 FROM course_manifest WHERE course = ? AND item_id = ?')
+    .get(COURSE, SPEC.item_id);
+  if (!column) return true;                                       // rule 0
   if (!SPEC.unit || !SPEC.lesson_id) return true;                 // rule 1
   if (caller.role === 'teacher') return true;                     // rule 2
 
@@ -140,6 +145,13 @@ run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,mast
 run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('sA','cA','A','x')`);
 run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('sB','cB','B','x')`);
 
+//  The lab gets its manifest row, because a lab without one is not gated at all
+//  as of 2026-09-09 and every arrangement below would resolve open. In production
+//  this lab is graded and has its row. One arrangement then REMOVES it, so the
+//  new branch is compared too rather than only the ladder underneath it.
+run(`INSERT INTO course_manifest (course,unit,lesson_id,item_id,item_type,points)
+     VALUES (?,?,?,?,?,?)`, COURSE, UNIT, LESSON, SPEC.item_id, SPEC.item_type, SPEC.points);
+
 const CALLERS = [
   { name: 'teacher t1', role: 'teacher', token: () => signTeacherToken({ id: 't1', email: 't@s.org' }) },
   { name: 'student of cA', role: 'student', class_id: 'cA', token: () => signStudentToken({ id: 'sA', class_id: 'cA' }) },
@@ -159,6 +171,9 @@ const ARRANGEMENTS = [
   { label: 'cA closed this activity, cB opened it', rows: [['cA', LESSON, ALIASES[0], 0], ['cB', LESSON, ALIASES[0], 1]] },
   { label: 'cA closed it under the OTHER alias', rows: [['cA', LESSON, ALIASES[1], 0]] },
   { label: 'both classes closed the whole unit', rows: [['cA', '*', '*', 0], ['cB', '*', '*', 0]] },
+  //  Same rows, but the lab has no gradebook column. Every caller must open.
+  { label: 'both closed the unit, but the lab has NO manifest row',
+    rows: [['cA', '*', '*', 0], ['cB', '*', '*', 0]], dropColumn: true },
 ];
 
 (async () => {
@@ -169,6 +184,12 @@ const ARRANGEMENTS = [
 
   for (const arr of ARRANGEMENTS) {
     db.prepare('DELETE FROM activity_gates').run();
+    if (arr.dropColumn) {
+      db.prepare('DELETE FROM course_manifest WHERE course = ? AND item_id = ?').run(COURSE, SPEC.item_id);
+    } else {
+      db.prepare(`INSERT OR IGNORE INTO course_manifest (course,unit,lesson_id,item_id,item_type,points)
+                  VALUES (?,?,?,?,?,?)`).run(COURSE, UNIT, LESSON, SPEC.item_id, SPEC.item_type, SPEC.points);
+    }
     for (const [cls, lesson, activity, open] of arr.rows) {
       run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open,updated_at)
            VALUES (?,?,?,?,?,?,datetime('now'))`, cls, COURSE, UNIT, lesson, activity, open);

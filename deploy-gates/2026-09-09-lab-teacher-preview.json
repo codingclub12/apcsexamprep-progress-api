@@ -42,8 +42,8 @@
     },
     {
       "kind": "rederive",
-      "name": "a second decision table agrees with the route on all 35 caller/gate combinations",
-      "_why": "Written from the rules rather than from routes/labs.js, and deliberately does NOT import resolveAliasGate or lockedForAnyClass: importing the thing under test and calling the comparison a rederive is how two implementations come to agree because they are one implementation. It disagreed on its first run, over a class that closes a unit and reopens one lesson inside it. The ROUTE was right and this side was wrong, which is what a rederive is for.",
+      "name": "a second decision table agrees with the route on all 40 caller/gate combinations",
+      "_why": "Written from the rules rather than from routes/labs.js, and deliberately does NOT import resolveAliasGate or lockedForAnyClass: importing the thing under test and calling the comparison a rederive is how two implementations come to agree because they are one implementation. It disagreed on its first run, over a class that closes a unit and reopens one lesson inside it. The ROUTE was right and this side was wrong, which is what a rederive is for. Extended 2026-09-09 with an arrangement that removes the lab's manifest row, so the second implementation covers the ungated-practice branch too rather than only the ladder beneath it.",
       "command": "npm run --silent smoke:labgaterederive",
       "expect": "3 passed, 0 failed"
     },

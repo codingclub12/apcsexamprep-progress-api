@@ -158,7 +158,41 @@ const LAB_ALIASES = (spec) => labs.aliases(spec);
 //  A lab NOBODY has closed is still served anonymously and still indexable. Only
 //  a lab carrying an explicit closing row for some class is withheld, because
 //  the public copy and the assigned copy are the same bytes.
+//  A lab a teacher has no CHIP for cannot be gated, because there is nothing she
+//  can click to change her mind.
+//
+//  An ungraded lab gets no course_manifest row on purpose. scripts/seed-manifest.js
+//  says why: "a manifest row is a denominator, and a denominator for work a
+//  student cannot do marks the whole class down for a reason no teacher can see
+//  on screen. A practice lab is playable and scores nothing, so it gets no row."
+//
+//  No row means no gradebook column, which means no switch on the assignments
+//  board. This route gated it anyway and fell back to the class's
+//  quiz_lock_default, a default she set for GRADED work. For a lock-by-default
+//  class that is permanently closed with no key, and the lab page said both
+//  halves of it in adjacent sentences:
+//
+//    "This one is practice. It checks your work on the page and records nothing."
+//    "Your teacher has not opened this lab yet."
+//
+//  Reported 2026-09-09 by a teacher who had unlocked the 1.2 Lab chip and
+//  watched her students stay shut out. The chip is 1.2-auth-lab; her students
+//  were opening 1.2-lab, which is practice.
+//
+//  IT ASKS THE MANIFEST, NOT spec.graded, though the two agree today because
+//  seed-manifest builds the rows from labSpecs.graded(). The manifest is what
+//  actually produces the chip, and the seeder already has hand-listed lab rows
+//  in constants beside the generated ones. Keying on the authored flag would go
+//  wrong the moment those two disagree, and it would go wrong silently.
+const labManifestStmt = db.prepare(
+  'SELECT 1 FROM course_manifest WHERE course = ? AND item_id = ? LIMIT 1'
+);
+function labHasColumn(spec) {
+  return !!labManifestStmt.get(spec.course, spec.item_id);
+}
+
 function labGate(req, spec) {
+  if (!labHasColumn(spec)) return { open: true, reason: 'practice-no-column' };
   const unitAny = spec.unit, lessonAny = spec.lesson_id;
   const stu = labStudent(req);
   if (!stu) {
