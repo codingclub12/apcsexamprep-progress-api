@@ -103,6 +103,13 @@
       "replace": "    for (const o of b[0].matchAll(/<div class=\"opt\"[^>]*id=\"opt-\\d+-([A-E])\"[^>]*>([\\s\\S]*)<\\/div>/g)) {",
       "command": "npm run --silent smoke:cyberextractqstem",
       "expect_failure": "every question has four options"
+    },
+    {
+      "kind": "live",
+      "name": "after the import, the extractor accepts 2.3 and 4.1 off the LIVE pages",
+      "_why": "This gate had suite, rederive and mutation, which is compliant, but nothing that OBSERVES the deployed system. All of those run against fixtures and a local transform, so every one stays green if the sheet is never imported, or imported over only one of the two pages. This is the assertion that cannot: today it reads accepted=0/2 problems=7 questions=0.",
+      "command": "node scripts/verify-cyber-stem-reword-live.js",
+      "expect": "accepted=2/2 problems=0 questions=11"
     }
   ],
   "_withdrawn": [
