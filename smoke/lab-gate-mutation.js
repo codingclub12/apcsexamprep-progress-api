@@ -22,6 +22,8 @@ const FILES = {
   contract: path.join(ROOT, 'lib', 'gradebook-contract.js'),
   gatelib: path.join(ROOT, 'lib', 'activity-gate.js'),
   player: path.join(ROOT, 'public', 'lab-player.js'),
+  labspec: path.join(ROOT, 'lib', 'lab-spec.js'),
+  page: path.join(ROOT, 'shopify', 'my-progress.html'),
 };
 const ORIGINAL = {};
 for (const [k, p] of Object.entries(FILES)) ORIGINAL[k] = fs.readFileSync(p, 'utf8');
@@ -51,6 +53,13 @@ function runPlayerSuite() {
   const r = spawnSync(process.execPath, [PLAYER_SUITE], { cwd: ROOT, encoding: 'utf8' });
   const out = (r.stdout || '') + (r.stderr || '');
   return { code: r.status, failed: [...out.matchAll(/^\s*\[FAIL\] (.+?)(?:  \{|  \[|$)/gm)].map((m) => m[1].trim()), out };
+}
+
+const PAGE_SUITE = path.join(__dirname, 'my-progress-page.js');
+function runPageSuite() {
+  const r = spawnSync(process.execPath, [PAGE_SUITE], { cwd: ROOT, encoding: 'utf8' });
+  const out = (r.stdout || '') + (r.stderr || '');
+  return { code: r.status, failed: [...out.matchAll(/^\s*\[FAIL\] (.+?)(?:  \{|  \[|  "|$)/gm)].map((m) => m[1].trim()), out };
 }
 
 const MUTATIONS = [
@@ -181,11 +190,84 @@ const MUTATIONS = [
   },
   {
     //  A teacher closes the Lab column; the spec calls itself terminal-lab.
+    //  The list moved to lib/lab-spec.js on 2026-09-09 so the gradebook could
+    //  read the same one. Same mutation, new home, and it now has to break the
+    //  BOARD as well as the route, because both read this list.
     name: 'THE NAME MISMATCH: only the spec\'s own activity type is resolved',
-    file: 'route',
+    file: 'labspec',
     find: "  return own === 'lab' ? ['lab'] : [own, 'lab'];",
     repl: "  return [own];",
     must: ['closing the "lab" column closes a terminal-lab spec'],
+  },
+  {
+    //  Reported 2026-09-09: a lab shut for the student while the teacher's own
+    //  board drew that column open, so the teacher was right to say they had
+    //  locked nothing. The route walks every alias; this file walked one.
+    name: 'THE BOARD DISAGREES: the gradebook resolves one name while the student path resolves two',
+    file: 'contract',
+    find: "    const names = aliasIndex.get(`${it.unit}|${it.lesson_ref}|${it.native_activity}`)\n      || [it.native_activity];",
+    repl: '    const names = [it.native_activity];',
+    must: ['and the Lab column the teacher reads reports locked, not open'],
+  },
+  {
+    //  Flatten the alias GROUP to its first name and enforceability goes back to
+    //  covering 'terminal-lab' only, so the Lab column a teacher clicks is drawn
+    //  as decoration: "students can still reach them". A teacher told that
+    //  clicks the padlock freely, which is how a lab gets closed by a class that
+    //  believes it locked nothing.
+    name: 'enforceability covers only the spec name again, so the Lab padlock reads as decorative',
+    file: 'contract',
+    find: '    for (const act of g.names) {',
+    repl: '    for (const act of g.names.slice(0, 1)) {',
+    must: ['the Lab column reports the lock as enforceable'],
+  },
+  {
+    //  Two columns on one lesson both labelled "1.2 Lab". A teacher cannot ask
+    //  about, or act on, a column they cannot name apart from its twin.
+    name: 'both lab columns render the same label again',
+    file: 'contract',
+    find: "const NATIVE_LABEL = { 'terminal-lab': 'Terminal Lab' };",
+    repl: 'const NATIVE_LABEL = {};',
+    must: ['and they no longer render the same label'],
+  },
+  {
+    //  The refusal that names the wrong person. Anonymous is refused whenever
+    //  ANY class has closed the lab, so a student of an OPEN class who is signed
+    //  out reads that their teacher closed it, and takes that to their teacher.
+    name: 'every refusal claims to be the caller\'s own class again',
+    file: 'route',
+    find: "      locked_for: gate.audience || 'class',",
+    repl: "      locked_for: 'class',",
+    must: ['a signed-out visitor is told it is the anonymous rule'],
+  },
+  {
+    //  Same wrong sentence, one layer out: the player ignores who locked it.
+    name: 'the player tells every locked visitor their teacher closed it',
+    file: 'player',
+    suite: 'player',
+    find: '          var forWho = spec.locked_for || "class";',
+    repl: '          var forWho = "class";',
+    must: ['it does NOT say a teacher has not opened it'],
+  },
+  {
+    //  The student dashboard drops lab work. The score arrives, the unit
+    //  percentage counts it, and the lesson row has no column to draw it in.
+    name: 'the student page drops the lab columns again',
+    file: 'page',
+    suite: 'page',
+    find: 'const cols=ACTS.concat(LAB_ACTS.filter(a=>lessons.some(l=>U.lessons[l].acts[a])));',
+    repl: 'const cols=ACTS;',
+    must: ['the unit with lab work renders a Terminal Lab column'],
+  },
+  {
+    //  The other direction: two more fixed columns on every table in every
+    //  course, including the ones with no labs at all.
+    name: 'the lab columns become unconditional, so every course grows two empty columns',
+    file: 'page',
+    suite: 'page',
+    find: 'const cols=ACTS.concat(LAB_ACTS.filter(a=>lessons.some(l=>U.lessons[l].acts[a])));',
+    repl: 'const cols=ACTS.concat(LAB_ACTS);',
+    must: ['a unit with no lab work gets no lab column'],
   },
   {
     name: 'the widest answer wins instead of the narrowest, so a unit close outranks an explicit open',
@@ -213,8 +295,8 @@ const MUTATIONS = [
   {
     name: 'the spec is put on the wire beside the locked flag',
     file: 'route',
-    find: '      locked: true, reason: gate.reason, lab: null,',
-    repl: '      locked: true, reason: gate.reason, lab: null, brief: spec.brief, steps: spec.steps,',
+    find: '      lab: null,\n    });',
+    repl: '      lab: null, brief: spec.brief, steps: spec.steps,\n    });',
     must: ['and the spec is NOT on the wire'],
   },
   {
@@ -256,12 +338,15 @@ ok('the suite is green before anything is mutated', base.code === 0, { code: bas
 if (base.code !== 0) { console.log(base.out.slice(-1800)); process.exit(1); }
 const basePlayer = runPlayerSuite();
 ok('the player suite is green before anything is mutated', basePlayer.code === 0, basePlayer.failed.slice(0, 3));
+const basePage = runPageSuite();
+ok('the student page suite is green before anything is mutated', basePage.code === 0, basePage.failed.slice(0, 3));
 //  The rederive suite prints only FAILURES, so its assertion names never appear
 //  in a green run and the startsWith scan below cannot see them. Listed here
 //  rather than parsed, and the mutation itself still proves the assertion fires.
 const REDERIVE_NAMES = ['the two implementations agree on every case'];
 const names = [...base.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim())
   .concat([...basePlayer.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim()))
+  .concat([...basePage.out.matchAll(/^\s*\[PASS\] (.+?)(?:  \{|$)/gm)].map((m) => m[1].trim()))
   .concat(REDERIVE_NAMES);
 for (const m of MUTATIONS) for (const w of m.must) {
   ok(`the suite has an assertion starting "${w.slice(0, 46)}"`, names.some((n) => n.startsWith(w)));
@@ -277,7 +362,8 @@ try {
     fs.writeFileSync(FILES[m.file], src.replace(m.find, m.repl));
     const r = m.suite === 'player' ? runPlayerSuite()
       : m.suite === 'rederive' ? runRederiveSuite()
-        : runSuite();
+        : m.suite === 'page' ? runPageSuite()
+          : runSuite();
     restore();
     ok('  the suite goes RED', r.code !== 0, { code: r.code, failed: r.failed });
     ok('  it failed an assertion rather than crashing', r.failed.length > 0, { tail: r.out.slice(-260) });

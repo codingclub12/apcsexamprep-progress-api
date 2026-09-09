@@ -1,0 +1,1041 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At"
+"ap-cyber-unit-3-lesson-1-quiz","MERGE","Topic 3.1 Quiz: Network Fundamentals | AP Cybersecurity","<script type=""application/ld+json"">
+[
+  {""@context"":""https://schema.org"",""@type"":""Quiz"",""headline"":""AP Cybersecurity 3.1 Quiz: Network Fundamentals (5 MCQ)"",""description"":""Test your network fundamentals knowledge with 5 AP Cybersecurity questions. Covers OSI model, attack surface, TCP/UDP, DNS, and network hardening."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.apcsexamprep.com/pages/ap-computer-science-tutor""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://www.apcsexamprep.com""},""educationalLevel"":""High School"",""inLanguage"":""en-US""},
+  {""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP Cybersecurity"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},{""@type"":""ListItem"",""position"":3,""name"":""Unit 3: Securing Networks"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit3""},{""@type"":""ListItem"",""position"":4,""name"":""Topic 3.1 Quiz: Network Fundamentals"",""item"":""https://www.apcsexamprep.com/pages/ap-cyber-unit-3-lesson-1-quiz""}]}
+]
+</script>
+<style>
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#apcyber-wrapper{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper .exhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#apcyber-wrapper .exhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .exhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#apcyber-wrapper .exhero p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;}
+#apcyber-wrapper .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#apcyber-wrapper .score-val{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;}
+#apcyber-wrapper .scenario-card{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#apcyber-wrapper .sc-inner{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#apcyber-wrapper .sc-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .sc-title{font-family:Georgia,serif!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .sc-text{font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;}
+#apcyber-wrapper .sc-text p{margin:0 0 8px!important;}
+/* question blocks */
+#apcyber-wrapper .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#apcyber-wrapper .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#apcyber-wrapper .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#apcyber-wrapper .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#apcyber-wrapper .q-topic{font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .q-stem{padding:18px 18px 4px!important;font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .options{padding:4px 18px 16px!important;}
+#apcyber-wrapper .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .option-label.correct-opt{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .option-label.wrong-opt{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .option-label.neutral-opt{opacity:0.55!important;}
+#apcyber-wrapper .check-btn{
+  display:block!important;margin:0 18px 16px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#apcyber-wrapper .feedback-box{display:none!important;margin:0 18px 18px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .feedback-box.show{display:block!important;}
+#apcyber-wrapper .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#apcyber-wrapper .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#apcyber-wrapper .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+/* textarea/select for Ex2 format */
+#apcyber-wrapper .field-group{margin-bottom:14px!important;}
+#apcyber-wrapper .field-label{display:block!important;font-size:13px!important;font-weight:700!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .field-select{width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;appearance:auto!important;-webkit-appearance:auto!important;}
+#apcyber-wrapper .field-textarea{width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;resize:vertical!important;line-height:1.5!important;}
+#apcyber-wrapper .field-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:3px!important;}
+#apcyber-wrapper .pts-badge{display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;}
+#apcyber-wrapper .submit-part{display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* part blocks for Ex2/Lab */
+#apcyber-wrapper .part-block{border:1px solid #E5E7EB!important;border-radius:10px!important;margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;}
+#apcyber-wrapper .part-header{background:#F5F0FF!important;padding:16px 18px!important;border-bottom:1px solid #DDD6FE!important;}
+#apcyber-wrapper .part-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;margin-right:8px!important;}
+#apcyber-wrapper .part-title{font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;}
+#apcyber-wrapper .part-body{padding:18px!important;}
+#apcyber-wrapper .part-context{background:#F9FAFB!important;border-left:3px solid #A855F7!important;padding:12px 14px!important;border-radius:0 6px 6px 0!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt{font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .part-feedback{display:none!important;margin-top:16px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .part-feedback.show{display:block!important;}
+#apcyber-wrapper .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-model{background:#F5F0FF!important;border-left:3px solid #7C3AED!important;padding:10px 14px!important;border-radius:0 6px 6px 0!important;margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcyber-wrapper .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+/* results */
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 32px!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#apcyber-wrapper .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#apcyber-wrapper .results-btn{display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;}
+#apcyber-wrapper a.results-btn:link,#apcyber-wrapper a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#apcyber-wrapper .nav-links{max-width:800px!important;margin:0 auto 40px!important;display:flex!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;}
+#apcyber-wrapper .nav-link{display:inline-block!important;padding:10px 20px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-link:link,#apcyber-wrapper a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+
+</style>
+
+<div id=""apcyber-wrapper"" data-lesson-id=""3.1a"">
+
+  <div class=""exhero"">
+    <div class=""exhero-badge"">Unit 3 • 3.1 • Quiz</div>
+    <nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;""><a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 3 › 3.1 › Quiz</span></nav>
+    <h1>Lesson 3.1 Quiz: Network Fundamentals</h1>
+    <p>5 questions — Demonstrate your understanding of network architecture and security</p>
+  </div>
+
+    <div class=""scenario-card"">
+    <div class=""sc-inner"">
+      <div class=""sc-label"">Scenario Organization</div>
+      <div class=""sc-title"">Meridian Energy Grid</div>
+      <div class=""sc-text""><p>Meridian Energy Grid operates a network spanning corporate offices, SCADA operations centers, 200 substations, and customer-facing billing portals. The network carries both IT traffic (email, web) and OT traffic (SCADA commands, sensor telemetry).</p></div>
+    </div>
+  </div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-3""
+       data-lesson=""3.1a""
+       data-activity=""quiz""></div>
+  <div class=""nav-links"">
+    <a href=""/pages/ap-cyber-unit-3-lesson-1-lab"" class=""nav-link"">← Lab 3.1</a>
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""nav-link"">Course Hub →</a>
+  </div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 3 · Lesson 3.1 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-1"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-1-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-1-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-1-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-3-lesson-2"">Next: 3.1b Network Threats &amp; Attacks →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-3-lesson-1"">Lesson 3.1</a><a href=""/pages/ap-cybersecurity-unit-3-securing-networks"">Unit 3 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-3-lesson-2-quiz","MERGE","AP Cybersecurity Unit 3 Lesson 2 Quiz","<script type=""application/ld+json"">
+[
+  {""@context"":""https://schema.org"",""@type"":""Quiz"",""headline"":""AP Cybersecurity 3.1 Quiz: Network Attacks (5 MCQ)"",""description"":""Test your network attack knowledge with 5 AP Cybersecurity questions. Covers DDoS, MitM, ARP poisoning, DNS spoofing, and session hijacking with feedback."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.apcsexamprep.com/pages/ap-computer-science-tutor""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://www.apcsexamprep.com""},""educationalLevel"":""High School"",""inLanguage"":""en-US""},
+  {""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP Cybersecurity"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},{""@type"":""ListItem"",""position"":3,""name"":""Unit 3: Securing Networks"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit3""},{""@type"":""ListItem"",""position"":4,""name"":""Topic 3.1 Quiz: Network Attacks"",""item"":""https://www.apcsexamprep.com/pages/ap-cyber-unit-3-lesson-2-quiz""}]}
+]
+</script>
+<style>
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#apcyber-wrapper{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper .exhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#apcyber-wrapper .exhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .exhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#apcyber-wrapper .exhero p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;}
+#apcyber-wrapper .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#apcyber-wrapper .score-val{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;}
+#apcyber-wrapper .scenario-card{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#apcyber-wrapper .sc-inner{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#apcyber-wrapper .sc-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .sc-title{font-family:Georgia,serif!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .sc-text{font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;}
+#apcyber-wrapper .sc-text p{margin:0 0 8px!important;}
+/* question blocks */
+#apcyber-wrapper .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#apcyber-wrapper .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#apcyber-wrapper .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#apcyber-wrapper .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#apcyber-wrapper .q-topic{font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .q-stem{padding:18px 18px 4px!important;font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .options{padding:4px 18px 16px!important;}
+#apcyber-wrapper .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .option-label.correct-opt{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .option-label.wrong-opt{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .option-label.neutral-opt{opacity:0.55!important;}
+#apcyber-wrapper .check-btn{
+  display:block!important;margin:0 18px 16px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#apcyber-wrapper .feedback-box{display:none!important;margin:0 18px 18px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .feedback-box.show{display:block!important;}
+#apcyber-wrapper .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#apcyber-wrapper .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#apcyber-wrapper .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+/* textarea/select for Ex2 format */
+#apcyber-wrapper .field-group{margin-bottom:14px!important;}
+#apcyber-wrapper .field-label{display:block!important;font-size:13px!important;font-weight:700!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .field-select{width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;appearance:auto!important;-webkit-appearance:auto!important;}
+#apcyber-wrapper .field-textarea{width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;resize:vertical!important;line-height:1.5!important;}
+#apcyber-wrapper .field-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:3px!important;}
+#apcyber-wrapper .pts-badge{display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;}
+#apcyber-wrapper .submit-part{display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* part blocks for Ex2/Lab */
+#apcyber-wrapper .part-block{border:1px solid #E5E7EB!important;border-radius:10px!important;margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;}
+#apcyber-wrapper .part-header{background:#F5F0FF!important;padding:16px 18px!important;border-bottom:1px solid #DDD6FE!important;}
+#apcyber-wrapper .part-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;margin-right:8px!important;}
+#apcyber-wrapper .part-title{font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;}
+#apcyber-wrapper .part-body{padding:18px!important;}
+#apcyber-wrapper .part-context{background:#F9FAFB!important;border-left:3px solid #A855F7!important;padding:12px 14px!important;border-radius:0 6px 6px 0!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt{font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .part-feedback{display:none!important;margin-top:16px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .part-feedback.show{display:block!important;}
+#apcyber-wrapper .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-model{background:#F5F0FF!important;border-left:3px solid #7C3AED!important;padding:10px 14px!important;border-radius:0 6px 6px 0!important;margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcyber-wrapper .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+/* results */
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 32px!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#apcyber-wrapper .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#apcyber-wrapper .results-btn{display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;}
+#apcyber-wrapper a.results-btn:link,#apcyber-wrapper a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#apcyber-wrapper .nav-links{max-width:800px!important;margin:0 auto 40px!important;display:flex!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;}
+#apcyber-wrapper .nav-link{display:inline-block!important;padding:10px 20px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-link:link,#apcyber-wrapper a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+
+</style>
+
+<div id=""apcyber-wrapper"" data-lesson-id=""3.1b"">
+
+  <div class=""exhero"">
+    <div class=""exhero-badge"">Unit 3 • 3.1 • Quiz</div>
+    <nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;""><a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 3 › 3.1 › Quiz</span></nav>
+    <h1>Lesson 3.1 Quiz: Network Attacks</h1>
+    <p>5 questions — Demonstrate your understanding of network attack techniques</p>
+  </div>
+
+    <div class=""scenario-card"">
+    <div class=""sc-inner"">
+      <div class=""sc-label"">Scenario Organization</div>
+      <div class=""sc-title"">Crossroads Logistics</div>
+      <div class=""sc-text""><p>Crossroads Logistics is a freight and shipping company operating a fleet of 200 trucks with IoT-based GPS tracking, a centralized dispatch system, and warehouse inventory management across 5 distribution centers. Each facility connects to headquarters over the company’s WAN.</p></div>
+    </div>
+  </div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-3""
+       data-lesson=""3.1b""
+       data-activity=""quiz""></div>
+  <div class=""nav-links"">
+    <a href=""/pages/ap-cyber-unit-3-lesson-2-lab"" class=""nav-link"">← Lab 3.1</a>
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""nav-link"">Course Hub →</a>
+  </div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 3 · Lesson 3.1 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-2"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-2-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-2-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-2-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-3-lesson-3"">Next: 3.4 Firewalls &amp; ACLs →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-3-lesson-2"">Lesson 3.1</a><a href=""/pages/ap-cybersecurity-unit-3-securing-networks"">Unit 3 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-3-lesson-3-quiz","MERGE","AP Cybersecurity Unit 3 Lesson 3 Quiz","<script type=""application/ld+json"">
+[
+  {""@context"":""https://schema.org"",""@type"":""Quiz"",""headline"":""AP Cybersecurity 3.2 Quiz: Secure Network Protocols (5 MCQ)"",""description"":""Test your secure protocol knowledge with 5 AP Cybersecurity questions. Covers TLS, HTTPS, SSH, VPN tunneling, certificate validation, and DNS encryption."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.apcsexamprep.com/pages/ap-computer-science-tutor""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://www.apcsexamprep.com""},""educationalLevel"":""High School"",""inLanguage"":""en-US""},
+  {""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP Cybersecurity"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},{""@type"":""ListItem"",""position"":3,""name"":""Unit 3: Securing Networks"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit3""},{""@type"":""ListItem"",""position"":4,""name"":""Topic 3.2 Quiz: Secure Network Protocols"",""item"":""https://www.apcsexamprep.com/pages/ap-cyber-unit-3-lesson-6-quiz""}]}
+]
+</script>
+<style>
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#apcyber-wrapper{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper .exhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#apcyber-wrapper .exhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .exhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#apcyber-wrapper .exhero p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;}
+#apcyber-wrapper .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#apcyber-wrapper .score-val{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;}
+#apcyber-wrapper .scenario-card{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#apcyber-wrapper .sc-inner{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#apcyber-wrapper .sc-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .sc-title{font-family:Georgia,serif!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .sc-text{font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;}
+#apcyber-wrapper .sc-text p{margin:0 0 8px!important;}
+/* question blocks */
+#apcyber-wrapper .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#apcyber-wrapper .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#apcyber-wrapper .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#apcyber-wrapper .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#apcyber-wrapper .q-topic{font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .q-stem{padding:18px 18px 4px!important;font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .options{padding:4px 18px 16px!important;}
+#apcyber-wrapper .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .option-label.correct-opt{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .option-label.wrong-opt{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .option-label.neutral-opt{opacity:0.55!important;}
+#apcyber-wrapper .check-btn{
+  display:block!important;margin:0 18px 16px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#apcyber-wrapper .feedback-box{display:none!important;margin:0 18px 18px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .feedback-box.show{display:block!important;}
+#apcyber-wrapper .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#apcyber-wrapper .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#apcyber-wrapper .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+/* textarea/select for Ex2 format */
+#apcyber-wrapper .field-group{margin-bottom:14px!important;}
+#apcyber-wrapper .field-label{display:block!important;font-size:13px!important;font-weight:700!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .field-select{width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;appearance:auto!important;-webkit-appearance:auto!important;}
+#apcyber-wrapper .field-textarea{width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;resize:vertical!important;line-height:1.5!important;}
+#apcyber-wrapper .field-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:3px!important;}
+#apcyber-wrapper .pts-badge{display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;}
+#apcyber-wrapper .submit-part{display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* part blocks for Ex2/Lab */
+#apcyber-wrapper .part-block{border:1px solid #E5E7EB!important;border-radius:10px!important;margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;}
+#apcyber-wrapper .part-header{background:#F5F0FF!important;padding:16px 18px!important;border-bottom:1px solid #DDD6FE!important;}
+#apcyber-wrapper .part-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;margin-right:8px!important;}
+#apcyber-wrapper .part-title{font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;}
+#apcyber-wrapper .part-body{padding:18px!important;}
+#apcyber-wrapper .part-context{background:#F9FAFB!important;border-left:3px solid #A855F7!important;padding:12px 14px!important;border-radius:0 6px 6px 0!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt{font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .part-feedback{display:none!important;margin-top:16px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .part-feedback.show{display:block!important;}
+#apcyber-wrapper .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-model{background:#F5F0FF!important;border-left:3px solid #7C3AED!important;padding:10px 14px!important;border-radius:0 6px 6px 0!important;margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcyber-wrapper .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+/* results */
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 32px!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#apcyber-wrapper .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#apcyber-wrapper .results-btn{display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;}
+#apcyber-wrapper a.results-btn:link,#apcyber-wrapper a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#apcyber-wrapper .nav-links{max-width:800px!important;margin:0 auto 40px!important;display:flex!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;}
+#apcyber-wrapper .nav-link{display:inline-block!important;padding:10px 20px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-link:link,#apcyber-wrapper a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+
+</style>
+
+<div id=""apcyber-wrapper"" data-lesson-id=""3.2"">
+
+  <div class=""exhero"">
+    <div class=""exhero-badge"">Unit 3 • 3.2 • Quiz</div>
+    <nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;""><a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 3 › 3.2 › Quiz</span></nav>
+    <h1>Lesson 3.2 Quiz: Secure Network Protocols</h1>
+    <p>5 questions — Demonstrate your understanding of secure protocol implementations</p>
+  </div>
+
+    <div class=""scenario-card"">
+    <div class=""sc-inner"">
+      <div class=""sc-label"">Scenario Organization</div>
+      <div class=""sc-title"">Crossroads Logistics</div>
+      <div class=""sc-text""><p>Crossroads Logistics is hardening its network protocols after a compliance audit found multiple insecure services in production. Fleet GPS trackers, warehouse scanners, and the corporate office all communicate using a mix of legacy and modern protocols.</p></div>
+    </div>
+  </div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-3""
+       data-lesson=""3.2""
+       data-activity=""quiz""></div>
+  <div class=""nav-links"">
+    <a href=""/pages/ap-cyber-unit-3-lesson-6-lab"" class=""nav-link"">← Lab 3.2</a>
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""nav-link"">Course Hub →</a>
+  </div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 3 · Lesson 3.2 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-6"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-6-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-6-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-6-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-4-lesson-1"">Next: 4.1 Device Vulnerabilities and Attacks →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-3-lesson-6"">Lesson 3.2</a><a href=""/pages/ap-cybersecurity-unit-3-securing-networks"">Unit 3 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-3-lesson-4-quiz","MERGE","AP Cybersecurity Unit 3 Lesson 4 Quiz","<script type=""application/ld+json"">
+[
+  {""@context"":""https://schema.org"",""@type"":""Quiz"",""headline"":""AP Cybersecurity 3.3 Quiz: Network Segmentation & VLANs (5 MCQ)"",""description"":""Test your VLAN and segmentation knowledge with 5 AP Cybersecurity questions. Covers VLAN hopping, inter-VLAN routing, trunk ports, and lateral movement defense."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.apcsexamprep.com/pages/ap-computer-science-tutor""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://www.apcsexamprep.com""},""educationalLevel"":""High School"",""inLanguage"":""en-US""},
+  {""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP Cybersecurity"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},{""@type"":""ListItem"",""position"":3,""name"":""Unit 3: Securing Networks"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit3""},{""@type"":""ListItem"",""position"":4,""name"":""Topic 3.3 Quiz: Network Segmentation and VLANs"",""item"":""https://www.apcsexamprep.com/pages/ap-cyber-unit-3-lesson-4-quiz""}]}
+]
+</script>
+<style>
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#apcyber-wrapper{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper .exhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#apcyber-wrapper .exhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .exhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#apcyber-wrapper .exhero p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;}
+#apcyber-wrapper .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#apcyber-wrapper .score-val{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;}
+#apcyber-wrapper .scenario-card{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#apcyber-wrapper .sc-inner{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#apcyber-wrapper .sc-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .sc-title{font-family:Georgia,serif!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .sc-text{font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;}
+#apcyber-wrapper .sc-text p{margin:0 0 8px!important;}
+/* question blocks */
+#apcyber-wrapper .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#apcyber-wrapper .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#apcyber-wrapper .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#apcyber-wrapper .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#apcyber-wrapper .q-topic{font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .q-stem{padding:18px 18px 4px!important;font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .options{padding:4px 18px 16px!important;}
+#apcyber-wrapper .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .option-label.correct-opt{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .option-label.wrong-opt{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .option-label.neutral-opt{opacity:0.55!important;}
+#apcyber-wrapper .check-btn{
+  display:block!important;margin:0 18px 16px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#apcyber-wrapper .feedback-box{display:none!important;margin:0 18px 18px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .feedback-box.show{display:block!important;}
+#apcyber-wrapper .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#apcyber-wrapper .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#apcyber-wrapper .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+/* textarea/select for Ex2 format */
+#apcyber-wrapper .field-group{margin-bottom:14px!important;}
+#apcyber-wrapper .field-label{display:block!important;font-size:13px!important;font-weight:700!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .field-select{width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;appearance:auto!important;-webkit-appearance:auto!important;}
+#apcyber-wrapper .field-textarea{width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;resize:vertical!important;line-height:1.5!important;}
+#apcyber-wrapper .field-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:3px!important;}
+#apcyber-wrapper .pts-badge{display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;}
+#apcyber-wrapper .submit-part{display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* part blocks for Ex2/Lab */
+#apcyber-wrapper .part-block{border:1px solid #E5E7EB!important;border-radius:10px!important;margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;}
+#apcyber-wrapper .part-header{background:#F5F0FF!important;padding:16px 18px!important;border-bottom:1px solid #DDD6FE!important;}
+#apcyber-wrapper .part-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;margin-right:8px!important;}
+#apcyber-wrapper .part-title{font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;}
+#apcyber-wrapper .part-body{padding:18px!important;}
+#apcyber-wrapper .part-context{background:#F9FAFB!important;border-left:3px solid #A855F7!important;padding:12px 14px!important;border-radius:0 6px 6px 0!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt{font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .part-feedback{display:none!important;margin-top:16px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .part-feedback.show{display:block!important;}
+#apcyber-wrapper .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-model{background:#F5F0FF!important;border-left:3px solid #7C3AED!important;padding:10px 14px!important;border-radius:0 6px 6px 0!important;margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcyber-wrapper .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+/* results */
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 32px!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#apcyber-wrapper .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#apcyber-wrapper .results-btn{display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;}
+#apcyber-wrapper a.results-btn:link,#apcyber-wrapper a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#apcyber-wrapper .nav-links{max-width:800px!important;margin:0 auto 40px!important;display:flex!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;}
+#apcyber-wrapper .nav-link{display:inline-block!important;padding:10px 20px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-link:link,#apcyber-wrapper a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+
+</style>
+
+<div id=""apcyber-wrapper"" data-lesson-id=""3.3"">
+
+  <div class=""exhero"">
+    <div class=""exhero-badge"">Unit 3 • 3.3 • Quiz</div>
+    <nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;""><a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 3 › 3.3 › Quiz</span></nav>
+    <h1>Lesson 3.3 Quiz: Network Segmentation &amp; VLANs</h1>
+    <p>5 questions — Demonstrate your understanding of network segmentation</p>
+  </div>
+
+    <div class=""scenario-card"">
+    <div class=""sc-inner"">
+      <div class=""sc-label"">Scenario Organization</div>
+      <div class=""sc-title"">Brightpath University</div>
+      <div class=""sc-text""><p>Brightpath University has deployed a segmented network with VLANs for students (VLAN 100), faculty (VLAN 200), research labs (VLAN 300), campus IoT (VLAN 400), and a DMZ for public web servers (VLAN 500). An inter-VLAN firewall controls traffic between zones.</p></div>
+    </div>
+  </div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-3""
+       data-lesson=""3.3""
+       data-activity=""quiz""></div>
+  <div class=""nav-links"">
+    <a href=""/pages/ap-cyber-unit-3-lesson-4-lab"" class=""nav-link"">← Lab 3.3</a>
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""nav-link"">Course Hub →</a>
+  </div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 3 · Lesson 3.3 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-4"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-4-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-4-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-4-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-3-lesson-5"">Next: 3.5 IDS/IPS &amp; SIEM →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-3-lesson-4"">Lesson 3.3</a><a href=""/pages/ap-cybersecurity-unit-3-securing-networks"">Unit 3 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-3-lesson-5-quiz","MERGE","AP Cybersecurity Unit 3 Lesson 5 Quiz","<script type=""application/ld+json"">
+[
+  {""@context"":""https://schema.org"",""@type"":""Quiz"",""headline"":""AP Cybersecurity 3.4 Quiz: Firewalls & Packet Filtering (5 MCQ)"",""description"":""Quiz your firewall knowledge with 5 AP Cybersecurity questions. Covers stateful vs stateless, rule ordering, default deny, and firewall limitations with feedback."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.apcsexamprep.com/pages/ap-computer-science-tutor""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://www.apcsexamprep.com""},""educationalLevel"":""High School"",""inLanguage"":""en-US""},
+  {""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP Cybersecurity"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},{""@type"":""ListItem"",""position"":3,""name"":""Unit 3: Securing Networks"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit3""},{""@type"":""ListItem"",""position"":4,""name"":""Topic 3.4 Quiz: Firewalls and Packet Filtering"",""item"":""https://www.apcsexamprep.com/pages/ap-cyber-unit-3-lesson-3-quiz""}]}
+]
+</script>
+<style>
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#apcyber-wrapper{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper .exhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#apcyber-wrapper .exhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .exhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#apcyber-wrapper .exhero p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;}
+#apcyber-wrapper .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#apcyber-wrapper .score-val{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;}
+#apcyber-wrapper .scenario-card{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#apcyber-wrapper .sc-inner{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#apcyber-wrapper .sc-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .sc-title{font-family:Georgia,serif!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .sc-text{font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;}
+#apcyber-wrapper .sc-text p{margin:0 0 8px!important;}
+/* question blocks */
+#apcyber-wrapper .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#apcyber-wrapper .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#apcyber-wrapper .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#apcyber-wrapper .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#apcyber-wrapper .q-topic{font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .q-stem{padding:18px 18px 4px!important;font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .options{padding:4px 18px 16px!important;}
+#apcyber-wrapper .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .option-label.correct-opt{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .option-label.wrong-opt{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .option-label.neutral-opt{opacity:0.55!important;}
+#apcyber-wrapper .check-btn{
+  display:block!important;margin:0 18px 16px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#apcyber-wrapper .feedback-box{display:none!important;margin:0 18px 18px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .feedback-box.show{display:block!important;}
+#apcyber-wrapper .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#apcyber-wrapper .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#apcyber-wrapper .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+/* textarea/select for Ex2 format */
+#apcyber-wrapper .field-group{margin-bottom:14px!important;}
+#apcyber-wrapper .field-label{display:block!important;font-size:13px!important;font-weight:700!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .field-select{width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;appearance:auto!important;-webkit-appearance:auto!important;}
+#apcyber-wrapper .field-textarea{width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;resize:vertical!important;line-height:1.5!important;}
+#apcyber-wrapper .field-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:3px!important;}
+#apcyber-wrapper .pts-badge{display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;}
+#apcyber-wrapper .submit-part{display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* part blocks for Ex2/Lab */
+#apcyber-wrapper .part-block{border:1px solid #E5E7EB!important;border-radius:10px!important;margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;}
+#apcyber-wrapper .part-header{background:#F5F0FF!important;padding:16px 18px!important;border-bottom:1px solid #DDD6FE!important;}
+#apcyber-wrapper .part-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;margin-right:8px!important;}
+#apcyber-wrapper .part-title{font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;}
+#apcyber-wrapper .part-body{padding:18px!important;}
+#apcyber-wrapper .part-context{background:#F9FAFB!important;border-left:3px solid #A855F7!important;padding:12px 14px!important;border-radius:0 6px 6px 0!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt{font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .part-feedback{display:none!important;margin-top:16px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .part-feedback.show{display:block!important;}
+#apcyber-wrapper .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-model{background:#F5F0FF!important;border-left:3px solid #7C3AED!important;padding:10px 14px!important;border-radius:0 6px 6px 0!important;margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcyber-wrapper .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+/* results */
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 32px!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#apcyber-wrapper .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#apcyber-wrapper .results-btn{display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;}
+#apcyber-wrapper a.results-btn:link,#apcyber-wrapper a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#apcyber-wrapper .nav-links{max-width:800px!important;margin:0 auto 40px!important;display:flex!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;}
+#apcyber-wrapper .nav-link{display:inline-block!important;padding:10px 20px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-link:link,#apcyber-wrapper a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+
+</style>
+
+<div id=""apcyber-wrapper"" data-lesson-id=""3.4"">
+
+  <div class=""exhero"">
+    <div class=""exhero-badge"">Unit 3 • 3.4 • Quiz</div>
+    <nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;""><a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 3 › 3.4 › Quiz</span></nav>
+    <h1>Lesson 3.4 Quiz: Firewalls &amp; Packet Filtering</h1>
+    <p>5 questions — Demonstrate your understanding of firewall concepts</p>
+  </div>
+
+    <div class=""scenario-card"">
+    <div class=""sc-inner"">
+      <div class=""sc-label"">Scenario Organization</div>
+      <div class=""sc-title"">NovaTech Solutions</div>
+      <div class=""sc-text""><p>NovaTech Solutions is a 300-employee SaaS company hosting its product on AWS. The security team manages a multi-tier firewall architecture: a perimeter NGFW, internal segmentation firewalls between production and development environments, and a WAF protecting customer-facing APIs.</p></div>
+    </div>
+  </div>
+
+  <div data-apcs-quiz
+       data-course=""ap-cybersecurity""
+       data-unit=""unit-3""
+       data-lesson=""3.4""
+       data-activity=""quiz""></div>
+  <div class=""nav-links"">
+    <a href=""/pages/ap-cyber-unit-3-lesson-3-lab"" class=""nav-link"">← Lab 3.4</a>
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""nav-link"">Course Hub →</a>
+  </div>
+</div>
+<script src=""https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"" defer></script>
+
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 3 · Lesson 3.4 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-3"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-3-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-3-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-3-lesson-3-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-3-lesson-4"">Next: 3.3 VLANs &amp; Network Segmentation →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-3-lesson-3"">Lesson 3.4</a><a href=""/pages/ap-cybersecurity-unit-3-securing-networks"">Unit 3 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"

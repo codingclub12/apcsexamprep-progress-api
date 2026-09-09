@@ -140,10 +140,10 @@ const labAnyGateStmt = db.prepare(
 //  ladder as everything else rather than a second opinion about precedence. An
 //  explicit open on either column therefore still beats a unit-wide close, which
 //  is what a teacher means when they reopen one thing inside a closed unit.
-const LAB_ALIASES = (spec) => {
-  const own = spec.item_type || 'terminal-lab';
-  return own === 'lab' ? ['lab'] : [own, 'lab'];
-};
+//  It lives in lib/lab-spec.js now, beside the specs it describes, because the
+//  gradebook needs the same list and a second copy of it is how the board came
+//  to draw a padlock the student path disagreed with.
+const LAB_ALIASES = (spec) => labs.aliases(spec);
 
 //  Returns { open, reason }. Another course and a spec that names no unit or
 //  lesson resolve OPEN: a gate needs a location, and refusing without one would
@@ -168,7 +168,13 @@ function labGate(req, spec) {
     //  first close ignores an explicit reopen on the other name, which is exactly
     //  what a teacher means by reopening one lab inside a closed unit.
     const hit = lockedForAnyClass(anyRows, lessonAny, LAB_ALIASES(spec));
-    if (hit.locked) return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope };
+    //  audience says WHOSE decision this was, so the player can stop attributing
+    //  it to a teacher who did nothing. This refusal is not about the caller's
+    //  class, because the caller has none: it fires when ANY class has closed
+    //  the lab. See the player's locked branch.
+    if (hit.locked) {
+      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };
+    }
     return { open: true, reason: 'self-study' };
   }
   const cls = labClassStmt.get(stu.class_id);
@@ -215,7 +221,11 @@ router.get('/api/labs/:course/:item_id', (req, res) => {
   if (!gate.open) {
     return res.json({
       course: req.params.course, item_id: req.params.item_id,
-      locked: true, reason: gate.reason, lab: null,
+      locked: true, reason: gate.reason,
+      //  'class' is the default because every other refusal on this route IS the
+      //  caller's own class: resolveAliasGate only ever runs with a class row.
+      locked_for: gate.audience || 'class',
+      lab: null,
     });
   }
   res.json(labs.forBrowser(spec));

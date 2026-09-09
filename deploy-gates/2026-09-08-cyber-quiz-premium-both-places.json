@@ -1,0 +1,102 @@
+{
+  "change": "the cyber quiz is premium in both places on the Command Center, teacher document and student link, and the free Unit 1 preview keeps everything else",
+  "_context": [
+    "Tanner, 2026-09-08: 'Just lock the quiz all together. Student and teacher.",
+    "Free preview is fine with just the slides and other supplementals.'",
+    "",
+    "The page gates lesson materials on `unlocked`, which is",
+    "STATE.entitled || unitFree(u). Unit 1 is a free unit, so `unlocked` is TRUE",
+    "for a signed-out visitor and the quiz was published to them in two places:",
+    "the teacher quiz document in the materials row, and the student quiz link in",
+    "the pages row. Both now read STATE.entitled through one predicate, quizOpen(),",
+    "which the answer key already used.",
+    "",
+    "NOTHING ELSE IN A FREE UNIT MOVES, and that is half of what the checks are",
+    "for. The deck, guided notes, supplements, teacher guide, lesson page,",
+    "scenarios, terminal lab and Question of the Day stay exactly as they were. A",
+    "mutation that locks the whole row instead of the quiz has to go red, because",
+    "'lock the quiz' and 'lock the preview' are one careless line apart.",
+    "",
+    "WHAT THIS IS: presentation gating, on two of the three surfaces, and the",
+    "distinction is worth keeping straight. The Drive quiz document is shared",
+    "'anyone with the link' and the student quiz page is a public Shopify page, so",
+    "hiding both stops them being PUBLISHED to a visitor who has not paid, and does",
+    "not revoke a URL somebody already holds. The answer key is different in kind:",
+    "the server refuses it on a credential. Making the student quiz page itself",
+    "refuse an unentitled reader is board 258 and 276, not a Command Center edit.",
+    "",
+    "NO LIVE CHECK IS POSSIBLE FROM HERE, and that is a property of the change",
+    "rather than an omission. This PR touches no route and no runtime module, so",
+    "merging deploys nothing: the change reaches a teacher only when the Matrixify",
+    "sheet is imported, which is a human action. The live assertion to run after",
+    "that import is written in the run note rather than pretended to here."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the quiz is locked in both places and nothing else in a free unit is",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect": "49 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the key endpoint is unchanged by this pass",
+      "command": "npm run --silent smoke:quizkey",
+      "expect": "30 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "the teacher quiz DOCUMENT rides on the free-unit gate again",
+      "_why": "This is the state the page ships in today. matButton takes `unlocked`, which is true for a signed-out visitor on Unit 1, so the Drive quiz url is printed into public HTML. Section 9 renders the materials row in exactly that state and must go red.",
+      "file": "scripts/cyber-cc-quiz-key-panel.js",
+      "find": "  + `    if(mat.key === \"quiz\") unlocked = quizOpen();\\n`\n",
+      "replace": "",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect_failure": "teacher Quiz document is LOCKED"
+    },
+    {
+      "kind": "mutation",
+      "name": "the student quiz LINK rides on the free-unit gate again",
+      "_why": "The other half of 'student and teacher'. A gate that only covered the teacher document would leave the quiz a click away in the row below it.",
+      "file": "scripts/cyber-cc-quiz-key-panel.js",
+      "find": "      var open = d[0]===\"quiz\" ? quizOpen() : unlocked;",
+      "replace": "      var open = unlocked;",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect_failure": "student Quiz link is LOCKED"
+    },
+    {
+      "kind": "mutation",
+      "name": "quizOpen stops meaning entitled",
+      "_why": "One predicate feeds all three surfaces, so it is the single point where this whole change can be undone by accident.",
+      "file": "scripts/cyber-cc-quiz-key-panel.js",
+      "find": "    + '  function quizOpen(){ return !!STATE.entitled; }\\n'",
+      "replace": "    + '  function quizOpen(){ return true; }\\n'",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect_failure": "Quiz document is LOCKED"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT OVERSHOOTS: locking the quiz locks the whole free preview",
+      "_why": "'Lock the quiz' and 'lock the preview' are one careless line apart, and the overshoot is the more damaging of the two because it takes away the thing the free unit exists to show. Tanner asked for the preview to keep the slides and supplementals, so section 9 asserts each of them is still OPEN and this must go red.",
+      "file": "scripts/cyber-cc-quiz-key-panel.js",
+      "find": "      var open = d[0]===\"quiz\" ? quizOpen() : unlocked;",
+      "replace": "      var open = quizOpen();",
+      "command": "npm run --silent smoke:cyberquizkeys",
+      "expect_failure": "Lesson page is still open"
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet re-read as a CSV rebuilds the page it was generated from, byte for byte",
+      "_why": "Generation is not evidence that generation worked. This one now undoes FOUR line edits rather than two, each listed explicitly rather than matched by a loose regex, so an edit the verifier does not know about fails the comparison instead of being normalized away. It also asserts no destination other than quiz was narrowed, which is the overshoot above checked from the artifact side.",
+      "command": "node scripts/verify-cc-quiz-key-sheet.js shopify/page-snapshots/cyber-command-center.before-quiz-answer-keys.html matrixify/cyber-cc-quiz-answer-keys-pages.csv",
+      "expect": "30 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the crosswalk still agrees with the CED taxonomy after the regeneration",
+      "_why": "The gate narrowing must not have disturbed which bank each row's key points at. Same two independent methods as the first pass.",
+      "command": "node scripts/rederive-cc-quiz-keys.js shopify/page-snapshots/cyber-command-center.before-quiz-answer-keys.html",
+      "expect": "15 rows confirmed by both methods"
+    }
+  ]
+}
