@@ -1,0 +1,75 @@
+{
+  "change": "the Command Center retry panel controls the policy the server enforces, instead of moving the numbers on the page and saving nothing",
+  "_reported": "Tanner, 2026-09-09: \"I also have students able to retry assignments as many times as they want.\" The engine was fine. The panel was four per-type switches tagged SAVING SOON that wrote to page state and called renderAll, so a teacher turning Quizzes off watched the grades move and changed nothing a student could do. Worse than an inert control: moving numbers is exactly the feedback a working one gives.",
+  "_why_three_and_not_four": "classes.retry_mode holds all / practice / none. Four per-type switches is 16 combinations of which the server can hold three, so wiring four toggles to three modes would refuse the teacher 13 times out of 16. The panel is a three-way choice now and every state it can reach is one the server has. Labels and blurbs are retry-policy.js's own MODE_LABELS and MODE_DESCRIPTIONS, copied verbatim so the two surfaces cannot describe the same rule differently.",
+  "_the_ride_along": "This sheet also carries work that is already in shopify/cyber-dashboard.html and was never imported: board 260's unenforceable-lock disclosure, which adds a warning glyph beside the padlock and moves the reason into aria-label. Measured against the live body 2026-09-09: the glyph is absent live and present in the repo. That is finished, reviewed work from 2026-09-07 whose run note says in as many words that the sheet needed a human to import it, and stripping it back out by hand would be worse than shipping it. Flagged rather than folded in silently. The remaining four diff hunks are entity round-trip noise: the repo writes &ndash; and &#9662; where the live body holds the decoded characters, and Shopify decodes them again on import.",
+  "_not_changed_here": "The per-student retry rows on the By Student tab. They still do not save, and they still say so on the card: \"Preview only in this session. These four do not save yet.\" Writing one is a single call; reading it back is not, because the teacher progress payload carries no retry_override field, so a wired toggle would show Default on the next load while an override was live. That is a payload change and its own piece of work.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the dashboard page suite, now driving the retry panel against the real policy module",
+      "command": "node scripts/gate-suite-floor.js tchdashpage 72",
+      "expect": "GATE OK",
+      "_why": "50 before this change, 72 after. Section 11 is new and compares the page's mapping against retry-policy.js itself over all 12 mode-and-type combinations, rather than against a second copy of my own reasoning."
+    },
+    {
+      "kind": "suite",
+      "name": "the retry policy end to end on the server, unchanged here and re-run because the page now drives it",
+      "command": "node scripts/gate-suite-floor.js retrymodes 64",
+      "expect": "GATE OK",
+      "_why": "This is what proves the endpoint the panel now calls actually accepts what it sends: PATCH /api/teacher/classes/:code/retry with the three modes and the legacy boolean alias."
+    },
+    {
+      "kind": "suite",
+      "name": "assignment locking on the same page, so the panel rewrite did not disturb the padlocks beside it",
+      "command": "node scripts/gate-suite-floor.js dashassign 39",
+      "expect": "GATE OK"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE REPORTED BUG: the panel stops saving and only moves the numbers",
+      "_why": "This is the state the teacher was in. The grid recomputes, the page looks like it worked, and no student is affected.",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/retry',{retry_mode:mode});",
+      "replace": "    const r={ok:true};",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]     it PATCHes the retry endpoint"
+    },
+    {
+      "kind": "mutation",
+      "name": "it paints the new mode optimistically instead of re-reading the class",
+      "_why": "Independent of the rule above and it breaks a different assertion. A control that shows what you clicked rather than what saved is how a panel ends up displaying a setting the server refused, which is the failure being fixed here.",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "    if(!r.ok){ alert(r.error||'Could not change the retry policy.'); return; }\n    await this.loadProgress(this._token());",
+      "replace": "    if(!r.ok){ alert(r.error||'Could not change the retry policy.'); return; }\n    this.state.retryMode=mode; this.state.retryTypes=this.typesForMode(mode); this.renderRetryMode();",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]     and then re-reads the class rather than trusting its own click"
+    },
+    {
+      "kind": "mutation",
+      "name": "the page invents a policy instead of reading the class row",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "    const rm=(d.class&&d.class.retry_mode)||((d.class&&d.class.retry_allowed)?'all':'practice');",
+      "replace": "    const rm='all';",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]     {\"retry_mode\":\"practice\"} -> practice"
+    },
+    {
+      "kind": "mutation",
+      "name": "the mapping drifts back to a state the server cannot be in",
+      "_why": "quiz on with exam off was the panel's own default and is not expressible: retry-policy.js treats quiz and exam alike as assessments. The suite compares against that module rather than against a copy of the rule, so a drift in either direction trips it.",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "    return {lesson:true, exercise:true, quiz:false, exam:false};",
+      "replace": "    return {lesson:true, exercise:true, quiz:true, exam:false};",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]   12 combinations compared, zero disagreements"
+    },
+    {
+      "kind": "live",
+      "name": "the imported page carries the picker and no longer carries the dead switches",
+      "command": "node -e \"const sf=require('./lib/storefront-fetch');const b=sf.page('/pages/cyber-dashboard').body;const dead=['rt-lesson','rt-ex','rt-quiz','rt-exam'].filter(id=>b.includes('id=\\\"'+id+'\\\"'));console.log('picker='+b.includes('gb-retryseg')+' saves='+b.includes(\\\"/retry',{retry_mode:mode}\\\")+' soon='+b.includes('SAVING SOON')+' dead='+dead.length)\"",
+      "expect": "picker=true saves=true soon=false dead=0",
+      "_why": "FALSE before the import and measured that way: the live body today has all four rt-* switches, the SAVING SOON tag, and no gb-retryseg. This runs AFTER a human imports the sheet, and it reads the deployed page rather than the repo file, which is the only thing that says the change reached a teacher. Fetched through lib/storefront-fetch.js so a bot challenge cannot be mistaken for a page that lost its panel."
+    }
+  ]
+}
