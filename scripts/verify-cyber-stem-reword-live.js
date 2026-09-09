@@ -18,6 +18,21 @@
 //  extractor will now lift these questions into the bank, so that is what is
 //  asked, and the count is pinned too: five from 2.3 and six from 4.1.
 //
+//  BOTH STATES WERE MEASURED, not reasoned about. On 2026-09-09 a sibling gate
+//  shipped a live check that could never pass: it pinned the PRE-import string
+//  in `expect` while also exiting non-zero pre-import, so the gate failed on the
+//  exit code before it ever read `expect`, and failed on `expect` afterwards.
+//  Both states red, and the gate output still looked like it was doing something.
+//
+//  This one was proven the same way that was: run against the exact bodies the
+//  committed sheet produces, parsed back out of the CSV rather than retyped.
+//
+//    live today                      accepted=0/2 problems=7 questions=0   exit 1
+//    the sheet's own output          accepted=2/2 problems=0 questions=11  exit 0
+//
+//  So it is false now and true after the import, which is the only shape a live
+//  check is worth having.
+//
 //  Read only, no credential, fetched through lib/storefront-fetch.js and
 //  therefore with NO User-Agent. The bot management has flipped twice in a week
 //  and the module's looksReal() is a positive marker a challenge cannot fake,
