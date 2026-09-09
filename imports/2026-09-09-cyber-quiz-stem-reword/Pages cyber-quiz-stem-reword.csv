@@ -1,0 +1,986 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At"
+"ap-cyber-unit-2-lesson-3-quiz","MERGE","AP Cybersecurity Unit 2 Lesson 3 Quiz","<script type=""application/ld+json"">
+[
+  {""@context"":""https://schema.org"",""@type"":""Quiz"",""headline"":""AP Cybersecurity 2.3 Quiz: Protecting Physical Spaces (5 MCQ)"",""description"":""Five AP Cybersecurity questions on Topic 2.3, Protecting Physical Spaces. Covers security awareness training, workstation and clean desk policy, locks, card readers, access control vestibules and turnstiles, disabling USB ports, uninterruptible power supplies and generators, and prioritizing mitigations by severity and cost."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.apcsexamprep.com/pages/ap-computer-science-tutor""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://www.apcsexamprep.com""},""educationalLevel"":""High School"",""inLanguage"":""en-US""},
+  {""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP Cybersecurity"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},{""@type"":""ListItem"",""position"":3,""name"":""Unit 2: Securing Spaces"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit2""},{""@type"":""ListItem"",""position"":4,""name"":""Topic 2.3 Quiz: Protecting Physical Spaces"",""item"":""https://www.apcsexamprep.com/pages/ap-cyber-unit-2-lesson-3-quiz""}]}
+]
+</script>
+<style>
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#apcyber-wrapper{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper .exhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#apcyber-wrapper .exhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .exhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#apcyber-wrapper .exhero p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;}
+#apcyber-wrapper .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#apcyber-wrapper .score-val{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;}
+#apcyber-wrapper .scenario-card{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#apcyber-wrapper .sc-inner{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#apcyber-wrapper .sc-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .sc-title{font-family:Georgia,serif!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .sc-text{font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;}
+#apcyber-wrapper .sc-text p{margin:0 0 8px!important;}
+/* question blocks */
+#apcyber-wrapper .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#apcyber-wrapper .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#apcyber-wrapper .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#apcyber-wrapper .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#apcyber-wrapper .q-topic{font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .q-stem{padding:18px 18px 4px!important;font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .options{padding:4px 18px 16px!important;}
+#apcyber-wrapper .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .option-label.correct-opt{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .option-label.wrong-opt{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .option-label.neutral-opt{opacity:0.55!important;}
+#apcyber-wrapper .check-btn{
+  display:block!important;margin:0 18px 16px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#apcyber-wrapper .feedback-box{display:none!important;margin:0 18px 18px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .feedback-box.show{display:block!important;}
+#apcyber-wrapper .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#apcyber-wrapper .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#apcyber-wrapper .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+/* textarea/select for Ex2 format */
+#apcyber-wrapper .field-group{margin-bottom:14px!important;}
+#apcyber-wrapper .field-label{display:block!important;font-size:13px!important;font-weight:700!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .field-select{width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;appearance:auto!important;-webkit-appearance:auto!important;}
+#apcyber-wrapper .field-textarea{width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;resize:vertical!important;line-height:1.5!important;}
+#apcyber-wrapper .field-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:3px!important;}
+#apcyber-wrapper .pts-badge{display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;}
+#apcyber-wrapper .submit-part{display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* part blocks for Ex2/Lab */
+#apcyber-wrapper .part-block{border:1px solid #E5E7EB!important;border-radius:10px!important;margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;}
+#apcyber-wrapper .part-header{background:#F5F0FF!important;padding:16px 18px!important;border-bottom:1px solid #DDD6FE!important;}
+#apcyber-wrapper .part-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;margin-right:8px!important;}
+#apcyber-wrapper .part-title{font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;}
+#apcyber-wrapper .part-body{padding:18px!important;}
+#apcyber-wrapper .part-context{background:#F9FAFB!important;border-left:3px solid #A855F7!important;padding:12px 14px!important;border-radius:0 6px 6px 0!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt{font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .part-feedback{display:none!important;margin-top:16px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .part-feedback.show{display:block!important;}
+#apcyber-wrapper .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-model{background:#F5F0FF!important;border-left:3px solid #7C3AED!important;padding:10px 14px!important;border-radius:0 6px 6px 0!important;margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcyber-wrapper .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+/* results */
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 32px!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#apcyber-wrapper .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#apcyber-wrapper .results-btn{display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;}
+#apcyber-wrapper a.results-btn:link,#apcyber-wrapper a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#apcyber-wrapper .nav-links{max-width:800px!important;margin:0 auto 40px!important;display:flex!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;}
+#apcyber-wrapper .nav-link{display:inline-block!important;padding:10px 20px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-link:link,#apcyber-wrapper a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+
+</style>
+
+<div id=""apcyber-wrapper"" data-lesson-id=""2.3"">
+
+  <div class=""exhero"">
+    <div class=""exhero-badge"">Unit 2 • 2.3 • Quiz</div>
+    <nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;""><a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 2 › 2.3 › Quiz</span></nav>
+    <h1>Lesson 2.3 Quiz: Protecting Physical Spaces</h1>
+    <p>5 questions — Recommend and prioritize physical and managerial controls (CED 2.3.A–2.3.B)</p>
+  </div>
+
+  <div class=""score-bar"">
+    <span>Score: <span class=""score-val"" id=""score-display"">0 / 0</span></span>
+    <span style=""font-size:13px;color:#6B7280;-webkit-text-fill-color:#6B7280;"">Answer each question, then check your score below</span>
+  </div>
+
+  <div class=""scenario-card"">
+    <div class=""sc-inner"">
+      <div class=""sc-label"">Scenario Organization</div>
+      <div class=""sc-title"">Xtensr Research Labs · Delmar Applied Optics</div>
+      <div class=""sc-text""><p>Xtensr Research Labs is acquiring Delmar Applied Optics, and you are on the physical security team writing the control recommendations for the new site. The walkthrough already recorded the findings: a finished-lens vault, an engineering file server in a utility closet, a reception PC on the internal wireless network, a badge controller cabinet in the open lobby, a testing bay on one power panel, and an optics bay below street grade on a floodplain. Five recommendations now need your judgment.</p></div>
+    </div>
+  </div>
+
+
+  <div style=""max-width:800px;margin:24px auto;padding:0 20px;"">
+    <div class=""q-block"" id=""q-q1"">
+      <div class=""q-header"">
+        <span class=""q-num"">Q1</span>
+        <span class=""q-topic"">Control Selection</span>
+      </div>
+      <div class=""q-stem"">During the Delmar walkthrough, a technician badged into the engineering wing and a stranger followed through the door behind him. The technician never saw the door close. Xtensr must recommend one control that would have stopped this entry <span class=""kw"">even if the technician stayed unaware</span>. Which recommendation does the control’s own function support?</div>
+      <div class=""options"">
+<label class=""option-label""><input type=""radio"" name=""qq1"" value=""A""> <span>(A) Add annual security awareness training on the rule that employees must never badge another person into a restricted area.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq1"" value=""B""> <span>(B) Install a card reader on the engineering wing door that records which badge opened it and at what time.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq1"" value=""C""> <span>(C) Install an access control vestibule at the engineering wing entrance so only one authenticated person can pass at a time.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq1"" value=""D""> <span>(D) Install a keyed lock on the engineering file server cabinet inside the utility closet down the hall.</span></label>
+      </div>
+      <button class=""check-btn"" onclick=""checkQ('q1')"">Check Answer</button>
+      <div class=""feedback-box"" id=""fb-q1"">
+        <div class=""fb-verdict""></div>
+        <div class=""fb-exp"">EK 2.3.B.5 — access control vestibules and turnstiles prevent an authorized person from intentionally <em>or accidentally</em> admitting an unauthorized person. That is the only one of the four that works when the authorized employee does not know anyone is behind him: the vestibule physically admits one authenticated person per cycle.</div>
+        <div class=""fb-distractors"">
+<p><strong>(A)</strong> Incorrect — EK 2.3.A.1 training tells employees not to badge others in, which addresses piggybacking, where the employee knowingly grants access. This entry was tailgating: no awareness, so there was no decision for training to change.</p>
+<p><strong>(B)</strong> Incorrect — EK 2.3.B.4 card readers deny unlisted badges and record use, but the door was already open on a valid badge. This control would document the technician’s entry and detect nothing about the second person.</p>
+<p><strong>(D)</strong> Incorrect — EK 2.3.B.3 a cabinet lock protects the server if someone reaches it, but it does nothing about who gets into the wing.</p>
+        </div>
+        <div class=""fb-tip"">
+<strong>Exam Tip:</strong> When a stem tells you what the employee did or did not notice, it is testing consent. Training and policy reach decisions employees make; vestibules and turnstiles reach entries they never see.</div>
+      </div>
+    </div>
+  </div>
+  <div style=""max-width:800px;margin:24px auto;padding:0 20px;"">
+    <div class=""q-block"" id=""q-q2"">
+      <div class=""q-header"">
+        <span class=""q-num"">Q2</span>
+        <span class=""q-topic"">Layered Controls</span>
+      </div>
+      <div class=""q-stem"">Delmar’s reception PC sits in an area anyone may walk into, connects to the internal wireless network, and has exposed USB ports. Xtensr considers three recommendations:<br><br>  I. Disable the USB ports on the reception PC.<br>  II. Require the receptionist to lock the workstation before leaving it unattended and to clear sensitive documents from the desk.<br>  III. Install bollards along the parking-lot edge of the reception entrance.<br><br>Which recommendations reduce the risk that this PC becomes a foothold into other Delmar resources?</div>
+      <div class=""options"">
+<label class=""option-label""><input type=""radio"" name=""qq2"" value=""A""> <span>(A) I only</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq2"" value=""B""> <span>(B) I and II only</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq2"" value=""C""> <span>(C) II and III only</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq2"" value=""D""> <span>(D) I, II, and III</span></label>
+      </div>
+      <button class=""check-btn"" onclick=""checkQ('q2')"">Check Answer</button>
+      <div class=""feedback-box"" id=""fb-q2"">
+        <div class=""fb-verdict""></div>
+        <div class=""fb-exp"">I is EK 2.3.B.6 — disabling USB ports stops an external drive from loading malware onto the machine. II is EK 2.3.A.2 — a workstation security policy requires locking the device before leaving it unattended and clearing sensitive documents, which closes the unattended logged-in session. Both attack the foothold directly. III does not: bollards are a perimeter deterrent.</div>
+        <div class=""fb-distractors"">
+<p><strong>(A)</strong> Incorrect — I is correct but incomplete. An adversary who never touches a USB port can still sit down at an unlocked, logged-in session, which is what II prevents.</p>
+<p><strong>(C)</strong> Incorrect — II is correct but III is not. Under EK 2.3.B.2, bollards deter a vehicle or a person from approaching the building; the reception area is already open to visitors by design.</p>
+<p><strong>(D)</strong> Incorrect — including III treats every physical control as relevant to every risk. Bollards would not change anything about a networked PC with open ports inside the lobby.</p>
+        </div>
+        <div class=""fb-tip"">
+<strong>Exam Tip:</strong> On a roman-numeral item, test each statement against the exact risk named in the stem — here, a foothold on one machine. A control can be a real control and still be the wrong control.</div>
+      </div>
+    </div>
+  </div>
+  <div style=""max-width:800px;margin:24px auto;padding:0 20px;"">
+    <div class=""q-block"" id=""q-q3"">
+      <div class=""q-header"">
+        <span class=""q-num"">Q3</span>
+        <span class=""q-topic"">Availability Controls</span>
+      </div>
+      <div class=""q-stem"">Delmar’s optics bay sits below street grade on a floodplain, and the testing bay next to it draws power from a single panel that has tripped twice this year. Which recommendation would do the <span class=""kw"">LEAST</span> to protect the availability of the testing bay’s equipment?</div>
+      <div class=""options"">
+<label class=""option-label""><input type=""radio"" name=""qq3"" value=""A""> <span>(A) Connect the testing bay’s critical instruments to an uninterruptible power supply so they stay powered through a trip.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq3"" value=""B""> <span>(B) Install a building generator sized to carry the testing bay and the optics bay through an extended outage.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq3"" value=""C""> <span>(C) Install a turnstile at the optics bay entrance so every person entering must authenticate individually.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq3"" value=""D""> <span>(D) Relocate the testing bay’s instrument racks to the floor above, out of the reach of a ground-level flood.</span></label>
+      </div>
+      <button class=""check-btn"" onclick=""checkQ('q3')"">Check Answer</button>
+      <div class=""feedback-box"" id=""fb-q3"">
+        <div class=""fb-verdict""></div>
+        <div class=""fb-exp"">A turnstile is a real control — EK 2.3.B.5 — but it addresses unauthorized entry into a restricted space, not availability. The other three all keep the equipment running or intact: a UPS and a generator answer the power threat (EK 2.3.B.7) and relocating the racks answers the flood, which EK 2.2.B.1 counts as a threat because natural disasters damage devices and disrupt services.</div>
+        <div class=""fb-distractors"">
+<p><strong>(A)</strong> Incorrect — EK 2.3.B.7 a UPS provides backup power for a device during an outage, which is exactly the panel-trip problem in the stem.</p>
+<p><strong>(B)</strong> Incorrect — EK 2.3.B.7 generators supply power at building scale to a set of critical devices, covering an outage longer than a UPS can bridge.</p>
+<p><strong>(D)</strong> Incorrect — moving the racks above the flood line removes the equipment from the hazard, which protects availability even though no power control is involved.</p>
+        </div>
+        <div class=""fb-tip"">
+<strong>Exam Tip:</strong> Match the control to the principle the stem names. LEAST questions are usually won by noticing that three options serve the named principle and one serves a different one — here, confidentiality of a restricted space instead of availability.</div>
+      </div>
+    </div>
+  </div>
+  <div style=""max-width:800px;margin:24px auto;padding:0 20px;"">
+    <div class=""q-block"" id=""q-q4"">
+      <div class=""q-header"">
+        <span class=""q-num"">Q4</span>
+        <span class=""q-topic"">Prioritizing Mitigations</span>
+      </div>
+      <div class=""q-stem"">Xtensr’s draft mitigation plan for Delmar ranks four recommendations. Exactly one row is ranked wrongly. Mitigations are prioritized by the severity of the risk and the cost of the mitigation.<br><br>  <strong>1.</strong> Lock on the utility closet holding the engineering file server — high severity, low cost<br>  <strong>2.</strong> Move the badge controller cabinet out of the open lobby into a locked enclosure — high severity, moderate cost<br>  <strong>3.</strong> Bollards around the full building perimeter — low severity, high cost<br>  <strong>4.</strong> Disable the USB ports on the reception PC — moderate severity, negligible cost<br><br>Which correction is <span class=""kw"">BEST</span>?</div>
+      <div class=""options"">
+<label class=""option-label""><input type=""radio"" name=""qq4"" value=""A""> <span>(A) Move row 4 above row 3, because a moderate-severity risk that costs almost nothing to mitigate outranks a low-severity risk that costs the most.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq4"" value=""B""> <span>(B) Move row 3 to first, because a building’s perimeter controls must be in place before any control inside the building can be effective.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq4"" value=""C""> <span>(C) Move row 1 to last, because a single cabinet lock cannot by itself mitigate a risk rated high severity.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq4"" value=""D""> <span>(D) Move row 2 to last, because relocating the badge controller cabinet costs more than the other three mitigations combined.</span></label>
+      </div>
+      <button class=""check-btn"" onclick=""checkQ('q4')"">Check Answer</button>
+      <div class=""feedback-box"" id=""fb-q4"">
+        <div class=""fb-verdict""></div>
+        <div class=""fb-exp"">Rows 1, 2 and 3 are already ordered correctly: two high-severity risks first, cheapest of the two leading, and the low-severity high-cost item last among them. Row 4 is the error — a moderate-severity risk closed at negligible cost should come before a low-severity risk that costs the most of any row. EK 2.3.B.8 weighs severity and cost together, not severity alone.</div>
+        <div class=""fb-distractors"">
+<p><strong>(B)</strong> Incorrect — nothing in EK 2.3 makes perimeter controls a prerequisite for interior controls. A defense-in-depth strategy layers controls; it does not require them in an outside-in order.</p>
+<p><strong>(C)</strong> Incorrect — row 1 is the strongest row in the plan. EK 2.3.B.3 locks on server cabinets prevent devices from being accessed or stolen, and a high-severity risk closed at low cost is exactly what EK 2.3.B.8 puts first.</p>
+<p><strong>(D)</strong> Incorrect — the plan lists row 2 at moderate cost, not the highest cost, so the reason given is false. Cost alone would not settle the ranking anyway.</p>
+        </div>
+        <div class=""fb-tip"">
+<strong>Exam Tip:</strong> On a spot-the-error item, find the error before you read the fixes. Three of these options repair a row that was already right, and each one sounds reasonable on its own.</div>
+      </div>
+    </div>
+  </div>
+  <div style=""max-width:800px;margin:24px auto;padding:0 20px;"">
+    <div class=""q-block"" id=""q-q5"">
+      <div class=""q-header"">
+        <span class=""q-num"">Q5</span>
+        <span class=""q-topic"">Control Function</span>
+      </div>
+      <div class=""q-stem"">A card reader on the finished-lens vault door denies any badge that is not on the vault access list and records which badge opened the door and when. Which statement <span class=""kw"">BEST</span> justifies this single control in the Delmar report?</div>
+      <div class=""options"">
+<label class=""option-label""><input type=""radio"" name=""qq5"" value=""A""> <span>(A) It corrects the vault’s access problem, because the entry log can be used to restore any lens taken from the vault.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq5"" value=""B""> <span>(B) It prevents entry by unauthorized badges, which removes the need for the vault’s mechanical lock and its camera.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq5"" value=""C""> <span>(C) It detects misuse of authorized badges, which is enough because the vault holds low-value assets unlikely to be targeted.</span></label>
+<label class=""option-label""><input type=""radio"" name=""qq5"" value=""D""> <span>(D) It prevents entry by unauthorized badges and records use, which helps detect and investigate misuse of an authorized badge.</span></label>
+      </div>
+      <button class=""check-btn"" onclick=""checkQ('q5')"">Check Answer</button>
+      <div class=""feedback-box"" id=""fb-q5"">
+        <div class=""fb-verdict""></div>
+        <div class=""fb-exp"">EK 2.3.B.1 asks how a control prevents, detects, or corrects an attack, and EK 2.3.B.4 says card readers do two of those: they deny unauthorized badges and they record which badge was used at which entry at what time. Naming both functions is what justifies the control, and the recorded use is what makes a cloned or shared badge investigable afterward.</div>
+        <div class=""fb-distractors"">
+<p><strong>(A)</strong> Incorrect — a corrective control restores a system to an operational state. A log tells you a lens left the vault; it does not bring the lens back.</p>
+<p><strong>(B)</strong> Incorrect — no single control removes the need for the others. Under EK 2.1.G a layered defense uses several control types precisely so one failure does not open the asset.</p>
+<p><strong>(C)</strong> Incorrect — the reason is false for this room. Finished lenses are the site’s highest-value inventory, so EK 2.2.C.4 low-risk reasoning does not apply, and detection alone leaves the entry open.</p>
+        </div>
+        <div class=""fb-tip"">
+<strong>Exam Tip:</strong> Card readers are the CED’s clearest example of a control with two functions. If an option credits a control with only one of its functions, or with a function it does not have, that is the flaw to find.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style=""max-width:800px;margin:0 auto;padding:0 20px;"">
+    <div class=""results-panel"" id=""results-panel"">
+      <div class=""results-score"" id=""r-score""></div>
+      <div class=""results-label"">Questions Correct</div>
+      <div class=""results-msg"" id=""r-msg""></div>
+      <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""results-btn"">Course Hub →</a>
+      <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""results-btn"">Course Hub</a>
+    </div>
+  </div>
+
+  <div class=""nav-links"">
+    <a href=""/pages/ap-cyber-unit-2-lesson-3-lab"" class=""nav-link"">← Lab 2.3</a>
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""nav-link"">Course Hub →</a>
+  </div>
+
+  <div style=""text-align:center!important;padding:20px!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;"">
+    AP Cybersecurity Unit 2 • 2.3 • Quiz | APCSExamPrep.com | Built by Tanner Crow, AP CS Teacher (11+ years)<br>
+    AP® is a registered trademark of the College Board, which was not involved in the production of this content.
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var ANSWERS = {""q1"": ""C"", ""q2"": ""B"", ""q3"": ""C"", ""q4"": ""A"", ""q5"": ""D""};
+  var score=0;var total=Object.keys(ANSWERS).length;var answered={};
+
+  function checkQ(qid){
+    var block=document.getElementById('q-'+qid);
+    var chosen=block.querySelector('input[name=""q'+qid+'""]:checked');
+    if(!chosen){alert('Please select an answer first.');return;}
+    if(answered[qid])return;
+    answered[qid]=true;
+    var val=chosen.value;var correct=ANSWERS[qid];
+    var fb=document.getElementById('fb-'+qid);
+    var labels=block.querySelectorAll('.option-label');
+    labels.forEach(function(lbl){
+      var inp=lbl.querySelector('input');inp.disabled=true;
+      if(inp.value===correct){lbl.classList.add('correct-opt');}
+      else if(inp.value===val&&val!==correct){lbl.classList.add('wrong-opt');}
+      else{lbl.classList.add('neutral-opt');}
+    });
+    block.querySelector('.check-btn').disabled=true;
+    fb.classList.add('show');
+    if(val===correct){
+      score++;block.classList.add('answered-correct');
+      fb.classList.add('fb-correct');fb.querySelector('.fb-verdict').textContent='Correct!';
+    }else{
+      block.classList.add('answered-wrong');fb.classList.add('fb-wrong');
+      fb.querySelector('.fb-verdict').textContent='Incorrect — the correct answer is '+correct+'.';
+    }
+    document.getElementById('score-display').textContent=score+' / '+Object.keys(answered).length;
+    if(Object.keys(answered).length===total){showResults();}
+  }
+
+  function showResults(){
+    var panel=document.getElementById('results-panel');panel.classList.add('show');
+    document.getElementById('r-score').textContent=score+'/'+total;
+    var pct=Math.round(score/total*100);
+    var msg=pct>=80?'Strong work! You have solid command of this topic.':
+            pct>=60?'Good effort. Review the questions you missed and try again.':
+            'Keep studying. Revisit the lesson before retaking this exercise.';
+    document.getElementById('r-msg').textContent=msg;
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  window.checkQ=checkQ;
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 2 · Lesson 2.3 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cybersecurity-unit-2-protecting-physical-spaces"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-2-lesson-3-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-2-lesson-3-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-2-lesson-3-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cybersecurity-unit-2-detecting-physical-attacks"">Next: 2.4 Detecting Physical Attacks →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cybersecurity-unit-2-protecting-physical-spaces"">Lesson 2.3</a><a href=""/pages/ap-cybersecurity-unit-2-securing-spaces"">Unit 2 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"
+"ap-cyber-unit-4-lesson-1-quiz","MERGE","AP Cybersecurity Unit 4 Lesson 1 Quiz","<!-- ====== UNIT 4 UCNAV BLOCK (injected) ====== -->
+<style>
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none;}}
+</style>
+<style>#ucnav .ucn-extra{display:inline-block!important;font-size:9px!important;font-weight:700!important;letter-spacing:.03em!important;text-transform:uppercase!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;border:1px solid #E8A020!important;border-radius:6px!important;padding:0 5px!important;margin:0 5px!important;vertical-align:middle!important;}</style><div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 4</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Device Types and Vulnerabilities"">4.1 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-1"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-1-quiz"" class=""ucn-step current"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Malware and Malicious Software"">4.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-2"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-2-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Authentication and Access Control"">4.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-3"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-3-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Device Hardening and Configuration"">4.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-4"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-4-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Securing IoT and Embedded Devices (enrichment, beyond the CED)"">4.5 <span class=""ucn-extra"">Beyond CED</span> <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-5"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-5-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+  </div>
+</div>
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){
+function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper')||document.querySelector('[data-lesson-id]')||document.querySelector('[id^=""u3l""]')||document.querySelector('[id^=""u1l""]')||document.querySelector('[id^=""u2l""]');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}
+function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}
+requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);
+window.addEventListener('resize',pos,{passive:true});
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^=""u3l""]')||document.querySelector('[id^=""u1l""]')||document.querySelector('[id^=""u2l""]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^=""u3l""]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);
+var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});
+var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
+})();
+</script>
+<!-- ====== END UCNAV BLOCK ====== -->
+<!-- AP CYBERSECURITY UNIT 4 LESSON 2 - QUIZ
+  Handle: ap-cyber-unit-4-lesson-2-quiz
+  Wrapper: #apcyber-l41-quiz
+  5 questions, timer, balanced answer key (1A 2B 1C 1D), HTML entities only. -->
+
+<style>
+/* ===== SHOPIFY TITLE RESET ===== */
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== ROOT RESET ===== */
+#apcyber-l41-quiz{
+  all:initial!important;
+  display:block!important;
+  font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;
+  background:#ffffff!important;
+  line-height:1.7!important;
+  -webkit-font-smoothing:antialiased!important;
+  max-width:860px!important;
+  margin:0 auto!important;
+  padding:0 16px 60px!important;
+}
+#apcyber-l41-quiz *{box-sizing:border-box!important;}
+
+/* ===== BREADCRUMB ===== */
+#apcyber-l41-quiz .l-breadcrumb{
+  font-size:12px!important;color:#6B7280!important;
+  padding:18px 0 0!important;font-family:'Georgia',serif!important;
+}
+#apcyber-l41-quiz a.l-breadcrumb-link:link,#apcyber-l41-quiz a.l-breadcrumb-link:visited{
+  color:#7C3AED!important;text-decoration:none!important;
+}
+#apcyber-l41-quiz a.l-breadcrumb-link:hover{text-decoration:underline!important;}
+
+/* ===== HEADER ===== */
+#apcyber-l41-quiz .l-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#4C1D95 100%)!important;
+  border-radius:12px!important;padding:36px 32px 32px!important;
+  margin:16px 0 32px!important;color:#ffffff!important;
+}
+#apcyber-l41-quiz .l-unit-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;margin:0 0 10px!important;display:block!important;
+}
+#apcyber-l41-quiz .l-title{
+  font-size:28px!important;font-weight:700!important;color:#ffffff!important;
+  font-family:'Georgia',serif!important;margin:0 0 12px!important;line-height:1.3!important;
+}
+#apcyber-l41-quiz .l-meta{
+  font-size:13px!important;color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;margin:0!important;
+}
+
+/* ===== OBJECTIVES / INSTRUCTION CALLOUT ===== */
+#apcyber-l41-quiz .l-objectives{
+  background:#F5F0FF!important;border-left:4px solid #7C3AED!important;
+  border-radius:0 10px 10px 0!important;padding:20px 24px!important;margin:0 0 32px!important;
+}
+#apcyber-l41-quiz .l-objectives-title{
+  font-size:13px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1px!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;margin:0 0 12px!important;display:block!important;
+}
+#apcyber-l41-quiz .l-objectives ul{margin:0!important;padding:0 0 0 20px!important;}
+#apcyber-l41-quiz .l-objectives li{
+  font-size:14px!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:0 0 6px!important;line-height:1.6!important;
+}
+#apcyber-l41-quiz .l-objectives p{
+  font-size:14px!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:0 0 8px!important;line-height:1.6!important;
+}
+#apcyber-l41-quiz .l-objectives p:last-child{margin:0!important;}
+
+/* ===== SECTION HEADINGS ===== */
+#apcyber-l41-quiz .l-h2{
+  font-size:20px!important;font-weight:700!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:36px 0 14px!important;
+  padding-bottom:8px!important;border-bottom:2px solid #EDE9FE!important;
+}
+#apcyber-l41-quiz .l-h3{
+  font-size:16px!important;font-weight:700!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;margin:24px 0 10px!important;
+}
+
+/* ===== BODY TEXT ===== */
+#apcyber-l41-quiz .l-p{
+  font-size:15px!important;color:#374151!important;
+  font-family:'Georgia',serif!important;margin:0 0 14px!important;line-height:1.75!important;
+}
+#apcyber-l41-quiz .l-p code,#apcyber-l41-quiz .l-q-stem code,#apcyber-l41-quiz .l-scenario code,#apcyber-l41-quiz .l-predict code{
+  font-family:'Consolas','Courier New',monospace!important;
+  background:#EDE9FE!important;color:#4C1D95!important;
+  padding:1px 6px!important;border-radius:4px!important;font-size:13px!important;
+}
+
+/* ===== SCENARIO BOX ===== */
+#apcyber-l41-quiz .l-scenario{
+  background:#FFFBEB!important;border:1px solid #FDE68A!important;
+  border-left:4px solid #D97706!important;border-radius:8px!important;
+  padding:18px 20px!important;margin:20px 0 28px!important;
+}
+#apcyber-l41-quiz .l-scenario-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;color:#D97706!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 8px!important;
+}
+#apcyber-l41-quiz .l-scenario p{
+  font-size:14px!important;color:#374151!important;
+  font-family:'Georgia',serif!important;margin:0 0 8px!important;line-height:1.7!important;
+}
+#apcyber-l41-quiz .l-scenario pre{
+  font-family:'Consolas','Courier New',monospace!important;
+  background:#1E1B4B!important;color:#E5E7EB!important;
+  padding:12px 14px!important;border-radius:6px!important;
+  font-size:12px!important;margin:8px 0!important;
+  white-space:pre!important;overflow-x:auto!important;line-height:1.5!important;
+}
+#apcyber-l41-quiz .l-scenario p:last-child{margin:0!important;}
+
+/* ===== CFU / QUESTION BLOCK ===== */
+#apcyber-l41-quiz .l-cfu{
+  background:#1E1B4B!important;border-radius:12px!important;
+  padding:28px 28px 24px!important;margin:36px 0 28px!important;
+}
+#apcyber-l41-quiz .l-cfu-title{
+  font-size:14px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1.5px!important;color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;margin:0 0 20px!important;display:block!important;
+}
+#apcyber-l41-quiz .l-q{
+  background:#ffffff!important;border-radius:8px!important;
+  padding:20px!important;margin:0 0 16px!important;
+}
+#apcyber-l41-quiz .l-q:last-child{margin:0!important;}
+#apcyber-l41-quiz .l-q-num{
+  font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1px!important;color:#7C3AED!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 8px!important;
+}
+#apcyber-l41-quiz .l-q-stem{
+  font-size:14px!important;font-weight:700!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:0 0 14px!important;
+  line-height:1.6!important;display:block!important;
+}
+#apcyber-l41-quiz .l-q-stem pre,#apcyber-l41-quiz .l-q pre{
+  font-family:'Consolas','Courier New',monospace!important;
+  background:#1E1B4B!important;color:#E5E7EB!important;
+  padding:12px 14px!important;border-radius:6px!important;
+  font-size:12px!important;margin:10px 0!important;
+  white-space:pre!important;overflow-x:auto!important;line-height:1.5!important;font-weight:400!important;
+}
+
+/* ===== PREDICT-FIRST GATE ===== */
+#apcyber-l41-quiz .l-predict{
+  background:#F5F0FF!important;border:1px dashed #A855F7!important;
+  border-radius:8px!important;padding:14px 16px!important;margin:0 0 14px!important;
+}
+#apcyber-l41-quiz .l-predict-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 6px!important;
+}
+#apcyber-l41-quiz .l-predict-text{
+  font-size:13px!important;color:#4C1D95!important;
+  font-family:'Georgia',serif!important;margin:0 0 10px!important;line-height:1.6!important;
+  display:block!important;
+}
+#apcyber-l41-quiz .l-predict textarea{
+  width:100%!important;min-height:60px!important;
+  border:1px solid #C4B5FD!important;border-radius:6px!important;
+  padding:8px 10px!important;font-family:'Georgia',serif!important;
+  font-size:13px!important;color:#1E1B4B!important;background:#ffffff!important;
+  outline:none!important;resize:vertical!important;
+}
+
+/* ===== MCQ OPTIONS ===== */
+#apcyber-l41-quiz .l-options{list-style:none!important;margin:0 0 12px!important;padding:0!important;}
+#apcyber-l41-quiz .l-options li{margin:0 0 8px!important;padding:0!important;}
+#apcyber-l41-quiz .l-options label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  cursor:pointer!important;font-size:14px!important;color:#374151!important;
+  font-family:'Georgia',serif!important;line-height:1.5!important;
+}
+#apcyber-l41-quiz .l-options input[type=""radio""],#apcyber-l41-quiz .l-options input[type=""checkbox""]{
+  margin-top:3px!important;flex-shrink:0!important;accent-color:#7C3AED!important;
+}
+
+/* ===== TEXT INPUT ===== */
+#apcyber-l41-quiz .l-text-input{
+  width:100%!important;padding:8px 10px!important;
+  border:1px solid #D1D5DB!important;border-radius:6px!important;
+  font-family:'Georgia',serif!important;font-size:13px!important;
+  color:#1E1B4B!important;background:#ffffff!important;outline:none!important;
+  margin:0 0 10px!important;
+}
+
+/* ===== MATCHING ===== */
+#apcyber-l41-quiz .l-match-row{
+  display:flex!important;align-items:center!important;gap:10px!important;
+  margin:0 0 10px!important;flex-wrap:wrap!important;
+}
+#apcyber-l41-quiz .l-match-term{
+  font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;min-width:200px!important;flex-shrink:0!important;
+}
+#apcyber-l41-quiz .l-match-select{
+  font-size:13px!important;font-family:'Georgia',serif!important;
+  padding:6px 10px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;
+  color:#374151!important;background:#ffffff!important;flex:1!important;min-width:180px!important;
+}
+
+/* ===== BUTTONS ===== */
+#apcyber-l41-quiz .l-check-btn{
+  display:inline-block!important;background:#7C3AED!important;
+  color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+  font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;
+  padding:9px 22px!important;border-radius:6px!important;border:none!important;
+  cursor:pointer!important;margin-top:6px!important;
+}
+#apcyber-l41-quiz button.l-check-btn:hover{background:#6B21A8!important;}
+#apcyber-l41-quiz .l-reveal-btn{
+  display:inline-block!important;background:transparent!important;
+  color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;
+  font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;
+  padding:6px 14px!important;border-radius:6px!important;border:1px solid #7C3AED!important;
+  cursor:pointer!important;margin:6px 8px 6px 0!important;
+}
+#apcyber-l41-quiz button.l-reveal-btn:hover{background:#F5F0FF!important;}
+
+/* ===== FEEDBACK ===== */
+#apcyber-l41-quiz .l-feedback{
+  display:none!important;margin-top:12px!important;padding:12px 16px!important;
+  border-radius:6px!important;font-size:13px!important;
+  font-family:'Georgia',serif!important;line-height:1.6!important;
+}
+#apcyber-l41-quiz .l-feedback.correct{
+  background:#F0FDF4!important;border:1px solid #BBF7D0!important;color:#14532D!important;
+}
+#apcyber-l41-quiz .l-feedback.incorrect{
+  background:#FEF2F2!important;border:1px solid #FECACA!important;color:#7F1D1D!important;
+}
+#apcyber-l41-quiz .l-feedback.neutral{
+  background:#F5F0FF!important;border:1px solid #DDD6FE!important;color:#4C1D95!important;
+}
+#apcyber-l41-quiz .l-feedback.shown{display:block!important;}
+
+/* ===== SCORE PANEL ===== */
+#apcyber-l41-quiz .l-score-panel{
+  display:none!important;background:#F5F0FF!important;border:2px solid #DDD6FE!important;
+  border-radius:10px!important;padding:20px!important;margin-top:20px!important;text-align:center!important;
+}
+#apcyber-l41-quiz .l-score-panel.shown{display:block!important;}
+#apcyber-l41-quiz .l-score-num{
+  font-size:36px!important;font-weight:700!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 6px!important;
+}
+#apcyber-l41-quiz .l-score-label{
+  font-size:13px!important;color:#4B5563!important;font-family:'Georgia',serif!important;
+}
+
+/* ===== EXAM TIP ===== */
+#apcyber-l41-quiz .l-exam-tip{
+  background:#EDE9FE!important;border:1px solid #DDD6FE!important;
+  border-left:4px solid #6B21A8!important;border-radius:8px!important;
+  padding:16px 20px!important;margin:28px 0!important;
+}
+#apcyber-l41-quiz .l-exam-tip-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 6px!important;
+}
+#apcyber-l41-quiz .l-exam-tip p{
+  font-size:14px!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:0!important;line-height:1.7!important;
+}
+
+/* ===== EXTENSION CHALLENGE ===== */
+#apcyber-l41-quiz .l-extension{
+  background:#F9FAFB!important;border:1px solid #E5E7EB!important;
+  border-top:3px solid #15803D!important;border-radius:8px!important;
+  padding:18px 20px!important;margin:28px 0!important;
+}
+#apcyber-l41-quiz .l-extension-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;color:#15803D!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 8px!important;
+}
+#apcyber-l41-quiz .l-extension p{
+  font-size:14px!important;color:#374151!important;
+  font-family:'Georgia',serif!important;margin:0 0 8px!important;line-height:1.7!important;
+}
+#apcyber-l41-quiz .l-extension p:last-child{margin:0!important;}
+
+/* ===== TIMER (quiz only) ===== */
+#apcyber-l41-quiz .l-timer{
+  display:inline-block!important;background:#3B0764!important;color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  padding:8px 14px!important;border-radius:6px!important;
+  font-family:'Consolas','Courier New',monospace!important;
+  font-size:14px!important;font-weight:700!important;letter-spacing:1px!important;
+  margin:0 0 16px!important;
+}
+
+/* ===== NAV ===== */
+#apcyber-l41-quiz .l-nav{
+  display:flex!important;justify-content:space-between!important;align-items:center!important;
+  margin:40px 0 0!important;gap:12px!important;flex-wrap:wrap!important;
+}
+#apcyber-l41-quiz a.l-nav-btn:link,#apcyber-l41-quiz a.l-nav-btn:visited{
+  display:inline-block!important;padding:11px 22px!important;border-radius:8px!important;
+  font-size:13px!important;font-weight:700!important;font-family:'Georgia',serif!important;
+  text-decoration:none!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+  background:#7C3AED!important;
+}
+#apcyber-l41-quiz a.l-nav-btn:hover{background:#6B21A8!important;}
+#apcyber-l41-quiz a.l-nav-btn.outline:link,#apcyber-l41-quiz a.l-nav-btn.outline:visited{
+  background:transparent!important;color:#7C3AED!important;
+  -webkit-text-fill-color:#7C3AED!important;border:2px solid #7C3AED!important;
+}
+#apcyber-l41-quiz a.l-nav-btn.outline:hover{background:#F5F0FF!important;}
+</style>
+
+<div id=""apcyber-l41-quiz"" data-lesson-id=""4.1"">
+
+  <nav class=""l-breadcrumb"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""l-breadcrumb-link"">AP Cybersecurity</a>
+     › 
+    <a href=""/pages/ap-cybersecurity-unit-4-securing-devices"" class=""l-breadcrumb-link"">Unit 4</a>
+     › 
+    <a href=""/pages/ap-cyber-unit-4-lesson-1"" class=""l-breadcrumb-link"">Lesson 4.1</a>
+     ›  Quiz
+  </nav>
+
+  <div class=""l-header"">
+    <span class=""l-unit-label"">Lesson 4.1 — Device Vulnerabilities &amp; Attacks  ·  Quiz</span>
+    <h1 class=""l-title"">Lesson 4.1 Quiz</h1>
+    <p class=""l-meta"">6 questions  ·  7-minute target  ·  Instant feedback  ·  AP exam format</p>
+  </div>
+
+  <div class=""l-objectives"">
+    <span class=""l-objectives-title"">🎯 Quiz Instructions</span>
+    <p>Answer all 6 questions. Click <strong>Check Answer</strong> after each to see the explanation. Your score appears after the last question. Target: 5 of 6 or better before moving to Lesson 4.2.</p>
+    <p><span class=""l-timer"" id=""timer"">00:00</span></p>
+  </div>
+
+  <div class=""l-cfu"">
+    <span class=""l-cfu-title"">✎ Lesson 4.1 Quiz</span>
+
+    <div class=""l-q"" id=""q1"">
+      <span class=""l-q-num"">Question 1 of 6</span>
+      <span class=""l-q-stem"">A consultant reviewing a municipal water-treatment plant argues that its embedded controllers should be the LOWEST patching priority “because embedded devices are slow, cheap, and store almost no data.” The flaw in this reasoning is BEST described as:</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q1"" value=""A""> (A) The reasoning is sound — low-resource devices hold little of value to an adversary.</label></li>
+        <li><label><input type=""radio"" name=""q1"" value=""B""> (B) Embedded devices actually store more data than servers, so they should rank higher.</label></li>
+        <li><label><input type=""radio"" name=""q1"" value=""C""> (C) It confuses a device’s physical limits with its security impact; critical-infrastructure embedded devices are high-priority targets.</label></li>
+        <li><label><input type=""radio"" name=""q1"" value=""D""> (D) Embedded devices run anti-malware as easily as personal computers, so they are equally defensible either way.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q1','C','The CED stresses that embedded/IoT devices in critical infrastructure tie digital failure to physical consequences, so physical limits do not make them low priority. A and D misstate CED facts; B is simply false.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q1-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q2"">
+      <span class=""l-q-num"">Question 2 of 6</span>
+      <span class=""l-q-stem"">Which of the following statements about malware are <strong>TRUE</strong>?<br>I. A virus requires a user to execute or open a file to activate, whereas a worm spreads between computers without human interaction.<br>II. Fileless malware hides its code inside files that are concealed from the operating system, which is why anti-malware cannot scan it.<br>III. A rootkit embeds itself in the operating system and can make itself invisible to detection.</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q2"" value=""A""> (A) I only</label></li>
+        <li><label><input type=""radio"" name=""q2"" value=""B""> (B) I and III only</label></li>
+        <li><label><input type=""radio"" name=""q2"" value=""C""> (C) II and III only</label></li>
+        <li><label><input type=""radio"" name=""q2"" value=""D""> (D) I, II, and III</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q2','B','I and III are exact CED facts. II is false: fileless malware lives in RAM and abuses legitimate installed programs — it has no file for a signature scan to match, which is a different reason than hiding files.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q2-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q3"">
+      <span class=""l-q-num"">Question 3 of 6</span>
+      <span class=""l-q-stem"">Each pairing below matches a device exploitation vector with a valid defense <strong>EXCEPT</strong>:</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q3"" value=""A""> (A) Unpatched software → apply vendor patches and OS updates promptly.</label></li>
+        <li><label><input type=""radio"" name=""q3"" value=""B""> (B) Open ports → use a host-based firewall to close ports and services not in use.</label></li>
+        <li><label><input type=""radio"" name=""q3"" value=""C""> (C) Autorun enabled → disable autorun and restrict external drives by policy.</label></li>
+        <li><label><input type=""radio"" name=""q3"" value=""D""> (D) Fileless malware → install signature-based anti-malware to detect and remove it.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q3','D','D is the mismatch. Signature-based anti-malware scans files; fileless malware leaves no file to match, so it is the boundary case anti-malware does not cover. A, B, and C are correct CED vector-defense pairings.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q3-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q4"">
+      <span class=""l-q-num"">Question 4 of 6</span>
+      <span class=""l-q-stem"">An analyst confirms a compromised workstation has no malicious files on disk; the malicious activity runs entirely in memory using the system’s own PowerShell, and a full signature-based scan comes back clean. The BEST explanation is:</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q4"" value=""A""> (A) The threat is fileless malware, which resides in RAM and abuses legitimate installed programs, so a file-signature scan has nothing to match.</label></li>
+        <li><label><input type=""radio"" name=""q4"" value=""B""> (B) The anti-malware database is merely outdated and a quick update will reveal the file.</label></li>
+        <li><label><input type=""radio"" name=""q4"" value=""C""> (C) The workstation was never compromised, since a clean signature scan is definitive.</label></li>
+        <li><label><input type=""radio"" name=""q4"" value=""D""> (D) The malware is a rootkit that deleted all of its own files immediately after installation.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q4','A','The evidence — no files, activity entirely in memory via a legitimate program — matches fileless malware. B, C, and D all contradict the stated finding that the activity runs in RAM with no file present.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q4-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q5"">
+      <span class=""l-q-num"">Question 5 of 6</span>
+      <span class=""l-q-stem"">Using the High/Moderate/Low device-risk framework, which assessment is MOST defensible?</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q5"" value=""A""> (A) A public-facing server missing critical OS patches is Low risk because servers are professionally managed.</label></li>
+        <li><label><input type=""radio"" name=""q5"" value=""B""> (B) A water-treatment controller reachable only through a password-protected internal interface is Moderate risk, because weak authentication is the main remaining exposure.</label></li>
+        <li><label><input type=""radio"" name=""q5"" value=""C""> (C) A personal laptop with no firewall and reused passwords is Low risk because only one person uses it.</label></li>
+        <li><label><input type=""radio"" name=""q5"" value=""D""> (D) An embedded medical device with no anti-malware and an open management port is Low risk because embedded devices are rarely targeted.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q5','B','This matches the CED water-treatment example, rated Moderate precisely because weak authentication is the key residual exposure once access is limited to an internal interface. A, C, and D all understate clearly high-exposure conditions.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q5-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q6"">
+      <span class=""l-q-num"">Question 6 of 6</span>
+      <span class=""l-q-stem"">Malware infects one machine on a hospital network and, with no further user action, copies itself to roughly 200 other machines within minutes, degrading network performance. Which malware type is this, and which CIA principle is most directly affected?</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q6"" value=""A""> (A) Virus, most directly tied to Confidentiality.</label></li>
+        <li><label><input type=""radio"" name=""q6"" value=""B""> (B) Trojan (RAT), most directly tied to Integrity.</label></li>
+        <li><label><input type=""radio"" name=""q6"" value=""C""> (C) Worm, most directly tied to Availability.</label></li>
+        <li><label><input type=""radio"" name=""q6"" value=""D""> (D) Logic bomb, most directly tied to Availability.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q6','C','Self-replication with no user action is the defining trait of a worm, and the CED ties worms to Availability because they consume resources as they spread. A virus needs user activation; a Trojan is disguised software the user installs; a logic bomb waits for a trigger condition.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q6-fb""></div>
+    </div>
+
+    <div class=""l-score-panel"" id=""results-panel"">
+      <span class=""l-score-num"" id=""r-score"">0 / 6</span>
+      <span class=""l-score-label"">Quiz complete — review any missed questions. 5+/6 means you are ready for Lesson 4.2.</span>
+    </div>
+  </div>
+
+  <div class=""l-nav"">
+    <a href=""/pages/ap-cyber-unit-4-lesson-1-lab"" class=""l-nav-btn outline"">← Back to Lab</a>
+    <a href=""/pages/ap-cyber-unit-4-lesson-1"" class=""l-nav-btn"">Review Lesson 4.1</a>
+  </div>
+
+</div><!-- end #apcyber-l41-quiz -->
+
+<script>
+(function(){
+  var qs=Array.prototype.slice.call(document.querySelectorAll('#apcyber-l41-quiz .l-q'));
+  var TOTAL=qs.length, answered={}, scores={};
+  qs.forEach(function(q){answered[q.id]=false;scores[q.id]=0;});
+  var start=Date.now(), timerEl=document.getElementById('timer');
+  function fmt(n){return (n<10?'0':'')+n;}
+  setInterval(function(){if(!timerEl)return;var e=Math.floor((Date.now()-start)/1000);timerEl.textContent=fmt(Math.floor(e/60))+':'+fmt(e%60);},1000);
+  function updatePanel(){var done=qs.every(function(q){return answered[q.id];});if(done){var t=qs.reduce(function(a,q){return a+scores[q.id];},0);var n=document.getElementById('r-score');if(n)n.textContent=t+' / '+TOTAL;var p=document.getElementById('results-panel');if(p)p.classList.add('shown');}}
+  function show(id,ok,msg){var el=document.getElementById(id);if(!el)return;el.textContent=(ok?'✓ Correct. ':'✗ Not quite. ')+msg;el.className='l-feedback shown '+(ok?'correct':'incorrect');}
+  window.checkMCQ=function(qid,correctVal,explanation){if(answered[qid])return;var sel=document.querySelector('input[name=""'+qid+'""]:checked');if(!sel){alert('Please select an answer first.');return;}var ok=(sel.value===correctVal);scores[qid]=ok?1:0;answered[qid]=true;show(qid+'-fb',ok,ok?explanation:'The correct answer is ('+correctVal+'). '+explanation);updatePanel();};
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 4 · Lesson 4.1 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-4-lesson-1"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-4-lesson-1-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-4-lesson-1-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-4-lesson-1-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-4-lesson-2"">Next: 4.2 Authentication →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-4-lesson-1"">Lesson 4.1</a><a href=""/pages/ap-cybersecurity-unit-4-securing-devices"">Unit 4 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"

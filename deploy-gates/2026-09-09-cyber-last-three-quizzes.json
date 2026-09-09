@@ -1,0 +1,118 @@
+{
+  "change": "the last three cyber quizzes: five stems reworded, and a fourth markup generation so 3.5 can be lifted",
+  "_context": [
+    "22 of 25 cyber quiz pages are server-scored. The three left, 2.3, 3.5 and 4.1,",
+    "were refused by scripts/extract-cyber-quizzes.js for two different reasons.",
+    "",
+    "Five stems named the CED to a student, which lib/quiz-citation.js refuses.",
+    "The rewordings were put to Tanner in docs/cyber-last-three-quizzes-decision.md",
+    "and approved. Four are deletions; 4.1 Q6 is a real rewrite because dropping",
+    "'the CED' leaves a broken sentence.",
+    "",
+    "It would have been half the work to patch a local copy of each body, run the",
+    "extractor on that and skip the sheet. That is routing around a guard to get",
+    "the output it was refusing, and the result looking identical is what makes it",
+    "the wrong habit to leave behind. The seed is GENERATED from live bodies and",
+    "--check re-derives it, so the corrected stem has to be live.",
+    "",
+    "3.5 needed no rewording. It needed a fourth markup generation, and a human",
+    "call on its ten items sitting inside the 9-to-24 teacher-bundle range.",
+    "That confirmation is per page and per COUNT, not a raised ceiling."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the reword touches five stems and nothing else",
+      "command": "npm run --silent smoke:cyberstemreword",
+      "expect": "19 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the fourth generation, with the key re-derived off the page",
+      "command": "npm run --silent smoke:cyberextractqstem",
+      "expect": "10 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the reword sheet parses back to what the transform produced from live",
+      "command": "node scripts/cyber-quiz-stem-reword.js --verify \"imports/2026-09-09-cyber-quiz-stem-reword/Pages cyber-quiz-stem-reword.csv\"",
+      "expect": "parse-back-diff=0"
+    },
+    {
+      "kind": "mutation",
+      "name": "R1 the replace is global, so it reaches identical text in an explanation",
+      "_why": "The blast radius that matters. 2.3 carries fourteen EK codes in its feedback blocks and every one of them is correct and must survive.",
+      "file": "scripts/cyber-quiz-stem-reword.js",
+      "find": "      body = body.replace(e.find, () => e.repl);",
+      "replace": "      body = body.split(e.find).join(e.repl); body = body.replace(/\\bEK\\s*2\\.3\\.B\\.4/g, 'the card reader rule');",
+      "command": "npm run --silent smoke:cyberstemreword",
+      "expect_failure": "lost exactly the"
+    },
+    {
+      "kind": "mutation",
+      "name": "R2 the one-occurrence guard is dropped, so a duplicated stem gets picked at random",
+      "file": "scripts/cyber-quiz-stem-reword.js",
+      "find": "      if (n !== 1) {",
+      "replace": "      if (false) {",
+      "command": "npm run --silent smoke:cyberstemreword",
+      "expect_failure": "refuses when the stem text appears TWICE"
+    },
+    {
+      "kind": "mutation",
+      "name": "R3 one edit silently does nothing",
+      "file": "scripts/cyber-quiz-stem-reword.js",
+      "find": "    repl: 'are <strong>TRUE</strong>?',",
+      "replace": "    repl: 'are <strong>TRUE</strong> according to the AP CED?',",
+      "command": "npm run --silent smoke:cyberstemreword",
+      "expect_failure": "zero stems carry a citation"
+    },
+    {
+      "kind": "mutation",
+      "name": "X1 the key is read as the option ORDER rather than the letter checkQ names",
+      "_why": "The one that would put a wrong answer in front of a class. The suite re-derives all ten keys off the page rather than trusting the parser.",
+      "file": "scripts/extract-cyber-quizzes.js",
+      "find": "      if (o[1] === keyM[1]) correct = opts.length;",
+      "replace": "      if (opts.length === 0) correct = 0;",
+      "command": "npm run --silent smoke:cyberextractqstem",
+      "expect_failure": "all ten keys match the answer the page itself names"
+    },
+    {
+      "kind": "mutation",
+      "name": "X2 explanations are read from the markup, where they are empty",
+      "file": "scripts/extract-cyber-quizzes.js",
+      "find": "    const q = mkQ(handle, lesson, n, stem, opts, correct, expl[n] || null);",
+      "replace": "    const q = mkQ(handle, lesson, n, stem, opts, correct, null);",
+      "command": "npm run --silent smoke:cyberextractqstem",
+      "expect_failure": "eight of ten carry an explanation"
+    },
+    {
+      "kind": "mutation",
+      "name": "X3 the confirmation becomes a raised ceiling for the handle, any count",
+      "_why": "What was confirmed is an instrument, not a handle. An eleventh question is a changed instrument and a changed decision.",
+      "file": "scripts/extract-cyber-quizzes.js",
+      "find": "    if (questions.length > WEB_QUIZ_MAX && CONFIRMED[handle] !== questions.length) {",
+      "replace": "    if (questions.length > WEB_QUIZ_MAX && CONFIRMED[handle] === undefined) {",
+      "command": "npm run --silent smoke:cyberextractqstem",
+      "expect_failure": "eleven questions is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "X4 the option scope goes greedy and swallows the following options",
+      "file": "scripts/extract-cyber-quizzes.js",
+      "find": "    for (const o of b[0].matchAll(/<div class=\"opt\"[^>]*id=\"opt-\\d+-([A-E])\"[^>]*>([\\s\\S]*?)<\\/div>/g)) {",
+      "replace": "    for (const o of b[0].matchAll(/<div class=\"opt\"[^>]*id=\"opt-\\d+-([A-E])\"[^>]*>([\\s\\S]*)<\\/div>/g)) {",
+      "command": "npm run --silent smoke:cyberextractqstem",
+      "expect_failure": "every question has four options"
+    }
+  ],
+  "_withdrawn": [
+    {
+      "name": "R4 the stem-scope check is removed, so an edit could land in an explanation",
+      "_why": "WITHDRAWN because it came back GREEN, and a green mutation run is a failed check rather than a passing one. Assertion 4 in the generator is a TOTAL blast-radius check, undoing the five edits must reproduce the original byte for byte, and it catches any edit landing anywhere it should not. No single-guard mutation gets past it. The scope check is labelled as producing a better error at the right moment rather than as the only defence, and the suite exercises it directly on a body where the text appears once and outside a stem."
+    },
+    {
+      "name": "R5 4.1 Q6 is 'fixed' by deletion, leaving a broken sentence",
+      "_why": "WITHDRAWN as a pass/fail, kept as a finding. Replacing the Q6 rewording with a bare deletion, which leaves 'which CIA principle does most directly associate with it', leaves the whole suite green. No automated check can judge whether a rewritten sentence reads like English. That is not a gap to close, it is the reason lib/quiz-citation.js says rewording belongs to a human, demonstrated rather than asserted."
+    }
+  ]
+}

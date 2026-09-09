@@ -197,10 +197,78 @@ function parseOptBtn(body, handle, lesson) {
   return out;
 }
 
+
+//  ── A FOURTH GENERATION: q-stem + .opt divs + checkQ ───────────────────────
+//  Found on ap-cyber-unit-3-lesson-6-quiz (CED 3.5) and nowhere else so far.
+//  Options are DIVS with an onclick rather than radios or buttons, the key is
+//  the second argument of checkQ(N,'X'), and the explanations do not live in
+//  the markup at all: they sit in an exp[] table inside the page's IIFE, which
+//  also assigns window.selectOpt and window.checkQ so the inline handlers
+//  resolve. Reading the markup alone would have produced ten questions with no
+//  explanations and looked complete.
+function parseQStemCheckQ(body, handle, lesson) {
+  const out = [];
+  //  exp[N]="..." from the script block, before any markup is touched.
+  const expl = {};
+  for (const m of body.matchAll(/\bexp\[(\d+)\]\s*=\s*"((?:[^"\\]|\\.)*)"/g)) {
+    expl[Number(m[1])] = decode(m[2].replace(/\\"/g, '"').replace(/\\n/g, ' '));
+  }
+  const blocks = [...body.matchAll(
+    /<div class="q-block" id="qblock-(\d+)"[\s\S]*?(?=<div class="q-block" id="qblock-\d+"|<div class="quiz-actions|<div class="nav-links|$)/g)];
+  if (!blocks.length) { note(handle, 'no qblock sections'); return null; }
+  for (const b of blocks) {
+    const n = Number(b[1]);
+    const stem = stemOf(b[0]);
+    //  The key, and the letter it names, before the letters are stripped off.
+    const keyM = b[0].match(/checkQ\(\s*\d+\s*,\s*'([A-E])'\s*\)/);
+    if (!keyM) { note(handle, `Q${n} has no checkQ key`); return null; }
+    const opts = [];
+    let correct = -1;
+    for (const o of b[0].matchAll(/<div class="opt"[^>]*id="opt-\d+-([A-E])"[^>]*>([\s\S]*?)<\/div>/g)) {
+      if (o[1] === keyM[1]) correct = opts.length;
+      opts.push(stripLetter(decode(o[2])));
+    }
+    const q = mkQ(handle, lesson, n, stem, opts, correct, expl[n] || null);
+    if (q) out.push(q);
+  }
+  return out;
+}
+
+
+//  ── PAGES A HUMAN HAS CONFIRMED ARE WEB QUIZZES, DESPITE THE COUNT ─────────
+//  NOT a raised ceiling. Every other page is still refused over WEB_QUIZ_MAX,
+//  and the count here must match EXACTLY: if the page gains or loses an item
+//  the confirmation no longer applies and it goes back to refusing, because
+//  what was confirmed was this instrument and not this handle.
+//
+//  ap-cyber-unit-3-lesson-6-quiz, CED 3.5, ten items. Confirmed 2026-09-09 by
+//  Tanner. The evidence that made it answerable rather than a coin flip:
+//
+//    - Every one of its ten questions carries a "Predict first" prompt. That is
+//      PRIMM lesson scaffolding, which is how this site writes a WEB lesson. A
+//      gated unit test does not ship per-item predict prompts.
+//    - Its ten stems share no meaningful text with the 60-item public practice
+//      bank in config/cyber-exam-items.json. Measured as 5-gram overlap: the
+//      highest pair scored 5.1% and is on an unrelated topic.
+//    - Lesson 3.5 has its own separate teacher Drive quiz doc, so the bundle
+//      instrument exists as a different artifact.
+//
+//  What none of that proves is that the Drive doc holds different items: the
+//  .docx files are not in this repo and no diff against them is possible here.
+//  If they turn out to be the same instrument, both need re-authoring, and
+//  seeding does not make that worse: the page is public today and serves its
+//  own answer key, so moving it server-side strictly reduces exposure. A wrong
+//  call here is also reversible, because dropping a qid from the seed sets it
+//  active = 0 rather than deleting it.
+const CONFIRMED = {
+  'ap-cyber-unit-3-lesson-6-quiz': 10,
+};
+
 const GENERATIONS = [
   { name: 'q-block+radio+ANSWERS', test: (b) => /class="q-block"/.test(b) && /type="radio"/.test(b) && /ANSWERS\s*=/.test(b), parse: parseQBlockRadio },
   { name: 'checkMCQ', test: (b) => /checkMCQ\(/.test(b), parse: parseCheckMcq },
   { name: 'opt-btn+data-correct', test: (b) => /class="opt-btn"/.test(b) && /data-correct=/.test(b), parse: parseOptBtn },
+  { name: 'q-stem+opt+checkQ', test: (b) => /class="q-stem"/.test(b) && /class="opt"/.test(b) && /checkQ\(/.test(b), parse: parseQStemCheckQ },
 ];
 
 function extract(dir) {
@@ -231,7 +299,7 @@ function extract(dir) {
     //  discriminator available: the .docx files are not in this repo and no
     //  diff against them is possible. Over the ceiling is a REFUSAL and a
     //  question for a human, not a judgement this script gets to make.
-    if (questions.length > WEB_QUIZ_MAX) {
+    if (questions.length > WEB_QUIZ_MAX && CONFIRMED[handle] !== questions.length) {
       note(handle, `${questions.length} questions, over the ${WEB_QUIZ_MAX}-item web-quiz ceiling. ` +
         'A teacher bundle instrument is 9 to 24 items, so this needs a human to confirm what it is before it is seeded.');
       continue;
