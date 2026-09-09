@@ -155,6 +155,16 @@ afterthought.
   board. Whether both columns should exist at all on a lesson is a content
   question I did not touch: merging them would put two scores in one cell out of
   two denominators, which is the collision the split was made to stop.
+- **A Terminal Lab cell on the student page carries no link.**
+  `lib/lesson-links.js` derives `ap-cyber-unit-1-lesson-2-terminal-lab` for that
+  cell, `pageFromHandle` cannot parse it back to the same key, and the resolver
+  fails CLOSED rather than linking to the wrong lesson, which is the right
+  behaviour and leaves the cell unclickable. The fix is small and is deliberately
+  not in this branch: a lab spec already carries its own `page_handle`, so the
+  resolver could ask lab-spec for lab activities instead of deriving. It touches
+  every course's cells, so it wants its own change and its own test.
 - I cannot verify my own work. 288 goes to `needs_verification`, and the check
-  worth running is Michelle's: sign a student out, open the 1.2 lab, and read
-  what it says.
+  worth running is the teacher's own: sign a student out, open the 1.2 lab, and
+  read what it says.
+- A reply to her is drafted at
+  `docs/inbox/drafts/2026-09-09-michelle-labs-and-dashboards.md`. Not sent.
