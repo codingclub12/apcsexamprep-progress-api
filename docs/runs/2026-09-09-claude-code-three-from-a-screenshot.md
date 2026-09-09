@@ -165,12 +165,24 @@ sheet is wrong.
 
 ## Still open
 
-- **The sheet needs a human to import it.** Seven pages,
-  `matrixify/cyber-lab-handle-repoint-pages.csv`. Until it lands, Topic 1.2 in
-  the Command Center still offers a Unit 4 lab. Checked live at 02:30 UTC and
-  none of it has landed: all seven pages still carry the Unit 1 URL, the STU map
-  still files the lab under 1.2, the Unit 1 chip is still there and the practice
-  card still reads Unit 1 / Topic 1.2.
+- ~~The sheet needs a human to import it.~~ **Imported 2026-09-09**, and
+  verified against the bytes Shopify stored rather than against the sheet. All
+  fourteen assertions pass: no page names the old handle, the Command Center's
+  STU map carries the lab under `"4.3"` and no longer under `"1.2"`, the Unit 1
+  chip is gone while the four real Unit 1 labs remain, and the practice card
+  reads Unit 4 with nothing on the page still saying Topic 1.2. The old URL still
+  answers 200 and canonicals to the Unit 4 handle, so existing bookmarks and
+  anything a student wrote down still work.
+
+  Six of the seven stored bodies are byte-identical to the sheet. The seventh
+  differs by ONE character: a non-breaking space between two nav anchors on
+  `ap-cybersecurity-complete-course-guide` came back as a normal space. That is
+  Shopify normalising on import, the same documented class as the entity
+  decoding on `my-progress`, and the nbsp was in the live body before the sheet
+  was built, so the sheet did not introduce it. Cosmetic: it allows a line wrap
+  between two links where one was previously prevented. Not worth an import
+  cycle to restore, and recorded here so the next regeneration is not surprised
+  to find the live body one character off.
 - **The denominator half IS live.** `ae51060` deployed and the boot seed wrote
   the row: `cyber_denominators total=96 changed=1`. The gate passes with three
   kinds agreeing. The 1.3 Lab cell should read points now rather than `29%*`.
