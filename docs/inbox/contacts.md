@@ -58,8 +58,17 @@ the argument for checking the neighbours of every report.
   docs/inbox/drafts/2026-09-07-michelle-locks-and-scores.md, every claim checked
   live that day and the check named beside it.
 - What the draft claims, and must stay consistent with:
-  - Her five Unit 1 lesson quiz locks are REAL and hold against a signed-out or
-    incognito student. Measured, unauthenticated, against production.
+  - **CORRECTED 2026-09-09 BEFORE SENDING.** The draft originally claimed all
+    five Unit 1 quiz locks were real, measured from the quiz API alone. Only
+    1.1 and 1.2 are: a lock is real only where the PAGE asks the server for its
+    questions, and 1.3, 1.4 and 1.5 still carry their own ANSWERS object in the
+    page body, so the API's refusal is never reached. Her screenshot shows 1.3
+    locked, so this would have been a false assurance about a lock she is
+    actually relying on. All 26 cyber quiz pages audited for both halves:
+    2 real, 24 not. Board #276 is the migration.
+  - Her 1.1 and 1.2 locks are real and hold against a signed-out or incognito
+    student. Everything else, including the Unit Tests and Units 2 to 5, is the
+    link itself as the lock.
   - Her Unit Test locks do nothing, and the unit test pages carry their
     questions and answer key in the page source. She was told to treat the link
     itself as the lock and hand it out on test day. Same for Units 2 to 5.

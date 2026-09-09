@@ -11,22 +11,29 @@ Hi Michelle,
 Good news and bad news on the lock, and you found a real bug in the gradebook.
 Taking them in order.
 
-**The lesson quizzes are really locked.** All five Unit 1 quizzes are served by
-our server, not by the page, so when you lock one the questions never leave the
-building. A student who opens the link sees "This quiz is not open yet. Your
-teacher opens it when the class is ready to take it." That holds if they sign
-out or open the link in a private window, which is the first thing a determined
-sophomore tries. Your workflow is exactly right: leave it locked, unlock it when
-the class sits down, and the link works from that moment.
+**Two of your locks are real, and the rest are not yet. That is fewer than I
+would like to be telling you.**
 
-**The Unit Tests are not, and that is what the "can't be enforced" note is
-telling you.** Those pages carry their own questions, so a student with the link
-has the whole test whatever the gradebook says, and the answers are in the page
-source for anyone who thinks to look. Locking one changes what your gradebook
-shows you and nothing on the student's screen. Until we move the unit tests onto
-the server the way the lesson quizzes already are, please treat the Unit Test
-link itself as the lock: hand it out on test day. Same for the Unit 2 to 5
-quizzes.
+The 1.1 and 1.2 quizzes are the real ones. Those pages ask our server for the
+questions, so when you lock one the questions never leave the building. A
+student who opens the link sees "This quiz is not open yet. Your teacher opens
+it when the class is ready to take it." That holds if they sign out or open the
+link in a private window, which is the first thing a determined sophomore tries.
+
+**1.3, 1.4 and 1.5 are not locked, even though the gradebook lets you lock
+them.** Those pages still carry their own questions and their own answer key, so
+a student who opens the link has the quiz and the answers regardless of the
+padlock. I checked 1.3 specifically because your screenshot shows it locked: the
+key is five letters sitting in the page source. The server half is built and
+waiting; the pages have not been switched over yet.
+
+**The Unit Tests are in the same state, and so are the Units 2 to 5 quizzes.**
+The Unit 1 Exam page carries all twenty questions and all twenty answers in its
+source.
+
+So until I tell you otherwise, please treat the LINK as the lock for everything
+except 1.1 and 1.2: hand it out when you want the class to sit it. The padlock
+in the gradebook is a note to yourself, not a door.
 
 I would rather tell you that plainly than let you find out from a student's
 score.
@@ -63,16 +70,25 @@ Tanner
 
 ## What each claim rests on
 
-- Five Unit 1 quizzes enforced, unauthenticated request to production
-  2026-09-07: `GET /api/quiz/ap-cybersecurity/unit-1/1.{1..5}/quiz` returns
-  `locked:true, questions:null, pool:5`, reasons `anonymous-closed-for-activity`
-  (1.1, 1.2) and `anonymous-closed-for-lesson` (1.3 to 1.5).
+- **CORRECTED 2026-09-09, and the first draft of this letter was wrong.** It
+  said all five Unit 1 quizzes were enforced, on the strength of the API alone:
+  `GET /api/quiz/ap-cybersecurity/unit-1/1.{1..5}/quiz` does return
+  `locked:true, questions:null` for all five. That is only half the question. A
+  lock is real only if the PAGE asks the server for its questions, and only 1.1
+  and 1.2 do. 1.3, 1.4 and 1.5 still carry `ANSWERS={1:'C',2:'C',3:'B',4:'B',
+  5:'A'}` and its siblings in the page body, so the API's refusal is never
+  reached.
+  Audited all 26 cyber quiz pages on 2026-09-09 for both halves, page mount and
+  server bank: **2 are real (1.1, 1.2), 24 are not.** Board #276 is the
+  migration; it has banks in production ahead of the page mounts, which is
+  exactly the gap that made the first draft's claim plausible and wrong.
 - Student wording: the deployed `apcs-quiz-mount.js`, `renderLocked()`.
 - Unit Tests not enforced: same endpoint for `unit-{1..5}/exam/exam` returns
   "No server-scored quiz for this location"; the live body of
   `ap-cyber-unit-1-exam` carries 20 questions and `var ANSWERS = {...}`.
-- Units 2 to 5 quizzes: same endpoint, same answer, checked 2.1, 2.2, 3.1a, 4.1,
-  5.1.
+- Units 2 to 5: several now have server banks that did not exist on 2026-09-07,
+  so the honest statement is about the PAGES rather than the API. None of them
+  mounts, so none is locked. Re-measured 2026-09-09.
 - The double count and its repair: `npm run smoke:carrier`, reproduced on a
   scratch database through the real routes. Run note
   `docs/runs/2026-09-07-claude-code-gradebook-two-writers.md`.
