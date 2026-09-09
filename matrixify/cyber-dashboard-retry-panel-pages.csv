@@ -1,0 +1,1289 @@
+﻿"Handle","Command","Title","Body HTML"
+"cyber-dashboard","UPDATE","Teacher Dashboard","<!-- apcs-ccx cross-link bar (managed) --><div id=""apcs-ccx"">
+<style>#apcs-ccx{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;}#apcs-ccx *{box-sizing:border-box!important;}#apcs-ccx .ccx-bar{display:flex!important;gap:8px!important;align-items:center!important;background:#0f1f3d!important;padding:10px 14px!important;border-radius:10px!important;margin:0 0 18px!important;flex-wrap:wrap!important;}#apcs-ccx .ccx-lbl{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-right:2px!important;}#apcs-ccx a.ccx-link{display:inline-block!important;padding:7px 13px!important;border-radius:7px!important;font-size:14px!important;font-weight:600!important;line-height:1.2!important;text-decoration:none!important;color:#e5edff!important;-webkit-text-fill-color:#e5edff!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-link:hover{background:rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-active{background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:#2563eb!important;cursor:default!important;}#apcs-ccx .ccx-soon{font-size:12px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;padding:0 4px!important;}#apcs-ccx .ccx-sep{width:1px!important;height:20px!important;background:rgba(255,255,255,.2)!important;margin:0 4px!important;}</style>
+<nav class=""ccx-bar"" aria-label=""Teacher hubs""><span class=""ccx-lbl"">Hubs</span><a class=""ccx-link"" href=""/pages/cyber-command-center"">Cyber</a><a class=""ccx-link"" href=""/pages/csp-command-center"">CSP</a><a class=""ccx-link"" href=""/pages/csa-command-center"">CSA</a><a class=""ccx-link"" href=""/pages/ap-networking-command-center"">Networking</a><span class=""ccx-sep""></span><a class=""ccx-link ccx-active"" href=""/pages/cyber-dashboard"" aria-current=""page"">Gradebook</a></nav>
+</div>
+<!-- APCSExamPrep Teacher Dashboard - /pages/cyber-dashboard -->
+<!-- Redesign: clean tabbed gradebook. Keeps auth, ?code= loading, /progress fetch, exports, roster tools, delete. -->
+<style>
+#tcdash-wrap{all:initial!important;display:block!important;}
+#tcdash-wrap *{box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;}
+#tcdash-wrap .gb-page{background:#f6f8fb!important;min-height:100vh!important;padding:24px 0 60px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;font-size:14px!important;line-height:1.5!important;}
+#tcdash-wrap .gb-wrap{max-width:1320px!important;margin:0 auto!important;padding:0 18px!important;}
+#tcdash-wrap .gb-hidden{display:none!important;}
+
+#tcdash-wrap .gb-topbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+#tcdash-wrap .gb-cid{display:flex!important;align-items:center!important;gap:13px!important;}
+#tcdash-wrap .gb-av{width:46px!important;height:46px!important;border-radius:12px!important;background:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;display:flex!important;align-items:center!important;justify-content:center!important;font-weight:700!important;font-size:17px!important;}
+#tcdash-wrap .gb-cname{font-size:19px!important;margin:0!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-sub{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;margin-top:4px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;font-size:12.5px!important;}
+#tcdash-wrap .gb-chip{display:inline-flex!important;align-items:center!important;gap:7px!important;background:#fff!important;border:1px solid #e5e7eb!important;border-radius:8px!important;padding:3px 9px 3px 11px!important;font-weight:600!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;font-size:12.5px!important;cursor:pointer!important;}
+#tcdash-wrap .gb-chip .cc{font-family:monospace!important;letter-spacing:1px!important;}
+#tcdash-wrap .gb-chip .cp{font-size:11px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .gb-tag{background:#eff6ff!important;color:#3b82f6!important;-webkit-text-fill-color:#3b82f6;border:1px solid #dbeafe!important;border-radius:999px!important;padding:2px 10px!important;font-weight:600!important;font-size:11.5px!important;}
+#tcdash-wrap .gb-actions{display:flex!important;gap:10px!important;align-items:center!important;flex-wrap:wrap!important;}
+#tcdash-wrap .gb-btn{border:1px solid #e5e7eb!important;background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569;border-radius:9px!important;padding:9px 14px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;text-decoration:none!important;display:inline-block!important;}
+#tcdash-wrap .gb-btn:hover{border-color:#94a3b8!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-btn.primary{background:#1e3a5f!important;border-color:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .gb-btn.primary:hover{background:#274b78!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .gb-export-menu{position:relative!important;display:inline-block!important;}
+#tcdash-wrap .gb-export-list{display:none;position:absolute!important;right:0!important;top:calc(100% + 6px)!important;z-index:50!important;background:#fff!important;border:1px solid #d7dee8!important;border-radius:8px!important;box-shadow:0 8px 24px rgba(15,32,56,.16)!important;min-width:280px!important;overflow:hidden!important;}
+#tcdash-wrap .gb-export-list.on{display:block!important;}
+#tcdash-wrap .gb-export-list button{display:block!important;width:100%!important;text-align:left!important;background:#fff!important;border:none!important;border-bottom:1px solid #eef2f7!important;padding:10px 14px!important;cursor:pointer!important;font:inherit!important;}
+#tcdash-wrap .gb-export-list button:last-child{border-bottom:none!important;}
+#tcdash-wrap .gb-export-list button:hover{background:#f4f7fb!important;}
+#tcdash-wrap .gb-export-list b{display:block!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f!important;font-size:13px!important;}
+#tcdash-wrap .gb-export-list span{display:block!important;color:#6b7a90!important;-webkit-text-fill-color:#6b7a90!important;font-size:11px!important;margin-top:2px!important;}
+#tcdash-wrap .gb-btn.sm{padding:6px 11px!important;font-size:12px!important;border-radius:8px!important;}
+#tcdash-wrap .gb-btn.danger{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-color:#fecaca!important;}
+
+#tcdash-wrap .gb-tabs{display:flex!important;gap:2px!important;border-bottom:1px solid #e5e7eb!important;margin-bottom:18px!important;}
+#tcdash-wrap .gb-tab{border:none!important;background:none!important;font-size:13.5px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;padding:11px 16px!important;cursor:pointer!important;border-bottom:2px solid transparent!important;margin-bottom:-1px!important;}
+#tcdash-wrap .gb-tab:hover{color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-tab.on{color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;border-bottom-color:#1e3a5f!important;}
+
+#tcdash-wrap .gb-share{display:flex!important;align-items:center!important;gap:14px!important;background:#eff6ff!important;border:1px solid #dbeafe!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:18px!important;flex-wrap:wrap!important;}
+#tcdash-wrap .gb-share .sl{font-size:13px!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;font-weight:600!important;}
+#tcdash-wrap .gb-share .su{font-size:12.5px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+#tcdash-wrap .gb-share .su b{color:#0f172a!important;-webkit-text-fill-color:#0f172a;font-family:monospace!important;letter-spacing:1px!important;}
+
+#tcdash-wrap .gb-promo{display:flex!important;align-items:center!important;gap:14px!important;background:linear-gradient(100deg,#f0f7ff,#eef2ff)!important;border:1px solid #dbe6fb!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:18px!important;}
+#tcdash-wrap .gb-promo .pi{width:32px!important;height:32px!important;border-radius:9px!important;background:#fff!important;border:1px solid #dbe6fb!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+#tcdash-wrap .gb-promo .pi i{width:13px!important;height:13px!important;border-radius:3px!important;background:#3b82f6!important;display:block!important;}
+#tcdash-wrap .gb-promo p{margin:0!important;font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569;}
+#tcdash-wrap .gb-promo p b{color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-promo .gb-btn{margin-left:auto!important;white-space:nowrap!important;}
+#tcdash-wrap .gb-promo .x{background:none!important;border:none!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-size:18px!important;cursor:pointer!important;}
+
+#tcdash-wrap .gb-stats{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:14px!important;margin-bottom:18px!important;}
+#tcdash-wrap .gb-stat{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:14px 16px!important;}
+#tcdash-wrap .gb-stat .l{font-size:11.5px!important;font-weight:600!important;text-transform:uppercase!important;letter-spacing:.04em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .gb-stat .v{font-size:26px!important;font-weight:750!important;margin-top:5px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-stat .v small{font-size:14px!important;font-weight:600!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .gb-stat .f{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;margin-top:2px!important;}
+
+#tcdash-wrap .gb-toolbar{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:14px!important;}
+#tcdash-wrap .gb-seg{display:inline-flex!important;background:#eef2f6!important;border-radius:9px!important;padding:3px!important;}
+#tcdash-wrap .gb-seg button{border:none!important;background:none!important;font-size:12.5px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;padding:6px 13px!important;border-radius:7px!important;cursor:pointer!important;}
+#tcdash-wrap .gb-seg button.on{background:#fff!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;}
+#tcdash-wrap .gb-input{font-size:13px!important;border:1px solid #e5e7eb!important;border-radius:9px!important;padding:8px 11px!important;background:#fff!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;min-width:180px!important;}
+#tcdash-wrap .gb-note{margin-left:auto!important;font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+
+#tcdash-wrap .gb-card{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;box-shadow:0 6px 18px rgba(15,23,42,.08)!important;overflow:hidden!important;}
+#tcdash-wrap .gb-scroll{overflow:auto!important;max-height:70vh!important;}
+#tcdash-wrap table.gb-grid{border-collapse:separate!important;border-spacing:0!important;width:100%!important;font-size:13px!important;}
+#tcdash-wrap .gb-grid th,#tcdash-wrap .gb-grid td{white-space:nowrap!important;}
+#tcdash-wrap .gb-grid thead th{position:sticky!important;top:0!important;background:#fff!important;z-index:20!important;}
+#tcdash-wrap .gb-grid thead tr.grp th{top:0!important;height:34px!important;font-size:11.5px!important;font-weight:700!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;border-bottom:1px solid #eef2f6!important;text-align:center!important;padding:0 8px!important;background:#fbfcfe!important;}
+#tcdash-wrap .gb-grid thead tr.sub th{top:34px!important;height:38px!important;font-size:11px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;border-bottom:1px solid #e5e7eb!important;text-align:center!important;padding:4px 6px!important;background:#fff!important;}
+#tcdash-wrap .gb-grid thead tr.sub th .mx{display:block!important;font-size:10px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:500!important;}
+/* Marks a score whose activity has no points assigned yet. The percent is real,
+   the fraction is unknown, and the star says which is which. */
+#tcdash-wrap .pv{opacity:.7!important;font-weight:700!important;margin-left:1px!important;}
+#tcdash-wrap .gb-grid tbody td{border-bottom:1px solid #eef2f6!important;height:46px!important;text-align:center!important;padding:4px 6px!important;}
+#tcdash-wrap .gb-grid tbody tr:hover td{background:#f9fbfd!important;}
+#tcdash-wrap .c-stick{position:sticky!important;background:#fff!important;z-index:10!important;}
+#tcdash-wrap .gb-grid{--w-name:190px;--w-grade:60px;--w-pts:70px;}
+#tcdash-wrap .c-name{left:0!important;width:var(--w-name)!important;min-width:var(--w-name)!important;max-width:var(--w-name)!important;text-align:left!important;padding-left:14px!important;overflow:hidden!important;box-shadow:1px 0 0 #eef2f6!important;}
+#tcdash-wrap .c-grade{left:var(--w-name)!important;width:var(--w-grade)!important;min-width:var(--w-grade)!important;}
+#tcdash-wrap .c-pts{left:calc(var(--w-name) + var(--w-grade))!important;width:var(--w-pts)!important;min-width:var(--w-pts)!important;box-shadow:1px 0 0 #e5e7eb!important;}
+#tcdash-wrap .stu .nm{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:130px!important;}
+/* Density is a continuous slider. Default vars + var-consuming overrides are in the density block near the end of this style; applyDensity() in JS interpolates them from the slider. */
+#tcdash-wrap .gb-grid thead .c-stick{z-index:30!important;}
+#tcdash-wrap .gb-grid thead tr.grp .c-name,#tcdash-wrap .gb-grid thead tr.grp .c-grade,#tcdash-wrap .gb-grid thead tr.grp .c-pts{background:#fbfcfe!important;}
+#tcdash-wrap .stu{display:flex!important;align-items:center!important;gap:10px!important;cursor:pointer!important;}
+#tcdash-wrap .stu .ini{width:30px!important;height:30px!important;border-radius:50%!important;background:#eef2f9!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;font-weight:700!important;font-size:12px!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+#tcdash-wrap .stu .nm{font-weight:600!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;font-size:13px!important;}
+#tcdash-wrap .stu .la{font-size:11px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .stu:hover .nm{color:#3b82f6!important;-webkit-text-fill-color:#3b82f6;}
+#tcdash-wrap .letter{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:26px!important;height:26px!important;border-radius:7px!important;font-weight:750!important;font-size:13px!important;}
+#tcdash-wrap .l-A{background:#ecfdf5!important;color:#047857!important;-webkit-text-fill-color:#047857;}
+#tcdash-wrap .l-B{background:#eff6ff!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8;}
+#tcdash-wrap .l-C{background:#fffbeb!important;color:#b45309!important;-webkit-text-fill-color:#b45309;}
+#tcdash-wrap .l-D{background:#fff7ed!important;color:#c2410c!important;-webkit-text-fill-color:#c2410c;}
+#tcdash-wrap .l-F{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;}
+#tcdash-wrap .gcell{display:flex!important;flex-direction:column!important;align-items:center!important;}
+#tcdash-wrap .pct{font-size:11.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin-top:2px!important;}
+#tcdash-wrap .ptsb{font-weight:700!important;font-size:13px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .ptss{font-size:11px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .cellbtn{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:48px!important;height:31px!important;border-radius:8px!important;font-weight:700!important;font-size:12.5px!important;border:1px solid transparent!important;padding:0 8px!important;cursor:pointer!important;}
+#tcdash-wrap .cellbtn:hover{outline:2px solid #3b82f6!important;outline-offset:1px!important;}
+#tcdash-wrap .g{background:#ecfdf5!important;color:#047857!important;-webkit-text-fill-color:#047857;border-color:#a7f3d0!important;}
+#tcdash-wrap .a{background:#fffbeb!important;color:#b45309!important;-webkit-text-fill-color:#b45309;border-color:#fde68a!important;}
+#tcdash-wrap .r{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-color:#fecaca!important;}
+#tcdash-wrap .cellbtn.n{background:#fff!important;border-color:#e5e7eb!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1;}
+#tcdash-wrap .ptxt{display:inline-flex!important;align-items:center!important;gap:6px!important;min-width:78px!important;justify-content:center!important;}
+#tcdash-wrap .dot{width:7px!important;height:7px!important;border-radius:50%!important;display:inline-block!important;}
+#tcdash-wrap .dot.g{background:#047857!important;}#tcdash-wrap .dot.a{background:#b45309!important;}#tcdash-wrap .dot.r{background:#b91c1c!important;}
+#tcdash-wrap .mk{position:absolute!important;top:-5px!important;right:-5px!important;min-width:14px!important;height:14px!important;border-radius:8px!important;font-size:9px!important;font-weight:800!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1.5px solid #fff!important;padding:0 2px!important;}
+#tcdash-wrap .mk.ov{background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .mk.open{background:#f59e0b!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .gb-grid tfoot td{position:sticky!important;bottom:0!important;background:#fbfcfe!important;border-top:1px solid #e5e7eb!important;height:42px!important;font-weight:700!important;color:#475569!important;-webkit-text-fill-color:#475569;font-size:12px!important;text-align:center!important;z-index:15!important;}
+#tcdash-wrap .gb-grid tfoot td.c-name{text-align:left!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;z-index:25!important;}
+#tcdash-wrap .gb-grid tfoot td.c-stick{z-index:25!important;}
+#tcdash-wrap .gb-legend{display:flex!important;gap:16px!important;align-items:center!important;flex-wrap:wrap!important;margin-top:12px!important;font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+#tcdash-wrap .gb-legend .k{display:inline-flex!important;align-items:center!important;gap:6px!important;}
+#tcdash-wrap .sw{width:14px!important;height:14px!important;border-radius:4px!important;border:1px solid transparent!important;}
+#tcdash-wrap .sw.g{background:#ecfdf5!important;border-color:#a7f3d0!important;}#tcdash-wrap .sw.a{background:#fffbeb!important;border-color:#fde68a!important;}
+#tcdash-wrap .sw.r{background:#fef2f2!important;border-color:#fecaca!important;}#tcdash-wrap .sw.n{background:#fff!important;border-color:#e5e7eb!important;}
+#tcdash-wrap .mb{display:inline-block!important;width:12px!important;height:12px!important;border-radius:50%!important;border:1.5px solid #fff!important;vertical-align:-1px!important;}
+#tcdash-wrap .mb.ov{background:#3b82f6!important;}#tcdash-wrap .mb.open{background:#f59e0b!important;}
+
+#tcdash-wrap .gb-panel{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:20px 22px!important;}
+#tcdash-wrap .rep-head{display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;}
+#tcdash-wrap .rep-head .ini{width:44px!important;height:44px!important;font-size:16px!important;border-radius:50%!important;background:#eef2f9!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;font-weight:700!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+#tcdash-wrap .rep-head h2{margin:0!important;font-size:18px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .thin{color:#64748b!important;-webkit-text-fill-color:#64748b;font-size:12.5px!important;}
+#tcdash-wrap .picker{margin-left:auto!important;}
+#tcdash-wrap .gb-select{font-size:13px!important;border:1px solid #e5e7eb!important;border-radius:9px!important;padding:8px 11px!important;background:#fff!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .rep-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:12px!important;margin:16px 0 6px!important;}
+#tcdash-wrap .mini{background:#fbfcfe!important;border:1px solid #eef2f6!important;border-radius:10px!important;padding:12px 14px!important;}
+#tcdash-wrap .mini .l{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.04em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:600!important;}
+#tcdash-wrap .mini .v{font-size:20px!important;font-weight:750!important;margin-top:3px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .stu-tools{display:flex!important;gap:8px!important;margin:14px 0 4px!important;flex-wrap:wrap!important;}
+#tcdash-wrap .stu-retry{background:#fbfcfe!important;border:1px solid #eef2f6!important;border-radius:10px!important;padding:14px 16px!important;margin-top:14px!important;}
+#tcdash-wrap .sr-head{font-size:13px!important;font-weight:700!important;margin-bottom:12px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .sr-head .thin{font-weight:500!important;}
+#tcdash-wrap .sr-rows{display:flex!important;flex-wrap:wrap!important;gap:12px 26px!important;}
+#tcdash-wrap .sr-item{display:flex!important;align-items:center!important;gap:10px!important;font-size:12.5px!important;color:#475569!important;-webkit-text-fill-color:#475569;}
+#tcdash-wrap .sr-item .nmw{min-width:78px!important;}
+#tcdash-wrap .sr-seg{display:inline-flex!important;background:#eef2f6!important;border-radius:8px!important;padding:2px!important;}
+#tcdash-wrap .sr-seg button{border:none!important;background:none!important;font-size:11.5px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;padding:4px 10px!important;border-radius:6px!important;cursor:pointer!important;}
+#tcdash-wrap .sr-seg button.on{background:#fff!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;}
+#tcdash-wrap .rep-table{width:100%!important;border-collapse:collapse!important;margin-top:14px!important;font-size:13px!important;}
+#tcdash-wrap .rep-table th{text-align:left!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:.04em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:600!important;padding:8px 10px!important;border-bottom:1px solid #e5e7eb!important;}
+#tcdash-wrap .rep-table td{padding:9px 10px!important;border-bottom:1px solid #eef2f6!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .flag{font-size:11px!important;font-weight:700!important;padding:2px 8px!important;border-radius:999px!important;}
+#tcdash-wrap .flag.low{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;}
+#tcdash-wrap .flag.miss{background:#fff7ed!important;color:#c2410c!important;-webkit-text-fill-color:#c2410c;}
+#tcdash-wrap .flag.ok{background:#ecfdf5!important;color:#047857!important;-webkit-text-fill-color:#047857;}
+#tcdash-wrap .flag.open{background:#fffbeb!important;color:#b45309!important;-webkit-text-fill-color:#b45309;}
+#tcdash-wrap .bar{height:9px!important;border-radius:999px!important;background:#eef2f6!important;overflow:hidden!important;}
+#tcdash-wrap .bar i{display:block!important;height:100%!important;border-radius:999px!important;background:#3b82f6!important;}
+#tcdash-wrap .ba-head{display:flex!important;align-items:baseline!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:4px!important;}
+#tcdash-wrap .ba-head h2{margin:0!important;font-size:18px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .set-row{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:20px!important;padding:16px 0!important;border-bottom:1px solid #eef2f6!important;}
+#tcdash-wrap .set-row:last-child{border-bottom:none!important;}
+#tcdash-wrap .set-row .txt h4{margin:0 0 3px!important;font-size:14px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .set-row .txt p{margin:0!important;font-size:12.5px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;max-width:560px!important;}
+#tcdash-wrap .free-tag{font-size:10px!important;font-weight:700!important;color:#047857!important;-webkit-text-fill-color:#047857;background:#ecfdf5!important;border:1px solid #a7f3d0!important;border-radius:999px!important;padding:2px 8px!important;margin-left:8px!important;}
+#tcdash-wrap .retrywhat{margin-top:6px!important;font-size:12px!important;color:#475569!important;-webkit-text-fill-color:#475569;}
+#tcdash-wrap .switch{position:relative!important;width:44px!important;height:26px!important;flex-shrink:0!important;display:inline-block!important;}
+#tcdash-wrap .switch input{opacity:0!important;width:0!important;height:0!important;position:absolute!important;}
+#tcdash-wrap .slider{position:absolute!important;inset:0!important;background:#cbd5e1!important;border-radius:999px!important;cursor:pointer!important;}
+#tcdash-wrap .slider:before{content:""""!important;position:absolute!important;width:20px!important;height:20px!important;left:3px!important;top:3px!important;background:#fff!important;border-radius:50%!important;transition:.15s!important;}
+#tcdash-wrap .switch input:checked + .slider{background:#1e3a5f!important;}
+#tcdash-wrap .switch input:checked + .slider:before{transform:translateX(18px)!important;}
+#tcdash-wrap h3.sec{font-size:13px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin:4px 0 2px!important;}
+#tcdash-wrap .gb-loading{text-align:center!important;padding:48px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+#tcdash-wrap .overlay{position:fixed!important;inset:0!important;z-index:150!important;background:transparent!important;}
+#tcdash-wrap .pop{position:absolute!important;z-index:200!important;width:256px!important;background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;box-shadow:0 12px 34px rgba(15,23,42,.18)!important;padding:14px!important;font-size:13px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .pop h5{margin:0 0 2px!important;font-size:13px!important;}
+#tcdash-wrap .pop .s{font-size:11.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin-bottom:10px!important;}
+#tcdash-wrap .pop .cur{margin-bottom:10px!important;}
+#tcdash-wrap .pop .cur b{font-size:18px!important;}
+#tcdash-wrap .pop .fld{display:flex!important;gap:6px!important;align-items:center!important;margin-bottom:8px!important;}
+#tcdash-wrap .pop input{width:64px!important;font-size:13px!important;border:1px solid #e5e7eb!important;border-radius:8px!important;padding:6px 8px!important;}
+#tcdash-wrap .pop .row2{display:flex!important;gap:6px!important;}
+#tcdash-wrap .pop .row2 .gb-btn{flex:1!important;text-align:center!important;}
+#tcdash-wrap .pop .pc{position:absolute!important;top:8px!important;right:10px!important;background:none!important;border:none!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-size:16px!important;cursor:pointer!important;}
+#tcdash-wrap .pop .soon,#tcdash-wrap .stu-retry .soon{margin-top:10px!important;font-size:11px!important;color:#b45309!important;-webkit-text-fill-color:#b45309;background:#fffbeb!important;border:1px solid #fde68a!important;border-radius:8px!important;padding:6px 8px!important;}
+/* ---- density slider: default vars (JS overrides via inline style on the table) ---- */
+#tcdash-wrap .gb-grid{--w-name:148px;--w-grade:45px;--w-pts:53px;--gfs:10.5px;--cfs:10.5px;--cmw:29px;--cch:21px;--trh:30px;--sbh:29px;--mxfs:8.5px;--inisz:20px;--ltsz:20px;--nmmax:87px;--sbfs:10px;--cpx:4.5px;}
+#tcdash-wrap table.gb-grid{font-size:var(--gfs)!important;}
+#tcdash-wrap .gb-grid tbody td{height:var(--trh)!important;}
+#tcdash-wrap .gb-grid thead tr.sub th{height:var(--sbh)!important;}
+#tcdash-wrap .gb-grid thead tr.sub th .mx{font-size:var(--mxfs)!important;}
+#tcdash-wrap .cellbtn{min-width:var(--cmw)!important;height:var(--cch)!important;font-size:var(--cfs)!important;}
+#tcdash-wrap .stu .ini{width:var(--inisz)!important;height:var(--inisz)!important;font-size:calc(var(--inisz) * .42)!important;}
+#tcdash-wrap .stu .nm{max-width:var(--nmmax)!important;}
+#tcdash-wrap .letter{width:var(--ltsz)!important;height:var(--ltsz)!important;font-size:calc(var(--ltsz) * .55)!important;}
+#tcdash-wrap .gb-grid thead tr.sub th:not(.c-stick){font-size:var(--sbfs)!important;padding-left:var(--cpx)!important;padding-right:var(--cpx)!important;}
+#tcdash-wrap .gb-grid thead tr.grp th:not(.c-stick){padding-left:var(--cpx)!important;padding-right:var(--cpx)!important;}
+#tcdash-wrap .gb-grid tbody td:not(.c-stick){padding-left:var(--cpx)!important;padding-right:var(--cpx)!important;}
+#tcdash-wrap .gb-dens{display:inline-flex!important;align-items:center!important;gap:8px!important;}
+#tcdash-wrap .gb-dens-a{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:700!important;line-height:1!important;}
+#tcdash-wrap .gb-dens-a.sm{font-size:11px!important;}
+#tcdash-wrap .gb-dens-a.lg{font-size:16px!important;}
+#tcdash-wrap #gb-densrange{width:118px!important;accent-color:#1e3a5f!important;cursor:pointer!important;height:16px!important;}
+#tcdash-wrap .gb-dd{position:relative!important;display:inline-block!important;}
+#tcdash-wrap .gb-dd-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;}
+#tcdash-wrap .gb-dd-btn .ck{font-size:10px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .gb-dd-panel{position:absolute!important;top:calc(100% + 6px)!important;left:0!important;z-index:130!important;background:#fff!important;border:1px solid #e5e7eb!important;border-radius:10px!important;box-shadow:0 12px 34px rgba(15,23,42,.16)!important;padding:8px!important;min-width:190px!important;max-height:300px!important;overflow:auto!important;}
+#tcdash-wrap .gb-dd-panel label{display:flex!important;align-items:center!important;gap:9px!important;padding:7px 9px!important;border-radius:7px!important;font-size:13px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;cursor:pointer!important;}
+#tcdash-wrap .gb-dd-panel label:hover{background:#f6f8fb!important;}
+#tcdash-wrap .gb-dd-panel input{width:15px!important;height:15px!important;accent-color:#1e3a5f!important;cursor:pointer!important;}
+#tcdash-wrap .gb-dd-panel .dd-div{height:1px!important;background:#eef2f6!important;margin:6px 4px!important;}
+@media(max-width:820px){#tcdash-wrap .gb-stats,#tcdash-wrap .rep-grid{grid-template-columns:repeat(2,1fr)!important;}}
+#tcdash-wrap .lk{display:inline!important;font-size:10.5px!important;line-height:1!important;cursor:pointer!important;vertical-align:1px!important;}#tcdash-wrap tr.grp .lk{margin-right:5px!important;}#tcdash-wrap tr.sub .lk{margin-left:4px!important;}#tcdash-wrap .lk.open{opacity:.16!important;}#tcdash-wrap .lk.mix{opacity:.55!important;}#tcdash-wrap .lk.nf{filter:sepia(1) saturate(6) hue-rotate(-15deg)!important;}#tcdash-wrap tr.sub .lk.hov{opacity:0!important;transition:opacity .12s!important;}#tcdash-wrap tr.sub th:hover .lk.hov{opacity:.3!important;}#tcdash-wrap th:hover .lk{opacity:.85!important;}#tcdash-wrap .lk.busy{opacity:.4!important;pointer-events:none!important;}#tcdash-wrap .gb-dd-panel .ur{display:flex!important;align-items:center!important;gap:8px!important;}#tcdash-wrap .gb-dd-panel .ur label{flex:1 1 auto!important;}#tcdash-wrap .gb-dd-panel .ur .lk{margin-left:auto!important;font-size:12px!important;}</style>
+
+<div id=""tcdash-wrap"">
+<div class=""gb-page"">
+  <div class=""gb-wrap"">
+
+    <div id=""tcdash-not-auth"" class=""gb-hidden"" style=""text-align:center;padding:60px 20px;"">
+      <div style=""font-size:20px;font-weight:700;color:#1e3a5f;-webkit-text-fill-color:#1e3a5f;margin-bottom:12px;"">Sign in to view your dashboard</div>
+      <a class=""gb-btn primary"" href=""/pages/cyber-class"">Go to Teacher Portal</a>
+    </div>
+
+    <div id=""tcdash-main"" class=""gb-hidden"">
+
+      <div class=""gb-topbar"">
+        <div class=""gb-cid"">
+          <div class=""gb-av"" id=""gb-av"">C</div>
+          <div>
+            <h1 class=""gb-cname"" id=""gb-cname"">Class</h1>
+            <div class=""gb-sub"">
+              <span class=""gb-tag"" id=""gb-course"">Course</span>
+              <span class=""gb-chip"" onclick=""TCDash.copyCode()"">Join code: <span class=""cc"" id=""gb-code""></span> <span class=""cp"" id=""gb-copy"">copy</span></span>
+              <span id=""gb-count""></span>
+            </div>
+          </div>
+        </div>
+        <div class=""gb-actions"">
+          <a class=""gb-btn"" href=""/pages/cyber-class"">All classes</a>
+          <span class=""gb-export-menu"" id=""gb-export-menu"">
+            <button class=""gb-btn primary"" onclick=""TCDash.toggleExportMenu(event)"">Export &#9662;</button>
+            <div class=""gb-export-list"" id=""gb-export-list"">
+              <button onclick=""TCDash.pickExport('gradebook')""><b>Gradebook spreadsheet</b><span>Every activity, for Excel or Sheets</span></button>
+              <button onclick=""TCDash.pickExport('canvas')""><b>Canvas CSV by unit</b><span>Five Canvas assignments, a unit grade in each</span></button>
+              <button onclick=""TCDash.pickExport('canvas-activity')""><b>Canvas CSV by activity</b><span>Every lesson, quiz, case file and exam as its own assignment</span></button>
+              <button onclick=""TCDash.pickExport('schoology')""><b>Schoology CSV</b><span>Points earned out of points possible, one column per assignment</span></button>
+              <button onclick=""TCDash.pickExport('full')""><b>Full data CSV</b><span>Raw scores and completion from the server</span></button>
+            </div>
+          </span>
+        </div>
+      </div>
+
+      <div class=""gb-tabs"" id=""gb-tabs"">
+        <button class=""gb-tab on"" data-tab=""overview"">Overview</button>
+        <button class=""gb-tab"" data-tab=""student"">By Student</button>
+        <button class=""gb-tab"" data-tab=""assignment"">By Assignment</button>
+        <button class=""gb-tab"" data-tab=""settings"">Settings</button>
+      </div>
+
+      <div class=""gb-promo"" id=""gb-promo"">
+        <div class=""pi""><i></i></div>
+        <p id=""gb-promo-text""><b>Teaching this course?</b> The teacher pack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.</p>
+        <a class=""gb-btn primary"" id=""gb-promo-link"" href=""/collections/bundles"">View course bundles</a>
+        <button class=""x"" onclick=""document.getElementById('gb-promo').remove()"">×</button>
+      </div>
+
+      <div class=""gb-share"">
+        <div>
+          <div class=""sl"">Share with students</div>
+          <div class=""su"">apcsexamprep.com/pages/join?code=<b id=""gb-share-code""></b>
+</div>
+        </div>
+        <button class=""gb-btn primary"" style=""margin-left:auto"" onclick=""TCDash.copyJoinLink()"">Copy join link</button>
+      </div>
+
+      <div id=""gb-loading"" class=""gb-loading"">Loading class progress...</div>
+
+      <div id=""overview"" class=""gb-hidden"">
+        <div class=""gb-stats"" id=""gb-statcards""></div>
+        <div class=""gb-toolbar"">
+          <div class=""gb-dd"" id=""gb-unitdd"">
+<button class=""gb-btn sm gb-dd-btn"" id=""gb-unitbtn"" onclick=""TCDash.toggleUnitDD(event)"">All units <span class=""ck"">▾</span></button><div class=""gb-dd-panel gb-hidden"" id=""gb-unitpanel""></div>
+</div>
+          <div class=""gb-seg"" id=""gb-viewseg"">
+<button class=""on"" data-view=""points"">Points</button><button data-view=""mastery"">Mastery</button>
+</div>
+          <div class=""gb-dens"" title=""Drag left to fit more columns with smaller text, right for bigger text"">
+<span class=""gb-dens-a sm"">A</span><input type=""range"" id=""gb-densrange"" min=""0"" max=""100"" value=""50""><span class=""gb-dens-a lg"">A</span>
+</div>
+          <input class=""gb-input"" type=""search"" id=""gb-search"" placeholder=""Search students"">
+          <span class=""gb-note"" id=""gb-calcnote""></span>
+        </div>
+        <div class=""gb-card""><div class=""gb-scroll""><table class=""gb-grid"" id=""gb-table""></table></div></div>
+        <div class=""gb-legend"">
+          <span class=""k""><span class=""sw g""></span> 80 and up</span>
+          <span class=""k""><span class=""sw a""></span> 60 to 79</span>
+          <span class=""k""><span class=""sw r""></span> below 60</span>
+          <span class=""k""><span class=""sw n""></span> not started</span>
+          <span class=""k""><span class=""mb ov""></span> override</span>
+          <span class=""k""><span class=""mb open""></span> retry open</span>
+          <span class=""k"" style=""margin-left:auto;color:#94a3b8;-webkit-text-fill-color:#94a3b8;"">Click a name or a score cell to drill in.</span>
+        </div>
+      </div>
+
+      <div id=""student"" class=""gb-hidden"">
+        <div class=""gb-panel"">
+          <div class=""rep-head"">
+            <div class=""ini"" id=""rep-ini"">--</div>
+            <div>
+<h2 id=""rep-name"">Student</h2>
+<div class=""thin"" id=""rep-meta""></div>
+</div>
+            <select class=""gb-select picker"" id=""rep-picker""></select>
+          </div>
+          <div class=""stu-tools"" id=""rep-tools""></div>
+          <div class=""rep-grid"" id=""rep-mini""></div>
+          <div id=""rep-retry""></div>
+          <table class=""rep-table"" id=""rep-table""></table>
+        </div>
+      </div>
+
+      <div id=""assignment"" class=""gb-hidden"">
+        <div class=""gb-panel"">
+          <div class=""ba-head"">
+<h2 id=""ba-name"">Assignment</h2>
+<select class=""gb-select picker"" id=""ba-picker"" style=""margin-left:auto""></select>
+</div>
+          <div class=""thin"" id=""ba-meta""></div>
+          <div class=""rep-grid"" id=""ba-mini""></div>
+          <table class=""rep-table"" id=""ba-table""></table>
+        </div>
+      </div>
+
+      <div id=""settings"" class=""gb-hidden"">
+        <div class=""gb-panel"">
+          <h3 class=""sec"">Grade calculation</h3>
+          <div class=""set-row"">
+            <div class=""txt"">
+<h4>Calculation method</h4>
+<p>Earned over graded counts only work a student has attempted. Earned over possible counts everything assigned, so untouched work pulls the average down.</p>
+</div>
+            <div class=""gb-seg"" id=""gb-calcseg"">
+<button class=""on"" data-calc=""graded"">Earned / graded</button><button data-calc=""possible"">Earned / possible</button>
+</div>
+          </div>
+          <div class=""set-row"">
+            <div class=""txt"">
+<h4>Mastery threshold</h4>
+<p>The percent that counts as passed. Cells at or above this show green.</p>
+</div>
+            <div style=""text-align:right"">
+<input type=""range"" id=""gb-thr"" min=""50"" max=""95"" step=""5"" value=""80""><span id=""gb-thrv"" style=""font-weight:700;margin-left:8px"">80%</span>
+</div>
+          </div>
+          <div class=""set-row"">
+            <div class=""txt"">
+<h4>Retries<span class=""free-tag"">FREE</span>
+</h4>
+<p>Which work students may re-attempt. This saves to the class the moment you pick it, and it decides what students can actually do, not just what this page shows. Per-student overrides live on the By Student tab.</p>
+<p class=""retrywhat"" id=""gb-retrywhat""></p>
+</div>
+            <div class=""seg"" id=""gb-retryseg""></div>
+          </div>
+          <div class=""set-row"">
+            <div class=""txt"">
+<h4>Show letter grades</h4>
+<p>Display an A to F letter next to each student percent.</p>
+</div>
+            <label class=""switch""><input type=""checkbox"" id=""gb-letters"" checked><span class=""slider""></span></label>
+          </div>
+          <h3 class=""sec"" style=""margin-top:18px"">Count toward the grade</h3>
+          <div class=""set-row"">
+<div class=""txt"">
+<h4>Lesson checks (CFUs)</h4>
+<p>Off by default so daily practice does not flood the gradebook.</p>
+</div>
+<label class=""switch""><input type=""checkbox"" id=""inc-lesson""><span class=""slider""></span></label>
+</div>
+          <div class=""set-row"">
+<div class=""txt""><h4>Exercises</h4></div>
+<label class=""switch""><input type=""checkbox"" id=""inc-ex"" checked><span class=""slider""></span></label>
+</div>
+          <div class=""set-row"">
+<div class=""txt""><h4>Quizzes</h4></div>
+<label class=""switch""><input type=""checkbox"" id=""inc-quiz"" checked><span class=""slider""></span></label>
+</div>
+          <div class=""set-row"">
+<div class=""txt""><h4>Unit tests</h4></div>
+<label class=""switch""><input type=""checkbox"" id=""inc-exam"" checked><span class=""slider""></span></label>
+</div>
+          <h3 class=""sec"" style=""margin-top:18px"">Removed students</h3>
+          <div class=""set-row"">
+<div class=""txt"">
+<p>Removing a student stops them signing in and takes them out of the gradebook, the grid and every export. Their scores are kept, so restoring a student puts everything back exactly as it was.</p>
+</div>
+</div>
+          <div id=""gb-removed""></div>
+          <h3 class=""sec"" style=""margin-top:18px"">Class data</h3>
+          <div class=""set-row"">
+<div class=""txt"">
+<h4>Full data CSV</h4>
+<p>Every score and completion for this class.</p>
+</div>
+<button class=""gb-btn"" onclick=""TCDash.exportCSV()"">Download full data CSV</button>
+</div>
+          <div class=""set-row"">
+<div class=""txt"">
+<h4>Canvas gradebook CSV</h4>
+<p>One assignment per unit, formatted to import straight into Canvas. Set each student's Student Ref to their Canvas SIS User ID first.</p>
+</div>
+<button class=""gb-btn"" onclick=""TCDash.exportCanvasCSV('unit')"">Download Canvas CSV</button>
+</div>
+          <div class=""set-row"">
+<div class=""txt"">
+<h4>Delete class</h4>
+<p>Permanently removes the class and all student progress. Cannot be undone.</p>
+</div>
+<button class=""gb-btn danger"" onclick=""TCDash.deleteClass()"">Delete class</button>
+</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class=""overlay gb-hidden"" id=""gb-overlay"" onclick=""TCDash.closePop()""></div>
+<div class=""pop gb-hidden"" id=""gb-pop""></div>
+</div>
+
+<script>
+(function(){
+const API = 'https://progress.apcsexamprep.com';
+const ACTIVITIES = ['lesson','exercise-1','exercise-2','quiz','lab'];
+    // Authored totals from the API, keyed `unit|lesson|activity` and
+    // `lesson|activity`. Activities genuinely differ (1.1 Exercise 1 is out of
+    // 7, 2.1 is out of 6), so a per-activity constant cannot be right for more
+    // than a few. Only AUTHORED columns appear, so an absent key means unknown,
+    // not zero.
+    var DEN = {};
+    // What a column is out of, unit-scoped key first. Every Cyber unit has a
+    // lesson called 'exam' and one called 'case-file', so a lesson key alone
+    // addresses five different columns and the five case files are 15, 14, 11,
+    // 12 and 11 points.
+    //
+    // Returns null when nobody has authored a total, and null is what gets
+    // rendered: the percent alone, marked. This replaced a hardcoded
+    // per-activity table (lesson 10, quiz 10, exam 25, case file 10, else 100)
+    // whose numbers appear on no page. It priced a 7 point exercise at 5 and an
+    // 11 point case file at 10, it weighted every unpriced column at 100 against
+    // real 5 point quizzes in the class average, and it printed row totals whose
+    // denominator no student could see.
+    function denomFor(unit,lesson,act){
+      var u=DEN[unit+'|'+lesson+'|'+act]; if(u!=null) return u;
+      var k=DEN[lesson+'|'+act]; return k==null?null:k;
+    }
+    // A unit may declare ONE exam or SEVERAL. Cyber gives each unit a single
+    // unit exam; CSP Big Idea 3 sits its test in two parts, which are two
+    // columns. utils.js examsOf() is the server side of this same rule.
+    function examsOf(u){ if(!u||!u.exam) return []; return Array.isArray(u.exam)?u.exam:[u.exam]; }
+const ACT_LABEL = {'lesson':'Lesson','exercise-1':'Ex 1','exercise-2':'Ex 2','quiz':'Quiz','lab':'Lab','exam':'Exam','case_file':'Case File'};
+// Course-specific teacher pack the gradebook promo cross-sells
+const BUNDLE = {
+  'ap-cybersecurity':{url:'/products/ap-cybersecurity-founding-teacher-bundle', label:'View the Cyber teacher pack', blurb:'The Founding Teacher Bundle has the full lecture slide decks, printable student guides, and editable quizzes for all five units.'},
+  'ap-csp':{url:'/products/ap-csp-teacher-superpack', label:'View the AP CSP teacher pack', blurb:'The CSP Teacher Superpack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.'},
+  'ap-csa':{url:'/products/ap-csa-teacher-superpack-free-preview', label:'View the AP CSA teacher pack', blurb:'The CSA Teacher Superpack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.'}
+};
+
+window.TCDash = {
+  classCode:'', data:null, model:null,
+  STUDENT_RETRY:{},
+  state:{view:'points',calc:'graded',threshold:80,letters:true,search:'',
+    //  Derived from the class's retry_mode on every load, never clicked into
+    //  existence here. The value it used to hold, quiz on with exam off, is not
+    //  a state the server can be in: retry-policy.js treats quiz and exam alike
+    //  as assessments, so the grid was drawn under a policy that cannot exist.
+    //  'practice' is retry-policy.js's DEFAULT_MODE and is what a class gets
+    //  when nobody has chosen, so it is the least wrong thing to paint before
+    //  the first response lands.
+    retryMode:'practice',
+    retryTypes:{lesson:true,exercise:true,quiz:false,exam:false},
+    include:{lesson:false,exercise:true,quiz:true,exam:true}, sortKey:'name', sortDir:1, densityScale:50, units:null},
+
+  async init(){
+    const token = localStorage.getItem('apcse_teacher_token');
+    if(!token){ document.getElementById('tcdash-not-auth').classList.remove('gb-hidden'); const here=location.pathname+location.search; location.replace('/pages/cyber-class?next='+encodeURIComponent(here)); return; }
+    const params = new URLSearchParams(location.search);
+    this.classCode = params.get('code') || '';
+    if(!this.classCode){ location.replace('/pages/cyber-class'); return; }
+    document.getElementById('tcdash-main').classList.remove('gb-hidden');
+    document.getElementById('gb-code').textContent = this.classCode;
+    document.getElementById('gb-share-code').textContent = this.classCode;
+    this.bindControls();
+    await this.loadProgress(token);
+  },
+
+  // ---- assignment availability (Assigned / Not assigned) ----
+  //  DELIBERATELY NOT CALLED ""locked"" ANYWHERE A TEACHER CAN SEE. On this page
+  //  `locked` already means ""this attempt was submitted as final"", set by quiz
+  //  finalize, and two different locks sharing one word on one screen is a
+  //  support ticket. The switch says Assigned or Not assigned.
+  gates:null,
+  async loadGates(token,d){
+    this.gates=null;
+    try{
+      const course=(d&&d.class&&d.class.course)||'';
+      const q=course?('?course='+encodeURIComponent(course)):'';
+      const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/assignments'+q,{headers:{'Authorization':'Bearer '+token}});
+      if(!r.ok) return;                       // older server: no switches, grades unaffected
+      const g=await r.json();
+      const items={}; (g.items||[]).forEach(it=>{ items[it.unit+'|'+it.lesson_ref+'|'+it.native_activity]=it; });
+      const units={}; (((g.gates||{}).units)||[]).forEach(u=>{ units[u.key]=u; });
+      const lessons={}; (((g.gates||{}).lessons)||[]).forEach(l=>{ lessons[l.key]=l; });
+      this.gates={items:items,units:units,lessons:lessons,course:course};
+    }catch(e){ this.gates=null; }             // a failed fetch must never blank the gradebook
+  },
+  // Three states, not two. A unit whose columns disagree is the normal state
+  // once one lesson has been opened inside a locked unit, and drawing it as
+  // either settled state is how a teacher flips a switch that already looked
+  // the way they wanted it.
+  rollState(r){ if(!r) return null; return r.state==='all'?'off':(r.state==='none'?'on':'mix'); },
+  // Both guard the map itself, not just the entry. An older server that answers
+  // /assignments without a rollup must cost the switches, never the gradebook.
+  unitState(unit){ return this.rollState(this.gates&&this.gates.units&&this.gates.units[unit])||'on'; },
+  lessonState(unit,lesson){ return this.rollState(this.gates&&this.gates.lessons&&this.gates.lessons[unit+'|'+lesson]); },
+  // A column group is one LESSON, not one unit. Its lesson id comes from the
+  // columns under it rather than from the group title, because a case file and
+  // an exam title themselves (""Case File 1"") and only the column carries the id
+  // the gate is keyed on.
+  groupLesson(g){ const c=(this.model&&this.model.cols||[]).find(x=>x.group===g.key); return c?c.dl:null; },
+  colItem(c){ return this.gates?this.gates.items[c.unit+'|'+c.dl+'|'+c.da]:null; },
+  //  Assigned / Not assigned, drawn as a padlock BESIDE the label rather than a
+  //  switch below it, so a header row keeps the height it already had. The
+  //  switch was the wrong control here: it is loud in the common case, and the
+  //  common case is ""assigned"". A padlock lets the common case be nearly
+  //  invisible so the eye finds the exceptions instead of the wallpaper.
+  //
+  //  `hov` hides the glyph on an OPEN column until its header is hovered, so a
+  //  hundred open columns stay exactly as narrow as they were before any of
+  //  this existed. The always-visible unit and lesson locks are what teach that
+  //  the control is there at all.
+  lkHtml(kind,unit,lesson,act,state,enf,label,hov){
+    const lying=(enf===false&&state==='off');
+    const cls='lk'+(state==='on'?' open':'')+(state==='mix'?' mix':'')+(lying?' nf':'')+(hov?' hov':'');
+    const what=state==='on'?'Assigned':(state==='mix'?'Partly assigned':'Not assigned');
+    const t=what+(lying?'. Cannot be enforced: this activity keeps its questions in the page, so students can still reach them.':'');
+    //  A WARNING SIGN, not just a colour filter. The filter above is the only
+    //  thing that distinguished an unenforceable lock, and one tinted padlock
+    //  next to another is not a distinction on a phone, in greyscale, or to a
+    //  colour blind teacher.
+    //
+    //  Written as a JS escape like the padlocks above it, NOT as the HTML entity
+    //  &#9888;. Shopify decodes entities on import, so an entity in a string
+    //  literal comes back as a raw character in the page body and stops being
+    //  the thing that was reviewed. scripts/page-body-csv.js refuses the sheet
+    //  for exactly this and caught it here before the sheet was written.
+    const g=(state==='on'?'\uD83D\uDD13':'\uD83D\uDD12')+(lying?'\u26A0':'');
+    const a=function(v){ return String(v==null?'':v).replace(/'/g,""\\'""); };
+    return ""<span class='""+cls+""' role='switch' aria-checked='""+(state==='on'?'true':(state==='mix'?'mixed':'false'))+
+      ""' aria-label='""+this.esc(label+': '+t)+""' title='""+this.esc(t)+
+      ""' onclick=\""TCDash.toggleGate(event,'""+a(kind)+""','""+a(unit)+""','""+a(lesson)+""','""+a(act)+""')\"">""+g+""</span>"";
+  },
+  async toggleGate(ev,kind,unit,lesson,act){
+    if(ev){ ev.stopPropagation(); ev.preventDefault(); }   // the header cell also navigates
+    if(!this.gates) return;
+    const cur=kind==='unit'?this.unitState(unit)
+      :((this.colItem({unit:unit,dl:lesson,da:act})||{}).locked?'off':'on');
+    // A mixed switch settles everything under it OPEN on the first click. The
+    // destructive direction should never be the one you get by accident.
+    const open=(cur==='mix')?true:(cur!=='on');
+    const body={course:this.gates.course,unit:unit,open:open};
+    if(kind!=='unit'){ body.lesson=lesson; body.activity_type=act; }
+    const el=ev&&ev.currentTarget; if(el) el.classList.add('busy');
+    const r=await this._api('POST','/api/teacher/classes/'+this.classCode+'/gate',body);
+    if(!r.ok){ if(el) el.classList.remove('busy'); alert(r.error||'Could not change this assignment.'); return; }
+    //  loadProgress redraws the grid. The unit padlocks live in the filter
+    //  panel, which it does not touch, so closing a unit from there would leave
+    //  its own lock showing the old state until something else redrew it.
+    await this.loadProgress(this._token());
+    this.renderUnitFilter();
+  },
+  async loadProgress(token){
+    try{
+      const r = await fetch(API+'/api/teacher/classes/'+this.classCode+'/progress',{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      const d = await r.json();
+      // Availability, fetched BEFORE the first render so the switches are there
+      // on paint rather than appearing a beat later. It is a separate document
+      // on purpose: this page reads the grades from /progress and the locks from
+      // the canonical contract, so gate resolution still happens in exactly one
+      // place on the server and this page never forms a second opinion about it.
+      await this.loadGates(token, d);
+      this.applyData(d);
+    }catch(e){ document.getElementById('gb-loading').textContent='Failed to load data. Try refreshing.'; }
+  },
+
+  applyData(d){
+    this.data = d;
+    this.model = this.buildModel(d);
+    document.getElementById('gb-loading').style.display='none';
+    document.getElementById('overview').classList.remove('gb-hidden');
+    document.getElementById('gb-cname').textContent = (d.class&&d.class.class_name)||this.classCode;
+    document.getElementById('gb-course').textContent = this.formatCourse((d.class&&d.class.course)||'');
+    const b = BUNDLE[(d.class&&d.class.course)] || {url:'/collections/bundles',label:'View course bundles',blurb:'The teacher pack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.'};
+    const bl=document.getElementById('gb-promo-link'); if(bl){ bl.href=b.url; bl.textContent=b.label; }
+    const bt=document.getElementById('gb-promo-text'); if(bt){ bt.innerHTML='<b>Teaching this course?</b> '+b.blurb; }
+    document.getElementById('gb-av').textContent = ((d.class&&d.class.class_name)||'C').replace(/[^A-Za-z0-9]/g,'').slice(0,2).toUpperCase() || 'C';
+    document.getElementById('gb-count').textContent = this.model.students.length+' students';
+    //  The retry policy comes from the class row, every load. buildCanonicalGradebook
+    //  falls back to the legacy boolean when retry_mode has not been backfilled,
+    //  and /progress returns the class row whole, so this is the same value the
+    //  server enforces rather than a second opinion formed here.
+    const rm=(d.class&&d.class.retry_mode)||((d.class&&d.class.retry_allowed)?'all':'practice');
+    this.state.retryMode=rm;
+    this.state.retryTypes=this.typesForMode(rm);
+    this.renderRetryMode();
+    this.initPickers();
+    this.renderUnitFilter();
+    this.renderAll();
+    this.applyDensity();
+  },
+
+  buildModel(resp){
+    const cfg = resp.course_config || {units:{}};
+    const units = cfg.units || {}; const uids = Object.keys(units);
+    // BEFORE the columns are built. This assignment used to sit below the loop,
+    // so every column was priced against an empty map and no authored value the
+    // API sent ever reached a header. The whole authored-denominator path was
+    // dead code, which is why the fabricated constants below it looked fine.
+    DEN = (resp && resp.denominators) || {};
+    const cols=[], groups=[];
+    uids.forEach(uid=>{
+      const u = units[uid]||{}; const acts = u.activities||ACTIVITIES; const lessons = u.lessons||[];
+      const uLabel = String(u.label||uid).replace(/:.*$/,'');
+      lessons.forEach(l=>{
+        const g={key:uid+'|'+l,title:String(l),span:0,unit:uid}; groups.push(g);
+        acts.forEach(a=>{ const p=denomFor(uid,String(l),a);
+          cols.push({unit:uid,uLabel:uLabel,lesson:String(l),lessonName:String(l),activity:a,type:ACT_LABEL[a]||a,possible:p,authored:p!=null,group:g.key,dl:String(l),da:a}); g.span++; });
+      });
+      if(u.case_file){ const cl=(u.case_file&&u.case_file.label)||'Case File'; const g={key:uid+'|cf',title:cl,span:1,unit:uid}; groups.push(g);
+        const p=denomFor(uid,'case-file','case-file');
+        cols.push({unit:uid,uLabel:uLabel,lesson:'case-file',lessonName:cl,activity:'case_file',type:'Case File',possible:p,authored:p!=null,group:g.key,dl:'case-file',da:'case-file'}); }
+      // Every exam the unit declares, at the lesson the config names. CSP sits
+      // its tests at lesson 'unit-test', so hardcoding 'exam' here looked up a
+      // lesson that course does not have and left the column permanently blank.
+      examsOf(u).forEach((ex,i)=>{ const el=ex.label||'Unit Exam'; const dl=ex.lesson||'exam';
+        const g={key:uid+'|exam'+(i?i:''),title:el,span:1,unit:uid}; groups.push(g);
+        const p=denomFor(uid,dl,'exam');
+        cols.push({unit:uid,uLabel:uLabel,lesson:dl,lessonName:el,activity:'exam',type:'Exam',possible:p,authored:p!=null,group:g.key,dl:dl,da:'exam'}); });
+    });
+    const unitList=uids.map(uid=>({id:uid,label:String((units[uid]&&units[uid].label)||uid).replace(/:.*$/,'')}));
+    // A removed student is DEACTIVATED, never deleted: the scores are gradebook
+    // data and have to survive. The API therefore keeps sending them, and this
+    // model used to pass every row straight through, so a teacher who clicked
+    // Remove watched the student reappear on reload, unchanged, with the same
+    // Remove button. The removal was real in the database and invisible on
+    // screen, which reads as a broken button.
+    //
+    // Splitting here is the whole fix: the grid, the stat cards, the student
+    // picker, the report tab and the gradebook CSV all read model.students, so
+    // one filter takes the student out of every one of them at once. The rows
+    // are kept in model.removed so Settings can put a student back, which is the
+    // half a hard delete could never offer.
+    const roster=(resp.summary||[]).map(rec=>({
+      id:rec.student.id, name:rec.student.name, ref:rec.student.ref,
+      active:rec.student.active!==0,
+      initials:(rec.student.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),
+      lastActive:this.formatDate(rec.student.last_active), detail:rec.detail||{}
+    }));
+    const students=roster.filter(s=>s.active), removed=roster.filter(s=>!s.active);
+    return {cols:cols,groups:groups,students:students,removed:removed,units:unitList};
+  },
+
+  keyOf(sid,c){ return sid+'|'+c.unit+'|'+c.lesson+'|'+c.activity; },
+  counts(a){ if(a==='lesson')return this.state.include.lesson; if(a==='exercise-1'||a==='exercise-2')return this.state.include.exercise; if(a==='quiz')return this.state.include.quiz; if(a==='exam')return this.state.include.exam; return true; },
+  retryGroup(a){ if(a==='lesson')return'lesson'; if(a==='exercise-1'||a==='exercise-2')return'exercise'; if(a==='quiz')return'quiz'; if(a==='exam')return'exam'; return null; },
+  //  ── THE RETRY POLICY, AS THE SERVER ACTUALLY HAS IT ──────────────────────
+  //  Three modes on classes.retry_mode, not four per-type switches. The panel
+  //  used to draw four, which is 16 combinations of which the server can hold
+  //  three, and it saved none of them: bindRetry wrote to page state and called
+  //  renderAll, so a teacher turning Quizzes off watched the grades move and
+  //  changed nothing a student could do. That is worse than an inert control,
+  //  because the numbers moving is exactly the feedback a working one gives.
+  //
+  //  Labels and blurbs are retry-policy.js's own MODE_LABELS and
+  //  MODE_DESCRIPTIONS, copied verbatim so the two surfaces cannot describe the
+  //  same rule differently. If they change there, change them here.
+  RETRY_MODES:[
+    {id:'all',      label:'Everything',    what:'Students may redo practice and retake quizzes. Their best attempt counts.'},
+    {id:'practice', label:'Practice only', what:'Students may redo practice work and their best attempt counts, but a quiz or exam is one attempt and that first attempt is the grade.'},
+    {id:'none',     label:'Off',           what:'One attempt at everything. The first attempt is the grade of record.'},
+  ],
+  //  The same split retryAllowedFor() makes: quiz and exam are assessments,
+  //  everything else is practice.
+  typesForMode(mode){
+    const m=(mode==='all'||mode==='none')?mode:'practice';
+    if(m==='all')  return {lesson:true, exercise:true, quiz:true,  exam:true};
+    if(m==='none') return {lesson:false,exercise:false,quiz:false, exam:false};
+    return {lesson:true, exercise:true, quiz:false, exam:false};
+  },
+  renderRetryMode(){
+    const S=this, seg=document.getElementById('gb-retryseg'); if(!seg)return;
+    seg.innerHTML=S.RETRY_MODES.map(m=>
+      ""<button class='""+(m.id===S.state.retryMode?'on':'')+""' data-retry='""+m.id+""'>""+S.esc(m.label)+""</button>""
+    ).join('');
+    const w=document.getElementById('gb-retrywhat');
+    if(w){ const cur=S.RETRY_MODES.filter(m=>m.id===S.state.retryMode)[0]; w.textContent=cur?cur.what:''; }
+  },
+  //  Saves first and REDRAWS FROM THE SERVER'S ANSWER. Painting the new mode
+  //  optimistically and reloading later is how a control ends up showing a
+  //  setting that did not save, which is the failure this whole panel is being
+  //  fixed for.
+  async setRetryMode(mode){
+    if(!mode||mode===this.state.retryMode)return;
+    const seg=document.getElementById('gb-retryseg'); if(seg)seg.classList.add('busy');
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/retry',{retry_mode:mode});
+    if(seg)seg.classList.remove('busy');
+    if(!r.ok){ alert(r.error||'Could not change the retry policy.'); return; }
+    await this.loadProgress(this._token());
+  },
+  retryOn(a,stu){ const g=this.retryGroup(a); if(!g)return false; if(stu){ const o=this.STUDENT_RETRY[stu.id]; if(o&&o[g])return o[g]==='on'; } return !!this.state.retryTypes[g]; },
+  retryEff(stu,g){ const o=this.STUDENT_RETRY[stu.id]; return (o&&o[g])?o[g]:'default'; },
+  clsFor(p){ if(p===null)return'n'; if(p>=this.state.threshold)return'g'; if(p>=60)return'a'; return'r'; },
+  num(n){ return (Math.round(n*100)/100).toString(); },
+  // How a column is named to a teacher. An exam or a case file carries its own
+  // label (""Big Idea 3 Unit Test Part A""); everything else is lesson plus
+  // activity. Keyed on the activity, not on the lesson id, because CSP sits its
+  // exams at lesson 'unit-test' and Cyber sits them at lesson 'exam'.
+  colLabel(c){ return (c.activity==='exam'||c.activity==='case_file')?c.lessonName:(c.lesson+' '+c.type); },
+  // The ONE place a graded cell becomes text, so the grid, the student report,
+  // the assignment view and the spreadsheet cannot disagree about the same
+  // score. Points over points wherever the points are known; where they are
+  // not, the percent alone, marked with a star.
+  cellText(cd,plain){ if(!cd.started) return '–';
+    if(cd.priced) return this.num(cd.earned)+'/'+this.num(cd.possible);
+    return this.num(cd.pct)+'%'+(plain?'*':""<span class='pv' title='Points have not been assigned to this activity yet'>*</span>""); },
+  letterFor(p){ if(p==null)return''; if(p>=90)return'A'; if(p>=80)return'B'; if(p>=70)return'C'; if(p>=60)return'D'; return'F'; },
+  // A grade with no priced work behind it prints as a dash, never as 0%.
+  pctText(p){ return p==null?'–':(p+'%'); },
+
+  cellData(stu,c){
+    const d = stu.detail[c.unit] && stu.detail[c.unit][c.dl] && stu.detail[c.unit][c.dl][c.da];
+    // The two facts the cell ACTIONS are decided from, carried on every branch
+    // below so the popover never has to reach back into the raw payload.
+    // progress_id is the row Reset and Grant attempt address; a cell with no row
+    // has nothing to act on. locked is set only by quiz finalize, so it is the
+    // only state Grant attempt can reopen. See openPop.
+    const pid = d ? (d.progress_id||null) : null, lockd = !!(d && d.locked);
+    if(!d || (d.score==null && !d.completed)) return {pct:null,earned:null,possible:c.possible,started:false,progress_id:pid,locked:lockd};
+      // Completed but never graded is NOT a zero. The exercise pages report no
+      // score at all, so turning null into 0 invented a failing grade for every
+      // exercise a student merely opened, and averaged it in against them.
+      if(d.score==null) return {pct:null,earned:null,possible:c.possible,started:false,ungraded:true,progress_id:pid,locked:lockd};
+      // Prefer the real pair the API reports. points_possible is per item, so an
+      // exercise out of 7 stays out of 7 instead of being squashed onto a
+      // per-activity constant and re-rounded, where 6/7 and 5/7 both became 4/5.
+      const pair = (d.points_possible!=null && d.points_possible>0 && d.points_earned!=null);
+      const possible = pair ? d.points_possible : c.possible;
+      // Whole marks when the total is whole. A question is right or wrong, so a
+      // 6 question quiz is scored out of 6 in ones, never 4.08.
+      const earned = pair ? d.points_earned
+        : (possible!=null ? (possible===Math.round(possible)
+            ? Math.round(d.score/100*possible)
+            : Math.round(d.score/100*possible*100)/100) : null);
+      // priced=false means nobody has authored a total and the page reported no
+      // pair. The percent is real and is shown; the points are unknown and are
+      // shown as unknown, not filled in.
+      return {pct:d.score,earned:earned,possible:possible,priced:(possible!=null&&earned!=null),started:true,progress_id:pid,locked:lockd};
+  },
+  totals(stu){
+    let earned=0,poss=0,done=0,total=0,unpriced=0;
+    this.model.cols.forEach(c=>{ if(!this.counts(c.activity))return; total++; const cd=this.cellData(stu,c);
+      if(!cd.started){ if(this.state.calc==='possible'&&cd.possible!=null) poss+=cd.possible; return; }
+      done++;
+      // An unpriced column carries no points, so it adds nothing to either side
+      // of the fraction. Adding a made up 100 was worse than leaving it out: it
+      // outweighed a real 5 point quiz twenty to one and moved the grade.
+      if(!cd.priced){ unpriced++; return; }
+      earned+=cd.earned; poss+=cd.possible; });
+    // NO PRICED WORK IS NOT A ZERO. With nothing priced there is no fraction to
+    // report, and 0 percent reads as a failing grade for work that was never
+    // graded. pct is null and every reader renders it as a dash.
+    return {earned:Math.round(earned*100)/100,poss:Math.round(poss*100)/100,
+            pct:poss>0?Math.round(earned/poss*100):null,done:done,total:total,unpriced:unpriced};
+  },
+
+  renderAll(){ this.renderStats(); this.renderGrid(); this.renderStudent(+document.getElementById('rep-picker').value||0); this.renderAssignment(+document.getElementById('ba-picker').value||0); this.renderRemoved(); },
+
+  renderStats(){
+    const arr=this.model.students.map(s=>this.totals(s));
+    const n=arr.length||1;
+    // Averaged over the students who HAVE a grade. Counting a student with no
+    // priced work as a zero drags the class average down for work nobody graded.
+    const graded_arr=arr.filter(x=>x.pct!=null);
+    const avg=graded_arr.length?Math.round(graded_arr.reduce((a,b)=>a+b.pct,0)/graded_arr.length):null;
+    const comp=Math.round(arr.reduce((a,b)=>a+(b.total?b.done/b.total:0),0)/n*100);
+    const active=this.model.students.filter(s=>/Today|Yesterday/.test(s.lastActive||'')).length;
+    const graded=arr.reduce((a,b)=>a+b.done,0);
+    const card=(l,v,f)=>'<div class=""gb-stat""><div class=""l"">'+l+'</div><div class=""v"">'+v+'</div><div class=""f"">'+f+'</div></div>';
+    document.getElementById('gb-statcards').innerHTML=
+      card('Class average',avg==null?'&ndash;':(avg+'<small>%</small>'),avg==null?'no graded work yet':(this.letterFor(avg)+' average'))+
+      card('Completion',comp+'<small>%</small>','of assigned work')+
+      card('Active recently',active+'<small>/'+this.model.students.length+'</small>','today or yesterday')+
+      card('Graded items',graded,'submissions logged');
+  },
+
+  renderGrid(){
+    const S=this, sel=this.state.units;
+    const showU=u=>(!sel||sel.length===0||sel.indexOf(u)>-1);
+    const vcols=this.model.cols.map((c,i)=>({c:c,oi:i})).filter(o=>showU(o.c.unit));
+    const vgroups=this.model.groups.filter(g=>showU(g.unit));
+    //  No unit ROW. Unit scope lives in the unit filter panel, which already
+    //  lists every unit and has room for a label. A third header row above a
+    //  dense grid was height spent on five controls.
+    let h=""<thead>"";
+    h+=""<tr class='grp'><th class='c-stick c-name'></th><th class='c-stick c-grade'></th><th class='c-stick c-pts'></th>"";
+    vgroups.forEach(g=>{ const gl=this.groupLesson(g); const st=gl?this.lessonState(g.unit,gl):null;
+      // No switch where the contract has no rollup for this lesson: a control
+      // that writes a gate row nothing resolves is worse than no control.
+      const gs=(this.gates&&gl&&st)?this.lkHtml('lesson',g.unit,gl,'',st,undefined,g.title,false):'';
+      h+=""<th colspan='""+g.span+""'>""+gs+S.esc(g.title)+""</th>""; });
+    h+=""</tr><tr class='sub'><th class='c-stick c-name' style='cursor:pointer' onclick=\""TCDash.setSort('name')\"">Student</th><th class='c-stick c-grade' style='cursor:pointer' onclick=\""TCDash.setSort('grade')\"">Grade</th><th class='c-stick c-pts'>Points</th>"";
+    vcols.forEach(o=>{ const c=o.c; const it=this.colItem(c);
+      // No switch on a column the manifest has never heard of. A control that
+      // writes a gate row nothing resolves would be worse than no control.
+      const cs=it?this.lkHtml('col',c.unit,c.dl,c.da,it.locked?'off':'on',it.lock_enforceable,c.lessonName+' '+c.type,!it.locked):'';
+      h+=""<th style='cursor:pointer' onclick=\""TCDash.gotoAssign(""+o.oi+"")\"" title='""+S.esc(c.lessonName+' '+c.type)+""'>""+S.esc(c.type)+((S.counts(c.activity)&&c.authored)?""<span class='mx'>/""+c.possible+""</span>"":"""")+cs+""</th>""; });
+    h+=""</tr></thead><tbody>"";
+    let rows=this.model.students.map((s,idx)=>({s:s,idx:idx,t:this.totals(s)}))
+      .filter(r=>r.s.name.toLowerCase().indexOf(this.state.search.toLowerCase())>-1);
+    rows.sort((a,b)=>{ const gv=x=>x.t.pct==null?-1:x.t.pct;
+      const d=this.state.sortKey==='grade'?(gv(a)-gv(b)):a.s.name.localeCompare(b.s.name); return d*this.state.sortDir; });
+    rows.forEach(r=>{
+      const s=r.s,t=r.t,lt=this.letterFor(t.pct);
+      h+=""<tr><td class='c-stick c-name'><div class='stu' onclick='TCDash.gotoStudent(""+r.idx+"")'><div class='ini'>""+s.initials+""</div><div><div class='nm'>""+S.esc(s.name)+""</div><div class='la'>""+S.esc(s.lastActive||'')+""</div></div></div></td>"";
+      h+=""<td class='c-stick c-grade'><div class='gcell'>""+((this.state.letters&&lt)?""<span class='letter l-""+lt+""'>""+lt+""</span>"":"""")+""<span class='pct'>""+this.pctText(t.pct)+""</span></div></td>"";
+      h+=""<td class='c-stick c-pts'><div class='ptsb'>""+t.earned+""</div><div class='ptss'>/ ""+t.poss+""</div></td>"";
+      vcols.forEach(o=>{ const c=o.c;
+        const cd=this.cellData(s,c), off=!this.counts(c.activity), dim=off?"" style='opacity:.45'"":"""";
+        const rOn=this.retryOn(c.activity,s); let mk="""";
+        if(cd.locked) mk=""<span class='mk ov' title='Submitted as final. Grant attempt reopens it.'>●</span>"";
+        else if(rOn && cd.started && cd.pct<this.state.threshold) mk=""<span class='mk open'>↻</span>"";
+        let inner;
+        if(!cd.started) inner=""–"";
+        else if(this.state.view==='points') inner=this.cellText(cd);
+        else { const lab=cd.pct>=this.state.threshold?""Mastered"":(cd.pct>=60?""Approaching"":""Not yet""); inner=""<span class='ptxt'><span class='dot ""+this.clsFor(cd.pct)+""'></span>""+lab+""</span>""; }
+        const cl=cd.started?(cd.earned===0?'r':this.clsFor(cd.pct)):'n';
+        const ttl=cd.started?(' title=""'+cd.pct+'%""'):'';
+        h+=""<td""+dim+""><button class='cellbtn ""+cl+""'""+ttl+"" onclick='TCDash.openPop(event,""+r.idx+"",""+o.oi+"")'>""+inner+mk+""</button></td>"";
+      });
+      h+=""</tr>"";
+    });
+    h+=""</tbody><tfoot><tr><td class='c-stick c-name'>Class average</td><td class='c-stick c-grade'></td><td class='c-stick c-pts'></td>"";
+    vcols.forEach(o=>{ const c=o.c; const vals=this.model.students.map(s=>this.cellData(s,c)).filter(x=>x.started);
+      if(!vals.length){ h+=""<td>–</td>""; return; } h+=""<td>""+Math.round(vals.reduce((a,b)=>a+b.pct,0)/vals.length)+""%</td>""; });
+    h+=""</tr></tfoot>"";
+    document.getElementById('gb-table').innerHTML=h;
+    const rL={lesson:'CFU',exercise:'Ex',quiz:'Quiz',exam:'Exam'};
+    const rOn=['lesson','exercise','quiz','exam'].filter(k=>this.state.retryTypes[k]).map(k=>rL[k]);
+    // Name the unpriced columns rather than letting a star go unexplained. A
+    // teacher seeing ""83%*"" next to ""6/7"" is owed the reason: nobody has said
+    // what that activity is out of, so it shows its percent and sits out of the
+    // points total instead of being weighted at a made up number.
+    const nop=this.model.cols.filter(c=>c.possible==null&&S.counts(c.activity)
+      &&this.model.students.some(s=>S.cellData(s,c).started)).length;
+    //  A LOCK THIS SERVER CANNOT ENFORCE HAS TO SAY SO WITHOUT A HOVER.
+    //
+    //  It already said so twice, and both channels are invisible on a phone: the
+    //  padlock gets a colour filter, which is one emoji tinted slightly against
+    //  another, and the explanation lives in a title tooltip, which a touch
+    //  screen has no way to open. On 2026-09-07 Tanner locked the 1.1 Lab, took
+    //  a student account to the page, found it open, and reported it as the lab
+    //  lock still being broken. It was not broken. That activity keeps its
+    //  questions in the Shopify page body, so the browser has them before any
+    //  server code runs, and the gradebook knew that the whole time.
+    //
+    //  So the count goes in the caveat line, beside the ""no points assigned yet""
+    //  note, which is plain text a teacher reads without hovering anything.
+    //  Named gi, not it. The render path below has its own `const it=this.colItem(c)`
+    //  that a mutation anchors on by exact text, and a second copy of that line
+    //  here makes the anchor ambiguous and the mutation silently inapplicable.
+    const nfCols=this.model.cols.filter(c=>{
+      const gi=this.colItem(c);
+      return !!(gi&&gi.locked&&gi.lock_enforceable===false);
+    }).length;
+    document.getElementById('gb-calcnote').textContent=(this.state.calc==='graded'?'Earned / graded':'Earned / possible')+'  |  mastery '+this.state.threshold+'%  |  retry: '+(rOn.length?rOn.join(', '):'off')+(nop?('  |  '+nop+' column'+(nop===1?'':'s')+' with no points assigned yet, shown as a percent with a star and not counted'):'')+(nfCols?('  |  '+nfCols+' locked column'+(nfCols===1?'':'s')+' cannot be enforced: '+(nfCols===1?'it keeps its':'they keep their')+' questions in the page, so students can still open '+(nfCols===1?'it':'them')):'');
+  },
+  setSort(k){ if(this.state.sortKey===k)this.state.sortDir*=-1; else{this.state.sortKey=k;this.state.sortDir=1;} this.renderGrid(); },
+  renderUnitFilter(){
+    const units=this.model.units||[]; const sel=this.state.units;
+    const course=(this.data&&this.data.class&&this.data.class.course)||'';
+    const termAll=course==='ap-csp'?'All Big Ideas':'All units', termN=course==='ap-csp'?' Big Ideas':' units';
+    const isAll=!sel||sel.length===0||sel.length===units.length;
+    const checked=id=>isAll||sel.indexOf(id)>-1;
+    let h=""<label><input type='checkbox' ""+(isAll?'checked':'')+"" onchange=\""TCDash.setUnitSel('all',this.checked)\""><b>""+termAll+""</b></label><div class='dd-div'></div>"";
+    //  The padlock sits OUTSIDE the label. Inside one, clicking it would also
+    //  toggle the checkbox beside it, and ""assign this unit"" must not quietly
+    //  change which units are on screen.
+    units.forEach(u=>{
+      const lk=this.gates?this.lkHtml('unit',u.id,'','',this.unitState(u.id),undefined,u.label,false):'';
+      h+=""<div class='ur'><label><input type='checkbox' ""+(checked(u.id)?'checked':'')+"" onchange=\""TCDash.setUnitSel('""+u.id+""',this.checked)\"">""+this.esc(u.label)+""</label>""+lk+""</div>""; });
+    document.getElementById('gb-unitpanel').innerHTML=h;
+    let lbl=termAll;
+    if(!isAll){ if(sel.length===1){ const u=units.find(x=>x.id===sel[0]); lbl=u?u.label:('1'+termN); } else lbl=sel.length+termN; }
+    document.getElementById('gb-unitbtn').innerHTML=this.esc(lbl)+"" <span class='ck'>▾</span>"";
+  },
+  setUnitSel(id,on){
+    const all=(this.model.units||[]).map(u=>u.id);
+    let sel=(!this.state.units||this.state.units.length===0)?all.slice():this.state.units.slice();
+    if(id==='all'){ sel=on?all.slice():[]; }
+    else if(on){ if(sel.indexOf(id)<0)sel.push(id); } else { sel=sel.filter(x=>x!==id); }
+    if(sel.length===0) sel=all.slice();
+    this.state.units=(sel.length===all.length)?null:sel;
+    this.renderUnitFilter(); this.renderGrid();
+  },
+  toggleUnitDD(ev){ ev.stopPropagation(); document.getElementById('gb-unitpanel').classList.toggle('gb-hidden'); },
+
+  openPop(ev,sidx,cidx){
+    ev.stopPropagation();
+    const s=this.model.students[sidx], c=this.model.cols[cidx], cd=this.cellData(s,c);
+    this.popCtx={sidx:sidx,cidx:cidx};
+    const pop=document.getElementById('gb-pop');
+    // An override is a number of points, so it needs a total to be out of. A
+    // column with no authored total has none, and inventing one here would put
+    // the fabricated denominator straight back on screen through the edit box.
+    const priced=(c.possible!=null);
+    const outOf=priced?("" · out of ""+c.possible):"" · points not assigned yet"";
+    const cur=cd.started?(cd.priced?(this.num(cd.earned)+""</b> <span class='thin'>/ ""+this.num(cd.possible)+""  (""+cd.pct+""%)"")
+                                   :(""&ndash;</b> <span class='thin'>""+cd.pct+""% (points not assigned yet)""))
+                        :""–</b> <span class='thin'>not started"";
+    // ── WHAT THIS POPOVER MAY OFFER ────────────────────────────────────────
+    //  Only what has a server path that persists. Every button here used to be
+    //  drawn unconditionally and none of them saved; a teacher set a score,
+    //  saw the grid change, reloaded, and lost it. So each control is now gated
+    //  on the fact that makes it possible:
+    //    Reset  needs a progress row to reset.
+    //    Grant  reopens a quiz submitted as FINAL, and quiz finalize is the
+    //           only thing that sets locked, so on anything else it is a no-op
+    //           and is not drawn.
+    //  Typing a score by hand has no server path on this course at all. It is
+    //  stated as unavailable rather than drawn and quietly dropped.
+    const canReset=!!cd.progress_id, canGrant=!!cd.progress_id&&!!cd.locked;
+    let acts="""";
+    if(canGrant||canReset){
+      acts=""<div class='row2'>""+
+        (canGrant?""<button class='gb-btn sm' onclick='TCDash.applyGrant()'>Grant attempt</button>"":"""")+
+        (canReset?""<button class='gb-btn sm danger' onclick='TCDash.applyReset()'>Reset</button>"":"""")+
+      ""</div>"";
+      if(canReset&&!canGrant) acts+=""<div class='fld thin'>Reset clears this score and gives the student one fresh attempt. Their earlier work stays in the history.</div>"";
+    } else {
+      acts=""<div class='fld thin'>Nothing is recorded here yet, so there is nothing to reset or reopen.</div>"";
+    }
+    pop.innerHTML=
+      ""<button class='pc' onclick='TCDash.closePop()'>×</button>""+
+      ""<h5>""+this.esc(s.name)+""</h5><div class='s'>""+this.esc(this.colLabel(c))+outOf+""</div>""+
+      ""<div class='cur'>Current: <b>""+cur+""</span>""+(cd.locked?"" <span class='flag'>final</span>"":"""")+""</div>""+
+      acts+
+      ""<div class='soon'>Typing a score in by hand is not available on this course. Its grades are a ledger of what the pages reported, and there is no teacher write path into that ledger yet. Reset is the way to let a student re-earn the mark.</div>"";
+    pop.classList.remove('gb-hidden'); document.getElementById('gb-overlay').classList.remove('gb-hidden');
+    const rect=ev.currentTarget.getBoundingClientRect();
+    let top=window.scrollY+rect.bottom+8, left=window.scrollX+rect.left-100;
+    left=Math.max(12,Math.min(left,window.scrollX+window.innerWidth-268));
+    pop.style.top=top+'px'; pop.style.left=left+'px';
+  },
+  closePop(){ document.getElementById('gb-pop').classList.add('gb-hidden'); document.getElementById('gb-overlay').classList.add('gb-hidden'); this.popCtx=null; },
+  // ── THE TWO CELL ACTIONS THAT PERSIST ──────────────────────────────────────
+  //  Both address the progress ROW by its id, which the teacher progress payload
+  //  carries per cell, and both re-read that payload afterwards rather than
+  //  patching the grid locally. Re-reading is the point: what the teacher sees
+  //  after the click is what the next page load will show, so the grid cannot
+  //  drift away from the server the way the old in-memory version did.
+  async _cellAction(body,verb){
+    const cd=this._popCell(); if(!cd||!cd.progress_id) return this.closePop();
+    const pid=cd.progress_id; this.closePop();
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/progress/'+pid+'/unlock',body);
+    if(!r||!r.ok) return alert((r&&r.error)||('Could not '+verb+'. Try again.'));
+    await this.loadProgress(this._token());
+  },
+  _popCell(){ if(!this.popCtx)return null; const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; return (s&&c)?this.cellData(s,c):null; },
+  // Destructive: it clears the recorded score. The earlier attempts are NOT
+  // deleted, they stay in the ledger and in the student's history, but the
+  // grade the teacher is looking at goes away, so it is confirmed first.
+  applyReset(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx];
+    if(!confirm('Clear '+s.name+""'s score for ""+this.colLabel(c)+'?\n\nThey get one fresh attempt. Their earlier work stays in the history.')) return;
+    return this._cellAction({reset:true},'reset that score'); },
+  applyGrant(){ return this._cellAction({reset:false},'reopen that quiz'); },
+
+  renderStudent(idx){
+    const s=this.model.students[idx]; if(!s)return; const t=this.totals(s),lt=this.letterFor(t.pct), S=this;
+    document.getElementById('rep-ini').textContent=s.initials;
+    document.getElementById('rep-name').textContent=s.name;
+    document.getElementById('rep-meta').textContent=((this.data.class&&this.data.class.class_name)||'')+'  |  last active '+(s.lastActive||'n/a')+(s.ref?('  |  '+s.ref):'');
+    document.getElementById('rep-tools').innerHTML=
+      ""<button class='gb-btn sm' onclick=\""TCDash.renameStudent('""+s.id+""')\"">Rename</button>""+
+      ""<button class='gb-btn sm' onclick=\""TCDash.resetPin('""+s.id+""')\"">Reset PIN</button>""+
+      ""<button class='gb-btn sm' onclick=\""TCDash.setStudentRef('""+s.id+""')\"">Canvas ref</button>""+
+      ""<button class='gb-btn sm danger' onclick=\""TCDash.removeStudent('""+s.id+""')\"">Remove</button>"";
+    let miss=0,low=0; this.model.cols.forEach(c=>{ if(!S.counts(c.activity))return; const cd=S.cellData(s,c); if(!cd.started)miss++; else if(cd.pct<S.state.threshold)low++; });
+    const mini=(l,v)=>""<div class='mini'><div class='l'>""+l+""</div><div class='v'>""+v+""</div></div>"";
+    document.getElementById('rep-mini').innerHTML=mini('Overall',(lt?(""<span class='letter l-""+lt+""' style='vertical-align:-5px'>""+lt+""</span> ""):'')+this.pctText(t.pct))+mini('Points',t.earned+' / '+t.poss)+mini('Below mastery',low)+mini('Not started',miss);
+    document.getElementById('rep-retry').innerHTML=this.retryCard(idx,s);
+    let rows=""<tr><th>Lesson</th><th>Activity</th><th>Score</th><th>Percent</th><th>Status</th></tr>"";
+    this.model.cols.forEach(c=>{ const cd=S.cellData(s,c); let st,sc,pc;
+      if(cd.ungraded){ st=""<span class='flag'>Done, not graded</span>""; sc=""–""; pc=""–""; }
+      else if(!cd.started){ st=""<span class='flag miss'>Not started</span>""; sc=""–""; pc=""–""; }
+      else{ pc=cd.pct+'%'; sc=cd.priced?(S.num(cd.earned)+' / '+S.num(cd.possible)):('&ndash; <span class=""thin"">points not assigned</span>');
+        if(cd.pct>=S.state.threshold) st=""<span class='flag ok'>Mastered</span>"";
+        else if(S.retryOn(c.activity,s)) st=""<span class='flag open'>Retry open</span>"";
+        else st=""<span class='flag low'>""+(cd.earned===0?'Missing':'Below '+S.state.threshold)+""</span>"";
+        if(cd.locked) st+="" <span class='flag'>final</span>""; }
+      rows+=""<tr><td>""+S.esc((c.activity==='exam'||c.activity==='case_file')?c.lessonName:c.lesson)+""</td><td>""+S.esc(c.type)+""</td><td>""+sc+""</td><td>""+pc+""</td><td>""+st+(S.counts(c.activity)?"""":"" <span class='thin'>(not counted)</span>"")+""</td></tr>""; });
+    document.getElementById('rep-table').innerHTML=rows;
+  },
+  retryCard(idx,s){
+    const S=this; const types=[['lesson','Lesson CFUs'],['exercise','Exercises'],['quiz','Quizzes'],['exam','Unit tests']];
+    const rows=types.map(t=>{ const g=t[0], eff=S.retryEff(s,g), def=S.state.retryTypes[g]?'on':'off';
+      const b=(val,lab)=>""<button class='""+(eff===val?'on':'')+""' onclick=\""TCDash.setStuRetry(""+idx+"",'""+g+""','""+val+""')\"">""+lab+""</button>"";
+      return ""<div class='sr-item'><span class='nmw'>""+t[1]+""</span><span class='sr-seg'>""+b('default','Default ('+def+')')+b('on','On')+b('off','Off')+""</span></div>"";
+    }).join('');
+    // These four toggles have never saved. The cell popover at least SAID so;
+    // this panel did not, which is the worse of the two failures: a teacher
+    // opens retry for a struggling student, the row updates, and nothing tells
+    // them it was forgotten on reload. Writing it is one call, but reading it
+    // back is not: the teacher progress payload does not carry retry_override,
+    // so a wired toggle would show ""Default"" on the next load while an override
+    // was live. Saying so is honest today; the fix is a field on that payload.
+    return ""<div class='stu-retry'><div class='sr-head'>Retry until mastery for ""+S.esc(s.name)+"" <span class='thin'>overrides the class policy for this student</span></div><div class='sr-rows'>""+rows+""</div>""+
+      ""<div class='soon'>Preview only in this session. These four do not save yet.</div></div>"";
+  },
+  setStuRetry(idx,g,val){ const s=this.model.students[idx]; this.STUDENT_RETRY[s.id]=this.STUDENT_RETRY[s.id]||{}; if(val==='default') delete this.STUDENT_RETRY[s.id][g]; else this.STUDENT_RETRY[s.id][g]=val; /* TODO PATCH .../students/:id retry_modes */ this.renderAll(); },
+
+  renderAssignment(cidx){
+    const c=this.model.cols[cidx]; if(!c)return; const S=this;
+    document.getElementById('ba-name').textContent=this.colLabel(c);
+    const cells=this.model.students.map(s=>({s:s,cd:S.cellData(s,c)}));
+    const done=cells.filter(o=>o.cd.started);
+    const avg=done.length?Math.round(done.reduce((a,b)=>a+b.cd.pct,0)/done.length):0;
+    const mastered=done.filter(o=>o.cd.pct>=S.state.threshold).length;
+    document.getElementById('ba-meta').textContent=(c.possible!=null?('Out of '+c.possible+' points'):'Points not assigned to this activity yet')+'  |  '+(S.counts(c.activity)?'counts toward grade':'display only, not counted');
+    const mini=(l,v)=>""<div class='mini'><div class='l'>""+l+""</div><div class='v'>""+v+""</div></div>"";
+    document.getElementById('ba-mini').innerHTML=mini('Class average',avg+'%')+mini('Completed',done.length+' / '+cells.length)+mini('Mastered',mastered+' / '+cells.length)+mini('Missing',(cells.length-done.length));
+    cells.sort((a,b)=>{ const av=a.cd.started?a.cd.pct:-1, bv=b.cd.started?b.cd.pct:-1; return bv-av; });
+    let rows=""<tr><th>Student</th><th>Score</th><th>Percent</th><th style='width:180px'>Distribution</th><th>Status</th></tr>"";
+    cells.forEach(o=>{ const cd=o.cd; let cell,pc,bar,st;
+      if(!cd.started){ cell=""–""; pc=""–""; bar=0; st=""<span class='flag miss'>Not started</span>""; }
+      else{ cell=cd.priced?(S.num(cd.earned)+' / '+S.num(cd.possible)):(S.num(cd.pct)+'%*'); pc=cd.pct+'%'; bar=cd.pct; st=cd.pct>=S.state.threshold?""<span class='flag ok'>Mastered</span>"":(S.retryOn(c.activity,o.s)?""<span class='flag open'>Retry open</span>"":""<span class='flag low'>""+(cd.earned===0?'Missing':'Retry')+""</span>""); }
+      rows+=""<tr><td>""+S.esc(o.s.name)+""</td><td>""+cell+""</td><td>""+pc+""</td><td><div class='bar'><i style='width:""+bar+""%'></i></div></td><td>""+st+""</td></tr>""; });
+    document.getElementById('ba-table').innerHTML=rows;
+  },
+
+  showTab(n){ ['overview','student','assignment','settings'].forEach(t=>document.getElementById(t).classList.toggle('gb-hidden',t!==n));
+    Array.prototype.forEach.call(document.querySelectorAll('#gb-tabs .gb-tab'),b=>b.classList.toggle('on',b.dataset.tab===n)); },
+  gotoStudent(i){ document.getElementById('rep-picker').value=i; this.renderStudent(i); this.showTab('student'); },
+  gotoAssign(i){ document.getElementById('ba-picker').value=i; this.renderAssignment(i); this.showTab('assignment'); },
+
+  initPickers(){
+    const sp=document.getElementById('rep-picker'); sp.innerHTML=''; this.model.students.forEach((s,i)=>sp.add(new Option(s.name,i)));
+    const ap=document.getElementById('ba-picker'); ap.innerHTML=''; this.model.cols.forEach((c,i)=>ap.add(new Option(this.colLabel(c),i)));
+    sp.onchange=()=>this.renderStudent(+sp.value); ap.onchange=()=>this.renderAssignment(+ap.value);
+  },
+  bindControls(){
+    const S=this;
+    document.getElementById('gb-tabs').addEventListener('click',e=>{ if(e.target.dataset.tab) S.showTab(e.target.dataset.tab); });
+    document.getElementById('gb-viewseg').addEventListener('click',e=>{ if(!e.target.dataset.view)return; S.state.view=e.target.dataset.view; S.segOn('gb-viewseg',e.target); S.renderGrid(); });
+    const dr=document.getElementById('gb-densrange'); dr.value=S.state.densityScale; dr.addEventListener('input',e=>{ S.state.densityScale=+e.target.value; S.applyDensity(); });
+    document.addEventListener('click',e=>{ const dd=document.getElementById('gb-unitdd'); if(dd && !dd.contains(e.target)){ const p=document.getElementById('gb-unitpanel'); if(p)p.classList.add('gb-hidden'); } });
+    document.getElementById('gb-calcseg').addEventListener('click',e=>{ if(!e.target.dataset.calc)return; S.state.calc=e.target.dataset.calc; S.segOn('gb-calcseg',e.target); S.renderAll(); });
+    document.getElementById('gb-search').addEventListener('input',e=>{ S.state.search=e.target.value; S.renderGrid(); });
+    document.getElementById('gb-thr').addEventListener('input',e=>{ S.state.threshold=+e.target.value; document.getElementById('gb-thrv').textContent=S.state.threshold+'%'; S.renderAll(); });
+    document.getElementById('gb-letters').addEventListener('change',e=>{ S.state.letters=e.target.checked; S.renderGrid(); });
+    const rseg=document.getElementById('gb-retryseg');
+    if(rseg) rseg.addEventListener('click',e=>{ const m=e.target&&e.target.dataset&&e.target.dataset.retry; if(m) S.setRetryMode(m); });
+    const bindInc=(id,key)=>{ document.getElementById(id).addEventListener('change',ev=>{ S.state.include[key]=ev.target.checked; S.renderAll(); }); };
+    bindInc('inc-lesson','lesson'); bindInc('inc-ex','exercise'); bindInc('inc-quiz','quiz'); bindInc('inc-exam','exam');
+  },
+  segOn(w,btn){ Array.prototype.forEach.call(document.getElementById(w).children,b=>b.classList.toggle('on',b===btn)); },
+  applyDensity(){ const g=document.getElementById('gb-table'); if(!g)return; const t=Math.max(0,Math.min(1,(this.state.densityScale||0)/100));
+    const A={wn:100,wg:30,wp:36,gfs:7,cfs:7,cmw:14,cch:14,trh:20,sbh:23,mxfs:6.5,ini:14,lt:14,nm:60,sbfs:8,cpx:2};
+    const B={wn:196,wg:60,wp:70,gfs:14,cfs:14,cmw:44,cch:28,trh:40,sbh:35,mxfs:10.5,ini:26,lt:26,nm:114,sbfs:12,cpx:7};
+    const L=(a,b,d)=>(a+(b-a)*t).toFixed(d==null?1:d)+'px', s=g.style;
+    s.setProperty('--w-name',L(A.wn,B.wn)); s.setProperty('--w-grade',L(A.wg,B.wg)); s.setProperty('--w-pts',L(A.wp,B.wp));
+    s.setProperty('--gfs',L(A.gfs,B.gfs,2)); s.setProperty('--cfs',L(A.cfs,B.cfs,2));
+    s.setProperty('--cmw',L(A.cmw,B.cmw)); s.setProperty('--cch',L(A.cch,B.cch));
+    s.setProperty('--trh',L(A.trh,B.trh)); s.setProperty('--sbh',L(A.sbh,B.sbh)); s.setProperty('--mxfs',L(A.mxfs,B.mxfs,2));
+    s.setProperty('--sbfs',L(A.sbfs,B.sbfs,2)); s.setProperty('--cpx',L(A.cpx,B.cpx,2));
+    s.setProperty('--inisz',L(A.ini,B.ini)); s.setProperty('--ltsz',L(A.lt,B.lt)); s.setProperty('--nmmax',L(A.nm,B.nm)); },
+
+  copyCode(){ if(navigator.clipboard)navigator.clipboard.writeText(this.classCode); const e=document.getElementById('gb-copy'); e.textContent='copied'; setTimeout(()=>e.textContent='copy',1200); },
+  copyJoinLink(){ const url='https://www.apcsexamprep.com/pages/join?code='+this.classCode; navigator.clipboard.writeText(url).catch(()=>prompt('Copy this link:',url)); },
+
+  // ---- exports ----
+  // The spreadsheet a teacher opens in Excel says the same thing the screen
+  // says: points earned over points possible, one column per activity, built
+  // from the SAME model and the same cellText() the grid renders from. It used
+  // to write a bare percent per cell and label a completion count ""Overall %"",
+  // so a teacher reconciling the file against the dashboard found two different
+  // numbers with no way to tell which was the grade.
+  buildGradebookCSV(){
+    const S=this, m=this.model, d=this.data||{};
+    const headers=['Name','Student Ref','Last Active','Grade %','Points Earned','Points Possible','Completion %'];
+    m.cols.forEach(c=>{ headers.push(S.colLabel(c)+(c.possible!=null?(' (/'+S.num(c.possible)+')'):'')); });
+    const lines=[headers];
+    const uids=Object.keys((d.course_config&&d.course_config.units)||{});
+    const byId={}; (d.summary||[]).forEach(r=>{ byId[r.student.id]=r; });
+    m.students.forEach(stu=>{
+      const t=S.totals(stu); const rec=byId[stu.id]||{};
+      let comp=0,tot=0; uids.forEach(uid=>{ const un=rec.units&&rec.units[uid]; if(un){comp+=un.completed||0;tot+=un.total||0;} });
+      const row=[stu.name||'',stu.ref||'',stu.lastActive||'Never',(t.pct==null?'':t.pct+'%'),S.num(t.earned),S.num(t.poss),(tot>0?Math.round(100*comp/tot):0)+'%'];
+      m.cols.forEach(c=>{ const cd=S.cellData(stu,c);
+        // Not started, completed but never graded, and scored are three
+        // different facts. Blank, ""Complete"" and a score, never all zero.
+        if(cd.ungraded){ row.push('Complete'); return; }
+        if(!cd.started){ row.push(''); return; }
+        row.push(S.cellText(cd,true)); });
+      lines.push(row);
+    });
+    return lines.map(r=>r.map(f=>{ const x=(f==null)?'':String(f); return /["",\r\n]/.test(x)?'""'+x.replace(/""/g,'""""')+'""':x; }).join(',')).join('\r\n');
+  },
+  exportGradebook(){ if(!this.data||!this.data.summary){ alert('No data loaded yet.'); return; }
+    try{ const csv=this.buildGradebookCSV(); const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-gradebook.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500); }catch(e){ alert('Could not build the gradebook file.'); } },
+  // A fetch that cannot hang forever. Without this a stalled connection (the API
+  // restarting after a deploy, a dropped link) leaves the promise unsettled, so
+  // the button spins with no error and no file.
+  async _fetchWithTimeout(url,opts,ms){
+    const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(),ms||20000);
+    try{ return await fetch(url,Object.assign({},opts,{signal:ctl.signal})); }
+    finally{ clearTimeout(t); }
+  },
+  async exportCSV(){
+    const token=localStorage.getItem('apcse_teacher_token');
+    try{ const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export',{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(!r.ok) throw new Error('status '+r.status);
+      const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-full-data.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }catch(e){ alert(e.name==='AbortError' ? 'The export timed out. The API may be restarting after a deploy: wait a minute and try again.' : ('Could not export CSV ('+(e.message||'unknown')+'). Refresh and try again.')); }
+  },
+  // Canvas import file. One request, no preflight gate: Canvas's own import
+  // screen lets a teacher map any unmatched row to a student by name, so
+  // warning first only added a click. preflight=1 still exists on the API.
+  toggleExportMenu(ev){ if(ev)ev.stopPropagation(); const el=document.getElementById('gb-export-list'); if(el)el.classList.toggle('on'); },
+  pickExport(which){ const el=document.getElementById('gb-export-list'); if(el)el.classList.remove('on');
+    if(which==='gradebook')return this.exportGradebook();
+    if(which==='canvas')return this.exportCanvasCSV('unit');
+    if(which==='canvas-activity')return this.exportCanvasCSV('activity');
+    if(which==='schoology')return this.exportSchoologyCSV();
+    return this.exportCSV(); },
+  // Set the Canvas SIS identifier for one student. The server validates it with
+  // the same rule the export applies, so a ref that would silently export blank
+  // is refused here rather than dropping the student during the Canvas import.
+  async setStudentRef(id){ const stu=this._findStudent(id); if(!stu)return;
+    const next=prompt('Canvas ref for '+stu.name+'.\n\nUse the SIS User ID from your Canvas gradebook export (a student number is best). An email works too. Leave blank to clear.',stu.ref||'');
+    if(next==null)return;
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{student_ref:next.trim()});
+    if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); }
+    else alert(r.error||'Could not set the Canvas ref.'); },
+  // The export follows the dashboard: the four include toggles and the unit
+  // selection go with it, so a teacher gets the gradebook on their screen
+  // rather than the whole course every time. Omitting a param means ""all"", so
+  // an unfiltered dashboard still exports everything.
+  exportFilterQuery(){
+    const inc=this.state.include||{};
+    const on=['lesson','exercise','quiz','exam'].filter(k=>inc[k]!==false);
+    let q='&include='+on.join(',');
+    const units=this.state.units;
+    if(units && units.length) q+='&units='+units.map(encodeURIComponent).join(',');
+    return q;
+  },
+  async exportCanvasCSV(scope){
+    const token=localStorage.getItem('apcse_teacher_token');
+    const sc=(scope==='activity')?'activity':'unit';
+    const q='?format=canvas&scope='+sc+this.exportFilterQuery();
+    try{ const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export'+q,{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(!r.ok) throw new Error('status '+r.status);
+      const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-canvas-'+sc+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }catch(e){ alert(e.name==='AbortError' ? 'The Canvas export timed out. The API may be restarting after a deploy: wait a minute and try again.' : ('Could not export the Canvas CSV ('+(e.message||'unknown')+'). Refresh and try again.')); }
+  },
+
+  // Schoology imports by mapping columns onto assignments that already exist,
+  // and a Schoology assignment has its own max points, so this file states
+  // MARKS: ""7"" into an assignment created out of 8. An activity nobody has
+  // assigned points to has no max, so it cannot become an assignment at all;
+  // the preflight names those columns before the download rather than letting
+  // them go missing from the file silently.
+  async exportSchoologyCSV(){
+    const token=localStorage.getItem('apcse_teacher_token');
+    const q='?format=schoology'+this.exportFilterQuery();
+    try{
+      const pre=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export'+q+'&preflight=1',{headers:{'Authorization':'Bearer '+token}});
+      if(pre.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(pre.ok){
+        const p=await pre.json();
+        if(!p.columns){ alert('Nothing to export yet.\n\nNo assignment in this selection has points recorded, so there is no mark to send to Schoology.'); return; }
+        const skipped=(p.skipped||[]).length;
+        if(skipped && !confirm(p.columns+' assignment(s) will export.\n\n'+skipped+' are left out because no points have been assigned to them yet, so Schoology has no total to grade against:\n\n'+(p.skipped||[]).slice(0,8).join('\n')+(skipped>8?('\n...and '+(skipped-8)+' more'):'')+'\n\nContinue?')) return;
+      }
+      const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export'+q,{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(!r.ok) throw new Error('status '+r.status);
+      const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-schoology.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }catch(e){ alert(e.name==='AbortError' ? 'The Schoology export timed out. The API may be restarting after a deploy: wait a minute and try again.' : ('Could not export the Schoology CSV ('+(e.message||'unknown')+'). Refresh and try again.')); }
+  },
+
+  // ---- roster tools (unchanged) ----
+  _token(){ return localStorage.getItem('apcse_teacher_token'); },
+  _findStudent(id){ const list=(this.data&&this.data.summary)||[]; const hit=list.find(x=>x.student&&x.student.id===id); return hit?hit.student:null; },
+  async _api(method,path,body){
+    try{ const opts={method:method,headers:{'Authorization':'Bearer '+this._token()}}; if(body){opts.headers['Content-Type']='application/json';opts.body=JSON.stringify(body);}
+      const res=await fetch(API+path,opts);
+      if(res.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return {ok:false,error:'Session expired.'}; }
+      let data={}; try{ data=await res.json(); }catch(e){}
+      return res.ok?{ok:true,data:data}:{ok:false,error:(data&&data.error)||('Request failed ('+res.status+')')};
+    }catch(e){ return {ok:false,error:'Network error.'}; }
+  },
+  async renameStudent(id){ const stu=this._findStudent(id); if(!stu)return; const next=prompt('New name for '+stu.name+':',stu.name); if(next==null)return; const name=next.trim(); if(name.length<1){ alert('Name cannot be empty.'); return; } if(name===stu.name)return;
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{display_name:name}); if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); } else alert(r.error||'Could not rename student.'); },
+  async resetPin(id){ const stu=this._findStudent(id); if(!stu)return; const suggested=String(Math.floor(1000+Math.random()*9000)); const pin=prompt('Set a new 4-digit PIN for '+stu.name+'.',suggested); if(pin==null)return; const clean=pin.trim(); if(!/^\d{4}$/.test(clean)){ alert('PIN must be exactly 4 digits.'); return; }
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{pin:clean}); if(r.ok) alert(stu.name+""'s new PIN is ""+clean+'.'); else alert(r.error||'Could not reset PIN.'); },
+  // The server deactivates and keeps every score. This dialog used to promise a
+  // permanent delete instead, so a teacher who read it, clicked OK and then saw
+  // the student still on the roster had every reason to call the button broken.
+  // The words now match what the server actually does, and they name the way
+  // back, because ""cannot be undone"" was the part that made people hesitate.
+  async removeStudent(id){ const stu=this._findStudent(id); if(!stu)return;
+    if(!confirm('Remove '+stu.name+' from this class?\n\nThey can no longer sign in, and they come off the gradebook, the grid and every export. Their scores are kept, and you can restore them from Settings.'))return;
+    const r=await this._api('DELETE','/api/teacher/classes/'+this.classCode+'/students/'+id);
+    if(!r||!r.ok) return alert((r&&r.error)||'Could not remove student.');
+    await this.loadProgress(this._token());
+    // The By Student tab is an INDEX into model.students, and that list is now
+    // one shorter, so the index the teacher was on belongs to somebody else.
+    // Overview is the honest landing place: it is where they can see the roster
+    // is actually shorter, which is the thing that was not happening before.
+    this.showTab('overview'); },
+  // The other half of a reversible removal. Nothing is recovered here, because
+  // nothing was destroyed: active goes back to 1 and the student's own history
+  // is already sitting where it always was.
+  async restoreStudent(id){ const stu=this._findStudent(id); if(!stu)return;
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{active:true});
+    if(!r||!r.ok) return alert((r&&r.error)||'Could not restore student.');
+    await this.loadProgress(this._token());
+    this.showTab('settings'); },
+  renderRemoved(){
+    const el=document.getElementById('gb-removed'); if(!el)return;
+    const S=this, list=(this.model&&this.model.removed)||[];
+    if(!list.length){ el.innerHTML='<div class=""set-row""><div class=""txt""><p class=""thin"">Nobody has been removed from this class.</p></div></div>'; return; }
+    el.innerHTML=list.map(s=>'<div class=""set-row""><div class=""txt""><h4>'+S.esc(s.name||'')+'</h4>'
+      +'<p>Removed. Last active '+S.esc(s.lastActive||'Never')+'. Scores kept.</p></div>'
+      +""<button class='gb-btn sm' onclick=\""TCDash.restoreStudent('""+s.id+""')\"">Restore</button></div>"").join('');
+  },
+  async deleteClass(){ const name=(this.data&&this.data.class&&this.data.class.class_name)||this.classCode; const count=((this.data&&this.data.summary)||[]).length;
+    const typed=prompt('This permanently deletes ""'+name+'"" and all '+count+' student(s). This CANNOT be undone.\n\nType the class code ('+this.classCode+') to confirm:'); if(typed==null)return;
+    if(typed.trim().toUpperCase()!==this.classCode.toUpperCase()){ alert('Class code did not match. Nothing was deleted.'); return; }
+    const r=await this._api('DELETE','/api/teacher/classes/'+this.classCode); if(r.ok){ alert('Class deleted.'); location.href='/pages/cyber-class'; } else alert(r.error||'Could not delete class.'); },
+
+  formatDate(dt){ if(!dt)return'Never'; const d=new Date(dt), today=new Date(); const diff=Math.floor((today-d)/86400000);
+    if(diff===0)return'Today'; if(diff===1)return'Yesterday'; if(diff<7)return diff+'d ago'; return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); },
+  formatCourse(c){ return {'ap-cybersecurity':'AP Cybersecurity','ap-csa':'AP CSA','ap-csp':'AP CSP'}[c]||c; },
+  // ── WHY THIS IS WRITTEN THE LONG WAY ────────────────────────────────────
+  //  Shopify DECODES every HTML entity it finds in a page body when it stores
+  //  it, so an escape table written with entity literals comes back with each
+  //  value collapsed to the bare character it stood for. The map becomes an
+  //  identity map, this returns its input unchanged, and it does so on a page
+  //  that writes student and class names into innerHTML. That is exactly what
+  //  this function had become, and it is invisible in the repo, in the sheet
+  //  and in review: the defect appears only after the round trip. The same
+  //  thing happened to join.html and was fixed there on 2026-08-22.
+  //  (Spelling an entity out even in THIS comment would trip the same decode.)
+  esc(str){
+    var A = '&';
+    return String(str == null ? '' : str)
+      .split(A).join(A + 'amp;')
+      .split('<').join(A + 'lt;')
+      .split('>').join(A + 'gt;')
+      .split('""').join(A + 'quot;');
+  }
+};
+// Close the export menu on any outside click, so it cannot be left hanging
+// over the gradebook.
+document.addEventListener('click', function(ev){
+  const menu=document.getElementById('gb-export-menu'), list=document.getElementById('gb-export-list');
+  if(list && menu && !menu.contains(ev.target)) list.classList.remove('on');
+});
+document.addEventListener('DOMContentLoaded',()=>TCDash.init());
+})();
+</script>"
