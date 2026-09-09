@@ -105,9 +105,10 @@
       "kind": "live",
       "name": "no cyber quiz page advertises a count its bank does not hold",
       "command": "node scripts/cyber-quiz-badge-sweep.js",
-      "expect": "1 advertising a count the bank does not hold",
-      "_why": "A stronger statement than the byte strings above, and false right now in the way that matters: the sweep exits 1 today, naming 1.2. After the import it exits 0 and this check's expect line has to be updated to '0 advertising', which is deliberate. The expect pins today's reading so a stale gate cannot silently pass.",
-      "_this_is_also_the_standing_check": "It compares each page's badge against the server's own pool, so it keeps working when a bank is resized later. It does NOT judge the duration badges: 5.5 and 5.6 say ~12 and ~15 minutes, their counts are right, they carry no blurb to contradict, and a check that cannot say what the right answer would be has no business calling one wrong."
+      "expect": "0 advertising a count the bank does not hold",
+      "_why": "FALSE right now and true only after the import, which is what a live check has to be. The sweep exits 1 today naming 1.2, so this fails on the exit code; after the import it exits 0 and prints \"0 advertising\", so it passes on both halves at once.",
+      "_this_is_also_the_standing_check": "It compares each page badge against the server own pool, so it keeps working when a bank is resized later. It does NOT judge the duration badges: 5.5 and 5.6 say ~12 and ~15 minutes, their counts are right, they carry no blurb to contradict, and a check that cannot say what the right answer would be has no business calling one wrong.",
+      "_this_pinned_the_wrong_state_first": "It expected \"1 advertising a count the bank does not hold\", which is the reading BEFORE the import, and a note called the resulting hand-edit deliberate. It was not deliberate, it was backwards: pre-import the sweep exits 1 so runCheck fails on the exit code before it ever reads expect, and post-import the string becomes \"0 advertising\" so it fails on expect instead. The check could not pass in either state. Found by re-reading the diff after shipping it, which is later than it should have been."
     }
   ]
 }

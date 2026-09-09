@@ -40,8 +40,8 @@ the right workflow, and the padlock is doing the work you think it is doing.
 **Three quizzes further along are not locked yet.** Unit 2 Lesson 3, Unit 3
 Lesson 5, and Unit 4 Lesson 1 still carry their own questions and their own
 answer key in the page itself, so the padlock does not stop anything on those
-three. Every other quiz in the course, 22 of 25, is on the server. Those three
-are queued.
+three. Every other quiz in the course, 22 of 25, is on the server. I will tell
+you when those three move rather than guess at a date.
 
 **The Unit Tests are not locked, and this is the one I would flag hardest.** None
 of the five is on the server, so a student who has the link has the test and the
@@ -106,7 +106,15 @@ All measured 2026-09-09 unless stated.
   sent, not inherited from the last version of the letter.
 - **The three that are not locked:** `ap-cyber-unit-2-lesson-3-quiz` (2.3),
   `ap-cyber-unit-3-lesson-6-quiz` (3.5), `ap-cyber-unit-4-lesson-1-quiz` (4.1).
-  Same run: `0 mount(s); key survives`. All three are waiting on server banks.
+  Same run: `0 mount(s); key survives`.
+  2.3 and 4.1 are waiting on server banks and nothing else.
+  **3.5 is not the same case and an earlier version of this line said it was.**
+  It carries TEN questions where every other cyber quiz bank holds five, so
+  whether it is a web quiz at all or a published bundle instrument is a question
+  somebody has to answer before it can be mounted. There is no board item for
+  that decision as of 2026-09-09, so this draft promises nothing about timing on
+  any of the three. Do not restore the word "queued": it reads as scheduled, and
+  one of the three is not.
 - **Student wording:** quoted verbatim from `renderLocked()` in the DEPLOYED
   `apcs-quiz-mount.js` at the Shopify CDN, not from the repo mirror.
 - **Unit Tests: five of five publish their key.** All five of

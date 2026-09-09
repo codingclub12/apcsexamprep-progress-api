@@ -136,14 +136,49 @@ was careless.
 - None of the five unit tests is migrated. That is the largest remaining gap
   between what the gradebook's padlock implies and what it does.
 
+## Two more, found after this note was first written
+
+**The gate had a live check that could never pass.** PR #649. The sweep check
+pinned `expect` to `1 advertising a count the bank does not hold`, which is the
+reading BEFORE the import, and I wrote a note beside it calling the hand edit
+that would be needed afterwards deliberate.
+
+    pre-import   the sweep exits 1, so runCheck fails on the exit code and
+                 never reads expect at all
+    post-import  it exits 0 but prints "0 advertising", so expect stops
+                 matching and it fails there instead
+
+Red in both states. That is worse than a missing check, because the gate output
+still reads like something is being verified. And the note is the part worth
+sitting with: calling the hand edit deliberate is what turned a defect into what
+looked like a design decision, which is how it would have survived review.
+
+It pins the post-import reading now, and both states were demonstrated rather
+than argued: the real sweep run against the body the sheet produces, parsed back
+out of the committed CSV, with only that one page intercepted and the other 24
+still fetched live. `0 advertising`, exit 0. Against live, still 1, still red.
+
+**And the check-in reminder about it fired carrying the wrong instruction.** The
+scheduled follow-up still said to hand edit that expect line, because the
+correction landed on a one-shot trigger that had already spent itself. Following
+it would have re-broken the check that had just been fixed.
+
 ## What I would tell the next session
 
-The two real findings today were both a check being confidently wrong, and
-neither was found by reading the check. `verify-cyber-quiz-mounts.js` reads as
-complete, its comment block explains why three assertions are needed and why the
-third is the one that matters, and it was blind to a live answer key the whole
-time. The mount rule I wrote reads as obviously correct and passed a renamed
-mount.
+Four things went wrong today and all four were the same thing: something written
+when it was true, read later when it was not.
 
-Run the check against the case. Both times the thing that found it was breaking
-the check on purpose and demanding it notice.
+    the draft to Michelle, twice   inherited a lock claim instead of re-measuring
+    the gate's expect line         pinned the state at authoring time
+    the reminder about that line   carried the pre-fix text an hour later
+
+The other two were checks being confidently wrong.
+`verify-cyber-quiz-mounts.js` reads as complete, its comment block explains why
+three assertions are needed and why the third is the one that matters, and it was
+blind to a live answer key the whole time. The mount rule I wrote reads as
+obviously correct and passed a renamed mount.
+
+So: run the check against the case, and re-measure anything you are about to
+repeat. Every one of these was found by breaking something on purpose or by
+fetching the thing again, and not one was found by reading a description,
+including the descriptions I had written myself that morning.
