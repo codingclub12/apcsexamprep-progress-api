@@ -166,15 +166,13 @@
 #tcdash-wrap .set-row .txt h4{margin:0 0 3px!important;font-size:14px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
 #tcdash-wrap .set-row .txt p{margin:0!important;font-size:12.5px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;max-width:560px!important;}
 #tcdash-wrap .free-tag{font-size:10px!important;font-weight:700!important;color:#047857!important;-webkit-text-fill-color:#047857;background:#ecfdf5!important;border:1px solid #a7f3d0!important;border-radius:999px!important;padding:2px 8px!important;margin-left:8px!important;}
-#tcdash-wrap .soon-tag{font-size:10px!important;font-weight:700!important;color:#b45309!important;-webkit-text-fill-color:#b45309;background:#fffbeb!important;border:1px solid #fde68a!important;border-radius:999px!important;padding:2px 8px!important;margin-left:8px!important;}
+#tcdash-wrap .retrywhat{margin-top:6px!important;font-size:12px!important;color:#475569!important;-webkit-text-fill-color:#475569;}
 #tcdash-wrap .switch{position:relative!important;width:44px!important;height:26px!important;flex-shrink:0!important;display:inline-block!important;}
 #tcdash-wrap .switch input{opacity:0!important;width:0!important;height:0!important;position:absolute!important;}
 #tcdash-wrap .slider{position:absolute!important;inset:0!important;background:#cbd5e1!important;border-radius:999px!important;cursor:pointer!important;}
 #tcdash-wrap .slider:before{content:""!important;position:absolute!important;width:20px!important;height:20px!important;left:3px!important;top:3px!important;background:#fff!important;border-radius:50%!important;transition:.15s!important;}
 #tcdash-wrap .switch input:checked + .slider{background:#1e3a5f!important;}
 #tcdash-wrap .switch input:checked + .slider:before{transform:translateX(18px)!important;}
-#tcdash-wrap .retrytypes{display:flex!important;flex-direction:column!important;gap:9px!important;min-width:190px!important;}
-#tcdash-wrap .retrytypes label{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569;}
 #tcdash-wrap h3.sec{font-size:13px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin:4px 0 2px!important;}
 #tcdash-wrap .gb-loading{text-align:center!important;padding:48px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
 #tcdash-wrap .overlay{position:fixed!important;inset:0!important;z-index:150!important;background:transparent!important;}
@@ -360,16 +358,12 @@
           </div>
           <div class="set-row">
             <div class="txt">
-<h4>Retry until mastery, by assignment type<span class="free-tag">FREE</span><span class="soon-tag">SAVING SOON</span>
+<h4>Retries<span class="free-tag">FREE</span>
 </h4>
-<p>Choose which activity types students may re-attempt until they reach the mastery threshold. Formative work fits; exams usually stay one attempt. Per-student overrides live on the By Student tab.</p>
+<p>Which work students may re-attempt. This saves to the class the moment you pick it, and it decides what students can actually do, not just what this page shows. Per-student overrides live on the By Student tab.</p>
+<p class="retrywhat" id="gb-retrywhat"></p>
 </div>
-            <div class="retrytypes">
-              <label>Lesson CFUs <span class="switch"><input type="checkbox" id="rt-lesson" checked><span class="slider"></span></span></label>
-              <label>Exercises <span class="switch"><input type="checkbox" id="rt-ex" checked><span class="slider"></span></span></label>
-              <label>Quizzes <span class="switch"><input type="checkbox" id="rt-quiz" checked><span class="slider"></span></span></label>
-              <label>Unit tests <span class="switch"><input type="checkbox" id="rt-exam"><span class="slider"></span></span></label>
-            </div>
+            <div class="seg" id="gb-retryseg"></div>
           </div>
           <div class="set-row">
             <div class="txt">
@@ -479,7 +473,15 @@ window.TCDash = {
   classCode:'', data:null, model:null,
   STUDENT_RETRY:{},
   state:{view:'points',calc:'graded',threshold:80,letters:true,search:'',
-    retryTypes:{lesson:true,exercise:true,quiz:true,exam:false},
+    //  Derived from the class's retry_mode on every load, never clicked into
+    //  existence here. The value it used to hold, quiz on with exam off, is not
+    //  a state the server can be in: retry-policy.js treats quiz and exam alike
+    //  as assessments, so the grid was drawn under a policy that cannot exist.
+    //  'practice' is retry-policy.js's DEFAULT_MODE and is what a class gets
+    //  when nobody has chosen, so it is the least wrong thing to paint before
+    //  the first response lands.
+    retryMode:'practice',
+    retryTypes:{lesson:true,exercise:true,quiz:false,exam:false},
     include:{lesson:false,exercise:true,quiz:true,exam:true}, sortKey:'name', sortDir:1, densityScale:50, units:null},
 
   async init(){
@@ -607,6 +609,14 @@ window.TCDash = {
     const bt=document.getElementById('gb-promo-text'); if(bt){ bt.innerHTML='<b>Teaching this course?</b> '+b.blurb; }
     document.getElementById('gb-av').textContent = ((d.class&&d.class.class_name)||'C').replace(/[^A-Za-z0-9]/g,'').slice(0,2).toUpperCase() || 'C';
     document.getElementById('gb-count').textContent = this.model.students.length+' students';
+    //  The retry policy comes from the class row, every load. buildCanonicalGradebook
+    //  falls back to the legacy boolean when retry_mode has not been backfilled,
+    //  and /progress returns the class row whole, so this is the same value the
+    //  server enforces rather than a second opinion formed here.
+    const rm=(d.class&&d.class.retry_mode)||((d.class&&d.class.retry_allowed)?'all':'practice');
+    this.state.retryMode=rm;
+    this.state.retryTypes=this.typesForMode(rm);
+    this.renderRetryMode();
     this.initPickers();
     this.renderUnitFilter();
     this.renderAll();
@@ -667,6 +677,50 @@ window.TCDash = {
   keyOf(sid,c){ return sid+'|'+c.unit+'|'+c.lesson+'|'+c.activity; },
   counts(a){ if(a==='lesson')return this.state.include.lesson; if(a==='exercise-1'||a==='exercise-2')return this.state.include.exercise; if(a==='quiz')return this.state.include.quiz; if(a==='exam')return this.state.include.exam; return true; },
   retryGroup(a){ if(a==='lesson')return'lesson'; if(a==='exercise-1'||a==='exercise-2')return'exercise'; if(a==='quiz')return'quiz'; if(a==='exam')return'exam'; return null; },
+  //  ── THE RETRY POLICY, AS THE SERVER ACTUALLY HAS IT ──────────────────────
+  //  Three modes on classes.retry_mode, not four per-type switches. The panel
+  //  used to draw four, which is 16 combinations of which the server can hold
+  //  three, and it saved none of them: bindRetry wrote to page state and called
+  //  renderAll, so a teacher turning Quizzes off watched the grades move and
+  //  changed nothing a student could do. That is worse than an inert control,
+  //  because the numbers moving is exactly the feedback a working one gives.
+  //
+  //  Labels and blurbs are retry-policy.js's own MODE_LABELS and
+  //  MODE_DESCRIPTIONS, copied verbatim so the two surfaces cannot describe the
+  //  same rule differently. If they change there, change them here.
+  RETRY_MODES:[
+    {id:'all',      label:'Everything',    what:'Students may redo practice and retake quizzes. Their best attempt counts.'},
+    {id:'practice', label:'Practice only', what:'Students may redo practice work and their best attempt counts, but a quiz or exam is one attempt and that first attempt is the grade.'},
+    {id:'none',     label:'Off',           what:'One attempt at everything. The first attempt is the grade of record.'},
+  ],
+  //  The same split retryAllowedFor() makes: quiz and exam are assessments,
+  //  everything else is practice.
+  typesForMode(mode){
+    const m=(mode==='all'||mode==='none')?mode:'practice';
+    if(m==='all')  return {lesson:true, exercise:true, quiz:true,  exam:true};
+    if(m==='none') return {lesson:false,exercise:false,quiz:false, exam:false};
+    return {lesson:true, exercise:true, quiz:false, exam:false};
+  },
+  renderRetryMode(){
+    const S=this, seg=document.getElementById('gb-retryseg'); if(!seg)return;
+    seg.innerHTML=S.RETRY_MODES.map(m=>
+      "<button class='"+(m.id===S.state.retryMode?'on':'')+"' data-retry='"+m.id+"'>"+S.esc(m.label)+"</button>"
+    ).join('');
+    const w=document.getElementById('gb-retrywhat');
+    if(w){ const cur=S.RETRY_MODES.filter(m=>m.id===S.state.retryMode)[0]; w.textContent=cur?cur.what:''; }
+  },
+  //  Saves first and REDRAWS FROM THE SERVER'S ANSWER. Painting the new mode
+  //  optimistically and reloading later is how a control ends up showing a
+  //  setting that did not save, which is the failure this whole panel is being
+  //  fixed for.
+  async setRetryMode(mode){
+    if(!mode||mode===this.state.retryMode)return;
+    const seg=document.getElementById('gb-retryseg'); if(seg)seg.classList.add('busy');
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/retry',{retry_mode:mode});
+    if(seg)seg.classList.remove('busy');
+    if(!r.ok){ alert(r.error||'Could not change the retry policy.'); return; }
+    await this.loadProgress(this._token());
+  },
   retryOn(a,stu){ const g=this.retryGroup(a); if(!g)return false; if(stu){ const o=this.STUDENT_RETRY[stu.id]; if(o&&o[g])return o[g]==='on'; } return !!this.state.retryTypes[g]; },
   retryEff(stu,g){ const o=this.STUDENT_RETRY[stu.id]; return (o&&o[g])?o[g]:'default'; },
   clsFor(p){ if(p===null)return'n'; if(p>=this.state.threshold)return'g'; if(p>=60)return'a'; return'r'; },
@@ -1017,8 +1071,8 @@ window.TCDash = {
     document.getElementById('gb-search').addEventListener('input',e=>{ S.state.search=e.target.value; S.renderGrid(); });
     document.getElementById('gb-thr').addEventListener('input',e=>{ S.state.threshold=+e.target.value; document.getElementById('gb-thrv').textContent=S.state.threshold+'%'; S.renderAll(); });
     document.getElementById('gb-letters').addEventListener('change',e=>{ S.state.letters=e.target.checked; S.renderGrid(); });
-    const bindRetry=(id,key)=>{ const el=document.getElementById(id); el.checked=!!S.state.retryTypes[key]; el.addEventListener('change',ev=>{ S.state.retryTypes[key]=ev.target.checked; S.renderAll(); }); };
-    bindRetry('rt-lesson','lesson'); bindRetry('rt-ex','exercise'); bindRetry('rt-quiz','quiz'); bindRetry('rt-exam','exam');
+    const rseg=document.getElementById('gb-retryseg');
+    if(rseg) rseg.addEventListener('click',e=>{ const m=e.target&&e.target.dataset&&e.target.dataset.retry; if(m) S.setRetryMode(m); });
     const bindInc=(id,key)=>{ document.getElementById(id).addEventListener('change',ev=>{ S.state.include[key]=ev.target.checked; S.renderAll(); }); };
     bindInc('inc-lesson','lesson'); bindInc('inc-ex','exercise'); bindInc('inc-quiz','quiz'); bindInc('inc-exam','exam');
   },

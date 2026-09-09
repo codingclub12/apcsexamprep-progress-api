@@ -274,5 +274,105 @@ const bareCsv = T.buildGradebookCSV().split('\r\n')[1].split(',');
 ok('  the spreadsheet leaves the grade blank rather than writing 0%',
   bareCsv[3] === '', bareCsv.slice(0, 7));
 
-console.log('\n' + (fail === 0 ? 'ALL PASS' : 'FAILURES: ' + fail) + '  (' + pass + ' passed)\n');
-process.exit(fail === 0 ? 0 : 1);
+console.log('\n11. The retry panel controls the policy the server enforces');
+//  Reported 2026-09-09: "I also have students able to retry assignments as many
+//  times as they want." The engine was fine. The panel was four per-type
+//  switches, tagged SAVING SOON, that wrote to page state and called renderAll.
+//  Nothing reached the server, so a teacher turning Quizzes off watched the
+//  grades move and changed nothing a student could do. Worse than an inert
+//  control: moving numbers is the feedback a working one gives.
+//
+//  classes.retry_mode has THREE modes, not four per-type switches. Four toggles
+//  is 16 combinations of which the server can hold three, so the panel is a
+//  three-way choice now and every state it can reach is one the server has.
+ok('  the SAVING SOON tag is gone from the shipped page', !/SAVING SOON/.test(html));
+for (const id of ['rt-lesson', 'rt-ex', 'rt-quiz', 'rt-exam']) {
+  ok('  the dead ' + id + ' switch is gone', !html.includes('id="' + id + '"'));
+}
+ok('  the picker offers exactly the three modes retry-policy.js has',
+  T.RETRY_MODES.map((m) => m.id).join(',') === 'all,practice,none',
+  T.RETRY_MODES.map((m) => m.id));
+
+//  The mapping has to match retryAllowedFor(): quiz and exam are assessments,
+//  everything else is practice. Asserted against the module rather than against
+//  a copy of my own reasoning, so the page and the server cannot drift.
+const policy = require('../retry-policy');
+console.log('   and it agrees with retry-policy.js on every mode and type');
+let drift = [];
+for (const mode of ['all', 'practice', 'none']) {
+  const types = T.typesForMode(mode);
+  for (const [key, activity] of [['lesson', 'lesson'], ['exercise', 'exercise-1'], ['quiz', 'quiz'], ['exam', 'exam']]) {
+    const server = policy.retryAllowedFor(mode, activity, null);
+    if (types[key] !== server) drift.push({ mode, key, page: types[key], server });
+  }
+}
+ok('  12 combinations compared, zero disagreements', drift.length === 0, drift);
+
+//  The state the panel used to hold, quiz on with exam off, is one the server
+//  cannot be in. A page that paints it is drawing a policy that does not exist.
+ok('  and the pre-load default is a real mode, not the impossible one',
+  !(T.state.retryTypes.quiz === true && T.state.retryTypes.exam === false)
+    || T.state.retryMode === 'all', [T.state.retryMode, T.state.retryTypes]);
+
+console.log('   the class row decides, on every load');
+for (const [row, wantMode, wantQuiz] of [
+  [{ retry_mode: 'all' }, 'all', true],
+  [{ retry_mode: 'practice' }, 'practice', false],
+  [{ retry_mode: 'none' }, 'none', false],
+  //  A row written before retry_mode was backfilled: the legacy boolean decides,
+  //  the same fallback buildCanonicalGradebook applies.
+  [{ retry_allowed: 1 }, 'all', true],
+  [{ retry_allowed: 0 }, 'practice', false],
+]) {
+  T.applyData({ class: Object.assign({ class_name: 'X', course: 'ap-cybersecurity' }, row),
+    course_config: CYBER.course_config, denominators: {}, summary: [] });
+  ok('    ' + JSON.stringify(row) + ' -> ' + wantMode,
+    T.state.retryMode === wantMode && T.state.retryTypes.quiz === wantQuiz,
+    [T.state.retryMode, T.state.retryTypes]);
+}
+
+//  The save path is async, and this file is CommonJS, so the awaiting half runs
+//  in an IIFE and owns the exit code. Everything above it is synchronous and has
+//  already counted its assertions.
+(async () => {
+  console.log('   picking a mode SAVES it, and redraws from the answer');
+  const calls = [];
+  sandbox.localStorage.getItem = () => 'tok-teacher';
+  sandbox.fetch = (url, opts) => {
+    calls.push({ url: String(url), method: (opts && opts.method) || 'GET', body: opts && opts.body });
+    return Promise.resolve({ ok: true, status: 200,
+      json: () => Promise.resolve({ class: { class_name: 'X', course: 'ap-cybersecurity', retry_mode: 'none' },
+        course_config: CYBER.course_config, denominators: {}, summary: [] }) });
+  };
+  T.classCode = 'CYBER-TEST';
+  T.state.retryMode = 'all';
+  await T.setRetryMode('none');
+  const patch = calls.filter((c) => c.method === 'PATCH')[0];
+  ok('    it PATCHes the retry endpoint', !!patch && /\/api\/teacher\/classes\/CYBER-TEST\/retry$/.test(patch.url),
+    patch && patch.url);
+  ok('    with the mode the teacher picked', !!patch && JSON.parse(patch.body).retry_mode === 'none',
+    patch && patch.body);
+  ok('    and then re-reads the class rather than trusting its own click',
+    calls.some((c) => c.method === 'GET' && /\/progress$/.test(c.url)), calls.map((c) => c.method + ' ' + c.url));
+  ok('    landing on the mode the server reported back',
+    T.state.retryMode === 'none' && T.state.retryTypes.lesson === false,
+    [T.state.retryMode, T.state.retryTypes]);
+
+  //  A refused save must not leave the page showing the mode it failed to set.
+  console.log('   a refused save leaves the panel telling the truth');
+  sandbox.fetch = () => Promise.resolve({ ok: false, status: 403, json: () => Promise.resolve({ error: 'nope' }) });
+  sandbox.alert = () => {};
+  T.state.retryMode = 'practice';
+  T.state.retryTypes = T.typesForMode('practice');
+  await T.setRetryMode('all');
+  ok('    the mode is unchanged after a 403', T.state.retryMode === 'practice', T.state.retryMode);
+  ok('    and so is the grid it draws', T.state.retryTypes.quiz === false, T.state.retryTypes);
+
+  //  The tally spelling every other suite here uses, and the one
+  //  scripts/gate-suite-floor.js parses. This file printed "(72 passed)" with no
+  //  failure count, so a deploy gate could not read a verdict off it and refused
+  //  a green suite.
+  console.log('\n' + (fail === 0 ? 'ALL PASS' : 'FAILURES: ' + fail)
+    + '  ' + pass + ' passed, ' + fail + ' failed\n');
+  process.exit(fail === 0 ? 0 : 1);
+})().catch((e) => { console.error('\nSUITE ERROR:', e); process.exit(1); });
