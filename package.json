@@ -165,6 +165,7 @@
     "smoke:posthog": "node smoke/posthog.js",
     "smoke:answerkeys": "node smoke/answer-keys.js",
     "smoke:answerleak": "node smoke/answer-leak.js",
+    "smoke:csa19key": "node smoke/csa-19-key-repair.js",
     "measure:csau1leak": "node scripts/measure-csa-unit1-leak.js",
     "smoke:examkeyshapes": "node smoke/exam-key-shapes.js",
     "smoke:cspunittests": "node smoke/csp-unit-tests.js",
