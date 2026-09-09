@@ -1,0 +1,579 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At"
+"ap-cyber-unit-4-lesson-1-quiz","MERGE","Lesson 4.1 Quiz","<!-- ====== UNIT 4 UCNAV BLOCK (injected) ====== -->
+<style>
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none;}}
+</style>
+<style>#ucnav .ucn-extra{display:inline-block!important;font-size:9px!important;font-weight:700!important;letter-spacing:.03em!important;text-transform:uppercase!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;border:1px solid #E8A020!important;border-radius:6px!important;padding:0 5px!important;margin:0 5px!important;vertical-align:middle!important;}</style><div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 4</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Device Types and Vulnerabilities"">4.1 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-1"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-1-quiz"" class=""ucn-step current"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Malware and Malicious Software"">4.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-2"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-2-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Authentication and Access Control"">4.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-3"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-3-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Device Hardening and Configuration"">4.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-4"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-4-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Securing IoT and Embedded Devices (enrichment, beyond the CED)"">4.5 <span class=""ucn-extra"">Beyond CED</span> <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-4-lesson-5"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-4-lesson-5-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+  </div>
+</div>
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){
+function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper')||document.querySelector('[data-lesson-id]')||document.querySelector('[id^=""u3l""]')||document.querySelector('[id^=""u1l""]')||document.querySelector('[id^=""u2l""]');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}
+function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}
+requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);
+window.addEventListener('resize',pos,{passive:true});
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^=""u3l""]')||document.querySelector('[id^=""u1l""]')||document.querySelector('[id^=""u2l""]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^=""u3l""]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);
+var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});
+var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
+})();
+</script>
+<!-- ====== END UCNAV BLOCK ====== -->
+<!-- AP CYBERSECURITY UNIT 4 LESSON 2 - QUIZ
+  Handle: ap-cyber-unit-4-lesson-2-quiz
+  Wrapper: #apcyber-l41-quiz
+  5 questions, timer, balanced answer key (1A 2B 1C 1D), HTML entities only. -->
+
+<style>
+/* ===== SHOPIFY TITLE RESET ===== */
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== ROOT RESET ===== */
+#apcyber-l41-quiz{
+  all:initial!important;
+  display:block!important;
+  font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;
+  background:#ffffff!important;
+  line-height:1.7!important;
+  -webkit-font-smoothing:antialiased!important;
+  max-width:860px!important;
+  margin:0 auto!important;
+  padding:0 16px 60px!important;
+}
+#apcyber-l41-quiz *{box-sizing:border-box!important;}
+
+/* ===== BREADCRUMB ===== */
+#apcyber-l41-quiz .l-breadcrumb{
+  font-size:12px!important;color:#6B7280!important;
+  padding:18px 0 0!important;font-family:'Georgia',serif!important;
+}
+#apcyber-l41-quiz a.l-breadcrumb-link:link,#apcyber-l41-quiz a.l-breadcrumb-link:visited{
+  color:#7C3AED!important;text-decoration:none!important;
+}
+#apcyber-l41-quiz a.l-breadcrumb-link:hover{text-decoration:underline!important;}
+
+/* ===== HEADER ===== */
+#apcyber-l41-quiz .l-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#4C1D95 100%)!important;
+  border-radius:12px!important;padding:36px 32px 32px!important;
+  margin:16px 0 32px!important;color:#ffffff!important;
+}
+#apcyber-l41-quiz .l-unit-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;margin:0 0 10px!important;display:block!important;
+}
+#apcyber-l41-quiz .l-title{
+  font-size:28px!important;font-weight:700!important;color:#ffffff!important;
+  font-family:'Georgia',serif!important;margin:0 0 12px!important;line-height:1.3!important;
+}
+#apcyber-l41-quiz .l-meta{
+  font-size:13px!important;color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;margin:0!important;
+}
+
+/* ===== OBJECTIVES / INSTRUCTION CALLOUT ===== */
+#apcyber-l41-quiz .l-objectives{
+  background:#F5F0FF!important;border-left:4px solid #7C3AED!important;
+  border-radius:0 10px 10px 0!important;padding:20px 24px!important;margin:0 0 32px!important;
+}
+#apcyber-l41-quiz .l-objectives-title{
+  font-size:13px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1px!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;margin:0 0 12px!important;display:block!important;
+}
+#apcyber-l41-quiz .l-objectives ul{margin:0!important;padding:0 0 0 20px!important;}
+#apcyber-l41-quiz .l-objectives li{
+  font-size:14px!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:0 0 6px!important;line-height:1.6!important;
+}
+#apcyber-l41-quiz .l-objectives p{
+  font-size:14px!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:0 0 8px!important;line-height:1.6!important;
+}
+#apcyber-l41-quiz .l-objectives p:last-child{margin:0!important;}
+
+/* ===== SECTION HEADINGS ===== */
+#apcyber-l41-quiz .l-h2{
+  font-size:20px!important;font-weight:700!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:36px 0 14px!important;
+  padding-bottom:8px!important;border-bottom:2px solid #EDE9FE!important;
+}
+#apcyber-l41-quiz .l-h3{
+  font-size:16px!important;font-weight:700!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;margin:24px 0 10px!important;
+}
+
+/* ===== BODY TEXT ===== */
+#apcyber-l41-quiz .l-p{
+  font-size:15px!important;color:#374151!important;
+  font-family:'Georgia',serif!important;margin:0 0 14px!important;line-height:1.75!important;
+}
+#apcyber-l41-quiz .l-p code,#apcyber-l41-quiz .l-q-stem code,#apcyber-l41-quiz .l-scenario code,#apcyber-l41-quiz .l-predict code{
+  font-family:'Consolas','Courier New',monospace!important;
+  background:#EDE9FE!important;color:#4C1D95!important;
+  padding:1px 6px!important;border-radius:4px!important;font-size:13px!important;
+}
+
+/* ===== SCENARIO BOX ===== */
+#apcyber-l41-quiz .l-scenario{
+  background:#FFFBEB!important;border:1px solid #FDE68A!important;
+  border-left:4px solid #D97706!important;border-radius:8px!important;
+  padding:18px 20px!important;margin:20px 0 28px!important;
+}
+#apcyber-l41-quiz .l-scenario-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;color:#D97706!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 8px!important;
+}
+#apcyber-l41-quiz .l-scenario p{
+  font-size:14px!important;color:#374151!important;
+  font-family:'Georgia',serif!important;margin:0 0 8px!important;line-height:1.7!important;
+}
+#apcyber-l41-quiz .l-scenario pre{
+  font-family:'Consolas','Courier New',monospace!important;
+  background:#1E1B4B!important;color:#E5E7EB!important;
+  padding:12px 14px!important;border-radius:6px!important;
+  font-size:12px!important;margin:8px 0!important;
+  white-space:pre!important;overflow-x:auto!important;line-height:1.5!important;
+}
+#apcyber-l41-quiz .l-scenario p:last-child{margin:0!important;}
+
+/* ===== CFU / QUESTION BLOCK ===== */
+#apcyber-l41-quiz .l-cfu{
+  background:#1E1B4B!important;border-radius:12px!important;
+  padding:28px 28px 24px!important;margin:36px 0 28px!important;
+}
+#apcyber-l41-quiz .l-cfu-title{
+  font-size:14px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1.5px!important;color:#C4B5FD!important;
+  font-family:'Georgia',serif!important;margin:0 0 20px!important;display:block!important;
+}
+#apcyber-l41-quiz .l-q{
+  background:#ffffff!important;border-radius:8px!important;
+  padding:20px!important;margin:0 0 16px!important;
+}
+#apcyber-l41-quiz .l-q:last-child{margin:0!important;}
+#apcyber-l41-quiz .l-q-num{
+  font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1px!important;color:#7C3AED!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 8px!important;
+}
+#apcyber-l41-quiz .l-q-stem{
+  font-size:14px!important;font-weight:700!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:0 0 14px!important;
+  line-height:1.6!important;display:block!important;
+}
+#apcyber-l41-quiz .l-q-stem pre,#apcyber-l41-quiz .l-q pre{
+  font-family:'Consolas','Courier New',monospace!important;
+  background:#1E1B4B!important;color:#E5E7EB!important;
+  padding:12px 14px!important;border-radius:6px!important;
+  font-size:12px!important;margin:10px 0!important;
+  white-space:pre!important;overflow-x:auto!important;line-height:1.5!important;font-weight:400!important;
+}
+
+/* ===== PREDICT-FIRST GATE ===== */
+#apcyber-l41-quiz .l-predict{
+  background:#F5F0FF!important;border:1px dashed #A855F7!important;
+  border-radius:8px!important;padding:14px 16px!important;margin:0 0 14px!important;
+}
+#apcyber-l41-quiz .l-predict-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 6px!important;
+}
+#apcyber-l41-quiz .l-predict-text{
+  font-size:13px!important;color:#4C1D95!important;
+  font-family:'Georgia',serif!important;margin:0 0 10px!important;line-height:1.6!important;
+  display:block!important;
+}
+#apcyber-l41-quiz .l-predict textarea{
+  width:100%!important;min-height:60px!important;
+  border:1px solid #C4B5FD!important;border-radius:6px!important;
+  padding:8px 10px!important;font-family:'Georgia',serif!important;
+  font-size:13px!important;color:#1E1B4B!important;background:#ffffff!important;
+  outline:none!important;resize:vertical!important;
+}
+
+/* ===== MCQ OPTIONS ===== */
+#apcyber-l41-quiz .l-options{list-style:none!important;margin:0 0 12px!important;padding:0!important;}
+#apcyber-l41-quiz .l-options li{margin:0 0 8px!important;padding:0!important;}
+#apcyber-l41-quiz .l-options label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  cursor:pointer!important;font-size:14px!important;color:#374151!important;
+  font-family:'Georgia',serif!important;line-height:1.5!important;
+}
+#apcyber-l41-quiz .l-options input[type=""radio""],#apcyber-l41-quiz .l-options input[type=""checkbox""]{
+  margin-top:3px!important;flex-shrink:0!important;accent-color:#7C3AED!important;
+}
+
+/* ===== TEXT INPUT ===== */
+#apcyber-l41-quiz .l-text-input{
+  width:100%!important;padding:8px 10px!important;
+  border:1px solid #D1D5DB!important;border-radius:6px!important;
+  font-family:'Georgia',serif!important;font-size:13px!important;
+  color:#1E1B4B!important;background:#ffffff!important;outline:none!important;
+  margin:0 0 10px!important;
+}
+
+/* ===== MATCHING ===== */
+#apcyber-l41-quiz .l-match-row{
+  display:flex!important;align-items:center!important;gap:10px!important;
+  margin:0 0 10px!important;flex-wrap:wrap!important;
+}
+#apcyber-l41-quiz .l-match-term{
+  font-size:13px!important;font-weight:700!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;min-width:200px!important;flex-shrink:0!important;
+}
+#apcyber-l41-quiz .l-match-select{
+  font-size:13px!important;font-family:'Georgia',serif!important;
+  padding:6px 10px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;
+  color:#374151!important;background:#ffffff!important;flex:1!important;min-width:180px!important;
+}
+
+/* ===== BUTTONS ===== */
+#apcyber-l41-quiz .l-check-btn{
+  display:inline-block!important;background:#7C3AED!important;
+  color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+  font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;
+  padding:9px 22px!important;border-radius:6px!important;border:none!important;
+  cursor:pointer!important;margin-top:6px!important;
+}
+#apcyber-l41-quiz button.l-check-btn:hover{background:#6B21A8!important;}
+#apcyber-l41-quiz .l-reveal-btn{
+  display:inline-block!important;background:transparent!important;
+  color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;
+  font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;
+  padding:6px 14px!important;border-radius:6px!important;border:1px solid #7C3AED!important;
+  cursor:pointer!important;margin:6px 8px 6px 0!important;
+}
+#apcyber-l41-quiz button.l-reveal-btn:hover{background:#F5F0FF!important;}
+
+/* ===== FEEDBACK ===== */
+#apcyber-l41-quiz .l-feedback{
+  display:none!important;margin-top:12px!important;padding:12px 16px!important;
+  border-radius:6px!important;font-size:13px!important;
+  font-family:'Georgia',serif!important;line-height:1.6!important;
+}
+#apcyber-l41-quiz .l-feedback.correct{
+  background:#F0FDF4!important;border:1px solid #BBF7D0!important;color:#14532D!important;
+}
+#apcyber-l41-quiz .l-feedback.incorrect{
+  background:#FEF2F2!important;border:1px solid #FECACA!important;color:#7F1D1D!important;
+}
+#apcyber-l41-quiz .l-feedback.neutral{
+  background:#F5F0FF!important;border:1px solid #DDD6FE!important;color:#4C1D95!important;
+}
+#apcyber-l41-quiz .l-feedback.shown{display:block!important;}
+
+/* ===== SCORE PANEL ===== */
+#apcyber-l41-quiz .l-score-panel{
+  display:none!important;background:#F5F0FF!important;border:2px solid #DDD6FE!important;
+  border-radius:10px!important;padding:20px!important;margin-top:20px!important;text-align:center!important;
+}
+#apcyber-l41-quiz .l-score-panel.shown{display:block!important;}
+#apcyber-l41-quiz .l-score-num{
+  font-size:36px!important;font-weight:700!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 6px!important;
+}
+#apcyber-l41-quiz .l-score-label{
+  font-size:13px!important;color:#4B5563!important;font-family:'Georgia',serif!important;
+}
+
+/* ===== EXAM TIP ===== */
+#apcyber-l41-quiz .l-exam-tip{
+  background:#EDE9FE!important;border:1px solid #DDD6FE!important;
+  border-left:4px solid #6B21A8!important;border-radius:8px!important;
+  padding:16px 20px!important;margin:28px 0!important;
+}
+#apcyber-l41-quiz .l-exam-tip-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;color:#6B21A8!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 6px!important;
+}
+#apcyber-l41-quiz .l-exam-tip p{
+  font-size:14px!important;color:#1E1B4B!important;
+  font-family:'Georgia',serif!important;margin:0!important;line-height:1.7!important;
+}
+
+/* ===== EXTENSION CHALLENGE ===== */
+#apcyber-l41-quiz .l-extension{
+  background:#F9FAFB!important;border:1px solid #E5E7EB!important;
+  border-top:3px solid #15803D!important;border-radius:8px!important;
+  padding:18px 20px!important;margin:28px 0!important;
+}
+#apcyber-l41-quiz .l-extension-label{
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;color:#15803D!important;
+  font-family:'Georgia',serif!important;display:block!important;margin:0 0 8px!important;
+}
+#apcyber-l41-quiz .l-extension p{
+  font-size:14px!important;color:#374151!important;
+  font-family:'Georgia',serif!important;margin:0 0 8px!important;line-height:1.7!important;
+}
+#apcyber-l41-quiz .l-extension p:last-child{margin:0!important;}
+
+/* ===== TIMER (quiz only) ===== */
+#apcyber-l41-quiz .l-timer{
+  display:inline-block!important;background:#3B0764!important;color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  padding:8px 14px!important;border-radius:6px!important;
+  font-family:'Consolas','Courier New',monospace!important;
+  font-size:14px!important;font-weight:700!important;letter-spacing:1px!important;
+  margin:0 0 16px!important;
+}
+
+/* ===== NAV ===== */
+#apcyber-l41-quiz .l-nav{
+  display:flex!important;justify-content:space-between!important;align-items:center!important;
+  margin:40px 0 0!important;gap:12px!important;flex-wrap:wrap!important;
+}
+#apcyber-l41-quiz a.l-nav-btn:link,#apcyber-l41-quiz a.l-nav-btn:visited{
+  display:inline-block!important;padding:11px 22px!important;border-radius:8px!important;
+  font-size:13px!important;font-weight:700!important;font-family:'Georgia',serif!important;
+  text-decoration:none!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+  background:#7C3AED!important;
+}
+#apcyber-l41-quiz a.l-nav-btn:hover{background:#6B21A8!important;}
+#apcyber-l41-quiz a.l-nav-btn.outline:link,#apcyber-l41-quiz a.l-nav-btn.outline:visited{
+  background:transparent!important;color:#7C3AED!important;
+  -webkit-text-fill-color:#7C3AED!important;border:2px solid #7C3AED!important;
+}
+#apcyber-l41-quiz a.l-nav-btn.outline:hover{background:#F5F0FF!important;}
+</style>
+
+<div id=""apcyber-l41-quiz"" data-lesson-id=""4.1"">
+
+  <nav class=""l-breadcrumb"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""l-breadcrumb-link"">AP Cybersecurity</a>
+     › 
+    <a href=""/pages/ap-cybersecurity-unit-4-securing-devices"" class=""l-breadcrumb-link"">Unit 4</a>
+     › 
+    <a href=""/pages/ap-cyber-unit-4-lesson-1"" class=""l-breadcrumb-link"">Lesson 4.1</a>
+     ›  Quiz
+  </nav>
+
+  <div class=""l-header"">
+    <span class=""l-unit-label"">Lesson 4.1 — Device Vulnerabilities &amp; Attacks  ·  Quiz</span>
+    <h1 class=""l-title"">Lesson 4.1 Quiz</h1>
+    <p class=""l-meta"">6 questions  ·  7-minute target  ·  Instant feedback  ·  AP exam format</p>
+  </div>
+
+  <div class=""l-objectives"">
+    <span class=""l-objectives-title"">🎯 Quiz Instructions</span>
+    <p>Answer all 6 questions. Click <strong>Check Answer</strong> after each to see the explanation. Your score appears after the last question. Target: 5 of 6 or better before moving to Lesson 4.2.</p>
+    <p><span class=""l-timer"" id=""timer"">00:00</span></p>
+  </div>
+
+  <div class=""l-cfu"">
+    <span class=""l-cfu-title"">✎ Lesson 4.1 Quiz</span>
+
+    <div class=""l-q"" id=""q1"">
+      <span class=""l-q-num"">Question 1 of 6</span>
+      <span class=""l-q-stem"">A consultant reviewing a municipal water-treatment plant argues that its embedded controllers should be the LOWEST patching priority “because embedded devices are slow, cheap, and store almost no data.” The flaw in this reasoning is BEST described as:</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q1"" value=""A""> (A) The reasoning is sound — low-resource devices hold little of value to an adversary.</label></li>
+        <li><label><input type=""radio"" name=""q1"" value=""B""> (B) Embedded devices actually store more data than servers, so they should rank higher.</label></li>
+        <li><label><input type=""radio"" name=""q1"" value=""C""> (C) It confuses a device’s physical limits with its security impact; critical-infrastructure embedded devices are high-priority targets.</label></li>
+        <li><label><input type=""radio"" name=""q1"" value=""D""> (D) Embedded devices run anti-malware as easily as personal computers, so they are equally defensible either way.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q1','C','The CED stresses that embedded/IoT devices in critical infrastructure tie digital failure to physical consequences, so physical limits do not make them low priority. A and D misstate CED facts; B is simply false.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q1-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q2"">
+      <span class=""l-q-num"">Question 2 of 6</span>
+      <span class=""l-q-stem"">Which of the following statements about malware are <strong>TRUE</strong>?<br>I. A virus requires a user to execute or open a file to activate, whereas a worm spreads between computers without human interaction.<br>II. Fileless malware hides its code inside files that are concealed from the operating system, which is why anti-malware cannot scan it.<br>III. A rootkit embeds itself in the operating system and can make itself invisible to detection.</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q2"" value=""A""> (A) I only</label></li>
+        <li><label><input type=""radio"" name=""q2"" value=""B""> (B) I and III only</label></li>
+        <li><label><input type=""radio"" name=""q2"" value=""C""> (C) II and III only</label></li>
+        <li><label><input type=""radio"" name=""q2"" value=""D""> (D) I, II, and III</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q2','B','I and III are exact CED facts. II is false: fileless malware lives in RAM and abuses legitimate installed programs — it has no file for a signature scan to match, which is a different reason than hiding files.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q2-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q3"">
+      <span class=""l-q-num"">Question 3 of 6</span>
+      <span class=""l-q-stem"">Each pairing below matches a device exploitation vector with a valid defense <strong>EXCEPT</strong>:</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q3"" value=""A""> (A) Unpatched software → apply vendor patches and OS updates promptly.</label></li>
+        <li><label><input type=""radio"" name=""q3"" value=""B""> (B) Open ports → use a host-based firewall to close ports and services not in use.</label></li>
+        <li><label><input type=""radio"" name=""q3"" value=""C""> (C) Autorun enabled → disable autorun and restrict external drives by policy.</label></li>
+        <li><label><input type=""radio"" name=""q3"" value=""D""> (D) Fileless malware → install signature-based anti-malware to detect and remove it.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q3','D','D is the mismatch. Signature-based anti-malware scans files; fileless malware leaves no file to match, so it is the boundary case anti-malware does not cover. A, B, and C are correct CED vector-defense pairings.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q3-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q4"">
+      <span class=""l-q-num"">Question 4 of 6</span>
+      <span class=""l-q-stem"">An analyst confirms a compromised workstation has no malicious files on disk; the malicious activity runs entirely in memory using the system’s own PowerShell, and a full signature-based scan comes back clean. The BEST explanation is:</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q4"" value=""A""> (A) The threat is fileless malware, which resides in RAM and abuses legitimate installed programs, so a file-signature scan has nothing to match.</label></li>
+        <li><label><input type=""radio"" name=""q4"" value=""B""> (B) The anti-malware database is merely outdated and a quick update will reveal the file.</label></li>
+        <li><label><input type=""radio"" name=""q4"" value=""C""> (C) The workstation was never compromised, since a clean signature scan is definitive.</label></li>
+        <li><label><input type=""radio"" name=""q4"" value=""D""> (D) The malware is a rootkit that deleted all of its own files immediately after installation.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q4','A','The evidence — no files, activity entirely in memory via a legitimate program — matches fileless malware. B, C, and D all contradict the stated finding that the activity runs in RAM with no file present.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q4-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q5"">
+      <span class=""l-q-num"">Question 5 of 6</span>
+      <span class=""l-q-stem"">Using the High/Moderate/Low device-risk framework, which assessment is MOST defensible?</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q5"" value=""A""> (A) A public-facing server missing critical OS patches is Low risk because servers are professionally managed.</label></li>
+        <li><label><input type=""radio"" name=""q5"" value=""B""> (B) A water-treatment controller reachable only through a password-protected internal interface is Moderate risk, because weak authentication is the main remaining exposure.</label></li>
+        <li><label><input type=""radio"" name=""q5"" value=""C""> (C) A personal laptop with no firewall and reused passwords is Low risk because only one person uses it.</label></li>
+        <li><label><input type=""radio"" name=""q5"" value=""D""> (D) An embedded medical device with no anti-malware and an open management port is Low risk because embedded devices are rarely targeted.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q5','B','This matches the CED water-treatment example, rated Moderate precisely because weak authentication is the key residual exposure once access is limited to an internal interface. A, C, and D all understate clearly high-exposure conditions.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q5-fb""></div>
+    </div>
+
+    <div class=""l-q"" id=""q6"">
+      <span class=""l-q-num"">Question 6 of 6</span>
+      <span class=""l-q-stem"">Malware infects one machine on a hospital network and, with no further user action, copies itself to roughly 200 other machines within minutes, degrading network performance. Which malware type is this, and which CIA principle does it most directly threaten?</span>
+      <ul class=""l-options"">
+        <li><label><input type=""radio"" name=""q6"" value=""A""> (A) Virus, most directly tied to Confidentiality.</label></li>
+        <li><label><input type=""radio"" name=""q6"" value=""B""> (B) Trojan (RAT), most directly tied to Integrity.</label></li>
+        <li><label><input type=""radio"" name=""q6"" value=""C""> (C) Worm, most directly tied to Availability.</label></li>
+        <li><label><input type=""radio"" name=""q6"" value=""D""> (D) Logic bomb, most directly tied to Availability.</label></li>
+      </ul>
+      <button class=""l-check-btn"" onclick=""checkMCQ('q6','C','Self-replication with no user action is the defining trait of a worm, and the CED ties worms to Availability because they consume resources as they spread. A virus needs user activation; a Trojan is disguised software the user installs; a logic bomb waits for a trigger condition.')"">Check Answer</button>
+      <div class=""l-feedback"" id=""q6-fb""></div>
+    </div>
+
+    <div class=""l-score-panel"" id=""results-panel"">
+      <span class=""l-score-num"" id=""r-score"">0 / 6</span>
+      <span class=""l-score-label"">Quiz complete — review any missed questions. 5+/6 means you are ready for Lesson 4.2.</span>
+    </div>
+  </div>
+
+  <div class=""l-nav"">
+    <a href=""/pages/ap-cyber-unit-4-lesson-1-lab"" class=""l-nav-btn outline"">← Back to Lab</a>
+    <a href=""/pages/ap-cyber-unit-4-lesson-1"" class=""l-nav-btn"">Review Lesson 4.1</a>
+  </div>
+
+</div><!-- end #apcyber-l41-quiz -->
+
+<script>
+(function(){
+  var qs=Array.prototype.slice.call(document.querySelectorAll('#apcyber-l41-quiz .l-q'));
+  var TOTAL=qs.length, answered={}, scores={};
+  qs.forEach(function(q){answered[q.id]=false;scores[q.id]=0;});
+  var start=Date.now(), timerEl=document.getElementById('timer');
+  function fmt(n){return (n<10?'0':'')+n;}
+  setInterval(function(){if(!timerEl)return;var e=Math.floor((Date.now()-start)/1000);timerEl.textContent=fmt(Math.floor(e/60))+':'+fmt(e%60);},1000);
+  function updatePanel(){var done=qs.every(function(q){return answered[q.id];});if(done){var t=qs.reduce(function(a,q){return a+scores[q.id];},0);var n=document.getElementById('r-score');if(n)n.textContent=t+' / '+TOTAL;var p=document.getElementById('results-panel');if(p)p.classList.add('shown');}}
+  function show(id,ok,msg){var el=document.getElementById(id);if(!el)return;el.textContent=(ok?'✓ Correct. ':'✗ Not quite. ')+msg;el.className='l-feedback shown '+(ok?'correct':'incorrect');}
+  window.checkMCQ=function(qid,correctVal,explanation){if(answered[qid])return;var sel=document.querySelector('input[name=""'+qid+'""]:checked');if(!sel){alert('Please select an answer first.');return;}var ok=(sel.value===correctVal);scores[qid]=ok?1:0;answered[qid]=true;show(qid+'-fb',ok,ok?explanation:'The correct answer is ('+correctVal+'). '+explanation);updatePanel();};
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id=""apcyber-activity-nav""><div class=""aan-card"">
+<span class=""aan-eyebrow"">AP Cybersecurity · Unit 4 · Lesson 4.1 · Quiz</span><div class=""aan-strip"">
+<a class=""aan-chip"" href=""/pages/ap-cyber-unit-4-lesson-1"">Lesson</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-4-lesson-1-exercise-1"">Exercise 1</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-4-lesson-1-exercise-2"">Exercise 2</a><span class=""aan-sep"">•</span><a class=""aan-chip"" href=""/pages/ap-cyber-unit-4-lesson-1-lab"">Lab</a><span class=""aan-sep"">•</span><span class=""aan-chip cur"">Quiz</span><span class=""aan-sep"">•</span><a class=""aan-chip next"" href=""/pages/ap-cyber-unit-4-lesson-2"">Next: 4.2 Authentication →</a>
+</div>
+<div class=""aan-up"">
+<span class=""aan-lbl"">Back to:</span><a href=""/pages/ap-cyber-unit-4-lesson-1"">Lesson 4.1</a><a href=""/pages/ap-cybersecurity-unit-4-securing-devices"">Unit 4 Study Guide</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->","TRUE","2026-03-01 12:00:00"

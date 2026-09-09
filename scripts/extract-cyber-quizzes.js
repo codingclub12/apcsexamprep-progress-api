@@ -283,4 +283,7 @@ if (require.main === module) {
   if (problems.length) process.exitCode = 1;
 }
 
-module.exports = { extract };
+//  `problems` is module-level and ACCUMULATES across calls in one process.
+//  It is exported so a caller can say WHY a quiz was refused rather than only
+//  that it is missing from the array; snapshot its length before calling.
+module.exports = { extract, problems };
