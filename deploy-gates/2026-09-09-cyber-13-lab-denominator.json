@@ -1,0 +1,65 @@
+{
+  "change": "price the Cyber 1.3 lab at 24, so a student's lab work shows as points and counts in the lesson total instead of printing a bare percent",
+  "_reported": "Tanner, 2026-09-09, from his own gradebook: \"29% not 7/24\". The 1.3 Lab cell read 29%* while every other cell in that row showed a points pair, and 29 percent of 24 is 6.96, which rounds to the 7 he expected.",
+  "_root_cause": "'1.3|lab' was in NEITHER table in scripts/seed-cyber-denominators.js: not priced, and not parked in MEASURED_UNPRICEABLE with a blocker either. Just absent. An unpriced column keeps its percent, is marked provisional and is left OUT of the points total, so the 1.3 row read 12/53 with the lab excluded while the unit percentage counted it.",
+  "_evidence_for_24": "Read from the page that owns the activity, which is the rule this seeder states about every value it holds. /pages/ap-cyber-unit-1-lesson-3-lab carries <span id=\"labTotal\">0</span> / 24 pts in its #labDone panel. Same shape and same number as '1.4|lab', whose comment already reads \"labTotal sums all parts, rendered / 24 pts\".",
+  "_the_guard_was_asserting_the_bug": "smoke/cyber-denominators.js pinned lesson 1.3 at THREE priced columns, so the missing lab was not merely uncaught, it was required. The comment ten lines above it describes this exact failure about 1.1 lab: \"in NEITHER table, which is the quietest way for a column to go missing\". A bare count of what was authored on the day cannot tell \"all of them\" from \"all the ones we happened to write down\". It asserts the four column names now.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the cyber denominator suite, now naming the 1.3 columns instead of counting them",
+      "command": "node scripts/gate-suite-floor.js cyberdenoms 76",
+      "expect": "GATE OK",
+      "_why": "74 before this change, 76 after: the count assertion became two, one for the set and one for the value."
+    },
+    {
+      "kind": "suite",
+      "name": "the student page, which is where the wrong cell was seen",
+      "command": "node scripts/gate-suite-floor.js myprogress 31",
+      "expect": "GATE OK"
+    },
+    {
+      "kind": "suite",
+      "name": "the denominator safety net, unchanged by this and re-run because a value moved",
+      "command": "node scripts/gate-suite-floor.js denomsafety 11",
+      "expect": "GATE OK"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE REPORTED BUG: the 1.3 lab goes back to having no authored total",
+      "_why": "Reproduces the cell Tanner photographed. With no row, the page prints the percent alone and the lesson total drops the lab.",
+      "file": "scripts/seed-cyber-denominators.js",
+      "find": "  '1.3|lab': 24,              // labTotal in the #labDone panel, rendered \"/ 24 pts\"\n",
+      "replace": "",
+      "command": "npm run --silent smoke:cyberdenoms",
+      "expect_failure": "[FAIL]   every 1.3 column is priced, by name"
+    },
+    {
+      "kind": "mutation",
+      "name": "and priced at a number the page does not state",
+      "_why": "Independent of the rule above and it breaks a different assertion. A column priced wrong is worse than one priced not at all: it regrades a class quietly, where an absent one only declines to show a pair.",
+      "file": "scripts/seed-cyber-denominators.js",
+      "find": "  '1.3|lab': 24,              // labTotal in the #labDone panel, rendered \"/ 24 pts\"",
+      "replace": "  '1.3|lab': 30,              // labTotal in the #labDone panel, rendered \"/ 24 pts\"",
+      "command": "npm run --silent smoke:cyberdenoms",
+      "expect_failure": "[FAIL]   including the lab, at 24"
+    },
+    {
+      "kind": "mutation",
+      "name": "a substitute column keeps the COUNT at four while the lab is gone",
+      "_why": "This is the one that shows why the guard had to stop counting. Swap the lab for any other 1.3 column and the old assertion, l13.length === 3 or >= 3, is just as happy: three or four columns are priced either way and the lab is missing. Naming them is what notices. One edit, one file, and it has to trip the name assertion.",
+      "file": "scripts/seed-cyber-denominators.js",
+      "find": "  '1.3|lab': 24,              // labTotal in the #labDone panel, rendered \"/ 24 pts\"",
+      "replace": "  '1.3|reading': 24,          // a substitute column, so the count is unchanged",
+      "command": "npm run --silent smoke:cyberdenoms",
+      "expect_failure": "[FAIL]   every 1.3 column is priced, by name"
+    },
+    {
+      "kind": "live",
+      "name": "production is seeding one more cyber denominator than it was",
+      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health | python3 -c \"import sys,json; d=json.load(sys.stdin)['seed']['seeds']['cyber_denominators']; print('cyber_denominators total=' + str(d['total']) + ' would_add=' + str(d['would_add']))\"",
+      "expect": "cyber_denominators total=96 would_add=0",
+      "_why": "FALSE before this deploy and measured that way: at 00:06 UTC today the same command answered total=95 would_add=0. The pair matters rather than the count alone. total=96 says the row landed; would_add=0 says the seeder has nothing left it wanted to write, so the number moved because this change shipped and not because the seeder is sitting on a backlog it cannot apply."
+    }
+  ]
+}
