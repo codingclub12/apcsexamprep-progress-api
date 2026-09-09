@@ -1,0 +1,61 @@
+{
+  "change": "ship the answer-leak detector, its mutation-tested guard, and the live Unit 1 measurement. Adds no route and no runtime behaviour: nothing under routes/ or server.js requires lib/answer-leak.js, so production's behaviour after this deploy is identical and the live check below can only pin that the build shipped.",
+  "_what_was_found": "All 15 AP CSA Unit 1 lesson pages carry their own answer key in the stored body. 207 disclosures, 102 of them on items that report a grade. The 45 debug, exercise-1 and frq pages are clean, which is what says this is the lesson template rather than the unit.",
+  "_why_a_module_and_not_a_grep": "The key is disclosed three ways: 128 data-answer attributes, 9 cloze blanks holding the answer text, and 70 HTML author comments naming the letter. Strip every attribute and the key is still readable in prose, so a sweep that greps for data-answer would report these pages fixed. That is the coverage failure the mojibake guard had, not a rule failure.",
+  "_the_bug_the_sweep_walked_into": "ap-csa-lesson-1-9-method-signatures item 1.9-cfu-1 stores its key as a newline then C. The page grades with chosen === correct against option letters that are exactly A B C D, no trim, so no option can ever match: nobody has been marked right on that question and the reporter posts 0 of 1 into the gradebook. Board 296. Found only because the first classifier read the untrimmed value, filed it as cloze prose, and disagreed with an earlier probe by one.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the answer-leak suite, all three rules and their negatives",
+      "command": "node scripts/gate-suite-floor.js answerleak 39",
+      "expect": "GATE OK",
+      "_why": "39 is the floor because a suite that silently stops running its cases is the failure a bare green cannot see."
+    },
+    {
+      "kind": "mutation",
+      "name": "the comment rule goes dead, and only it",
+      "_why": "This is the channel a pasted data-answer pattern misses, so it is the one whose loss must be loudest. The first draft of this same mutation inside the suite was hollow: /(?!)/ && /real/ returns the real regex because a regex object is truthy, so it broke nothing and section 5 would have passed on an unmutated rule.",
+      "file": "lib/answer-leak.js",
+      "find": "const DISCLOSES = /\\b",
+      "replace": "const DISCLOSES = /(?!)\\b",
+      "command": "npm run --silent smoke:answerleak",
+      "expect_failure": "FAIL  1.7 the comment channel is found"
+    },
+    {
+      "kind": "mutation",
+      "name": "MCQ letter keys stop being reported, while cloze and comments still are",
+      "_why": "Independent of the rule above and it breaks a different assertion. This is the 128-of-207 channel and the one carrying every graded item id.",
+      "file": "lib/answer-leak.js",
+      "find": "    const trimmed = value.trim();",
+      "replace": "    const trimmed = value.trim();\n    if (/^[A-D]$/.test(trimmed)) continue;",
+      "command": "npm run --silent smoke:answerleak",
+      "expect_failure": "FAIL  1.1 a graded MCQ attribute is found"
+    },
+    {
+      "kind": "mutation",
+      "name": "the trim comes out, and the live 1.9 case goes back to being misfiled",
+      "_why": "The one mutation built from a defect that is live rather than invented. Without the trim, data-answer=\"\\nC\" is not a lone letter, so it classifies as cloze prose and the padded flag that names an ungradeable item disappears. That is exactly how this session first reported it, and the discrepancy is the only reason board 296 exists.",
+      "file": "lib/answer-leak.js",
+      "find": "    const trimmed = value.trim();",
+      "replace": "    const trimmed = value;",
+      "command": "npm run --silent smoke:answerleak",
+      "expect_failure": "FAIL  3b.1 classified as an MCQ key despite the padding"
+    },
+    {
+      "kind": "rederive",
+      "name": "a naive attribute count agrees with the module's classified sum",
+      "command": "node -e \"const sf=require('./lib/storefront-fetch');const leak=require('./lib/answer-leak');const {LESSONS}=require('./scripts/measure-csa-unit1-leak.js');let raw=0,mod=0;for(const l of LESSONS){const b=sf.pageBody('ap-csa-lesson-'+l).body_html;raw+=(b.match(/data-answer\\s*=/g)||[]).length;const s=leak.summarize(b);mod+=(s.byRule['mcq-answer-attribute']||0)+(s.byRule['cloze-answer-attribute']||0);}console.log('raw='+raw+' module='+mod+' agree='+(raw===mod));\"",
+      "expect": "raw=137 module=137 agree=true",
+      "_why": "A second method over the same raw artifact: a flat regex count of the attribute against the module's per-rule classification. If the module ever drops a channel or double-counts one, the two numbers separate. It cannot check the comment channel, which has no second count, and this manifest does not pretend otherwise.",
+      "_independence": "Written before the module, as a throwaway probe, and it said 137 while the module said 128 plus 9. That agreement is what makes the split into two rules checkable rather than asserted."
+    },
+    {
+      "kind": "live",
+      "name": "production is serving this commit",
+      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health | python3 -c \"import sys,json; print('commit=' + json.load(sys.stdin)['commit'])\"",
+      "expect": "commit=MERGE_SHA",
+      "_why": "FALSE before this deploy and measured that way: /api/health read commit=d8227a2 at 03:33 UTC, the base this branch was cut from. The change adds no route and moves no counter, so the sha is the only thing about production this deploy makes true. An assertion about behaviour would have passed yesterday and would be decoration.",
+      "_fill_in": "MERGE_SHA is the short sha of the merge commit and is unknowable until the merge happens, so this check runs after it, not with --pre."
+    }
+  ]
+}
