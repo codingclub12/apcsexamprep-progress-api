@@ -135,7 +135,7 @@ it.
 
 ## What I got wrong on the way
 
-Two things, both worth writing down because both looked like findings.
+Three things, all worth writing down because all three looked like findings.
 
 **The stale manifest row that never existed.** I read
 `retypeTerminalLabManifest`, saw it says in as many words that it does not touch
@@ -144,6 +144,16 @@ behind at Unit 1 when the spec moved. It reads exactly like a bug. Then I looked
 at the spec's history: it has said `unit-4` since the first commit, so there was
 never a move for the migration to miss. The comment was describing a real
 limitation of a migration that had nothing to do with this lab.
+
+**A live assertion that failed on a deploy that had worked.** The gate's live
+check asserted `would_add=0` from `/api/health`, and the deploy came back
+`total=96 changed=1 would_add=1`. `seedCyberDenominators` computes `wouldAdd`
+BEFORE it inserts and returns it unchanged, so on the very boot that adds a row
+it necessarily reads 1 and only reaches 0 on the NEXT boot. I had read a
+pre-insert snapshot as post-state. `changed` is the field that says a row reached
+the volume, and the assertion is pinned to it now. The gate caught this on the
+one assertion nobody had run yet, which is the argument for the second run
+existing at all: a deferred live check that never runs is decoration.
 
 **A sheet that disagreed with my re-derivation, twice.** The parse-back diff on
 `ap-cybersecurity-practice` came back DIFFER, and both times it was my copy of
@@ -157,7 +167,13 @@ sheet is wrong.
 
 - **The sheet needs a human to import it.** Seven pages,
   `matrixify/cyber-lab-handle-repoint-pages.csv`. Until it lands, Topic 1.2 in
-  the Command Center still offers a Unit 4 lab.
+  the Command Center still offers a Unit 4 lab. Checked live at 02:30 UTC and
+  none of it has landed: all seven pages still carry the Unit 1 URL, the STU map
+  still files the lab under 1.2, the Unit 1 chip is still there and the practice
+  card still reads Unit 1 / Topic 1.2.
+- **The denominator half IS live.** `ae51060` deployed and the boot seed wrote
+  the row: `cyber_denominators total=96 changed=1`. The gate passes with three
+  kinds agreeing. The 1.3 Lab cell should read points now rather than `29%*`.
 - **The retry panel is a decision, above.** Nothing shipped for it.
 - **The item id is still `1.2-lab`.** Deliberately.
   `scripts/gen-cyber-lab-topic-retarget.js` records why: changing it is a data
