@@ -53,9 +53,9 @@
       "kind": "live",
       "name": "production is serving this commit",
       "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health | python3 -c \"import sys,json; print('commit=' + json.load(sys.stdin)['commit'])\"",
-      "expect": "commit=MERGE_SHA",
+      "expect": "commit=7eea084",
       "_why": "FALSE before this deploy and measured that way: /api/health read commit=d8227a2 at 03:33 UTC, the base this branch was cut from. The change adds no route and moves no counter, so the sha is the only thing about production this deploy makes true. An assertion about behaviour would have passed yesterday and would be decoration.",
-      "_fill_in": "MERGE_SHA is the short sha of the merge commit and is unknowable until the merge happens, so this check runs after it, not with --pre."
+      "_filled_in": "7eea084 is the merge commit of PR #635. Confirmed FALSE before the deploy twice over: /api/health read d8227a2 at 03:33 UTC, and 9758166 at 03:41 UTC after two other sessions merged #636 and #637 ahead of this one. Neither is 7eea084, and the sweep between them is why this pins a sha rather than a behaviour."
     }
   ]
 }
