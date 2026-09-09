@@ -42,6 +42,8 @@
     "cyber:ccunit3check": "node scripts/cyber-cc-unit3-check.js",
     "smoke:cyberccunit3ced": "node smoke/cyber-cc-unit3-ced-numbers.js",
     "smoke:cyberhubunit3ced": "node smoke/cyber-hub-unit3-ced-numbers.js",
+    "smoke:cyberstemreword": "node smoke/cyber-quiz-stem-reword.js",
+    "smoke:cyberextractqstem": "node smoke/cyber-quiz-extract-qstem.js",
     "verify:cyberquizmounts": "node scripts/verify-cyber-quiz-mounts.js",
     "smoke:denomsafety": "node smoke/denominator-safety.js",
     "smoke:scoreeventsource": "node smoke/score-event-source.js",

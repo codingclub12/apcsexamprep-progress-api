@@ -58,26 +58,43 @@ the argument for checking the neighbours of every report.
   docs/inbox/drafts/2026-09-07-michelle-locks-and-scores.md, every claim checked
   live that day and the check named beside it.
 - What the draft claims, and must stay consistent with:
-  - **CORRECTED 2026-09-09 BEFORE SENDING.** The draft originally claimed all
-    five Unit 1 quiz locks were real, measured from the quiz API alone. Only
-    1.1 and 1.2 are: a lock is real only where the PAGE asks the server for its
-    questions, and 1.3, 1.4 and 1.5 still carry their own ANSWERS object in the
-    page body, so the API's refusal is never reached. Her screenshot shows 1.3
-    locked, so this would have been a false assurance about a lock she is
-    actually relying on. All 26 cyber quiz pages audited for both halves:
-    2 real, 24 not. Board #276 is the migration.
-  - Her 1.1 and 1.2 locks are real and hold against a signed-out or incognito
-    student. Everything else, including the Unit Tests and Units 2 to 5, is the
-    link itself as the lock.
-  - Her Unit Test locks do nothing, and the unit test pages carry their
-    questions and answer key in the page source. She was told to treat the link
-    itself as the lock and hand it out on test day. Same for Units 2 to 5.
+  - **CORRECTED TWICE, most recently 2026-09-09, and the second correction
+    REVERSED the first.** Both errors were the same mistake made from opposite
+    ends: inheriting a live-state claim instead of re-measuring it.
+    Draft 1 said all five Unit 1 locks were real, on the quiz API alone. That is
+    half the question. A lock is real only where the PAGE asks the server rather
+    than shipping its own key, and on 2026-09-07 only 1.1 and 1.2 did.
+    Draft 2 said so. Within two days board #276 landed the page mounts, so draft
+    2 was stale in the other direction and would have told a teacher her working
+    locks were theatre.
+    Re-measured 2026-09-09 with `node scripts/verify-cyber-quiz-mounts.js`, which
+    reads both halves: **22 of 25 mounted and served, 3 still ship a key.** Her
+    Unit 1 is five for five. The roster is 25 pages, not 26; the 26th was 4.5,
+    untracked on 2026-09-03 and not a CED topic.
+  - All five of her Unit 1 quiz locks are real and hold against a signed-out or
+    incognito student.
+  - Three quizzes are still not locked: 2.3, 3.5, 4.1. All three await server
+    banks. The draft names them to her.
+  - Her Unit Test locks do nothing, and this is unchanged since 2026-09-07. None
+    of the five exam pages mounts and all five answer 404 from the quiz API. She
+    was told to treat the link itself as the lock and hand it out on test day.
+  - **FIVE of five publish their answer key, not four.** Unit 3 was reported
+    clean by `verify-cyber-quiz-mounts.js` while shipping `var CORR=[20 answers]`,
+    because that check was a list of NAMES and nobody had added that one. Board
+    #304: it now also matches the SHAPE of a key, proven by deleting CORR from
+    the name list and watching the shape detector still catch it. All 25 quiz
+    pages re-swept by shape: none carries a key-shaped literal, so the "22 of 25
+    locked" claim does not rest on the list that failed.
   - No date was given for moving the unit tests onto the server.
   - 1.1 Ex 1 was double counted, the percentages her students saw were always
     right, the Points column and letter grade will move slightly when the fix
     deploys, and nobody has to redo anything.
   - 1.1 Ex 2 is out of 15 and the header was stale. A student who sat the older
     8 question version keeps 5 out of 8 and is not rescaled.
+  - The 1.2 quiz page advertised 12 questions and ~25 minutes against a bank of
+    5 and its own blurb saying 10. The draft mentions it in one sentence, and
+    that sentence is FALSE until the sheet in PR #646 is imported. The draft
+    says so at the top.
 - **DECIDED 2026-09-08 by Tanner: she is NOT told about the other columns.**
   The check built off her email found six more priced wrong in her own course,
   1.4 and 1.5, including one where 46 students were shown their work out of 4.

@@ -1,0 +1,508 @@
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"Quiz","headline":"AP Cybersecurity 3.5 Quiz: IDS, IPS and SIEM","description":"Test your IDS, IPS, and SIEM knowledge with 10 hard AP Cybersecurity questions. Covers detection types, inline vs. passive, correlation, and alert fatigue.","author":{"@type":"Person","name":"Tanner Crow","url":"https://www.apcsexamprep.com/pages/ap-computer-science-a-tutor"},"publisher":{"@type":"Organization","name":"APCSExamPrep.com","url":"https://www.apcsexamprep.com"},"educationalLevel":"High School","inLanguage":"en-US"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.apcsexamprep.com"},{"@type":"ListItem","position":2,"name":"AP Cybersecurity","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"},{"@type":"ListItem","position":3,"name":"Unit 3: Securing Networks","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit3"},{"@type":"ListItem","position":4,"name":"Topic 3.5 Quiz: IDS, IPS and SIEM","item":"https://www.apcsexamprep.com/pages/ap-cyber-unit-3-lesson-5-quiz"}]}]
+</script>
+<style>
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#apcyber-wrapper{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper .exhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#apcyber-wrapper .exhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .exhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#apcyber-wrapper .exhero p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;}
+#apcyber-wrapper .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#apcyber-wrapper .score-val{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;}
+#apcyber-wrapper .scenario-card{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#apcyber-wrapper .sc-inner{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#apcyber-wrapper .sc-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .sc-title{font-family:Georgia,serif!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .sc-text{font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;}
+#apcyber-wrapper .sc-text p{margin:0 0 8px!important;}
+/* question blocks */
+#apcyber-wrapper .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#apcyber-wrapper .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#apcyber-wrapper .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#apcyber-wrapper .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#apcyber-wrapper .q-topic{font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .q-stem{padding:18px 18px 4px!important;font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .options{padding:4px 18px 16px!important;}
+#apcyber-wrapper .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .option-label.correct-opt{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .option-label.wrong-opt{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .option-label.neutral-opt{opacity:0.55!important;}
+#apcyber-wrapper .check-btn{
+  display:block!important;margin:0 18px 16px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#apcyber-wrapper .feedback-box{display:none!important;margin:0 18px 18px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .feedback-box.show{display:block!important;}
+#apcyber-wrapper .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#apcyber-wrapper .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#apcyber-wrapper .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+/* textarea/select for Ex2 format */
+#apcyber-wrapper .field-group{margin-bottom:14px!important;}
+#apcyber-wrapper .field-label{display:block!important;font-size:13px!important;font-weight:700!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .field-select{width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;appearance:auto!important;-webkit-appearance:auto!important;}
+#apcyber-wrapper .field-textarea{width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;resize:vertical!important;line-height:1.5!important;}
+#apcyber-wrapper .field-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:3px!important;}
+#apcyber-wrapper .pts-badge{display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;}
+#apcyber-wrapper .submit-part{display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* part blocks for Ex2/Lab */
+#apcyber-wrapper .part-block{border:1px solid #E5E7EB!important;border-radius:10px!important;margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;}
+#apcyber-wrapper .part-header{background:#F5F0FF!important;padding:16px 18px!important;border-bottom:1px solid #DDD6FE!important;}
+#apcyber-wrapper .part-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;margin-right:8px!important;}
+#apcyber-wrapper .part-title{font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;}
+#apcyber-wrapper .part-body{padding:18px!important;}
+#apcyber-wrapper .part-context{background:#F9FAFB!important;border-left:3px solid #A855F7!important;padding:12px 14px!important;border-radius:0 6px 6px 0!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt{font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .part-feedback{display:none!important;margin-top:16px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .part-feedback.show{display:block!important;}
+#apcyber-wrapper .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-model{background:#F5F0FF!important;border-left:3px solid #7C3AED!important;padding:10px 14px!important;border-radius:0 6px 6px 0!important;margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcyber-wrapper .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+/* results */
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 32px!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#apcyber-wrapper .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#apcyber-wrapper .results-btn{display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;}
+#apcyber-wrapper a.results-btn:link,#apcyber-wrapper a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#apcyber-wrapper .nav-links{max-width:800px!important;margin:0 auto 40px!important;display:flex!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;}
+#apcyber-wrapper .nav-link{display:inline-block!important;padding:10px 20px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-link:link,#apcyber-wrapper a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+
+
+#apcyber-wrapper .q-block{max-width:800px!important;margin:0 auto 28px!important;padding:0 20px!important;}
+#apcyber-wrapper .q-num-badge{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;margin-bottom:10px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .q-predict{background:#FFF7ED!important;border-left:3px solid #F59E0B!important;padding:8px 14px!important;border-radius:0 6px 6px 0!important;font-size:13px!important;font-style:italic!important;color:#78350F!important;-webkit-text-fill-color:#78350F!important;margin-bottom:12px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .q-stem{font-family:Georgia,serif!important;font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .q-stem code{font-family:monospace!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;padding:2px 6px!important;border-radius:4px!important;font-size:13px!important;}
+#apcyber-wrapper .opts{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:14px!important;}
+#apcyber-wrapper .opt{display:flex!important;align-items:flex-start!important;gap:10px!important;padding:10px 14px!important;border:1.5px solid #E5E7EB!important;border-radius:8px!important;cursor:pointer!important;font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#fff!important;}
+#apcyber-wrapper .opt:hover{border-color:#A855F7!important;background:#FAFAF9!important;}
+#apcyber-wrapper .opt.selected{border-color:#7C3AED!important;background:#F5F0FF!important;}
+#apcyber-wrapper .opt.correct{border-color:#16A34A!important;background:#DCFCE7!important;}
+#apcyber-wrapper .opt.wrong{border-color:#DC2626!important;background:#FEE2E2!important;}
+#apcyber-wrapper .opt-letter{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;min-width:22px!important;font-size:14px!important;}
+#apcyber-wrapper .opt.correct .opt-letter{color:#16A34A!important;-webkit-text-fill-color:#16A34A!important;}
+#apcyber-wrapper .opt.wrong .opt-letter{color:#DC2626!important;-webkit-text-fill-color:#DC2626!important;}
+#apcyber-wrapper .check-btn{background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;padding:10px 24px!important;font-size:14px!important;font-weight:700!important;font-family:Georgia,serif!important;cursor:pointer!important;}
+#apcyber-wrapper .check-btn:hover{background:#7C3AED!important;}
+#apcyber-wrapper .q-feedback{display:none!important;margin-top:12px!important;padding:12px 16px!important;border-radius:8px!important;font-family:Georgia,serif!important;font-size:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .q-feedback.show{display:block!important;}
+#apcyber-wrapper .q-feedback.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;color:#14532D!important;-webkit-text-fill-color:#14532D!important;}
+#apcyber-wrapper .q-feedback.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;}
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 40px!important;padding:0 20px!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-inner{background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:16px!important;padding:32px 24px!important;text-align:center!important;}
+#apcyber-wrapper .res-score{font-family:Georgia,serif!important;font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+#apcyber-wrapper .res-label{font-family:Georgia,serif!important;font-size:16px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;margin-bottom:16px!important;}
+#apcyber-wrapper .res-msg{font-family:Georgia,serif!important;font-size:15px!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;max-width:500px!important;margin:0 auto 20px!important;}
+#apcyber-wrapper .nav-row{max-width:800px!important;margin:0 auto 40px!important;padding:0 20px!important;display:flex!important;gap:12px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .nav-btn{flex:1!important;min-width:160px!important;padding:12px 16px!important;border-radius:8px!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:700!important;text-align:center!important;border:2px solid #6B21A8!important;}
+#apcyber-wrapper a.nav-btn:link,#apcyber-wrapper a.nav-btn:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;background:#fff!important;}
+#apcyber-wrapper a.nav-btn.primary:link,#apcyber-wrapper a.nav-btn.primary:visited{background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcyber-wrapper a.nav-btn:hover{background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-btn.primary:hover{background:#7C3AED!important;}
+</style>
+<!-- v2 -->
+<div id="apcyber-wrapper" data-lesson-id="3.5">
+
+<div class="exhero">
+  <div class="exhero-badge">Unit 3 • 3.5 • Quiz</div>
+  <nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;">
+<a href="/" style="color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;">Home</a>
+<span style="margin:0 6px;color:#d1d5db;">›</span>
+<a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;">AP Cybersecurity</a>
+<span style="margin:0 6px;color:#d1d5db;">›</span>
+<span style="color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;">Unit 3 › 3.5 › Quiz</span></nav>
+  <h1>Quiz — IDS, IPS &amp; SIEM</h1>
+  <p>10 questions — Covers detection types, inline vs. passive deployment, SIEM correlation, and alert fatigue</p>
+</div>
+
+<div class="score-bar">
+<span>Score: <span class="score-val" id="score-display">0 / 10</span></span><span style="font-size:13px;color:#6B7280;-webkit-text-fill-color:#6B7280;">Complete all 10 questions to see your result</span>
+</div>
+
+<div class="q-block" id="qblock-1">
+  <div class="q-num-badge">Question 1 of 10</div>
+  <div class="q-predict">✎ Predict first: Think about what a network IDS does vs. what an IPS does.</div>
+  <div class="q-stem">A network administrator reviews the following security architecture note: <br><br><em>"Our perimeter IDS is configured to monitor all inbound traffic and will <span class="kw">automatically drop</span> packets matching known exploit signatures before they reach internal systems."</em><br><br>What is <span class="kw">incorrect</span> about this statement?</div>
+  <div class="opts" id="opts-1">
+<div class="opt" id="opt-1-A" onclick="selectOpt(1,'A')">
+<span class="opt-letter">A.</span><span>A network IDS is a passive monitoring device; it detects and alerts but cannot block or drop traffic on its own.</span>
+</div>
+<div class="opt" id="opt-1-B" onclick="selectOpt(1,'B')">
+<span class="opt-letter">B.</span><span>Packet inspection at the perimeter is ineffective because encrypted traffic cannot be analyzed.</span>
+</div>
+<div class="opt" id="opt-1-C" onclick="selectOpt(1,'C')">
+<span class="opt-letter">C.</span><span>Signature-based detection is not a valid method for identifying exploit attempts.</span>
+</div>
+<div class="opt" id="opt-1-D" onclick="selectOpt(1,'D')">
+<span class="opt-letter">D.</span><span>Monitoring inbound traffic is insufficient; IDS must also monitor outbound traffic to be effective.</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(1,'A')">Check Answer</button>
+  <div class="q-feedback" id="fb-1"></div>
+</div>
+<div class="q-block" id="qblock-2">
+  <div class="q-num-badge">Question 2 of 10</div>
+  <div class="q-predict">✎ Predict first: Anomaly detection compares to a baseline. What must that imply?</div>
+  <div class="q-stem">Which of the following are <span class="kw">characteristics</span> of anomaly-based IDS detection?<br><br>I. It can detect zero-day attacks that have no existing signature.<br>II. It has a lower false positive rate than signature-based detection.<br>III. It requires a baseline model of normal behavior to compare against.</div>
+  <div class="opts" id="opts-2">
+<div class="opt" id="opt-2-A" onclick="selectOpt(2,'A')">
+<span class="opt-letter">A.</span><span>I only</span>
+</div>
+<div class="opt" id="opt-2-B" onclick="selectOpt(2,'B')">
+<span class="opt-letter">B.</span><span>II only</span>
+</div>
+<div class="opt" id="opt-2-C" onclick="selectOpt(2,'C')">
+<span class="opt-letter">C.</span><span>I and III only</span>
+</div>
+<div class="opt" id="opt-2-D" onclick="selectOpt(2,'D')">
+<span class="opt-letter">D.</span><span>I, II, and III</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(2,'C')">Check Answer</button>
+  <div class="q-feedback" id="fb-2"></div>
+</div>
+<div class="q-block" id="qblock-3">
+  <div class="q-num-badge">Question 3 of 10</div>
+  <div class="q-predict">✎ Predict first: If a device can block traffic, where must it physically sit in the network?</div>
+  <div class="q-stem">A security engineer is deploying an IPS to protect a web server farm. The engineer connects the IPS to a <strong>SPAN (mirror) port</strong> on the distribution switch and configures automatic block rules. After deployment, the IPS generates alerts for confirmed attacks, but traffic from those attacks <span class="kw">still reaches</span> the web servers.<br><br>What is the <span class="kw">most likely cause</span> of this behavior?</div>
+  <div class="opts" id="opts-3">
+<div class="opt" id="opt-3-A" onclick="selectOpt(3,'A')">
+<span class="opt-letter">A.</span><span>An IPS connected via SPAN port receives only a copy of traffic and cannot block the original packets; the device must be deployed inline.</span>
+</div>
+<div class="opt" id="opt-3-B" onclick="selectOpt(3,'B')">
+<span class="opt-letter">B.</span><span>The block rules require manual confirmation before they take effect, which delays automated blocking.</span>
+</div>
+<div class="opt" id="opt-3-C" onclick="selectOpt(3,'C')">
+<span class="opt-letter">C.</span><span>SPAN ports only mirror outbound traffic, so inbound attacks are not visible to the IPS.</span>
+</div>
+<div class="opt" id="opt-3-D" onclick="selectOpt(3,'D')">
+<span class="opt-letter">D.</span><span>The web server farm requires a host-based IPS in addition to the network IPS for blocking to work.</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(3,'A')">Check Answer</button>
+  <div class="q-feedback" id="fb-3"></div>
+</div>
+<div class="q-block" id="qblock-4">
+  <div class="q-num-badge">Question 4 of 10</div>
+  <div class="q-predict">✎ Predict first: What is a SIEM uniquely able to do that individual tools cannot?</div>
+  <div class="q-stem">A SIEM receives the following events within a 10-minute window from three separate log sources:<br><ul style="font-family:Georgia,serif;font-size:14px;color:#374151;-webkit-text-fill-color:#374151;">
+<li>Firewall: 120 outbound connections to the same external IP</li>
+<li>Endpoint: New process <code>svch0st.exe</code> (note: zero not letter O) created under SYSTEM context</li>
+<li>DNS: Query for <code>beacon.malservices[.]ru</code> resolved successfully</li>
+</ul>Individually, none of these events would trigger a critical alert. The SIEM fires a <strong>CRITICAL: APT_BEACON_SUSPECTED</strong> alert based on all three together. This is an example of which SIEM capability?</div>
+  <div class="opts" id="opts-4">
+<div class="opt" id="opt-4-A" onclick="selectOpt(4,'A')">
+<span class="opt-letter">A.</span><span>Log normalization — converting events from different formats into a common schema</span>
+</div>
+<div class="opt" id="opt-4-B" onclick="selectOpt(4,'B')">
+<span class="opt-letter">B.</span><span>Event correlation — combining events across multiple sources to detect patterns invisible to individual tools</span>
+</div>
+<div class="opt" id="opt-4-C" onclick="selectOpt(4,'C')">
+<span class="opt-letter">C.</span><span>Anomaly detection — identifying behavior that deviates from a learned baseline</span>
+</div>
+<div class="opt" id="opt-4-D" onclick="selectOpt(4,'D')">
+<span class="opt-letter">D.</span><span>Threat intelligence integration — matching events against known indicators of compromise</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(4,'B')">Check Answer</button>
+  <div class="q-feedback" id="fb-4"></div>
+</div>
+<div class="q-block" id="qblock-5">
+  <div class="q-num-badge">Question 5 of 10</div>
+  <div class="q-predict">✎ Predict first: False positives are alerts on benign traffic. Which rule behaviors produce this?</div>
+  <div class="q-stem">A SOC team is troubleshooting high false positive rates in their IDS. Which of the following configuration choices would <span class="kw">most likely</span> contribute to excessive false positives?<br><br>I. A threshold rule that fires on any single failed login attempt.<br>II. Using signature-based detection for a well-known, stable exploit (e.g., EternalBlue).<br>III. Setting an anomaly detection sensitivity so high that any 10% deviation from baseline triggers an alert.</div>
+  <div class="opts" id="opts-5">
+<div class="opt" id="opt-5-A" onclick="selectOpt(5,'A')">
+<span class="opt-letter">A.</span><span>I only</span>
+</div>
+<div class="opt" id="opt-5-B" onclick="selectOpt(5,'B')">
+<span class="opt-letter">B.</span><span>II only</span>
+</div>
+<div class="opt" id="opt-5-C" onclick="selectOpt(5,'C')">
+<span class="opt-letter">C.</span><span>I and III only</span>
+</div>
+<div class="opt" id="opt-5-D" onclick="selectOpt(5,'D')">
+<span class="opt-letter">D.</span><span>I, II, and III</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(5,'C')">Check Answer</button>
+  <div class="q-feedback" id="fb-5"></div>
+</div>
+<div class="q-block" id="qblock-6">
+  <div class="q-num-badge">Question 6 of 10</div>
+  <div class="q-predict">✎ Predict first: Think about what a host-based IDS can see that a network device cannot.</div>
+  <div class="q-stem">An attacker on an internal network uses a fully encrypted, certificate-pinned application to exfiltrate data to an external server. The organization has a network-based IDS deployed at the perimeter inspecting all outbound traffic. The exfiltration is <span class="kw">not detected</span> by the network IDS.<br><br>Which of the following <span class="kw">best explains</span> why the network IDS failed, and which control would have been more effective?</div>
+  <div class="opts" id="opts-6">
+<div class="opt" id="opt-6-A" onclick="selectOpt(6,'A')">
+<span class="opt-letter">A.</span><span>The network IDS was not tuned to inspect outbound traffic; a properly configured IDS would have detected the exfiltration.</span>
+</div>
+<div class="opt" id="opt-6-B" onclick="selectOpt(6,'B')">
+<span class="opt-letter">B.</span><span>The network IDS relies only on anomaly detection; signature-based detection would have identified the encrypted exfiltration channel.</span>
+</div>
+<div class="opt" id="opt-6-C" onclick="selectOpt(6,'C')">
+<span class="opt-letter">C.</span><span>The network IDS cannot process traffic at the required throughput; a higher-capacity IDS would have detected the activity.</span>
+</div>
+<div class="opt" id="opt-6-D" onclick="selectOpt(6,'D')">
+<span class="opt-letter">D.</span><span>Encrypted traffic cannot be inspected by a network IDS without SSL/TLS interception; a host-based IDS on the source machine could detect the file access and process behavior before encryption.</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(6,'D')">Check Answer</button>
+  <div class="q-feedback" id="fb-6"></div>
+</div>
+<div class="q-block" id="qblock-7">
+  <div class="q-num-badge">Question 7 of 10</div>
+  <div class="q-predict">✎ Predict first: Which systems generate security-relevant logs worth feeding into a SIEM?</div>
+  <div class="q-stem">A security architect is determining which log sources to feed into a new SIEM deployment. Which of the following would provide the <span class="kw">most security value</span> as SIEM data sources?<br><br>I. Firewall and perimeter device logs (allow/deny decisions, connection metadata)<br>II. Application performance monitoring (APM) metrics (CPU, memory, response time)<br>III. Authentication and identity provider logs (login events, MFA results, privilege changes)</div>
+  <div class="opts" id="opts-7">
+<div class="opt" id="opt-7-A" onclick="selectOpt(7,'A')">
+<span class="opt-letter">A.</span><span>I and III only</span>
+</div>
+<div class="opt" id="opt-7-B" onclick="selectOpt(7,'B')">
+<span class="opt-letter">B.</span><span>II and III only</span>
+</div>
+<div class="opt" id="opt-7-C" onclick="selectOpt(7,'C')">
+<span class="opt-letter">C.</span><span>I and II only</span>
+</div>
+<div class="opt" id="opt-7-D" onclick="selectOpt(7,'D')">
+<span class="opt-letter">D.</span><span>I, II, and III</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(7,'A')">Check Answer</button>
+  <div class="q-feedback" id="fb-7"></div>
+</div>
+<div class="q-block" id="qblock-8">
+  <div class="q-num-badge">Question 8 of 10</div>
+  <div class="q-predict">✎ Predict first: If an IDS has not been updated, what kinds of attacks can it NOT detect?</div>
+  <div class="q-stem">An organization’s network IDS has not received a signature update in 8 months. The security team believes it is still fully protective because it has not generated any critical alerts. A penetration tester uses a recently published exploit (released 3 months ago) against an internal web server and gains access without triggering any IDS alert.<br><br>Which of the following <span class="kw">best identifies</span> the configuration failure demonstrated here?</div>
+  <div class="opts" id="opts-8">
+<div class="opt" id="opt-8-A" onclick="selectOpt(8,'A')">
+<span class="opt-letter">A.</span><span>The IDS is deployed on a SPAN port and cannot block traffic; it should be replaced with an IPS.</span>
+</div>
+<div class="opt" id="opt-8-B" onclick="selectOpt(8,'B')">
+<span class="opt-letter">B.</span><span>Signature-based IDS can only detect attacks with matching signatures; outdated signatures create a detection blind spot for newer exploits.</span>
+</div>
+<div class="opt" id="opt-8-C" onclick="selectOpt(8,'C')">
+<span class="opt-letter">C.</span><span>The absence of critical alerts indicates the IDS is functioning correctly; the penetration test used a technique designed to evade all IDS systems.</span>
+</div>
+<div class="opt" id="opt-8-D" onclick="selectOpt(8,'D')">
+<span class="opt-letter">D.</span><span>The web server’s traffic is encrypted, preventing the IDS from analyzing the exploit payload.</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(8,'B')">Check Answer</button>
+  <div class="q-feedback" id="fb-8"></div>
+</div>
+<div class="q-block" id="qblock-9">
+  <div class="q-num-badge">Question 9 of 10</div>
+  <div class="q-predict">✎ Predict first: An inline IPS sits in the traffic path. What are the risks of that placement?</div>
+  <div class="q-stem">Which of the following are <span class="kw">valid concerns</span> about deploying an IPS in inline mode?<br><br>I. If the IPS fails, it may become a single point of failure and take down the network segment it protects.<br>II. An IPS introduces latency because all traffic must be inspected before forwarding.<br>III. An IPS with poorly tuned rules may block legitimate business traffic, causing operational disruption.</div>
+  <div class="opts" id="opts-9">
+<div class="opt" id="opt-9-A" onclick="selectOpt(9,'A')">
+<span class="opt-letter">A.</span><span>I only</span>
+</div>
+<div class="opt" id="opt-9-B" onclick="selectOpt(9,'B')">
+<span class="opt-letter">B.</span><span>II only</span>
+</div>
+<div class="opt" id="opt-9-C" onclick="selectOpt(9,'C')">
+<span class="opt-letter">C.</span><span>I, II, and III</span>
+</div>
+<div class="opt" id="opt-9-D" onclick="selectOpt(9,'D')">
+<span class="opt-letter">D.</span><span>I and III only</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(9,'C')">Check Answer</button>
+  <div class="q-feedback" id="fb-9"></div>
+</div>
+<div class="q-block" id="qblock-10">
+  <div class="q-num-badge">Question 10 of 10</div>
+  <div class="q-predict">✎ Predict first: If analysts are overwhelmed with alerts, what happens to the serious ones?</div>
+  <div class="q-stem">A SIEM generates an average of 20,000 alerts per day. The SOC has 4 analysts who can each thoroughly investigate 15 alerts per shift. The SIEM’s correlation rules have not been reviewed or tuned in 14 months. An analyst discovers that a confirmed APT breach (which began 6 days ago) was detected by the SIEM on day 1 but was never investigated.<br><br>This scenario is <span class="kw">best described</span> as a consequence of which security problem?</div>
+  <div class="opts" id="opts-10">
+<div class="opt" id="opt-10-A" onclick="selectOpt(10,'A')">
+<span class="opt-letter">A.</span><span>Signature drift — outdated detection rules that no longer match current attack techniques</span>
+</div>
+<div class="opt" id="opt-10-B" onclick="selectOpt(10,'B')">
+<span class="opt-letter">B.</span><span>Single point of failure — over-reliance on the SIEM as the sole detection mechanism</span>
+</div>
+<div class="opt" id="opt-10-C" onclick="selectOpt(10,'C')">
+<span class="opt-letter">C.</span><span>False negative rate — the SIEM failed to detect the attack in its initial stage</span>
+</div>
+<div class="opt" id="opt-10-D" onclick="selectOpt(10,'D')">
+<span class="opt-letter">D.</span><span>Alert fatigue — excessive alert volume causes analysts to miss or skip legitimate high-priority detections</span>
+</div>
+</div>
+  <button class="check-btn" onclick="checkQ(10,'D')">Check Answer</button>
+  <div class="q-feedback" id="fb-10"></div>
+</div>
+
+<div class="results-panel" id="results-panel">
+<div class="results-inner">
+  <div class="res-score" id="r-score">0 / 10</div>
+  <div class="res-label">IDS, IPS &amp; SIEM Quiz Score</div>
+  <div class="res-msg" id="quiz-msg">Complete all 10 questions to see your result.</div>
+</div>
+</div>
+
+<div class="nav-row">
+  <a class="nav-btn" href="/pages/ap-cyber-unit-3-lesson-5-lab">← Lab: Operation Silent Watch</a>
+  <a class="nav-btn primary" href="/pages/ap-cyber-unit-3-lesson-5">Lesson 3.5 →</a>
+</div>
+
+</div><!-- end wrapper -->
+
+<script>
+(function(){
+  var selected={};var checked={};var correct=0;var total=10;
+  var exp={};
+  exp[1]="A network IDS is a passive out-of-band device. It receives a copy of network traffic (via a span port or TAP) and generates alerts — it cannot drop packets. Only an IPS, which is deployed inline, can intercept and block traffic. A system described as being able to ‘automatically drop packets’ would be an IPS, not an IDS.";
+exp[2]="I is true: anomaly-based detection identifies deviations from normal behavior, so it can detect novel attacks without a signature. III is true: it requires a trained baseline. II is false — anomaly-based detection typically has a <em>higher</em> false positive rate than signature-based, because legitimate but unusual traffic can trigger alerts. Signature-based detection is more precise (lower FP) but cannot detect unknown attacks.";
+exp[3]="This is a classic inline vs. out-of-band deployment error. A SPAN (mirror) port sends a copy of traffic to the monitoring device — perfect for a passive IDS. But an IPS must sit <em>inline</em> (in the actual traffic path) so it can intercept and drop malicious packets before they reach their destination. Connected via SPAN, the IPS can only alert, not block — exactly the symptom described.";
+exp[4]="This scenario illustrates <strong>event correlation</strong>: the SIEM joins three individually low-confidence signals into one high-confidence alert. No single source knew about the other two. While the DNS query does involve a known bad domain (D is partially relevant), the defining capability here is correlation — the SIEM rule combined multiple disparate events using AND logic. Anomaly detection (C) would apply if a baseline was being compared; normalization (A) is a prerequisite, not the detection technique.";
+exp[5]="I contributes to false positives: a single failed login is extremely common (mistyped passwords, locked screens) and does not indicate an attack. Setting a threshold of 1 will generate thousands of benign alerts. III contributes to false positives: overly sensitive anomaly detection will trigger on legitimate spikes in traffic. II does NOT contribute to false positives — a well-tuned signature for a specific exploit like EternalBlue is highly precise; legitimate traffic will not match the exploit payload.";
+exp[6]="The fundamental limitation here is encryption. A network IDS inspects packet payloads — but when traffic is encrypted end-to-end, the IDS cannot read the content. Without TLS interception (which introduces its own complexity and trust issues), a network IDS is essentially blind to encrypted exfiltration. A host-based IDS (HIDS) on the source machine monitors file system access, process execution, and system calls — it sees the data being read and the process making the transfer, before encryption occurs.";
+exp[7]="I and III are high-value SIEM sources. Firewall logs reveal network connection attempts, blocked traffic, and lateral movement patterns. Authentication logs are critical for detecting brute force, credential stuffing, impossible travel, and privilege abuse. II (APM metrics like CPU/memory/response time) has value for operations monitoring but is not a security-focused log source. High CPU could indicate cryptomining, but this indirect signal does not make APM a primary SIEM input — security-oriented log sources are the priority.";
+exp[8]="This is a core limitation of signature-based detection: it can only detect what it knows. A signature for an exploit published 3 months ago would not exist in an 8-month-old signature database. The absence of alerts is being misinterpreted as absence of threats — a dangerous assumption. This underscores why keeping IDS signatures current is a critical maintenance task. The team’s reasoning (“no alerts = protected”) is the flawed assumption that caused the gap.";
+exp[9]="All three are valid and real operational concerns about inline IPS deployment. I: inline failure — most enterprise IPS devices have a ‘fail-open’ or ‘fail-closed’ mode, but both create problems (either network goes down or protection is bypassed). II: latency — deep packet inspection takes processing time; at scale this can affect performance-sensitive applications. III: false positives with blocks — unlike an IDS that only alerts, an IPS with bad rules actively blocks traffic, which can disrupt legitimate operations. These are the tradeoffs that make IPS deployment decisions more complex than IDS.";
+exp[10]="This is the defining real-world consequence of alert fatigue. The SIEM did its job — it generated the correct alert on day 1. The detection system did not fail (C is wrong — there was no false negative). The problem was the volume: 20,000 alerts vs. 60 analyst-hours of capacity means only 0.3% of alerts get reviewed. High-priority detections get buried under noise. Alert fatigue is one of the most significant practical challenges in SOC operations and a primary reason SIEM rule tuning is critical.";
+
+  window.selectOpt=function(n,letter){
+    if(checked[n])return;
+    selected[n]=letter;
+    var opts=document.querySelectorAll('#opts-'+n+' .opt');
+    opts.forEach(function(o){o.classList.remove('selected');});
+    document.getElementById('opt-'+n+'-'+letter).classList.add('selected');
+  };
+
+  window.checkQ=function(n,ans){
+    if(checked[n])return;
+    if(!selected[n]){alert('Please select an answer first.');return;}
+    checked[n]=true;
+    var isCorrect=selected[n]===ans;
+    if(isCorrect)correct++;
+    var opts=document.querySelectorAll('#opts-'+n+' .opt');
+    opts.forEach(function(o){o.style.cursor='default';o.onclick=null;});
+    document.getElementById('opt-'+n+'-'+ans).classList.add('correct');
+    if(!isCorrect)document.getElementById('opt-'+n+'-'+selected[n]).classList.add('wrong');
+    var fb=document.getElementById('fb-'+n);
+    fb.innerHTML=(isCorrect?'✅ <strong>Correct.</strong> ':'❌ <strong>Incorrect. The answer is '+ans+'.</strong> ')+exp[n];
+    fb.className='q-feedback show '+(isCorrect?'fb-correct':'fb-wrong');
+    document.getElementById('score-display').textContent=correct+' / '+total;
+    if(Object.keys(checked).length===total){
+      var res=document.getElementById('results-panel');res.classList.add('show');
+      document.getElementById('r-score').textContent=correct+' / '+total;
+      var pct=correct/total;
+      document.getElementById('quiz-msg').textContent=
+        pct>=0.9?'Outstanding. You have mastered IDS, IPS, and SIEM concepts.':
+        pct>=0.7?'Strong work. Review the questions you missed, focusing on inline vs. passive and alert fatigue.':
+        pct>=0.5?'Solid attempt. Re-read Lesson 3.5 and focus on the difference between IDS, IPS, and SIEM capabilities.':
+        'Keep reviewing. Focus on how each device is deployed and what it can and cannot do.';
+    }
+  };
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 3 · Lesson 3.5 · Quiz</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cyber-unit-3-lesson-5">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-3-lesson-5-exercise-1">Exercise 1</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-3-lesson-5-exercise-2">Exercise 2</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-3-lesson-5-lab">Lab</a><span class="aan-sep">•</span><span class="aan-chip cur">Quiz</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-3-lesson-6">Next: 3.2 Incident Response →</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cyber-unit-3-lesson-5">Lesson 3.5</a><a href="/pages/ap-cybersecurity-unit-3-securing-networks">Unit 3 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

@@ -46,6 +46,7 @@ const PAGES = {
 //  still be graded, or read, in the browser.
 const KEY_IDIOMS = [
   ['ANSWERS', /\bANSWERS\s*=/],
+  ['CORR', /\bCORR\s*=/],
   ['data-correct', /data-correct=/],
   ['data-val', /data-val=/],
   ['checkMCQ', /checkMCQ\(/],
@@ -53,6 +54,36 @@ const KEY_IDIOMS = [
   ['l-q', /class="l-q"/],
   ['opt-btn', /class="opt-btn"/],
 ];
+
+//  ── AND A CHECK THAT DOES NOT DEPEND ON THE LIST ABOVE ──────────────────────
+//  The list went stale, and it went stale silently, which is the only way a
+//  list ever fails. On 2026-09-09 this script reported `key: none` for
+//  ap-cyber-unit-3-exam, which ships `var CORR=[1,1,1,2,2,...]`: twenty answers
+//  in the page source under a name nobody had added. CORR is in the list now,
+//  and that fix on its own would be worth nothing, because the next generation
+//  will pick a different name and this script will go quiet again.
+//
+//  So look for the SHAPE instead. An answer key is a run of small integers or
+//  single letters bound to a name, and that is true whatever the name is. Four
+//  entries is the floor: shorter than that and a coordinate pair or an RGB
+//  triple starts matching.
+//
+//  It reports a CANDIDATE rather than a key, deliberately. `var SIZES=[1,2,3,4]`
+//  would match and is innocent. Across all 25 quiz pages and all 5 exams, one
+//  literal matched and it was the real thing, so the false positive rate is
+//  worth the alternative: a name list that reports clean on a published key.
+const KEY_SHAPES = [
+  ['array literal', /(?:var|const|let)\s+([A-Za-z_$][\w$]*)\s*=\s*\[\s*(?:(?:[0-4]|'[A-Ea-e]'|"[A-Ea-e]")\s*,\s*){3,}(?:[0-4]|'[A-Ea-e]'|"[A-Ea-e]")\s*\]/g],
+  ['index to letter map', /(?:var|const|let)\s+([A-Za-z_$][\w$]*)\s*=\s*\{\s*(?:\d+\s*:\s*['"][A-Ea-e]['"]\s*,\s*){3,}\d+\s*:\s*['"][A-Ea-e]['"]\s*\}/g],
+];
+
+function keyShapes(body) {
+  const found = [];
+  for (const [label, rx] of KEY_SHAPES) {
+    for (const m of body.matchAll(new RegExp(rx.source, 'g'))) found.push(`${m[1]} (${label})`);
+  }
+  return found;
+}
 
 async function serves(unit, lesson) {
   const url = `${API}/api/quiz/${COURSE}/${unit}/${encodeURIComponent(lesson)}/quiz`;
@@ -82,7 +113,12 @@ async function serves(unit, lesson) {
       catch (e) { console.log(`  ${handle}  UNREACHABLE: ${e.message}`); continue; }
 
       const mounts = (body.match(/data-apcs-quiz/g) || []).length;
-      const survivors = KEY_IDIOMS.filter(([, rx]) => rx.test(body)).map(([n2]) => n2);
+      const named = KEY_IDIOMS.filter(([, rx]) => rx.test(body)).map(([n2]) => n2);
+      //  A shape the name list did not know about counts the same as one it did.
+      //  Reported separately so a stale list is visible as staleness rather than
+      //  disappearing into the same word.
+      const shaped = keyShapes(body).filter((f) => !named.some((n2) => f.startsWith(n2 + ' ')));
+      const survivors = named.concat(shaped);
       //  utils.pageFromHandle is the resolver production keys on, so the mount
       //  is checked against that rather than against the handle digits. Unit 3's
       //  handles are one lesson higher than the pages they name.
@@ -117,6 +153,34 @@ async function serves(unit, lesson) {
 
   console.log(`\n  ${mounted} of ${total} mounted, ${keyed} still ship a key, `
     + `${wrong} mount the wrong lesson, ${unserved} mounted but not served`);
+
+  //  ── THE UNIT TESTS, REPORTED AND NOT FAILED ─────────────────────────────
+  //  None of the five has been migrated, so a key here is the KNOWN state and
+  //  must not read as a regression. They are swept anyway for two reasons.
+  //  First, a teacher who locks a unit test in the gradebook is relying on
+  //  something that does not exist, and this is where that gets counted.
+  //  Second, the shape detector above was built because THIS is the page set
+  //  that broke the name list, so the check has to run where it can be seen
+  //  working rather than only where it currently finds nothing.
+  if (!process.argv[2]) {
+    console.log('\nUnit tests (not migrated; reported, not failed)');
+    let examKeyed = 0;
+    for (let u = 1; u <= 5; u++) {
+      const handle = `ap-cyber-unit-${u}-exam`;
+      let body;
+      try { body = sf.pageBody(handle).body_html; }
+      catch (e) { console.log(`  ${handle}  UNREACHABLE: ${e.message}`); continue; }
+      const mounts = (body.match(/data-apcs-quiz/g) || []).length;
+      const named = KEY_IDIOMS.filter(([, rx]) => rx.test(body)).map(([n2]) => n2);
+      const shaped = keyShapes(body).filter((f) => !named.some((n2) => f.startsWith(n2 + ' ')));
+      const survivors = named.concat(shaped);
+      if (survivors.length) examKeyed++;
+      console.log(`  ${survivors.length ? 'ships a key' : 'no key found'}  ${handle.replace('ap-cyber-', '').padEnd(14)}`
+        + `${mounts} mount(s)  ${survivors.join(', ')}`);
+    }
+    console.log(`\n  ${examKeyed} of 5 unit tests publish their answer key. `
+      + `Locking one in the gradebook does nothing.`);
+  }
   //  Non-zero only for a page that is actively broken. "Not mounted yet" is the
   //  expected state before an import and must not read as a failure.
   process.exit(keyed && mounted ? 1 : (wrong || unserved) ? 1 : 0);
