@@ -1,4 +1,4 @@
-# Unit 3 on the website, back on the CED's numbers
+# Unit 3 on the website, back on the CED's numbers, on both hubs
 
 Tanner: "Unit 3 never updated on the website to be back to CED." He is right, and
 the part that had not moved is narrower and worse than it sounds.
@@ -72,24 +72,61 @@ have left a teacher who ticked 3.3 Firewalls looking at a ticked 3.3
 Segmentation, which is a silent wrong rather than a visible one. The sheet
 carries a one-time remap into a fresh object, stamped so it does not run twice.
 
+## The second page, which is the one students see
+
+Sweeping the live cyber pages for retired Unit 3 numbers turned up
+`/pages/ap-cybersecurity`, the public course hub, with the identical defect.
+Units 1, 2 and 4 list their lessons on the CED's numbers. Unit 3 alone ran 3.1
+to 3.6, and the same three links opened the wrong lesson, so a student clicking
+"3.3 Firewalls & Packet Filtering" landed on wireless security.
+
+That one matters more than the Command Center, and it was still there after the
+Command Center had been looked at twice. The sweep is in the run notes now
+because "we fixed the surface somebody reported" is how the second instance
+survives.
+
+The two hubs number the 3.1 pair differently, on purpose:
+
+    Command Center   3.1a, 3.1b     a teacher matching a gradebook column
+    public hub       3.1, 3.1       what the lesson pages print in their own h1,
+                                    told apart by the Part label
+
+`lib/cyber-unit3-renumber.js` already carries both, `PLAN.lessonId` for the
+first and `DISPLAY_MAP` for the second, so neither number is typed here. Putting
+3.1a in front of a student would contradict the page it links to.
+
+That choice got confirmed by something other than my own reasoning, which is the
+only reason it is worth trusting. The Unit 3 landing page,
+`ap-cybersecurity-unit-3-securing-networks`, was rebuilt during the renumbering
+and already lists its lessons as 3.1 (Part 1 of 2), 3.1 (Part 2 of 2), 3.2, 3.3,
+3.4, 3.5, every anchor opening the page whose number it prints. The public hub
+now says exactly what that page says.
+
+The diff is six anchor lines and nothing else, checked line by line against the
+live body.
+
 ## Evidence
 
 `deploy-gates/2026-09-09-cyber-cc-unit3-ced-numbers.json`. Three kinds green
 pre-deploy, plus the live one, which cannot run until the sheet is imported.
 
-- **suite**: `npm run smoke:cyberccunit3ced`, 47 passed. The relink suite it
-  supersedes still passes at 16, so the two do not contradict each other.
+- **suite**: `npm run smoke:cyberccunit3ced`, 47 passed, and
+  `npm run smoke:cyberhubunit3ced`, 22 passed. The relink suite this supersedes
+  still passes at 16, so the two do not contradict each other.
 - **rederive**: the sheet parsed back through a quote-aware reader and diffed
   against a fresh transform of the live body. Zero. Body md5
   `178128e367cc7f5ce13be4c38e2f1140`.
-- **mutation**: eleven, each red on the rule it targets and no other.
+- **mutation**: nineteen, eleven on the Command Center and eight on the hub,
+  each red on the rule it targets and no other.
 - **live**: `scripts/cyber-cc-unit3-ced-rederive.js` reads neither source the
   generator is built on. It asks each live page what it is through the
   `data-lesson-id` the gradebook keys on, and compares that to the number the row
   displays.
 
-      live now                  rows=6 id-matches-page=0 ced-matches-page=3
-      live + sheet in memory    rows=6 id-matches-page=6 ced-matches-page=6
+      Command Center, live now        rows=6 id-matches-page=0 ced-matches-page=3
+      Command Center, sheet applied   rows=6 id-matches-page=6 ced-matches-page=6
+      public hub, live now            hub-links=6 number-matches-page=1
+      public hub, sheet applied       hub-links=6 number-matches-page=6
 
   Zero of six is the number worth keeping. The badge count of 3 is why this
   survived three weeks: half the badges were right, so any spot check had good
@@ -125,7 +162,7 @@ being dereferenced at the top of the suite, so one class of mutation killed the
 run rather than naming a rule. That is the cascade problem this repo keeps
 finding, wearing a different hat.
 
-**One mutation was withdrawn rather than fixed.** Removing the one-shot
+**Two mutations were withdrawn rather than fixed, for the same reason.** Removing the one-shot
 precondition leaves the suite green, and so does removing the next guard, and the
 one after that. Refusing an already-renumbered page turns out to be defended
 three times: the explicit precondition, the row-id regex that will not match the
@@ -135,17 +172,39 @@ as insurance against a future widening rather than as something a passing run
 proves, and the withdrawal is recorded in the gate under `_withdrawn` so nobody
 spends an afternoon rediscovering it.
 
+The hub had the same shape. Widening the scope bounds to reach the neighbouring
+unit card makes the lesson list hold twelve anchors, and the anchor-count guard
+refuses before the byte-identical assertion can measure anything. That one was
+fixable: the mutation now removes the guard itself, and the suite grew an
+assertion that exercises it directly on a list carrying a foreign anchor. Where
+two guards overlap, break the one nearer the failure.
+
 ## Still open
 
-1. **The sheet is not imported, and that is the whole reason this task existed.**
+1. **Neither sheet is imported, and that is the whole reason this task existed.**
    Yesterday's relink sheet was built, gated and left sitting in `imports/`, and
-   the page has been wrong ever since. `imports/2026-09-09-cyber-cc-unit3-ced-numbers/`,
-   MERGE, one row. After importing, `node scripts/cyber-cc-unit3-ced-rederive.js`
-   with no arguments should answer `rows=6 id-matches-page=6 ced-matches-page=6`
-   against the live page, and the gate's live check is what closes this.
+   the page has been wrong ever since. Two sheets now, both MERGE, one row each:
+
+       imports/2026-09-09-cyber-cc-unit3-ced-numbers/    the Command Center
+       imports/2026-09-09-cyber-hub-unit3-ced-numbers/   the public course hub
+
+   `imports/2026-09-08-cyber-cc-unit3-relink/` is superseded and must NOT be
+   imported alongside them. After importing, these two should answer:
+
+       node scripts/cyber-cc-unit3-ced-rederive.js
+         rows=6 id-matches-page=6 ced-matches-page=6
+       node scripts/cyber-cc-unit3-ced-rederive.js --hub
+         hub-links=6 number-matches-page=6
+
+   That is the gate's live check, and it is what closes this.
 2. **Three titles for one topic**, as above. Worth its own board item; it is a
    content decision.
-3. **Nothing else on the site was audited for retired Unit 3 numbers.** This pass
-   covered `cyber-command-center` only. The hub and the lesson rails were checked
-   during the 2026-08-28 import and were correct then, but "correct three weeks
-   ago" is exactly the assumption that produced this task.
+3. **The sweep covered twelve pages, not the whole site.** `cyber-command-center`
+   and `ap-cybersecurity` were the only two carrying retired numbers, and both
+   have sheets here. Clean: the six lesson pages, the complete course guide, the
+   practice hub, and the Unit 3 landing page at
+   `ap-cybersecurity-unit-3-securing-networks`, whose every anchor prints the
+   number of the page it opens. Three hits on `ap-cyber-unit-3-lesson-4` are
+   section numbers inside topic 3.3 (`3.3.5`, `3.3.6`, `3.3.6b`) and are
+   correct. Anything linking Unit 3 from a blog post, an email or a Drive doc is
+   outside what a storefront sweep can see.

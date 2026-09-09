@@ -1,5 +1,5 @@
 {
-  "change": "the Command Center's Unit 3 speaks the CED's numbers, in the CED's order",
+  "change": "Unit 3 speaks the CED's numbers on both hubs, the teacher Command Center and the public course hub",
   "_context": [
     "Unit 3 was renumbered onto the CED on 2026-08-28 and the six live lesson pages",
     "moved that day. The Command Center did not. Measured live 2026-09-09: its rows",
@@ -17,7 +17,21 @@
     "",
     "A teacher's taught ticks live in localStorage keyed on the row id, so the sheet",
     "carries a one-time remap. Without it a tick on 3.3 Firewalls would come back",
-    "ticked against 3.3 Segmentation."
+    "ticked against 3.3 Segmentation.",
+    "",
+    "SECOND PAGE, found by sweeping the live site rather than by being told about",
+    "it: /pages/ap-cybersecurity, the public course hub, had the identical defect",
+    "on the page that faces STUDENTS. Units 1, 2 and 4 list their lessons on the",
+    "CED's numbers and Unit 3 alone ran 3.1 to 3.6, with the same three links",
+    "opening the wrong lesson. A student clicking '3.3 Firewalls & Packet",
+    "Filtering' landed on wireless security.",
+    "",
+    "The two hubs number the 3.1 pair DIFFERENTLY on purpose. The Command Center",
+    "shows 3.1a and 3.1b because a teacher matching a gradebook column needs the",
+    "column key. The public hub shows 3.1 twice with a Part label, because that is",
+    "what the lesson pages print in their own h1 and 3.1a is not a number a student",
+    "should ever have to reconcile. lib/cyber-unit3-renumber.js has both: PLAN",
+    "lessonId for the first, DISPLAY_MAP for the second."
   ],
   "checks": [
     {
@@ -153,6 +167,99 @@
       "replace": "    newId: p.lessonId === '3.1a' ? '3.1' : p.lessonId,",
       "command": "npm run --silent smoke:cyberccunit3ced",
       "expect_failure": "crossCheck finds nothing to complain about"
+    },
+    {
+      "kind": "suite",
+      "name": "the public hub: CED numbers, CED order, the 3.1 pair told apart by its Part label",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect": "22 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the hub sheet parses back to what the transform produced from live",
+      "command": "node scripts/cyber-hub-unit3-ced-numbers.js --verify \"imports/2026-09-09-cyber-hub-unit3-ced-numbers/Pages cyber-hub-unit3-ced-numbers.csv\"",
+      "expect": "parse-back-diff=0"
+    },
+    {
+      "kind": "live",
+      "name": "every hub link's number matches the lesson page it opens",
+      "_why": "Same instrument as the Command Center check and the same independence: it reads the live page's data-lesson-id, not PLAN and not config/cyber-topics.json. Before the import this answers 1 of 6, so the assertion is FALSE beforehand.",
+      "command": "node scripts/cyber-cc-unit3-ced-rederive.js --hub",
+      "expect": "hub-links=6 number-matches-page=6",
+      "before": "hub-links=6 number-matches-page=1",
+      "pre_command": "node scripts/cyber-cc-unit3-ced-rederive.js --hub-fixed"
+    },
+    {
+      "kind": "mutation",
+      "name": "H1 THE PING-PONG: the rebuild reads the number already in the href",
+      "file": "scripts/cyber-hub-unit3-ced-numbers.js",
+      "find": "    const tail = found[r.oldId].tail;",
+      "replace": "    const tail = found[String(Object.keys(found)[r.target - 1])].tail;",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect_failure": "is Firewalls, and it opens the page that teaches it"
+    },
+    {
+      "kind": "mutation",
+      "name": "H2 the map is typed by hand instead of derived from PLAN",
+      "file": "scripts/cyber-hub-unit3-ced-numbers.js",
+      "find": "  .map((p) => ({ oldId: p.oldTopic, display: DISPLAY_MAP[p.oldTopic], target: p.target, part: p.part }))",
+      "replace": "  .map((p) => ({ oldId: p.oldTopic, display: {'3.1':'3.1','3.2':'3.1','3.3':'3.3','3.4':'3.4','3.5':'3.5','3.6':'3.2'}[p.oldTopic], target: p.target, part: p.part }))",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect_failure": "the displayed number comes from DISPLAY_MAP"
+    },
+    {
+      "kind": "mutation",
+      "name": "H3 the links are left in their old order instead of CED order",
+      "file": "scripts/cyber-hub-unit3-ced-numbers.js",
+      "find": "  .sort((a, b) => a.target - b.target);",
+      "replace": "  .sort((a, b) => a.oldId.localeCompare(b.oldId));",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect_failure": "six links, reading 3.1, 3.1, 3.2, 3.3, 3.4, 3.5"
+    },
+    {
+      "kind": "mutation",
+      "name": "H4 the Part label is dropped, so a student sees 3.1 twice with nothing to tell them apart",
+      "file": "scripts/cyber-hub-unit3-ced-numbers.js",
+      "find": "    const part = r.part ? ` (${r.part})` : '';",
+      "replace": "    const part = '';",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect_failure": "both carry a Part label"
+    },
+    {
+      "kind": "mutation",
+      "name": "H5 the Part label is put on EVERY row, not just the 3.1 pair",
+      "file": "scripts/cyber-hub-unit3-ced-numbers.js",
+      "find": "    const part = r.part ? ` (${r.part})` : '';",
+      "replace": "    const part = ` (${r.part || 'Part 1 of 2'})`;",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect_failure": "no OTHER link gained a Part label"
+    },
+    {
+      "kind": "mutation",
+      "name": "H6 the scope guard is removed, so a rewrite can escape its own card",
+      "file": "scripts/cyber-hub-unit3-ced-numbers.js",
+      "find": "  if (anchors !== 6) return fail(`the Unit 3 list holds ${anchors} lesson links, expected 6`);",
+      "replace": "  if (false) return fail(`the Unit 3 list holds ${anchors} lesson links, expected 6`);",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect_failure": "refuses a lesson list holding an anchor that is not one of the six"
+    },
+    {
+      "kind": "mutation",
+      "name": "H7 the href is left pointing where it already pointed",
+      "file": "scripts/cyber-hub-unit3-ced-numbers.js",
+      "find": "    return `${indent}<a class=\"ch-lesson\" href=\"/pages/ap-cyber-unit-3-lesson-${r.target}\">${r.display}${tail}${part}</a>`;",
+      "replace": "    return `${indent}<a class=\"ch-lesson\" href=\"/pages/ap-cyber-unit-3-lesson-${found[r.oldId].target}\">${r.display}${tail}${part}</a>`;",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect_failure": "opening lesson-1 through lesson-6 in order"
+    },
+    {
+      "kind": "mutation",
+      "name": "H8 the displayed number is left as the retired site number",
+      "file": "scripts/cyber-hub-unit3-ced-numbers.js",
+      "find": "${r.display}${tail}${part}</a>`;",
+      "replace": "${r.oldId}${tail}${part}</a>`;",
+      "command": "npm run --silent smoke:cyberhubunit3ced",
+      "expect_failure": "six links, reading 3.1, 3.1, 3.2, 3.3, 3.4, 3.5"
     }
   ],
   "_withdrawn": [
@@ -161,6 +268,12 @@
       "name": "M11 the one-shot precondition is removed",
       "_why": "WITHDRAWN because it came back GREEN, and a green mutation run is a failed check rather than a passing one. Refusing an already-renumbered page turns out to be defended three times over: disable the explicit precondition and the row-id regex refuses on the new id shape; widen that too and the PLAN lookup finds no row for the retired ids. No single-line mutation isolates any one guard, so the suite's assertion 8 is LABELLED as insurance against a future widening rather than as something a passing run establishes. Recorded here rather than deleted, so the next session does not spend the afternoon rediscovering it.",
       "result": "green, failure unreachable"
+    },
+    {
+      "kind": "mutation_withdrawn",
+      "name": "H6 the hub scope bounds are widened to reach the neighbouring unit card",
+      "_why": "WITHDRAWN as originally written. Widening the bounds makes the lesson list hold twelve anchors instead of six, and the anchor-count guard refuses before the byte-identical assertion can measure anything, so it red on the wrong rule. Replaced with a mutation that removes THAT GUARD, and the suite grew a named assertion that exercises it directly on a list carrying a foreign anchor. Same lesson as M11: where two guards overlap, break the one nearer the failure.",
+      "result": "replaced by a mutation of the guard itself"
     }
   ]
 }

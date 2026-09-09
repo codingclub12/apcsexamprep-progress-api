@@ -31,9 +31,18 @@
 //  Both must reach 6. The badge count alone would have called a page fixed
 //  while every row still displayed a retired number.
 //
+//  ALSO CHECKS THE PUBLIC HUB, which had the identical defect on the page that
+//  faces students. Same question, different markup: /pages/ap-cybersecurity
+//  lists Unit 3 as six anchors, and the number printed on each must match the
+//  lesson it opens. There the two halves of CED 3.1 both display 3.1, so either
+//  half satisfies a link reading 3.1; that is what the lesson pages themselves
+//  print, and 3.1a is a gradebook key rather than something a student reads.
+//
 //  Run: node scripts/cyber-cc-unit3-ced-rederive.js           live as it is
 //       node scripts/cyber-cc-unit3-ced-rederive.js --fixed   live, sheet applied
 //                                                             in memory
+//       node scripts/cyber-cc-unit3-ced-rederive.js --hub     the public hub, live
+//       node scripts/cyber-cc-unit3-ced-rederive.js --hub-fixed
 //       node scripts/cyber-cc-unit3-ced-rederive.js <body.html>
 // -----------------------------------------------------------------------------
 const fs = require('fs');
@@ -63,8 +72,34 @@ function rowClaims(ccBody) {
   return out;
 }
 
+//  The public hub: six anchors, each printing a number and opening a page.
+function hubMain(applyFix) {
+  const HUB = 'ap-cybersecurity';
+  let body = sf.pageBody(HUB).body_html;
+  if (applyFix) {
+    const { transform } = require('./cyber-hub-unit3-ced-numbers');
+    const r = transform(body);
+    body = r ? r.out : body;
+  }
+  const links = [...body.matchAll(
+    /<a class="ch-lesson" href="\/pages\/(ap-cyber-unit-3-lesson-\d)">(\d\.\d)([^<]*)<\/a>/g)];
+  let match = 0;
+  const bad = [];
+  for (const [, handle, shown, title] of links) {
+    let says = 'unreachable';
+    try { says = statedLessonId(sf.pageBody(handle).body_html) || 'none'; } catch (e) { /* keep */ }
+    //  A link reading 3.1 is satisfied by either half of CED 3.1.
+    const hit = says === shown || (shown === '3.1' && /^3\.1[ab]$/.test(says));
+    if (hit) match++;
+    else bad.push(`  "${shown}${title.trim()}" opens ${handle}, which states ${says}`);
+  }
+  for (const b of bad) console.error(b);
+  console.log(`hub-links=${links.length} number-matches-page=${match}`);
+}
+
 function main() {
   const arg = process.argv[2];
+  if (arg === '--hub' || arg === '--hub-fixed') return hubMain(arg === '--hub-fixed');
   let cc;
   if (arg === '--fixed') {
     const { transform } = require('./cyber-cc-unit3-ced-numbers');
