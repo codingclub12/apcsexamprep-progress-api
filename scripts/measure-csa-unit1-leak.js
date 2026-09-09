@@ -25,6 +25,13 @@ const path = require('path');
 const sf = require('../lib/storefront-fetch');
 const leak = require('../lib/answer-leak');
 
+//  ── LESSONS IS LOAD BEARING. DO NOT ADD TO IT. ────────────────────────────
+//  deploy-gates/2026-09-09-csa-unit1-answer-leak.json imports this exact array
+//  for its rederive check and expects the fifteen Unit 1 slugs to total 137
+//  attributes. Units 2 to 4 are a SEPARATE array below for that reason: growing
+//  this one would break a manifest that is meant to stay re-runnable, and the
+//  breakage would read as a leak count that moved rather than as a list that did.
+//
 //  The fifteen Unit 1 lessons of the 2025-2026 four-unit CED, in lesson order.
 const LESSONS = [
   '1-1-intro-algorithms', '1-2-variables-data-types', '1-3-expressions-assignment',
@@ -33,11 +40,56 @@ const LESSONS = [
   '1-10-calling-class-methods', '1-11-math-class', '1-12-objects-instances',
   '1-13-object-creation', '1-14-calling-instance-methods', '1-15-string-manipulation',
 ];
+//  The other thirty eight, 12 / 9 / 17 across Units 2, 3 and 4, which with the
+//  fifteen above is the 53 the CED has and the manifest seeds. Measured for the
+//  first time on 2026-09-09 and every one of them leaks, so this is the course
+//  rather than the pilot unit.
+const LESSONS_2_4 = [
+  '2-1-algorithms-selection-repetition',
+  '2-2-boolean-expressions',
+  '2-3-if-statements',
+  '2-4-nested-if-statements',
+  '2-5-compound-boolean-expressions',
+  '2-6-comparing-boolean-expressions',
+  '2-7-while-loops',
+  '2-8-for-loops',
+  '2-9-implementing-selection-iteration-algorithms',
+  '2-10-implementing-string-algorithms',
+  '2-11-nested-iteration',
+  '2-12-informal-run-time-analysis',
+  '3-1-abstraction-and-program-design',
+  '3-2-impact-of-program-design',
+  '3-3-anatomy-of-a-class',
+  '3-4-constructors',
+  '3-5-methods-how-to-write-them',
+  '3-6-methods-passing-returning-object-references',
+  '3-7-class-variables-and-methods',
+  '3-8-scope-and-access',
+  '3-9-this-keyword',
+  '4-1-ethical-social-issues-data-collection',
+  '4-2-introduction-to-using-data-sets',
+  '4-3-array-creation-and-access',
+  '4-4-traversing-arrays',
+  '4-5-algorithms-with-arrays',
+  '4-6-using-text-files',
+  '4-7-wrapper-classes',
+  '4-8-arraylist-methods',
+  '4-9-traversing-arraylists',
+  '4-10-algorithms-with-arraylists',
+  '4-11-2d-array-creation-and-access',
+  '4-12-traversing-2d-arrays',
+  '4-13-implementing-2d-array-algorithms',
+  '4-14-searching-algorithms',
+  '4-15-sorting-algorithms',
+  '4-16-recursion',
+  '4-17-recursive-searching-and-sorting',
+];
+
 const SUFFIXES = ['', '-debug', '-exercise-1', '-frq'];
 
-function measure() {
+function measure(lessons) {
   const rows = [];
-  for (const slug of LESSONS) {
+  for (const slug of (lessons || LESSONS)) {
     for (const suffix of SUFFIXES) {
       const handle = 'ap-csa-lesson-' + slug + suffix;
       const row = { handle, kind: suffix ? suffix.slice(1) : 'lesson', lesson: slug.split('-').slice(0, 2).join('.') };
@@ -87,10 +139,13 @@ function totals(rows) {
 function main() {
   const argv = process.argv.slice(2);
   const jsonAt = argv.indexOf('--json') >= 0 ? argv[argv.indexOf('--json') + 1] : null;
-  const rows = measure();
+  //  Unit 1 by default, because that is what this was built for and what the
+  //  deploy gate re-runs. --all reads the whole 53 lesson course.
+  const all = argv.includes('--all');
+  const rows = measure(all ? LESSONS.concat(LESSONS_2_4) : LESSONS);
   const t = totals(rows);
 
-  console.log('\nAP CSA UNIT 1: ANSWER KEY READABLE FROM PAGE SOURCE');
+  console.log('\nAP CSA ' + (all ? 'UNITS 1 TO 4' : 'UNIT 1') + ': ANSWER KEY READABLE FROM PAGE SOURCE');
   console.log('measured ' + new Date().toISOString() + ' against the stored body of ' + t.pages + ' pages\n');
   console.log('  ' + 'handle'.padEnd(48) + 'kind'.padEnd(11) + 'total'.padStart(6) + 'graded'.padStart(8) + '  rules');
   for (const r of rows) {
@@ -126,4 +181,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { LESSONS, SUFFIXES, measure, totals };
+module.exports = { LESSONS, LESSONS_2_4, SUFFIXES, measure, totals };
