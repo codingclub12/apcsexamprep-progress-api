@@ -1,0 +1,98 @@
+{
+  "change": "one lab, one answer: the gradebook resolves every name a lab column answers to, the refusal says whose lock it is, and a student's dashboard shows the lab they did",
+  "_reported": "Michelle Campbell, AP Cybersecurity, 2026-09-08 18:56. Two sentences, two different bugs. 'Some of the labs say Your Teacher has not opened this lab yet. But I have not locked them? How do I assign/open them? (For example the 1.2 Terminal Lab)' and 'Also the students cannot see the labs on their dashboards?'",
+  "_root_cause": "A cyber lesson carries TWO lab columns. utils.js lists 'lab' in every unit's activities, and a terminal lab's manifest row says 'terminal-lab', which is a deliberate split (lib/gradebook-contract.js, 2026-09-04) so the lab denominator stops overwriting the widget's. routes/labs.js has resolved BOTH names since 2026-09-07 and takes the narrowest answer, with a tie going to the closing row. lib/gradebook-contract.js resolved ONE. So a row on either name refused the student while the other column drew open, and lock_enforceable was computed from the spec's name alone, which drew the 'lab' column as a lock the server cannot enforce. A teacher told a padlock does nothing clicks it freely. Both columns also rendered the same label, '1.2 Lab', so there was nothing to name the difference with.",
+  "_the_second_bug": "shopify/my-progress.html listed lesson, the two exercises and the quiz in ACTS. A finished terminal lab arrived from the API, counted in the unit percentage, and had no column to be drawn in, so the lesson row and the unit total under it disagreed and the missing half was the work the student had actually done.",
+  "_not_changed_here": "The anonymous rule itself. An item with an explicit closing row for ANY class is withheld from every request with no token, chosen by Tanner on 2026-09-07 so that signing out could not walk past a lock. Whether one class closing a lab should close it for every anonymous visitor is board task 277 and is a decision, not a patch. What changes here is the SENTENCE that refusal produces, which the 2026-09-07 run note left open in as many words: a visitor with no teacher was being told their teacher had not opened the lab.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the lab gate suite, now asserting the board and the student agree",
+      "command": "node scripts/gate-suite-floor.js labgate 40",
+      "expect": "GATE OK",
+      "_why": "A floor rather than an exact count: main gains assertions from other branches, and a gate that refuses a correct deploy over a grown suite is the failure the floor script was written for. 24 before this change, 40 after."
+    },
+    {
+      "kind": "suite",
+      "name": "the player suite, now covering both refusals rather than one",
+      "command": "node scripts/gate-suite-floor.js labplayertoken 19",
+      "expect": "GATE OK"
+    },
+    {
+      "kind": "suite",
+      "name": "the student page suite, driving renderUnits rather than only the model behind it",
+      "command": "node scripts/gate-suite-floor.js myprogress 31",
+      "expect": "GATE OK",
+      "_why": "The harness could not read a render before this branch: its DOM stub returned a fresh element per getElementById, so every innerHTML the page wrote was discarded. A column is a rendering decision, so the suite had to be able to see markup."
+    },
+    {
+      "kind": "suite",
+      "name": "assignment locking end to end, unchanged by this branch and re-run because the contract moved",
+      "command": "node scripts/gate-suite-floor.js gatescope 70",
+      "expect": "GATE OK"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE REPORTED BUG: the gradebook resolves one name while the student path resolves two",
+      "_why": "This is the mutation that reproduces the email. The row is real, the student is refused, and the teacher's own board draws that column open, so 'I have not locked them' is an accurate report of what they were shown.",
+      "file": "lib/gradebook-contract.js",
+      "find": "    const names = aliasIndex.get(`${it.unit}|${it.lesson_ref}|${it.native_activity}`)\n      || [it.native_activity];",
+      "replace": "    const names = [it.native_activity];",
+      "command": "npm run --silent smoke:labgate",
+      "expect_failure": "[FAIL]   and the Lab column the teacher reads reports locked, not open"
+    },
+    {
+      "kind": "mutation",
+      "name": "enforceability covers the spec name only, so the Lab padlock reads as decoration again",
+      "_why": "Independent of the rule above and it fails on its own assertion. A lock reported unenforceable carries the tooltip 'this activity keeps its questions in the page, so students can still reach them', which is an invitation to click it and an untruth about a lock routes/labs.js does enforce.",
+      "file": "lib/gradebook-contract.js",
+      "find": "    for (const act of g.names) {",
+      "replace": "    for (const act of g.names.slice(0, 1)) {",
+      "command": "npm run --silent smoke:labgate",
+      "expect_failure": "[FAIL]   the Lab column reports the lock as enforceable"
+    },
+    {
+      "kind": "mutation",
+      "name": "the refusal claims to be the caller's own class again",
+      "_why": "The sentence that produced the support email. A student of a class that has OPENED the lab, signed out, reads that their teacher closed it, and takes that to their teacher.",
+      "file": "routes/labs.js",
+      "find": "      locked_for: gate.audience || 'class',",
+      "replace": "      locked_for: 'class',",
+      "command": "npm run --silent smoke:labgate",
+      "expect_failure": "[FAIL]   a signed-out visitor is told it is the anonymous rule"
+    },
+    {
+      "kind": "mutation",
+      "name": "the student page drops the lab columns again",
+      "file": "shopify/my-progress.html",
+      "find": "const cols=ACTS.concat(LAB_ACTS.filter(a=>lessons.some(l=>U.lessons[l].acts[a])));",
+      "replace": "const cols=ACTS;",
+      "command": "npm run --silent smoke:myprogress",
+      "expect_failure": "[FAIL]   the unit with lab work renders a Terminal Lab column"
+    },
+    {
+      "kind": "mutation",
+      "name": "and the overcorrection: two empty columns on every table in every course",
+      "_why": "The opposite mistake, and the one that looks like the simple fix. Cyber lists a lab on all 24 topics and three exist; CSA and CSP have none at all. A suite that only asserted 'the lab column renders' would pass on this.",
+      "file": "shopify/my-progress.html",
+      "find": "const cols=ACTS.concat(LAB_ACTS.filter(a=>lessons.some(l=>U.lessons[l].acts[a])));",
+      "replace": "const cols=ACTS.concat(LAB_ACTS);",
+      "command": "npm run --silent smoke:myprogress",
+      "expect_failure": "[FAIL]   a unit with no lab work gets no lab column"
+    },
+    {
+      "kind": "live",
+      "name": "the refusal names the anonymous rule on a lab that is actually closed today",
+      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/labs/ap-cybersecurity/1.2-auth-lab",
+      "expect": "\"locked_for\":\"anonymous\"",
+      "_why": "FALSE before this deploy, and provably so: the field does not exist in the response today. Measured 2026-09-09 00:07 UTC, that URL answered {\"course\":\"ap-cybersecurity\",\"item_id\":\"1.2-auth-lab\",\"locked\":true,\"reason\":\"anonymous-closed-for-activity\",\"lab\":null} with no locked_for at all. It also depends on state this branch does not control: some class has that lab closed, which is what makes the assertion meaningful, and if every class reopens it the response becomes the open spec and this check fails honestly rather than passing on nothing. That is the same UNPROVEN shape verify-anon-gate-live.js already reports, and it is why the wording check below rides beside it."
+    },
+    {
+      "kind": "live",
+      "name": "the deployed player carries the sentence that does not blame a teacher",
+      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/lab-player.js",
+      "expect": "This lab opens for signed-in students",
+      "_why": "Also false before the deploy, and unlike the check above it depends on no teacher's setting. The player is served no-store precisely so this can be read as deployed rather than as cached: on 2026-09-07 the edge served the previous player for hours while /api/health reported the new commit, and a stale player is what silently disables the gate."
+    }
+  ]
+}
