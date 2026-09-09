@@ -92,8 +92,14 @@ const MUTATIONS = [
     name: 'THE BYPASS: anonymous goes back to being automatically self-study',
     file: 'route',
     suite: 'gate',
-    find: "  if (!stu) {\n    if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };",
-    repl: "  if (!stu) {\n    return { open: true, reason: 'self-study' };\n    // eslint-disable-next-line no-unreachable\n    if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };",
+    //  ANCHORED ON THE BRANCH OPENING ALONE, not on the line that used to follow
+    //  it. The first version named the next statement too and broke the day a
+    //  teacher carve-out was inserted between them: the patch found 0 hits, so
+    //  the mutation silently stopped running and the battery reported a FAIL for
+    //  the anchor rather than a hollow guard. A mutation anchor should name the
+    //  least it can get away with.
+    find: "  if (!stu) {\n",
+    repl: "  if (!stu) {\n    return { open: true, reason: 'self-study' };\n    // eslint-disable-next-line no-unreachable\n",
     must: ['signing out no longer opens a closed lab'],
   },
   {

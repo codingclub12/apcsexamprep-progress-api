@@ -94,6 +94,17 @@ const URL = `/api/labs/${LAB.course}/${LAB.item_id}`;
 //  reach it by accident.
 const OPEN_LAB = labSpec.all().find((s) => s.course === LAB.course && s.unit
   && s.lesson_id && s.item_id !== LAB.item_id && s.lesson_id !== LAB.lesson_id);
+
+//  OPEN_LAB NEEDS ITS MANIFEST ROW TOO, and that is new on 2026-09-09.
+//  routes/labs.js now short-circuits a lab with no gradebook column: no row means
+//  no chip, and a lock nobody can open is not a lock. Without this row OPEN_LAB
+//  resolves open before the anonymous rule is ever consulted, which silently
+//  guts the one assertion this lab exists for. The mutation battery caught it:
+//  "anonymous is refused EVERY lab" still went red, but on a different assertion,
+//  so the rule it targets had stopped being tested.
+run(`INSERT INTO course_manifest (course,unit,lesson_id,item_id,item_type,points) VALUES (?,?,?,?,?,?)`,
+  OPEN_LAB.course, OPEN_LAB.unit, OPEN_LAB.lesson_id, OPEN_LAB.item_id,
+  OPEN_LAB.item_type, OPEN_LAB.points);
 if (!OPEN_LAB) { console.log('need a second cyber lab in another lesson; nothing to test'); process.exit(1); }
 const OPEN_URL = `/api/labs/${OPEN_LAB.course}/${OPEN_LAB.item_id}`;
 const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { course: LAB.course, unit: LAB.unit, ...b }, TT);

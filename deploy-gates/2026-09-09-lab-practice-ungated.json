@@ -72,6 +72,13 @@
       "expect": "15 passed, 0 failed"
     },
     {
+      "kind": "suite",
+      "name": "the lab-gate mutation battery, which is what caught this branch weakening a guard",
+      "_why": "CI found what my own gate did not. The new branch sits above the anonymous rule, and smoke/lab-gate.js seeded no manifest row for OPEN_LAB, the second lab that exists solely to keep 'anonymous is refused' from meaning 'every lab is refused'. That lab short-circuited open and the assertion stopped testing the anonymous rule at all. The battery still went RED on that mutation, but on a DIFFERENT assertion, which is the signal that a rule has gone hollow rather than that a suite has broken. It also caught a mutation anchor that my edit had shifted, so one mutation had silently stopped running. It is a suite here rather than a mutation entry because it already is a mutation harness; mutating it under the gate tests the gate, not the route.",
+      "command": "npm run --silent smoke:labgatemutation",
+      "expect": "144 passed, 0 failed"
+    },
+    {
       "kind": "mutation",
       "name": "THE ONE THAT SHIPPED: gate the practice lab again",
       "_why": "The exact state the route was in when the screenshots arrived.",
