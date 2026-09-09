@@ -1,0 +1,166 @@
+{
+  "change": "the Command Center's Unit 3 speaks the CED's numbers, in the CED's order",
+  "_context": [
+    "Unit 3 was renumbered onto the CED on 2026-08-28 and the six live lesson pages",
+    "moved that day. The Command Center did not. Measured live 2026-09-09: its rows",
+    "read 3.1 to 3.6 on the retired site numbering, with a second CED badge beside",
+    "each title, while units 1, 2, 4 and 5 key on the CED number and carry no badge",
+    "at all. There is a row 3.6 and the CED's Unit 3 stops at 3.5.",
+    "",
+    "The unit note still told teachers the sequence differs from the CED's topic",
+    "order. That stopped being true when the three-cycle moved the bodies: handle",
+    "order IS CED order now, lesson-1 through lesson-6 stating 3.1a, 3.1b, 3.2, 3.3,",
+    "3.4, 3.5. Three rows also opened the wrong page, which is board 283; keying a",
+    "row on the CED number makes the handle follow from it, so that fix lands here",
+    "as a consequence and the sheet in imports/2026-09-08-cyber-cc-unit3-relink/ is",
+    "superseded rather than imported alongside.",
+    "",
+    "A teacher's taught ticks live in localStorage keyed on the row id, so the sheet",
+    "carries a one-time remap. Without it a tick on 3.3 Firewalls would come back",
+    "ticked against 3.3 Segmentation."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "CED numbers, CED order, right handles, ticks that follow their lessons",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect": "47 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the relink suite this supersedes still passes, so the two do not disagree",
+      "command": "npm run --silent smoke:cyberccunit3",
+      "expect": "16 passed, 0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "every row's number matches the lesson page it opens",
+      "_why": "Reads NEITHER source the generator is built on: not lib/cyber-unit3-renumber.js PLAN, not config/cyber-topics.json. It asks each LIVE page what it is through the data-lesson-id the gradebook keys on, and compares that to the number the row displays. Against the live page before the import this answers id-matches-page=0, so the assertion below is FALSE beforehand and cannot pass on a page that never changed. Run --fixed for the pre-merge gate, which fetches live and applies the sheet in memory; run it with no arguments after the import, when it observes the deployed page directly.",
+      "command": "node scripts/cyber-cc-unit3-ced-rederive.js",
+      "expect": "rows=6 id-matches-page=6 ced-matches-page=6",
+      "before": "rows=6 id-matches-page=0 ced-matches-page=3",
+      "pre_command": "node scripts/cyber-cc-unit3-ced-rederive.js --fixed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet parses back to exactly what the transform produced from live",
+      "_why": "Generation is not evidence that generation worked. The CSP sheet lost 90 bytes a page while every semantic check passed. Reads the shipped CSV back through a parser and diffs against a fresh transform of the live body.",
+      "command": "node scripts/cyber-cc-unit3-ced-numbers.js --verify \"imports/2026-09-09-cyber-cc-unit3-ced-numbers/Pages cyber-cc-unit3-ced-numbers.csv\"",
+      "expect": "parse-back-diff=0"
+    },
+    {
+      "kind": "mutation",
+      "name": "M1 THE PING-PONG: the row rewrite reads the number already in the handle",
+      "_why": "The trap lib/cyber-unit3-renumber.js documents. A cycle written as ordered replaces moves rows that were already right and cannot tell its own output from its input.",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "  out = out.replace(/ap-cyber-unit-3-lesson-\\d/g, `ap-cyber-unit-3-lesson-${r.target}`);",
+      "replace": "  for (const q of ROWS) out = out.split(`lesson-${q.target}`).join(`lesson-${q.target === 6 ? 1 : q.target + 1}`);",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "data array: every row opens the lesson its id names"
+    },
+    {
+      "kind": "mutation",
+      "name": "M2 the map is typed by hand instead of derived from PLAN",
+      "_why": "Retyping the Unit 3 mapping is how site 3.3 and 3.4 became each other's CED topics in the first place.",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "const ROWS = PLAN\n  .map((p) => ({",
+      "replace": "const ROWS = [{oldTopic:'3.1',lessonId:'3.1a',target:1},{oldTopic:'3.2',lessonId:'3.1b',target:2},{oldTopic:'3.6',lessonId:'3.2',target:3},{oldTopic:'3.4',lessonId:'3.3',target:4},{oldTopic:'3.3',lessonId:'3.4',target:6},{oldTopic:'3.5',lessonId:'3.5',target:5}]\n  .map((p) => ({",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "every ROW comes from a PLAN entry"
+    },
+    {
+      "kind": "mutation",
+      "name": "M3 the rows are left in their old order instead of CED order",
+      "_why": "Reordering is half the fix. Ids alone would leave the list reading 3.1a, 3.1b, 3.4, 3.3, 3.5, 3.2 and contradict the order the six pages actually run in.",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "  .sort((a, b) => a.target - b.target);",
+      "replace": "  .sort((a, b) => a.oldId.localeCompare(b.oldId));",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "the rows read 3.1a, 3.1b, 3.2, 3.3, 3.4, 3.5 in that order"
+    },
+    {
+      "kind": "mutation",
+      "name": "M4 the CED badge is stripped from the 3.1 pair too",
+      "_why": "3.1a and 3.1b are the two rows whose id is NOT the CED topic number, so they are the two that still need the badge to say which topic they belong to.",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "  if (r.newId === r.cedTopic) out = out.replace(/,\\s*ced:\"CED 3\\.\\d\"/, '');",
+      "replace": "  out = out.replace(/,\\s*ced:\"CED 3\\.\\d\"/, '');\n  if (false) out = out;",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "keeps the CED 3.1 badge"
+    },
+    {
+      "kind": "mutation",
+      "name": "M5 the badge is kept everywhere, so four rows repeat their own id",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "  if (r.newId === r.cedTopic) out = out.replace(/,\\s*ced:\"CED 3\\.\\d\"/, '');\n  else out = out.replace(/(\\bced:\")CED 3\\.\\d(\")/, `$1CED ${r.cedTopic}$2`);",
+      "replace": "  out = out.replace(/(\\bced:\")CED 3\\.\\d(\")/, `$1CED ${r.cedTopic}$2`);",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "drops the badge that would repeat its own id"
+    },
+    {
+      "kind": "mutation",
+      "name": "M6 the tick migration applies the map IN PLACE, so the 3.3/3.4 swap ping-pongs",
+      "_why": "This is the mutation that found a hollow assertion. With every tick set to `true` the in-place rewrite still left one of the swapped pair looking correct and the battery came back green. The ticks in the suite now carry DISTINCT values that name their lesson, and it reds on the rule it targets.",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "    '    for(k in o){ if(Object.prototype.hasOwnProperty.call(o,k)) out[U3_CED_IDS[k]||k]=o[k]; }',",
+      "replace": "    '    out=o; for(k in U3_CED_IDS){ if(out[k]!==undefined){ out[U3_CED_IDS[k]]=out[k]; if(U3_CED_IDS[k]!==k) delete out[k]; } }',",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "a tick on firewalls stays on firewalls"
+    },
+    {
+      "kind": "mutation",
+      "name": "M7 the tick migration is dropped entirely",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "  out = addTaughtMigration(out);\n  if (out === null) return null;",
+      "replace": "  // migration removed",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "the migration is spliced in"
+    },
+    {
+      "kind": "mutation",
+      "name": "M8 the note is left as it was, still telling teachers the order differs from the CED",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "  newBlock = newBlock.replace(noteRe, (m, head, old, tail) => head + NOTE + tail);",
+      "replace": "  newBlock = newBlock.replace(noteRe, (m, head, old, tail) => head + old + tail);",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "the unit note no longer claims a sequence differing from the CED"
+    },
+    {
+      "kind": "mutation",
+      "name": "M9 the STU link map keys are renumbered but the handles inside are not",
+      "_why": "Two blocks carry these links and both have to move. Fixing only one is the failure this separates: the data array and the link map are asserted independently.",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "    const obj = e.obj.replace(/ap-cyber-unit-3-lesson-\\d/g, `ap-cyber-unit-3-lesson-${r.target}`);",
+      "replace": "    const obj = e.obj;",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "link map: every row opens the lesson its id names"
+    },
+    {
+      "kind": "mutation",
+      "name": "M10 the row boundary goes greedy, so one row's text swallows the rows after it",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "    const to = i + 1 < 6 ? rowStarts[i + 1] : arrayEnd;",
+      "replace": "    const to = arrayEnd;",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "the rows read 3.1a, 3.1b, 3.2, 3.3, 3.4, 3.5 in that order"
+    },
+    {
+      "kind": "mutation",
+      "name": "M12 the derived lesson id drifts from config/cyber-topics.json",
+      "_why": "Disabling the cross-check alone is VACUOUS while the two sources agree, so it was replaced with one that makes them disagree. That is the only condition the check exists for.",
+      "file": "scripts/cyber-cc-unit3-ced-numbers.js",
+      "find": "    newId: p.lessonId,",
+      "replace": "    newId: p.lessonId === '3.1a' ? '3.1' : p.lessonId,",
+      "command": "npm run --silent smoke:cyberccunit3ced",
+      "expect_failure": "crossCheck finds nothing to complain about"
+    }
+  ],
+  "_withdrawn": [
+    {
+      "kind": "mutation_withdrawn",
+      "name": "M11 the one-shot precondition is removed",
+      "_why": "WITHDRAWN because it came back GREEN, and a green mutation run is a failed check rather than a passing one. Refusing an already-renumbered page turns out to be defended three times over: disable the explicit precondition and the row-id regex refuses on the new id shape; widen that too and the PLAN lookup finds no row for the retired ids. No single-line mutation isolates any one guard, so the suite's assertion 8 is LABELLED as insurance against a future widening rather than as something a passing run establishes. Recorded here rather than deleted, so the next session does not spend the afternoon rediscovering it.",
+      "result": "green, failure unreachable"
+    }
+  ]
+}
