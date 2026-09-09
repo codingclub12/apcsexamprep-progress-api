@@ -1,0 +1,101 @@
+{
+  "change": "a teacher previewing a lab is no longer treated as anonymous, so her own lock stops refusing her",
+  "_context": [
+    "Reported 2026-09-09: 'lab open but isn't open'. Measured before touching",
+    "anything: all three AP Cybersecurity labs answer locked:true to any request",
+    "the server cannot attribute to a student.",
+    "",
+    "labStudent() requires role === 'student', so a signed-in TEACHER resolves to",
+    "null and falls into the cross-class anonymous branch, which refuses whenever",
+    "ANY class anywhere has closed that lab. She opens the lab for her own class,",
+    "clicks preview, and is told to sign in with a class code she does not have,",
+    "over a lock some other teacher set.",
+    "",
+    "The player's WORDING was corrected earlier the same day off the same email.",
+    "That made the refusal honest and left it wrong: she is signed in, and she did",
+    "open it.",
+    "",
+    "Refusing her is also incoherent with the route immediately below, which hands",
+    "a verified teacher the lab's ANSWER KEY. Withholding the lab from someone we",
+    "will hand the key to protects nothing.",
+    "",
+    "This does not reopen the 2026-09-07 hole. That was a STUDENT signing out to",
+    "walk past their teacher's lock, and a student cannot mint a teacher token.",
+    "Entitlement is deliberately not required: it gates the KEY, and a lab nobody",
+    "has closed is already served to the public, so requiring it here would invent",
+    "a second way to be wrong for a teacher on a free plan.",
+    "",
+    "NOTE ON THE THIRD KIND. There is no live check here and that is deliberate.",
+    "The row that moved is what a TEACHER's token gets, and observing that against",
+    "production needs a teacher credential, which a session never asks for and",
+    "never puts in a transcript. An assertion about the anonymous row would have",
+    "passed yesterday and would be decoration. The rederive is the honest third",
+    "kind, and it caught a real disagreement on its first run."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "four callers, four answers, and a forged token gets none of them",
+      "_why": "The risk in this fix is not that teachers stay locked out, it is that widening the door reopens the lock it was built around. The student-of-a-closed-class row and the no-token row are asserted with their reason strings, so a mutation that simply opens the lab for everybody cannot satisfy them.",
+      "command": "npm run --silent smoke:labteacherpreview",
+      "expect": "13 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second decision table agrees with the route on all 35 caller/gate combinations",
+      "_why": "Written from the rules rather than from routes/labs.js, and deliberately does NOT import resolveAliasGate or lockedForAnyClass: importing the thing under test and calling the comparison a rederive is how two implementations come to agree because they are one implementation. It disagreed on its first run, over a class that closes a unit and reopens one lesson inside it. The ROUTE was right and this side was wrong, which is what a rederive is for.",
+      "command": "npm run --silent smoke:labgaterederive",
+      "expect": "3 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: treat a teacher as anonymous again",
+      "_why": "This is the exact state the route was in when the email arrived. It must go red on the assertion that names it rather than on some downstream symptom.",
+      "file": "routes/labs.js",
+      "find": "    const asTeacher = verifyAnyToken(bearer(req) || '');\n    if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {\n      return { open: true, reason: 'teacher-preview', audience: 'teacher' };\n    }\n",
+      "replace": "",
+      "command": "npm run --silent smoke:labteacherpreview",
+      "expect_failure": "a signed-in TEACHER gets the lab"
+    },
+    {
+      "kind": "mutation",
+      "name": "over-correct: open the lab for every unattributed caller",
+      "_why": "The opposite failure, and the one a suite that only tested the teacher row would miss. It reopens the 2026-09-07 hole exactly: sign out, walk past the lock.",
+      "file": "routes/labs.js",
+      "find": "    if (hit.locked) {\n      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };\n    }",
+      "replace": "    if (false && hit.locked) {\n      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };\n    }",
+      "command": "npm run --silent smoke:labteacherpreview",
+      "expect_failure": "a caller with NO token is still refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "accept any valid token, not specifically a teacher",
+      "_why": "Drops the role claim and keeps the signature check. This survived GREEN on its first run, which is the finding: labStudent() handles every ordinary student above, so no normal student ever reaches the branch and the role check looked untestable. The caller that does reach it is a valid, correctly signed student token whose student row is gone, which a deactivated student really holds for 180 days. Without that assertion this mutation is invisible.",
+      "file": "routes/labs.js",
+      "find": "    if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {",
+      "replace": "    if (asTeacher && asTeacher.id) {",
+      "command": "npm run --silent smoke:labteacherpreview",
+      "expect_failure": "a valid STUDENT token whose row no longer exists"
+    },
+    {
+      "kind": "mutation",
+      "name": "trust the claim without verifying the signature",
+      "_why": "The realistic version of this bug: someone reads the payload instead of verifying it, and every assertion about teachers still passes. Only a forged token catches it, which is why one is minted with the wrong secret rather than assumed unreachable.",
+      "file": "routes/labs.js",
+      "find": "    const asTeacher = verifyAnyToken(bearer(req) || '');",
+      "replace": "    const _t = bearer(req) || ''; let asTeacher = null; try { asTeacher = JSON.parse(Buffer.from(_t.split('.')[1] || '', 'base64').toString('utf8')); } catch (e) { asTeacher = null; }",
+      "command": "npm run --silent smoke:labteacherpreview",
+      "expect_failure": "a teacher token signed with the WRONG secret"
+    },
+    {
+      "kind": "mutation",
+      "name": "the rederive stops resolving each class and counts raw closing rows",
+      "_why": "This is the bug the rederive itself shipped with for one run, so it is pinned rather than forgotten. It proves the comparison is sensitive to the ladder and not just to the open/locked booleans, which a matrix of all-open or all-closed arrangements would not be.",
+      "file": "smoke/lab-gate-rederive.js",
+      "find": "  for (const rows of byClass.values()) {\n    const sorted = rows.slice().sort((a, b) => widthOf(a) - widthOf(b));\n    const best = widthOf(sorted[0]);\n    const tied = sorted.filter((r) => widthOf(r) === best);\n    //  Same tie rule as rule 3: an explicit open wins at equal width.\n    if (!tied.some((r) => r.open === 1)) return false;\n  }\n  return true;",
+      "replace": "  for (const rows of byClass.values()) {\n    if (rows.some((r) => r.open === 0)) return false;\n  }\n  return true;",
+      "command": "npm run --silent smoke:labgaterederive",
+      "expect_failure": "two independent implementations agree"
+    }
+  ]
+}

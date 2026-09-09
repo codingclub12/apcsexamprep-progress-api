@@ -162,6 +162,32 @@ function labGate(req, spec) {
   const unitAny = spec.unit, lessonAny = spec.lesson_id;
   const stu = labStudent(req);
   if (!stu) {
+    //  A TEACHER IS NOT ANONYMOUS, and treating one as anonymous is what put a
+    //  support email in Tanner's inbox on 2026-09-09: "lab open but isn't open".
+    //
+    //  labStudent() requires role === 'student', so a signed-in TEACHER returns
+    //  null here and falls into the cross-class branch below. That branch
+    //  refuses whenever ANY class anywhere has closed the lab. So a teacher
+    //  opens a lab for her own class, clicks preview, and is told to sign in
+    //  with a class code she does not have, over a lock some other teacher set.
+    //
+    //  The player's WORDING was corrected earlier the same day, off the same
+    //  email. That made the refusal honest and left it wrong: she is signed in,
+    //  and she did open it.
+    //
+    //  Refusing her is also incoherent with the route directly below, which
+    //  hands a verified teacher the lab's ANSWER KEY. Withholding the lab from
+    //  someone we will hand the key to protects nothing.
+    //
+    //  This does not reopen the 2026-09-07 hole. That was a STUDENT signing out
+    //  to walk past their teacher's lock, and a student cannot mint a teacher
+    //  token. Entitlement is deliberately NOT required: it gates the KEY, and a
+    //  lab nobody has closed is served to the public already, so requiring it
+    //  here would invent a second way to be wrong for a teacher on a free plan.
+    const asTeacher = verifyAnyToken(bearer(req) || '');
+    if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {
+      return { open: true, reason: 'teacher-preview', audience: 'teacher' };
+    }
     if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };
     const anyRows = labAnyGateStmt.all(spec.course, unitAny);
     //  Both names in ONE call. Asking about each in turn and refusing on the
