@@ -61,13 +61,7 @@ looking at the attribute that was meant to change.
 
 ## Still open
 
-- **The import itself.** This environment has no `SHOPIFY_ADMIN_TOKEN`, so the
-  sheet is handed over rather than applied. Run the verifier BEFORE importing as
-  well as after: a sheet carries a body captured on one day, and if it comes back
-  6 of 6 the key is already fixed and the sheet is stale enough to revert whatever
-  did it. The generator refuses on the same condition. That check is step 1 of the
-  runbook rather than a footnote, because the 2026-09-08 Command Center sheet
-  proved a day is long enough.
+- Nothing. The import landed. See below.
 - **The grader still does not trim.** Fixing the data was the right first move
   because the script is inline in the page body, so patching it is the same MERGE
   with a larger diff, and a malformed key would still be sitting there for the
@@ -77,3 +71,33 @@ looking at the attribute that was meant to change.
   `measure:csau1leak` prints them, so Unit 1 is covered. Units 2 to 4 are not
   measured.
 - Nothing here touches board 295. The key is still readable on all fifteen pages.
+
+## IMPORTED, and it holds
+
+Tanner imported the sheet on 2026-09-09. The page's `updated_at` moved to
+06:32:29-05:00 and the body is 91,573 bytes, exactly one less than the 91,574
+recorded before it. That one byte is the newline.
+
+    node scripts/verify-csa-19-key-live.js
+    6 passed, 0 failed
+
+Read a second way, without going through the verifier, because the verifier and
+the sheet were written by the same session and a suite agreeing with its own
+author is a report:
+
+    raw data-answer: "C"  codepoints: [ 67 ]
+    option letters:  ["A","B","C","D"]
+    strict === match now possible: true
+
+    all six graded keys: 1.9-cfu-1="C"  1.9-cfu-2="A"  1.9-cfu-3="D"
+                         1.9-cfu-4="B"  1.9-cfu-5="C"  1.9-cfu-6="A"
+
+`strict === match now possible` is the whole thing. It was false for every
+student who ever answered that question. The other five keys are byte for byte
+what they were, which is the half that would have mattered if the MERGE had gone
+wrong, and the page is one byte shorter rather than a section lighter.
+
+What this does NOT close: the key is still readable on all fifteen Unit 1 pages,
+`1.9-cfu-1` included. Board 295. And the grader still does not trim, so a padded
+key anywhere else has the same effect; Unit 1 is covered by the `padded` flag in
+`lib/answer-leak.js`, Units 2 to 4 are not measured.
