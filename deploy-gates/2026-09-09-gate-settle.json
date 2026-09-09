@@ -1,0 +1,117 @@
+{
+  "change": "a lesson or unit switch now settles what is under it, so a teacher's click actually opens the assignment",
+  "_context": [
+    "Reported 2026-09-09: '1.2 have the lock off but it isn't open.'",
+    "",
+    "The assignments board has said 'a mixed switch settles everything under it",
+    "OPEN on the first click' since it shipped. It was not true. The route wrote",
+    "ONE row at the clicked scope, narrower rows survived, and narrower always",
+    "wins at read time.",
+    "",
+    "So a teacher whose lab carried its own closing row flipped the 1.2 lesson",
+    "switch to open, the lab stayed shut, the board correctly re-rendered mixed,",
+    "and clicking again did exactly nothing. Reproduced before touching anything:",
+    "",
+    "  after closing the lab at activity scope   LOCKED (explicit-closed)",
+    "  after opening the whole LESSON            LOCKED (explicit-closed)",
+    "  rows: [1.2|*|1, 1.2|terminal-lab|0]",
+    "",
+    "A switch that cannot settle is worse than a missing one, because there is no",
+    "way to tell from the outside that it is not working. She had no move that",
+    "would have fixed it except finding the individual chip.",
+    "",
+    "THE RULE IS CONTAINMENT, NOT WIDTH, and that is the whole risk in the fix. A",
+    "lesson row (1.2, *) and an activity-type row (*, quiz) overlap without either",
+    "containing the other, so clearing one for the other throws away a setting the",
+    "teacher never spoke about. A width-based implementation is the obvious wrong",
+    "way to write this and passes every test that only exercises the unit case, so",
+    "it is mutated explicitly.",
+    "",
+    "PINNING SURVIVES. Close the unit, then open one lesson inside it: the narrow",
+    "write clears nothing above itself and still wins. That is the case the ladder",
+    "was built for and it is asserted end to end, not by reading rows."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the reported click works, containment holds, pinning survives, the delete stays in its lane",
+      "_why": "Section 1 reproduces the teacher's exact sequence through the LAB route, because routes/quiz.js will never serve a lab and the first draft of this suite checked the wrong door. Section 4 is the worst outcome available from this change: a delete that reaches another class or another unit.",
+      "command": "npm run --silent smoke:gatesettle",
+      "expect": "15 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the ladder itself is unchanged",
+      "_why": "This changes what is STORED, not how it resolves, so the assertions that pin precedence, both enforcement paths and the gradebook's view of a lock must be untouched. One assertion in it DID move and it is worth knowing why: four sequential writes ending on the unit-activity scope used to leave four rows, and now the last one correctly settles the activity row under it. Reordered widest-first rather than relaxed, with both behaviours recorded in the comment, and a new assertion added that the settling happens in the other order.",
+      "command": "npm run --silent smoke:gatescope",
+      "expect": "71 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "an independent containment rule agrees with the route on every write shape",
+      "_why": "Written from the rule in English rather than from the DELETE's WHERE clause, which would be one implementation wearing two hats. The matrix is exhaustive over the four scope shapes in both positions, so the two pairs that catch a width-based implementation are covered by construction rather than by remembering to add them. It also asserts the matrix both clears and keeps rows, because a comparison where nothing is ever cleared proves nothing.",
+      "command": "npm run --silent smoke:gatesettlerederive",
+      "expect": "4 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: write the row and clear nothing",
+      "_why": "This is the exact state the route was in when the report arrived. It must go red on the assertion that names the teacher's own click.",
+      "file": "routes/teacher.js",
+      "find": "  const cleared = db.prepare(`\n    DELETE FROM activity_gates\n     WHERE class_id = ? AND course = ? AND unit = ?\n       AND (? = '*' OR lesson = ?)\n       AND (? = '*' OR activity_type = ?)\n       AND NOT (lesson = ? AND activity_type = ?)\n  `).run(cls.id, course, unit, lesson, lesson, activity_type, activity_type, lesson, activity_type).changes;",
+      "replace": "  const cleared = 0;",
+      "command": "npm run --silent smoke:gatesettle",
+      "expect_failure": "and the lab is now actually open to a student"
+    },
+    {
+      "kind": "mutation",
+      "name": "clear by WIDTH instead of containment",
+      "_why": "The obvious wrong implementation, and the one that looks right. Treating scope as a single width number makes a lesson write swallow an activity-type row spanning the whole unit, which the teacher never spoke about. It passes the unit case and every roll-up assertion.",
+      "file": "routes/teacher.js",
+      "find": "       AND (? = '*' OR lesson = ?)\n       AND (? = '*' OR activity_type = ?)\n       AND NOT (lesson = ? AND activity_type = ?)\n  `).run(cls.id, course, unit, lesson, lesson, activity_type, activity_type, lesson, activity_type).changes;",
+      "replace": "       AND (? = '*' OR lesson = ? OR ? <> '*')\n       AND (? = '*' OR activity_type = ?)\n       AND NOT (lesson = ? AND activity_type = ?)\n  `).run(cls.id, course, unit, lesson, lesson, lesson, activity_type, activity_type, lesson, activity_type).changes;",
+      "command": "npm run --silent smoke:gatesettle",
+      "expect_failure": "leaves the activity-type row alone"
+    },
+    {
+      "kind": "mutation",
+      "name": "the delete forgets the unit, so it reaches across the whole course",
+      "_why": "The worst outcome available here. A teacher settling one unit would silently wipe her settings in every other unit of the same course, and nothing in the response or the board would say so.",
+      "file": "routes/teacher.js",
+      "find": "     WHERE class_id = ? AND course = ? AND unit = ?\n       AND (? = '*' OR lesson = ?)",
+      "replace": "     WHERE class_id = ? AND course = ? AND (unit = ? OR 1=1)\n       AND (? = '*' OR lesson = ?)",
+      "command": "npm run --silent smoke:gatesettle",
+      "expect_failure": "the same class keeps its rows in another unit"
+    },
+    {
+      "kind": "mutation",
+      "name": "the delete forgets the class, so it reaches every teacher",
+      "_why": "The other direction of the same blast radius, and the one that would take out somebody else's class entirely. Asserted with a bystander class holding a row at the identical location.",
+      "file": "routes/teacher.js",
+      "find": "     WHERE class_id = ? AND course = ? AND unit = ?",
+      "replace": "     WHERE (class_id = ? OR 1=1) AND course = ? AND unit = ?",
+      "command": "npm run --silent smoke:gatesettle",
+      "expect_failure": "another class keeps its row at the same location"
+    },
+    {
+      "kind": "mutation",
+      "name": "the write clears its own row too, so an assignment click deletes what it just set",
+      "_why": "Dropping the self-exclusion looks harmless because the INSERT runs afterwards and puts the row back. It is caught only by the count reported to the caller, which is the one signal a teacher's client has that anything happened.",
+      "file": "routes/teacher.js",
+      "find": "       AND NOT (lesson = ? AND activity_type = ?)\n  `).run(cls.id, course, unit, lesson, lesson, activity_type, activity_type, lesson, activity_type).changes;",
+      "replace": "  `).run(cls.id, course, unit, lesson, lesson, activity_type, activity_type).changes;",
+      "command": "npm run --silent smoke:gatesettle",
+      "expect_failure": "an ASSIGNMENT write clears nothing"
+    },
+    {
+      "kind": "mutation",
+      "name": "the rederive's containment rule goes width-based",
+      "_why": "Pins the comparison to containment rather than to the open/locked counts. If the second implementation drifts to a width number the diff stops being a second opinion, and it would drift silently because the unit and assignment cases agree either way.",
+      "file": "smoke/gate-settle-rederive.js",
+      "find": "  if (target.lesson !== '*' && row.lesson !== target.lesson) return false;\n  if (target.activity !== '*' && row.activity !== target.activity) return false;\n  return true;",
+      "replace": "  const w = (r) => (r.lesson !== '*' ? 0 : 2) + (r.activity !== '*' ? 0 : 1);\n  return w(row) < w(target);",
+      "command": "npm run --silent smoke:gatesettlerederive",
+      "expect_failure": "agree on all 4 writes"
+    }
+  ]
+}

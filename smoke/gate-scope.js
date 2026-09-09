@@ -279,15 +279,37 @@ const resolved = (lesson, activity) => gate.resolveScopedGate(rowsFor(), CLS, le
 
   // ═══ 3. THE TEACHER API ════════════════════════════════════════════════════
   wipeGates();
+  //  WIDEST FIRST, and the order is load-bearing as of 2026-09-09.
+  //
+  //  These four writes used to run narrowest-ish last, ending on the
+  //  unit-activity row, and all four survived because a write only ever touched
+  //  its own row. It no longer does: a write now CLEARS the rows it contains, so
+  //  writing (*, quiz) last would settle the (1.1, quiz) row underneath it and
+  //  this block would see three rows rather than four.
+  //
+  //  That is the fix working, not a regression. A teacher who closes every quiz
+  //  in the unit means the 1.1 quiz too, and the old behaviour is why she could
+  //  flip a switch and watch nothing happen. Board 306.
+  //
+  //  Reordered rather than relaxed, because what this block is FOR is that
+  //  /gates names all four scopes, and that is still true. Written widest first,
+  //  no write contains a row that already exists.
   r = await setGate({ open: false });
   ok('POST /gate with no lesson writes a unit-scope row', r.body && r.body.scope === 'unit', r.body);
+  r = await setGate({ activity_type: 'quiz', open: false });
+  ok('POST /gate with an activity but no lesson writes a unit-activity row',
+    r.body && r.body.scope === 'unit-activity', r.body);
   r = await setGate({ lesson: '1.1', open: false });
   ok('POST /gate with a lesson writes a lesson-scope row', r.body && r.body.scope === 'lesson', r.body);
   r = await setGate({ lesson: '1.1', activity_type: 'quiz', open: false });
   ok('POST /gate with both writes an activity-scope row', r.body && r.body.scope === 'activity', r.body);
+
+  //  And the other order settles, which is the whole point of the change. Kept
+  //  here beside the four scopes so a reader sees both facts in one place.
   r = await setGate({ activity_type: 'quiz', open: false });
-  ok('POST /gate with an activity but no lesson writes a unit-activity row',
-    r.body && r.body.scope === 'unit-activity', r.body);
+  ok('re-writing the unit-activity scope SETTLES the activity row it contains',
+    r.body && r.body.cleared === 1, r.body);
+  r = await setGate({ lesson: '1.1', activity_type: 'quiz', open: false });
 
   r = await call('GET', `/api/teacher/classes/${CODE}/gates`, null, TT);
   ok('GET /gates returns every scope with its name',
