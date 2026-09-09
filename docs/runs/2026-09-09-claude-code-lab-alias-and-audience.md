@@ -136,8 +136,20 @@ afterthought.
 
 ## Still open
 
-- **The sheet needs a human to import it.** One page, `my-progress`. Until it
-  lands, students still cannot see their labs; nothing else here depends on it.
+- ~~The sheet needs a human to import it.~~ **Imported 2026-09-09.** Verified
+  against the bytes Shopify stored rather than against the sheet: the live body
+  carries `LAB_ACTS`, the `Terminal Lab` label and the conditional `cols` line,
+  and driving that live script under a DOM stub renders a Terminal Lab column in
+  a unit with lab work, a 6/8 cell in the 1.2 row, and no lab column at all in a
+  unit without one. `page-body-csv.js --live` says every selected page already
+  matches, which is the same answer reached a second way.
+
+  The live body is 26 bytes shorter than the repo source and that is Shopify
+  decoding entities inside JavaScript string literals on import, six of them:
+  `&#10003;` to a check mark and `&ndash;` to an en dash. Pre-existing, not from
+  this change, and `renderable()` normalizes both sides for exactly this reason.
+  The full diff is those six lines and nothing else, which is the check that
+  matters: a marker scan cannot see damage it was not told to look for.
 - **I do not know whose closing rows those are.** `activity_gates` needs the
   admin key and this session holds only `COMMAND_READ_TOKEN` and `TODO_KEY`, so
   `GET /api/admin/class/:id/gradebook` answers 403 to me. The anonymous refusal
