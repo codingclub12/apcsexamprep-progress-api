@@ -1,6 +1,6 @@
 # One lab, two columns, two padlocks, and a message that blamed the wrong person
 
-**Board:** 288. Reported by Michelle Campbell (AP Cybersecurity) by email, 2026-09-08
+**Board:** 288. Reported by Michelle, the AP Cybersecurity teacher, by email, 2026-09-08
 18:56, forwarded the same evening.
 
 > Some of the labs say "Your Teacher has not opened this lab yet." But I have not
@@ -110,7 +110,12 @@ both columns say so. Before today one said open.
   refusal names whose lock it is.
 - `smoke:labplayertoken` 19 of 19, `smoke:myprogress` 31 of 31,
   `smoke:gatescope` 70 of 70, `smoke:labgatemutation` 144 of 144 over 27
-  mutations, `smoke:gatescopemutation` 108 of 108.
+  mutations, `smoke:gatescopemutation` 108 of 108, `smoke:analysismutation`
+  73 of 73.
+- Every offline suite ran locally, 221 green. The three that failed are this
+  container missing `python-pptx` and `python-docx`, which CI installs:
+  `csakitstyle`, `deckvoice`, `exercisekeys`. Two mutation batteries failed on
+  that run and are green after the retargets above.
 - `deploy-gates/2026-09-09-lab-alias-and-audience.json` passes `--pre`: suite
   and mutation agreeing, live deferred to after the deploy. Five of the
   mutations are new and each breaks its own assertion, including both directions
@@ -120,10 +125,11 @@ both columns say so. Before today one said open.
   three markers survive the round trip. `matrixify-preflight --expect-command
   UPDATE` is clear to import.
 
-Two mutation targets in OTHER batteries broke on this branch and were retargeted
+Four mutation targets in OTHER batteries broke on this branch and were retargeted
 rather than deleted: `smoke/gate-scope-mutation.js` aimed at the contract line I
-replaced, and `smoke/lab-gate-mutation.js` aimed at the alias list I moved and at
-the locked response shape I extended. A mutation whose find string silently
+replaced, `smoke/lab-gate-mutation.js` aimed at the alias list I moved and at the
+locked response shape I extended, and `smoke/analysis-mutation.js` aimed at both
+halves of the two location lists that became one. A mutation whose find string silently
 misses reports a clean run over code it never touched, which is the exact failure
 those batteries exist to prevent, so the retarget is the work rather than an
 afterthought.
