@@ -1027,24 +1027,36 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   who teaches this for a living, it fails, and no amount of technical accuracy
   fixes it. This applies to a run note and a commit message too, just with a
   lower bar: those are read by people who work here.
-- **A deliverable gets COMMITTED, and what you hand over is a commit-pinned
-  link.** Sending the file as well is fine and often helpful. Sending it
-  INSTEAD of the link is what keeps costing Tanner a round trip, and he asked
-  for this rule on 2026-09-04 after having to ask more than once for the same
-  Matrixify sheet to be re-sent.
-  The mechanism, because the rule looks like a preference and is not: a session
-  runs in a container that is reclaimed after inactivity, and everything under
-  the scratchpad goes with it. A sheet, a report, a generated asset or a page
-  snapshot that lives only there is GONE by the next session, and the next
-  session cannot fetch it for him either. Committed, it is permanent and he
-  never has to ask anyone.
-  Pin the commit rather than linking a branch. `main` moves, and an import
-  sheet is worth exactly the bytes that were validated, not whatever is there
-  a week later. This repo is public, so a raw link works logged out:
+- **A deliverable gets COMMITTED, and the FILE ITSELF is what you hand over.**
+  Attach it in the conversation. Tanner asked for this on 2026-09-09, in these
+  words: "Present the files here not in GitHub link."
+
+  **This reverses the handover half of a rule he set on 2026-09-04**, which said
+  the opposite: hand over a commit-pinned raw link, and sending the file was
+  optional politeness. Do not re-derive the old version from the reasoning below,
+  because the reasoning did not change and the instruction did. He is on a
+  treadmill, by voice, and a link is something he has to go open on a machine he
+  may not be at. A file in the thread is already there.
+
+  What is UNCHANGED is that it still gets committed, and the mechanism is why: a
+  session runs in a container that is reclaimed after inactivity, and everything
+  under the scratchpad goes with it. A sheet, a report, a generated asset or a
+  page snapshot that lives only there is GONE by the next session, and the next
+  session cannot fetch it for him either. So commit it AND send it. Committing is
+  what makes it survive; sending is what delivers it.
+
+  The link is now a footnote rather than the delivery. When one is worth giving at
+  all, pin the commit rather than a branch, because `main` moves and an import
+  sheet is worth exactly the bytes that were validated. This repo is public, so a
+  raw link works logged out:
   `https://raw.githubusercontent.com/codingclub12/apcsexamprep-progress-api/<sha>/<path>`.
-  Verify it before handing it over. The one on 2026-09-04 was checked at 200
-  with an md5 matching the local file, which takes one curl and turns "here is
-  a link" into "here is the file".
+
+  Say which files you validated yourself and which you are only passing along. On
+  2026-09-09 seven sheets went over at once and only two were this session's work;
+  the other five came from another session's merge and had not been checked here.
+  A handover that does not distinguish those is asking him to trust a file nobody
+  read.
+
   This does NOT mean commit everything. Scratch work, probe scripts and
   mutation harnesses belong in the scratchpad and should die there. The test is
   whether Tanner would ever want it again: a sheet he has to import, a report
