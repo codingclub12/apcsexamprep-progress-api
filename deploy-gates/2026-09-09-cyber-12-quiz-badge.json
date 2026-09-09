@@ -1,0 +1,113 @@
+{
+  "change": "the 1.2 quiz page stops advertising a 12 question, 25 minute quiz it does not serve",
+  "_the_defect": "/pages/ap-cyber-unit-1-lesson-2-quiz says '5 questions, about 10 minutes' in its blurb and then, in the badge row directly beneath it, [12 Questions] [Skills 1.A, 1.B, 2.A] [~25 min] [Instant Feedback]. The two sit one line apart. A student reads 12 and is served 5; a teacher planning a period reads 25 minutes for a quiz that takes 10.",
+  "_root_cause": "The badges are left over from the 12 item bank transcribed from the teacher bundle on 2026-08-26 and retired the next day, when the rule landed that bundle instruments stay offline. The page was later migrated onto the server render path, and the badge row was not revisited.",
+  "_scope": "There are 25 cyber quiz pages, not 26, and the first version of this line said 26. Re-swept 2026-09-09: seven of the 25 carry a question count badge at all, and 1.2 is the only one whose badge disagrees with its bank. So it is an instance and not a class. 5.5 and 5.6 advertise ~12 and ~15 minutes where everyone else says ~10; their counts are right, they carry no blurb to contradict, and a duration is an estimate rather than a derived fact, so they are left alone.",
+  "_the_count_is_measured": "The replacement number is read from the live quiz API's own pool for this lesson, by the generator and again by the rederive. Typing 5 in from the blurb would make this a second opinion about how many questions the bank holds, and a second opinion is what put the wrong number there in the first place.",
+  "_import_is_tanners": "The artifact is a Matrixify sheet. Nothing here writes to Shopify. The live check below can only pass after he imports it.",
+  "checks": [
+    {
+      "kind": "rederive",
+      "name": "the sheet parses back, in another language's CSV reader, to live plus exactly two substitutions",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect": "REDERIVE OK",
+      "_why": "The generator writes the CSV with its own quoting and then checks its own output with its own string logic, which proves the two halves agree with each other and nothing more. This reads the file the way an importer does and rebuilds it from the live body by hand."
+    },
+    {
+      "kind": "mutation",
+      "name": "M1 THE REPORTED DEFECT: the stale count is left on the page",
+      "_why": "Reproduces exactly what is live right now. If this stays green the check is not looking at the thing that is wrong.",
+      "file": "imports/2026-09-09-cyber-12-quiz-badge/Pages cyber-12-quiz-badge.csv",
+      "find": ">5 Questions<",
+      "replace": ">12 Questions<",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect_failure": "no stale count survived"
+    },
+    {
+      "kind": "mutation",
+      "name": "M2 the duration is left at 25 minutes",
+      "_why": "Independent of M1 and separately consequential: the count is what a student notices, the duration is what a teacher plans a period around.",
+      "file": "imports/2026-09-09-cyber-12-quiz-badge/Pages cyber-12-quiz-badge.csv",
+      "find": ">~10 min<",
+      "replace": ">~25 min<",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect_failure": "no stale duration survived"
+    },
+    {
+      "kind": "mutation",
+      "name": "M3 the badge is corrected to a number the server does not serve",
+      "_why": "This is the rule that makes the repair honest rather than merely different. Naming this assertion is the point: the reconstruction catches this mutation too, and would have reported a clean run over a server check that never fired.",
+      "file": "imports/2026-09-09-cyber-12-quiz-badge/Pages cyber-12-quiz-badge.csv",
+      "find": ">5 Questions<",
+      "replace": ">7 Questions<",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect_failure": "the sheet advertises the count the server serves"
+    },
+    {
+      "kind": "mutation",
+      "name": "M4 a third edit, somewhere nobody declared a marker for",
+      "_why": "The reconstruction's own case, and the reason it exists. A marker list has to be told what to look for; this one byte is in a badge no rule above mentions.",
+      "file": "imports/2026-09-09-cyber-12-quiz-badge/Pages cyber-12-quiz-badge.csv",
+      "find": "Skills 1.A, 1.B, 2.A",
+      "replace": "Skills 1.A, 1.B, 2.B",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect_failure": "the sheet IS the live body plus exactly those two substitutions"
+    },
+    {
+      "kind": "mutation",
+      "name": "M5 the quiz mount is renamed out from under the page",
+      "_why": "THIS ONE CAUGHT A HOLLOW GUARD IN THIS VERY CHECK. The first draft asserted 'data-apcs-quiz' in body, and 'data-apcs-quiz' is a substring of 'data-apcs-quizX', so a renamed mount passed. The mount is what makes Michelle's lock real rather than decorative, so a sheet that quietly drops it would turn a locked quiz back into an open one.",
+      "file": "imports/2026-09-09-cyber-12-quiz-badge/Pages cyber-12-quiz-badge.csv",
+      "find": "data-apcs-quiz data-course",
+      "replace": "data-apcs-quizX data-course",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect_failure": "the sheet still carries exactly one, unmoved"
+    },
+    {
+      "kind": "mutation",
+      "name": "M6 the mount is repointed at another lesson",
+      "_why": "A different failure from M5 and a worse one: the mount is present, the page renders, and 1.2's students are quietly served and scored against 1.3's bank. A presence check cannot tell these apart, which is why the rule asserts the shape.",
+      "file": "imports/2026-09-09-cyber-12-quiz-badge/Pages cyber-12-quiz-badge.csv",
+      "find": "data-unit=\"\"unit-1\"\" data-lesson=\"\"1.2\"\"",
+      "replace": "data-unit=\"\"unit-1\"\" data-lesson=\"\"1.3\"\"",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect_failure": "the sheet still carries exactly one, unmoved"
+    },
+    {
+      "kind": "mutation",
+      "name": "M7 the BOM is stripped",
+      "_why": "Not cosmetic. The body carries 18 non-ASCII characters, and without the BOM Matrixify reads the file as cp1252 and imports them as mojibake onto a live page.",
+      "file": "imports/2026-09-09-cyber-12-quiz-badge/Pages cyber-12-quiz-badge.csv",
+      "find": "﻿\"ID\"",
+      "replace": "\"ID\"",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect_failure": "the sheet is written with a BOM"
+    },
+    {
+      "kind": "mutation",
+      "name": "M8 the command is UPDATE instead of MERGE",
+      "_why": "MERGE touches only the columns present. The distinction is what keeps a one column sheet from blanking everything else on the page.",
+      "file": "imports/2026-09-09-cyber-12-quiz-badge/Pages cyber-12-quiz-badge.csv",
+      "find": "\"MERGE\"",
+      "replace": "\"UPDATE\"",
+      "command": "python3 scripts/cyber-12-quiz-badge-rederive.py",
+      "expect_failure": "the command is MERGE"
+    },
+    {
+      "kind": "live",
+      "name": "the storefront stops advertising 12 questions and starts advertising 5",
+      "command": "node -e \"const {pageBody}=require('./lib/storefront-fetch');const b=pageBody('ap-cyber-unit-1-lesson-2-quiz').body_html;console.log('badge12='+b.includes('>12 Questions<')+' badge5='+b.includes('>5 Questions<')+' t25='+b.includes('>~25 min<')+' t10='+b.includes('>~10 min<'));\"",
+      "expect": "badge12=false badge5=true t25=false t10=true",
+      "_why": "FALSE before the import and measured that way. At 11:5x UTC on 2026-09-09, before the sheet existed, the same command printed badge12=true badge5=false t25=true t10=false. All four flip, so a partial import cannot read as a whole one.",
+      "_fetched_through_the_one_door": "lib/storefront-fetch.js, which sends no User-Agent and refuses a body that is not provably a rendered page. Without that, a challenge interstitial would satisfy badge12=false and half of this assertion would pass on a page that never loaded."
+    },
+    {
+      "kind": "live",
+      "name": "no cyber quiz page advertises a count its bank does not hold",
+      "command": "node scripts/cyber-quiz-badge-sweep.js",
+      "expect": "1 advertising a count the bank does not hold",
+      "_why": "A stronger statement than the byte strings above, and false right now in the way that matters: the sweep exits 1 today, naming 1.2. After the import it exits 0 and this check's expect line has to be updated to '0 advertising', which is deliberate. The expect pins today's reading so a stale gate cannot silently pass.",
+      "_this_is_also_the_standing_check": "It compares each page's badge against the server's own pool, so it keeps working when a bank is resized later. It does NOT judge the duration badges: 5.5 and 5.6 say ~12 and ~15 minutes, their counts are right, they carry no blurb to contradict, and a check that cannot say what the right answer would be has no business calling one wrong."
+    }
+  ]
+}
