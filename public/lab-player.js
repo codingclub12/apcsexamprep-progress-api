@@ -802,8 +802,26 @@
         //  not be loaded" about a lab a teacher deliberately closed would send
         //  the student to support instead of to their teacher.
         if (spec && spec.locked) {
-          container.textContent = "Your teacher has not opened this lab yet.";
+          //  TWO refusals, two sentences, because they are two different facts
+          //  and only one of them is about a teacher.
+          //
+          //  A signed-in student whose own class closed this lab is being told
+          //  something true and actionable: go and ask their teacher.
+          //
+          //  A request with NO token is refused whenever ANY class has closed
+          //  this lab, which is the rule chosen on 2026-09-07 so that signing
+          //  out could not walk past a lock. Telling that visitor "your teacher
+          //  has not opened this" names a teacher who did nothing: it is wrong
+          //  for a member of the public, who has no teacher, and it is worse for
+          //  a student of a class that HAS opened the lab and is simply signed
+          //  out, because their teacher then gets a support email about a lock
+          //  they never set. That email arrived on 2026-09-09.
+          var forWho = spec.locked_for || "class";
+          container.textContent = forWho === "anonymous"
+            ? "This lab opens for signed-in students. Sign in with your class code and open it again."
+            : "Your teacher has not opened this lab yet.";
           container.setAttribute("data-apcs-lab-locked", "1");
+          container.setAttribute("data-apcs-lab-locked-for", forWho);
           return null;
         }
         return mount(container, spec, opts);

@@ -43,8 +43,14 @@ function load(token, response) {
   const el = () => ({
     textContent: '', innerHTML: '', style: {}, dataset: {},
     classList: { add() {}, remove() {}, contains() { return false; } },
-    addEventListener() {}, appendChild() {}, setAttribute(k, v) { this[k] = v; },
-    getAttribute() { return null; }, querySelector: () => el(), querySelectorAll: () => [],
+    attrs: {},
+    //  Recorded in attrs as well as on the node, because an assertion that reads
+    //  a bare property cannot tell an attribute the player SET from one that was
+    //  never touched: both are undefined only by luck of the key name.
+    addEventListener() {}, appendChild() {},
+    setAttribute(k, v) { this[k] = v; this.attrs[k] = v; },
+    getAttribute(k) { return (k in this.attrs) ? this.attrs[k] : null; },
+    querySelector: () => el(), querySelectorAll: () => [],
   });
   const sandbox = {
     console: { log() {}, error() {}, warn() {} },
@@ -98,6 +104,36 @@ const SPEC = { course: 'ap-cybersecurity', item_id: '1.2-lab', title: 'T', brief
     /teacher has not opened/i.test(node.textContent), node.textContent);
   ok('  and never says the lab could not be loaded',
     !/could not be loaded/i.test(node.textContent), node.textContent);
+  ok('  and it marks the node as locked for the CLASS, which is who closed it',
+    node.attrs && node.attrs['data-apcs-lab-locked-for'] === 'class', node.attrs);
+
+  console.log('\n3b. The ANONYMOUS refusal does not blame a teacher');
+  //  The anonymous rule fires when ANY class has closed this lab, so the visitor
+  //  it refuses usually has nothing to do with the class that closed it. Two
+  //  people read that sentence: a member of the public, who has no teacher, and
+  //  a student whose own class HAS opened the lab and is simply signed out. The
+  //  second one takes the message to their teacher, and on 2026-09-09 one did.
+  h = load('', { course: 'ap-cybersecurity', item_id: '1.2-lab', locked: true,
+    reason: 'anonymous-closed-for-activity', locked_for: 'anonymous', lab: null });
+  node = h.el();
+  await h.API.mountById(node, 'ap-cybersecurity', '1.2-lab', {}).catch(() => {});
+  ok('  it does NOT say a teacher has not opened it',
+    !/teacher has not opened/i.test(node.textContent), node.textContent);
+  ok('  it tells the reader to sign in, which is the one thing that helps',
+    /sign in/i.test(node.textContent), node.textContent);
+  ok('  and it is still a lock rather than an error',
+    !/could not be loaded/i.test(node.textContent)
+      && node.attrs && node.attrs['data-apcs-lab-locked'] === '1', node.textContent);
+  ok('  marked with the audience, so a live check can tell the two apart',
+    node.attrs && node.attrs['data-apcs-lab-locked-for'] === 'anonymous', node.attrs);
+
+  //  A locked response with no locked_for is a spec route older than this field.
+  //  It must keep the wording it always had rather than falling into the new one.
+  h = load('tok-123', { course: 'ap-cybersecurity', item_id: '1.2-lab', locked: true, reason: 'explicit-closed', lab: null });
+  node = h.el();
+  await h.API.mountById(node, 'ap-cybersecurity', '1.2-lab', {}).catch(() => {});
+  ok('  a response with no locked_for still reads as the class refusal',
+    /teacher has not opened/i.test(node.textContent), node.textContent);
 
   console.log('\n4. The route must not let an edge cache outlive a lock');
   //  The deploy on 2026-09-07 was correct and the edge served the previous
