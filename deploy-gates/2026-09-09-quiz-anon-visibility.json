@@ -27,7 +27,8 @@
       "kind": "suite",
       "name": "the gate ladder and both enforcement points are unchanged",
       "command": "npm run --silent smoke:gatescope",
-      "expect": "70 passed, 0 failed"
+      "expect": "71 passed, 0 failed",
+      "_why": "Count moved 70 -> 71 on 2026-09-09 when the settle fix added an assertion that a wider gate write clears the rows it contains. Updating the number rather than loosening the check: a gate that stops naming an exact count stops noticing an assertion that quietly disappeared."
     },
     {
       "kind": "mutation",
