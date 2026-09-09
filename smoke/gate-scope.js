@@ -242,26 +242,38 @@ const resolved = (lesson, activity) => gate.resolveScopedGate(rowsFor(), CLS, le
   r = await call('GET', quizUrl('1.2'), null, ST);
   ok('render: the rest of the locked unit is still closed', r.body && r.body.locked === true, r.body && r.body.locked);
 
-  //  Self-study, and the line that moved on 2026-09-07.
+  //  Self-study, and this line has now moved TWICE. Both moves are recorded
+  //  because the second one partly undoes the first, and a reader who only sees
+  //  the current assertion would think the incognito bypass was never fixed.
   //
-  //  It used to read "self-study is untouched by a unit lock", and that was the
-  //  bypass: 1.2 is inside the locked unit, so a student who signed out was
-  //  handed the quiz their teacher had just closed. A teacher found it by
-  //  testing her own lock in incognito.
+  //  Before 2026-09-07 it read "self-study is untouched by a unit lock", and that
+  //  was the bypass: a student who signed out was handed the quiz their teacher
+  //  had just closed. A teacher found it by testing her own lock in incognito.
   //
-  //  The rule now distinguishes the two halves that were being conflated. A quiz
-  //  SOME class has closed is withheld from anyone with no token. A quiz nobody
-  //  has closed is still served to everyone, which is the half that keeps the
-  //  public practice layer public and is asserted immediately below rather than
-  //  assumed.
+  //  From 2026-09-07 the RENDER was refused whenever any class had closed the
+  //  activity. That closed the bypass and cost more than anyone measured: on
+  //  2026-09-08, mounting 22 cyber quiz pages made every one of them answer
+  //  locked to a signed-out reader, so one teacher's lock took the public copy of
+  //  22 pages dark.
+  //
+  //  From 2026-09-09 the two halves are split at the right seam. The QUESTIONS go
+  //  to anyone, because they shipped in the public page body until the day before
+  //  and the public practice layer is indexed on purpose. The KEY is what a
+  //  closed activity withholds, in the submit path, which is asserted in
+  //  smoke/quiz-anon-visibility.js.
+  //
+  //  What this costs, stated rather than buried: a student who signs out CAN read
+  //  the questions of a quiz their teacher closed. What they cannot get is which
+  //  option was right, any explanation, or a grade.
   r = await call('GET', quizUrl('1.2'));
-  ok('signed out, a quiz inside a locked unit is no longer served',
-    r.body && r.body.locked === true, r.body && r.body.reason);
-  ok('and the refusal names the anonymous rule',
-    r.body && /^anonymous-/.test(r.body.reason || ''), r.body && r.body.reason);
+  ok('signed out, a quiz inside a locked unit is served, because the questions are public',
+    r.body && r.body.locked === false && r.body.questions && r.body.questions.length === 2,
+    r.body && { locked: r.body.locked, reason: r.body.reason });
+  ok('and it carries no key on render',
+    (r.body.questions || []).every((q) => q.correct_index === undefined && q.explanation === undefined));
   //  1.1 was explicitly reopened above, so no class has it closed.
   r = await call('GET', quizUrl('1.1'));
-  ok('while a quiz no class has closed is still served signed out',
+  ok('while a quiz no class has closed is served signed out too',
     r.body && r.body.locked === false && r.body.questions && r.body.questions.length === 2,
     r.body && r.body.reason);
 

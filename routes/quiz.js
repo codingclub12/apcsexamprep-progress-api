@@ -263,21 +263,31 @@ router.get('/:course/:unit/:lesson/:activity_type', renderStudent, (req, res) =>
     // teacher never intended to control. Same test the submit path uses to
     // decide mode, so render and submit cannot disagree.
     //
-    // ANONYMOUS IS NOT AUTOMATICALLY SELF-STUDY, changed 2026-09-07. It was, and
-    // that made every lock one click wide: signing out, or opening the same page
-    // in incognito, handed over a quiz the teacher had closed. A quiz NO class
-    // has closed is still served to anyone and still indexable, because the
-    // public practice layer is the SEO engine and gating it would be a strategic
-    // loss. Only a quiz carrying an explicit closing row is withheld, on the
-    // reasoning that the public copy and the assigned copy are the same bytes.
+    // ANONYMOUS GETS THE QUESTIONS. The KEY is what a lock withholds from it,
+    // and that split is new on 2026-09-09.
+    //
+    // This route used to refuse an anonymous RENDER whenever any class anywhere
+    // had closed that activity, added 2026-09-07 to stop a student signing out
+    // to walk around their teacher's lock. The cost of that was invisible while
+    // every quiz page still carried its own questions, because nobody reached
+    // this route. Mounting 22 cyber quiz pages on 2026-09-08 made it visible and
+    // it was severe: all 22 answered locked to a signed-out visitor, so the
+    // public copy of every one of them went dark, and one teacher's lock was
+    // closing a public page for the whole internet.
+    //
+    // The questions were never the protected thing. They shipped in the public
+    // page body until the day before, they are the same bytes as the public
+    // practice copy, and that layer is indexed on purpose. The ANSWER KEY is the
+    // thing a closed quiz must not hand over, and the submit path withholds it
+    // for exactly this case. So a signed-out reader can take the quiz and see a
+    // score; what they cannot get is which option was right or why.
+    //
+    // A student in a class still hits their own class's gate above and is
+    // refused outright, which is unchanged.
     const sCls = req.student ? gateClassStmt.get(req.student.class_id) : null;
     const gcls = sCls && sCls.course === course ? sCls : null;
     const gateRows = gcls ? gateStmt.all(gcls.id, course, unit) : [];
-    let gate = resolveScopedGate(gateRows, gcls, lesson, activity_type);
-    if (gate.open && !gcls) {
-      const hit = lockedForAnyClass(anyGateStmt.all(course, unit), lesson, activity_type);
-      if (hit.locked) gate = { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope };
-    }
+    const gate = resolveScopedGate(gateRows, gcls, lesson, activity_type);
     if (!gate.open) {
       return res.json({
         course, unit, lesson, activity_type,
@@ -473,6 +483,19 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
     if (mode === 'class') {
       const rel = releaseStmt.get(req.student.class_id, course, unit, lesson, activity_type);
       released = !!(rel && rel.released);
+    }
+
+    //    ANONYMOUS ON AN ACTIVITY SOME CLASS HAS CLOSED GETS NO KEY. This is the
+    //    other half of serving the questions anonymously, and it is what makes
+    //    that safe: signing out to walk around a teacher's lock now gets you the
+    //    same questions the public page always carried, a score, and nothing you
+    //    could not have worked out yourself.
+    //
+    //    Anonymous only. A solo (ME-) account is a real identity with its own
+    //    retry policy and is self-study by design, so it keeps its key.
+    if (selfStudy && !req.student) {
+      const hit = lockedForAnyClass(anyGateStmt.all(course, unit), lesson, activity_type);
+      if (hit.locked) released = false;
     }
 
     // 6) Score against the key. Map the shown option position the student picked
