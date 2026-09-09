@@ -57,9 +57,10 @@
     {
       "kind": "live",
       "name": "production is seeding one more cyber denominator than it was",
-      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health | python3 -c \"import sys,json; d=json.load(sys.stdin)['seed']['seeds']['cyber_denominators']; print('cyber_denominators total=' + str(d['total']) + ' would_add=' + str(d['would_add']))\"",
-      "expect": "cyber_denominators total=96 would_add=0",
-      "_why": "FALSE before this deploy and measured that way: at 00:06 UTC today the same command answered total=95 would_add=0. The pair matters rather than the count alone. total=96 says the row landed; would_add=0 says the seeder has nothing left it wanted to write, so the number moved because this change shipped and not because the seeder is sitting on a backlog it cannot apply."
+      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health | python3 -c \"import sys,json; d=json.load(sys.stdin)['seed']['seeds']['cyber_denominators']; print('cyber_denominators total=' + str(d['total']) + ' changed=' + str(d['changed']))\"",
+      "expect": "cyber_denominators total=96 changed=1",
+      "_why": "FALSE before this deploy and measured that way: at 00:06 UTC today the same block read total=95, changed=0. total is the size of the authored map in the deployed code, so on its own it only proves the code shipped; changed is the number of rows this boot actually WROTE, which is the evidence the denominator reached the volume.",
+      "_would_add_is_a_pre_insert_snapshot": "This first asserted would_add=0 and failed on a deploy that had worked. seedCyberDenominators computes wouldAdd BEFORE inserting and returns it unchanged, so on the very boot that adds a row it necessarily reads 1, and only reaches 0 on the NEXT boot. Reading it as post-state was my error, and the gate caught it, which is the gate doing its job on the one assertion nobody had run yet. Re-running this manifest on a LATER deploy will read changed=0 and fail honestly: it is pinned to the boot that wrote the row, which is the only boot where the claim is checkable."
     }
   ]
 }
