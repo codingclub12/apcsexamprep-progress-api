@@ -24,15 +24,17 @@
 //  `npm run smoke:csadeckdays`. Those numbers are real: one entry per lesson,
 //  equal to the number of Day<N>_Deck_*.pptx pairs the builder emits.
 //
-//  Unit 1's table below is still the placeholder every-lesson-is-1 it always
-//  was, and that is not an oversight. Unit 1's decks predate the kit builder
-//  and exist only in Google Drive ('AP CSA Unit 1 Preview'), whose own
-//  COURSE-MATERIALS-INDEX.txt states 15 topics across 35 instructional days. So
-//  the real Unit 1 counts are knowable, they are just not derivable from
-//  anything in this repo, and inventing a split across 15 lessons to reach 35
-//  would be a fabrication dressed as data. Enumerating the Drive folders is the
-//  fix; until then a 1 here means "at least one teaching day exists", which is
-//  true, rather than a sourced pacing claim.
+//  Unit 1's counts were the placeholder every-lesson-is-1 until 2026-09-04,
+//  when the Drive folders were enumerated and the table below was filled in
+//  with real numbers. The paragraph that used to sit here said to fix that
+//  "before converting Unit 1, not after", and it outlived the fix by five
+//  days; anyone acting on it would have redone finished work. See the
+//  UNIT_1_DAYS block for how they were counted and what they cost.
+//
+//  They are also no longer unguarded. `npm run smoke:csaslides` re-derives all
+//  fifteen from docs/drive-snapshot/ap-csa-teacher-bundle.json, the committed
+//  snapshot of what the bundle actually contains, so the hand count and the
+//  bundle cannot drift apart in silence.
 //
 //  A DAY COUNT IS AN UPPER BOUND ON LOOKUPS, NOT A PROMISE OF CONTENT.
 //  decksForLesson walks day 1..dayCount and asks the embed map for each one. A
@@ -76,10 +78,16 @@ const authored = require('./csa-slide-days.json');
 // 1-6, 1-7 and 1-8 really are single-day lessons, so three of the fifteen were
 // right by accident. The other twelve understated, 1-5 by two days.
 //
-// THIS IS A MEASUREMENT WITH A DATE ON IT, not a derivation, and nothing in CI
-// can re-check it: the numbers live in a Drive folder no offline suite can
-// reach. If Unit 1's decks are re-authored through the kit builder, delete this
-// table and let csa-slide-days.json carry it like every other unit.
+// THIS WAS A MEASUREMENT WITH A DATE ON IT and nothing could re-check it,
+// because the numbers lived in a Drive folder no offline suite could reach.
+// That changed on 2026-09-08: docs/drive-snapshot/ap-csa-teacher-bundle.json
+// is a committed enumeration of the whole bundle, written by the weekly
+// drive-watch run, and it carries every Day<N>_Deck_*.pptx path. So
+// `npm run smoke:csaslides` now counts them a second way and refuses a table
+// that disagrees. The table is still hand-entered; it is no longer unchecked.
+//
+// If Unit 1's decks are re-authored through the kit builder, delete this table
+// and let csa-slide-days.json carry it like every other unit.
 const UNIT_1_DAYS = {
   '1-1': 2, '1-2': 2, '1-3': 2, '1-4': 2, '1-5': 3,
   '1-6': 1, '1-7': 1, '1-8': 1, '1-9': 2, '1-10': 2,

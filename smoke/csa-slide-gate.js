@@ -129,6 +129,58 @@ const grant = (teacherId, course) => db.prepare(
     ok('  every authored lesson has at least one teaching day',
        manifest.AUTHORED_LESSON_IDS.every((l) => manifest.dayCount(l) >= 1));
 
+    //  UNIT 1'S DAY COUNTS, RE-DERIVED FROM WHAT IS ACTUALLY IN THE BUNDLE.
+    //
+    //  Units 2 to 4 come from the authored kit content, so csa-slide-days.json
+    //  regenerates and `npm run smoke:csadeckdays` refuses a drifted copy.
+    //  Unit 1 has no such source: its decks predate the builder and were
+    //  counted by hand out of Drive on 2026-09-04, which left fifteen numbers
+    //  in the manifest that nothing could contradict.
+    //
+    //  docs/drive-snapshot/ap-csa-teacher-bundle.json closed that. It is the
+    //  weekly drive-watch enumeration of the real bundle, committed, and it
+    //  carries every Day<N>_Deck_*.pptx path in the tree. Counting the highest
+    //  Day<N> per lesson is a second derivation of the same fact from an
+    //  artifact written by a different process, so agreement means the table
+    //  matches the bundle rather than that someone copied one into the other.
+    //
+    //  It reads the snapshot as RAW TEXT and never requires the manifest's
+    //  internals, for the same reason verify-csa-slide-pilot-scope.js does.
+    {
+      const snapPath = path.join(__dirname, '..', 'docs', 'drive-snapshot',
+        'ap-csa-teacher-bundle.json');
+      const haveSnap = fs.existsSync(snapPath);
+      ok('  the Drive snapshot is committed, so Unit 1 can be checked at all', haveSnap);
+      if (haveSnap) {
+        const raw = fs.readFileSync(snapPath, 'utf8');
+        const fromDrive = {};
+        const rx = /"Unit 1\/Lesson_(\d+)\.(\d+)_[^"\/]*\/Slide_Decks\/Day(\d)_Deck_[^"]*"/g;
+        let m;
+        while ((m = rx.exec(raw)) !== null) {
+          const id = `${m[1]}-${m[2]}`;
+          const day = parseInt(m[3], 10);
+          if (!fromDrive[id] || day > fromDrive[id]) fromDrive[id] = day;
+        }
+        const found = Object.keys(fromDrive).length;
+        //  A regex that matches nothing would make every comparison below
+        //  vacuously true, which is the failure this repo keeps finding.
+        ok('  the snapshot yields all 15 Unit 1 lessons, so the check is not vacuous',
+           found === 15, { found, fromDrive });
+
+        const mismatched = Object.keys(fromDrive)
+          .filter((id) => manifest.dayCount(id) !== fromDrive[id])
+          .map((id) => `${id}: manifest ${manifest.dayCount(id)} vs bundle ${fromDrive[id]}`);
+        ok('  every Unit 1 day count matches the decks actually in the bundle',
+           found === 15 && mismatched.length === 0, mismatched);
+
+        //  28 teaching days, 56 decks, asserted as a total so that two errors
+        //  cancelling each other out still shows up.
+        const totalDays = Object.values(fromDrive).reduce((a, b) => a + b, 0);
+        ok('  Unit 1 totals 28 teaching days across its 15 lessons',
+           totalDays === 28, totalDays);
+      }
+    }
+
     // These four used to 404 as "outside the pilot", then answered 200 with an
     // empty list while the decks were unconverted. The conversion ran on
     // 2026-09-04, so an entitled teacher must now actually GET something: two
