@@ -97,3 +97,40 @@ class, fetched through `lib/storefront-fetch.js`.
 - 1.7's early wrapper close is a third change, and the only one where markup
   rather than CSS is at fault.
 - Units 2 to 4 are unmeasured for this. The same probe answers it.
+
+## Measured across the whole course, and it is four times bigger
+
+Board 303 was scoped at 13 pages on the strength of Unit 1 alone. Measured
+2026-09-09 across all 53:
+
+    unit 1   13 of 15 pages   107 elements    2 with no footer nav
+    unit 2   12 of 12 pages   160 elements    0
+    unit 3    6 of  9 pages    96 elements    3 with no footer nav
+    unit 4   17 of 17 pages   284 elements    0
+             -----------------------------
+             48 of 53 pages   647 elements    5 with no footer nav
+
+Unit 4 is the worst and had not been looked at.
+
+### There are TWO markup generations and they do not overlap
+
+    .apcsa-nav-btn  .apcsa-lesson-nav     13 pages, every one of them Unit 1
+    .nav-prev  .nav-next  .apcsa-block    35 pages, every one of them Units 2 to 4
+
+Zero pages carry both. So the footer nav was authored twice under different class
+names, neither set has CSS, and a sheet written against Unit 1's names fixes 13
+pages and leaves 35 exactly as they are. `apcs-ex-label` is unstyled on 35 pages
+and `apcsa-block` on 33, both Units 2 to 4 only.
+
+That is the fact that changes the shape of the work. It is not one stylesheet
+applied to more pages, it is two component vocabularies for the same component,
+and somebody has to decide whether to write two sets of rules or rename one
+generation onto the other. Renaming is a body edit on 35 live pages, which is the
+larger blast radius; writing two sets keeps the divergence alive.
+
+### Five pages have no footer nav at all
+
+1.1, 1.2, 3.1, 3.3, 3.4. Nothing to style, so they score clean and are in fact
+worse off: a student finishing any of them has no prev or next link. Three of the
+five are in Unit 3, which was renumbered, so this is worth checking against that
+renumbering rather than assumed to be the same defect as 1.1 and 1.2.
