@@ -22,6 +22,15 @@
 //  at this page, because the sweep that found the pages was scoped to the two
 //  surfaces the note named. Fixed here.
 //
+//  ── AND THE PLACEMENT, ADDED 2026-09-09 ─────────────────────────────────────
+//  A repoint alone was not enough and the sheet built before today would not
+//  have fixed what was reported. Two surfaces FILE this lab under Topic 1.2 and
+//  keep doing so after every URL is corrected: the Command Center's STU map and
+//  the Unit 1 practice page's lab list. Those move here too, so one sheet
+//  carries the whole correction. Two sheets touching one page body is a footgun
+//  anyway: Matrixify MERGE replaces the body, so importing a second sheet built
+//  before the first would silently undo it.
+//
 //  Run: node scripts/gen-cyber-lab-handle-repoint.js
 // -----------------------------------------------------------------------------
 const fs = require('fs');
@@ -76,9 +85,96 @@ for (const h of PAGES) {
     }
   }
 
+  //  ── THE PART A REPOINT DOES NOT FIX, found 2026-09-09 ───────────────────
+  //  Repointing the URL leaves the lab exactly where it was in every surface
+  //  that FILES it, and the filing is the actual complaint: the Command Center
+  //  hangs this lab off Topic 1.2 and the Unit 1 practice page lists it among
+  //  Unit 1 labs. After a pure repoint, Topic 1.2 still offers a Unit 4 lab,
+  //  just without the redirect hop. Reported by Tanner: "1.2 terminal lab is
+  //  not correct and should move to unit 4".
+  //
+  //  The Command Center's STU map keys every student link by topic. The entry
+  //  moves from "1.2" to "4.3", which already exists and has no termlab of its
+  //  own. Anchored on the exact key text rather than a loose match: "1.2"
+  //  appears throughout that file and a document-wide edit would retarget
+  //  links that are filed correctly.
+  if (h === 'cyber-command-center') {
+    const ENTRY = `,termlab:"/pages/${NEW}"`;
+    if (!next.includes(ENTRY)) throw new Error(`${h}: no repointed termlab entry to move`);
+    const moved = next.replace(ENTRY, '');
+    if (moved === next) throw new Error(`${h}: could not lift the termlab entry off 1.2`);
+    //  Land it on 4.3, inside that topic's own object, before its closing brace.
+    const key = '"4.3":{';
+    const at = moved.indexOf(key);
+    if (at < 0) throw new Error(`${h}: the STU map has no "4.3" entry to move the lab onto`);
+    const close = moved.indexOf('}', at);
+    if (close < 0) throw new Error(`${h}: the "4.3" entry is not closed`);
+    if (moved.slice(at, close).includes('termlab:')) {
+      throw new Error(`${h}: "4.3" already carries a termlab, so this move would create two`);
+    }
+    next = moved.slice(0, close) + ENTRY + moved.slice(close);
+    extraNote = ', termlab moved from topic 1.2 to 4.3';
+  }
+
+  //  A Unit 1 practice page listing a Unit 4 lab among "Unit 1 labs" is wrong
+  //  whichever URL it points at, and relabelling the chip would only make the
+  //  page state the contradiction more clearly. The chip comes out. Every other
+  //  chip in that list is a real Unit 1 lab and is left alone.
+  if (h === 'ap-cybersecurity-unit-1-practice') {
+    const CHIP = `<li><a href="/pages/${NEW}">Lesson 2 terminal lab</a></li>`;
+    if (!next.includes(CHIP)) throw new Error(`${h}: the Unit 1 chip is not in the shape this expects`);
+    next = next.split(CHIP).join('');
+    extraNote = ', Unit 4 lab chip removed from the Unit 1 lab list';
+  }
+
   if (next === body) throw new Error(`${h}: nothing changed despite ${hits} hit(s)`);
   rows.push({ Handle: h, Command: 'MERGE', 'Body HTML': next });
   report.push({ h, hits, bytes: [body.length, next.length], extraNote });
+}
+
+//  ── POST-CONDITIONS, checked on the rows about to be written ────────────────
+//  Each rule above throws if its own precondition is missing, which catches a
+//  page whose shape moved. That is not the same as checking the RESULT, and the
+//  result is what gets imported. A sheet is written once and then this generator
+//  is spent, so the assertions belong here rather than in a suite nobody will
+//  run again.
+{
+  const body = (h) => (rows.find((r) => r.Handle === h) || {})['Body HTML'] || '';
+  const must = (name, cond, extra) => {
+    if (!cond) throw new Error('POST-CONDITION FAILED: ' + name + (extra ? '  ' + extra : ''));
+  };
+  //  The Unit 1 practice page is the exception BY DESIGN: its chip is removed
+  //  rather than repointed, so it ends up naming neither handle. Writing this as
+  //  "every page names the new one" failed on exactly that page, which is the
+  //  post-condition doing its job on the first run.
+  const DROPPED = 'ap-cybersecurity-unit-1-practice';
+  for (const r of rows) {
+    must('no page still names the old handle, and ' + r.Handle + ' does',
+      !r['Body HTML'].includes(OLD));
+    if (r.Handle === DROPPED) {
+      must(DROPPED + ' drops the link rather than repointing it',
+        !r['Body HTML'].includes(NEW));
+    } else {
+      must(r.Handle + ' names the new handle', r['Body HTML'].includes(NEW));
+    }
+  }
+
+  const cc = body('cyber-command-center');
+  const entry = (topic) => (new RegExp('"' + topic.replace('.', '\\.') + '":\\{[^}]*\\}').exec(cc) || [''])[0];
+  must('topic 1.2 no longer carries a terminal lab', !entry('1.2').includes('termlab:'), entry('1.2'));
+  must('topic 4.3 carries it instead', entry('4.3').includes('termlab:' ), entry('4.3'));
+  must('and the map still has exactly the two terminal labs it started with',
+    (cc.match(/termlab:/g) || []).length === 2, String((cc.match(/termlab:/g) || []).length));
+
+  const u1 = body('ap-cybersecurity-unit-1-practice');
+  must('the Unit 1 lab list has dropped the Unit 4 lab', !u1.includes('Lesson 2 terminal lab'));
+  must('and still lists the Unit 1 labs it should',
+    ['Lesson 1 lab', 'Lesson 2 lab', 'Lesson 3 lab', 'Lesson 4 lab']
+      .every((t) => u1.includes('>' + t + '</a>')));
+
+  const pr = body('ap-cybersecurity-practice');
+  must('the practice card is filed under Unit 4', !/ph-card-focus">Unit 1<\/span><span class="ph-card-title">Find the tournament/.test(pr));
+  must('and says Topic 4.3 throughout', !pr.includes('Topic 1.2'));
 }
 
 const COLS = ['Handle', 'Command', 'Body HTML'];

@@ -194,9 +194,23 @@ console.log('1. Per-lesson values, as the pages state them');
 
   //  Lesson 1.3 was the one absent entirely rather than parked. Pin the whole
   //  set so a partial move cannot happen.
+  //
+  //  IT WAS PINNED AT THREE, AND THE FOURTH WAS THE LAB. That is the failure the
+  //  1.1 comment above describes, committed by this very assertion: a bare count
+  //  of what was priced on the day it was written cannot tell "all of them" from
+  //  "all the ones we happened to author". 1.3 lab was absent from both tables
+  //  until 2026-09-09, so the cell printed "29%*" while every other cell in the
+  //  row showed points, and the student's lab work sat outside the lesson total.
+  //  Reported by Tanner from his own gradebook, not by anything in here.
+  //
+  //  So it names the columns now. A count going from four to three passes a
+  //  test written as "length === 4" if someone adds a column while dropping
+  //  another; a missing NAME cannot.
   {
-    const l13 = Object.keys(POINTS).filter((k) => k.startsWith('1.3|'));
-    ok('  all three 1.3 columns are priced', l13.length === 3, l13);
+    const l13 = Object.keys(POINTS).filter((k) => k.startsWith('1.3|')).sort();
+    const want = ['1.3|exercise-1', '1.3|exercise-2', '1.3|lab', '1.3|quiz'];
+    ok('  every 1.3 column is priced, by name', l13.join(',') === want.join(','), l13);
+    ok('  including the lab, at 24', POINTS['1.3|lab'] === 24, POINTS['1.3|lab']);
   }
 
   // ── The five per-unit exams ────────────────────────────────────────────────

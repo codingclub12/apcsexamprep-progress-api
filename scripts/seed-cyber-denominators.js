@@ -81,6 +81,13 @@ const POINTS = {
   // ── 1.3 ────────────────────────────────────────────
   '1.3|exercise-1': 24,       // "/ 24 pts" score bar and finalScore, badge "3 Parts . 24 pts"
   '1.3|exercise-2': 24,       // "/ 24 pts" finalScore, badge "3 Parts . 24 pts"
+  //  ADDED 2026-09-09. Never authored and never parked in MEASURED_UNPRICEABLE
+  //  either, so it was simply missing, and the cell printed a bare "29%*" with
+  //  the provisional marker while every other cell in the row showed points. A
+  //  student's lab work was left out of the lesson total: 1.3 read 12/53 with
+  //  the lab excluded. Same evidence shape as 1.4 below, read from the live page
+  //  the same way.
+  '1.3|lab': 24,              // labTotal in the #labDone panel, rendered "/ 24 pts"
   '1.3|quiz': 5,              // qzScore reads "0 / 5", ANSWERS has 5 keys, q1..q5
 
   // PRICED 2026-08-25, having been parked in MEASURED_UNPRICEABLE since
