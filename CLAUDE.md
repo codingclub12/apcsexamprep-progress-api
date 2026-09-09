@@ -734,6 +734,37 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   the default. A sheet is reviewable before it lands, re-runnable in MERGE mode
   after a partial import, and it is the one path that has not silently truncated
   a live body. Generate it, read the refusals, import it once.
+- **A sheet covering many pages ships SPLIT, one import per unit or section**,
+  and Tanner's question about the first one is the rule: "can we not do this by
+  unit?" MERGE overwrites a live body with no undo, so the blast radius of a
+  single click is however many rows you chose to put in the file. The cyber quiz
+  migration was built as one seventeen-page sheet: seventeen live pages on one
+  click with nothing to check between them, against five files that cost nothing
+  to generate.
+
+  Splitting has its own failure mode, so prove it LOSSLESS rather than assume it:
+  parse the split sheets back as CSV and diff against the set they replace. The
+  five per-unit quiz sheets carry the same 20 handles as the two originals,
+  byte-identical on every row, with no page appearing in two files. A split that
+  drops a page is worse than the big sheet, because nothing announces it.
+
+  Each split sheet needs its own post-import check, and the check must assert the
+  thing that MATTERS rather than the thing that is easy to see. For a quiz mount
+  that is not "did the mount container appear": a sheet that added the mount and
+  left the old markup in place would render two quizzes and still publish the
+  answer key, and a check looking only for the mount would call it a success.
+  `scripts/verify-cyber-quiz-mounts.js` asks three things, and the third is the
+  point: one mount, the right course/unit/lesson on it, and no key idiom
+  surviving anywhere in the body. It also asks the server whether it will serve
+  that lesson, because the player wraps its whole render in
+  `if (r.status !== 404)`, so a page mounted against a missing bank shows nothing
+  at all where the quiz used to be.
+
+  Hand the sheets over as an ordered runbook carrying the EXPECTED end state per
+  step, deliberate exceptions included. Three cyber quiz pages stay unmounted on
+  purpose, so unit 2 verifies at 3 of 4 and unit 3 at 5 of 6. Without that written
+  down next to the step, a correct import reads as a failure and gets re-run,
+  which is another unreviewed MERGE over a live body.
 - Never put CED Essential Knowledge codes in front of students. The code is
   teacher knowledge: write "secure information, such as a one-time password",
   not "secure information (1.1.C.2)". A code earns its place only where it is
