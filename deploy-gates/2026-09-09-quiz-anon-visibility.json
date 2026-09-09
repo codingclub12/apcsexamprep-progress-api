@@ -1,0 +1,70 @@
+{
+  "change": "a signed-out reader gets the questions again; what a lock withholds from them is the answer key",
+  "_context": [
+    "On 2026-09-07 this route began refusing an anonymous RENDER whenever any class",
+    "anywhere had closed that activity, to stop a student signing out to walk around",
+    "their teacher's lock. Nothing measured the cost, because every quiz page still",
+    "carried its own questions and no anonymous reader reached the route.",
+    "",
+    "Mounting 22 cyber quiz pages on 2026-09-08 made the cost visible and it was",
+    "severe: all 22 answered locked:true to a signed-out request, so the public copy",
+    "of every one went dark. One teacher's lock was closing a public page for the",
+    "whole internet, which is what Tanner named: 'I don't want assignments locked",
+    "when they shouldn't be either.'",
+    "",
+    "The questions were never the protected thing. They shipped in the public page",
+    "body until the day before. The KEY is, and the submit path withholds it for",
+    "exactly this case now."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "questions served, key withheld, and the class lock still bites",
+      "command": "npm run --silent smoke:quizanonvis",
+      "expect": "16 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the gate ladder and both enforcement points are unchanged",
+      "command": "npm run --silent smoke:gatescope",
+      "expect": "70 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: refuse the anonymous render again",
+      "_why": "This is the exact state the route was in, and it took 22 public pages dark. It must go red on the assertion that names it rather than on some downstream symptom.",
+      "file": "routes/quiz.js",
+      "find": "    const gate = resolveScopedGate(gateRows, gcls, lesson, activity_type);",
+      "replace": "    let gate = resolveScopedGate(gateRows, gcls, lesson, activity_type);\n    if (gate.open && !gcls) {\n      const hit = lockedForAnyClass(anyGateStmt.all(course, unit), lesson, activity_type);\n      if (hit.locked) gate = { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope };\n    }",
+      "command": "npm run --silent smoke:quizanonvis",
+      "expect_failure": "and is NOT locked, though a class has closed it"
+    },
+    {
+      "kind": "mutation",
+      "name": "serve the questions but hand over the key too",
+      "_why": "Serving the questions is only safe because the key is withheld. Drop that half and the lock buys nothing at all: sign out, submit anything, read the answers.",
+      "file": "routes/quiz.js",
+      "find": "      if (hit.locked) released = false;",
+      "replace": "      if (hit.locked) released = true;",
+      "command": "npm run --silent smoke:quizanonvis",
+      "expect_failure": "it reports released: false"
+    },
+    {
+      "kind": "mutation",
+      "name": "withhold the key from every anonymous reader, closed or not",
+      "_why": "The opposite over-correction, and the one a suite that only tested the closed case would miss. Public practice on an OPEN quiz must still show the answer and the rationale, because that layer is the SEO engine.",
+      "file": "routes/quiz.js",
+      "find": "      if (hit.locked) released = false;",
+      "replace": "      released = false;",
+      "command": "npm run --silent smoke:quizanonvis",
+      "expect_failure": "an open activity still releases the key"
+    },
+    {
+      "kind": "live",
+      "name": "the 22 mounted cyber quizzes answer a signed-out reader with questions",
+      "_why": "Every one of them answers locked:true today, which is the defect. This assertion is false before the deploy on all 22 and cannot pass by accident.",
+      "command": "node -e \"const T=[['unit-1','1.1'],['unit-1','1.2'],['unit-1','1.3'],['unit-1','1.4'],['unit-1','1.5'],['unit-2','2.1'],['unit-2','2.2'],['unit-2','2.4'],['unit-3','3.1a'],['unit-3','3.1b'],['unit-3','3.2'],['unit-3','3.3'],['unit-3','3.4'],['unit-4','4.2'],['unit-4','4.3'],['unit-4','4.4'],['unit-5','5.1'],['unit-5','5.2'],['unit-5','5.3'],['unit-5','5.4'],['unit-5','5.5'],['unit-5','5.6']];(async()=>{let open=0,keyed=0;for(const [u,l] of T){const r=await fetch('https://progress.apcsexamprep.com/api/quiz/ap-cybersecurity/'+u+'/'+encodeURIComponent(l)+'/quiz');const j=await r.json().catch(()=>null);const qs=(j&&j.questions)||[];if(j&&j.locked===false&&qs.length)open++;if(qs.some(q=>q.correct_index!==undefined||q.explanation!==undefined))keyed++;}console.log('open='+open+'/22 keyed='+keyed);})()\"",
+      "expect": "open=22/22 keyed=0"
+    }
+  ]
+}

@@ -29,6 +29,7 @@
     "smoke:teacher": "node smoke/teacher-dashboard.js",
     "smoke:quizgate": "node smoke/quiz-gate.js",
     "smoke:gatescope": "node smoke/gate-scope.js",
+    "smoke:labteacherpreview": "node smoke/lab-teacher-preview.js",
     "smoke:gatescopemutation": "node smoke/gate-scope-mutation.js",
     "smoke:quiztogradebook": "node smoke/quiz-to-gradebook.js",
     "smoke:admingates": "node smoke/admin-gates.js",
@@ -36,6 +37,7 @@
     "smoke:assistantdiag": "node smoke/assistant-diagnostics.js",
     "smoke:assistantkb": "node smoke/assistant-kb.js",
     "smoke:quizauthoring": "node smoke/quiz-bank-authoring.js",
+    "smoke:quizanonvis": "node smoke/quiz-anon-visibility.js",
     "smoke:cyberquizlesson": "node smoke/cyber-quiz-lesson.js",
     "smoke:cyberccunit3": "node smoke/cyber-cc-unit3-relink.js",
     "cyber:ccunit3check": "node scripts/cyber-cc-unit3-check.js",
@@ -290,7 +292,11 @@
     "sweep:delivery": "node scripts/activity-delivery-sweep.js",
     "smoke:cyberu1nav": "node smoke/cyber-u1-nav.js",
     "smoke:quizkey": "node smoke/quiz-answer-key.js",
-    "smoke:cyberquizkeys": "node smoke/cyber-cc-quiz-keys.js"
+    "smoke:cyberquizkeys": "node smoke/cyber-cc-quiz-keys.js",
+    "smoke:labgaterederive": "node smoke/lab-gate-rederive.js",
+    "smoke:gatesettle": "node smoke/gate-settle.js",
+    "smoke:gatesettlerederive": "node smoke/gate-settle-rederive.js",
+    "smoke:labpracticeungated": "node smoke/lab-practice-ungated.js"
   },
   "keywords": [],
   "author": "",

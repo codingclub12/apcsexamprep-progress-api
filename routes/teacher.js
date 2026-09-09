@@ -1304,6 +1304,45 @@ router.post('/classes/:code/gate', requireTeacher, (req, res) => {
   const { course, unit, lesson, activity_type } = target;
   const open = req.body.open === undefined ? 1 : (req.body.open ? 1 : 0);
 
+  //  SETTLE WHAT IS UNDER IT. A wider write CLEARS the rows it contains, and
+  //  that is new on 2026-09-09 off a teacher report: "1.2 have the lock off but
+  //  it isn't open."
+  //
+  //  The board has said "a mixed switch settles everything under it OPEN on the
+  //  first click" since it shipped. It was not true. This route wrote ONE row at
+  //  the clicked scope, narrower rows survived, and narrower always wins at read
+  //  time. So a teacher whose lab carried its own closing row flipped the lesson
+  //  switch to open, the lab stayed shut, the board correctly re-rendered mixed,
+  //  and clicking again did exactly nothing. A switch that cannot settle is worse
+  //  than one that is missing, because she has no way to tell it is not working.
+  //
+  //  CONTAINMENT, not width. Scope width alone is wrong here: a lesson row
+  //  (1.2, *) and an activity-type row (*, quiz) overlap without either
+  //  containing the other, and clearing one for the other would throw away a
+  //  setting the teacher never spoke about. A row is under this write only when
+  //  every column this write NAMES is the same, and it is not the row itself:
+  //
+  //    write (*, *)      the unit          clears every row in the unit
+  //    write (1.2, *)    one lesson        clears (1.2, anything), not (*, quiz)
+  //    write (*, quiz)   every quiz        clears (anything, quiz), not (1.2, *)
+  //    write (1.2, quiz) one assignment    clears nothing, nothing is narrower
+  //
+  //  PINNING SURVIVES, because order still decides. Close the unit, then open
+  //  1.2: the second write clears nothing above itself and the narrow row wins,
+  //  which is the case the ladder was built for. What no longer survives is a
+  //  pin the teacher has since written over from above, which is what she means
+  //  by clicking the wider switch.
+  //
+  //  Reported back in `cleared`, so a destructive-ish write says what it did
+  //  rather than doing it quietly.
+  const cleared = db.prepare(`
+    DELETE FROM activity_gates
+     WHERE class_id = ? AND course = ? AND unit = ?
+       AND (? = '*' OR lesson = ?)
+       AND (? = '*' OR activity_type = ?)
+       AND NOT (lesson = ? AND activity_type = ?)
+  `).run(cls.id, course, unit, lesson, lesson, activity_type, activity_type, lesson, activity_type).changes;
+
   db.prepare(`
     INSERT INTO activity_gates (class_id, course, unit, lesson, activity_type, open, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
@@ -1311,7 +1350,7 @@ router.post('/classes/:code/gate', requireTeacher, (req, res) => {
       DO UPDATE SET open = excluded.open, updated_at = datetime('now')
   `).run(cls.id, course, unit, lesson, activity_type, open);
 
-  res.json({ ok: true, open: !!open, scope: rowScope({ lesson, activity_type }), course, unit, lesson, activity_type });
+  res.json({ ok: true, open: !!open, scope: rowScope({ lesson, activity_type }), course, unit, lesson, activity_type, cleared });
 });
 
 // ── CLEAR A GATE ROW ──────────────────────────────────────────────────────────

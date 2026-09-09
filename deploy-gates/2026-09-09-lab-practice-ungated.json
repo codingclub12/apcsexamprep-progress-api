@@ -1,0 +1,122 @@
+{
+  "change": "a practice lab is no longer gated, because no teacher has a switch that could open it",
+  "_context": [
+    "Reported 2026-09-09 with two screenshots. He unlocked Quiz and Lab on his 1.2",
+    "row, waited five minutes, signed in and out of his student profile, and the",
+    "lab was still shut. The student page said both halves of it in adjacent",
+    "sentences:",
+    "",
+    "  'This one is practice. It checks your work on the page and records nothing.'",
+    "  'Your teacher has not opened this lab yet.'",
+    "",
+    "The Lab chip on 1.2 is 1.2-auth-lab, 'Read the login log', graded, filed at",
+    "unit-1/1.2. His students were opening ap-cyber-unit-1-lesson-2-lab, which",
+    "mounts 1.2-lab, 'Find the tournament code', UNGRADED and filed at unit-4/4.3.",
+    "The title on his screenshot is the tournament one, so the two are certainly",
+    "different labs.",
+    "",
+    "An ungraded lab gets no course_manifest row on purpose. seed-manifest.js:",
+    "'a manifest row is a denominator, and a denominator for work a student cannot",
+    "do marks the whole class down for a reason no teacher can see on screen. A",
+    "practice lab is playable and scores nothing, so it gets no row.'",
+    "",
+    "No row means no gradebook column, which means no switch anywhere on the",
+    "assignments board. So the only thing that can ever close that lab is a WIDER",
+    "row written about something else, and nothing can reopen it.",
+    "",
+    "THE CLASS DEFAULT IS NOT THE MECHANISM. The first reading of this blamed",
+    "quiz_lock_default, and the suite caught it: DEFAULT_GATED is {quiz, exam}, so",
+    "the class default has never touched a lab. It is a unit or lesson lock, which",
+    "is the ordinary way a term starts. That fact is now asserted rather than",
+    "assumed, because a wrong mechanism is a wrong answer to the teacher even when",
+    "the fix is right.",
+    "",
+    "NOT FIXED HERE, and it is the other half: lesson 1.2 links to a lab the server",
+    "files at 4.3, while 1.2's own graded lab sits on a different page. That is a",
+    "storefront wiring question and it needs a sheet and a human's judgement about",
+    "which lab belongs on that lesson."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "practice ungated, graded unchanged, and the source is the manifest",
+      "_why": "The risk is not that practice labs open, it is that this becomes 'labs are no longer gated'. Section 2 re-asserts every way a real lab is still shut: an explicit row, a unit lock, and the anonymous cross-class refusal. Section 3 is the only part that can tell spec.graded from the manifest row, because seed-manifest builds one from the other and they agree in production.",
+      "command": "npm run --silent smoke:labpracticeungated",
+      "expect": "13 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the ladder and both enforcement paths are untouched",
+      "command": "npm run --silent smoke:gatescope",
+      "expect": "71 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "a teacher preview and the four caller shapes still resolve as they did",
+      "_why": "This adds a branch ABOVE the teacher carve-out shipped earlier today, so the earlier fix has to survive it.",
+      "command": "npm run --silent smoke:labteacherpreview",
+      "expect": "13 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "an independent decision table agrees with the route on all 40 caller and gate combinations",
+      "_why": "Written from the rules rather than from routes/labs.js. Rule 0, a lab with no gradebook column is not gated, is stated in the same list as the ladder rules and one arrangement removes the manifest row so the new branch is compared rather than only the ladder underneath it.",
+      "command": "npm run --silent smoke:labgaterederive",
+      "expect": "3 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the settle fix from earlier today still settles",
+      "_why": "Its section 1 drives the LAB route, so the new branch sits above it. It seeded no manifest row and went red until the fixture was corrected, which is the finding worth keeping: every suite that drives this route now has to model a lab a teacher could actually gate.",
+      "command": "npm run --silent smoke:gatesettle",
+      "expect": "15 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the lab-gate mutation battery, which is what caught this branch weakening a guard",
+      "_why": "CI found what my own gate did not. The new branch sits above the anonymous rule, and smoke/lab-gate.js seeded no manifest row for OPEN_LAB, the second lab that exists solely to keep 'anonymous is refused' from meaning 'every lab is refused'. That lab short-circuited open and the assertion stopped testing the anonymous rule at all. The battery still went RED on that mutation, but on a DIFFERENT assertion, which is the signal that a rule has gone hollow rather than that a suite has broken. It also caught a mutation anchor that my edit had shifted, so one mutation had silently stopped running. It is a suite here rather than a mutation entry because it already is a mutation harness; mutating it under the gate tests the gate, not the route.",
+      "command": "npm run --silent smoke:labgatemutation",
+      "expect": "144 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: gate the practice lab again",
+      "_why": "The exact state the route was in when the screenshots arrived.",
+      "file": "routes/labs.js",
+      "find": "  if (!labHasColumn(spec)) return { open: true, reason: 'practice-no-column' };\n",
+      "replace": "",
+      "command": "npm run --silent smoke:labpracticeungated",
+      "expect_failure": "a practice lab survives a UNIT lock"
+    },
+    {
+      "kind": "mutation",
+      "name": "over-correct: stop gating every lab",
+      "_why": "The opposite failure and the one a suite testing only the practice lab would miss entirely. It removes the lock from graded work a teacher is relying on.",
+      "file": "routes/labs.js",
+      "find": "  if (!labHasColumn(spec)) return { open: true, reason: 'practice-no-column' };",
+      "replace": "  return { open: true, reason: 'practice-no-column' };",
+      "command": "npm run --silent smoke:labpracticeungated",
+      "expect_failure": "a graded lab IS shut by an explicit closing row"
+    },
+    {
+      "kind": "mutation",
+      "name": "read spec.graded instead of asking the manifest",
+      "_why": "Looks identical in production, because seed-manifest builds lab rows from labSpecs.graded(). It is wrong the moment a lab gets a hand-listed manifest row, which the seeder already does for some, and it would be wrong silently. Only section 3 can see it.",
+      "file": "routes/labs.js",
+      "find": "function labHasColumn(spec) {\n  return !!labManifestStmt.get(spec.course, spec.item_id);\n}",
+      "replace": "function labHasColumn(spec) {\n  return !!spec.graded;\n}",
+      "command": "npm run --silent smoke:labpracticeungated",
+      "expect_failure": "a GRADED lab whose row is missing goes ungated"
+    },
+    {
+      "kind": "mutation",
+      "name": "match the manifest row on course alone",
+      "_why": "A lookup that ignores item_id finds SOME row for the course and calls every lab gated, which restores the reported bug while looking like a working check. Course-only and item-only lookups both pass the graded case.",
+      "file": "routes/labs.js",
+      "find": "  'SELECT 1 FROM course_manifest WHERE course = ? AND item_id = ? LIMIT 1'\n);\nfunction labHasColumn(spec) {\n  return !!labManifestStmt.get(spec.course, spec.item_id);\n}",
+      "replace": "  'SELECT 1 FROM course_manifest WHERE course = ? LIMIT 1'\n);\nfunction labHasColumn(spec) {\n  return !!labManifestStmt.get(spec.course);\n}",
+      "command": "npm run --silent smoke:labpracticeungated",
+      "expect_failure": "a practice lab survives a UNIT lock"
+    }
+  ]
+}
