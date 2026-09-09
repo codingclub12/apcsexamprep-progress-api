@@ -62,8 +62,12 @@ looking at the attribute that was meant to change.
 ## Still open
 
 - **The import itself.** This environment has no `SHOPIFY_ADMIN_TOKEN`, so the
-  sheet is handed over rather than applied. One import, MERGE, then run the
-  verifier.
+  sheet is handed over rather than applied. Run the verifier BEFORE importing as
+  well as after: a sheet carries a body captured on one day, and if it comes back
+  6 of 6 the key is already fixed and the sheet is stale enough to revert whatever
+  did it. The generator refuses on the same condition. That check is step 1 of the
+  runbook rather than a footnote, because the 2026-09-08 Command Center sheet
+  proved a day is long enough.
 - **The grader still does not trim.** Fixing the data was the right first move
   because the script is inline in the page body, so patching it is the same MERGE
   with a larger diff, and a malformed key would still be sitting there for the
