@@ -755,7 +755,16 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   answer key, and a check looking only for the mount would call it a success.
   `scripts/verify-cyber-quiz-mounts.js` asks three things, and the third is the
   point: one mount, the right course/unit/lesson on it, and no key idiom
-  surviving anywhere in the body. It also asks the server whether it will serve
+  surviving anywhere in the body.
+
+  A generated sheet also GOES STALE, and on 2026-09-08 one nearly did damage.
+  A sheet repointing the Command Center's Unit 3 links sat unimported for a day
+  while somebody renumbered that page onto CED lesson ids, which fixes the same
+  defect more thoroughly. The sheet still carried the pre-renumbering body, so
+  importing it would have MERGED a five-day-old page over the better one and
+  reverted the fix, and nothing in the sheet or the runbook would have said so.
+  Re-run the post-import check BEFORE importing, not only after: it reads the
+  live page, and a sheet whose defect is already gone is a sheet to delete. It also asks the server whether it will serve
   that lesson, because the player wraps its whole render in
   `if (r.status !== 404)`, so a page mounted against a missing bank shows nothing
   at all where the quiz used to be.
