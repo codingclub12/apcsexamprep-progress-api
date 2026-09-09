@@ -1,4 +1,5 @@
-<!-- APCSExamPrep Student Progress - /pages/my-progress -->
+﻿"Handle","Command","Title","Body HTML"
+"my-progress","UPDATE","My Progress","<!-- APCSExamPrep Student Progress - /pages/my-progress -->
 <!-- Navy redesign to match the teacher dashboard. Reads /api/student/progress. -->
 <!--
   POINTS EARNED OVER POINTS POSSIBLE.
@@ -32,9 +33,9 @@
   authored a total, the cell shows its PERCENT ALONE, marked with a *, and is
   left out of the points total on both sides.
 
-  An interim version printed those cells as "17/100" instead. The percentage was
+  An interim version printed those cells as ""17/100"" instead. The percentage was
   right, but the 100 was not a number anyone chose: it outweighed a real 5 mark
-  quiz twenty to one in the total, and it produced course totals like "71 / 127"
+  quiz twenty to one in the total, and it produced course totals like ""71 / 127""
   whose denominator appears on no page. Unknown points are shown as unknown.
 -->
 <style>
@@ -108,7 +109,7 @@
 #stprog-wrap .sp-switch{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 18px!important;}
 #stprog-wrap .sp-switch button{font:inherit!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;border:1px solid #e5e7eb!important;background:#fff!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;border-radius:999px!important;padding:7px 14px!important;}
 #stprog-wrap .sp-switch button:hover{border-color:#1e3a5f!important;}
-#stprog-wrap .sp-switch button[aria-current="true"]{background:#1e3a5f!important;border-color:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#stprog-wrap .sp-switch button[aria-current=""true""]{background:#1e3a5f!important;border-color:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;}
 #stprog-wrap .sp-switch button[disabled]{opacity:.6!important;cursor:default!important;}
 #stprog-wrap .sp-switch .sp-add{border-style:dashed!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
 /* A cell that links to its own page. The link is the whole cell so the tap
@@ -122,48 +123,48 @@
 @media(max-width:720px){#stprog-wrap .sp-stats{grid-template-columns:repeat(2,1fr)!important;} #stprog-wrap .sp-unit-bar{display:none!important;}}
 </style>
 
-<div id="stprog-wrap">
-<div class="sp-page">
-  <div class="sp-wrap">
+<div id=""stprog-wrap"">
+<div class=""sp-page"">
+  <div class=""sp-wrap"">
 
-    <div id="sp-auth" class="sp-auth sp-hidden">
+    <div id=""sp-auth"" class=""sp-auth sp-hidden"">
       <h1>See your progress</h1>
       <p>Sign in with your class code, name, and PIN to view your scores.</p>
-      <a class="sp-btn primary" href="/pages/join">Sign in</a>
+      <a class=""sp-btn primary"" href=""/pages/join"">Sign in</a>
     </div>
 
-    <div id="sp-main" class="sp-hidden">
-      <div class="sp-top">
-        <div class="sp-id">
-          <div class="sp-av" id="sp-av" aria-hidden="true">--</div>
+    <div id=""sp-main"" class=""sp-hidden"">
+      <div class=""sp-top"">
+        <div class=""sp-id"">
+          <div class=""sp-av"" id=""sp-av"" aria-hidden=""true"">--</div>
           <div>
-            <h1 class="sp-name" id="sp-name">Student</h1>
-            <div class="sp-sub">
-              <span class="sp-tag" id="sp-course">Course</span>
-              <span id="sp-class"></span>
+            <h1 class=""sp-name"" id=""sp-name"">Student</h1>
+            <div class=""sp-sub"">
+              <span class=""sp-tag"" id=""sp-course"">Course</span>
+              <span id=""sp-class""></span>
             </div>
           </div>
         </div>
-        <button class="sp-btn" onclick="StProg.logout()">Sign out</button>
+        <button class=""sp-btn"" onclick=""StProg.logout()"">Sign out</button>
       </div>
 
       <!-- Course switcher. One account, one name, one PIN, every course the
            student takes. Hidden entirely when there is only one, so a student
            in a single class sees no new furniture. -->
-      <nav id="sp-switch" class="sp-switch sp-hidden" aria-label="Your courses"></nav>
+      <nav id=""sp-switch"" class=""sp-switch sp-hidden"" aria-label=""Your courses""></nav>
 
-      <div id="sp-loading" class="sp-note" role="status" aria-live="polite">Loading your progress...</div>
-      <div id="sp-error" class="sp-err sp-hidden" role="alert"></div>
+      <div id=""sp-loading"" class=""sp-note"" role=""status"" aria-live=""polite"">Loading your progress...</div>
+      <div id=""sp-error"" class=""sp-err sp-hidden"" role=""alert""></div>
 
-      <div id="sp-body" class="sp-hidden">
-        <div class="sp-stats" id="sp-stats"></div>
-        <div class="sp-pass" id="sp-pass"></div>
-        <div id="sp-units"></div>
-        <div class="sp-legend" aria-hidden="true">
-          <span class="k"><span class="sw g"></span> 80 and up</span>
-          <span class="k"><span class="sw a"></span> 60 to 79</span>
-          <span class="k"><span class="sw r"></span> below 60</span>
-          <span class="k"><span class="sw n"></span> not started</span>
+      <div id=""sp-body"" class=""sp-hidden"">
+        <div class=""sp-stats"" id=""sp-stats""></div>
+        <div class=""sp-pass"" id=""sp-pass""></div>
+        <div id=""sp-units""></div>
+        <div class=""sp-legend"" aria-hidden=""true"">
+          <span class=""k""><span class=""sw g""></span> 80 and up</span>
+          <span class=""k""><span class=""sw a""></span> 60 to 79</span>
+          <span class=""k""><span class=""sw r""></span> below 60</span>
+          <span class=""k""><span class=""sw n""></span> not started</span>
         </div>
       </div>
     </div>
@@ -224,7 +225,7 @@ window.StProg={
       const data=await r.json();
       const rows=Array.isArray(data)?data:(data.progress||data.rows||[]);
       this.threshold=(data && (data.mastery_threshold || (data.class && data.class.mastery_threshold))) || 80;
-      // The authored "out of" per lesson and activity, resolved server side by
+      // The authored ""out of"" per lesson and activity, resolved server side by
       // the same authority the teacher gradebook uses. Absent means nobody has
       // authored one for that column, and the cell shows a bare percent.
       this.denominators=(data && data.denominators) || {};
@@ -311,34 +312,34 @@ window.StProg={
   linkWrap(inner,c,label){
     if(!c||!c.url) return inner;
     const hint=c.urlKind==='page'?('Open '+label):('Open the unit that contains '+label);
-    return "<a class='sp-go' href='"+this.esc(c.url)+"' title='"+this.esc(hint)+"' aria-label='"+this.esc(hint)+"'>"+inner+"</a>";
+    return ""<a class='sp-go' href='""+this.esc(c.url)+""' title='""+this.esc(hint)+""' aria-label='""+this.esc(hint)+""'>""+inner+""</a>"";
   },
 
   cellHtml(nm,a,c){ const S=this;
     if(c&&c.score!=null){
-      const att=(c.attempts&&c.attempts>1)?("<span class='sp-att'>"+c.attempts+"x</span>"):"";
+      const att=(c.attempts&&c.attempts>1)?(""<span class='sp-att'>""+c.attempts+""x</span>""):"""";
       // Points earned over points possible whenever the points are known. Where
       // nobody has assigned points to the activity yet, the percent is shown on
       // its own and marked, rather than invented against a denominator that
       // appears on no page.
       const prov=(c.possible==null||c.earned==null);
       const text=prov
-        ? S.num(c.score)+"%<span class='sp-prov' title='Points not assigned to this activity yet'>*</span>"
-        : S.num(c.earned)+"/"+S.num(c.possible);
+        ? S.num(c.score)+""%<span class='sp-prov' title='Points not assigned to this activity yet'>*</span>""
+        : S.num(c.earned)+""/""+S.num(c.possible);
       const label=prov
-        ? S.num(c.score)+" percent, points not assigned to this activity yet"
-        : S.num(c.earned)+" of "+S.num(c.possible)+" points";
-      return S.linkWrap("<span class='sp-cell "+S.clsFor(c.score)+"' aria-label='"+S.esc(nm)+": "+label
-        +((c.attempts&&c.attempts>1)?(", "+c.attempts+" attempts"):"")+"'>"+text+att+"</span>", c, nm);
+        ? S.num(c.score)+"" percent, points not assigned to this activity yet""
+        : S.num(c.earned)+"" of ""+S.num(c.possible)+"" points"";
+      return S.linkWrap(""<span class='sp-cell ""+S.clsFor(c.score)+""' aria-label='""+S.esc(nm)+"": ""+label
+        +((c.attempts&&c.attempts>1)?("", ""+c.attempts+"" attempts""):"""")+""'>""+text+att+""</span>"", c, nm);
     }
-    if(c&&c.completed){ return S.linkWrap("<span class='sp-cell c' aria-label='"+S.esc(nm)+": completed, not graded'>&#10003;</span>", c, nm); }
-    return S.linkWrap("<span class='n' aria-label='"+S.esc(nm)+": not started'>&ndash;</span>", c, nm);
+    if(c&&c.completed){ return S.linkWrap(""<span class='sp-cell c' aria-label='""+S.esc(nm)+"": completed, not graded'>&#10003;</span>"", c, nm); }
+    return S.linkWrap(""<span class='n' aria-label='""+S.esc(nm)+"": not started'>&ndash;</span>"", c, nm);
   },
 
   unitLabel(k){ let m; if(m=/^unit-(\d+)$/.exec(k))return 'Unit '+m[1]; if(m=/^bi-?(\d+)$/.exec(k))return 'Big Idea '+m[1]; if(k==='qotd')return 'Daily Practice'; if(k==='exams')return 'Practice Exams'; return k.replace(/(^|[-_])(\w)/g,(x,s,c)=>(s?' ':'')+c.toUpperCase()); },
   // 'solo' is a real course value, not a fallthrough: a self-study account's
   // class row carries it, and without an entry here the page prints the word
-  // "solo" at the student as though it were a course name.
+  // ""solo"" at the student as though it were a course name.
   formatCourse(c){ return {'ap-cybersecurity':'AP Cybersecurity','ap-csa':'AP CSA','ap-csp':'AP CSP','ap-networking':'AP Networking','solo':'Self-Study'}[c]||c||''; },
 
   allActivityCells(){
@@ -369,7 +370,7 @@ window.StProg={
     const t=this.totals(cells);
     const mastered=scored.filter(x=>x.score>=this.threshold).length;
     const has=t.pct!=null;
-    const card=(l,v,f)=>'<div class="sp-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div><div class="f">'+f+'</div></div>';
+    const card=(l,v,f)=>'<div class=""sp-stat""><div class=""l"">'+l+'</div><div class=""v"">'+v+'</div><div class=""f"">'+f+'</div></div>';
     document.getElementById('sp-stats').innerHTML=
       card('Overall',has?(t.pct+'<small>%</small>'):'&ndash;',has?(this.letter(t.pct)+', points earned over points attempted'):'no graded points yet')+
       card('Points',has?(this.num(t.earned)+'<small> / '+this.num(t.graded)+'</small>'):'&ndash;','of the work you have attempted')+
@@ -381,11 +382,11 @@ window.StProg={
   renderUnits(){
     const cs=this.model; let html=''; const S=this; const ckeys=Object.keys(cs);
     ckeys.forEach(ck=>{ const C=cs[ck];
-      html+="<h2 class='sp-course-h'>"+S.esc(S.formatCourse(ck)||ck)+"</h2>";
+      html+=""<h2 class='sp-course-h'>""+S.esc(S.formatCourse(ck)||ck)+""</h2>"";
       C.order.forEach(uk=>{ const U=C.units[uk];
         const ucells=[]; U.order.forEach(lk=>Object.keys(U.lessons[lk].acts).forEach(a=>ucells.push(U.lessons[lk].acts[a])));
         const ut=S.totals(ucells);
-        html+="<section class='sp-unit'><div class='sp-unit-head'><h2>"+S.esc(S.unitLabel(uk))+"</h2><span class='sp-unit-pct'>"+(ut.pct==null?'Not graded':ut.pct+'%')+"<span class='sp-unit-bar'><i style='width:"+(ut.pct||0)+"%'></i></span></span></div>";
+        html+=""<section class='sp-unit'><div class='sp-unit-head'><h2>""+S.esc(S.unitLabel(uk))+""</h2><span class='sp-unit-pct'>""+(ut.pct==null?'Not graded':ut.pct+'%')+""<span class='sp-unit-bar'><i style='width:""+(ut.pct||0)+""%'></i></span></span></div>"";
         const lessons=U.order.slice().sort((a,b)=>S.cmpLesson(a,b));
         // A lab column appears in this unit only if this unit has lab work in
         // it, so a course with no labs is byte for byte the table it was.
@@ -393,48 +394,48 @@ window.StProg={
         const standard=lessons.filter(l=>Object.keys(U.lessons[l].acts).some(a=>cols.indexOf(a)>-1));
         const singles=lessons.filter(l=>standard.indexOf(l)<0);
         if(standard.length){
-          // No "/N" in the header. Denominators differ per lesson (Cyber 1.1
+          // No ""/N"" in the header. Denominators differ per lesson (Cyber 1.1
           // Exercise 1 is out of 7, Unit 2's is out of 6), so a single number
           // above the column is wrong for most of it. Each cell carries its own.
-          html+="<table class='sp-table'><thead><tr><th class='lname' scope='col'>Lesson</th>";
-          cols.forEach(a=>{ html+="<th scope='col'>"+ACT_LABEL[a]+"</th>"; });
-          html+="<th scope='col'>Lesson</th></tr></thead><tbody>";
+          html+=""<table class='sp-table'><thead><tr><th class='lname' scope='col'>Lesson</th>"";
+          cols.forEach(a=>{ html+=""<th scope='col'>""+ACT_LABEL[a]+""</th>""; });
+          html+=""<th scope='col'>Lesson</th></tr></thead><tbody>"";
           standard.forEach(lk=>{ const L=U.lessons[lk]; const nm=S.lessonLabel(lk);
-            const ln=L.url?("<a class='sp-lname' href="+JSON.stringify(L.url)+">"+S.esc(nm)+"</a>"):S.esc(nm);
-            html+="<tr><td class='lname'>"+ln+"</td>";
+            const ln=L.url?(""<a class='sp-lname' href=""+JSON.stringify(L.url)+"">""+S.esc(nm)+""</a>""):S.esc(nm);
+            html+=""<tr><td class='lname'>""+ln+""</td>"";
             const lcells=[];
-            cols.forEach(a=>{ const c=L.acts[a]; if(c) lcells.push(c); html+="<td>"+S.cellHtml(nm+' '+ACT_LABEL[a],a,c)+"</td>"; });
+            cols.forEach(a=>{ const c=L.acts[a]; if(c) lcells.push(c); html+=""<td>""+S.cellHtml(nm+' '+ACT_LABEL[a],a,c)+""</td>""; });
             const lt=S.totals(lcells);
-            html+="<td class='lpct'>"+(lt.pct==null?"<span class='n'>&ndash;</span>":(S.num(lt.earned)+"/"+S.num(lt.graded)))+"</td></tr>";
+            html+=""<td class='lpct'>""+(lt.pct==null?""<span class='n'>&ndash;</span>"":(S.num(lt.earned)+""/""+S.num(lt.graded)))+""</td></tr>"";
           });
-          html+="</tbody></table>";
+          html+=""</tbody></table>"";
         }
         if(singles.length){
-          html+="<div class='sp-srows'>";
+          html+=""<div class='sp-srows'>"";
           singles.forEach(lk=>{ const L=U.lessons[lk]; const a=Object.keys(L.acts)[0]; const c=L.acts[a];
             const nm=(lk==='exam'||lk==='case-file')?(ACT_LABEL[lk]||(S.unitLabel(uk)+' '+lk)):S.lessonLabel(lk);
-            const sn=L.url?("<a class='sp-lname' href="+JSON.stringify(L.url)+">"+S.esc(nm)+"</a>"):S.esc(nm);
-            html+="<div class='sp-srow'><span class='lname'>"+sn+"</span>"+S.cellHtml(nm,a,c)+"</div>";
+            const sn=L.url?(""<a class='sp-lname' href=""+JSON.stringify(L.url)+"">""+S.esc(nm)+""</a>""):S.esc(nm);
+            html+=""<div class='sp-srow'><span class='lname'>""+sn+""</span>""+S.cellHtml(nm,a,c)+""</div>"";
           });
-          html+="</div>";
+          html+=""</div>"";
         }
-        html+="</section>";
+        html+=""</section>"";
       });
     });
-    if(!html) html="<div class='sp-note'>No progress yet. Start a lesson and your scores will show up here.</div>";
+    if(!html) html=""<div class='sp-note'>No progress yet. Start a lesson and your scores will show up here.</div>"";
     const anyScore=this.allActivityCells().some(x=>x.score!=null);
-    if(!anyScore && html.indexOf('sp-note')<0){ html="<div class='sp-info'>These are lessons you have opened. Individual grades appear here as you complete the graded quizzes and exercises in each lesson.</div>"+html; }
+    if(!anyScore && html.indexOf('sp-note')<0){ html=""<div class='sp-info'>These are lessons you have opened. Individual grades appear here as you complete the graded quizzes and exercises in each lesson.</div>""+html; }
     document.getElementById('sp-units').innerHTML=html;
     const pn=document.getElementById('sp-pass');
     if(pn){
       const t=this.totals(this.allActivityCells());
-      let note="Passing mark: <b>"+this.threshold+"%</b>. Each score is points earned out of points possible. A blue check means completed but not yet graded.";
+      let note=""Passing mark: <b>""+this.threshold+""%</b>. Each score is points earned out of points possible. A blue check means completed but not yet graded."";
       // What the total actually does with those activities. It used to say they
-      // "count out of 100 until then", which was the old behaviour and is no
+      // ""count out of 100 until then"", which was the old behaviour and is no
       // longer true: an unpriced activity is left out of the points total
       // entirely, on both sides. Saying otherwise told a student their grade was
       // computed one way while it was computed another.
-      if(t.unpriced) note+=" A * marks "+t.unpriced+" activit"+(t.unpriced===1?"y whose":"ies whose")+" points have not been assigned yet. "+(t.unpriced===1?"Its percent is shown, and it is":"Their percents are shown, and they are")+" not counted in the points total.";
+      if(t.unpriced) note+="" A * marks ""+t.unpriced+"" activit""+(t.unpriced===1?""y whose"":""ies whose"")+"" points have not been assigned yet. ""+(t.unpriced===1?""Its percent is shown, and it is"":""Their percents are shown, and they are"")+"" not counted in the points total."";
       pn.innerHTML=note;
     }
   },
@@ -463,12 +464,12 @@ window.StProg={
     if(list.length>1){
       list.forEach(e=>{
         const label=this.formatCourse(e.course)||e.class_name||e.class_code;
-        html+="<button type='button' aria-current='"+(e.current?'true':'false')+"'"
-          +(e.current?" disabled":"")
-          +" onclick=\"StProg.switchTo('"+this.esc(e.class_code)+"')\">"+this.esc(label)+"</button>";
+        html+=""<button type='button' aria-current='""+(e.current?'true':'false')+""'""
+          +(e.current?"" disabled"":"""")
+          +"" onclick=\""StProg.switchTo('""+this.esc(e.class_code)+""')\"">""+this.esc(label)+""</button>"";
       });
     }
-    html+="<button type='button' class='sp-add' onclick='StProg.addCourse()'>+ Add a class</button>";
+    html+=""<button type='button' class='sp-add' onclick='StProg.addCourse()'>+ Add a class</button>"";
     el.innerHTML=html;
     el.classList.remove('sp-hidden');
   },
@@ -521,8 +522,9 @@ window.StProg={
 
   logout(){ localStorage.removeItem('apcse_token'); localStorage.removeItem('apcse_student');
     document.getElementById('sp-main').classList.add('sp-hidden'); document.getElementById('sp-auth').classList.remove('sp-hidden'); },
-  esc(s){ var A='&'; return String(s==null?'':s).split(A).join(A+'amp;').split('<').join(A+'lt;').split('>').join(A+'gt;').split('"').join(A+'quot;'); }
+  esc(s){ var A='&'; return String(s==null?'':s).split(A).join(A+'amp;').split('<').join(A+'lt;').split('>').join(A+'gt;').split('""').join(A+'quot;'); }
 };
 document.addEventListener('DOMContentLoaded',()=>StProg.init());
 })();
 </script>
+"
