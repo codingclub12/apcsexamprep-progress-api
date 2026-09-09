@@ -156,8 +156,14 @@ const MUTATIONS = [
   {
     name: 'contract stops resolving the ladder and reads the class default only',
     file: 'contract',
-    find: '    const row = pickGateRow(inUnit, it.lesson_ref, it.native_activity);',
-    repl: '    const row = null;',
+    //  Retargeted 2026-09-09 when the contract started resolving every alias a
+    //  column answers to. Same rule, same failure: hand the resolver no rows and
+    //  the class default decides everything, which is what a padlock drawn from
+    //  a default rather than from the teacher's own row looks like.
+    find: `    const row = names.map((n) => pickGateRow(inUnit, it.lesson_ref, n)).find(Boolean) || null;
+    const g = resolveAliasGate(inUnit, gcls, it.lesson_ref, names);`,
+    repl: `    const row = null;
+    const g = resolveAliasGate([], gcls, it.lesson_ref, names);`,
     must: ['contract: an item under the locked unit is marked locked',
       'contract agrees with the render path on the same column'],
   },

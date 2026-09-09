@@ -75,10 +75,16 @@ function loadPage() {
     set innerHTML(v) { this._html = v; }, get innerHTML() { return this._html || ''; },
   });
   const store = {};
+  //  One element per id, kept, so a render can be READ BACK. A fresh stub per
+  //  call means every innerHTML the page writes is discarded, and a suite that
+  //  cannot see the markup can only test the model behind it. The lab columns
+  //  are a rendering decision, so they need the markup.
+  const nodes = {};
+  const byId = (id) => (nodes[id] || (nodes[id] = el()));
   const sandbox = {
     window: {}, console,
     document: {
-      getElementById: () => el(),
+      getElementById: byId,
       addEventListener: () => {},
       querySelector: () => el(),
     },
@@ -93,15 +99,15 @@ function loadPage() {
   vm.createContext(sandbox);
   vm.runInContext(scripts[0], sandbox, { timeout: 5000 });
   if (!sandbox.window.StProg) throw new Error('page did not define window.StProg');
-  return sandbox.window.StProg;
+  return { StProg: sandbox.window.StProg, byId };
 }
 
 (async () => {
   console.log('\nMY-PROGRESS PAGE RENDERS THE TEACHER\'S NUMBERS\n');
 
   console.log('0. The shipped page loads and exposes its logic');
-  let StProg;
-  try { StProg = loadPage(); ok('  shopify/my-progress.html defines StProg', true); }
+  let StProg, byId;
+  try { ({ StProg, byId } = loadPage()); ok('  shopify/my-progress.html defines StProg', true); }
   catch (e) { ok('  shopify/my-progress.html defines StProg', false, e.message); throw e; }
   // Scoped to the SCRIPT, not the whole file: the comment at the top of the
   // page quotes the old constant table on purpose, to say what was removed and
@@ -239,6 +245,51 @@ function loadPage() {
   ok('  and the page total equals the teacher total',
     near(t.earned, student.overall.earned) && near(t.graded, student.overall.graded),
     { page: [t.earned, t.graded], teacher: [student.overall.earned, student.overall.graded] });
+
+  console.log('6. A student can see their lab work at all');
+  //  Reported 2026-09-09 by a teacher: "the students cannot see the labs on
+  //  their dashboards". They could not. ACTS listed lesson, the two exercises
+  //  and the quiz, so a finished terminal lab arrived from the API, was counted
+  //  in the unit percentage, and had no column to be drawn in. The lesson row
+  //  and the unit total under it disagreed, and the missing half was the work
+  //  the student had actually done.
+  run(`INSERT INTO course_denominators (course,unit,lesson,activity_type,possible) VALUES (?,'unit-1','1.2','terminal-lab',8)`, COURSE);
+  await post('/api/student/progress',
+    { course: COURSE, unit: 'unit-1', lesson: '1.2', activity_type: 'terminal-lab', score: 75, completed: true }, stok);
+  //  A unit with no lab work in it, to prove the column is conditional. Without
+  //  this, "the lab column renders" would also pass on a page that had simply
+  //  added two more fixed columns to every table in every course.
+  await post('/api/student/progress',
+    { course: COURSE, unit: 'unit-2', lesson: '2.1', activity_type: 'quiz', score: 90, completed: true }, stok);
+
+  const sv2 = await get('/api/student/progress', stok);
+  StProg.denominators = sv2.body.denominators || {};
+  StProg.model = StProg.buildModel(sv2.body.progress);
+  StProg.renderUnits();
+  const rendered = byId('sp-units').innerHTML || '';
+  const sections = rendered.split("<section class='sp-unit'>");
+  const unitOf = (label) => sections.find((x) => x.indexOf(label) > -1) || '';
+  const u1 = unitOf('Unit 1'), u2 = unitOf('Unit 2');
+
+  ok('  the unit with lab work renders a Terminal Lab column',
+    />Terminal Lab</.test(u1), u1.slice(0, 400));
+  ok('  and the lab score is in the lesson row, not only in the unit total',
+    /6\/8/.test(u1), (/(<tr>(?:(?!<\/tr>)[\s\S])*1\.2(?:(?!<\/tr>)[\s\S])*<\/tr>)/.exec(u1) || ['no 1.2 row'])[0]);
+  ok('  the widget Lab column is drawn too, since 1.4 has lab work',
+    />Lab</.test(u1), u1.slice(0, 400));
+  ok('  a unit with no lab work gets no lab column',
+    u2 && !/>Terminal Lab</.test(u2) && !/>Lab</.test(u2), u2.slice(0, 400));
+  ok('  and that unit is still a real table, so the check is not passing on an empty string',
+    /<th scope='col'>Quiz<\/th>/.test(u2), u2.slice(0, 200));
+
+  //  The disagreement the missing column caused, stated as arithmetic. Every
+  //  cell the row draws has to add up to the pair printed at the end of it.
+  const l12 = StProg.model[COURSE].units['unit-1'].lessons['1.2'];
+  const shown = ['lesson', 'exercise-1', 'exercise-2', 'quiz', 'lab', 'terminal-lab']
+    .map((a) => l12.acts[a]).filter(Boolean);
+  const rowTotal = StProg.totals(shown);
+  ok('  the 1.2 row now totals its lab in: 2 of 7 plus 6 of 8',
+    rowTotal.earned === 8 && near(rowTotal.graded, 15), [rowTotal.earned, rowTotal.graded]);
 
   console.log(`\n${pass} passed, ${fail} failed\n`);
   server.close();

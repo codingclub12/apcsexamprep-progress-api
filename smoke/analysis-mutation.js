@@ -157,8 +157,13 @@ const MUTATIONS = [
     name: 'the gradebook forgets analysis activities, so the padlock is decorative again',
     file: 'contract',
     suite: 'gate',
-    find: '  for (const l of labLocations().concat(analysisLocations())) {',
-    repl: '  for (const l of labLocations()) {',
+    //  Retargeted 2026-09-09. labLocations and analysisLocations became one
+    //  specAliasGroups(), because the lab half needed the alias GROUPS and two
+    //  lists built the same way from two modules is how the two halves drifted
+    //  in the first place. Same mutation: drop the analysis specs and an
+    //  analysis lock goes back to being drawn as decoration.
+    find: "  add('./analysis-spec');",
+    repl: '',
     must: ['and the lock is now ENFORCEABLE, which is the whole point of the migration'],
   },
   {
@@ -167,8 +172,8 @@ const MUTATIONS = [
     name: 'only the spec name is registered as enforceable, not the column a teacher clicks',
     file: 'contract',
     suite: 'gate',
-    find: '      for (const act of mod.aliases(sp)) {',
-    repl: '      for (const act of [sp.item_type === "lab" ? "terminal-lab" : "lab"]) {',
+    find: '    for (const act of g.names) {',
+    repl: '    for (const act of [g.names[0] === "lab" ? "terminal-lab" : "lab"]) {',
     must: ['and the lock is now ENFORCEABLE, which is the whole point of the migration'],
   },
 ];

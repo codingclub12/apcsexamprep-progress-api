@@ -220,6 +220,116 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   ok('  a lab nobody closed is still open signed out',
     r.status === 200 && !r.body.locked, r.body && r.body.reason);
 
+  console.log('\n8. THE BOARD AND THE STUDENT CANNOT DISAGREE ABOUT ONE LAB');
+  //  Reported 2026-09-09 by the same teacher: labs reading "your teacher has not
+  //  opened this lab yet" on a class that had locked nothing.
+  //
+  //  A cyber lesson carries TWO lab columns. utils.js lists 'lab' in every unit's
+  //  activities, and the manifest row for a terminal lab says 'terminal-lab',
+  //  which is a deliberate split so the lab denominator stops overwriting the
+  //  widget's. The student path has resolved both names since 2026-09-07. The
+  //  gradebook resolved ONE, so a row written on either name locked the student
+  //  out while the other column drew open, and a teacher looking at the open one
+  //  is exactly right to say they locked nothing.
+  const bothCols = () => {
+    const gb = contract.buildCanonicalGradebook('c1', { reveal: false });
+    const at = (act) => gb.items.find((i) => i.unit === LAB.unit
+      && i.lesson_ref === LAB.lesson_id && i.native_activity === act);
+    return { gb, lab: at('lab'), spec: at(ACT) };
+  };
+  run('DELETE FROM activity_gates');
+  let cols = bothCols();
+  ok('  the lesson really does carry both columns, which is why this matters',
+    !!cols.lab && !!cols.spec, [!!cols.lab, !!cols.spec]);
+  ok('  and they no longer render the same label, so a teacher can name the one they mean',
+    cols.lab && cols.spec && cols.lab.label !== cols.spec.label,
+    cols.lab && cols.spec && [cols.lab.label, cols.spec.label]);
+
+  //  Close the SPEC's name. The student is refused; the teacher's Lab column has
+  //  to say so too.
+  await setGate({ lesson: LAB.lesson_id, activity_type: ACT, open: false });
+  r = await call('GET', URL, null, ST);
+  cols = bothCols();
+  ok('  closing terminal-lab refuses the student', r.body && r.body.locked === true, r.body && r.body.reason);
+  ok('  and the Lab column the teacher reads reports locked, not open',
+    cols.lab && cols.lab.locked === true, cols.lab && [cols.lab.locked, cols.lab.lock_reason]);
+
+  //  Close the column a teacher actually clicks. The spec column has to agree.
+  run('DELETE FROM activity_gates');
+  await setGate({ lesson: LAB.lesson_id, activity_type: 'lab', open: false });
+  r = await call('GET', URL, null, ST);
+  cols = bothCols();
+  ok('  closing the Lab column refuses the student', r.body && r.body.locked === true, r.body && r.body.reason);
+  ok('  and the terminal-lab column reports locked too',
+    cols.spec && cols.spec.locked === true, cols.spec && [cols.spec.locked, cols.spec.lock_reason]);
+
+  //  Enforceability, on BOTH names. The tooltip behind a false reading here says
+  //  "this activity keeps its questions in the page, so students can still reach
+  //  them", which invites a teacher to treat the padlock as decoration.
+  ok('  the Lab column reports the lock as enforceable',
+    cols.lab && cols.lab.lock_enforceable === true, cols.lab && cols.lab.lock_enforceable);
+  ok('  and neither column is listed as an unenforceable lock',
+    cols.gb.gates.locked_but_unenforceable.length === 0, cols.gb.gates.locked_but_unenforceable);
+
+  //  TWO ROWS AT THE SAME SCOPE, one closing and one opening, is a tie, and the
+  //  tie goes to the CLOSING row on every path (lib/activity-gate.js). So a
+  //  teacher who closes the Lab column and then opens the Terminal Lab column
+  //  is still closed, which is correct and is also the moment the old board was
+  //  at its worst: it drew one padlock shut and one open and neither told them
+  //  which one the student was hitting. Both columns must now say closed.
+  await setGate({ lesson: LAB.lesson_id, activity_type: ACT, open: true });
+  r = await call('GET', URL, null, ST);
+  cols = bothCols();
+  ok('  opening the other name does not defeat the close, per the tie rule',
+    r.body && r.body.locked === true, r.body && r.body.reason);
+  ok('  and BOTH columns show closed, so the board matches what the student gets',
+    cols.lab && cols.spec && cols.lab.locked === true && cols.spec.locked === true,
+    cols.lab && cols.spec && [cols.lab.locked, cols.spec.locked]);
+
+  //  The way out. Clearing the row that closed it reopens the lab, and both
+  //  columns follow, so a teacher can always undo their own lock.
+  await call('DELETE', `/api/teacher/classes/${CODE}/gate`,
+    { course: LAB.course, unit: LAB.unit, lesson: LAB.lesson_id, activity_type: 'lab' }, TT);
+  r = await call('GET', URL, null, ST);
+  cols = bothCols();
+  ok('  clearing the closing row reopens the lab for the student',
+    r.body && !r.body.locked, r.body && r.body.reason);
+  ok('  and both columns read open again',
+    cols.lab && cols.spec && cols.lab.locked === false && cols.spec.locked === false,
+    cols.lab && cols.spec && [cols.lab.locked, cols.spec.locked]);
+
+  //  The half that must not move: a lesson with no lab spec has no alias group,
+  //  so its columns resolve under their own name exactly as they always did.
+  run('DELETE FROM activity_gates');
+  await setGate({ lesson: LAB.lesson_id, activity_type: 'quiz', open: false });
+  const gbq = contract.buildCanonicalGradebook('c1', { reveal: false });
+  const quizCol = gbq.items.find((i) => i.unit === LAB.unit && i.lesson_ref === LAB.lesson_id && i.native_activity === 'quiz');
+  const labCol = gbq.items.find((i) => i.unit === LAB.unit && i.lesson_ref === LAB.lesson_id && i.native_activity === 'lab');
+  ok('  a quiz close still locks only the quiz',
+    quizCol && quizCol.locked === true && labCol && labCol.locked === false,
+    [quizCol && quizCol.locked, labCol && labCol.locked]);
+
+  console.log('\n9. THE REFUSAL SAYS WHOSE LOCK IT IS');
+  //  Two refusals, two audiences. The anonymous one fires when ANY class has
+  //  closed the lab, so telling that visitor "your teacher has not opened this"
+  //  names a teacher who did nothing, and blames the wrong person when the
+  //  visitor is a student of an OPEN class who happens to be signed out. That is
+  //  how a support email about a lock nobody set gets written.
+  run('DELETE FROM activity_gates');
+  await setGate({ lesson: LAB.lesson_id, activity_type: ACT, open: false });
+  r = await call('GET', URL, null, ST);
+  ok('  a student whose own class closed it is told about their class',
+    r.body && r.body.locked_for === 'class', r.body && r.body.locked_for);
+  r = await call('GET', URL);
+  ok('  a signed-out visitor is told it is the anonymous rule',
+    r.body && r.body.locked_for === 'anonymous', r.body && r.body.locked_for);
+  //  A student of a class that has NOT closed this lab, signed out, is the case
+  //  the wording was wrong for. Signed in they get the lab; signed out they hit
+  //  the anonymous rule, and must not be told their teacher closed anything.
+  r = await call('GET', URL, null, OTHER);
+  ok('  a student of an open class still gets the lab while signed in',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
+
   console.log(`\n  ${pass} passed, ${fail} failed`);
   server.close();
   process.exit(fail ? 1 : 0);
