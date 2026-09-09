@@ -2,7 +2,7 @@
   "change": "the 1.2 quiz page stops advertising a 12 question, 25 minute quiz it does not serve",
   "_the_defect": "/pages/ap-cyber-unit-1-lesson-2-quiz says '5 questions, about 10 minutes' in its blurb and then, in the badge row directly beneath it, [12 Questions] [Skills 1.A, 1.B, 2.A] [~25 min] [Instant Feedback]. The two sit one line apart. A student reads 12 and is served 5; a teacher planning a period reads 25 minutes for a quiz that takes 10.",
   "_root_cause": "The badges are left over from the 12 item bank transcribed from the teacher bundle on 2026-08-26 and retired the next day, when the rule landed that bundle instruments stay offline. The page was later migrated onto the server render path, and the badge row was not revisited.",
-  "_scope": "Swept all 26 cyber quiz pages. This is the only mounted one advertising a count that is not 5, so it is an instance and not a class.",
+  "_scope": "There are 25 cyber quiz pages, not 26, and the first version of this line said 26. Re-swept 2026-09-09: seven of the 25 carry a question count badge at all, and 1.2 is the only one whose badge disagrees with its bank. So it is an instance and not a class. 5.5 and 5.6 advertise ~12 and ~15 minutes where everyone else says ~10; their counts are right, they carry no blurb to contradict, and a duration is an estimate rather than a derived fact, so they are left alone.",
   "_the_count_is_measured": "The replacement number is read from the live quiz API's own pool for this lesson, by the generator and again by the rederive. Typing 5 in from the blurb would make this a second opinion about how many questions the bank holds, and a second opinion is what put the wrong number there in the first place.",
   "_import_is_tanners": "The artifact is a Matrixify sheet. Nothing here writes to Shopify. The live check below can only pass after he imports it.",
   "checks": [
@@ -100,6 +100,14 @@
       "expect": "badge12=false badge5=true t25=false t10=true",
       "_why": "FALSE before the import and measured that way. At 11:5x UTC on 2026-09-09, before the sheet existed, the same command printed badge12=true badge5=false t25=true t10=false. All four flip, so a partial import cannot read as a whole one.",
       "_fetched_through_the_one_door": "lib/storefront-fetch.js, which sends no User-Agent and refuses a body that is not provably a rendered page. Without that, a challenge interstitial would satisfy badge12=false and half of this assertion would pass on a page that never loaded."
+    },
+    {
+      "kind": "live",
+      "name": "no cyber quiz page advertises a count its bank does not hold",
+      "command": "node scripts/cyber-quiz-badge-sweep.js",
+      "expect": "1 advertising a count the bank does not hold",
+      "_why": "A stronger statement than the byte strings above, and false right now in the way that matters: the sweep exits 1 today, naming 1.2. After the import it exits 0 and this check's expect line has to be updated to '0 advertising', which is deliberate. The expect pins today's reading so a stale gate cannot silently pass.",
+      "_this_is_also_the_standing_check": "It compares each page's badge against the server's own pool, so it keeps working when a bank is resized later. It does NOT judge the duration badges: 5.5 and 5.6 say ~12 and ~15 minutes, their counts are right, they carry no blurb to contradict, and a check that cannot say what the right answer would be has no business calling one wrong."
     }
   ]
 }

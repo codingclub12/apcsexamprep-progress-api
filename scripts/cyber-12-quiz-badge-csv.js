@@ -21,8 +21,13 @@
 //  A student reads 12 and is served 5. A teacher planning a period reads 25
 //  minutes for a quiz that takes 10.
 //
-//  Swept all 26 cyber quiz pages: this is the only mounted one advertising a
-//  count that is not 5.
+//  Swept the 25 cyber quiz pages, re-measured 2026-09-09. Seven carry a question
+//  count badge at all, and 1.2 is the only one whose badge disagrees with its
+//  bank. Unit 5's 5.5 and 5.6 advertise ~12 and ~15 minutes against everyone
+//  else's ~10, and those are not defects: their counts are right, they carry no
+//  blurb to contradict, and a duration is an estimate rather than a derived
+//  fact. A first pass of this sweep flagged them, which is the sweep being blunt
+//  rather than the pages being wrong.
 //
 //  ── THE COUNT IS MEASURED, NOT ASSUMED ──────────────────────────────────────
 //  The replacement number is read from the live quiz API's own pool size for
