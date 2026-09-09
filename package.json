@@ -38,6 +38,7 @@
     "smoke:quizauthoring": "node smoke/quiz-bank-authoring.js",
     "smoke:cyberquizlesson": "node smoke/cyber-quiz-lesson.js",
     "smoke:cyberccunit3": "node smoke/cyber-cc-unit3-relink.js",
+    "verify:cyberquizmounts": "node scripts/verify-cyber-quiz-mounts.js",
     "smoke:denomsafety": "node smoke/denominator-safety.js",
     "smoke:scoreeventsource": "node smoke/score-event-source.js",
     "smoke:ekprotect": "node smoke/ek-protection.js",
