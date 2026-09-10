@@ -1,0 +1,247 @@
+TEACHER GUIDE
+
+Topic 1.5: Casting and Range of Variables
+
+3 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.5.A | Develop code to cast primitive values to different primitive types in arithmetic expressions and determine the value that is produced as a result. |
+| 1.5.B | Describe conditions when an integer expression evaluates to a value out of range. |
+| 1.5.C | Describe conditions that limit accuracy of expressions. |
+
+Students will be able to
+
+I can predict the exact value of an expression that uses an (int) or (double) cast, including where the cast stops applying.
+
+I can explain why (double)(7 / 2) is 3.0 while (double) 7 / 2 is 3.5, and spot integer division hiding inside a cast.
+
+I can state Integer.MAX\_VALUE and Integer.MIN\_VALUE and describe exactly what Java does when an int expression goes out of range.
+
+I can explain why 0.1 + 0.2 does not print 0.3 and name one strategy that avoids the problem.
+
+How the days run
+
+Day 1
+
+The two cast operators and truncation; Widening and narrowing: which direction needs a cast
+
+Bell ringer: Two casts, two answers (6 min)
+
+On the board:  
+System.out.println((double) 7 / 2);  
+System.out.println((double)(7 / 2));  
+Both lines use the same numbers and the same cast. Write down what each one prints. If you think they print the same thing, write that down too, and be ready to defend it.
+
+Debrief: Take a hand count on 'same' versus 'different' before revealing anything. The first prints 3.5, the second prints 3.0. In line 1 the cast turns 7 into 7.0, so 7.0 / 2 is double division. In line 2 the parentheses force 7 / 2 to run first as int division, giving 3, and the cast then makes it 3.0. The information was already destroyed before the cast ran. Tell them plainly: this single pair of lines is the most commonly tested idea in this topic, and they will see it again today, on the checkpoint, and on the exam.
+
+Objectives and guided-notes preview (3 min)
+
+The two cast operators and truncation (14 min)
+
+A cast forces a value from one numeric type to another. AP CSA uses exactly two cast operators for primitives: (int) and (double). Nothing else is in scope.
+
+(int) converts a double to an int by dropping every digit after the decimal point. That is called truncation, and it is not rounding. (int) 9.99 is 9, and (int) 9.99 is not 10.
+
+Truncation always moves toward zero, so it chops, it never bumps a value up. Say the word 'chop' out loud when you trace a cast.
+
+(double) converts an int to a double by adding a decimal part. No information is lost, so this direction is always safe.
+
+The cast does not change the variable being read. (int) d does not turn d into an int; it produces an int value from d, and d stays a double.
+
+Worked example at the board (9 min)
+
+Cast a double to an int on the board and ask what happened to the fraction. Truncation, not rounding, is the single highest-value fact in Unit 1.
+
+Widening and narrowing: which direction needs a cast (14 min)
+
+Widening is Java automatically promoting an int to a double. It happens when you assign an int to a double variable, and it happens when an int and a double appear together in one arithmetic expression.
+
+double d = 5; is legal. The int 5 widens to 5.0 on the way in. No cast, no warning, no error.
+
+Narrowing is the other direction, double to int, and Java refuses to do it silently because it would throw away data. int n = 5.0; is a compile error, even though 5.0 is a whole number.
+
+The rule to memorize: safe direction is automatic, lossy direction must be requested in writing with an (int) cast.
+
+Mixed arithmetic follows the same logic. If either operand is a double, the other one widens and the result is a double. 7 / 2.0 is 3.5 because 7 widens to 7.0 first.
+
+Misconception check: Cast scope: the cast grabs one operand only (6 min)
+
+Cast scope: the cast grabs one operand only: A cast applies to the immediately following operand, not to the rest of the expression. (int) 2.9 + 1.6 casts only 2.9 and evaluates to 3.6, while (int)(2.9 + 1.6) evaluates to 4. Remember also that the bare cast chops rather than rounds, so (int) 2.9 is 2 and never 3.
+
+Stop and think, then assign homework (8 min)
+
+This topic carries more exam points than any other in the unit. If a day is going to be cut, do not cut this one.
+
+Day 2
+
+Cast scope, and the integer division hiding inside it; Rounding a non-negative double with (int)(x + 0.5)
+
+Bell ringer: retrieval on the previous day (5 min)
+
+Integer division and casting: three predictions, no notes.
+
+Objectives and guided-notes preview (3 min)
+
+Cast scope, and the integer division hiding inside it (15 min)
+
+A cast operator applies only to the immediately following operand, not to the rest of the expression. This one sentence is the highest-value sentence in the topic.
+
+(int) 2.9 + 1.6 casts only 2.9, giving 2, and then adds 1.6, giving 3.6. To cast the whole sum you must write (int)(2.9 + 1.6), which is (int) 4.5, which is 4.
+
+Now combine that with integer division from 1.3. When both operands are ints, the division is int division and the fractional part is thrown away before anything else happens.
+
+(double)(7 / 2) is the classic wrong answer. Java evaluates 7 / 2 inside the parentheses first, gets 3, and then widens 3 to 3.0. The .5 was destroyed before the cast ever ran.
+
+The fix is to cast an operand, not the result: (double) 7 / 2 gives 3.5, and 7 / (double) 2 also gives 3.5. Casting either side is enough, because one double operand makes the whole division double division.
+
+When you trace, circle what the cast touches before you compute anything. If you cannot say out loud which single operand the cast grabbed, you are guessing.
+
+Worked walkthrough (10 min)
+
+Overflow an int deliberately and show the wrap. Students remember the number going negative.
+
+Rounding a non-negative double with (int)(x + 0.5) (13 min)
+
+Because (int) chops, rounding requires you to build it yourself. The standard formula is (int)(x + 0.5), and it works for non-negative values.
+
+The logic is simple. If the fractional part is 0.5 or more, adding 0.5 pushes the value past the next whole number, so the chop lands one higher. If the fractional part is under 0.5, adding 0.5 is not enough to cross, so the chop lands the same.
+
+The outer parentheses are mandatory. (int) x + 0.5 casts only x and then adds 0.5, which produces a double and does not round anything.
+
+The formula is stated for non-negative values in the CED, and that is how the exam uses it. Do not extend it to negatives on a free-response answer.
+
+This is a place where the cast-scope rule from the previous segment pays for itself immediately, so make them justify the parentheses out loud.
+
+Misconception check: Cast scope: the cast grabs one operand only (6 min)
+
+Cast scope: the cast grabs one operand only: A cast applies to the immediately following operand, not to the rest of the expression. (int) 2.9 + 1.6 casts only 2.9 and evaluates to 3.6, while (int)(2.9 + 1.6) evaluates to 4. Remember also that the bare cast chops rather than rounds, so (int) 2.9 is 2 and never 3.
+
+Stop and think, then assign homework (8 min)
+
+This topic carries more exam points than any other in the unit. If a day is going to be cut, do not cut this one.
+
+Day 3
+
+When values do not fit: integer overflow and double round-off error
+
+Bell ringer: retrieval on the previous day (5 min)
+
+Integer division and casting: three predictions, no notes.
+
+Objectives and guided-notes preview (3 min)
+
+When values do not fit: integer overflow and double round-off error (16 min)
+
+An int is stored in exactly 4 bytes, 32 bits, which fixes its range. Integer.MAX\_VALUE is 2,147,483,647 and Integer.MIN\_VALUE is -2,147,483,648.
+
+If an int expression would produce a value outside that range, integer overflow occurs. Java does not throw an exception and does not report anything. The value wraps silently around to the other end of the range and the program keeps running with a wrong number.
+
+Adding 1 to Integer.MAX\_VALUE gives Integer.MIN\_VALUE. Subtracting 1 from Integer.MIN\_VALUE gives Integer.MAX\_VALUE. This is a favorite exam item, and the distractors are always a compile error, an ArithmeticException, or automatic promotion to a wider type. All three are false.
+
+Real programs sometimes use a wider integer type for very large values, but that type is outside AP CSA scope and will not be a correct answer choice. Recognize it as a distractor, do not write it.
+
+Doubles have a different failure mode. Some decimal values cannot be represented exactly in binary floating point, so the stored value is the nearest representable number. That gap is round-off error.
+
+The classic demonstration is 0.1 + 0.2, which prints 0.30000000000000004. When exact results matter, use int arithmetic instead, for example count money in whole cents and only convert to dollars for display.
+
+Worked walkthrough (10 min)
+
+Overflow an int deliberately and show the wrap. Students remember the number going negative.
+
+Guided practice on the live lesson page (12 min)
+
+Work the live lesson page as a class (Unit 1 Link Sheet, row 1.5). Start with the Java Code Editor exercise so students watch a real compiler truncate, then move to the Tier 2 AP Practice set in pairs, then close with the Tier 3 Mastery Challenge, The Track Team Timer, which combines truncation with round-off error in one problem.
+
+In the Java Code Editor, print (double) 7 / 2 and (double)(7 / 2) in the same program and confirm the outputs are 3.5 and 3.0.
+
+In the same editor, set an int to Integer.MAX\_VALUE, add 1, print it, and read the wrapped value out loud as a class.
+
+Print 0.1 + 0.2 and have every student copy the exact printed value into their notes, all digits.
+
+Complete the Tier 2 practice questions in pairs. Require partners to write the value of every sub-expression before selecting an answer; no answer choice may be circled from a bare guess.
+
+Play one of the two games, Output Predictor or Bug Hunt, for five minutes as a whole-class competition.
+
+Work Parts A and B of the Tier 3 Mastery Challenge, The Track Team Timer, together. Part A produces 12.6 rather than the expected 12.7, and the reason is round-off error; Part B is fixed by adding 0.5 before the cast.
+
+Independent practice (9 min)
+
+Offline expression-evaluation drill. Everything here runs on paper with no compiler, and every item has a single exact answer.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. What value is stored in result?  
+double result = (double)(5 / 2) + (double) 1 / 4;
+
+Answer: D
+
+2\. A student writes:  
+int n = Integer.MAX\_VALUE;  
+n = n + 1;  
+System.out.println(n);  
+What happens?
+
+Answer: C
+
+3\. Give the exact output:  
+double d = 7.9;  
+int trunc = (int) d;  
+int rounded = (int)(d + 0.5);  
+System.out.println(trunc + " " + rounded);
+
+Answer: 7 8
+
+Traps this topic sets
+
+Cast scope: the cast grabs one operand only. A cast applies to the immediately following operand, not to the rest of the expression. (int) 2.9 + 1.6 casts only 2.9 and evaluates to 3.6, while (int)(2.9 + 1.6) evaluates to 4. Remember also that the bare cast chops rather than rounds, so (int) 2.9 is 2 and never 3.
+
+Integer division hiding inside a cast. (double)(7 / 2) evaluates to 3.0, not 3.5, because 7 / 2 is int division and finishes before the cast runs. Casting the result cannot recover a fractional part that was already discarded. To get 3.5 you must cast an operand instead: (double) 7 / 2 or 7 / (double) 2.
+
+Out-of-range int values wrap silently. When an int expression exceeds Integer.MAX\_VALUE (2,147,483,647) or drops below Integer.MIN\_VALUE (-2,147,483,648), Java wraps the value around to the other end of the range and keeps running. No exception is thrown, no compile error occurs, and the variable is not promoted to a wider type. Integer.MAX\_VALUE + 1 equals Integer.MIN\_VALUE.
+
+Doubles are not exact. Some decimal values cannot be represented exactly in binary floating point, so the stored value is the nearest representable one and 0.1 + 0.2 prints 0.30000000000000004. This round-off error can also make a truncation land one lower than expected, which is why 12.7 minus 12 times 10 can truncate to 6. When exact results matter, use int arithmetic, for example whole cents rather than dollars.
+
+Differentiation
+
+Support
+
+Give a printed two-step card for every cast question: step 1, circle the single operand the cast touches; step 2, evaluate left to right with normal precedence. Students who follow the card mechanically get these right before they understand why.
+
+Color-code the parentheses. Have students highlight (int)(...) in one color and a bare (int) in another, so the two shapes stop looking alike on the page.
+
+Provide a partly completed trace table for the overflow example with the MAX\_VALUE row already filled in, so the student only has to supply the wrapped value and the word 'silently'.
+
+Restrict the first practice set to whole-number doubles such as 6.0 and 4.0, where truncation is not the issue, so the student can focus purely on cast scope.
+
+Stretch
+
+Ask for an expression using the ints 9 and 4 that evaluates to exactly 2.25, then a second one using the same two ints that evaluates to 2.0, and a written justification of the difference.
+
+Have students predict the output of (int)((0.1 + 0.2) \* 10) before running it, then explain the result using round-off error. It prints 3 here, but require them to argue why they could not have been certain without knowing the stored value.
+
+Give the value 2147483647 and ask for two different single-line int expressions that overflow it, one going over the top and one going under the bottom, with the exact wrapped value for each.
+
+Beyond-scope enrichment, clearly labeled as not tested: Java has integer types wider than int, and a decimal class that stores values exactly rather than in binary floating point. Students may research what these exist for and write a paragraph on why the AP course deliberately leaves them out. No code required, and neither one will ever be a correct answer choice on the exam.
+
+Homework
+
+Vocabulary: write all nine terms with definitions in your own words, and give one example for cast operator, truncation, widening, and integer overflow.
+
+Predict and justify: for eight expressions on the handout, write the exact value and one sentence naming which operand each cast applied to.
+
+Range write-up: from memory, write Integer.MAX\_VALUE and Integer.MIN\_VALUE, then answer in complete sentences whether integer overflow throws an exception and what the resulting value is when Integer.MAX\_VALUE is incremented by 1.
+
+Error-spotting: three short segments; for each, decide whether it compiles, and if it does, write the exact output. One of the three is int n = 6.0; which does not compile.
+
+Optional online: redo the Tier 3 Mastery Challenge, The Track Team Timer, and write Part C in full (Unit 1 Link Sheet, row 1.5).
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.5 teacher guide Page

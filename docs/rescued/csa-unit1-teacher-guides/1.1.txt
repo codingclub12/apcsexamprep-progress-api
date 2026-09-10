@@ -1,0 +1,165 @@
+TEACHER GUIDE
+
+Topic 1.1: Introduction to Algorithms, Programming, and Compilers
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.1.A | Represent patterns and algorithms found in everyday life using written language or diagrams. |
+| 1.1.B | Explain the code compilation and execution process. |
+| 1.1.C | Identify types of programming errors. |
+
+Students will be able to
+
+I can write an everyday process as a numbered algorithm and explain why the order of the steps matters.
+
+I can explain what a compiler does, what an IDE is, and what happens between typing code and seeing output.
+
+I can classify a mistake as a syntax error, logic error, run-time error, or exception, and say which ones the compiler catches.
+
+How the days run
+
+Day 1
+
+Algorithms and sequencing; how source becomes a running program
+
+Bell ringer: the sandwich algorithm (6 min)
+
+On the board: 'Write instructions for making a peanut butter sandwich for a robot that does EXACTLY what you say and nothing more. You have 4 minutes. Trade with a neighbor and find one step that breaks.'
+
+Debrief: Collect two or three broken instructions out loud. Every failure is either a missing step or a step out of order. Name it: the order of steps is called sequencing, and a precise ordered list of steps is an algorithm. Computers have zero common sense, so the algorithm has to carry all of it.
+
+Objectives and guided-notes preview (3 min)
+
+Algorithms and sequencing (14 min)
+
+An algorithm is a step-by-step process for completing a task. It does not have to be code: a recipe, driving directions, and long division are all algorithms.
+
+The CED says students must represent algorithms in written language or diagrams, not just Java. If you cannot say your plan in plain English, you cannot say it in Java either.
+
+Sequencing means the steps run one at a time, in the order written. The computer never looks ahead and never guesses what you meant.
+
+Worked example: write and trace an everyday algorithm (9 min)
+
+Do it live. Take a student-suggested process, number the steps, then deliberately swap two and ask what breaks. Sequencing lands when they watch it fail.
+
+From source code to running program (14 min)
+
+Java code is text. You can write it anywhere, but programmers use an IDE (IntelliJ, BlueJ, Eclipse, or the editor on our lesson pages) because it bundles writing, compiling, and running in one window.
+
+The compiler translates your source code into a form the machine can run. On the way, it checks the code against Java's language rules.
+
+If the compiler finds a rule violation, the program does not run at all. Compilation is a gate: fix the error or nothing executes.
+
+Compiling successfully means Java accepts the code as valid Java. It does not mean the program does what you wanted.
+
+Misconception check: if it compiles, it works (6 min)
+
+If it compiles, it works: Successful compilation means the code follows Java's rules, nothing more. A compiled program can still throw an exception at run time or produce wrong output. The exam tests this wording directly.
+
+Stop and think, then assign homework (8 min)
+
+Two cold-call questions, then set the vocabulary homework. Do not start the error types today; they need a full block.
+
+Day 2
+
+The four error types, and when each one surfaces
+
+Bell ringer: retrieval on Day 1 (5 min)
+
+Three questions, no notes: what is an algorithm, what does the compiler do, what does compiling successfully NOT prove?
+
+Objectives and guided-notes preview (3 min)
+
+The four error types (16 min)
+
+Syntax error: breaks Java's rules. Caught by the compiler. The program never runs. Examples: missing semicolon, unclosed brace, misspelled keyword.
+
+Logic error: the program compiles, runs, finishes, and gives the wrong answer. Only testing with real inputs catches it.
+
+Run-time error: the program starts, then something goes wrong during execution and it usually terminates abnormally.
+
+Exception: a specific kind of run-time error, an unexpected condition the compiler could not predict. The two you will meet first: ArithmeticException (divide an int by zero) and NullPointerException (call a method on null).
+
+Classification question to drill: WHEN does the error surface? Compile time means syntax. Crash while running means run-time or exception. Runs fine but wrong output means logic.
+
+Worked walkthrough: classify four failures live (10 min)
+
+One example of each type on the board. For each, ask WHEN it surfaces before naming it. Compile time means syntax; everything else is run time or logic.
+
+Guided practice on the live lesson page (12 min)
+
+Move the class to the live lesson page (Unit 1 Link Sheet, row 1.1). Students run the Hello, AP CSA editor exercise, then intentionally break it twice: delete a semicolon (watch the compiler refuse) and misspell println (same). Then work the Tier 2 practice set as pairs.
+
+Run the 1.1 Java editor exercise as written and confirm the expected output.
+
+Break it: remove the semicolon, run, and read the compiler message out loud.
+
+Break it differently: misspell println as printn, run it, and compare the compiler message to the missing-semicolon one.
+
+Complete the Tier 2 practice questions (six items) with a partner, error-bucket vocabulary open.
+
+Independent practice: nine scenario cards (9 min)
+
+Offline error-classification drill. Students get nine one-line scenarios and sort them into syntax, logic, run-time/exception.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. A program compiles cleanly, runs to completion, and prints a total that is 10 too high. What kind of error is this?
+
+Answer: B
+
+2\. Which error type does the compiler catch?
+
+Answer: A
+
+3\. True or false: a flowchart of steps for checking out a library book is an algorithm.
+
+Answer: True
+
+Traps this topic sets
+
+If it compiles, it works. Successful compilation means the code follows Java's rules, nothing more. A compiled program can still throw an exception at run time or produce wrong output. The exam tests this wording directly.
+
+Exception equals run-time error. Students treat the words as synonyms. An exception is a specific kind of run-time error caused by an unexpected condition. All exceptions are run-time errors; not all run-time errors are exceptions.
+
+Wrong output gets called an exception. If a program compiles, runs to completion, and produces wrong output, it is a logic error, no matter how strange the output looks. The exam words the scenario to tempt you toward exception. Do not bite.
+
+An algorithm has to be code. The CED explicitly lists written language and diagrams as valid representations. A flowchart and a numbered list are algorithms; correctness has nothing to do with the form of representation.
+
+Differentiation
+
+Support
+
+Give the 2x2 decision chart (compiles? crashes? right output?) as a printed card; struggling students classify by walking the chart, not from memory.
+
+Pair the error-sort activity: one partner reads the scenario, the other picks the bucket, then swap.
+
+For the algorithm write-up, provide the six steps scrambled; the student only has to order them and justify two orderings.
+
+Stretch
+
+Have advanced students write one program per bucket: one that will not compile, one that crashes at run time, one that runs but lies. They label each with the exact error type.
+
+Ask: can one program contain all three error types at once? Have them construct one and explain which error surfaces first and why (syntax blocks everything else).
+
+Preview definite assignment: show that Java refuses to compile a read of an uninitialized local variable, and ask which bucket that belongs in (compile-time, so it behaves like syntax on the exam).
+
+Homework
+
+Vocabulary: write the eight terms with definitions in your own words (no copying), one example each.
+
+Trace practice: three short programs on the handout; for each, decide compiles or not, and if it compiles, write the exact output or the crash.
+
+Optional online: replay the 1.1 editor exercise and the Bug Hunt game on the lesson page (Unit 1 Link Sheet, row 1.1).
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.1 teacher guide Page

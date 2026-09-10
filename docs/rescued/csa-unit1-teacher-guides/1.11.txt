@@ -1,0 +1,187 @@
+TEACHER GUIDE
+
+Topic 1.11: Math Class
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.11.A | Develop code to write expressions that incorporate calls to built-in mathematical libraries and determine the value that is produced as a result. |
+
+Students will be able to
+
+I can call Math.abs, Math.pow, Math.sqrt, and Math.random and state the exact value and the exact type each call returns.
+
+I can evaluate a nested Math expression by working from the innermost call outward and write the exact printed output, including the decimal point.
+
+I can write the formula for a random int from min to max inclusive, and state the exact smallest and largest value a given random expression can produce.
+
+I can explain why storing the result of Math.pow in an int variable without a cast is a compile error, and fix it.
+
+How the days run
+
+Day 1
+
+The four methods you are responsible for; Return types and the cast rule; Nested calls: evaluate from the inside out
+
+Bell ringer: Order matters (5 min)
+
+On the board:  
+System.out.println(Math.pow(2, 8));  
+System.out.println(Math.pow(8, 2));  
+Write the exact output of each line. Exact means every character you would see on the screen. Three minutes, no talking, no calculators.
+
+Debrief: Line 1 prints 256.0 and line 2 prints 64.0. Two things to pull out. First, Math.pow(base, exponent): the first argument is the base, so swapping the arguments changes the answer. Second, nobody wrote 256 without the .0 and nobody should, because Math.pow always hands back a double. Those two facts are the whole first half of today.
+
+Objectives and guided-notes preview (3 min)
+
+The four methods you are responsible for (9 min)
+
+The Math class lives in java.lang, so there is no import statement. Every Math method is static, which means you call it on the class name: Math.sqrt(25), never mathObject.sqrt(25). You never create a Math object.
+
+The AP Java Quick Reference gives you exactly four Math methods: Math.abs, Math.pow, Math.sqrt, and Math.random. That sheet is in front of you during the exam, so the memorization job is small. The reasoning job is not.
+
+Math.abs is the only one of the four that is overloaded across return types: hand it an int and you get an int back, hand it a double and you get a double back.
+
+Math.pow, Math.sqrt, and Math.random return a double every single time, with no exceptions. Write that on your reference card now, because half the traps in this topic come from that one sentence.
+
+Worked example at the board (9 min)
+
+Math.random() live, several times, and pin down the range: \[0.0, 1.0). The half-open interval is the whole point.
+
+Return types and the cast rule (10 min)
+
+Java lets you widen automatically: an int fits into a double with no effort, so double d = Math.abs(-5); is fine.
+
+Java refuses to narrow automatically. A double does not fit into an int, so assigning the result of Math.pow or Math.sqrt straight into an int variable is a compile error. The program does not run at all.
+
+The fix is an explicit cast: int r = (int) Math.pow(4, 3);. The cast truncates toward zero, it does not round. (int) 7.9 is 7 and (int) -7.9 is -7.
+
+Watch the parentheses when you cast. (int) Math.pow(4, 3) casts the returned value, which is what you want here.
+
+Nested calls: evaluate from the inside out (10 min)
+
+A method call can be an argument to another method call. The inner call runs first, produces a value, and that value becomes the argument for the outer call.
+
+Read nested expressions the way you read nested parentheses in algebra: innermost first, then work outward. Do not read left to right.
+
+The classic nested pattern on the exam is the distance formula: Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)). Two pow calls run, their results are added, then sqrt runs on the sum.
+
+Nesting does not change any return types. Every intermediate value here is a double, and the final answer is a double, which means the printed output ends in .0 for whole-number results.
+
+Misconception check: Math methods return double (6 min)
+
+Math methods return double: Math.pow, Math.sqrt, and Math.random return a double every time. Assigning any of those results straight into an int variable without a cast is a compile error, so nothing runs. Math.abs given an int argument is the one Quick Reference case that returns an int.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+Math.random and the range formulas
+
+Bell ringer: retrieval on the previous day (5 min)
+
+Give the range of Math.random() and the formula for a random int in a range.
+
+Objectives and guided-notes preview (3 min)
+
+Math.random and the range formulas (16 min)
+
+Math.random() takes no arguments and returns a double that is greater than or equal to 0.0 and strictly less than 1.0. It can return exactly 0.0. It can never return 1.0.
+
+Multiplying scales the range and casting to int truncates. (int)(Math.random() \* n) produces the whole numbers 0 through n minus 1, which is exactly n different values.
+
+The formula to memorize for a random int from min to max inclusive: (int)(Math.random() \* (max - min + 1)) + min. The number you multiply by is the count of values in the range, and the number you add is the smallest value you want.
+
+For a random double instead, do not cast: Math.random() \* (high - low) + low gives a double from low inclusive to high exclusive.
+
+To check any random expression, test the two extremes. Substitute 0.0 for Math.random() to get the minimum, then substitute a value just under 1.0 to get the maximum.
+
+Worked walkthrough (10 min)
+
+Build the random-int-in-a-range formula from scratch rather than handing it over.
+
+Guided practice on the live lesson page (12 min)
+
+Move the class to the live lesson page (Unit 1 Link Sheet, row 1.11). Students run the Java editor exercise, then work the Tier 2 AP Practice set of eight questions in pairs with the four-method return-type table visible. Close with one of the two games and then the Tier 3 Mastery Challenge, The Geometry Calculator.
+
+Run the 1.11 Java editor exercise as written and confirm the expected output before changing anything.
+
+Modify the editor exercise: replace Math.pow(2, 8) with Math.pow(8, 2) and read the new output out loud to prove argument order matters.
+
+Work the eight Tier 2 practice questions with a partner. For each random-range item, write the minimum and maximum substitutions in the margin before choosing.
+
+Choose one game: Output Predictor (six questions, type the exact output including any decimal point) or Bug Hunt (seven snippets, one buggy line each).
+
+Finish with Tier 3, The Geometry Calculator, Parts A, B, and C. Part C asks for the perimeter line and an explanation of why the result is a double.
+
+Independent practice (9 min)
+
+Offline drill on exact values and exact ranges. No compiler needed; a pencil and the four-method table are enough.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. What is the exact output?  
+System.out.println(Math.sqrt(Math.pow(6,2)+Math.pow(8,2)));
+
+Answer: B
+
+2\. A student writes int result = Math.pow(4, 3); What happens?
+
+Answer: A
+
+3\. What is the largest value (int)(Math.random() \* 6) + 2 can produce?
+
+Answer: B
+
+Traps this topic sets
+
+Math methods return double. Math.pow, Math.sqrt, and Math.random return a double every time. Assigning any of those results straight into an int variable without a cast is a compile error, so nothing runs. Math.abs given an int argument is the one Quick Reference case that returns an int.
+
+(int)(Math.random() \* n) gives 0 through n minus 1. Math.random() never returns 1.0, so the product never reaches n and the cast truncates. To include n you multiply by n plus 1. The number you multiply by is always the count of possible values, never the largest value.
+
+Argument order in Math.pow. Math.pow(base, exponent) takes the base first. Math.pow(2, 8) is 256.0 and Math.pow(8, 2) is 64.0. Distractors are built by swapping the two arguments, and the swapped answer is always offered as a choice.
+
+Trap distractor: Math.round, Math.floor, Math.min, and Math.max. These are real Java methods but they are not on the AP Java Quick Reference and are outside the scope of this course, so no exam question requires them. They appear here only so you recognize them as out of scope when they show up in an answer choice. Note for the curious: Math.round returns a long, and long is itself out of scope in this course.
+
+Differentiation
+
+Support
+
+Give a printed four-row card: method, return type, one example call, its exact output. Struggling students answer return-type questions by reading the card rather than from memory, which removes the guessing.
+
+For random ranges, provide a two-column substitution template with the words 'plug in 0.0' and 'plug in 0.9999' already printed. The student only fills in the arithmetic, so the procedure is scaffolded and the thinking is not.
+
+Pair the nested-call work: one partner numbers the calls in evaluation order and the other computes each value, then they swap for the next expression.
+
+Stretch
+
+Give a target range such as 'exactly the even integers 0 through 18' and ask for an expression using only the four Quick Reference methods, arithmetic, and casting. Have them prove the minimum and maximum by substitution.
+
+Ask why (int)(Math.random() \* 8) + 3 and (int)(Math.random() \* 8 + 3) produce the same set of values here, and then find a pair of expressions where moving the parenthesis does change the result.
+
+Challenge: Math.abs is the only Quick Reference Math method that can return an int. Have them write two statements, one storing a Math result in an int with no cast and one requiring a cast, and explain in one sentence what makes the difference.
+
+Have advanced students build three Bug Hunt snippets of their own, each with exactly one error drawn from a different trap in today's list, then trade and solve.
+
+Homework
+
+Vocabulary: write the nine terms with definitions in your own words. For each of the four Math methods include one call and its exact returned value, with the correct type.
+
+Exact-output set: ten expressions on the handout. For each, write the printed output exactly as it would appear, or 'compile error' plus a one-line reason. Decimal points count as part of the answer.
+
+Range analysis: five random expressions on the handout. For each, show the substitution of 0.0 and of 0.9999 and give the minimum, the maximum, and the count of possible values.
+
+Write and predict: on paper, write four lines that compute the hypotenuse of a right triangle with legs 9.0 and 12.0 using nested Math calls, and state the exact output. Then rewrite it so the hypotenuse is stored in an int and say what you had to add.
+
+Optional online: replay the Output Predictor and Bug Hunt games on the lesson page (Unit 1 Link Sheet, row 1.11) until you catch all seven bugs.
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.11 teacher guide Page

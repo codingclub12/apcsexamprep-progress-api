@@ -1,0 +1,229 @@
+TEACHER GUIDE
+
+Topic 1.4: Assignment Statements and Input
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.4.A | Develop code for assignment statements with expressions and determine the value that is stored in the variable as a result of these statements. |
+| 1.4.B | Develop code to read input. |
+
+Students will be able to
+
+I can trace a sequence of assignment statements and write the value of every variable after each line.
+
+I can explain why score = score + 5 is a legal command rather than a false equation.
+
+I can decide whether an assignment compiles, using the rules for widening, narrowing, null, and definite assignment.
+
+I can describe how a Java program reads input and what the values look like once they are stored in variables.
+
+How the days run
+
+Day 1
+
+The assignment operator: right side into left side; Tracing sequences of assignments; Initialization, definite assignment, and null
+
+Bell ringer: The swap that does not swap (6 min)
+
+On the board: 'This code is supposed to swap the two values so it prints 9 5. Trace it line by line and write down what it actually prints.  
+int a = 5;  
+int b = 9;  
+a = b;  
+b = a;  
+System.out.println(a + " " + b);'
+
+Debrief: Collect predictions before revealing. The output is 9 9. After a = b, the 5 that was in a is gone forever, overwritten. Then b = a reads the current value of a, which is now 9. Draw two boxes and erase the 5 physically so the class watches the value disappear. The repair needs a third box: int temp = a; a = b; b = temp;. That is the AP-expected swap pattern, and it is worth memorizing today.
+
+Objectives and guided-notes preview (3 min)
+
+The assignment operator: right side into left side (9 min)
+
+The assignment operator = does exactly one thing: it evaluates the expression on the right side completely, then stores that single result in the variable on the left side.
+
+The direction is fixed. The left side is always a variable name. The right side is always an expression. You cannot write 5 = x.
+
+Read = as 'gets', never as 'equals'. Say it out loud that way all week: total gets total plus five.
+
+The old value of the left-side variable is replaced and is not recoverable. If you needed it, you had to save it somewhere first, which is exactly what the swap warm-up proved.
+
+AP exclusion: assignment used inside another expression, such as a = b = 4, is outside the scope of the exam. You will not see chained assignment on the test.
+
+Worked example at the board (9 min)
+
+Walk a Scanner read end to end, including what happens when the input type does not match. Do not skip the mismatch case.
+
+Tracing sequences of assignments (9 min)
+
+Almost every exam MCQ on this topic is a short sequence of assignments ending in a print. The skill is mechanical: one line at a time, update the table, never skip ahead.
+
+Two variables that reference each other are where students lose points, because they carry a stale value forward one line too long.
+
+Write the new value in the table before you read the next line. If you find yourself computing two lines at once, you are about to be wrong.
+
+When a variable appears on both sides, evaluate the whole right side first with the old value, then write.
+
+The classic three-step swap uses a temporary variable: save one value, overwrite it, restore from the temporary. That pattern is expected on the exam.
+
+Initialization, definite assignment, and null (10 min)
+
+Declaring reserves the named slot. Initializing puts a value in it for the first time. They are two separate events, and Java tracks both.
+
+You cannot use a local variable in an expression until it has been assigned. The compiler rejects the program before it ever runs, so this is a compile error, never a run-time one.
+
+Be precise with the wording: the 'defaults to zero' behavior applies to instance variables introduced later in the course, not to the local variables you write inside main. Locals have no default.
+
+null is a literal meaning that no object is associated with a reference variable. String name = null; is legal because String is a reference type.
+
+null is only valid for reference types. int count = null; and double ratio = null; are both compile errors, because a primitive must hold an actual value.
+
+A variable holding null compiles fine. The danger comes later: calling a method on a null reference throws a NullPointerException at run time.
+
+Misconception check: Reading = as equality instead of a command (6 min)
+
+Reading = as equality instead of a command: pts = pts + 5 is nonsense as an equation and perfectly ordinary as an instruction: compute pts + 5, then store the result back in pts. Students who read = as 'equals' consistently mis-trace multi-step sequences. Say 'gets' out loud every time.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+Every expression has one value and one type; Reading input
+
+Bell ringer: retrieval on the previous day (5 min)
+
+What does an assignment statement do, in order, right side first?
+
+Objectives and guided-notes preview (3 min)
+
+Every expression has one value and one type (8 min)
+
+During execution, an expression is evaluated to produce a single value, and that value has a type determined by the operands and operators. That is why assignment works: the right side collapses to one typed value before the store happens.
+
+int x = 3 + 4 \* 2; evaluates the right side to the single int 11, and only then assigns.
+
+Assigning an int value to a double variable is a widening conversion and is automatic. double d = 5; stores 5.0 with no cast and no complaint.
+
+Assigning a double value to an int variable is a narrowing conversion and is a compile error without an explicit cast. int n = 3.7; does not compile. Casting is Topic 1.5.
+
+A comparison such as (x \> 4) is an expression too, and its value has type boolean, so it can be assigned to a boolean variable.
+
+Combine this with Topic 1.3: widening happens after the arithmetic, so int division still truncates before the value ever reaches a double variable.
+
+Worked walkthrough (10 min)
+
+Show an uninitialised local variable and let the compiler refuse it. This is the difference between locals and fields.
+
+Reading input (8 min)
+
+Programs get more useful when the values are not hard-coded. Reading input means getting a value from outside the program and storing it in a variable with an assignment statement.
+
+Java's standard keyboard input mechanism is the Scanner class from java.util. You create one Scanner object with new Scanner(System.in), then call methods on it to read values: an int, a double, or a word.
+
+The result of a read is just an expression on the right side of an assignment. Everything you learned in the first four segments applies unchanged: the value comes back, it has a type, and it gets stored.
+
+AP scope note, and it lowers the stakes: the exam recognizes Scanner as the standard input mechanism but does not test the specific method names in isolation. If Scanner appears, it is context inside a larger code segment, not a recall question.
+
+Our editors are IDE-agnostic, so the way a value physically arrives (typed at a console, supplied by the lesson page editor, or written in as a literal while you test) is not what is being assessed. What is assessed is the value that ends up in the variable and what happens next.
+
+Practical classroom rule: when you cannot type live input, replace the read with a literal assignment and trace from there. The rest of the program behaves identically.
+
+Guided practice on the live lesson page (12 min)
+
+Move to the live lesson page (Unit 1 Link Sheet, row 1.4). Students run the Java editor exercise, then work the eight Tier 2 AP practice items on assignment tracing, null with primitives, uninitialized locals, widening and narrowing, integer division stored into a double, the broken swap, valid assignment sets, and the Scanner-context item. Close with the Tier 3 Science Fair Score Tracker.
+
+Run the 1.4 editor exercise, then edit it: comment out the initialization of one variable, run it, and read the compiler's 'might not have been initialized' message aloud.
+
+Tier 2 trace: int val = 4; val = val \* 3; val = val - 5; val = val + val; predict the printed value (answer 14), then check with the editor.
+
+Tier 2 compile-or-not set: decide which of String label = null; int count = null; double ratio = null; compile. Only the String line does.
+
+Tier 2 assignment validity: for int x = 6; double y = 2.5; boolean flag = true; decide which of y = x; x = y; flag = (x \> 4); compile. The first and third do.
+
+Tier 3 Science Fair Score Tracker Part A: trace score and bonus through all four assignments with an entered value of 50 and predict the output. The answer is 80.
+
+Tier 3 Part C on paper: rewrite the three assignment statements so bonus doubles before the first addition, then state the new printed result, which is 90.
+
+Play one round of the Assignment Tracing Output Predictor or the Assignment Statements Bug Hunt as the closer.
+
+Independent practice (9 min)
+
+Offline tracing work. Everything below runs on paper with a trace table.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. What is printed?  
+int val = 4;  
+val = val \* 3;  
+val = val - 5;  
+val = val + val;  
+System.out.println(val);
+
+Answer: B
+
+2\. Which statements cause a compile error?  
+I. String label = null;  
+II. int count = null;  
+III. double ratio = null;
+
+Answer: D
+
+3\. What happens when this code segment is compiled and run?  
+int base;  
+int height = 8;  
+int area = base \* height / 2;  
+System.out.println(area);
+
+Answer: A
+
+Traps this topic sets
+
+Reading = as equality instead of a command. pts = pts + 5 is nonsense as an equation and perfectly ordinary as an instruction: compute pts + 5, then store the result back in pts. Students who read = as 'equals' consistently mis-trace multi-step sequences. Say 'gets' out loud every time.
+
+The two-line swap loses a value. a = b; b = a; does not exchange the values. After the first line both variables hold b's value, and the original value of a is gone, so the second line copies that same value back. The exam-expected fix uses a temporary variable: int temp = a; a = b; b = temp;.
+
+Assuming uninitialized locals default to zero. The zero-default rule applies to instance variables, which come later in the course, not to local variables declared inside a method. Reading an uninitialized local is caught by the compiler, so the program never runs at all. The distractor answers offer 0 and 'unpredictable value', and both are wrong.
+
+null assigned to a primitive. null means no object is associated with a reference variable, so it is legal only for reference types such as String. int count = null; and double ratio = null; are compile errors. A primitive variable must hold an actual value of its type.
+
+Differentiation
+
+Support
+
+Give pre-drawn trace tables with the variable names and line numbers already filled in, so the student only supplies values and never has to build the structure under time pressure.
+
+Use two paper cups and a slip of paper for the swap: physically move the slips so the student sees why a third cup is required before writing any code.
+
+Provide a one-page decision card for compile-or-not questions with four yes-or-no checks in order: is it declared, is it assigned before use, is null going into a primitive, is a double going into an int.
+
+Stretch
+
+Give advanced students a start value and a target value and ask them to reach it in exactly three assignment statements, each of which must use the variable on both sides. Then have a partner verify by trace table.
+
+Ask them to construct a four-line sequence where every wrong answer a careless student could give is the value at some intermediate line, then explain how exam writers build distractors that way.
+
+Have them write a short segment that compiles and one that fails only because of definite assignment, differing by a single character, and defend which error bucket from Topic 1.1 the failure belongs in.
+
+Beyond-scope enrichment (not tested, no new concepts required): the classic swap can be done for int values with the XOR operator, written a ^= b; b ^= a; a ^= b;. It works because XOR is its own inverse, but it is harder to read and no faster on modern hardware. Use the temporary variable on the exam.
+
+Homework
+
+Trace tables: four assignment sequences on the handout, one table each, with the printed value circled and one sentence naming the line where a careless reader would stop.
+
+Compile-or-not: eight statements to mark COMPILES or ERROR with the rule named (widening, narrowing, null on a primitive, uninitialized local).
+
+Written explanation, three to five sentences: why does score = score + bonus work when a math teacher would call it false? Use the words evaluate, store, and replace.
+
+Vocabulary: the eight terms with definitions in your own words, plus one code example each for widening and narrowing.
+
+Optional online: replay the Assignment Tracing Output Predictor (Unit 1 Link Sheet, row 1.4) until you score at least five of six.
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.4 teacher guide Page
