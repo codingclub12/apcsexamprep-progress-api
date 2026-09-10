@@ -143,6 +143,17 @@ def main():
     src = sys.argv[1] if len(sys.argv) > 1 else 'build/csa-unit1-guides'
     src = os.path.abspath(src)
 
+    # Build if the guides are not there. CI derives its suite list from
+    # package.json order, so this would have worked by accident today and broken
+    # the day somebody reordered two lines. A suite that needs another suite to
+    # have run first is a dependency nobody wrote down.
+    if not os.path.isdir(src):
+        repo = os.path.dirname(HERE)
+        subprocess.run([sys.executable,
+                        os.path.join(repo, 'scripts',
+                                     'build-csa-unit1-teacher-guides.py'),
+                        '--out', src], check=True, cwd=repo)
+
     code, out = run(src)
     if code != 0:
         print('CONTROL IS ALREADY RED, so no mutation below proves anything:')

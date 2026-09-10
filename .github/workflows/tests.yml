@@ -89,8 +89,10 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Two suites are Python. smoke:csadeckdays is stdlib only and has always
-      # been fine. smoke:csakitstyle needs BOTH: it imports csa_kit.deck to
+      # Four suites are Python. smoke:csadeckdays is stdlib only and has always
+      # been fine. smoke:csaunit1guides and smoke:csaunit1guidesmutation build
+      # and read back the 15 Unit 1 teacher guides, so they need python-docx.
+      # smoke:csakitstyle needs BOTH: it imports csa_kit.deck to
       # check the bell-ringer rule, which pulls in python-pptx, and it builds
       # the 38 teacher guides and reads them back, which needs python-docx.
       # The runner ships neither.
@@ -109,7 +111,7 @@ jobs:
       # Pinned to the versions the suite was actually verified against, the
       # same reasoning as npm ci above. Pinning a version nobody ran would
       # test something this repo has never seen.
-      - name: Install Python deps for the two Python suites
+      - name: Install Python deps for the Python suites
         run: python3 -m pip install --quiet python-docx==1.2.0 python-pptx==1.0.2
 
       # Every suite runs even after one fails, so a red build reports ALL the
