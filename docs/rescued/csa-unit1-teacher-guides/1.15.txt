@@ -1,0 +1,226 @@
+TEACHER GUIDE
+
+Topic 1.15: String Manipulation
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.15.A | Develop code to create string objects and determine the result of creating and combining strings. |
+
+Students will be able to
+
+I can create a String with a literal or a constructor and explain why a String object can never be changed after it is created.
+
+I can determine the exact result of expressions built with + and += that mix Strings and numbers, evaluating strictly left to right.
+
+I can compute the exact return value of length(), substring(from), substring(from, to), and indexOf(str), including the empty String and the -1 not-found case.
+
+I can compare String contents correctly with equals() and compareTo(), and explain why == is the wrong tool.
+
+How the days run
+
+Day 1
+
+Creating Strings, and why they never change; Concatenation with + and +=; Indices, length(), and substring
+
+Bell ringer: Predict three lines, defend one (7 min)
+
+On the board, predict each exact printed line before we run anything:  
+System.out.println("score: " + 4 + 6);  
+System.out.println("score: " + (4 + 6));  
+System.out.println(4 + 6 + " total");  
+Write all three predictions, then circle the one you are least sure about.
+
+Debrief: Answers: score: 46, then score: 10, then 10 total. Java evaluates + strictly left to right. In line 1 the first + already has a String on the left, so 4 is converted and glued on, and the second + does the same with 6. Parentheses in line 2 force the int addition first. In line 3 both operands of the first + are ints, so 4 + 6 really adds to 10 before the String shows up. The rule to write down: once a String appears in the running left-to-right result, every + after it concatenates.
+
+Objectives and guided-notes preview (3 min)
+
+Creating Strings, and why they never change (9 min)
+
+A String is an object, not a primitive, but it is special enough that Java lets you create one with a literal in double quotes: String s = "hello";. That is what you will use almost always.
+
+The constructor form String b = new String("hello"); also works and creates a separate object. It is rare in real code and it exists on the exam mainly to set up the == trap later today.
+
+Strings are immutable: once a String object exists, its characters can never change. There is no String method anywhere that edits the object it was called on.
+
+So every String method that looks like it modifies actually builds and returns a new String and leaves the original alone. If you do not catch that return value, nothing you can observe has happened.
+
+The fix for the classic bug is always the same shape: reassign the variable to the returned value, s = s.substring(0, 4);. The variable now points at the new object; the old object was never touched.
+
+Immutability is not a rule to memorize in the abstract. It is the reason FRQ scoring notes keep saying the original String is unchanged, and it is the subject of a Tier 3 written response on the lesson page.
+
+Worked example at the board (9 min)
+
+Index a String on the board with the class counting from zero out loud. substring(4, 8) includes 4 and excludes 8; make them say it.
+
+Concatenation with + and += (9 min)
+
+Two Strings joined with + produce a new String. The originals are untouched, which is immutability again.
+
+A number joined to a String is automatically converted to its String representation. "Java " + 17 gives "Java 17", and no cast is needed.
+
+The += operator works the same way: result += "\!"; means result = result + "\!";. It looks like editing the String but it is a reassignment to a brand new object.
+
+Evaluation is strictly left to right, and this is where the points are lost. Once the running result is a String, every later + concatenates instead of adding.
+
+Two ways to force the arithmetic: put parentheses around it, or put the numeric addition to the left of the first String. "total: " + (3 + 4) and 3 + 4 + " total" both do the arithmetic first.
+
+Concatenation is also how you print mixed content, so you will write these expressions in nearly every FRQ. Being fluent here is worth more than any single method.
+
+Indices, length(), and substring (9 min)
+
+Characters are numbered from 0, so in "computer" the c is at index 0 and the r is at index 7. length() returns 8, and the last valid index is always length() - 1.
+
+substring(from, to) returns the characters starting at index from and stopping just before index to. The from index is inclusive and the to index is exclusive. This is the single most tested String detail on the exam.
+
+Two consequences worth writing in the margin: the length of the result is exactly to - from, and substring(i, i) returns the empty String because it stops before it starts.
+
+The one-argument form substring(from) runs from that index to the end of the String, which is identical to substring(from, length()). So substring(0, s.length()) hands back the whole String.
+
+To pull the single character at index i as a String, write s.substring(i, i + 1). Note that charAt is not on the AP CSA Quick Reference and char is not an in-scope type for this course, so substring is how we extract one character.
+
+Asking for an index outside the valid range throws a StringIndexOutOfBoundsException at run time. It compiles fine, so it belongs in the run-time bucket from 1.1.
+
+Misconception check: String immutability (6 min)
+
+String immutability: A String object can never be changed after it is created, so every String method that appears to modify actually returns a new String and leaves the original untouched. Writing s.substring(0, 3); on its own line changes nothing observable because the returned object is discarded. The fix is always to store the return value, as in s = s.substring(0, 3);, which repoints the variable at the new object.
+
+Stop and think, then assign homework (8 min)
+
+String immutability is the idea students otherwise carry all the way into Unit 4. Do not let this one go fuzzy.
+
+Day 2
+
+indexOf and the -1 answer; Comparing Strings: equals, compareTo, and why == fails
+
+Bell ringer: retrieval on the previous day (5 min)
+
+substring endpoints, indexOf on a miss, and what == compares for Strings.
+
+Objectives and guided-notes preview (3 min)
+
+indexOf and the -1 answer (7 min)
+
+indexOf(str) searches for str inside the String and returns the index where the first occurrence begins. The index of the first character of the match is what comes back, not the whole match and not a true or false.
+
+If str never appears, indexOf returns -1. Not 0, not an exception. -1 is chosen precisely because it can never be a valid index.
+
+Only the first occurrence is reported. "abcabc".indexOf("bc") returns 1 even though bc also appears later.
+
+indexOf and substring are designed to be used together: s.substring(s.indexOf("cd")) chops the String starting at wherever cd begins. Compute the inner call first and write that number down before doing the substring.
+
+The 0 versus -1 confusion is deliberate on the exam, because index 0 is a real position and means found at the very front.
+
+Worked walkthrough (10 min)
+
+Show that a String method returns a new String and the original is unchanged. Immutability is the misconception that survives into Unit 4.
+
+Comparing Strings: equals, compareTo, and why == fails (9 min)
+
+equals(other) returns true when the two Strings hold the same characters in the same order. It is case sensitive, so "hello".equals("Hello") is false.
+
+\== on two String variables compares references, meaning it asks whether they point at the same object, not whether the characters match. Two separate objects holding identical characters can make == false.
+
+So the rule is absolute for this course: use equals to compare String content, never ==. Answer choices offering == are distractors every time.
+
+compareTo(other) compares in dictionary order and returns a negative number when this String comes first, zero when the two Strings are equal, and a positive number when this String comes later.
+
+Do not memorize the exact number compareTo returns. The exam asks only for negative, zero, or positive, and a choice claiming the value must be exactly 1 or -1 is wrong.
+
+Two details worth knowing: uppercase letters come before lowercase, so "A".compareTo("a") is negative, and s1.compareTo(s2) == 0 is a legitimate second way to test equality.
+
+One safety note: "hello".equals(null) simply returns false rather than throwing anything, but calling a method on a null reference still throws a NullPointerException, exactly as in 1.14.
+
+Guided practice on the live lesson page (12 min)
+
+Work the live lesson page together (Unit 1 Link Sheet, row 1.15). Java Code Editor first, then the eight Tier 2 practice questions in pairs, then a game, then the Tier 3 Mastery Challenge (The Username Generator) as the unit capstone.
+
+Run the 1.15 Java editor exercise as written and confirm the expected output before editing anything.
+
+Modify it twice: call a substring without storing the result and print the original (immutability), then reassign and print again, so both behaviors appear side by side in one run.
+
+Complete the Tier 2 practice set with a partner. House rule: write the numbered index line under every String before choosing an answer.
+
+Play Output Predictor or Bug Hunt for String methods; require a written prediction before each reveal and log every miss by trap name.
+
+Tier 3 Mastery Challenge, The Username Generator: trace Parts A and B as a class, then write Part C individually against the 4-point immutability rubric. Note that toLowerCase appears in that problem but is not on the AP Quick Reference; treat it as given and keep the focus on substring, indexOf, and immutability, which are the tested pieces.
+
+Independent practice (9 min)
+
+Offline String drill on paper. Every String needed is printed on the handout with a blank index line under it.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. String s = "hello";  
+s.substring(0, 3);  
+System.out.println(s);  
+What is printed?
+
+Answer: B
+
+2\. String s = "abcdefg";  
+Which statements are TRUE?  
+I. s.substring(s.indexOf("cd")) returns "cdefg"  
+II. s.indexOf("xyz") returns 0  
+III. s.substring(0, s.length()) returns "abcdefg"
+
+Answer: C
+
+3\. Two String variables s1 and s2 hold exactly the same characters but were built as separate objects. Which expression reliably reports that their contents match?
+
+Answer: B
+
+Traps this topic sets
+
+String immutability. A String object can never be changed after it is created, so every String method that appears to modify actually returns a new String and leaves the original untouched. Writing s.substring(0, 3); on its own line changes nothing observable because the returned object is discarded. The fix is always to store the return value, as in s = s.substring(0, 3);, which repoints the variable at the new object.
+
+substring's exclusive second argument. substring(from, to) includes the character at index from and stops just before index to, so the result has exactly to - from characters. Students who read to as the last index included return one character too many. Two consequences to memorize: substring(i, i + 1) is the single character at index i, and substring(i, i) is the empty String.
+
+Using == to compare String contents. == compares references, asking whether two variables point at the same object, not whether the characters match. Two separately created Strings with identical characters can make == evaluate to false. Always use equals for content, or compareTo(other) == 0 as an equivalent test.
+
+Left-to-right evaluation with +. Java evaluates + one operator at a time from left to right, so once the running result is a String every later + concatenates instead of adding. "score: " + 4 + 6 prints score: 46, not score: 10. Force the arithmetic with parentheses, "score: " + (4 + 6), or put the numeric addition to the left of the first String.
+
+Differentiation
+
+Support
+
+Require the numbered index line under every String, and give graph paper strips with one character per box so from and to can be pointed at physically.
+
+Give a printed substring card with the sentence from is inclusive, to is exclusive, result length is to minus from, and have students check every answer against the length formula.
+
+Provide the immutability example half-worked: lines 1 through 3 already traced with the answer, so the student only completes the reassignment half.
+
+For comparisons, supply a two-column sorter (same characters yes or no, then which comes first in the dictionary) so equals and compareTo are answered separately instead of at once.
+
+Stretch
+
+Give a target output and the String "international", and ask for the shortest expression using substring and indexOf together that produces it, then have them state the exact return value of the inner call.
+
+Ask them to write one println whose value is the last three characters of any String s, using only length() and substring, and to justify why it works for every String of length 3 or more.
+
+Pose the counting question: how many distinct non-empty substrings can substring produce from a String of length 5, counting by from and to pairs, and explain the count in terms of which pairs are legal.
+
+Ask for two different expressions that both prove "apple" comes before "banana", one using compareTo and one using equals plus substring, then have them argue which is better evidence and why.
+
+Homework
+
+Method reference sheet: for length, substring (both forms), indexOf, equals, and compareTo, write the return type, what it returns in one sentence, one example call, and that call's exact return value. This sheet is your unit test study tool.
+
+Trace practice: six printed statements mixing substring and indexOf on "literature" and "statement". Write the numbered index line first, then the exact value of each.
+
+Immutability paragraph: in four sentences, explain to a classmate why String s = "cat"; s.substring(0, 1); leaves s as cat, and give the one-line fix.
+
+Error prediction: three printed programs. For each, write compiles or does not compile, and if it compiles write the exact output or name the exception (one of them asks for substring(3, 12) on a 6-character String).
+
+Optional online: replay the 1.15 Bug Hunt until you catch 7 of 7 (Unit 1 Link Sheet, row 1.15).
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.15 teacher guide Page

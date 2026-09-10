@@ -1,0 +1,202 @@
+TEACHER GUIDE
+
+Topic 1.10: Calling Class Methods
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.10.A | Develop code to call class methods and determine the result of those calls. |
+
+Students will be able to
+
+I can identify a class method by the static keyword in its header and explain that it belongs to the class, not to any object.
+
+I can call a class method with the ClassName.methodName(arguments) syntax, and say when the class name is required and when it may be omitted.
+
+I can determine the exact value and type produced by a class method call, and decide whether the result needs a cast before it is stored.
+
+I can build a random integer in a stated range using Math.random and state the smallest and largest values the expression can produce.
+
+How the days run
+
+Day 1
+
+What makes a method a class method; The call syntax, and when the class name is required; Using the result: return types decide what is legal
+
+Bell ringer: Two lines, one compiles (6 min)
+
+On the board: 'One of these two lines does not compile. Which one, and why? Write your answer before you say it.'  
+  
+int root = Math.sqrt(64.0);  
+double p = Math.pow(2, 8);
+
+Debrief: The first line does not compile. Math.sqrt always returns a double, and storing a double in an int is a narrowing conversion, which Java refuses without an explicit cast. The fix is int root = (int) Math.sqrt(64.0);, which stores 8. The second line is fine and stores 256.0. Notice the common thread: to use a class method correctly you have to know its return type, not just its name. That is today's work.
+
+Objectives and guided-notes preview (3 min)
+
+What makes a method a class method (10 min)
+
+A class method, also called a static method, is associated with the class itself and not with any particular object. The keyword static in the header is how you spot one.
+
+Because it belongs to the class, you do not need an object to call it. You never write new Math() to use Math.sqrt, and in fact you cannot: Math has a private constructor and refuses to be instantiated.
+
+The design reason is that these methods are pure utilities. Math.sqrt(16.0) depends on nothing but its argument. There is no stored state to belong to, so there is nothing for an object to hold.
+
+Draw the boundary out loud now: methods that are called on an OBJECT rather than on a class name are instance methods, and they are topic 1.14. Today is only the static kind, called on the class name.
+
+You have already been calling one all year. System.out.println is not the same shape, but Math.abs, Math.pow, and Math.sqrt are, and they are on the Java Quick Reference you get during the exam.
+
+Worked example at the board (9 min)
+
+Call a static method with and without the class name and explain why one compiles.
+
+The call syntax, and when the class name is required (9 min)
+
+The general form is ClassName.methodName(arguments). Read the dot as 'look inside.' Math.sqrt means look inside Math for sqrt.
+
+From OUTSIDE the class that declares the method, the class name is required. Writing sqrt(49) in your own Main class is a compile error, because your class has no method named sqrt.
+
+From INSIDE the class that declares the method, the class name is optional. Both area(3.0, 4.0) and Main.area(3.0, 4.0) work inside Main.
+
+Arguments follow the same matching rules as topic 1.9: number, order, and compatible type. Math.sqrt(49) is legal even though the parameter is a double, because the int 49 widens to 49.0 automatically.
+
+The Quick Reference lists these five: abs(int), abs(double), pow(double, double), sqrt(double), and random(). Know what each returns, not just what each does. Topic 1.11 works through the Math class in depth; today the point is the calling mechanics.
+
+Using the result: return types decide what is legal (9 min)
+
+Every class method call evaluates to a value of the method's declared return type, and that type governs what you are allowed to do with it.
+
+Math.sqrt and Math.pow always return double. That is true even when the mathematical answer is a whole number, so Math.sqrt(64.0) is 8.0, not 8.
+
+Storing a double result in an int variable is a narrowing conversion and is a compile error without a cast. int root = (int) Math.sqrt(64.0); is the fix, and it truncates rather than rounds.
+
+Math.abs is overloaded, so its return type depends on which version ran: Math.abs(-5) gives the int 5 and Math.abs(-5.0) gives the double 5.0. int a = Math.abs(-5); compiles; int b = Math.abs(-5.0); does not.
+
+Calls can nest. The inner call is evaluated first and its returned value becomes the argument to the outer call, exactly like nested parentheses in arithmetic.
+
+Misconception check: Instantiating a utility class (6 min)
+
+Instantiating a utility class: Class methods do not require an object, and Math specifically cannot be instantiated because its constructor is private, so new Math().sqrt(9.0) is a compile error. The correct pattern is always the class name and the dot operator: Math.sqrt(9.0). Calling a static method on an object reference is not the pattern the exam expects.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+Math.random and building a range
+
+Bell ringer: retrieval on the previous day (5 min)
+
+Static versus instance: which one needs an object first?
+
+Objectives and guided-notes preview (3 min)
+
+Math.random and building a range (16 min)
+
+Math.random() takes no arguments and returns a double in the range 0.0 up to but NOT including 1.0. 0.0 is possible. 1.0 is never returned. Nothing at or above 1.0 ever comes out.
+
+To get useful integers you scale, cast, and shift. Multiply by how many values you want, cast to int to truncate, then add the smallest value you want.
+
+The formula is (int)(Math.random() \* range) + min, which produces a random int from min to min + range - 1 inclusive.
+
+Get range right by counting: range is high minus low plus one. For 10 through 20 that is 20 - 10 + 1 = 11, so (int)(Math.random() \* 11) + 10.
+
+Check your work at both ends. The smallest possible value comes from Math.random() returning 0.0, and the largest from it returning just under 1.0, which truncates to range - 1. If either end is wrong, your multiplier or your addend is wrong.
+
+The cast is required. Math.random() \* 6 is a double, and storing it in an int without (int) is the same compile error you saw with sqrt.
+
+Worked walkthrough (10 min)
+
+Work a Math method call with a nested call inside it, innermost first.
+
+Guided practice on the live lesson page (12 min)
+
+Move to the live lesson page (Unit 1 Link Sheet, row 1.10). Run the Java editor exercises first, then the Tier 2 practice set in pairs, then let each pair choose one of the two games, then the Tier 3 Mastery Challenge, The Game Randomizer.
+
+In the 1.10 Java editor: print Math.abs(-8), Math.sqrt(16.0), and Math.pow(2, 8), predicting all three outputs on paper first, then confirming 8, 4.0, and 256.0.
+
+Break it on purpose: delete Math. from one of those lines, run it, and read the compiler message out loud. Restore it, then try int x = Math.sqrt(16.0); and read that message too.
+
+Tier 2 questions: the value of Math.pow(2, 8), which expression gives a random int from 10 to 20 inclusive, and which value Math.random() can never return.
+
+Tier 2 static-method questions: which of Math.pow(3.0, 2.0), new Math().sqrt(9.0), and Math.abs(-100) are valid calls, and why the middle one is not.
+
+Choose one game: Output Predictor (predict the exact value printed or stored, six items) or Bug Hunt (find the one buggy line in each snippet, seven items). Report your score to the class.
+
+Tier 3 The Game Randomizer, Parts A and B: the possible range of (int)(Math.random() \* 100), and the value of Math.pow(2, score1 % 5) when score1 is 7.
+
+Independent practice (9 min)
+
+Offline class-method practice, all doable with pencil and paper.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. Which of these is a valid way to call a class method?  
+I. Math.pow(3.0, 2.0)  
+II. new Math().sqrt(9.0)  
+III. Math.abs(-100)
+
+Answer: C
+
+2\. What happens with this statement?  
+int root = Math.sqrt(81.0);
+
+Answer: C
+
+3\. Which expression produces a random integer from 4 to 12 inclusive?
+
+Answer: B
+
+Traps this topic sets
+
+Instantiating a utility class. Class methods do not require an object, and Math specifically cannot be instantiated because its constructor is private, so new Math().sqrt(9.0) is a compile error. The correct pattern is always the class name and the dot operator: Math.sqrt(9.0). Calling a static method on an object reference is not the pattern the exam expects.
+
+Forgetting the class name from outside. Called from any class other than the one that declares it, a class method needs its class name: sqrt(49) is a compile error but Math.sqrt(49) is fine. Inside the declaring class the name is optional, which is why students who write their own static methods in Main get away with omitting it and then omit it everywhere else too.
+
+The return type is fixed by the method, not the arguments. Math.sqrt and Math.pow always return double even when the arguments are ints and the answer is a whole number, so Math.pow(2, 8) is 256.0 and int result = Math.pow(2, 8); does not compile. Math.abs is the exception only because it is overloaded, returning an int for an int argument. Read the return type off the Quick Reference before you choose the variable type.
+
+Math.random never reaches 1.0. Math.random() returns a value in 0.0 up to but not including 1.0, so (int)(Math.random() \* 6) gives 0 through 5, not 0 through 6. Students multiply by the highest value they want instead of by the count of values, or forget to add the minimum, and lose the point at one endpoint. Count with high minus low plus one, then check both ends.
+
+Differentiation
+
+Support
+
+Give a printed Quick Reference card with the five Math signatures and, next to each, the return type circled in red. Students may use it on every practice item; the exam gives them the same reference, so this is not a crutch, it is the real testing condition.
+
+For range problems, supply a fill-in template: 'range = \_\_\_\_ minus \_\_\_\_ plus 1 = \_\_\_\_' and 'min = \_\_\_\_', so students compute the two numbers before they build the expression.
+
+Two-column sorting for compile errors: students sort ten given statements into COMPILES and NEEDS A CAST piles before writing anything, using only the return type as the deciding rule.
+
+Stretch
+
+Derive the range formula from scratch. Start from the fact that Math.random() is in 0.0 up to but not including 1.0, and write a proof in three or four sentences that (int)(Math.random() \* range) + min covers exactly min through min + range - 1 with no gaps and no extras.
+
+Truncation versus rounding: compute (int) Math.sqrt(63.0) and (int) Math.sqrt(64.0) by hand, then write a sentence on why (int)(x + 0.5) behaves differently from a plain cast, and give one value of x where the two disagree.
+
+Write a small utility class of your own with three static methods (for example perimeter, halfway, and distanceFrom100), then write a main in a different class that calls all three by class name and prints exact outputs you can state in advance.
+
+Explain in a paragraph why the designers made every Math method static. Push for the real answer: the methods depend only on their arguments and hold no stored state, so there is nothing for an object to remember and creating one would be pure overhead.
+
+Homework
+
+Vocabulary: all eight terms in your own words. For each of the four Math methods, also write its return type on the same line.
+
+Value and type drill: fifteen class-method calls on the handout. Write the exact value and the exact type for each, and mark the ones whose value could be stored in an int without a cast.
+
+Range problems: write the expression for six stated ranges, then for each write the two endpoint checks (what happens when Math.random() returns 0.0, and what happens when it returns just under 1.0).
+
+Error explanations: five broken lines involving class-method calls (missing class name, missing cast, new Math(), wrong multiplier, dropped addend). For each, name the error and write the corrected line.
+
+Write-and-predict: write a static method scoreDistance(double s) that returns Math.abs(s - 100.0), then write three calls and state the exact printed output of each.
+
+Optional online: replay the 1.10 Output Predictor and Bug Hunt games (Unit 1 Link Sheet, row 1.10) and log every item you missed.
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.10 teacher guide Page

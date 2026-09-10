@@ -1,0 +1,167 @@
+TEACHER GUIDE
+
+Topic 1.7: Application Program Interface (API) and Libraries
+
+1 day | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.7.A | Identify the attributes and behaviors of a class found in the libraries contained in an API. |
+
+Students will be able to
+
+I can explain what a library is, what an API specification does, and why classes are grouped into packages.
+
+I can read a method's documentation line and state what the method needs, what it gives back, and how to call it, without seeing the code inside it.
+
+I can sort the members of a described class into attributes and behaviors and defend each choice in one sentence.
+
+How the days run
+
+Day 1
+
+Libraries and packages: code somebody else already wrote; The API specification and procedural abstraction; Attributes and behaviors: what a class has and what it does
+
+Bell ringer: You already used code you have never read (5 min)
+
+On the board:  
+System.out.println(Math.sqrt(16));  
+This prints 4.0. Nobody in this room has ever seen the code inside Math.sqrt. In two sentences, explain how you can be confident it gives the right answer, and write down what you would need to know before using a method called Math.cbrt that you have also never seen.
+
+Debrief: Push until someone says something like 'the documentation tells you what it does.' Name it: that documentation is the API specification, and using a method by its documented behavior instead of its implementation is called procedural abstraction. The three things you need for any unfamiliar method are the same three every time: what it needs (parameters), what it gives back (return type), and what it promises to do. Point out that AP hands them a Java Quick Reference during the exam precisely because real programmers read documentation instead of memorizing it.
+
+Objectives and guided-notes preview (3 min)
+
+Libraries and packages: code somebody else already wrote (8 min)
+
+A library is a collection of pre-written classes you can use without writing the code yourself. Java ships with a large standard library covering math, text, input and output, and data structures.
+
+Using a library is not cheating and it is not a shortcut for beginners. It is the normal way software gets built, because rewriting a square root routine is wasted effort and a fresh source of bugs.
+
+Classes in Java libraries are grouped into packages. A package is a named grouping that keeps related classes together and prevents name collisions between classes that happen to share a name.
+
+The two library classes in Unit 1 scope, Math and String, both live in the package java.lang. Classes in java.lang are available by default, so you never write an import for them.
+
+Classes in other packages usually need an import statement first. The Scanner class, for example, lives in the package java.util. You do not need to use Scanner in this course, but you should recognize the package name when documentation shows it.
+
+Worked example at the board (7 min)
+
+Open the Java API documentation live and look up one method together. Students who have never seen the docs treat them as forbidden.
+
+The API specification and procedural abstraction (10 min)
+
+An API, an Application Program Interface, is the specification that documents how to use the classes in a library. It tells you what a class does, what methods it provides, what each method requires, and what each method returns.
+
+You do not need to know how a method is implemented to use it correctly. You only need its documented behavior. That idea has a name on the exam: procedural abstraction.
+
+Read every documentation line the same way, in three questions. What does it need? What does it give back? What does it promise to do?
+
+Take the line public static double pow(double base, double exponent). It needs two doubles, it gives back a double, and it promises the first value raised to the power of the second.
+
+Because ints widen to doubles automatically, you can pass Math.pow whole numbers, but the return value is still a double, so it prints with a decimal part.
+
+Abstraction also protects you over time. If the people who maintain a library improve the internal algorithm, your code keeps working as long as the documented behavior does not change.
+
+The exam will never ask you to recall API details from memory. It gives you the documentation or a class description and asks you to use it, which is why the Java Quick Reference is provided during the exam.
+
+Attributes and behaviors: what a class has and what it does (9 min)
+
+Every class has two kinds of members. Attributes are the data related to the class, stored in variables, and they describe what an object has.
+
+Behaviors are what instances of the class can do. They are defined by methods, and they describe what an object does.
+
+The sorting rule is mechanical. Variables are always attributes and methods are always behaviors. If the description says the class stores or tracks something, that is an attribute. If it says the class can do something or returns something, that is a behavior.
+
+Take a described class: a LibraryCard tracks the cardholder name, the number of books checked out, and the expiration year, and it can check out a book, return a book, and report whether the card is expired. The first three are attributes and the last three are behaviors.
+
+Watch for the pair that shares a word. booksCheckedOut is an attribute, a stored count, while checkOut is a behavior, an action that changes that count. Similar names do not mean similar kinds.
+
+A String is a good live example. The characters it holds are its data, and length and substring are behaviors you call on that data. From the API you know what each behavior returns without ever seeing how a String stores its characters.
+
+Guided practice on the live lesson page (8 min)
+
+Work the live lesson page as a class (Unit 1 Link Sheet, row 1.7). Students complete the Tier 2 AP Practice set, which walks through class descriptions for Student and Car and asks them to classify members, then close with the Tier 3 Mastery Challenge, The Library Card System.
+
+As a class, read one Math documentation line off the board and answer the three questions out loud: what it needs, what it gives back, what it promises.
+
+In the Java Code Editor, call Math.sqrt, Math.abs, and Math.pow once each and record the exact printed output, noting which results print with a decimal part and why.
+
+Complete the Tier 2 practice questions in pairs. For each classification item, partners must state the word in the description that decided it, such as stores, tracks, can, or returns.
+
+Work Part A of the Tier 3 Mastery Challenge, The Library Card System: sort cardholderName, booksCheckedOut, expirationYear, checkOut, returnBook, and isExpired into attributes and behaviors.
+
+Work Part B together: given the documentation line void checkOut(String title), state what the method needs (one String), what it returns (nothing, because the return type is void), and write a sample call.
+
+Discuss Part C as a class before students write it: why is it safe and efficient to use a class without reading its implementation?
+
+Independent practice (6 min)
+
+Offline documentation-reading and classification drill. Every item works from a printed class description or documentation line, with no compiler needed.
+
+Exit ticket (4 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. A class description says: a Student stores a name and a grade level, and can report a GPA with getGPA(). Which of these is a behavior?
+
+Answer: C
+
+2\. Documentation line: public static double pow(double base, double exponent). Which statement is correct?
+
+Answer: A
+
+3\. Why does Math.sqrt(x) work without an import statement, while a class such as Scanner would need one?
+
+Answer: Math is in the package java.lang, which is available by default, while Scanner is in java.util and classes outside java.lang normally require an import.
+
+Traps this topic sets
+
+Attributes versus behaviors. Variables are always attributes and methods are always behaviors, with no exceptions. If the description says the class stores or tracks something, that is an attribute; if it says the class can do something or returns something, that is a behavior. Watch for near-identical names such as booksCheckedOut, a stored count, and checkOut, a method.
+
+You do not need the implementation. Students assume they must see inside a method before trusting it. Procedural abstraction means the documented behavior is enough: the parameters, the return type, and the description tell you everything required to call it correctly. This is also why the implementation can be improved later without breaking your code.
+
+Import confusion. Math and String are in java.lang, which is available by default, so they never need an import. Classes in other packages, such as Scanner in java.util, normally do. An answer choice claiming Math requires an import is wrong, and so is one claiming no Java class ever needs one.
+
+Memorizing the API. The exam never asks you to recall API details from memory. It supplies the documentation or a class description and tests whether you can read it, which is exactly why a Java Quick Reference is provided during the exam. Study the skill of reading a signature, not a list of method names.
+
+Differentiation
+
+Support
+
+Give a two-column sorting card, HAS on the left and DOES on the right, and have students place each member physically before writing anything down.
+
+Provide a highlighter rule for class descriptions: highlight stores and tracks in one color and can and returns in another. The colors do the classification for them until the pattern sticks.
+
+Give a fill-in template for reading documentation with three blanks labeled needs, returns, and promises, so every documentation line gets processed the same way.
+
+Preload the vocabulary with a matching activity, six terms to six definitions, before any classification work begins.
+
+Stretch
+
+Give the printed documentation for three Math methods students have not used and ask them to write a single expression that combines all three, then state the exact value and type of the result.
+
+Ask for a written argument, with a concrete example, for why the API deliberately hides the implementation, using the maintenance case: the library authors improve the internal algorithm and no existing code breaks.
+
+Have students write documentation lines for a class they invent, three attributes and four behaviors, complete with parameter types and return types, then trade papers and have a partner write legal calls using only the documentation.
+
+Beyond-scope enrichment, clearly labeled as not tested: Java's javadoc tool generates the official HTML documentation directly from specially formatted comment blocks in the source code, which is why the docs and the code agree. Students can write what such a comment block would need to contain for one of their invented methods, then compare it to the comment syntax coming in Topic 1.8.
+
+Homework
+
+Vocabulary: write the six terms with definitions in your own words and one example each.
+
+Documentation drill: for the five printed documentation lines on the handout, write what the method needs, what it returns, and one legal call.
+
+Classification: sort the fourteen members of two printed class descriptions into attributes and behaviors, with a justification word for each.
+
+Short answer: a teammate says using a class you did not write is risky. In three to five sentences, explain why the API specification makes it safe, naming procedural abstraction and listing what the documentation provides.
+
+Optional online: redo the Tier 3 Mastery Challenge, The Library Card System, and write Part C in full (Unit 1 Link Sheet, row 1.7).
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.7 teacher guide Page

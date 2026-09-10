@@ -1,0 +1,186 @@
+TEACHER GUIDE
+
+Topic 1.2: Variables and Data Types
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.2.A | Identify the most appropriate data type category for a particular specification. |
+| 1.2.B | Develop code to declare variables to store numbers and Boolean values. |
+
+Students will be able to
+
+I can name the two data type categories (primitive and reference) and sort a given type into the right one.
+
+I can pick int, double, or boolean for a described quantity and defend the choice in one sentence.
+
+I can write a legal declaration with the form type name = value; and spot a declaration that will not compile.
+
+I can explain why reading a local variable before assigning it is a compile error, not a run-time surprise.
+
+How the days run
+
+Day 1
+
+What a variable is, and why Java demands a type; Two categories, and the three primitives that are actually on the exam; Declaration syntax and the naming rules
+
+Bell ringer: Three quantities, three types (5 min)
+
+On the board: 'A school app tracks (1) how many students are in the room, (2) the average score on the last quiz, (3) whether the fire alarm is armed. For each one, write down what kind of value it is and give a sample value. Two minutes, no Java yet.'
+
+Debrief: Take answers out loud. Push on number 2 until someone says the average of 87, 90, and 92 is 89.666, so whole numbers are not enough. Then name the three Java types that match what they already said: int for counts, double for measurements that can have a fractional part, boolean for armed or not armed. Point out that they chose types before knowing any syntax, because the data decides the type.
+
+Objectives and guided-notes preview (3 min)
+
+What a variable is, and why Java demands a type (8 min)
+
+A variable is a named storage location that holds a value, and the value can change while the program runs. The name is how your code gets back to that value later.
+
+Java is statically typed: every variable also has a fixed data type that the compiler tracks from the moment you declare it. The value changes; the type never does.
+
+The type tells Java two things: which values are allowed in that slot, and which operations are legal on them. That is the actual definition of a data type, a set of values plus the operations on them.
+
+Storing the number 42 is not the same as storing the text "42". One is a number you can do arithmetic on; the other is a sequence of two characters. Java treats them as different types and will not silently trade one for the other.
+
+Worked example at the board (9 min)
+
+Declare one variable of each primitive type on the board and have the class predict the default value before you print it. The int/double split is the whole topic.
+
+Two categories, and the three primitives that are actually on the exam (11 min)
+
+Every Java type falls into one of two categories. Primitive types directly hold a simple value. Reference types are used to define objects, such as String and any class you write later.
+
+The short version for now: a primitive holds the value itself, and a reference holds a way to find an object that lives somewhere else in memory. We stay entirely on primitives today.
+
+AP CSA uses exactly three primitives: int for whole numbers, double for real numbers with a possible decimal portion, and boolean for exactly true or false.
+
+The exclusion statement is a gift. Java has five other primitives (long, short, byte, float, char) and all five are explicitly out of scope. On the exam, an answer choice that depends on one of them is wrong by definition of the course. Eliminate it before you even read the rest of the choice.
+
+Say boolean values out loud correctly: true and false, lowercase, no quotes. "true" with quotes is a String, and a String cannot go in a boolean variable.
+
+Declaration syntax and the naming rules (10 min)
+
+The pattern is dataType variableName = initialValue; with the initial value optional. Type first, name second, equals sign, value, semicolon.
+
+Names must start with a letter, an underscore, or a dollar sign, never a digit. After the first character you can use letters, digits, underscores, and dollar signs.
+
+Names cannot be Java reserved words, and they are case sensitive: score and Score are two different variables. That one bites people in long programs.
+
+camelCase is convention, not law, but the exam and every reader expect it: numStudents, not num\_students and not NumStudents. Convention violations do not break compilation; naming rule violations do.
+
+Type mismatch is a compile error, not a rounding. int x = 2.5; does not compile at all. Java will not quietly throw away the .5 for you.
+
+Misconception check: Out-of-scope primitives as distractors (6 min)
+
+Out-of-scope primitives as distractors: Answer choices mentioning long, short, byte, float, or char are wrong by definition of AP CSA course scope. The only primitives in this course are int, double, and boolean. Train the reflex to eliminate those choices before reading them closely.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+Choosing the most appropriate type, and definite assignment
+
+Bell ringer: retrieval on the previous day (5 min)
+
+Name the four primitives the CED tests, and give the range trap for each.
+
+Objectives and guided-notes preview (3 min)
+
+Choosing the most appropriate type, and definite assignment (16 min)
+
+Choosing a type is a design decision, not a Java decision. Java will happily let you store a student count in a double. The program compiles and runs.
+
+On the exam, 'which is the most appropriate data type' has exactly one credited answer: the type that matches the values the specification allows. Whole-number quantities use int. Quantities with a fractional part use double. Two-state quantities use boolean.
+
+Picking a wider type just in case is wrong on this exam even when it would be reasonable engineering elsewhere. Read the specification and match it.
+
+You may declare without initializing: int score; is legal. But Java refuses to let you read that variable until something has been assigned to it. That rule is called definite assignment.
+
+This matters for error classification from Topic 1.1: reading an uninitialized local is caught by the compiler, so it behaves like a syntax error on the exam. It is never a run-time surprise.
+
+Worked walkthrough (10 min)
+
+Show a declaration that compiles and one that does not, side by side. Ask which line the compiler objects to before you run it.
+
+Guided practice on the live lesson page (12 min)
+
+Move to the live lesson page (Unit 1 Link Sheet, row 1.2). Students run the Java editor exercise for declarations, then work the Tier 2 practice set of six items covering type categories, the three primitives in scope, declaration syntax, and the exclusions. Finish with the Tier 3 Library Checkout System challenge as a whole-class walkthrough.
+
+Run the 1.2 Java editor exercise: declare one int, one double, and one boolean, print all three, and confirm the expected output.
+
+Break it on purpose: change the int declaration to hold 2.5, run it, and read the compiler's type mismatch message out loud.
+
+Complete the six Tier 2 practice questions in pairs; for every wrong choice that contains long, float, short, byte, or char, write the words 'out of scope' next to it.
+
+Tier 3 Library Checkout System: the class decides which of double bookId = 4271.0; int lateFee = 2.50; boolean isCheckedOut = "true"; compiles, which do not, and which compiles with the wrong type. Answer: the double bookId line compiles but should be int; the other two do not compile.
+
+Play one game round, Variables Bug Hunt or Java Wordle: Variables, as the last five minutes.
+
+Independent practice (9 min)
+
+Offline declaration drill and type-selection sort. Everything below runs on paper.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. Which declaration will NOT compile?
+
+Answer: C
+
+2\. A program must store the number of laps a runner completed. Which type is most appropriate?
+
+Answer: A
+
+3\. What happens when this code segment is compiled and run?  
+int total;  
+System.out.println(total);
+
+Answer: C
+
+Traps this topic sets
+
+Out-of-scope primitives as distractors. Answer choices mentioning long, short, byte, float, or char are wrong by definition of AP CSA course scope. The only primitives in this course are int, double, and boolean. Train the reflex to eliminate those choices before reading them closely.
+
+Storing a decimal in an int. int x = 2.5; does not compile. Java refuses to assign a double value to an int variable without an explicit conversion, which is covered in Topic 1.5. The compiler reports a type mismatch, so nothing runs and nothing gets rounded.
+
+Confusing "true" with true. A boolean literal is true or false: lowercase, no quotes. Putting quotes around it makes a String of four or five characters, and a String cannot be assigned to a boolean variable. The exam tests this exact substitution.
+
+Variable names that start with a digit. int 1stPlace = 100; is a syntax error because a name must begin with a letter, an underscore, or a dollar sign. place1 and firstPlace are both legal. Only the leading character is restricted, so digits later in the name are fine.
+
+Differentiation
+
+Support
+
+Give a printed declaration frame with four blanks (type, name, equals, value, semicolon) so students fill slots instead of recalling word order.
+
+Reduce the type sort to six items and pre-mark three answers as worked examples, so the student is matching a pattern rather than starting cold.
+
+Provide a card with only the three in-scope primitives and the five excluded ones in a red box; struggling students use it during every practice item until they stop reaching for it.
+
+Stretch
+
+Ask advanced students to write a specification for which int and double are both defensible, then argue for one in three sentences. This forces them to articulate what 'most appropriate' actually means.
+
+Give them the exclusion statement and ask why a course would exclude float when it exists in Java. Push toward the real answer: the exam tests reasoning, not the size of numeric ranges, and double already covers every case in the course.
+
+Beyond-scope enrichment (not tested, no new syntax): have them predict what Java prints for 0.1 + 0.2 stored in a double. The answer is 0.30000000000000004. Explain that double is binary floating point and cannot represent 0.1 exactly, which is why real financial software uses exact decimal types instead. On this exam, money still uses double.
+
+Homework
+
+Vocabulary: write all nine terms with definitions in your own words, plus one example of each of the three primitive types.
+
+Trace table: six declarations are listed on the handout; for each, write the variable name, the type, the value stored, and COMPILES or DOES NOT COMPILE with a reason.
+
+Explain in three to five sentences why "true" is not the same as true in Java, using the words String, primitive, and static type checking.
+
+Optional online: replay the 1.2 editor exercise and the Variables Bug Hunt game (Unit 1 Link Sheet, row 1.2).
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.2 teacher guide Page
