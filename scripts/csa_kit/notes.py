@@ -279,7 +279,20 @@ def _mono(doc, text, indent=0.45):
     return doc
 
 
-def _segment(doc, label, minutes):
+def _segment(doc, label):
+    """One teaching segment heading in the teacher guide.
+
+    IT NO LONGER PRINTS THE MINUTES, and that is a product decision rather than
+    a layout one. Tanner set it as an acceptance criterion on 2026-09-07: the
+    bundle says what is in the lesson, it does not tell a teacher how to run
+    their room. A heading reading "(14 min)" is the most directional thing on
+    the page, and a teacher who already has a lesson plan is being told their
+    job. The theme bundle made the same change in PR #111.
+
+    The minutes stay in the content dicts and still sum against a period. They
+    are a check on OUR authoring, not an instruction to a teacher, and that
+    distinction is the whole reason they were not simply deleted.
+    """
     p = doc.add_paragraph()
     p.paragraph_format.space_before = Pt(8)
     p.paragraph_format.space_after = Pt(2)
@@ -288,11 +301,6 @@ def _segment(doc, label, minutes):
     r.font.bold = True
     r.font.name = 'Calibri'
     r.font.color.rgb = NAVY
-    if minutes:
-        r2 = p.add_run(f'   ({minutes} min)')
-        r2.font.size = Pt(9.5)
-        r2.font.name = 'Calibri'
-        r2.font.color.rgb = MUTED
     return p
 
 
@@ -379,7 +387,8 @@ def build_frq(path, item, key_edition):
        size=7.5, color=MUTED, space_after=0)
     doc.save(path)
 
-def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_line):
+def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_line,
+                        i_can=None, traps=None, homework=None):
     """The full teacher guide for one topic.
 
     THIS REPLACED A ONE PAGE LESSON MAP ON 2026-09-04, and the reason is worth
@@ -437,9 +446,23 @@ def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_li
                         r.font.size = Pt(10)
                         r.font.name = 'Calibri'
 
+    # The CED objective and the student-facing "I can" line are two different
+    # sentences, and printing the objective twice was reading as a formatting
+    # bug. The kit already carries the second one as `learned`; it just was not
+    # being used here. The shipped Unit 1 guides this renderer was written to
+    # match print the CED text in the table and the I can lines in the list.
+    lines = list(i_can or [])
+    if not lines:
+        for d in days:
+            for t in d.get('learned', []):
+                if t not in lines:
+                    lines.append(t)
+    if not lines:
+        lines = [text for text, _code in seen]
+    if lines:
         _heading(doc, 'Students will be able to')
-        for text, _code in seen:
-            _bullet(doc, text)
+        for t in lines:
+            _bullet(doc, t)
 
     # ── how the days run ─────────────────────────────────────────────────────
     _heading(doc, 'How the days run')
@@ -486,7 +509,7 @@ def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_li
                 cursor += len(take)
         warm = d.get('warmup') or []
         for seg_i, (minutes, label) in enumerate(d.get('schedule', [])):
-            _segment(doc, label, minutes)
+            _segment(doc, label)
             low = label.lower()
             if low.startswith('bell ringer') and len(warm) >= 3:
                 _bullet(doc, warm[1])
@@ -508,7 +531,16 @@ def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_li
             elif low.startswith('misconception'):
                 m = d.get('misconception') or {}
                 if m.get('truth'):
-                    _bullet(doc, f"{m.get('heading', 'Misconception')}: {m['truth']}")
+                    _bullet(doc, m['truth'])
+            elif low.startswith('guided practice'):
+                lp = d.get('lesson_page') or {}
+                if lp.get('intro'):
+                    _bullet(doc, lp['intro'])
+                for act in lp.get('activities', []):
+                    _bullet(doc, act)
+            elif low.startswith('independent practice'):
+                if d.get('independent'):
+                    _bullet(doc, d['independent'])
             elif low.startswith('stop and think'):
                 for q in (d.get('discussion') or []):
                     _bullet(doc, q)
@@ -525,22 +557,37 @@ def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_li
             for j, opt in enumerate(q['options']):
                 mark = '  <-- answer' if j == q['answer_index'] else ''
                 _bullet(doc, f"{chr(65 + j)}. {opt}{mark}", size=10, indent=0.45)
+            if not q['options']:
+                _bullet(doc, f"Answer: {q.get('free_answer', '')}", size=10,
+                        indent=0.45)
             if q.get('why'):
                 _p(doc, f"Why: {q['why']}", size=9.5, color=MUTED, space_after=8)
 
     # ── traps ────────────────────────────────────────────────────────────────
-    traps = []
-    for d in days:
-        m = d.get('misconception') or {}
-        if m.get('truth'):
-            traps.append((m.get('heading', 'Misconception'), m['truth']))
-        b = d.get('break_it') or {}
-        if b.get('why'):
-            change = (b.get('change') or 'One change').rstrip('.')
-            traps.append((f'Change it and see: {change}', b['why']))
-    if traps:
+    # Unit 1's guides carry a four-item "Traps this topic sets" section that is
+    # authored per topic rather than derived from one misconception plus one
+    # break-it. They are the same four the printed exercises key uses, so
+    # passing them in keeps the two documents from disagreeing about what the
+    # topic gets wrong.
+    if traps is not None:
+        derived = list(traps)
+    else:
+        derived = []
+        for d in days:
+            m = d.get('misconception') or {}
+            if m.get('truth'):
+                derived.append((m.get('heading', 'Misconception'), m['truth']))
+            b = d.get('break_it') or {}
+            if b.get('why'):
+                change = (b.get('change') or 'One change').rstrip('.')
+                derived.append((f'Change it and see: {change}', b['why']))
+    if derived:
         _heading(doc, 'Traps this topic sets')
-        for head, body in traps:
+        for trap in derived:
+            if isinstance(trap, str):
+                _p(doc, trap, size=10.5, space_after=6)
+                continue
+            head, body = trap
             # rstrip the period: several headings already end with one, and
             # "same conditions.. Separate ifs" is how that looked before.
             _p(doc, f'{head.rstrip(".")}. {body}', size=10.5, space_after=6)
@@ -567,6 +614,18 @@ def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_li
             _bullet(doc, item)
         _p(doc, 'Stretch', size=11.5, bold=True, color=ACCENT, space_after=3)
         for item in diff['stretch']:
+            _bullet(doc, item)
+
+    # ── homework ─────────────────────────────────────────────────────────────
+    # The shipped Unit 1 guides end with one and this renderer had no section
+    # for it, which is worth more than the missing text. Twenty-five of the
+    # promises of material a teacher does not have live in the homework, so a
+    # phantom-material check ran green over all fifteen documents purely because
+    # the section it was looking for was never printed. The mutation harness
+    # found that, not the check.
+    if homework:
+        _heading(doc, 'Homework')
+        for item in homework:
             _bullet(doc, item)
 
     # ── the three surfaces ───────────────────────────────────────────────────

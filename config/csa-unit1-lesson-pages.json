@@ -1,0 +1,165 @@
+{
+ "_provenance": {
+  "source": "APCSExamPrep-theme teacher-bundle/exercises/unit-1/<topic>.json, the \"online\" block",
+  "why": "These 15 blocks are the lesson-page inventory that ships in the Unit 1 printed exercises a teacher already holds. They were repaired in theme PR #110 and #111 and pass that repo's validateVoice, so importing them keeps the guide and the exercise saying the same thing about the same page rather than drifting.",
+  "changed_on_import": "the phrase \"out loud\" removed in 7 places, the one staging idiom the theme pass left behind",
+  "captured": "2026-09-10"
+ },
+ "1.1": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.1) has the Hello, AP CSA editor exercise and a six-item Tier 2 practice set. The editor exercise is built to be broken: a deleted semicolon and a misspelled println both stop the compiler, and the two messages read differently.",
+  "activities": [
+   "Run the 1.1 Java editor exercise as written and confirm the expected output.",
+   "Break it: remove the semicolon, run, and read the compiler message.",
+   "Break it differently: misspell println as printn, run it, and compare the compiler message to the missing-semicolon one.",
+   "Complete the Tier 2 practice questions, six items, with the error-bucket vocabulary open."
+  ]
+ },
+ "1.2": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.2) has the Java editor exercise for declarations, a six-item Tier 2 practice set covering type categories, the three primitives in scope, declaration syntax and the exclusions, and the Tier 3 Library Checkout System challenge.",
+  "activities": [
+   "Run the 1.2 Java editor exercise: declare one int, one double, and one boolean, print all three, and confirm the expected output.",
+   "Break it on purpose: change the int declaration to hold 2.5, run it, and read the compiler's type mismatch message.",
+   "Complete the six Tier 2 practice questions. For every wrong choice containing long, float, short, byte or char, write 'out of scope' next to it.",
+   "Tier 3 Library Checkout System: of double bookId = 4271.0; int lateFee = 2.50; boolean isCheckedOut = \"true\"; work out which compile, which do not, and which compiles with the wrong type.",
+   "Play one game round, Variables Bug Hunt or Java Wordle: Variables, as the last five minutes."
+  ]
+ },
+ "1.3": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.3) has the Java editor exercise, eight Tier 2 AP practice items, and the Tier 3 School Store Vending Machine challenge. The eight items cover print and println layout, expression types, integer division with remainder, escape sequences in a Windows path, compound precedence, ArithmeticException segments, the average-precedence trap, and newline counting.",
+  "activities": [
+   "Run the 1.3 editor exercise, then modify it: change one operand from 2 to 2.0 and describe in one sentence what changed about the output and why.",
+   "Tier 2 output trace: for the segment println(\"Status: \"), print(\"OK\"), println(), print(\"Done\"), write the output before revealing. The answer is Status: on line 1, OK on line 2, Done on line 3.",
+   "Tier 2 division set: work the 250 / 8 and 250 % 8 item (answers 31 and 2) and the 14 / 4 versus 14.0 / 4 versus 14 / 4 * 2 typing item (only the first and third are int).",
+   "Tier 3 School Store Vending Machine, Part A: trace changeCents = 100 - 65, quarters = changeCents / 25, remainder = changeCents % 25 and predict the output. The answers are 1 quarter and 10 leftover cents.",
+   "Tier 3 Part C on paper: explain why \"Change: $\" + changeCents / 100 prints Change: $0 when changeCents is 35, and rewrite it using 100.0 so it prints Change: $0.35.",
+   "Play one round of the Output Predictor game or the Expressions Bug Hunt as the closer."
+  ]
+ },
+ "1.4": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.4) has the Java editor exercise, eight Tier 2 AP practice items, and the Tier 3 Science Fair Score Tracker. The items cover assignment tracing, null with primitives, uninitialized locals, widening and narrowing, integer division stored into a double, the broken swap, valid assignment sets, and the Scanner-context item.",
+  "activities": [
+   "Run the 1.4 editor exercise, then edit it: comment out the initialization of one variable, run it, and read the compiler's 'might not have been initialized' message aloud.",
+   "Tier 2 trace: int val = 4; val = val * 3; val = val - 5; val = val + val; predict the printed value (answer 14), then check with the editor.",
+   "Tier 2 compile-or-not set: decide which of String label = null; int count = null; double ratio = null; compile. Only the String line does.",
+   "Tier 2 assignment validity: for int x = 6; double y = 2.5; boolean flag = true; decide which of y = x; x = y; flag = (x > 4); compile. The first and third do.",
+   "Tier 3 Science Fair Score Tracker Part A: trace score and bonus through all four assignments with an entered value of 50 and predict the output. The answer is 80.",
+   "Tier 3 Part C on paper: rewrite the three assignment statements so bonus doubles before the first addition, then state the new printed result, which is 90.",
+   "Play one round of the Assignment Tracing Output Predictor or the Assignment Statements Bug Hunt as the closer."
+  ]
+ },
+ "1.5": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.5) has the Java Code Editor exercise, where a real compiler truncates in front of the student, the Tier 2 AP Practice set, and the Tier 3 Mastery Challenge, The Track Team Timer, which puts truncation and round-off error in one problem.",
+  "activities": [
+   "In the Java Code Editor, print (double) 7 / 2 and (double)(7 / 2) in the same program and confirm the outputs are 3.5 and 3.0.",
+   "In the same editor, set an int to Integer.MAX_VALUE, add 1, and print it. The wrapped value is the point.",
+   "Print 0.1 + 0.2 and have every student copy the exact printed value into their notes, all digits.",
+   "Complete the Tier 2 practice questions, writing the value of every sub-expression before selecting an answer. Nothing in this set is meant to be answered from a guess.",
+   "Play one of the two games, Output Predictor or Bug Hunt.",
+   "Work Parts A and B of the Tier 3 Mastery Challenge, The Track Team Timer, together. Part A produces 12.6 rather than the expected 12.7, and the reason is round-off error; Part B is fixed by adding 0.5 before the cast."
+  ]
+ },
+ "1.6": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.6) has the Java Code Editor, which verifies traces already written on paper, the Tier 2 AP Practice set, and the Tier 3 Mastery Challenge on the shelf-count sequence.",
+  "activities": [
+   "Before touching the editor, each student writes a paper trace of int n = 100; n /= 4; n %= 7; n += n; and predicts the final value. It is 8.",
+   "Type the same sequence into the Java Code Editor with a println after each statement and confirm the printed values 25, 4, 8 against the paper trace.",
+   "In the editor, run double total = 9.0; total /= 2; and confirm it prints 4.5, then change the declared type to int and observe what happens to the same statement.",
+   "Complete the Tier 2 practice questions, writing the value after every line before selecting an answer.",
+   "Play the game on the lesson page. It runs one trace at a time.",
+   "Work Parts A and B of the Tier 3 Mastery Challenge together. Part A traces the shelf sequence to 0, and Part B asks which single statement is equivalent to shelf += shelf; the answer is shelf *= 2 because it doubles for any value, while a hardcoded number only works for one."
+  ]
+ },
+ "1.7": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.7) has the Tier 2 AP Practice set, which walks through class descriptions for Student and Car and asks for each member to be classified, and the Tier 3 Mastery Challenge, The Library Card System.",
+  "activities": [
+   "Read one Math documentation line and answer the three questions it raises: what it needs, what it gives back, what it promises.",
+   "In the Java Code Editor, call Math.sqrt, Math.abs, and Math.pow once each and record the exact printed output, noting which results print with a decimal part and why.",
+   "Complete the Tier 2 practice questions. Each classification item turns on one word in the description, such as stores, tracks, can or returns; name that word.",
+   "Work Part A of the Tier 3 Mastery Challenge, The Library Card System: sort cardholderName, booksCheckedOut, expirationYear, checkOut, returnBook, and isExpired into attributes and behaviors.",
+   "Work Part B together: given the documentation line void checkOut(String title), state what the method needs (one String), what it returns (nothing, because the return type is void), and write a sample call.",
+   "Part C asks why it is safe and efficient to use a class without reading its implementation."
+  ]
+ },
+ "1.8": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.8) has the Tier 2 practice questions and the Tier 3 Mastery Challenge, The Grade Calculator. This is the one Unit 1 lesson with no Java editor exercise, so all of it is reading and reasoning.",
+  "activities": [
+   "Tier 2 question 1 (the commented-out score line) on a show-of-hands vote before anyone speaks, then one student explains the answer 20.",
+   "Tier 2 questions on the index precondition, the largest-element postcondition, and the setTemperature(90) scenario. For each, name which answer choice describes the method checking something, and eliminate it on that basis alone.",
+   "Tier 3 Part A and Part B: fill in the precondition and the postcondition for letterGrade(int score) given that the method handles 90-100 as A, 80-89 as B, and so on, and does not handle values outside 0-100.",
+   "Tier 3 Part C in writing: a classmate calls safeDivide(10, 0) on a method with precondition b != 0. Three to five sentences on what the precondition means, whether the method must handle the call safely, and what the caller should have done."
+  ]
+ },
+ "1.9": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.9) has the Java editor exercises, where call-by-value fails on a real compiler rather than on paper, the Tier 2 practice set, and the Tier 3 Mastery Challenge, The Temperature Converter.",
+  "activities": [
+   "In the 1.9 Java editor: write a void method that doubles its int parameter, call it on a variable set to 7, print the variable, and confirm 7 prints. Then rewrite it as a value-returning method and assign the result so 14 prints.",
+   "Tier 2 signature question: identify the signature of public double computeTax(double income, int dependents) and say which distractor added the return type.",
+   "Tier 2 trace question: predict the output of the triple(4) segment (A, B, 12 order) before running it, then run it.",
+   "Tier 2 overload question: given process(int x), process(double x), and process(int x, int y), decide whether the class compiles and justify with signatures.",
+   "Tier 2 argument-matching question: for signature scale(double factor, int count), decide which of scale(2.0, 3), scale(2, 3), and scale(3, 2.0) fail to compile, and why.",
+   "Tier 3 The Temperature Converter, Parts A and B: which overload runs for toCelsius(98.6), and which runs for toCelsius(100.0, \"F\") after a two-parameter version is added."
+  ]
+ },
+ "1.10": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.10) has the Java editor exercises, the Tier 2 practice set, two games, and the Tier 3 Mastery Challenge, The Game Randomizer.",
+  "activities": [
+   "In the 1.10 Java editor: print Math.abs(-8), Math.sqrt(16.0), and Math.pow(2, 8), predicting all three outputs on paper first, then confirming 8, 4.0, and 256.0.",
+   "Break it on purpose: delete Math. from one of those lines, run it, and read the compiler message. Restore it, then try int x = Math.sqrt(16.0); and read that message too.",
+   "Tier 2 questions: the value of Math.pow(2, 8), which expression gives a random int from 10 to 20 inclusive, and which value Math.random() can never return.",
+   "Tier 2 static-method questions: which of Math.pow(3.0, 2.0), new Math().sqrt(9.0), and Math.abs(-100) are valid calls, and why the middle one is not.",
+   "Choose one game: Output Predictor (predict the exact value printed or stored, six items) or Bug Hunt (find the one buggy line in each snippet, seven items).",
+   "Tier 3 The Game Randomizer, Parts A and B: the possible range of (int)(Math.random() * 100), and the value of Math.pow(2, score1 % 5) when score1 is 7."
+  ]
+ },
+ "1.11": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.11) has the Java editor exercise, an eight-question Tier 2 AP Practice set that leans on the four-method return-type table, two games, and the Tier 3 Mastery Challenge, The Geometry Calculator.",
+  "activities": [
+   "Run the 1.11 Java editor exercise as written and confirm the expected output before changing anything.",
+   "Modify the editor exercise: replace Math.pow(2, 8) with Math.pow(8, 2) and read the new output to prove argument order matters.",
+   "Work the eight Tier 2 practice questions. For each random-range item, write the minimum and maximum substitutions in the margin before choosing.",
+   "Choose one game: Output Predictor (six questions, type the exact output including any decimal point) or Bug Hunt (seven snippets, one buggy line each).",
+   "Finish with Tier 3, The Geometry Calculator, Parts A, B, and C. Part C asks for the perimeter line and an explanation of why the result is a double."
+  ]
+ },
+ "1.12": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.12) has the Java editor exercise, a six-question Tier 2 AP Practice set that leans on the memory diagram from the notes, one game, and the Tier 3 Mastery Challenge, The Library System.",
+  "activities": [
+   "Run the 1.12 Java editor exercise as written and confirm the expected output.",
+   "Modify it: add a second reference variable that is assigned from the first, reassign the first, then print both, and check the result against your prediction before running.",
+   "Work the six Tier 2 practice questions. For every question involving two variables, draw the boxes and the addresses before choosing an answer.",
+   "Choose one game: Output Predictor for Objects and References (six questions) or Bug Hunt (seven snippets, one buggy line each).",
+   "Finish with Tier 3, The Library System, Parts A, B, and C. Part C is a four-point written response on class versus object using the Book class, so draft it in complete sentences."
+  ]
+ },
+ "1.13": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.13) has the Java editor exercise, an eight-question Tier 2 AP Practice set built on the four-part creation pattern, one game, and the Tier 3 Mastery Challenge, The Bank Account.",
+  "activities": [
+   "Run the 1.13 Java editor exercise as written and confirm the expected output.",
+   "Break it on purpose: delete the keyword new from a creation line, run it, and read the compiler message. Then restore it.",
+   "Break it a second way: pass a double literal to a constructor whose parameter is an int, run it, and compare that message with the previous one.",
+   "Work the eight Tier 2 practice questions. For every question with overloaded constructors, write the matching signature in the margin before choosing.",
+   "Choose one game: Output Predictor for Object Creation (six questions, with the class definitions available behind the View class definition control) or Bug Hunt for Instantiation (seven snippets, one buggy line each).",
+   "Finish with Tier 3, The Bank Account, Parts A, B, and C. Part C asks for a third overloaded no-arg constructor plus an explanation of why three constructors may share one name, so write it in complete sentences."
+  ]
+ },
+ "1.14": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.14) has the Java Code Editor exercise, the Tier 2 practice set, two games, and the Tier 3 Mastery Challenge, The Temperature Sensor.",
+  "activities": [
+   "Run the 1.14 Java editor exercise as written and confirm the expected output before changing anything.",
+   "Break it on purpose twice: remove the parentheses from one call (read the compiler message aloud), then assign a void call to an int variable and compare the two messages.",
+   "Complete the eight Tier 2 practice questions, naming for each call whether it is void or value-returning before choosing.",
+   "Play either Output Predictor or Bug Hunt for instance methods; require a written prediction before each reveal.",
+   "Tier 3 Mastery Challenge, The Temperature Sensor: Parts A and B are a trace with a reading column, and Part C is the aliasing explanation, scored against a 4-point rubric."
+  ]
+ },
+ "1.15": {
+  "intro": "The live lesson page (Unit 1 Link Sheet, row 1.15) has the Java Code Editor exercise, eight Tier 2 practice questions, a game, and the Tier 3 Mastery Challenge, The Username Generator, which closes the unit.",
+  "activities": [
+   "Run the 1.15 Java editor exercise as written and confirm the expected output before editing anything.",
+   "Modify it twice: call a substring without storing the result and print the original (immutability), then reassign and print again, so both behaviors appear side by side in one run.",
+   "Complete the Tier 2 practice set, writing the numbered index line under every String before choosing an answer.",
+   "Play Output Predictor or Bug Hunt for String methods; require a written prediction before each reveal and log every miss by trap name.",
+   "Tier 3 Mastery Challenge, The Username Generator: Parts A and B are a trace, and Part C is scored against a 4-point immutability rubric. toLowerCase appears in the problem but is not on the AP Quick Reference, so treat it as given; the tested pieces are substring, indexOf and immutability."
+  ]
+ }
+}
