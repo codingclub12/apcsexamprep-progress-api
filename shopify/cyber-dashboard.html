@@ -787,21 +787,54 @@ window.TCDash = {
             pct:poss>0?Math.round(earned/poss*100):null,done:done,total:total,unpriced:unpriced};
   },
 
+  // A CLASS AVERAGE IS MARKS OVER MARKS, for the same reason a student's grade
+  // is. A mean of percentages lets one student's 5 point quiz weigh exactly as
+  // much as another student's 25 point project, and it is the defect board 85
+  // is written about, one level up from the student row where it was fixed.
+  //
+  // Measured on a class of two, one student on 1 / 1 and one on 12 / 40: the
+  // mean reads 65 and the class has earned 13 marks out of 41.
+  //
+  // The mean survives only where nothing is priced at all, because then there
+  // are no marks to add and it is the only number there is. `basis` says which,
+  // and the page already marks unpriced columns with a star and names them.
+  classAvg(rows){
+    const graded=rows.filter(x=>x.pct!=null);
+    let e=0,p=0; graded.forEach(x=>{ e+=x.earned; p+=x.poss; });
+    if(p>0) return {pct:Math.round(e/p*100),earned:Math.round(e*100)/100,poss:Math.round(p*100)/100,basis:'points'};
+    if(graded.length) return {pct:Math.round(graded.reduce((a,b)=>a+b.pct,0)/graded.length),earned:null,poss:null,basis:'percent'};
+    return {pct:null,earned:null,poss:null,basis:'none'};
+  },
+  // The same rule down a column. `priced` is false where nobody has authored an
+  // out-of and the page reported no pair, so those cells carry a percent and no
+  // marks, exactly as they do in a student's row.
+  colAvg(cells){
+    const started=cells.filter(x=>x.started&&x.pct!=null);
+    const pr=started.filter(x=>x.priced);
+    let e=0,p=0; pr.forEach(x=>{ e+=x.earned; p+=x.possible; });
+    if(p>0) return {pct:Math.round(e/p*100),earned:Math.round(e*100)/100,poss:Math.round(p*100)/100,basis:'points'};
+    if(started.length) return {pct:Math.round(started.reduce((a,b)=>a+b.pct,0)/started.length),earned:null,poss:null,basis:'percent'};
+    return {pct:null,earned:null,poss:null,basis:'none'};
+  },
+
   renderAll(){ this.renderStats(); this.renderGrid(); this.renderStudent(+document.getElementById('rep-picker').value||0); this.renderAssignment(+document.getElementById('ba-picker').value||0); this.renderRemoved(); },
 
   renderStats(){
     const arr=this.model.students.map(s=>this.totals(s));
     const n=arr.length||1;
-    // Averaged over the students who HAVE a grade. Counting a student with no
-    // priced work as a zero drags the class average down for work nobody graded.
-    const graded_arr=arr.filter(x=>x.pct!=null);
-    const avg=graded_arr.length?Math.round(graded_arr.reduce((a,b)=>a+b.pct,0)/graded_arr.length):null;
+    // Over the students who HAVE a grade. Counting a student with no priced work
+    // as a zero drags the class average down for work nobody graded.
+    const ca=this.classAvg(arr);
+    const avg=ca.pct;
     const comp=Math.round(arr.reduce((a,b)=>a+(b.total?b.done/b.total:0),0)/n*100);
     const active=this.model.students.filter(s=>/Today|Yesterday/.test(s.lastActive||'')).length;
     const graded=arr.reduce((a,b)=>a+b.done,0);
     const card=(l,v,f)=>'<div class="gb-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div><div class="f">'+f+'</div></div>';
     document.getElementById('gb-statcards').innerHTML=
-      card('Class average',avg==null?'&ndash;':(avg+'<small>%</small>'),avg==null?'no graded work yet':(this.letterFor(avg)+' average'))+
+      card('Class average',avg==null?'&ndash;':(avg+'<small>%</small>'),
+        avg==null?'no graded work yet'
+          :(ca.basis==='points'?(this.letterFor(avg)+' average, '+this.num(ca.earned)+' / '+this.num(ca.poss)+' marks')
+                               :(this.letterFor(avg)+' average, from percentages')))+
       card('Completion',comp+'<small>%</small>','of assigned work')+
       card('Active recently',active+'<small>/'+this.model.students.length+'</small>','today or yesterday')+
       card('Graded items',graded,'submissions logged');
@@ -854,8 +887,10 @@ window.TCDash = {
       h+="</tr>";
     });
     h+="</tbody><tfoot><tr><td class='c-stick c-name'>Class average</td><td class='c-stick c-grade'></td><td class='c-stick c-pts'></td>";
-    vcols.forEach(o=>{ const c=o.c; const vals=this.model.students.map(s=>this.cellData(s,c)).filter(x=>x.started);
-      if(!vals.length){ h+="<td>–</td>"; return; } h+="<td>"+Math.round(vals.reduce((a,b)=>a+b.pct,0)/vals.length)+"%</td>"; });
+    vcols.forEach(o=>{ const c=o.c; const av=this.colAvg(this.model.students.map(s=>this.cellData(s,c)));
+      if(av.pct==null){ h+="<td>–</td>"; return; }
+      h+="<td"+(av.basis==='points'?" title='"+this.num(av.earned)+" / "+this.num(av.poss)+" marks across the class'":" title='averaged from percentages, no points assigned to this activity yet'")
+        +">"+av.pct+"%"+(av.basis==='percent'?"*":"")+"</td>"; });
     h+="</tr></tfoot>";
     document.getElementById('gb-table').innerHTML=h;
     const rL={lesson:'CFU',exercise:'Ex',quiz:'Quiz',exam:'Exam'};
@@ -1037,11 +1072,14 @@ window.TCDash = {
     document.getElementById('ba-name').textContent=this.colLabel(c);
     const cells=this.model.students.map(s=>({s:s,cd:S.cellData(s,c)}));
     const done=cells.filter(o=>o.cd.started);
-    const avg=done.length?Math.round(done.reduce((a,b)=>a+b.cd.pct,0)/done.length):0;
+    // Marks over marks, and a dash rather than 0 where nobody has started it.
+    // Zero percent reads as a failing class average for work nobody has done.
+    const av=this.colAvg(cells.map(o=>o.cd));
+    const avg=av.pct;
     const mastered=done.filter(o=>o.cd.pct>=S.state.threshold).length;
     document.getElementById('ba-meta').textContent=(c.possible!=null?('Out of '+c.possible+' points'):'Points not assigned to this activity yet')+'  |  '+(S.counts(c.activity)?'counts toward grade':'display only, not counted');
     const mini=(l,v)=>"<div class='mini'><div class='l'>"+l+"</div><div class='v'>"+v+"</div></div>";
-    document.getElementById('ba-mini').innerHTML=mini('Class average',avg+'%')+mini('Completed',done.length+' / '+cells.length)+mini('Mastered',mastered+' / '+cells.length)+mini('Missing',(cells.length-done.length));
+    document.getElementById('ba-mini').innerHTML=mini('Class average',avg==null?'&ndash;':(avg+'%'+(av.basis==='percent'?'*':'')))+mini('Completed',done.length+' / '+cells.length)+mini('Mastered',mastered+' / '+cells.length)+mini('Missing',(cells.length-done.length));
     cells.sort((a,b)=>{ const av=a.cd.started?a.cd.pct:-1, bv=b.cd.started?b.cd.pct:-1; return bv-av; });
     let rows="<tr><th>Student</th><th>Score</th><th>Percent</th><th style='width:180px'>Distribution</th><th>Status</th></tr>";
     cells.forEach(o=>{ const cd=o.cd; let cell,pc,bar,st;

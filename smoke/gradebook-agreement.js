@@ -342,12 +342,36 @@ const samePoints = (a, b) => (a == null && b == null)
     { admin: adminO.overall.pct, contract: contractO.overall.pct });
   ok('  and both are the same fraction, 6 of 13',
     adminO.overall.earned === contractO.overall.earned
-    && adminO.overall.possible === contractO.overall.graded,
-    { admin: [adminO.overall.earned, adminO.overall.possible],
+    && adminO.overall.graded === contractO.overall.graded,
+    { admin: [adminO.overall.earned, adminO.overall.graded],
       contract: [contractO.overall.earned, contractO.overall.graded] });
   ok('  and it is 6 of 13 marks, the work that actually has points',
-    adminO.overall.earned === 6 && adminO.overall.possible === 13,
-    { earned: adminO.overall.earned, possible: adminO.overall.possible });
+    adminO.overall.earned === 6 && adminO.overall.graded === 13,
+    { earned: adminO.overall.earned, graded: adminO.overall.graded });
+
+  // ── THE THIRD DENOMINATOR ────────────────────────────────────────────────
+  //  This assertion used to read `adminO.overall.possible === contractO.overall
+  //  .graded`, and it PINNED the defect rather than catching it. The admin view
+  //  published one field called `possible` carrying the ATTEMPTED sum, so the
+  //  suite required the two views to disagree about what the word means, and a
+  //  consumer asking "how much of this course is priced" got the attempted
+  //  total, which equals the graded total by construction and therefore always
+  //  read as complete.
+  //
+  //  The numbers have to differ for this to be worth asserting. Here the class
+  //  prices 18 marks across its whole course and this student has attempted 13
+  //  of them.
+  ok('  the course total is a different number from the attempted total',
+    adminO.overall.possible > adminO.overall.graded,
+    { graded: adminO.overall.graded, possible: adminO.overall.possible });
+  ok('  and the two views agree on it, to the mark',
+    adminO.overall.possible === contractO.overall.possible,
+    { admin: adminO.overall.possible, contract: contractO.overall.possible });
+  ok('  the grade divides by GRADED, never by the course total',
+    adminO.overall.pct === Math.round((adminO.overall.earned / adminO.overall.graded) * 100)
+    && adminO.overall.pct !== Math.round((adminO.overall.earned / adminO.overall.possible) * 100),
+    { pct: adminO.overall.pct, earned: adminO.overall.earned,
+      graded: adminO.overall.graded, possible: adminO.overall.possible });
   ok('  the admin grade is points based, not a mean of percentages',
     adminO.overall.basis === 'points', adminO.overall.basis);
   // The specific wrong answer this replaces: a mean over four columns, two of
