@@ -116,8 +116,8 @@
       "kind": "live",
       "name": "the build serving production is the one carrying this change",
       "command": "curl -sS https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log('commit='+JSON.parse(s).commit))\"",
-      "expect": "commit=PENDING",
-      "_why": "False before the deploy and measured that way: /api/health reported commit=3206ced at 11:36Z, which is the commit before this change. Fill the expected sha in after the merge and run it again without --pre. It proves the build landed. It does NOT prove a teacher's column reads right, which is the next check."
+      "expect": "commit=1591fe3",
+      "_why": "RAN 2026-09-11 12:02:43Z and PASSED. False before the deploy and measured that way: /api/health reported commit=3206ced continuously from 11:36Z to 12:02:22Z, which is the commit before this change. The merge was at 12:01Z and Railway served the new build 100 seconds later. It proves the build landed. It does NOT prove a teacher's column reads right, which is the next check and the one still outstanding."
     },
     {
       "kind": "live",

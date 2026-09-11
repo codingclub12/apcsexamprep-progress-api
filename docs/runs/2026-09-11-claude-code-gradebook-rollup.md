@@ -192,6 +192,17 @@ beside the new one. It holds the other two changes and not this one, so importin
 it afterwards would put the mean back. Two live sheets for one page is how a fix
 gets reverted by somebody being helpful.
 
+## The deploy
+
+Merged as `1591fe3` at 12:01Z with CI green on `18a9f87`, the same SHA the merge
+carried. `/api/health` reported `3206ced` continuously from 11:36Z to 12:02:22Z
+and `1591fe3` at 12:02:43Z, so the assertion was false before the deploy and is
+true after, which is the whole requirement. One attempt, about 100 seconds from
+merge to serving, unlike this morning's three.
+
+That proves the build landed. It does not prove a column reads right, and
+nothing this session can run does.
+
 ## Still open
 
 - **The live check has not been run.** `GET /api/admin/class/:id/gradebook` is
