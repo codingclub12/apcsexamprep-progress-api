@@ -819,10 +819,34 @@ router.post('/progress', requireStudent, (req, res) => {
     // A score is optional here: the same route also records visits, confidence and
     // time. When one IS sent it has to be a number, because a value that cannot be
     // read must never be stored as if it were a grade.
+    //
+    // AND IT HAS TO BE IN RANGE. This said "(0-100)" in its own error string and
+    // checked only Number.isFinite, so any number a page computed was stored as a
+    // percentage. On 2026-09-11 a teacher's AP Cyber 2.1 Lab column read 483% for
+    // one student and 467% for another, with a class average of 176%. Nothing was
+    // corrupted: the page scrapes its own score display, that display counts only
+    // the questions answered so far (board 291), so a student at 29 of a rubric
+    // showing 6 answered posted round(29/6*100) and this route wrote 483 into
+    // progress.score, which every dashboard renders as a percent.
+    //
+    // REJECTED, not clamped. Clamping 483 to 100 would hand the student a mastery
+    // grade for work nobody measured, and this repo's posture is that a missing
+    // grade and a wrong grade are different facts. Rejecting costs nothing the
+    // student earned: the per-item rows on the same activity go through
+    // /api/student/score, which clamps points into [0, max] per row and is
+    // untouched here, so the real 29 out of 30 still reaches the gradebook. What
+    // is lost is only the page's own bad summary of it, and a 400 is what makes a
+    // broken reporter visible instead of laundering it into a grade.
     const scored = req.body.score !== undefined && req.body.score !== null;
     const score = scored ? Number(req.body.score) : null;
     if (scored && !Number.isFinite(score)) {
       return res.status(400).json({ error: 'score must be a number (0-100), or omitted' });
+    }
+    if (scored && (score < 0 || score > 100)) {
+      return res.status(400).json({
+        error: 'score must be a percentage between 0 and 100, or omitted',
+        received: score,
+      });
     }
 
     const clientEventId = req.body.client_event_id
@@ -1194,6 +1218,14 @@ router.post('/quiz', requireStudent, (req, res) => {
     const { course, unit, lesson, answers, score } = req.body;
     if (!course || !unit || !lesson) return res.status(400).json({ error: 'course, unit, lesson required' });
     if (typeof score !== 'number') return res.status(400).json({ error: 'score required (0-100)' });
+    // Same range guard as /api/student/progress, and for the same reason: this
+    // number is written straight to progress.score and read back as a percent.
+    if (!Number.isFinite(score) || score < 0 || score > 100) {
+      return res.status(400).json({
+        error: 'score must be a percentage between 0 and 100',
+        received: score,
+      });
+    }
 
     // Get class settings
     const cls = db.prepare('SELECT mastery_threshold, retry_allowed FROM classes WHERE id = ?').get(req.student.class_id);

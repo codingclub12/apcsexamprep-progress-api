@@ -1,0 +1,97 @@
+{
+  "change": "a gradebook percentage that was not a percentage, and a cell whose percent and fraction came from different places",
+  "_context": [
+    "A live AP Cyber 2.1 Lab column, priced at 30 points, read 483% for one student,",
+    "467% for another, and 176% as the class average. The grid footer read 248%.",
+    "",
+    "Two faults stacked. GET /api/teacher/classes/:code/progress carried `score` off",
+    "the progress table and the points pair off a sum of score_events, written by",
+    "different endpoints on different arithmetic, with nothing requiring them to",
+    "agree. And POST /api/student/progress said (0-100) in its own error string while",
+    "checking only Number.isFinite, so the page's scraped summary, computed against a",
+    "denominator counting only the questions answered so far, wrote 483 as a grade.",
+    "",
+    "Per-item writes clamp points into [0, max] per row, so the ledger never produced",
+    "this and the pair stayed correct at 29 / 30 throughout. The whole-activity",
+    "percent was the only door.",
+    "",
+    "A third fault surfaced on the way: board 270 removed the scraped reporter",
+    "carrier from three readers of that ledger and there are five. Both missed ones",
+    "are in routes/teacher.js, and one is the query behind the dashboard a teacher",
+    "opens, so 1.1 Exercise 1 still read 14 out of 14 under a /7 header after that",
+    "task closed."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the screenshot is rebuilt and every cell percent equals its own fraction",
+      "command": "npm run --silent smoke:gradebookpct",
+      "expect": "39 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation reaches the same cells from the raw ledger",
+      "_why": "A standalone second implementation. It generates a ledger across the axes that decide the answer (how many writers, whether the page named its own items, how many attempts, whether a percent was posted and whether it is in range, whether the cell was then reset), reads raw rows with plain SELECTs, and groups them in JavaScript with no window function and nothing imported from the route. It runs under both retry modes, so the first-attempt branch is checked too. Measured against the pre-fix route on seed 20260911: 16 cells out of range and 54 disagreeing with their own pair, so it is not hollow.",
+      "command": "npm run --silent smoke:gradebookpctrederive",
+      "expect": "OK - the route and the rederivation agree"
+    },
+    {
+      "kind": "suite",
+      "name": "the cells a teacher can reset, and the retry policy, still behave",
+      "_why": "Both caught a real regression in the first draft of this change. The reset one is the important half: the ledger is append-only, so deriving a percent from the pair put a reset 43% straight back on screen.",
+      "command": "npm run --silent smoke:cellactions && npm run --silent smoke:retrymodes",
+      "expect": "64 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: /progress stores any finite number as a percent",
+      "file": "routes/student.js",
+      "find": "    if (scored && (score < 0 || score > 100)) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:gradebookpct",
+      "expect_failure": "[FAIL]   POST /progress refuses 483"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE MISSED CONSUMER: the dashboard query sums the scraped carrier again",
+      "_why": "This is the exact state the route was in while board 270 read as done. It must go red.",
+      "file": "routes/teacher.js",
+      "find": "    ) WHERE rn = 1 AND ${keepItemSql('item', 'has_named')}",
+      "replace": "    ) WHERE rn = 1",
+      "command": "npm run --silent smoke:gradebookpct",
+      "expect_failure": "[FAIL]   the doubled pair reads 7 / 7 under a /7 header, not 14 / 14"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE TEMPTING WRONG FIX: reconcile every cell that has a pair, reset or not",
+      "_why": "The first draft of this change. A teacher's reset nulls progress.score but the ledger keeps every row, so 'derive from the pair whenever there is a pair' undoes the reset. Nothing else in the repo caught it.",
+      "file": "routes/teacher.js",
+      "find": "      if (score != null && earned != null) {",
+      "replace": "      if (earned != null) {",
+      "command": "npm run --silent smoke:gradebookpct",
+      "expect_failure": "[FAIL]   after the reset the percent is gone, not recomputed from the ledger"
+    },
+    {
+      "kind": "suite",
+      "name": "the full battery, ten mutations, each on its own named assertion",
+      "_why": "A mutation that reddens the suite SOMEWHERE ELSE certifies a rule nothing tested. Every entry names the assertion it has to break, and a find string that stops matching is itself a failure. That fired for real during this change, on an edit that moved the code the battery was aimed at.",
+      "command": "npm run --silent smoke:gradebookpctmutation",
+      "expect": "49 passed, 0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "the build serving production is the one carrying this change",
+      "command": "curl -sS https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log('commit='+JSON.parse(s).commit))\"",
+      "expect": "commit=<the merge sha>",
+      "_why": "FALSE before the deploy and measured that way: /api/health reported commit=5663223 on 2026-09-11 05:24Z, which is the commit before this branch. It proves the deploy landed. It does NOT prove the fix works, which is the next check."
+    },
+    {
+      "kind": "live",
+      "name": "the cell that read 483% reads its own fraction on the real class",
+      "_credential": "NEEDS A TEACHER LOGIN. This session holds COMMAND_READ_TOKEN and TODO_KEY only, and per CLAUDE.md a session must never ask for a password, so this one is written out rather than run. It is the check that actually settles the report.",
+      "command": "TOK=$(curl -sS -X POST https://progress.apcsexamprep.com/api/teacher/login -H 'Content-Type: application/json' -d \"{\\\"email\\\":\\\"$TEACHER_EMAIL\\\",\\\"password\\\":\\\"$TEACHER_PASSWORD\\\"}\" | node -pe \"JSON.parse(require('fs').readFileSync(0)).token\"); curl -sS -H \"Authorization: Bearer $TOK\" \"https://progress.apcsexamprep.com/api/teacher/classes/$CLASS_CODE/progress\" | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const d=JSON.parse(s);let bad=0,drift=0,n=0;for(const st of d.summary)for(const u of Object.values(st.detail))for(const l of Object.values(u))for(const c of Object.values(l)){if(c.score==null)continue;n++;if(c.score<0||c.score>100)bad++;if(c.points_possible>0&&c.score!==Math.round(c.points_earned/c.points_possible*100))drift++;}console.log('cells='+n+' over100='+bad+' disagreeing='+drift)})\"",
+      "expect": "over100=0 disagreeing=0",
+      "_why": "FALSE before the deploy: that class had at least two cells above 100 and the same two disagreeing with their own pair, which is what the screenshots show."
+    }
+  ]
+}
