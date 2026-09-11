@@ -151,6 +151,8 @@
     "shotlist": "node scripts/intro-java-shot-list.js",
     "smoke:gapgrade": "node smoke/gap-grade.js",
     "smoke:gbagree": "node smoke/gradebook-agreement.js",
+    "smoke:gbrollup": "node smoke/gradebook-rollup.js",
+    "smoke:gbrollupmutation": "node smoke/gradebook-rollup-mutation.js",
     "smoke:cyberlesson": "node smoke/cyber-lesson-score.js",
     "smoke:contract": "node smoke/gradebook-contract.js",
     "smoke:carrier": "node smoke/reporter-carrier.js",

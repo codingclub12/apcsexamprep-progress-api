@@ -1,0 +1,131 @@
+{
+  "change": "the gradebook rollup, at every level above the student row: points, not a mean of percentages, and three denominators that are three different numbers",
+  "_context": [
+    "Board 85. Its headline half was fixed on 2026-09-02: a student's overall grade has",
+    "summed points since then, and the run note from 2026-09-03 checked that and said so.",
+    "What nobody compared was every OTHER number on the same page, and five of them kept",
+    "the old arithmetic with every gradebook suite in this repo green:",
+    "",
+    "  the lesson cell     printed '10 / 30' with '60%' beside it. The pair summed marks,",
+    "                      the percent averaged the two item percentages, and nothing",
+    "                      required them to agree. Ten marks out of thirty is 33.",
+    "  the column footer   class average per assignment, a mean over students",
+    "  the lesson footer   the same, per lesson",
+    "  the activity rollup a mean of column averages, weighted by heads not marks",
+    "  the class average   a mean of student percentages, so a student on 1 / 1 weighed",
+    "                      the same as a student on 12 / 40",
+    "",
+    "That is the same sentence board 85 is written in, one level up: a 5 point quiz",
+    "weighing the same as a 25 point project. It is also what the 2026-09-11 percent fix",
+    "left open, in its own words, and handed back to 85.",
+    "",
+    "And one denominator too many was collapsed. overall.possible carried the ATTEMPTED",
+    "sum, which docs/gradebook-contract.md calls `graded`, so a consumer asking how much",
+    "of the course is priced got a number equal to the graded total by construction and",
+    "therefore always reading as complete. The course total was not reported at all.",
+    "",
+    "Found on the way: public/teachers.html has drawn a lost-score X from cell.score_missing",
+    "and a legend from overall.items_score_missing since the contract landed. This builder",
+    "set neither, so both were dead code on the operator page and a graded activity",
+    "finished with no score rendered as 'done', which reads as done and fine."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "every level rolls up marks, on a fixture where the two rules give different answers",
+      "_why": "smoke/admin-gradebook.js stayed green through all of this because its columns are equally weighted, and where every cell in a column is out of the same number a mean of percentages and a points average ARE the same number. No assertion over that fixture could tell the two rules apart. This one is built so they differ at every level. Measured against the pre-fix builder: 35 of its 47 assertions fail, including the lesson cell reading 60 beside '10 / 30', the column footer reading 70 instead of 86, and the class average reading 74 instead of 63.",
+      "command": "npm run --silent smoke:gbrollup",
+      "expect": "OK - all 47 checks passed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation reaches the same rollup from the raw rows",
+      "_why": "Reads progress, attempts, course_denominators and course_manifest with plain SELECTs, groups them in JavaScript, and imports nothing from either builder: not the grid, not pointsFromRatio, not gradePct. Cells are generated across the axes that decide the answer (which pipeline wrote the cell, whether an out-of was authored, whether the page reported its own, how heavy the column is, whether the student finished it with no score) and the fixture is asserted to be thick enough to prove something before a pass is reported. Against the pre-fix builder on seed 20260911 it reports 69 disagreements out of 153 numbers compared, so it is not hollow.",
+      "command": "node scripts/gradebook-rollup-rederive.js --seed 20260911",
+      "expect": "OK - the builder and the rederivation agree"
+    },
+    {
+      "kind": "suite",
+      "name": "the operator view and the teacher view still tell the same story",
+      "_why": "The drift this fixes was invisible because nothing ever compared these two builders. smoke/gradebook-contract.js test 12 compares the TEACHER route to as-teacher, which share a function and cannot differ. This one compares the second builder to the contract, and now on all three denominators.",
+      "command": "npm run --silent smoke:gbagree && npm run --silent smoke:contract",
+      "expect": "OK - all 29 checks passed"
+    },
+    {
+      "kind": "suite",
+      "name": "the existing gradebook suites, the operator page and the retry modes",
+      "command": "npm run --silent smoke:gradebook && npm run --silent smoke:admingbpage && npm run --silent smoke:gradebookpct && npm run --silent smoke:retrymodes",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: the lesson cell percent is a mean of its item percentages",
+      "file": "lib/admin-gradebook.js",
+      "find": "      const points = whole ? gradePct(la.earned, la.possible) : null;",
+      "replace": "      const points = null;",
+      "command": "npm run --silent smoke:gbrollup",
+      "expect_failure": "[FAIL] the lesson percent equals its own displayed fraction"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: the class average is a mean of student grades",
+      "file": "lib/admin-gradebook.js",
+      "find": "      class_avg_pct: classPoints != null ? round(classPoints)\n        : (withScores.length",
+      "replace": "      class_avg_pct: (false\n        ? null\n        : withScores.length",
+      "command": "npm run --silent smoke:gbrollup",
+      "expect_failure": "[FAIL] the class average is 39 of 62, which is 63"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE TEMPTING WRONG FIX: divide the grade by the course total instead of the attempted total",
+      "_why": "The one arithmetic board 85 spells out as forbidden, and the reason the third denominator has to exist without being divided by. It reads as a student failing for work they have not reached yet.",
+      "file": "lib/admin-gradebook.js",
+      "find": "    const overallPoints = gradePct(earnedSum, possibleSum);",
+      "replace": "    const overallPoints = gradePct(earnedSum, coursePossible);",
+      "command": "npm run --silent smoke:gbrollup",
+      "expect_failure": "[FAIL] the grade divides by graded: 28 of 50 is 56"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE TEMPTING WRONG FIX: points only, so an unpriced column reports nothing at all",
+      "_why": "'No more means anywhere' is the repair somebody reaches for next, and it blanks a real number on a teacher's screen for every column nobody has authored an out-of for. That is most of AP Cyber.",
+      "file": "lib/admin-gradebook.js",
+      "find": "    it.class_avg_pct = points != null ? round(points) : (n ? round(sum / n) : null);",
+      "replace": "    it.class_avg_pct = points != null ? round(points) : null;",
+      "command": "npm run --silent smoke:gbrollup",
+      "expect_failure": "[FAIL] an unpriced column falls back to the mean, 75"
+    },
+    {
+      "kind": "mutation",
+      "name": "NOTHING ATTEMPTED READS AS ZERO: the shared grade rule returns 0 instead of null",
+      "_why": "CLAUDE.md 1b: nothing attempted is null, never 0. Not attempted and scored zero are different facts and must never render alike.",
+      "file": "lib/gradebook-contract.js",
+      "find": "  return graded > 0 ? (earned / graded) * 100 : null;",
+      "replace": "  return graded > 0 ? (earned / graded) * 100 : 0;",
+      "command": "npm run --silent smoke:gbrollup",
+      "expect_failure": "[FAIL] a column nobody has touched has no average at all"
+    },
+    {
+      "kind": "suite",
+      "name": "the full battery, twelve mutations, each on its own named assertion",
+      "_why": "Six places apply this arithmetic and any one can rot while the other five hold, which is precisely what happened. A mutation that reddens the suite SOMEWHERE ELSE certifies a level nothing tested, so every entry names the assertion it has to break, an anchor that stops matching is itself a failure, and the battery refuses to report anything if the baseline is not green first.",
+      "command": "npm run --silent smoke:gbrollupmutation",
+      "expect": "56 passed, 0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "the build serving production is the one carrying this change",
+      "command": "curl -sS https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log('commit='+JSON.parse(s).commit))\"",
+      "expect": "commit=PENDING",
+      "_why": "False before the deploy and measured that way: /api/health reported commit=3206ced at 11:36Z, which is the commit before this change. Fill the expected sha in after the merge and run it again without --pre. It proves the build landed. It does NOT prove a teacher's column reads right, which is the next check."
+    },
+    {
+      "kind": "live",
+      "name": "the real cyber class reports three denominators and a points class average",
+      "_credential": "NEEDS AN ADMIN CREDENTIAL, AND HAS NOT BEEN RUN. This session holds COMMAND_READ_TOKEN and TODO_KEY only. ADMIN_READ_KEY is implemented in routes/admin.js (GET only, reveal=1 refused) and is unset on this environment, so the gradebook route answers 403 here. Per CLAUDE.md a session must never ask for a credential, so the command is written out rather than run. This is the check that settles board 85: the sha above proves the build landed, not that the column reads right on real data.",
+      "command": "curl -sS -H \"x-admin-key: $ADMIN_READ_KEY\" \"https://progress.apcsexamprep.com/api/admin/class/e57aa18d-92ca-4cc6-84bf-7c821a8c042e/gradebook\" | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const g=JSON.parse(s);const st=g.students.filter(x=>x.overall.pct!=null);const drift=st.filter(x=>x.overall.pct!==Math.round(x.overall.earned/x.overall.graded*100)).length;const collapsed=st.every(x=>x.overall.possible===x.overall.graded);const over=[...g.items,...g.lessons].filter(i=>i.class_avg_pct>100).length;console.log('students='+st.length+' drift='+drift+' collapsed='+collapsed+' over100='+over+' basis='+g.summary.class_avg_basis+' class='+g.summary.class_avg_pct+' of '+g.summary.earned+'/'+g.summary.graded+' course='+g.summary.possible)})\"",
+      "expect": "drift=0 collapsed=false over100=0 basis=points",
+      "_why": "FALSE before the deploy, and false in three separate ways: every student reported possible === graded because the field carried the attempted sum, summary.class_avg_basis did not exist at all, and the column footers were means. It is the same class board 85 names in its artifact URL."
+    }
+  ]
+}
