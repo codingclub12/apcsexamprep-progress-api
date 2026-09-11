@@ -510,7 +510,14 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     } else if (authored != null) {
       // Nothing reported, so fall back to the authored total and price the
       // stored percent against it. This is for pages with no reporter yet.
-      const ratio = p.score != null ? p.score / 100 : null;
+      //
+      // The CAPPED percent, not the stored one. Pricing 612 against an authored
+      // 30 produced 183.6 out of 30, so the cell showed a capped 100% beside a
+      // pair six times its own denominator and the column's points basis went
+      // over 100 on its own. This branch is the common shape for an
+      // out-of-range row, because a page with no per-item reporter has nothing
+      // else to report.
+      const ratio = score != null ? score / 100 : null;
       possible = authored;
       earned = pointsFromRatio(ratio, authored);
       denomSource = 'authored';

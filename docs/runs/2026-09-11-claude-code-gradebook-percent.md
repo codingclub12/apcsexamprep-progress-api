@@ -91,14 +91,14 @@ disagree" because it derives them "exactly as rollupScore" does. It does not.
 
 ## Evidence
 
-`npm run smoke:gradebookpct`, 36 assertions. It rebuilds the screenshot from the
+`npm run smoke:gradebookpct`, 39 assertions. It rebuilds the screenshot from the
 roster up, forces Leo byun's and Harry Jung's stored rows back to 483 and 467
 because that is what production carries today, and requires every cell percent to
 equal its own fraction. Section 7 re-derives every priced cell from the raw
 ledger in a second implementation that shares no SQL with the route and requires
 them to agree.
 
-`npm run smoke:gradebookpctmutation`, 10 mutations, 45 assertions. Each guard is
+`npm run smoke:gradebookpctmutation`, 11 mutations, 54 assertions. Each guard is
 broken on its own and the suite has to go red on a named assertion, not just go
 red. Two of the ten are not the defect that shipped but the repair somebody
 reaches for next: clamping the write instead of rejecting it, and dropping the
@@ -134,6 +134,21 @@ mutation aimed at exactly that.
 **The deploy gate refused a rederive that was not one.** My first rederive check
 ran the same npm script as the suite check, so one check was being counted twice
 and the gate said so. It is a separate script now.
+
+**The class average assertion was decoration.** Every student in the rebuilt
+column had per-item rows, so the reconciliation alone kept the mean under 100
+with the cap removed, and the cap alone kept it under 100 with the
+reconciliation removed. It passed under either mutation separately and was
+therefore testing nothing. Adding one student with no pair behind the percent
+fixes it: that is the case only the cap can save, and it is the common one in
+production, because a page with no per-item reporter has nothing else to report.
+Without the cap the column now reads 151%.
+
+**And that student found one more real defect.** The authored fallback prices
+its points from the STORED percent rather than the capped one, so a stored 612
+against an authored total of 30 became 183.6 out of 30, sitting beside a capped
+100%. The cell disagreed with itself again, by a different route, and the
+column's points basis went over 100 on its own. Fixed and mutation tested.
 
 ## Two things found in the tooling, neither mine to fix here
 

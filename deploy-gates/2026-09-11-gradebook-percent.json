@@ -73,10 +73,10 @@
     },
     {
       "kind": "suite",
-      "name": "the full battery, ten mutations, each on its own named assertion",
+      "name": "the full battery, eleven mutations, each on its own named assertion",
       "_why": "A mutation that reddens the suite SOMEWHERE ELSE certifies a rule nothing tested. Every entry names the assertion it has to break, and a find string that stops matching is itself a failure. That fired for real during this change, on an edit that moved the code the battery was aimed at.",
       "command": "npm run --silent smoke:gradebookpctmutation",
-      "expect": "49 passed, 0 failed"
+      "expect": "54 passed, 0 failed"
     },
     {
       "kind": "live",

@@ -172,8 +172,22 @@ const U = 'unit-2', L = '2.1', A = 'lab';
   forceScore.run(483, 'Leo byun', L, A);
   forceScore.run(467, 'Harry Jung', L, A);
 
+  //  AND ONE CELL WITH NO PAIR BEHIND IT, carrying an out-of-range percent.
+  //  Section 4 needs it. Every student above has per-item rows, so the
+  //  reconciliation alone keeps their percents sane and the column average
+  //  stays under 100 even with the read-time cap removed. Measured, not
+  //  assumed: with only the six priced students in the column, section 4
+  //  passed under both mutations separately and was therefore testing nothing.
+  //  This student is the case only the cap can save, which is also the common
+  //  one in production, because a page with no per-item reporter has nothing
+  //  else to report.
+  const unpriced = await join('Unpriced');
+  await wholePct(unpriced, 100);           // accepted, then forced out of range
+  forceScore.run(612, 'Unpriced', L, A);
+
   const shot = await progress();
   const lab = ROSTER.map(([name]) => ({ name, c: cellOf(shot, name, U, L, A) }));
+  const unpricedCell = cellOf(shot, 'Unpriced', U, L, A);
 
   for (const { name, c } of lab) {
     ok('  ' + name.padEnd(11) + ' percent is within 0 to 100',
@@ -193,7 +207,8 @@ const U = 'unit-2', L = '2.1', A = 'lab';
   console.log('\n4. The column average a teacher reads is a possible number');
   //  Exactly the arithmetic shopify/cyber-dashboard.html runs on this payload:
   //  the mean of the started cells' percents. It was 176 on the live column.
-  const started = lab.map((x) => x.c).filter((c) => c && c.score != null);
+  const started = lab.map((x) => x.c).concat([unpricedCell])
+    .filter((c) => c && c.score != null);
   const dashAvg = Math.round(started.reduce((a, c) => a + c.score, 0) / started.length);
   ok('  the mean of the cell percents is at most 100', dashAvg <= 100, dashAvg);
   //  And the points basis CLAUDE.md section 1b requires, for comparison. These

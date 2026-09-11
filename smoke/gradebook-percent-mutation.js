@@ -132,7 +132,15 @@ const MUTATIONS = [
       score = Math.max(0, Math.min(100, score));
     }`,
     repl: '',
-    must: ['the stored 483 is served as 100'],
+    must: ['the stored 483 is served as 100', 'the mean of the cell percents is at most 100'],
+  },
+  {
+    name: 'the authored fallback prices its points from the UNCAPPED percent',
+    _why: 'The capped percent and the stored one are two different numbers, and this branch used the stored one. Pricing 612 against an authored 30 gave 183.6 out of 30 beside a capped 100%, so the cell disagreed with itself again and the column points basis went over 100 on its own. This is the common shape for an out-of-range row: a page with no per-item reporter has nothing else to report.',
+    file: 'teacher',
+    find: '      const ratio = score != null ? score / 100 : null;',
+    repl: '      const ratio = p.score != null ? p.score / 100 : null;',
+    must: ['the points basis is at most 100'],
   },
   {
     name: 'the cap stops saying it capped anything',
