@@ -82,13 +82,13 @@
       "kind": "live",
       "name": "the build serving production is the one carrying this change",
       "command": "curl -sS https://progress.apcsexamprep.com/api/health | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log('commit='+JSON.parse(s).commit))\"",
-      "expect": "commit=<the merge sha>",
-      "_why": "FALSE before the deploy and measured that way: /api/health reported commit=5663223 on 2026-09-11 05:24Z, which is the commit before this branch. It proves the deploy landed. It does NOT prove the fix works, which is the next check."
+      "expect": "commit=e7cbdec",
+      "_why": "RAN 2026-09-11 06:27Z and passed. False before the deploy and measured that way: /api/health reported commit=fa71622 continuously from 05:24Z to 06:26Z, which is the commit before this change. It proves the deploy landed. It does NOT prove the fix works, which is the next check. Note the deploy took three attempts: two railway up uploads timed out against Railway's own API before one went through, so main was ahead of production for 39 minutes while the PR read as shipped."
     },
     {
       "kind": "live",
       "name": "the cell that read 483% reads its own fraction on the real class",
-      "_credential": "NEEDS A TEACHER LOGIN. This session holds COMMAND_READ_TOKEN and TODO_KEY only, and per CLAUDE.md a session must never ask for a password, so this one is written out rather than run. It is the check that actually settles the report.",
+      "_credential": "NEEDS A TEACHER LOGIN, AND HAS NOT BEEN RUN. This session holds COMMAND_READ_TOKEN and TODO_KEY only, and per CLAUDE.md a session must never ask for a password, so this is written out rather than run. It is the check that actually settles the report: the sha above proves the build landed, not that the column reads 97%.",
       "command": "TOK=$(curl -sS -X POST https://progress.apcsexamprep.com/api/teacher/login -H 'Content-Type: application/json' -d \"{\\\"email\\\":\\\"$TEACHER_EMAIL\\\",\\\"password\\\":\\\"$TEACHER_PASSWORD\\\"}\" | node -pe \"JSON.parse(require('fs').readFileSync(0)).token\"); curl -sS -H \"Authorization: Bearer $TOK\" \"https://progress.apcsexamprep.com/api/teacher/classes/$CLASS_CODE/progress\" | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const d=JSON.parse(s);let bad=0,drift=0,n=0;for(const st of d.summary)for(const u of Object.values(st.detail))for(const l of Object.values(u))for(const c of Object.values(l)){if(c.score==null)continue;n++;if(c.score<0||c.score>100)bad++;if(c.points_possible>0&&c.score!==Math.round(c.points_earned/c.points_possible*100))drift++;}console.log('cells='+n+' over100='+bad+' disagreeing='+drift)})\"",
       "expect": "over100=0 disagreeing=0",
       "_why": "FALSE before the deploy: that class had at least two cells above 100 and the same two disagreeing with their own pair, which is what the screenshots show."
