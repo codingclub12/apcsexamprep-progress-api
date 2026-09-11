@@ -189,9 +189,49 @@ five fail identically on the parent commit, so none is from this change.
   page body, so it ships as a sheet, not from here.
 - **Board 270 should not read as done.** Closing it is what let this sit.
 
-## What I would check after the deploy
+## The deploy, which took three attempts
 
-`GET /api/teacher/classes/<code>/progress` on the real class, for the cell that
-read 483: `score` equal to `round(points_earned / points_possible * 100)`, and no
-cell in the payload above 100. That assertion was false before the deploy, which
-is the point of running it after.
+Merged as `e7cbdec` at 05:48Z with CI green on `d509963`, the same SHA. The
+Railway deploy then failed twice, both times identically:
+
+```
+Deploying e7cbdec to apcsexamprep-progress-api
+Indexing...
+Uploading...
+error sending request for url (https://backboard.railway.com/.../up?serviceId=...)
+Caused by:
+    operation timed out
+```
+
+Neither attempt reached a build. `railway up` timed out posting the upload,
+after about 90 seconds each time. Attempt 3 at 06:26Z went through in 46
+seconds and production has served `e7cbdec` since 06:27Z.
+
+So it was Railway being slow, and the interesting part is how close that came
+to reading as this change's fault. The timing pointed straight at the diff:
+#655 and #656 had deployed in about 65 seconds each in the twenty minutes
+before, and this one hung for 90. What ruled it out was that the diff touches
+no deployment code and the payload had not grown, at 71MB across 2,258 tracked
+files. Worth writing down because the measurement nearly went the other way:
+the first figure taken for that comparison was 183MB, measured on the working
+directory, which includes gitignored build output `railway up` never sends. A
+2.5x overstatement pointing at exactly the wrong suspect.
+
+**`main` was one commit ahead of production for 39 minutes** while the fix read
+as shipped. `/api/health` is the only thing that says otherwise, and a merge
+is not a deploy.
+
+## What the live checks said
+
+`/api/health` reports `commit=e7cbdec`. It reported `fa71622` continuously from
+05:24Z to 06:26Z, so that assertion was false before the deploy and is true
+after, which is the whole requirement.
+
+**The check that actually settles the report has NOT been run.** It is
+`GET /api/teacher/classes/<code>/progress` on the real class: no cell above 100,
+and every cell's `score` equal to `round(points_earned / points_possible * 100)`.
+That needs a teacher login. This session holds `COMMAND_READ_TOKEN` and
+`TODO_KEY` only, and asking for a password would put one in a transcript, so the
+command is written out in `deploy-gates/2026-09-11-gradebook-percent.json`
+instead of run. The commit sha proves the build landed. It does not prove the
+column reads 97%.
