@@ -144,6 +144,54 @@ disagree.** Running it against the pre-fix builder was the only thing that turne
 it from a script into a check. 69 disagreements out of 153 is what makes the
 zero mean something.
 
+## The other gradebook, which is the one a teacher opens
+
+The operator page is the smaller audience. `/pages/cyber-dashboard` is what a
+teacher actually looks at, it is a Shopify page body rather than this repo's
+code, and it had the same defect in the same three places:
+
+```
+renderStats        class average, a mean of student percentages
+the grid footer    class average per column, a mean of cell percentages
+renderAssignment   the same, and 0 rather than a dash when nobody has started
+```
+
+Its student ROWS were already points. That is the same split as the server side,
+and for the same reason: somebody fixed the row, and nothing pointed at the
+numbers underneath it.
+
+The page now carries `classAvg` and `colAvg` as two named functions, which is
+also what makes them testable: `smoke/teacher-dashboard-page.js` already runs the
+page's own script in a vm with a stub DOM, so section 12 calls them directly on a
+fixture where a mean and a points average disagree. 31 of 62 is 50, and a mean of
+90 and 31 is 61. 19 of 22 is 86, and a mean of 90 and 50 is 70. Mutating either
+function back to the mean reddens the assertions that name those numbers.
+
+`scripts/verify-dashboard-rollup-live.js` is the live check, and it is not a
+string search. It pulls the script out of the live page body, runs it in the same
+vm, and asserts the numbers, because a sheet that added the function and left the
+old call site in place would pass a text search while the page still printed the
+mean. Right now it fails, correctly: the live body is from 2026-09-07 and has
+neither function.
+
+### The sheet carries two other sessions' work, and that is worth knowing
+
+`shopify/cyber-dashboard.html` was two changes ahead of the live page before I
+touched it: the retry panel rewrite from 2026-09-09 and board 260's
+unenforceable-lock disclosure from 2026-09-07. Both were finished, validated and
+handed over, and nobody imported them. A sheet built from the mirror ships all
+three, so the runbook names which one this session verified and which two it is
+passing along.
+
+The generator's loss guard caught the same four `rt-` element ids it caught on
+2026-09-09, which is a useful signal in itself: it confirms the live page is
+still the older body and that the earlier sheet never landed.
+
+`matrixify/cyber-dashboard-retry-panel-pages.csv` is deleted rather than left
+beside the new one. It holds the other two changes and not this one, so importing
+it afterwards would put the mean back. Two live sheets for one page is how a fix
+gets reverted by somebody being helpful.
+
 ## Still open
 
 - **The live check has not been run.** `GET /api/admin/class/:id/gradebook` is
@@ -162,9 +210,11 @@ zero mean something.
   `activity_coverage`, the "which grader is never firing" signal that the
   contract has no equivalent for, and the operator page reads it. Worth doing
   only with that moved across first.
-- **The class and column averages on the teacher's own dashboard are a Shopify
-  page body**, not this repo. That half of the 2026-09-11 handoff is still open
-  and ships as a sheet.
+- **The dashboard sheet needs a human to import it.** One page, one row,
+  `matrixify/cyber-dashboard-gradebook-rollup-pages.csv`, with the runbook at
+  `docs/runs/2026-09-11-cyber-dashboard-import-runbook.md`. Until it lands, a
+  teacher's class average is still a mean of percentages even after PR #660
+  deploys, because the two are independent surfaces.
 - Nothing, on the suites. All 245 offline suites pass. The five that fail in a
   fresh container on missing python modules (csaunit1guides,
   csaunit1guidesmutation, csakitstyle, deckvoice, exercisekeys) pass once
