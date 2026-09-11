@@ -379,18 +379,28 @@ const scoreTwice = async (who, unit, lesson, type, first, second) => {
     c = await cell();
     ok('  mode all: the same ledger now reads 10 points',
       c.points_earned === 10, c);
-    // The percent on this row is progress.score, a CACHE. It is recomputed from
-    // the ledger on the student's next write, exactly as W10a established, so
-    // straight after a mode flip the read-time points lead the cached percent.
-    // Pinned deliberately: this is the documented lag, not a disagreement about
-    // policy, and it closes the moment the student touches the activity again.
-    ok('  the cached percent still shows the old policy until the next write',
-      c.score === 40, c);
+    // THE LAG THIS USED TO PIN IS GONE, and that is the point of the change
+    // that removed it rather than an accident of it.
+    //
+    // progress.score is a CACHE, recomputed from the ledger on the student's
+    // next write, so after a mode flip it used to trail the read-time points
+    // and this assertion pinned the trailing value at 40 beside points of 10.
+    // That was recorded as a documented lag rather than a disagreement, on the
+    // reasoning that it closes when the student next touches the activity.
+    //
+    // It is a disagreement. A teacher who flips the retry policy and opens the
+    // gradebook sees a first-attempt percent beside best-attempt points on one
+    // row, for as long as that student does not come back, which for a finished
+    // unit is forever. The same split source of truth printed 483% beside
+    // 29 / 30 on a live lab column (board 310), and the fix for that one derives
+    // a cell's percent from its own pair, which closes this at read time too.
+    ok('  the percent follows the flip immediately, no cache lag',
+      c.score === 100, c);
     await post('/api/student/score',
       { course: COURSE, unit: 'unit-4', lesson: '4.1', activity_type: 'exercise-1',
         item: 'q1', points: 1, max_points: 10 }, TOK.s_flip);
     c = await cell();
-    ok('  after that write the percent agrees with the points, 100',
+    ok('  and the student writing again does not move it',
       c.score === 100 && c.points_earned === 10, c);
   }
 

@@ -11,7 +11,7 @@ const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
 const { rowScope, SCOPE_ALL } = require('../lib/activity-gate');
-const { LESSON_SCORE_ITEM } = require('../scoring');
+const { LESSON_SCORE_ITEM, namedItemFlagSql, keepItemSql } = require('../scoring');
 const { buildCanonicalGradebook, canonicalActivity, isGradedActivity,
   pointsFromRatio, denominatorMap } = require('../lib/gradebook-contract');
 const {
@@ -46,6 +46,10 @@ function claimPendingSafe(teacherId, email) {
 // below 50 is not a meaningful mastery line. Reads elsewhere default to 80 when
 // a class has no threshold set. Returns fallback when the value is not a number.
 const THRESHOLD_MIN = 50, THRESHOLD_MAX = 100;
+
+// A points pair as a whole percent. Module scope because the progress payload
+// calls it once per progress row and this runs on a 1 vCPU box.
+const pctOf = (earned, possible) => Math.round((earned / possible) * 100);
 function clampThreshold(v, fallback = 80) {
   const n = parseInt(v, 10);
   if (Number.isNaN(n)) return fallback;
@@ -369,6 +373,7 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
       SELECT se.student_id, se.unit, se.lesson, se.activity_type, se.item,
              se.points     AS kept_points,
              se.max_points AS item_max,
+             ${namedItemFlagSql('se.item', 'se.student_id, se.unit, se.lesson, se.activity_type')} AS has_named,
              ROW_NUMBER() OVER (
                PARTITION BY se.student_id, se.unit, se.lesson, se.activity_type, se.item
                ORDER BY CASE WHEN ${RETRY_SQL} = 1 THEN -se.points ELSE 0 END ASC,
@@ -387,7 +392,19 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
         -- reason. A percent with no pair behind it belongs in the authored
         -- fallback below, not here.
         AND se.item <> '${LESSON_SCORE_ITEM}'
-    ) WHERE rn = 1
+        -- The reporter carrier, on the same rule as the other three readers of
+        -- this ledger. A page that reports for ITSELF has already said what the
+        -- run was worth, and assets/apcs-score-reporter.js scraping the number
+        -- that page displays is the same run counted twice. Where the carrier is
+        -- the only writer it IS the grade and is kept. Board 270 put this in
+        -- scoring.js, gradebook-contract.js and admin-denominators.js and missed
+        -- this query, which is the one the live teacher dashboard reads, so
+        -- Michelle's 1.1 Exercise 1 still showed 14 out of 14 under a /7 header
+        -- after the fix shipped. There are FIVE readers of this ledger, not
+        -- three: the export route below is the other one it missed. The
+        -- fragments are imported rather than restated so they cannot drift
+        -- apart again, and board 315 is to make it one function instead of five.
+    ) WHERE rn = 1 AND ${keepItemSql('item', 'has_named')}
     GROUP BY student_id, unit, lesson, activity_type
   `).all(cls.id, cls.course);
   const pointsMap = {};
@@ -412,6 +429,36 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     if (!progressMap[p.student_id][p.unit]) progressMap[p.student_id][p.unit] = {};
     if (!progressMap[p.student_id][p.unit][p.lesson]) progressMap[p.student_id][p.unit][p.lesson] = {};
     const pt = pointsMap[`${p.student_id}|${p.unit}|${p.lesson}|${p.activity_type}`];
+
+    //  THE PERCENT AND THE PAIR ARE ONE FACT, NOT TWO.
+    //
+    //  This payload used to carry `score` straight off the progress table while
+    //  `points_earned` / `points_possible` came from the ledger sum above, and
+    //  nothing reconciled them. They are written by different endpoints on
+    //  different arithmetic, so they disagree whenever a page reports both, and
+    //  the dashboard renders the percent from one and the fraction from the
+    //  other in the same cell. On 2026-09-11 that printed "29 / 30" beside
+    //  "483%" on an AP Cyber 2.1 Lab: the ledger said 29 of 30, and the page's
+    //  own scraped summary, posted to /api/student/progress against a
+    //  denominator that counts only what has been answered, said 483.
+    //
+    //  lib/gradebook-contract.js has answered this since it landed: a reported
+    //  pair wins and the percent is derived FROM it. That is not a new opinion
+    //  to invent here, it is the one this route drifted away from by being a
+    //  second implementation, so it is adopted rather than restated.
+    //
+    //  A percent with NO pair behind it is all the information there is, so it
+    //  is kept, but a number outside 0 to 100 is not a percentage. The write
+    //  guard in routes/student.js stops new ones; these are the rows already on
+    //  disk. Capped rather than dropped, and SAID rather than laundered: a cell
+    //  that had to be capped carries score_out_of_range with the raw value, so
+    //  a wrong grade stays findable instead of quietly becoming a plausible one.
+    let score = p.score, scoreRaw = null;
+    if (score != null && (score < 0 || score > 100)) {
+      scoreRaw = score;
+      score = Math.max(0, Math.min(100, score));
+    }
+
     // The "out of" comes from course_denominators (the AUTHORED value) whenever
     // that lesson/activity has one. Summing the recorded max_points instead made
     // the denominator depend on what happened to be captured: a student served 5
@@ -440,6 +487,21 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     if (!isGradedActivity(canonicalActivity(p.activity_type).activity)) {
       earned = null; possible = null; denomSource = null;
     } else if (possible != null && possible > 0) {
+      //  A NULL SCORE IS NOT A CELL TO RECOMPUTE, IT IS A CELL WITH NO GRADE.
+      //
+      //  A teacher resetting a cell stamps score_reset_at and nulls
+      //  progress.score, but the append-only ledger keeps every row, on purpose.
+      //  So deriving a percent from the pair whenever a pair exists undoes the
+      //  reset: the first draft of this change put a reset 43% straight back on
+      //  the screen. Nothing else caught it, because the pair had always been
+      //  left populated behind a null score and no reader had ever looked at it.
+      //
+      //  Guarded on earned too rather than assumed: pctOf(null, n) is 0, and a
+      //  fabricated zero reads as a failing grade for work nobody graded.
+      if (score != null && earned != null) {
+        score = pctOf(earned, possible);
+        scoreRaw = null;
+      }
       // A REPORTED pair wins. One question is one point, and the page already
       // counted them: 3 of 8 is what the student saw and earned. An authored
       // total is a guess about a page, so letting it override real points made
@@ -448,14 +510,22 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     } else if (authored != null) {
       // Nothing reported, so fall back to the authored total and price the
       // stored percent against it. This is for pages with no reporter yet.
-      const ratio = p.score != null ? p.score / 100 : null;
+      //
+      // The CAPPED percent, not the stored one. Pricing 612 against an authored
+      // 30 produced 183.6 out of 30, so the cell showed a capped 100% beside a
+      // pair six times its own denominator and the column's points basis went
+      // over 100 on its own. This branch is the common shape for an
+      // out-of-range row, because a page with no per-item reporter has nothing
+      // else to report.
+      const ratio = score != null ? score / 100 : null;
       possible = authored;
       earned = pointsFromRatio(ratio, authored);
       denomSource = 'authored';
     }
     progressMap[p.student_id][p.unit][p.lesson][p.activity_type] = {
       completed:    !!p.completed,
-      score:        p.score,
+      score:        score,
+      ...(scoreRaw != null ? { score_out_of_range: scoreRaw } : {}),
       attempts:     p.attempts,
       confidence:   p.confidence,
       completed_at: p.completed_at,
@@ -718,6 +788,14 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     ).all(cls.id, cls.course);
     const map = {};
     for (const p of allProgress) {
+      // Same cap as the dashboard payload, and it matters MORE here: this file
+      // is imported into a teacher's real gradebook, where a 483 stops being a
+      // number on a screen somebody can disbelieve and becomes a grade. Rows
+      // written before routes/student.js started refusing them are still on
+      // disk, so the cap is a read-time repair with no migration.
+      if (p.score != null && (p.score < 0 || p.score > 100)) {
+        p.score = Math.max(0, Math.min(100, p.score));
+      }
       (map[p.student_id] = map[p.student_id] || {})[`${p.unit}|${p.lesson}|${p.activity_type}`] = p;
     }
 
@@ -732,11 +810,21 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     //
     // Only `points` is set. The percentage already on the row is left alone, so
     // the native and Canvas exports are byte for byte unchanged by this.
+    //
+    // The scraped carrier is dropped on the same rule as every other reader,
+    // imported from scoring.js rather than restated. Without it a page that
+    // reports its own items AND gets scraped exported "14/14" for a run worth
+    // 7, into a file that lands in a teacher's real gradebook.
     const eventPoints = db.prepare(`
       SELECT student_id, unit, lesson, activity_type,
-             SUM(points) AS earned, SUM(max_points) AS possible
-      FROM score_events
-      WHERE class_id = ? AND course = ? AND item <> '${LESSON_SCORE_ITEM}'
+             SUM(kept_points) AS earned, SUM(item_max) AS possible
+      FROM (
+        SELECT student_id, unit, lesson, activity_type, item,
+               points AS kept_points, max_points AS item_max,
+               ${namedItemFlagSql('item', 'student_id, unit, lesson, activity_type')} AS has_named
+        FROM score_events
+        WHERE class_id = ? AND course = ? AND item <> '${LESSON_SCORE_ITEM}'
+      ) WHERE ${keepItemSql('item', 'has_named')}
       GROUP BY student_id, unit, lesson, activity_type
     `).all(cls.id, cls.course);
     for (const e of eventPoints) {
