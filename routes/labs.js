@@ -27,10 +27,11 @@
 //  SIGNED-IN student whose own class has closed this lab is refused, which is
 //  the only case the teacher was ever asking about.
 //
-//  It inherits the same limit every gate on this site has, and it is worth
-//  stating rather than discovering: a student who signs out can still open the
-//  lab, exactly as they can still open a closed quiz. The gate answers "is this
-//  open for my class", not "can this be reached by anybody".
+//  It inherits the same limit every gate on this site has, and since board 277 on
+//  2026-09-14 that limit is the deliberate policy rather than a caveat: a student
+//  who signs out can still open the lab, exactly as they can still open a closed
+//  quiz. The gate answers "is this open for my class", not "can this be reached
+//  by anybody".
 //
 //  No em-dashes, per repo convention.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -38,7 +39,7 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { resolveAliasGate, lockedForAnyClass } = require('../lib/activity-gate');
+const { resolveAliasGate } = require('../lib/activity-gate');
 const labs = require('../lib/lab-spec');
 const answerKey = require('../lib/lab-answer-key');
 const entitlements = require('../lib/entitlements');
@@ -121,11 +122,6 @@ const labGateStmt = db.prepare(
   'SELECT lesson, activity_type, open FROM activity_gates WHERE class_id = ? AND course = ? AND unit = ?'
 );
 
-//  Every class's rows for this location, for the anonymous case below. Carries
-//  class_id, which the per-class query above does not need.
-const labAnyGateStmt = db.prepare(
-  'SELECT class_id, lesson, activity_type, open FROM activity_gates WHERE course = ? AND unit = ?'
-);
 
 //  THE NAME A TEACHER CLICKS IS NOT THE NAME THE SPEC CARRIES.
 //  A lab spec declares item_type 'terminal-lab'. The course config declares the
@@ -149,15 +145,21 @@ const LAB_ALIASES = (spec) => labs.aliases(spec);
 //  lesson resolve OPEN: a gate needs a location, and refusing without one would
 //  lock people out of practice nobody closed.
 //
-//  ANONYMOUS IS NO LONGER AUTOMATICALLY OPEN, and that changed on 2026-09-07.
-//  It used to return self-study for anyone without a token, which made the lock
-//  one click wide: a student who signed out, or opened the same page in
-//  incognito, was handed a lab their teacher had closed. The teacher who
-//  reported the original bug found this one too, by checking her own fix.
+//  ANONYMOUS IS OPEN AGAIN, and that is board 277, decided 2026-09-14.
 //
-//  A lab NOBODY has closed is still served anonymously and still indexable. Only
-//  a lab carrying an explicit closing row for some class is withheld, because
-//  the public copy and the assigned copy are the same bytes.
+//  Between 2026-09-07 and that date this route refused an anonymous caller for a
+//  lab ANY class had closed. The reason was real: without it the lock is one
+//  click wide, because a student who signs out, or opens the page in incognito,
+//  is handed a lab their teacher had closed, and the teacher who reported the
+//  original bug found that one too. Tanner was given that cost and chose the
+//  other side: "Labs should be open as long as the specific teacher doesn't lock
+//  it." One school closing a lesson was taking the lab dark for the whole public
+//  internet, and a gate is meant to answer "is this open for MY class".
+//
+//  So a caller with no class gets the lab. A signed-in student is governed by
+//  their own class, unchanged. See the branch in labGate for the full reasoning,
+//  which is written there so that nobody restores the old rule by reading the
+//  incident history alone.
 //  A lab a teacher has no CHIP for cannot be gated, because there is nothing she
 //  can click to change her mind.
 //
@@ -193,7 +195,6 @@ function labHasColumn(spec) {
 
 function labGate(req, spec) {
   if (!labHasColumn(spec)) return { open: true, reason: 'practice-no-column' };
-  const unitAny = spec.unit, lessonAny = spec.lesson_id;
   const stu = labStudent(req);
   if (!stu) {
     //  A TEACHER IS NOT ANONYMOUS, and treating one as anonymous is what put a
@@ -222,19 +223,33 @@ function labGate(req, spec) {
     if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {
       return { open: true, reason: 'teacher-preview', audience: 'teacher' };
     }
-    if (!unitAny || !lessonAny) return { open: true, reason: 'unlocatable-spec' };
-    const anyRows = labAnyGateStmt.all(spec.course, unitAny);
-    //  Both names in ONE call. Asking about each in turn and refusing on the
-    //  first close ignores an explicit reopen on the other name, which is exactly
-    //  what a teacher means by reopening one lab inside a closed unit.
-    const hit = lockedForAnyClass(anyRows, lessonAny, LAB_ALIASES(spec));
-    //  audience says WHOSE decision this was, so the player can stop attributing
-    //  it to a teacher who did nothing. This refusal is not about the caller's
-    //  class, because the caller has none: it fires when ANY class has closed
-    //  the lab. See the player's locked branch.
-    if (hit.locked) {
-      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };
-    }
+    //  NOBODY SIGNED IN MEANS NOBODY'S TEACHER, SO IT IS OPEN. Board 277,
+    //  decided by Tanner on 2026-09-14: "Labs should be open as long as the
+    //  specific teacher doesn't lock it."
+    //
+    //  DO NOT RE-DERIVE THE OLD RULE FROM THE HISTORY IN THIS FILE. From
+    //  2026-09-07 to 2026-09-14 this branch refused an anonymous caller whenever
+    //  ANY class anywhere had closed the lab, and the reasoning was real and is
+    //  still written above: a student who signs out, or opens the same page in
+    //  incognito, walks past their teacher's lock, and the teacher who reported
+    //  the original bug found that one too. The cost was put to Tanner in those
+    //  terms and he chose the other side of it.
+    //
+    //  What he chose, and why it is coherent: one school closing a lesson was
+    //  taking the lab dark for every visitor on the public internet, including
+    //  every other teacher's students and every search engine. The public
+    //  practice layer is the SEO engine and gating it is a strategic loss, which
+    //  this repo already says out loud about tier 1 content. A gate answers "is
+    //  this open for MY class". An anonymous caller has no class, so no teacher's
+    //  answer applies to them.
+    //
+    //  WHAT STILL HOLDS, so the concession stays the size it is. A signed-in
+    //  student is governed by their own class exactly as before, which is the
+    //  path below and is untouched. The lock is real for the people it names and
+    //  porous to anyone who signs out, and that porousness is now the chosen
+    //  behaviour rather than a hole. A teacher who needs an assessment nobody can
+    //  reach signed-out needs server-side identity on the item, which is a
+    //  different feature and not this switch.
     return { open: true, reason: 'self-study' };
   }
   const cls = labClassStmt.get(stu.class_id);

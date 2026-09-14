@@ -100,27 +100,22 @@ function rederiveOpen(caller) {
     return tied.some((r) => r.open === 1);
   }
 
-  //  rule 4. RESOLVE EACH CLASS FIRST, then ask whether any of them lands on
-  //  closed. The naive reading, "does any row anywhere say 0", was what the first
-  //  draft of this function did and the comparison caught it: a class that closes
-  //  a whole unit and then reopens THIS lesson has, on balance, opened it, and
-  //  counting its wide closing row refuses a lab nobody has closed. The route
-  //  was right and this side was wrong, which is the outcome a rederive is for.
-  const byClass = new Map();
-  for (const r of db.prepare(
-    'SELECT class_id, lesson, activity_type, open FROM activity_gates WHERE course = ? AND unit = ?'
-  ).all(COURSE, UNIT)) {
-    if (!coversMe(r)) continue;
-    if (!byClass.has(r.class_id)) byClass.set(r.class_id, []);
-    byClass.get(r.class_id).push(r);
-  }
-  for (const rows of byClass.values()) {
-    const sorted = rows.slice().sort((a, b) => widthOf(a) - widthOf(b));
-    const best = widthOf(sorted[0]);
-    const tied = sorted.filter((r) => widthOf(r) === best);
-    //  Same tie rule as rule 3: an explicit open wins at equal width.
-    if (!tied.some((r) => r.open === 1)) return false;
-  }
+  //  rule 4. NOBODY SIGNED IN MEANS NOBODY'S TEACHER, SO IT IS OPEN. Board 277,
+  //  decided 2026-09-14: a lab is open unless the caller's OWN teacher locked it,
+  //  and a caller with no class has no such teacher.
+  //
+  //  This rule used to resolve EVERY class and refuse if any of them landed on
+  //  closed. That version is kept in the git history rather than here, and the
+  //  bug it found is worth carrying forward even though the rule is gone: the
+  //  naive reading, "does any row anywhere say 0", was the first draft, and the
+  //  comparison caught it, because a class that closes a whole unit and then
+  //  reopens THIS lesson has on balance opened it. The route was right and this
+  //  side was wrong, which is the outcome a rederive is for.
+  //
+  //  lib/activity-gate.js still exports lockedForAnyClass and routes/quiz.js still
+  //  calls it to withhold an answer KEY from an anonymous scorer, which is a
+  //  different question from whether the activity opens. smoke:anongatererederive
+  //  is the second implementation for that function and is unaffected by 277.
   return true;
 }
 

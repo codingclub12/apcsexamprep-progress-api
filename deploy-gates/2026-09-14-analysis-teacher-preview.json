@@ -31,40 +31,34 @@
       "expect": "0 failed"
     },
     {
-      "kind": "mutation",
-      "name": "THE ONE THAT SHIPPED: the teacher is anonymous again",
-      "file": "routes/analysis.js",
-      "find": "    const asTeacher = verifyAnyToken(bearer(req) || '');\n    if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {\n      return { open: true, reason: 'teacher-preview', audience: 'teacher' };\n    }\n",
-      "replace": "",
-      "command": "npm run --silent smoke:analysisgate",
-      "expect_failure": "[FAIL]   the teacher gets the activity she opened"
-    },
-    {
-      "kind": "mutation",
-      "name": "THE HOLLOW ONE: the branch stops checking the role, so a stale student token previews",
-      "_why": "Dropping role === 'teacher' left the whole gate suite GREEN until an assertion was written for it. The way in is not a forged token but a stale one: student() also returns null when the student ROW is gone, so a 180 day JWT from a deleted roster entry verifies, still claims role student, and would take this branch straight past every class's lock.",
-      "file": "routes/analysis.js",
-      "find": "if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {",
-      "replace": "if (asTeacher && asTeacher.id) {",
-      "command": "npm run --silent smoke:analysisgate",
-      "expect_failure": "[FAIL]   a token whose student row is gone gets no teacher preview"
-    },
-    {
-      "kind": "mutation",
-      "name": "the anonymous rule goes back to automatic self-study, reopening the 2026-09-07 hole",
-      "file": "routes/analysis.js",
-      "find": "    if (hit.locked) {\n      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };\n    }",
-      "replace": "    if (false) { return { open: false }; }",
-      "command": "npm run --silent smoke:analysisgate",
-      "expect_failure": "[FAIL]   a signed-OUT student is refused too"
-    },
-    {
       "kind": "live",
       "name": "the deployed route emits locked_for, which the build it replaced could not",
       "_credential": "NO CREDENTIAL NEEDED. It does NOT observe a real teacher getting the activity: that needs a teacher credential this environment does not hold, and CLAUDE.md says a session must never ask for one. The teacher branch itself is evidenced by the suite and the two mutations above. The live half pins that the new build is the one answering, and that the new branch fails closed for a credential that is not a teacher.",
       "_why": "FALSE before the deploy and measured that way. Production answered at 02:35 on 2026-09-14, on commit 1e896d0, with no locked_for key anywhere in the body. An assertion that would have passed yesterday is decoration; this one could not have.",
       "command": "node scripts/verify-analysis-teacher-preview-live.js",
-      "expect": "OK - the analysis teacher branch is deployed and fails closed (7 checks)"
+      "expect": "OK - the analysis teacher branch is deployed and fails closed (7 checks)",
+      "_note": "The script this named was rewritten for board 277 the same day, so re-running this manifest exercises the NEW rule rather than the one it shipped. The measurement it recorded stands: production on 1e896d0 emitted no locked_for key at all, which is what proved the deploy landed."
     }
+  ],
+  "_superseded": [
+    "SUPERSEDED IN PART by deploy-gates/2026-09-14-board-277-labs-open.json, later the",
+    "same day. This manifest is kept as the record of what shipped in PR #666, and its",
+    "three retired checks are listed below rather than deleted, because a manifest that",
+    "quietly loses checks reads like it never had them.",
+    "",
+    "Board 277 opened the anonymous case, so three checks here can no longer fail and",
+    "were removed rather than repaired:",
+    "",
+    "  the teacher-branch mutation      deleting the branch is now unobservable,",
+    "                                   because every caller without a student row",
+    "                                   gets the activity anyway",
+    "  the role-check mutation          same reason; the role still decides the lab",
+    "                                   ANSWER KEY, which smoke:labkey asserts",
+    "  the anonymous-rule mutation      the rule it defended is the one 277 retired",
+    "",
+    "The teacher branch itself is KEPT. It is a permit rather than a guard, so being",
+    "redundant makes it harmless, while a mutation claiming to prove something it",
+    "cannot is the hollow thing. If the anonymous rule is ever narrowed again, that",
+    "branch is what keeps a teacher out of the support queue."
   ]
 }

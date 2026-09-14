@@ -1,25 +1,27 @@
 #!/usr/bin/env node
 'use strict';
 // ─────────────────────────────────────────────────────────────────────────────
-//  Does a signed-out visitor still walk past a teacher's lock?
+//  Is every lab open to a signed-out visitor?
 //
-//  A teacher closed a lab, the gradebook showed it shut, and she checked her own
-//  fix in incognito and found it open. She was right: the gate answered "is this
-//  open for MY class", and a request with no token has no class, so every lock on
-//  the site was one click wide.
+//  BOARD 277, decided by Tanner on 2026-09-14: "Labs should be open as long as
+//  the specific teacher doesn't lock it." A request with no token has no class,
+//  so no teacher's lock applies to it and every lab must answer with its spec.
 //
-//  NO CREDENTIAL NEEDED, which is the point. This is exactly the request a
-//  student makes by opening a private window, so the check IS the exploit.
+//  THIS SCRIPT USED TO ASSERT THE OPPOSITE, and that history is kept rather than
+//  rewritten away. Between 2026-09-07 and 277 an anonymous caller was refused any
+//  lab ANY class had closed, because a teacher closed a lab, checked her own fix
+//  in incognito, and found it open. She was right that the lock was one click
+//  wide. Tanner was shown that cost and chose the other side, because one school
+//  was otherwise taking a lab dark for the entire public internet. The porousness
+//  is now the policy, and this script checks the policy.
 //
-//  WHAT THIS CAN AND CANNOT PROVE. It reads live state it does not control: if
-//  no teacher currently has anything closed, there is nothing for the rule to
-//  refuse and no run of this script can show it working. So it reports three
-//  outcomes and never collapses them into a pass:
+//  NO CREDENTIAL NEEDED, which is still the point. This is exactly the request a
+//  student makes by opening a private window.
 //
-//    CLOSED     something is locked, and anonymous is refused it. The rule fires.
-//    DARK       anonymous is refused something NO class has locked, or refused
-//               everything. That is worse than the bug and fails loudly.
-//    UNPROVEN   nothing is locked right now. Not a pass. Says so.
+//  WHAT IT CANNOT SEE. It cannot prove a signed-in student of a locking class is
+//  still refused, because that needs a class code and a PIN, and a session must
+//  never ask for one. That half is smoke:labgate and smoke:labteacherpreview,
+//  which drive the real router.
 //
 //  Run: node scripts/verify-anon-gate-live.js
 // ─────────────────────────────────────────────────────────────────────────────
@@ -44,12 +46,11 @@ async function get(url) {
     const r = await get(`${API}/api/labs/${encodeURIComponent(s.course)}/${encodeURIComponent(s.item_id)}`);
     const locked = !!(r.body && r.body.locked);
     const reason = (r.body && r.body.reason) || '';
-    //  The spec must not be on the wire for a refused lab. A locked:true flag
-    //  beside a full spec is not a lock, it is a suggestion, and View Source
-    //  defeats it.
-    const leaked = locked && !!(r.body && (r.body.brief || r.body.checks || r.body.hosts));
-    rows.push({ id: `${s.course} ${s.item_id}`, status: r.status, locked, reason, leaked });
-    console.log(`    ${String(r.status).padEnd(4)} ${locked ? 'LOCKED' : 'open  '} ${leaked ? 'SPEC LEAKED ' : ''}${rows[rows.length - 1].id}${reason ? '  (' + reason + ')' : ''}`);
+    //  A lab that answers open must actually carry its spec. Without this the
+    //  whole check would pass against a route serving empty bodies.
+    const hasSpec = !!(r.body && (r.body.brief || r.body.checks || r.body.hosts));
+    rows.push({ id: `${s.course} ${s.item_id}`, status: r.status, locked, reason, hasSpec });
+    console.log(`    ${String(r.status).padEnd(4)} ${locked ? 'LOCKED' : 'open  '} ${hasSpec ? '' : 'NO SPEC '}${rows[rows.length - 1].id}${reason ? '  (' + reason + ')' : ''}`);
   }
 
   let pass = 0, fail = 0;
@@ -59,29 +60,20 @@ async function get(url) {
   ok('every lab answered, so the route is not simply down',
     rows.every((r) => r.status === 200), rows.filter((r) => r.status !== 200));
 
-  //  The failure mode that is WORSE than the bug: refusing everyone everything.
-  //  Public practice pays for this feature and a blanket refusal takes it dark.
-  ok('the public practice layer is not dark: at least one lab is still open to anonymous',
-    rows.some((r) => !r.locked), 'every lab refused a signed-out visitor');
-
-  //  A refused lab must name the anonymous rule, so an operator can tell this
-  //  rule fired rather than some other lock.
+  //  THE RULE ITSELF. Nobody without a class may be refused, whatever any class
+  //  has closed. One refusal here is board 277 not holding in production.
   const locked = rows.filter((r) => r.locked);
-  ok('every refusal names the anonymous rule',
-    locked.every((r) => /^anonymous-/.test(r.reason)), locked.map((r) => r.id + ':' + r.reason));
+  ok('no lab refuses a signed-out visitor, which is the whole of board 277',
+    locked.length === 0, locked.map((r) => r.id + ':' + r.reason));
 
-  ok('no refused lab put its spec on the wire anyway',
-    !rows.some((r) => r.leaked), rows.filter((r) => r.leaked).map((r) => r.id));
+  //  NOT VACUOUS. A route answering every lab with an empty body would satisfy
+  //  the line above while serving nothing, so the spec has to be there.
+  ok('and every lab put its spec on the wire rather than an empty shell',
+    rows.every((r) => r.hasSpec), rows.filter((r) => !r.hasSpec).map((r) => r.id));
 
   console.log();
-  if (locked.length) {
-    console.log(`  CLOSED: ${locked.length} of ${rows.length} labs refuse a signed-out visitor.`);
-    console.log('  Before 2026-09-07 every one of these was served in full to anyone.');
-  } else {
-    console.log('  UNPROVEN: no lab is closed for any class right now, so there was');
-    console.log('  nothing for the rule to refuse. This run does NOT show the bypass');
-    console.log('  closed. Re-run while a teacher has a lab locked.');
-  }
+  console.log(`  ${rows.length} labs, ${locked.length} refused, to a caller with no token.`);
+  console.log('  Between 2026-09-07 and board 277 a lab any class had closed was withheld here.');
 
   console.log(`\n  ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);

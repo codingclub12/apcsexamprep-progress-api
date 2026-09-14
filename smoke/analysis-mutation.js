@@ -77,39 +77,40 @@ const MUTATIONS = [
     name: 'signing out walks past it again: anonymous goes back to automatic self-study',
     file: 'route',
     suite: 'gate',
-    find: "    if (hit.locked) {\n      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };\n    }",
-    repl: '    if (false) { return { open: false }; }',
-    must: ['a signed-OUT student is refused too'],
+    find: "    return { open: true, reason: 'self-study' };\n  }\n  const cls = classStmt.get(stu.class_id);",
+    repl: "    return { open: false, reason: 'anonymous-closed-for-activity' };\n  }\n  const cls = classStmt.get(stu.class_id);",
+    //  Named on the SECTION 1 assertion rather than the section 3 one, because
+    //  this mutation refuses every anonymous caller and section 1 is where the
+    //  first of them asks. The suite stops there (the next line reads
+    //  activity.specimens on a null activity), so section 3 never runs and naming
+    //  it would make this entry fail for bookkeeping rather than for the rule.
+    must: ['an anonymous visitor gets the activity'],
   },
-  {
-    //  Reported 2026-09-14: "the 1.1 lab will not unlock even when it's unlocked".
-    //  student() answers for STUDENTS, so a signed-in teacher returns null, and
-    //  this route read that null as "nobody is signed in" and ran the cross-class
-    //  rule on her. A lock set by a teacher at another school then shut her out of
-    //  a lab her own class had open, and her own row was never consulted.
-    name: 'a teacher is anonymous again, so another class\'s lock shuts her out of her own lab',
-    file: 'route',
-    suite: 'gate',
-    find: "    const asTeacher = verifyAnyToken(bearer(req) || '');\n    if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {\n      return { open: true, reason: 'teacher-preview', audience: 'teacher' };\n    }\n",
-    repl: '',
-    must: ['the teacher gets the activity she opened'],
-  },
-  {
-    //  The role check on that branch is load-bearing and this proves it rather
-    //  than asserting it. student() also returns null when the student ROW is
-    //  gone, so a stale 180 day token from a deleted roster entry verifies, still
-    //  claims role 'student', and would take the teacher branch if the role were
-    //  not checked. That is the 2026-09-07 sign-out bypass with extra steps.
-    //
-    //  Written because dropping the role check left the gate suite entirely
-    //  green, which is the definition of a hollow guard in this repo.
-    name: 'the teacher branch stops checking the role, so a stale student token previews too',
-    file: 'route',
-    suite: 'gate',
-    find: "if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {",
-    repl: 'if (asTeacher && asTeacher.id) {',
-    must: ['a token whose student row is gone gets no teacher preview'],
-  },
+  //  ── TWO MUTATIONS RETIRED 2026-09-14, BOARD 277 ────────────────────────────
+  //  They mutated the teacher-preview branch: one deleted it outright, one
+  //  dropped its `role === 'teacher'` check. Both were real when they were
+  //  written on 2026-09-14, because an anonymous caller was refused whenever any
+  //  class had closed the activity, so the branch decided whether a teacher got
+  //  in and the role check decided who counted as one.
+  //
+  //  Board 277, later the same day, opened the anonymous case. Every caller
+  //  without a student row now gets the activity, so deleting the teacher branch
+  //  changes nothing observable and this battery reported both mutations GREEN,
+  //  which is a FAILED check by the rule at the top of this file. They are
+  //  retired rather than repaired because there is nothing left to repair: the
+  //  behaviour they defended is now produced by the branch below them.
+  //
+  //  THE BRANCH ITSELF IS KEPT, and that is deliberate rather than an oversight.
+  //  It is a permit and not a guard: redundant code that grants what is already
+  //  granted is harmless, while a MUTATION claiming to prove something it cannot
+  //  is the hollow thing, so the mutations go and the four lines stay. If the
+  //  anonymous rule is ever narrowed again, that branch is what keeps a teacher
+  //  out of the support queue, and the mutation directly above this comment is
+  //  what makes narrowing it a visible act.
+  //
+  //  The role check still decides something real elsewhere: the lab ANSWER KEY.
+  //  smoke:labkey and smoke:labteacherpreview assert a forged, expired, student
+  //  and stale token are each refused it.
   {
     //  The overcorrection. Refusing everyone everything closes the hole and takes
     //  the public practice layer dark, which is the trade Tanner did not choose.

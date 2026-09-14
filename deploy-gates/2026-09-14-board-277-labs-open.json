@@ -1,0 +1,95 @@
+{
+  "change": "board 277: a lab is open unless the caller's OWN teacher locked it, so a visitor with no class is never refused",
+  "_context": [
+    "Tanner, 2026-09-14: \"Labs should be open as long as the specific teacher doesn't lock it.\"",
+    "",
+    "Between 2026-09-07 and this change, routes/labs.js and routes/analysis.js refused",
+    "an anonymous caller any activity ANY class had closed. That rule was built for a",
+    "real reason, which is written out in both routes and is not forgotten: without it",
+    "a student signs out, or opens incognito, and walks past their teacher's lock.",
+    "",
+    "The cost on the other side was larger. One school closing lesson 1.1 was taking",
+    "the activity dark for every visitor on the public internet, including every other",
+    "teacher's students and every search engine, and this repo already says out loud",
+    "that gating tier 1 practice content is a strategic loss rather than a security",
+    "win. A gate is meant to answer \"is this open for MY class\"; a caller with no",
+    "class has no teacher whose answer could apply.",
+    "",
+    "WHAT THIS COSTS, stated because it is real: the lock now binds only a signed-in",
+    "student of the class that set it. Anyone who signs out gets the lab. That is the",
+    "chosen behaviour rather than a hole, and a teacher who needs an assessment nobody",
+    "can reach signed-out needs server-side identity on the item, which is a different",
+    "feature.",
+    "",
+    "lib/activity-gate.js keeps lockedForAnyClass: routes/quiz.js still calls it to",
+    "withhold an answer KEY from an anonymous scorer, which is a different question",
+    "from whether the activity opens."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "both gated routes, and the truth table that shrank to two rows",
+      "_why": "labteacherpreview is the one that matters: its four callers now collapse to teacher OPEN, student-of-a-closed-class LOCKED, student-of-an-open-class OPEN, no-token OPEN. Row 2 is the only refusal left and is asserted with its audience string, so a mutation returning open for everybody has to fail on it.",
+      "command": "npm run --silent smoke:labgate && npm run --silent smoke:analysisgate && npm run --silent smoke:labteacherpreview && npm run --silent smoke:labpracticeungated",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the answer key did NOT come along for the ride",
+      "_why": "This is the risk the change actually carries. The activity is now handed to anyone, so the key being off the wire stops being a nice property and becomes the only one. smoke:labkey asserts no token, a garbage token, a student token, an unentitled teacher and a tampered teacher token are each refused the lab key; smoke:analysisgate section 2 asserts the analysis payload carries no key at all.",
+      "command": "npm run --silent smoke:labkey && npm run --silent smoke:cyberquizkeys",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation of the gate reaches the same answer on 40 generated cases",
+      "_why": "smoke:labgaterederive resolves every caller shape against every gate arrangement longhand, importing nothing from the module under test, and asserts BOTH answers appear so the agreement is not vacuous. smoke:anongatererederive does the same for lockedForAnyClass, which quiz.js still uses and which this change does not touch.",
+      "command": "npm run --silent smoke:labgaterederive && npm run --silent smoke:anongatererederive",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "BOARD 277 REVERTED: a caller with no class is refused again",
+      "_why": "The point is not that reverting is wrong, it is that reverting must be a VISIBLE act rather than something a future session does by re-deriving the old rule from the incident history in these files.",
+      "file": "routes/labs.js",
+      "find": "    return { open: true, reason: 'self-study' };\n  }\n  const cls = labClassStmt.get(stu.class_id);",
+      "replace": "    return { open: false, reason: 'anonymous-closed-for-activity' };\n  }\n  const cls = labClassStmt.get(stu.class_id);",
+      "command": "npm run --silent smoke:labgate",
+      "expect_failure": "[FAIL]   an anonymous visitor gets a lab another class has closed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE OVERCORRECTION: the lock stops binding the one student it should",
+      "_why": "The opposite failure, and the one a careless reading of 277 produces. 'Open unless the specific teacher locked it' still has a second half. A suite that only asserted 'everyone gets it' would go green on this.",
+      "file": "routes/labs.js",
+      "find": "  const rows = labGateStmt.all(cls.id, spec.course, unit);",
+      "replace": "  const rows = [];",
+      "command": "npm run --silent smoke:labgate",
+      "expect_failure": "[FAIL]"
+    },
+    {
+      "kind": "mutation",
+      "name": "the analysis route stops opening for a caller with no class",
+      "file": "routes/analysis.js",
+      "find": "    return { open: true, reason: 'self-study' };\n  }\n  const cls = classStmt.get(stu.class_id);",
+      "replace": "    return { open: false, reason: 'anonymous-closed-for-activity' };\n  }\n  const cls = classStmt.get(stu.class_id);",
+      "command": "npm run --silent smoke:analysisgate",
+      "expect_failure": "[FAIL]   an anonymous visitor gets the activity"
+    },
+    {
+      "kind": "live",
+      "name": "every lab answers a signed-out visitor with its spec",
+      "_credential": "NO CREDENTIAL NEEDED, and it is exactly the request a student makes in a private window. It does NOT observe a signed-in student of a locking class still being refused, which is the half of the rule that still bites: that needs a class code and a PIN, and a session must never ask for one. The suite half covers it.",
+      "_why": "FALSE before the deploy and measured that way. Run against production on commit 42b5a7d it reported 1 of 7 labs refused, ap-cybersecurity 1.2-auth-lab with reason anonymous-closed-for-lesson, because a class genuinely has lesson 1.2 closed. So the fixture is live state rather than a contrivance, and this check cannot pass against the build it replaces.",
+      "command": "node scripts/verify-anon-gate-live.js",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "live",
+      "name": "the 1.1 analysis activity opens, and opening it shipped no answer key",
+      "_why": "Also FALSE beforehand: production answered locked:true, reason anonymous-closed-for-lesson, activity null. The second section is the one that matters more than the opening, and it is asserted against the LIVE payload rather than trusted from the suite, because handing the activity to everyone is only safe if the key is genuinely not in it. The script says so out loud when the activity is withheld, so its key assertions cannot pass vacuously on a refused body.",
+      "command": "node scripts/verify-analysis-teacher-preview-live.js",
+      "expect": "OK - the 1.1 analysis activity is open to anyone and still ships no key"
+    }
+  ]
+}

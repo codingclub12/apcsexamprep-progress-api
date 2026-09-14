@@ -1,45 +1,51 @@
 'use strict';
 // ─────────────────────────────────────────────────────────────────────────────
-//  LIVE: the analysis route's teacher branch is deployed and fails closed.
+//  LIVE: the 1.1 analysis activity is open to a signed-out visitor, and opening
+//  it did not put the answer key on the wire.
 //
-//  WHAT THIS PINS, AND WHY IT IS NOT DECORATION
-//  The deploy gate refuses a live check that would have passed yesterday. The
-//  assertion here is `locked_for`, a key the OLD build does not emit at all.
-//  Measured against production at 02:35 on 2026-09-14, before the merge:
+//  BOARD 277, decided by Tanner on 2026-09-14: "Labs should be open as long as
+//  the specific teacher doesn't lock it." A caller with no token has no class, so
+//  no teacher's lock reaches them.
+//
+//  WHAT THIS PINS. The deploy gate refuses a live check that would have passed
+//  yesterday. Production answered this path at 02:35 on 2026-09-14, on commit
+//  42b5a7d, with the activity withheld:
 //
 //    {"course":"ap-cybersecurity","item_id":"1.1-lab","locked":true,
-//     "reason":"anonymous-closed-for-lesson","activity":null}
+//     "reason":"anonymous-closed-for-lesson","locked_for":"anonymous",
+//     "activity":null}
 //
-//  No locked_for anywhere in it. So this check was FALSE before the deploy and
-//  cannot pass against the build it replaced.
+//  A class has lesson 1.1 closed, so that refusal is live state rather than a
+//  contrivance, and this check cannot pass against the build it replaces.
 //
-//  WHAT IT DELIBERATELY DOES NOT CLAIM
-//  It does not observe a real teacher getting the activity. That needs a teacher
-//  credential, this environment holds none, and CLAUDE.md says a session must
-//  never ask for one. The teacher branch itself is evidenced by
-//  smoke:analysisgate section 9, which drives the real router with a signed
-//  teacher token, and by the two mutations in smoke:analysismutation that prove
-//  those assertions are not hollow. Saying so here is the point: a live check
-//  that overstated its reach would be worse than one that states its limit.
+//  THE HALF THAT MATTERS MORE THAN THE OPENING. Serving the activity to everyone
+//  is only safe because the answer key was moved off the wire when this route was
+//  built. That was true while the activity was withheld from most callers and it
+//  has to be true now that it is handed to anyone, so the key check is asserted
+//  here against the LIVE payload rather than trusted from the suite. If board 277
+//  had been implemented by relaxing the wrong thing, this is what would catch it.
 //
-//  What it CAN establish live, and does, is the direction that matters for
-//  safety: the new branch must not hand the activity to a credential that is not
-//  a teacher. A garbage bearer, and a well-formed token signed with the wrong
-//  key, both still get the refusal.
+//  WHAT IT DELIBERATELY DOES NOT CLAIM. It does not observe a signed-in student
+//  of a locking class still being refused, which is the half of the rule that
+//  still bites. That needs a class code and a PIN, this environment holds none,
+//  and CLAUDE.md says a session must never ask for one. That half is
+//  smoke:analysisgate and smoke:labteacherpreview, which drive the real router.
 //
 //  The progress API is a different origin from the storefront and is not behind
 //  its bot management, so it is fetched directly. Nothing here touches
 //  www.apcsexamprep.com; anything that did would go through
 //  lib/storefront-fetch.js, per the repo rule and smoke:storefront rule 5.6.
 //
-//  Zero PII: one unauthenticated read and two deliberately invalid ones.
+//  Zero PII: unauthenticated reads only.
 //  No em-dashes, per repo convention.
 //  Run: node scripts/verify-analysis-teacher-preview-live.js
 // ─────────────────────────────────────────────────────────────────────────────
 const cp = require('child_process');
+const specs = require('../lib/analysis-spec');
 
 const API = process.env.API_BASE || 'https://progress.apcsexamprep.com';
-const ITEM = '/api/analysis/ap-cybersecurity/1.1-lab';
+const SPEC = specs.get('ap-cybersecurity', '1.1-lab');
+const ITEM = `/api/analysis/${SPEC.course}/${SPEC.item_id}`;
 
 function get(pathname, bearer) {
   const args = ['-sS', '--max-time', '25', API + pathname];
@@ -53,39 +59,54 @@ function get(pathname, bearer) {
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
   if (c) { pass++; console.log('  [PASS] ' + n); }
-  else { fail++; console.log('  [FAIL] ' + n + (x !== undefined ? '  ' + JSON.stringify(x).slice(0, 200) : '')); }
+  else { fail++; console.log('  [FAIL] ' + n + (x !== undefined ? '  ' + JSON.stringify(x).slice(0, 220) : '')); }
 };
 
-//  A JWT shaped correctly and signed with a key that is not ours. It must be
-//  rejected by the signature check before any role claim is read, so a token
-//  CLAIMING role teacher gets nothing.
-const FORGED = [
-  Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url'),
-  Buffer.from(JSON.stringify({ id: 'nobody', role: 'teacher', exp: 4102444800 })).toString('base64url'),
-  'not-a-real-signature',
-].join('.');
-
 const anon = get(ITEM);
+const wire = JSON.stringify(anon);
 
 console.log('\n  ' + API + ITEM + '\n');
-console.log('1. The new build is the one answering');
-ok('  the response carries locked_for, which the old build never emitted',
-  Object.prototype.hasOwnProperty.call(anon, 'locked_for'), Object.keys(anon));
-ok('  and it names the anonymous rule rather than the caller\'s own class',
-  anon.locked_for === 'anonymous', anon.locked_for);
+console.log('1. Board 277: a caller with no class is not refused');
+ok('  the activity is served to a signed-out visitor',
+  anon.locked === false && !!anon.activity, { locked: anon.locked, reason: anon.reason });
+ok('  and it is the whole thing, not an empty shell',
+  !!(anon.activity && anon.activity.specimens && anon.activity.specimens.length === SPEC.specimens.length),
+  anon.activity && anon.activity.specimens && anon.activity.specimens.length);
 
-console.log('\n2. The anonymous rule is intact, which board 277 has not yet changed');
-ok('  a signed-out visitor is still refused', anon.locked === true, anon);
-ok('  and the activity is not on the wire', anon.activity === null, Object.keys(anon));
+console.log('\n2. Opening it did NOT put the answer key on the wire');
+for (const k of ['senderKey', 'elementsKey', 'impactKey', 'actionKey', 'tacticWhy', 'typeWhy']) {
+  ok(`  ${k} is still withheld`, !wire.includes(k));
+}
+//  The sharpest version, and the one a key-name grep would miss: for every
+//  specimen, its own correct select value must not be derivable from the payload.
+//  The value appears as an OPTION, which every student sees, so the assertion is
+//  that no specimen object carries it.
+//  Guarded, because a refused response carries activity: null and a verifier that
+//  THROWS says less than one that reports. The 2026-09-03 storefront episode is
+//  the same lesson from the other side: a check that cannot complete must fail
+//  legibly rather than look like an outage.
+const derivable = ((anon.activity && anon.activity.specimens) || []).some((sp, i) => {
+  const ans = SPEC.specimens[i] && SPEC.specimens[i].answer;
+  if (!ans) return false;
+  const j = JSON.stringify(sp);
+  return j.includes(`"${ans.tactic}"`) || j.includes(`"${ans.type}"`);
+});
+ok('  and no specimen carries its own correct answer', !derivable);
 
-console.log('\n3. The teacher branch fails closed');
-ok('  a garbage bearer gets no preview', get(ITEM, 'garbage').locked === true);
-const forged = get(ITEM, FORGED);
-ok('  a well-formed token signed with the wrong key gets no preview',
-  forged.locked === true, forged);
-ok('  and it is refused as anonymous, so the role claim was never reached',
-  forged.locked_for === 'anonymous', forged.locked_for);
+console.log('\n3. A junk credential is treated as a passer-by, not an error');
+const junk = get(ITEM, 'garbage');
+ok('  a garbage bearer degrades to anonymous rather than 401ing',
+  junk.locked === false && !!junk.activity, { locked: junk.locked, reason: junk.reason });
+
+//  The key assertions above pass vacuously on a refused body, which carries no
+//  activity at all. Say so rather than letting six green lines imply the payload
+//  was inspected. This is the same failure the storefront verifiers had on
+//  2026-09-03: every "this string is gone" assertion passed on a challenge page.
+if (!anon.activity) {
+  console.log('\n  NOTE  the activity was WITHHELD, so section 2 inspected nothing.');
+  console.log('        Its passes are vacuous and this run proves only section 1 failing.');
+}
 
 console.log(`\n  ${pass} passed, ${fail} failed`);
 if (fail) { console.log('\nFAILED'); process.exit(1); }
-console.log('\nOK - the analysis teacher branch is deployed and fails closed (' + pass + ' checks)');
+console.log('\nOK - the 1.1 analysis activity is open to anyone and still ships no key (' + pass + ' checks)');
