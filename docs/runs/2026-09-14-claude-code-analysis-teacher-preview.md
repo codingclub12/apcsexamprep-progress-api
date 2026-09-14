@@ -64,6 +64,35 @@ way to be wrong for a teacher on a free plan.
 gains two mutations and has one repointed, because my edit reshaped the literal its
 anonymous-rule mutation was pinned to.
 
+## Shipped
+
+PR #666, merged as `42b5a7d`. CI passed on `c5a9f7f`, which was the head at merge
+time and the only commit on the branch, checked rather than assumed.
+
+Production before the merge, on commit `1e896d0`, carried no `locked_for` key at
+all:
+
+    {"course":"ap-cybersecurity","item_id":"1.1-lab","locked":true,
+     "reason":"anonymous-closed-for-lesson","activity":null}
+
+After, on `42b5a7d`:
+
+    {"course":"ap-cybersecurity","item_id":"1.1-lab","locked":true,
+     "reason":"anonymous-closed-for-lesson","locked_for":"anonymous","activity":null}
+
+`deploy-gates/2026-09-14-analysis-teacher-preview.json` passes on three
+independent kinds, suite, mutation and live, run after the deploy rather than
+before it.
+
+The live half states its own limit rather than overstating its reach. It does NOT
+observe a real teacher getting the activity, because that needs a teacher
+credential this environment does not hold and a session must never ask for one.
+What it pins is that the new build is the one answering, which the old build
+could not fake, and that the new branch fails closed: a garbage bearer and a
+well-formed token signed with the wrong key both still get the refusal. The
+teacher path itself rests on the suite driving the real router with a signed
+teacher token, and on the mutation that proves that assertion is not hollow.
+
 ## What was learned
 
 The role check on that branch was hollow, and mutation testing is the only reason
