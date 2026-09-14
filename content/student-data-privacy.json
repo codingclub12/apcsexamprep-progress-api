@@ -1,0 +1,157 @@
+{
+  "handle": "student-data-privacy",
+  "title": "Student Data Privacy",
+  "updated": "2026-09-14",
+  "audit_doc": "docs/student-data-privacy-audit.md",
+  "_comment_flag": "student_pages_ad_free drives the advertising section. false renders what is true on 2026-09-14: the ad network and session replay run on every page. Flip to true ONLY after the theme actually stops loading them on student pages, then regenerate and re-import. The validator refuses a body whose advertising section disagrees with this flag.",
+  "student_pages_ad_free": false,
+  "intro": [
+    "Districts ask the same three questions before they approve a tool, so this page answers them in that order: what we collect about a student, who else touches it, and how you get it deleted.",
+    "It is written to be handed to an IT reviewer rather than read for reassurance, so it names vendors instead of describing them in general terms. If your review needs something this page does not cover, ask and we will answer it in writing."
+  ],
+  "account_model": {
+    "heading": "A student account is a name and a PIN",
+    "paragraphs": [
+      "A student never gives us an email address. There is no field for one anywhere in the student sign-in, and there is no column for one in the students table.",
+      "A teacher creates a class, the class gets a code like CSA-7QX4, and a student joins with a display name their teacher will recognize and a four digit PIN. Most teachers use a first name and a last initial. The PIN is stored as a bcrypt hash, so we cannot read it back and neither can anyone who obtains the database; a forgotten PIN is reset by the teacher, never recovered. That is the entire account.",
+      "Students who work without a teacher get an ME- code under the same model. Still a display name, still a PIN, still no email.",
+      "Our mailing list is a separate thing and it is not connected to any of this. Anyone can subscribe from the footer of the site, and some students do. A subscription creates a marketing contact holding an email address and nothing else: it is not a student account, it does not appear in any class, and it is not linked to a name, a PIN, or a single score. Unsubscribe is in every email we send."
+    ]
+  },
+  "collected": {
+    "heading": "What we store about a student",
+    "rows": [
+      [
+        "Display name",
+        "Chosen at join, visible to the teacher and to that student. Usually a first name and last initial. Nothing requires it to be a legal name.",
+        "Set by the student or teacher"
+      ],
+      [
+        "PIN",
+        "Four digits, stored as a bcrypt hash. Used to sign in and for nothing else.",
+        "Set at join"
+      ],
+      [
+        "Class membership",
+        "Which class code the student belongs to, and whether the account is active.",
+        "From the join"
+      ],
+      [
+        "Progress and scores",
+        "Which lessons were opened, quiz and check-for-understanding attempts, score out of the item's points, attempt number, and whether it met the class mastery threshold.",
+        "Recorded as the student works"
+      ],
+      [
+        "Per-question results",
+        "Question number, which option was selected, and whether it was correct. Option numbers and true or false, never answer text.",
+        "Recorded with an attempt"
+      ],
+      [
+        "Time on an item",
+        "Seconds between the item rendering and the student submitting it.",
+        "Recorded with an attempt"
+      ],
+      [
+        "Browser string",
+        "The User-Agent the browser sends, truncated to 120 characters. Used to tell a phone from a Chromebook when a teacher reports that something will not load.",
+        "Captured by the server"
+      ],
+      [
+        "Timestamps",
+        "When the account was created and when it was last active.",
+        "Captured by the server"
+      ],
+      [
+        "SIS reference, optional",
+        "Only if a teacher enters one so the gradebook can export into Canvas. It is whatever the teacher types, which in some districts is a school email address. Left empty unless a teacher fills it in.",
+        "Entered by the teacher"
+      ],
+      [
+        "Sandbox programs, optional",
+        "Code a student writes in the free practice sandbox, and the name they give it, so it can be reopened tomorrow. Only that student can read it. Graded code is never stored.",
+        "Written by the student"
+      ]
+    ]
+  },
+  "not_collected": {
+    "heading": "What we do not collect",
+    "items": [
+      "Email addresses for students. No field, no column.",
+      "Passwords. A four digit PIN is not a password and we do not ask for one.",
+      "Date of birth, address, phone number, photograph, or any demographic field.",
+      "Free typed text, with one exception named above. Quiz answers are stored as option numbers, so a student cannot type something into our database.",
+      "Location beyond what any web server sees from a request.",
+      "Anything from a student's device: no camera, no microphone, no browser history, no proctoring, no keystroke logging, no screen capture."
+    ]
+  },
+  "subprocessors": {
+    "heading": "Who else processes student work",
+    "lead": "These are the services that student data passes through. This is the list your NDPA is asking for.",
+    "rows": [
+      [
+        "Railway",
+        "Hosts the progress API and the database volume.",
+        "All stored student data: display name, PIN hash, scores, timestamps."
+      ],
+      [
+        "Shopify",
+        "Hosts the storefront that serves every lesson page.",
+        "Page requests. No progress data is stored in Shopify."
+      ],
+      [
+        "Judge0, via RapidAPI",
+        "Runs student written code for coding exercises and the sandbox.",
+        "The code text, while it runs. It is not given a student name or id. Graded code is discarded after scoring and never stored."
+      ],
+      [
+        "Resend",
+        "Sends transactional email such as a teacher password reset.",
+        "Teacher email addresses only. It is never given a student record."
+      ],
+      [
+        "Cloudflare",
+        "CDN and bot protection in front of the storefront.",
+        "Request metadata, the same as any site behind a CDN."
+      ]
+    ]
+  },
+  "ads_current": {
+    "heading": "Advertising and analytics on our pages",
+    "paragraphs": [
+      "Our public website is an ordinary Shopify storefront and it carries advertising and analytics. They run on pages students use, including the page where a student sees their own progress and the page where they join a class. Signed-in teachers see no advertising.",
+      "As of the date at the top of this page the advertising is Raptive. The analytics are Microsoft Clarity, which records session replays, Google Analytics, Klaviyo for our mailing list, Ahrefs, and Shopify's own. The analytics run for every visitor across the site and are not switched off on student pages.",
+      "None of them is handed a student identifier. We do not pass a display name, a student id, or a session token to any of them, and we check the rendered pages to confirm it rather than taking it on trust. What they receive is that a page was viewed.",
+      "We are telling you this because your agreement will ask about targeted advertising and because saying otherwise would be false. If your district requires that no advertising or session replay run on pages students use while signed in, raise it with us before you sign rather than after."
+    ]
+  },
+  "ads_clean": {
+    "heading": "Advertising and analytics on our pages",
+    "paragraphs": [
+      "Our marketing pages carry ordinary website analytics and advertising. The pages a signed-in student uses do not. Advertising and session replay are not loaded on the student progress page, the join page, or on lesson pages for a signed-in student.",
+      "Where analytics do run, none of them is handed a student identifier. We do not pass a display name, a student id, or a session token to any of them, and we check the rendered pages to confirm it rather than taking it on trust."
+    ]
+  },
+  "retention": {
+    "heading": "How long we keep it",
+    "paragraphs": [
+      "Student work is kept while the class exists, because a gradebook that quietly drops last semester is not a gradebook. There is no automatic purge and we would rather say so than imply a schedule we do not run.",
+      "A teacher can delete a class at any time from their dashboard. That removes the class, its students, and all of their progress and attempts in one action, and it is not recoverable afterwards.",
+      "Deactivating a student is a different thing and it is deliberately not deletion. It removes them from the active roster and keeps their grade history, which is what a teacher usually wants at the end of a term. If you want the record gone, delete rather than deactivate, or ask us."
+    ]
+  },
+  "rights": {
+    "heading": "Access, correction and deletion",
+    "paragraphs": [
+      "A teacher can already see, correct and delete everything we hold for their own class: the roster, every score, a student's name, and the class itself. For most requests the teacher is the fastest path and needs nothing from us.",
+      "For a formal request from a parent, a student or a district, write to us and we will action it. We will confirm in writing what was deleted and when. We do not require a particular form and we do not charge for it.",
+      "If your district needs a signed data privacy agreement, send us yours. We will sign an NDPA rather than insisting on our own terms."
+    ]
+  },
+  "contact": {
+    "heading": "Contact",
+    "paragraphs": [
+      "Questions about this page, a deletion request, or an agreement to review: use the contact form on this site and say it is about student data so it gets routed properly."
+    ]
+  },
+  "closing_note": "This page describes how the product actually behaves, checked against the running system on the date shown, not how we intend it to behave. If you find something here that does not match what you observe, tell us and we will correct the page."
+}

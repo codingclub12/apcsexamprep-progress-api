@@ -307,7 +307,10 @@
     "smoke:labgaterederive": "node smoke/lab-gate-rederive.js",
     "smoke:gatesettle": "node smoke/gate-settle.js",
     "smoke:gatesettlerederive": "node smoke/gate-settle-rederive.js",
-    "smoke:labpracticeungated": "node smoke/lab-practice-ungated.js"
+    "smoke:labpracticeungated": "node smoke/lab-practice-ungated.js",
+    "privacy:page": "node scripts/build-student-data-privacy.js",
+    "smoke:privacypage": "node smoke/student-data-privacy.js",
+    "smoke:privacypagemutation": "node smoke/student-data-privacy-mutation.js"
   },
   "keywords": [],
   "author": "",
