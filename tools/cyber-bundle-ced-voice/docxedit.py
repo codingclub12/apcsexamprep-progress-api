@@ -61,9 +61,31 @@ class Refused(Exception):
     pass
 
 
+def _parent_map(root):
+    return {child: parent for parent in root.iter() for child in parent}
+
+
+def _delete_paragraph(root, para, parents):
+    """
+    Remove a whole paragraph.
+
+    A table cell must contain at least one paragraph or Word treats the document
+    as corrupt, so emptying a cell is refused rather than risked. Nothing being
+    deleted here lives alone in a cell, and if that ever changes this says so
+    instead of producing a file that will not open.
+    """
+    parent = parents.get(para)
+    if parent is None:
+        raise Refused("paragraph has no parent element")
+    if parent.tag == W + 'tc' and len([k for k in parent if k.tag == W + 'p']) == 1:
+        raise Refused("refusing to empty a table cell of its only paragraph")
+    parent.remove(para)
+
+
 def apply_edits(src, dst, edits):
     """
     edits: [{index, old, new}] against paragraph order in src.
+    A `new` of None DELETES the paragraph outright.
     Writes dst. Raises Refused rather than guessing if a paragraph does not read
     the way the plan says it does.
     """
@@ -72,8 +94,10 @@ def apply_edits(src, dst, edits):
         blobs = {n: z.read(n) for n in names}
     root = ET.fromstring(blobs[DOC])
     paras = list(root.iter(W + 'p'))
+    parents = _parent_map(root)
     applied = 0
 
+    # Descending index order so a deletion never shifts an index still to come.
     for e in sorted(edits, key=lambda x: -x['index']):
         if e['index'] >= len(paras):
             raise Refused(f"paragraph {e['index']} does not exist ({len(paras)} in file)")
@@ -82,6 +106,10 @@ def apply_edits(src, dst, edits):
         if text != e['old']:
             raise Refused(f"paragraph {e['index']} is not what was planned:\n"
                           f"  on disk: {text[:120]!r}\n  planned: {e['old'][:120]!r}")
+        if e['new'] is None:
+            _delete_paragraph(root, paras[e['index']], parents)
+            applied += 1
+            continue
         new = e['new']
         if text == new:
             continue
