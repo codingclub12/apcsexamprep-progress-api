@@ -15,14 +15,16 @@
 //  where the SERVER decides what goes on the wire, which is here.
 //
 //  THE GATE IS THE SAME ONE, NOT A SECOND OPINION
-//  resolveAliasGate and lockedForAnyClass come from lib/activity-gate.js, the
-//  same functions routes/labs.js calls. An anonymous request is refused only for
-//  an item some class has explicitly closed, so an activity nobody has locked
-//  stays open and indexable.
+//  resolveAliasGate comes from lib/activity-gate.js, the same function
+//  routes/labs.js calls. It answers "is this open for MY class", and that is the
+//  only question this route asks.
 //
-//  A SIGNED-IN TEACHER IS NOT AN ANONYMOUS REQUEST. She gets the activity, and
-//  the cross-class rule never runs for her. See gateFor below for what went
-//  wrong before that was true.
+//  NOBODY WITHOUT A CLASS IS REFUSED. Board 277, decided 2026-09-14: a lab is
+//  open unless the caller's own teacher locked it. An anonymous visitor has no
+//  teacher, so they get the activity and it stays indexable. A signed-in TEACHER
+//  gets it too. Both branches are in gateFor below, each with the history that
+//  produced it, because both reverse an earlier rule and neither should be
+//  reverted by reading that history alone.
 //
 //  GRADING KEEPS NOTHING
 //  A student types prose into four of the six fields. That prose is graded by
@@ -40,7 +42,7 @@ const router = express.Router();
 const db = require('../db');
 const specs = require('../lib/analysis-spec');
 const grader = require('../lib/analysis-grade');
-const { resolveAliasGate, lockedForAnyClass } = require('../lib/activity-gate');
+const { resolveAliasGate } = require('../lib/activity-gate');
 const { verifyStudentToken } = require('../utils');
 const { makeRateLimit } = require('../lib/rate-limit');
 
@@ -83,9 +85,6 @@ const classStmt = db.prepare('SELECT id, course, quiz_lock_default FROM classes 
 const gateStmt = db.prepare(
   'SELECT lesson, activity_type, open FROM activity_gates WHERE class_id = ? AND course = ? AND unit = ?'
 );
-const anyGateStmt = db.prepare(
-  'SELECT class_id, lesson, activity_type, open FROM activity_gates WHERE course = ? AND unit = ?'
-);
 
 //  Returns { open, reason }. An activity with no unit or lesson cannot be
 //  located by a gate row, so it resolves open rather than being refused for a
@@ -101,8 +100,8 @@ function gateFor(req, spec) {
     //  A TEACHER IS NOT ANONYMOUS, and this route said she was until 2026-09-14.
     //
     //  student() requires role === 'student', so a signed-in TEACHER returns null
-    //  and fell straight into the cross-class branch below. That branch refuses
-    //  whenever ANY class anywhere has closed the activity. So a teacher opened
+    //  and fell into the cross-class branch this route used to carry, which
+    //  refused whenever ANY class had closed it. So a teacher opened
     //  the 1.1 Lab for her own class, opened the page to check it, and was told
     //  her teacher had not opened it yet, over a lock some other teacher set on
     //  a class she has never seen. Her own class's open row was never consulted.
@@ -114,26 +113,45 @@ function gateFor(req, spec) {
     //  routes/labs.js already decided this on 2026-09-09 off the same support
     //  email ("lab open but isn't open"). This route was written on 2026-09-07
     //  and never got the port, so the two siblings disagreed about who counts as
-    //  anonymous. One fix in two files is how that drift started; this is the
-    //  second half of it.
+    //  anonymous.
     //
-    //  This does not reopen the 2026-09-07 hole. That was a STUDENT signing out
-    //  to walk past their teacher's lock, and a student cannot mint a teacher
-    //  token. Entitlement is deliberately not required, matching routes/labs.js:
-    //  an activity nobody has closed is served to the public already, so
-    //  demanding one here would invent a fresh way to be wrong for a teacher on
-    //  a free plan.
+    //  THE BRANCH IS KEPT even though board 277 has since opened the anonymous
+    //  case anyway, which would now reach the same answer for her by accident. It
+    //  earns its own line for two reasons: it says WHY she is allowed rather than
+    //  letting that fall out of a policy that could change again, and its reason
+    //  string is 'teacher-preview' rather than 'self-study', so an operator
+    //  reading a log can tell a signed-in teacher from a passer-by. Entitlement
+    //  is deliberately not required, matching routes/labs.js.
     const asTeacher = verifyAnyToken(bearer(req) || '');
     if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {
       return { open: true, reason: 'teacher-preview', audience: 'teacher' };
     }
-    const hit = lockedForAnyClass(anyGateStmt.all(spec.course, unit), lesson, acts);
-    //  audience says WHOSE decision this was, so the page can stop attributing a
-    //  cross-class refusal to a teacher the caller does not have. Same field and
-    //  same meaning as routes/labs.js.
-    if (hit.locked) {
-      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };
-    }
+    //  NOBODY SIGNED IN MEANS NOBODY'S TEACHER, SO IT IS OPEN. Board 277,
+    //  decided by Tanner on 2026-09-14: "Labs should be open as long as the
+    //  specific teacher doesn't lock it."
+    //
+    //  DO NOT RE-DERIVE THE OLD RULE FROM THE INCIDENT HISTORY BELOW. From
+    //  2026-09-07 to 2026-09-14 this branch refused an anonymous caller whenever
+    //  ANY class anywhere had closed the activity, and the reasoning was real: a
+    //  student who signs out, or opens the same page in incognito, walks past
+    //  their teacher's lock, and a teacher found exactly that. That cost was put
+    //  to Tanner in those terms and he chose the other side of it.
+    //
+    //  What he chose, and why it is coherent: one school closing lesson 1.1 was
+    //  taking the activity dark for every visitor on the public internet,
+    //  including every other teacher's students and every search engine. The
+    //  public practice layer is the SEO engine and gating it is a strategic loss,
+    //  which this repo already says out loud about tier 1 content. A gate is
+    //  supposed to answer "is this open for MY class". An anonymous caller has no
+    //  class, so there is no teacher whose answer could apply to them.
+    //
+    //  WHAT STILL HOLDS, so the concession stays the size it is. A signed-in
+    //  student is governed by their own class exactly as before, which is the
+    //  path below and is untouched. The lock is therefore real for the people it
+    //  names and porous to anyone who signs out, and that porousness is now the
+    //  chosen behaviour rather than a hole. A teacher who needs an assessment
+    //  nobody can reach signed-out needs server-side identity on the item, which
+    //  is a different feature and not this switch.
     return { open: true, reason: 'self-study' };
   }
   const cls = classStmt.get(stu.class_id);

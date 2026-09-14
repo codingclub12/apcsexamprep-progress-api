@@ -31,9 +31,14 @@
 //
 //  THE RISK is the second half of that sentence. This must not become "labs are
 //  no longer gated", so every existing behaviour is re-asserted against a lab
-//  that DOES have a row: the class lock, the class default, and the anonymous
-//  cross-class refusal all have to still bite. A suite that only tested the
-//  practice lab would pass with the gate removed entirely.
+//  that DOES have a row: the class lock and the class default both have to still
+//  bite. A suite that only tested the practice lab would pass with the gate
+//  removed entirely.
+//
+//  The anonymous cross-class refusal used to be re-asserted here too. Board 277
+//  removed it on 2026-09-14: a lab is open unless the caller's OWN teacher locked
+//  it, so a caller with no class is never refused. The assertion below is now the
+//  other way round, and the lock it does not reach is the deliberate cost.
 //
 //  IT ASKS THE MANIFEST, NOT spec.graded. The two agree today because
 //  seed-manifest builds lab rows from labSpecs.graded(), so a suite that seeded
@@ -167,9 +172,12 @@ const closeIt = (cls, spec) => run(
   ok('while a class that wrote no such row still gets it',
     r.status === 200 && !r.body.locked, r.body);
 
+  //  Board 277, 2026-09-14: a graded lab another class closed is still served to a
+  //  caller with no class, because no teacher of theirs closed it. This asserted
+  //  the opposite between 2026-09-07 and that date.
   r = await getLab(GRADED, null);
-  ok('and the anonymous cross-class refusal still bites on a graded lab',
-    r.body && r.body.locked === true && r.body.locked_for === 'anonymous', r.body);
+  ok('and a caller with no class gets the graded lab, over that class\'s lock',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
 
   closeUnit('c1', GRADED.unit);
   r = await getLab(GRADED, SHUT);
