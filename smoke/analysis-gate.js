@@ -31,7 +31,7 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 
 const express = require('express');
 const db = require('../db');
-const { signStudentToken } = require('../utils');
+const { signStudentToken, signTeacherToken } = require('../utils');
 const specs = require('../lib/analysis-spec');
 const grader = require('../lib/analysis-grade');
 
@@ -67,9 +67,16 @@ run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s1','c1',
 run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,quiz_lock_default)
      VALUES ('c2','t1','CYBER-ANA2','Leaves it open','ap-cybersecurity',1,0)`);
 run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s2','c2','B','x')`);
+//  A THIRD class under a DIFFERENT teacher, for section 9. The cross-class rule
+//  fires on a lock set by someone the caller has never met, so the fixture has to
+//  contain someone the caller has never met.
+run(`INSERT INTO teachers (id,name,email,password_hash) VALUES ('t2','U','u@s.org','x')`);
+run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,quiz_lock_default)
+     VALUES ('c3','t2','CYBER-ANA3','Another school','ap-cybersecurity',1,0)`);
 
 const ST = signStudentToken({ id: 's1', class_id: 'c1' });
 const OTHER = signStudentToken({ id: 's2', class_id: 'c2' });
+const TEACHER = signTeacherToken({ id: 't1', email: 't@s.org' });
 
 const close = (lesson, act) => run(
   `INSERT OR REPLACE INTO activity_gates (class_id,course,unit,lesson,activity_type,open) VALUES ('c1',?,?,?,?,0)`,
@@ -168,6 +175,73 @@ const TYPED = 'the decisive detail is';
     item && item.lock_enforceable === true, item && item.lock_enforceable);
   ok('  so it is no longer named among the locks that cannot be enforced',
     !gb.gates.locked_but_unenforceable.includes(item && item.item_key), gb.gates.locked_but_unenforceable);
+
+  console.log('\n9. A TEACHER IS NOT ANONYMOUS');
+  //  Reported 2026-09-14 as "the 1.1 lab will not unlock even when it's unlocked".
+  //  student() answers for STUDENTS, so a signed-in teacher returned null and the
+  //  route read that null as "nobody is signed in" and ran the cross-class rule on
+  //  her. That rule refuses whenever ANY class anywhere has closed the activity, so
+  //  a lock set by a teacher at another school shut her out of a lab she had open,
+  //  and her own class's row was never consulted. The chip read open, the page read
+  //  shut, and nothing she could click reconciled them.
+  //
+  //  routes/labs.js settled this on 2026-09-09 off the same complaint. This route
+  //  was written two days earlier and never got the port.
+  run('DELETE FROM activity_gates');
+  //  Her class pins the lab OPEN. Her Command Center chip reads unlocked.
+  run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open)
+       VALUES ('c1',?,?,?,'lab',1)`, SPEC.course, SPEC.unit, SPEC.lesson_id);
+  //  A class she has never seen closes the whole of lesson 1.1.
+  run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open)
+       VALUES ('c3',?,?,?,'*',0)`, SPEC.course, SPEC.unit, SPEC.lesson_id);
+
+  r = await call('GET', URL, null, TEACHER);
+  ok('  the teacher gets the activity she opened', r.status === 200 && !r.body.locked,
+    r.body && r.body.reason);
+  ok('  and it is the whole thing, not an empty shell',
+    !!r.body.activity && r.body.activity.specimens.length === SPEC.specimens.length,
+    r.body && r.body.activity && r.body.activity.specimens && r.body.activity.specimens.length);
+
+  //  The rule still does its job for everyone it was actually written for. A
+  //  student cannot mint a teacher token, so the 2026-09-07 sign-out bypass
+  //  stays closed.
+  r = await call('GET', URL);
+  ok('  a signed-out visitor is still refused', r.body && r.body.locked === true,
+    r.body && r.body.reason);
+  ok('  and the refusal no longer blames a teacher the caller does not have',
+    r.body.locked_for === 'anonymous', r.body && r.body.locked_for);
+
+  //  Her own students are unaffected, which is the case that was already right.
+  r = await call('GET', URL, null, ST);
+  ok('  her signed-in student still gets it', r.status === 200 && !r.body.locked,
+    r.body && r.body.reason);
+
+  //  A refusal that IS the caller's own class still says so, so the page can word
+  //  the two differently.
+  run('DELETE FROM activity_gates');
+  close(SPEC.lesson_id, 'lab');
+  r = await call('GET', URL, null, ST);
+  ok('  a student closed out by their OWN class is told so', r.body.locked_for === 'class',
+    r.body && r.body.locked_for);
+
+  //  THE ROLE CHECK IS LOAD-BEARING, and mutation testing is how that was
+  //  established rather than assumed. Dropping `role === 'teacher'` from the
+  //  branch above left this suite entirely green, which means the branch could
+  //  have been widened to any verified token and nothing would have said so.
+  //
+  //  The reachable way in is not a forged token, it is a STALE one. student()
+  //  returns null for four reasons, and the fourth is that the student row is
+  //  gone: a student removed from a roster, or a class deleted, still holds a
+  //  180 day JWT that verifies and still claims role 'student'. Without the role
+  //  check that token would take the teacher-preview branch and walk past every
+  //  class's lock, which is the 2026-09-07 sign-out bypass with extra steps.
+  run(`DELETE FROM activity_gates`);
+  run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open)
+       VALUES ('c3',?,?,?,'*',0)`, SPEC.course, SPEC.unit, SPEC.lesson_id);
+  const GHOST = signStudentToken({ id: 'deleted-student', class_id: 'c1' });
+  r = await call('GET', URL, null, GHOST);
+  ok('  a token whose student row is gone gets no teacher preview',
+    r.body && r.body.locked === true, r.body && r.body.reason);
 
   console.log(`\n  ${pass} passed, ${fail} failed`);
   server.close();
