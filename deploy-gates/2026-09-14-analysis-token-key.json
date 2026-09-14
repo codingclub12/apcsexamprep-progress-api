@@ -1,0 +1,71 @@
+{
+  "change": "the analysis player finds a signed-in student: the 1.1 lab page named a localStorage key nothing writes, so no teacher lock could bind anyone",
+  "_context": [
+    "Reported as \"it didn't lock when the teacher locked it for a student\", hours after",
+    "board 277 opened the anonymous case.",
+    "",
+    "NOT A REGRESSION FROM 277, and worth being exact about that. The page has always",
+    "read localStorage 'apcs_student_token'. Nothing writes it: shopify/join.html line",
+    "563 sets 'apcse_token' at sign-in, theme.liquid decides 'logged-in-student' by",
+    "reading it, and all 20 token references in the theme use it. So a signed-in",
+    "student has always sent no Authorization header on that page.",
+    "",
+    "It was invisible because the anonymous rule in force until 277 refused anonymous",
+    "callers anyway, so the page LOOKED locked and the missing token changed nothing",
+    "observable. Opening the anonymous case is what made a missing token start to",
+    "matter. The live page proves it on its own bytes: 'apcse_token' appears at offset",
+    "96777, put there by the theme's own tracker, and the analysis mount at 229910",
+    "reads a different key.",
+    "",
+    "FIXED IN THE PLAYER, NOT THE PAGE, and that is the whole design of it. The player",
+    "is served from this API with no-store and costs a push; a page body costs a live",
+    "Matrixify MERGE with no undo. So an EMPTY answer from the page's configured",
+    "getToken now falls through to the resolution the lab player has always had. The",
+    "live page needs no import.",
+    "",
+    "The same defect was found in public/heartbeat-reporter.js by grepping the other",
+    "consumers rather than by waiting for a second report."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "every browser player resolves the key sign-in actually writes",
+      "_why": "Section 3 is the one that counts: it RUNS each player under a DOM stub with a fake localStorage holding only 'apcse_token' and asserts the Authorization header on the wire. Mutation 2 below proves why: removing the key from the code leaves it in the comment, so the text scan in section 1 still passes and only the behavioural check fails.",
+      "command": "npm run --silent smoke:studenttokenkeys",
+      "expect": "16 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the gate still behaves, on both routes",
+      "command": "npm run --silent smoke:analysisgate && npm run --silent smoke:labgate && npm run --silent smoke:labteacherpreview && npm run --silent smoke:labplayertoken",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: the configured getToken wins even when it answers nothing",
+      "file": "public/analysis-player.js",
+      "find": "    return configured || fallbackToken();",
+      "replace": "    return configured;",
+      "command": "npm run --silent smoke:studenttokenkeys",
+      "expect_failure": "[FAIL]   analysis-player falls through a getToken naming the DEAD key and still sends it"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE KEY ITSELF: apcse_token drops out of the fallback",
+      "_why": "This is the mutation that shows why section 1 is not enough on its own. The key survives in the comment above the code, so the text scan still passes and only the run-it check goes red.",
+      "file": "public/analysis-player.js",
+      "find": "        localStorage.getItem('apcse_token') ||",
+      "replace": "",
+      "command": "npm run --silent smoke:studenttokenkeys",
+      "expect_failure": "[FAIL]   analysis-player falls through a getToken naming the DEAD key and still sends it"
+    },
+    {
+      "kind": "live",
+      "name": "the DEPLOYED player sends the token, driven by the live page's own broken config",
+      "_credential": "NO CREDENTIAL NEEDED. The token is a string the script invents and nothing is sent anywhere. It does NOT observe a real student being refused, which needs a class code and a PIN; that half is smoke:analysisgate.",
+      "_why": "FALSE before the deploy and measured that way: run against production it reported '(no Authorization header at all)' on the signed-in case while both other cases passed. It RUNS the deployed bytes rather than grepping them, because a string being present is not the behaviour being right, which is the lesson already recorded on verify-lab-lock-live.js.",
+      "command": "node scripts/verify-analysis-token-live.js",
+      "expect": "OK - the deployed analysis player finds a signed-in student"
+    }
+  ]
+}
