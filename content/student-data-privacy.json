@@ -14,7 +14,8 @@
     "paragraphs": [
       "A student never gives us an email address. There is no field for one anywhere in the student sign-in, and there is no column for one in the students table.",
       "A teacher creates a class, the class gets a code like CSA-7QX4, and a student joins with a display name their teacher will recognize and a four digit PIN. Most teachers use a first name and a last initial. The PIN is stored as a bcrypt hash, so we cannot read it back and neither can anyone who obtains the database; a forgotten PIN is reset by the teacher, never recovered. That is the entire account.",
-      "Students who work without a teacher get an ME- code under the same model. Still a display name, still a PIN, still no email."
+      "Students who work without a teacher get an ME- code under the same model. Still a display name, still a PIN, still no email.",
+      "Our mailing list is a separate thing and it is not connected to any of this. Anyone can subscribe from the footer of the site, and some students do. A subscription creates a marketing contact holding an email address and nothing else: it is not a student account, it does not appear in any class, and it is not linked to a name, a PIN, or a single score. Unsubscribe is in every email we send."
     ]
   },
   "collected": {
