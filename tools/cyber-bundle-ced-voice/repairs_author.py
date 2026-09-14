@@ -208,6 +208,40 @@ PHRASES = [
     ("Which statements are consistent with, and D.4?", "Which statements are correct?"),
     ("(A.1 deepfake, A.2 phishing, A.3 extraction, A.4 poisoning, A.5 recon, A.6 coding)",
      "(deepfake, phishing, extraction, poisoning, recon, coding)"),
+
+    # ── the framework in SUBJECT position ───────────────────────────────────
+    # Found by the 2026-09-14 question audit. The modifier rules used to strip
+    # these too, leaving "yet the splits the CONTROLS" and "does the specifically
+    # recommend" in a shipped quiz. The gate refuses them now, so each one is
+    # rewritten into the passive or given a real subject.
+    ("which physical mitigation does the CED specifically recommend?",
+     "which physical mitigation is specifically recommended?"),
+    ("yet the CED splits the CONTROLS into two categories",
+     "yet the CONTROLS are split into two categories"),
+    ("The number of employees at the store, which the CED names as the primary driver of risk",
+     "The number of employees at the store, which is the primary driver of risk"),
+    ("Which of the following are techniques the CED names for segmenting a network under LO 3.3.A?",
+     "Which of the following are techniques for segmenting a network?"),
+    ("The CED splits the topic into managerial controls (3.2.A, the written rules) "
+     "and configuring wireless features (3.2.B, the actions).",
+     "This topic splits into managerial controls (the written rules) and "
+     "configuring wireless features (the actions)."),
+    ("protects against three attacks the CED names", "protects against three named attacks"),
+    ("one root cause the CED names", "one root cause"),
+    ("Task B - Which idea is hardest to get right? [LO 3.4.A–D] —",
+     "Task B - Which idea is hardest to get right? —"),
+
+    # ── damage that was ALREADY in the bundle ───────────────────────────────
+    # Neither of these carries a CED word, so the voice detector was never going
+    # to see them; the 2026-09-14 audit found them by reading the items. Both are
+    # the earlier strip's work, and the student copy is the one that is broken.
+    ("happening; the says the feed should be recorded AND monitored",
+     "happening; the feed should be recorded AND monitored"),
+    ("cite the law/standard or the, and justify it",
+     "cite the law or standard, and justify it"),
+    # Matches the wording tools/bundle-quiz-relabel/plan.py authored for this same
+    # item on 2026-09-01, independently.
+    ("Which statement(s) correctly reflect?", "Which statement(s) are correct?"),
 ]
 
 CLEANUPS = [(re.compile(r'[ \t]{2,}'), ' '), (re.compile(r'\s+([,.;:?!])'), r'\1')]

@@ -22,7 +22,34 @@ ET.register_namespace('w', W[1:-1])
 
 QUIZ = 'Unit_2_Securing_Spaces/Lesson_2.2_Physical_Vulnerabilities/Quiz/Quiz_STUDENT.docx'
 EX = 'Unit_4_Securing_Devices/Lesson_4.1_Device_Vulnerabilities/Supplements/Exercise_1_STUDENT.docx'
+EX2 = 'Unit_4_Securing_Devices/Lesson_4.3_Protecting_Devices/Supplements/Exercise_2_STUDENT.docx'
 KEY = 'Unit_2_Securing_Spaces/Lesson_2.2_Physical_Vulnerabilities/Quiz/Quiz_KEY.docx'
+
+
+def _retext(match, new):
+    """Replace a paragraph's text outright."""
+    def f(root):
+        for para in root.iter(W + 'p'):
+            ts = [t for t in para.iter(W + 't')]
+            txt = ''.join(t.text or '' for t in ts).strip()
+            if ts and match(txt):
+                ts[0].text = new
+                for t in ts[1:]:
+                    t.text = ''
+                return True
+        return False
+    return f
+
+
+def _empty_a_cell(root):
+    """Strip every paragraph out of one table cell."""
+    for tc in root.iter(W + 'tc'):
+        ps = [k for k in tc if k.tag == W + 'p']
+        if len(ps) >= 1:
+            for k in ps:
+                tc.remove(k)
+            return True
+    return False
 
 
 def _rewrite(path, fn):
@@ -79,14 +106,21 @@ def _strip_char(match, ch):
 
 
 MUTATIONS = [
-    ('removed: one target line left in the document', 'removed', QUIZ,
+    ('removed: a document left unprocessed', 'removed', QUIZ,
+     'restore the unprocessed original'),
+    ('removed: a callout box left in place', 'removed', EX,
+     'restore the unprocessed original'),
+    ('removed: a step row left in place', 'removed', EX2,
      'restore the unprocessed original'),
     ('only: an extra, untargeted paragraph deleted', 'only', QUIZ,
      _drop_nth_paragraph(lambda t: t.startswith('A. '), 0)),
-    ('spared: an exercise "Predict first" heading deleted', 'spared', EX,
-     _drop_nth_paragraph(lambda t: t == 'Predict first', 0)),
+    ('only: a paragraph reworded, not a renumber', 'only', QUIZ,
+     _retext(lambda t: t.startswith('7. '), 'Something else entirely.')),
+    ('renumber: surviving steps not renumbered', 'renumber', EX2,
+     _retext(lambda t: t.startswith('Step 1 - '), 'Step 3 - Mechanism + defense')),
+    ('package: a table cell emptied of paragraphs', 'package', EX2, _empty_a_cell),
     ('intact: a correct-answer checkmark removed', 'intact', KEY,
-     _strip_char(lambda t: True, '✓')),
+     _strip_char(lambda t: True, '\u2713')),
     ('intact: framework voice put back in a student copy', 'intact', QUIZ,
      _append_to_first(lambda t: t.startswith('7. '), ' According to the CED, which?')),
     ('package: the file truncated', 'package', QUIZ, 'truncate'),

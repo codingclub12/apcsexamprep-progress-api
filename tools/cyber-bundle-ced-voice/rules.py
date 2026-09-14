@@ -84,7 +84,9 @@ VERB_AFTER = (
     r'identify|identifies|allow|allows|warn|warns|advise|advises|assign|assigns|'
     r'apply|applies|cover|covers|address|addresses|show|shows|give|gives|'
     r'provide|provides|make|makes|set|sets|use|uses|consider|considers|'
-    r'separate|separates|prohibit|prohibits|permit|permits|report|reports'
+    r'separate|separates|prohibit|prohibits|permit|permits|report|reports|'
+    r'split|splits|divide|divides|count|counts|mark|marks|rank|ranks|sort|sorts|'
+    r'hold|holds|break|breaks|put|puts|take|takes|answer|answers'
 )
 
 # ── the rules ───────────────────────────────────────────────────────────────
@@ -105,10 +107,12 @@ RULES = [
     #    "the CB malware type" is just "the malware type": the taxonomy is the
     #    lesson's content, and naming its owner adds nothing a student can use.
     ('mod_the_ced',     _sub(r"\bthe\s+(?:CED|CB)(?:'s)?\s+"
+                             r"(?!(?:" + VERB_AFTER + r")\b)"
                              r"(malware|device|password|detection|risk|attack|vulnerabilit|"
                              r"categor|term|control|defen|weakness|criteri|indicator|IoC|"
                              r"name|type|three|four|seven|illustrative)", r'the \1')),
     ('mod_bare_ced',    _sub(r"\b(?:CED|CB)\s+"
+                             r"(?!(?:" + VERB_AFTER + r")\b)"
                              r"(malware type|device vulnerabilit\w*|device weakness|"
                              r"password attack|detection method|risk level|attack|"
                              r"vulnerabilit\w*|categor\w+|terms?|controls?|defenses?|"
@@ -118,7 +122,7 @@ RULES = [
     ('mod_its_ced',     _sub(r"\bits\s+(?:CED|CB)\s+(name|type|categor\w+|attack name)", r'its \1')),
     ('mod_each_ced',    _sub(r'\beach\s+(?:CED|CB)\s+(attack|control|method)', r'each \1')),
     ('mod_a_ced',       _sub(r'\ba\s+(?:CED|CB)\s+(risk level|malware type)', r'a \1')),
-    ('mod_which_ced',   _sub(r'\bwhich\s+(?:CED|CB)\s+', 'which ')),
+    ('mod_which_ced',   _sub(r'\b(which)\s+(?:CED|CB)\s+', r'\1 ')),
     ('mod_two_ced',     _sub(r'\b(two|three|four|five|six|seven)\s+(?:CED|CB)\s+', r'\1 ')),
 
     # 4. Course-navigation labels. The distinction is real and useful to a
@@ -167,8 +171,10 @@ RULES = [
     # 8. Any remaining "the CED/CB/College Board <common noun>" modifier. Anchored
     #    on a lowercase next word so "the CB Learning Objectives" is left to
     #    drop_lo_map rather than being turned into "the Learning Objectives".
-    ('mod_generic_ced', _sub(r"\bthe\s+(?:CED|CB)(?:'s)?\s+(?!(?:" + VERB_AFTER + r")\b)(?=[a-z])", 'the ')),
-    ('mod_generic_board', _sub(r"\bthe\s+College\s+Board(?:'s)?\s+(?!(?:" + VERB_AFTER + r")\b)(?=[a-z])", 'the ')),
+    ('mod_generic_ced', _sub(r"\bthe\s+(?:CED|CB)(?:'s)?\s+"
+                             r"(?!(?:" + VERB_AFTER + r")\b)(?!\w+ly\b)(?=[a-z])", 'the ')),
+    ('mod_generic_board', _sub(r"\bthe\s+College\s+Board(?:'s)?\s+"
+                               r"(?!(?:" + VERB_AFTER + r")\b)(?!\w+ly\b)(?=[a-z])", 'the ')),
     ('mod_cb_required', _sub(r'\bthe\s+CB-required\b', 'the required')),
     ('mod_cb_hyphen',   _sub(r'\bCB-required\b', 'required')),
 
@@ -183,7 +189,8 @@ RULES = [
     #     Anchored on a lowercase next word, so the capitalised proper names
     #     ("CB Standard", "CB Scenario 3B", "CB Learning Objectives") are left to
     #     their own rules above rather than being silently decapitated.
-    ('mod_bare_generic', _sub(r'\b(?:CED|CB)\s+(?!(?:' + VERB_AFTER + r')\b)(?=[a-z])', '')),
+    ('mod_bare_generic', _sub(r'\b(?:CED|CB)\s+'
+                              r'(?!(?:' + VERB_AFTER + r')\b)(?!\w+ly\b)(?=[a-z])', '')),
     ('drop_code_number2', _sub(r'(?<!EK )\s+\d\.\d\.[A-F]\s+number\b', '')),
     ('drop_paren_code',  _sub(r'\s*\(\d\.\d\.[A-F](?:\.\d+)?\)', '')),
 
@@ -235,7 +242,8 @@ RULES = [
     #     established answer, from tools/bundle-quiz-relabel/plan.py, is to ask
     #     for the statement instead: the question survives, the filing system does
     #     not.
-    ('which_ek',        _sub(r'\bWhich EK\b', 'Which statement')),
+    ('which_ek_mod',    _sub(r'\b(Which)\s+EK\s+[\d.A-F]+\s+(?=[a-z])', r'\1 ')),
+    ('which_ek',        _sub(r'\bWhich EK\b(?!\s*[\d.])', 'Which statement')),
     ('the_ek_that',     _sub(r'\bthe EK that\b', 'the statement that')),
     ('matches_ek',      _sub(r'\bmatches EK\s+[\d.A-F]+', 'matches that definition')),
     ('reflect_ek',      _sub(r'\bcorrectly reflect EK\s+[\d.A-F]+', 'are correct')),
@@ -325,6 +333,19 @@ DAMAGE = [
     ('orphan_dash',   re.compile(r'[—–]\s*[.?!]|[—–]\s*$')),
     ('starts_lower',  re.compile(r'^\d+\.\s+[a-z]')),
     ('orphan_ek',     re.compile(r'\bEKs?\s+(?:and|or|,|\.)')),
+    # The framework was the SUBJECT of the sentence and removing it left the
+    # article stranded in front of the verb: "yet the splits the CONTROLS",
+    # "does the specifically recommend", "which the names as the primary driver".
+    ('subject_stripped', re.compile(
+        r'\bthe\s+(?:says?|said|splits?|lists\b|calls\b|describes?|defines?|states\b|'
+        r'recommends?|gives\b|treats?|classifies|identifies|emphasi\w+|'
+        r'specifically|explicitly|directly|chiefly|names\s+(?:as|the)\b)')),
+    ('bare_the',      re.compile(r'\bthe\s*[,.]')),
+    # "Which statement detection method": a head noun replaced in front of another.
+    ('statement_noun', re.compile(
+        r'\bWhich statement\s+(?!best|captures?|describes?|explains?|supports?|'
+        r'correctly|is\b|are\b|about\b|\(s\))[a-z]')),
+    ('lower_which',   re.compile(r'[.!?]\s+which\s')),
 ]
 
 

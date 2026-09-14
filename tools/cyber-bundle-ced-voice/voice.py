@@ -84,6 +84,19 @@ DANGLING = [
     # "(with its)": a parenthetical whose noun was deleted out of it.
     ('dangling_paren',  re.compile(r'\(\s*(?:(?:with|and|per|see|from|under|in)\s+)?'
                                    r'(?:its|the)\s*\)')),
+    # The subject deleted out from under its own verb, by the EARLIER strip rather
+    # than by this tool: "; the says the feed should be recorded AND monitored".
+    # Found by the 2026-09-14 question audit, which read the items rather than
+    # scanning them for framework words. These carry no CED wording at all, so
+    # nothing else here was ever going to see them.
+    ('dangling_subject', re.compile(r'\bthe\s+(?:says?|splits?|specifically|explicitly'
+                                    r'|chiefly|names\s+as)\b')),
+    # "Which statement(s) correctly reflect?" - reflect is transitive here and its
+    # object (an EK code) went out with the earlier strip. The KEY still reads
+    # "correctly reflect EK 2.2.B.1?", so only the student copy is broken.
+    ('dangling_reflect', re.compile(r'\bcorrectly reflect\s*\?')),
+    # "cite the law/standard or the, and justify it"
+    ('dangling_orthe',  re.compile(r'\b(?:or|and)\s+the\s*,')),
     # A preposition whose object was deleted out from under it: "consistent with,".
     ('dangling_prep',   re.compile(r'\b(?:According to|consistent with|described in|'
                                    r'defined in|Per)\s*,', re.I)),
