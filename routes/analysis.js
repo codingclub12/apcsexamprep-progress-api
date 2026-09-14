@@ -20,6 +20,10 @@
 //  an item some class has explicitly closed, so an activity nobody has locked
 //  stays open and indexable.
 //
+//  A SIGNED-IN TEACHER IS NOT AN ANONYMOUS REQUEST. She gets the activity, and
+//  the cross-class rule never runs for her. See gateFor below for what went
+//  wrong before that was true.
+//
 //  GRADING KEEPS NOTHING
 //  A student types prose into four of the six fields. That prose is graded by
 //  lib/analysis-grade.js and discarded when the response is written. It is never
@@ -48,15 +52,29 @@ function cors(res) {
   res.append('Vary', 'Authorization');
 }
 
+function bearer(req) {
+  const auth = req.headers.authorization || '';
+  return auth.startsWith('Bearer ') ? auth.slice(7) : null;
+}
+
+//  Role-agnostic verify, the same reuse routes/labs.js and routes/gate.js make:
+//  one canonical secret in utils.js, and the payload's own role claim decides.
+function verifyAnyToken(token) {
+  try { return verifyStudentToken(token); } catch (e) { return null; }
+}
+
 //  TOLERANT, exactly like routes/labs.js: an absent or unreadable token is
 //  anonymous rather than an error, because this route releases no key to a
 //  signed-in student that it withholds from a signed-out one.
+//
+//  It answers for STUDENTS only. A teacher token verifies fine and returns null
+//  here, which is correct for what this function is for and is why gateFor below
+//  has to ask about a teacher separately rather than reading the absence of a
+//  student as "nobody is signed in".
 function student(req) {
-  const auth = req.headers.authorization || '';
-  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  const token = bearer(req);
   if (!token) return null;
-  let payload;
-  try { payload = verifyStudentToken(token); } catch (e) { return null; }
+  const payload = verifyAnyToken(token);
   if (!payload || payload.role !== 'student' || !payload.id) return null;
   return db.prepare('SELECT id, class_id FROM students WHERE id = ?').get(payload.id) || null;
 }
@@ -80,8 +98,42 @@ function gateFor(req, spec) {
 
   const stu = student(req);
   if (!stu) {
+    //  A TEACHER IS NOT ANONYMOUS, and this route said she was until 2026-09-14.
+    //
+    //  student() requires role === 'student', so a signed-in TEACHER returns null
+    //  and fell straight into the cross-class branch below. That branch refuses
+    //  whenever ANY class anywhere has closed the activity. So a teacher opened
+    //  the 1.1 Lab for her own class, opened the page to check it, and was told
+    //  her teacher had not opened it yet, over a lock some other teacher set on
+    //  a class she has never seen. Her own class's open row was never consulted.
+    //
+    //  Reported as "the 1.1 lab will not unlock even when it's unlocked", which
+    //  is precisely what it looks like from the Command Center: the chip reads
+    //  open, the page reads shut, and nothing she can click reconciles them.
+    //
+    //  routes/labs.js already decided this on 2026-09-09 off the same support
+    //  email ("lab open but isn't open"). This route was written on 2026-09-07
+    //  and never got the port, so the two siblings disagreed about who counts as
+    //  anonymous. One fix in two files is how that drift started; this is the
+    //  second half of it.
+    //
+    //  This does not reopen the 2026-09-07 hole. That was a STUDENT signing out
+    //  to walk past their teacher's lock, and a student cannot mint a teacher
+    //  token. Entitlement is deliberately not required, matching routes/labs.js:
+    //  an activity nobody has closed is served to the public already, so
+    //  demanding one here would invent a fresh way to be wrong for a teacher on
+    //  a free plan.
+    const asTeacher = verifyAnyToken(bearer(req) || '');
+    if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {
+      return { open: true, reason: 'teacher-preview', audience: 'teacher' };
+    }
     const hit = lockedForAnyClass(anyGateStmt.all(spec.course, unit), lesson, acts);
-    if (hit.locked) return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope };
+    //  audience says WHOSE decision this was, so the page can stop attributing a
+    //  cross-class refusal to a teacher the caller does not have. Same field and
+    //  same meaning as routes/labs.js.
+    if (hit.locked) {
+      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };
+    }
     return { open: true, reason: 'self-study' };
   }
   const cls = classStmt.get(stu.class_id);
@@ -90,7 +142,11 @@ function gateFor(req, spec) {
 }
 
 const LOCKED_BODY = (course, itemId, gate) => ({
-  course, item_id: itemId, locked: true, reason: gate.reason, activity: null,
+  course, item_id: itemId, locked: true, reason: gate.reason,
+  //  'class' is the default because every other refusal here IS the caller's own
+  //  class: resolveAliasGate only ever runs with a class row.
+  locked_for: gate.audience || 'class',
+  activity: null,
 });
 
 router.get('/api/analysis/:course/:item_id', (req, res) => {

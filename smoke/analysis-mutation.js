@@ -77,9 +77,38 @@ const MUTATIONS = [
     name: 'signing out walks past it again: anonymous goes back to automatic self-study',
     file: 'route',
     suite: 'gate',
-    find: "    const hit = lockedForAnyClass(anyGateStmt.all(spec.course, unit), lesson, acts);\n    if (hit.locked) return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope };",
-    repl: '    if (false) return { open: false };',
+    find: "    if (hit.locked) {\n      return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope, audience: 'anonymous' };\n    }",
+    repl: '    if (false) { return { open: false }; }',
     must: ['a signed-OUT student is refused too'],
+  },
+  {
+    //  Reported 2026-09-14: "the 1.1 lab will not unlock even when it's unlocked".
+    //  student() answers for STUDENTS, so a signed-in teacher returns null, and
+    //  this route read that null as "nobody is signed in" and ran the cross-class
+    //  rule on her. A lock set by a teacher at another school then shut her out of
+    //  a lab her own class had open, and her own row was never consulted.
+    name: 'a teacher is anonymous again, so another class\'s lock shuts her out of her own lab',
+    file: 'route',
+    suite: 'gate',
+    find: "    const asTeacher = verifyAnyToken(bearer(req) || '');\n    if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {\n      return { open: true, reason: 'teacher-preview', audience: 'teacher' };\n    }\n",
+    repl: '',
+    must: ['the teacher gets the activity she opened'],
+  },
+  {
+    //  The role check on that branch is load-bearing and this proves it rather
+    //  than asserting it. student() also returns null when the student ROW is
+    //  gone, so a stale 180 day token from a deleted roster entry verifies, still
+    //  claims role 'student', and would take the teacher branch if the role were
+    //  not checked. That is the 2026-09-07 sign-out bypass with extra steps.
+    //
+    //  Written because dropping the role check left the gate suite entirely
+    //  green, which is the definition of a hollow guard in this repo.
+    name: 'the teacher branch stops checking the role, so a stale student token previews too',
+    file: 'route',
+    suite: 'gate',
+    find: "if (asTeacher && asTeacher.role === 'teacher' && asTeacher.id) {",
+    repl: 'if (asTeacher && asTeacher.id) {',
+    must: ['a token whose student row is gone gets no teacher preview'],
   },
   {
     //  The overcorrection. Refusing everyone everything closes the hole and takes
