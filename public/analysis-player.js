@@ -9,6 +9,10 @@
 //     server cannot attribute to a class. The lab player shipped without this
 //     once and a closed lab stayed open for everyone; the token is optional, so
 //     anonymous practice still works, but it is SENT when it exists.
+//
+//     SENDING IT MEANS FINDING IT. Supplying the header is only half: the 1.1
+//     page named a localStorage key nothing writes, so this player dutifully sent
+//     nothing and a signed-in student was served as a passer-by. See token().
 //  2. IT NEVER BUILDS MARKUP FROM AUTHOR STRINGS. Paragraphs arrive as token
 //     lists and are rendered with createTextNode, so no content file can inject
 //     HTML into a student's page.
@@ -25,8 +29,40 @@
   var conf = window.APCS_ANALYSIS || {};
   var BASE = conf.base || '';
 
+  //  THE CONFIGURED getToken IS A HINT, NOT THE ONLY SOURCE, and that changed on
+  //  2026-09-14 because the page got it wrong and nothing said so.
+  //
+  //  The 1.1 lab page supplies a getToken reading localStorage 'apcs_student_token'
+  //  and nothing else. Nothing WRITES that key: shopify/join.html sets
+  //  'apcse_token' at sign-in and every one of the theme's 20 token references
+  //  reads that one. So a signed-in student sent no Authorization header, the
+  //  server saw an anonymous request, and the teacher's lock could not bind them.
+  //
+  //  It stayed invisible for a week because the anonymous rule in force until
+  //  board 277 refused anonymous callers anyway, so the page LOOKED locked and
+  //  the missing token changed nothing anybody could see. Opening the anonymous
+  //  case exposed it the same day, reported as "it didn't lock when the teacher
+  //  locked it for a student".
+  //
+  //  So an EMPTY answer from the configured getToken falls through to the same
+  //  resolution the lab player has always had. That is what repairs the live page
+  //  on a deploy rather than on a Matrixify import, and page bodies are the
+  //  expensive half: a key list in a page body costs a live MERGE to change,
+  //  while this file costs a push. lib/student-token-keys.js is the authority for
+  //  the list and smoke:studenttokenkeys fails if this drifts from it.
+  function fallbackToken() {
+    try {
+      return window.APCS_STUDENT_TOKEN ||
+        localStorage.getItem('apcse_token') ||
+        localStorage.getItem('apcs_student_token') ||
+        localStorage.getItem('student_token') || '';
+    } catch (e) { return ''; }
+  }
+
   function token() {
-    try { return (conf.getToken && conf.getToken()) || ''; } catch (e) { return ''; }
+    var configured = '';
+    try { configured = (conf.getToken && conf.getToken()) || ''; } catch (e) { configured = ''; }
+    return configured || fallbackToken();
   }
 
   function el(tag, cls, text) {
@@ -61,7 +97,7 @@
   function specimenNode(act, sp, onCheck) {
     var wrap = el('div', 'lab-section');
     wrap.id = 'email' + sp.n + '-section';
-    wrap.appendChild(el('h2', null, 'Email Specimen #' + sp.n + ' — Difficulty: ' + sp.difficulty));
+    wrap.appendChild(el('h2', null, 'Email Specimen #' + sp.n + ', Difficulty: ' + sp.difficulty));
 
     var spec = el('div', 'email-specimen');
     var bar = el('div', 'email-bar');
@@ -169,7 +205,7 @@
         for (var g = 0; g < got.fields.length; g++) {
           fb.appendChild(document.createElement('br'));
           fb.appendChild(el('strong', null, got.fields[g].detail.label + ':'));
-          fb.appendChild(document.createTextNode(' ' + got.fields[g].points + (got.fields[g].points === 1 ? ' pt — ' : ' pts — ') + got.fields[g].detail.text));
+          fb.appendChild(document.createTextNode(' ' + got.fields[g].points + (got.fields[g].points === 1 ? ' pt. ' : ' pts. ') + got.fields[g].detail.text));
         }
 
         var t = 0, done = 0;

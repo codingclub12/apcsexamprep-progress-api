@@ -67,8 +67,14 @@ function build() {
 
   const mount = [
     boot.mountPoint(MOUNT, 'Loading the analysis activity...'),
-    '<script>window.APCS_ANALYSIS={base:' + JSON.stringify(API) + ','
-      + 'getToken:function(){try{return localStorage.getItem("apcs_student_token")||"";}catch(e){return "";}}};</' + 'script>',
+    //  NO getToken. It used to emit one reading localStorage 'apcs_student_token',
+    //  a key nothing writes, so every signed-in student on this page was served
+    //  as a passer-by and no teacher lock could bind them. The player resolves the
+    //  token itself now, starting with 'apcse_token' which is what sign-in
+    //  actually sets, and it falls through an empty configured getToken for the
+    //  same reason. Naming the key HERE puts it in a page body, and a page body
+    //  costs a live Matrixify MERGE to correct while the player costs a push.
+    '<script>window.APCS_ANALYSIS={base:' + JSON.stringify(API) + '};</' + 'script>',
     boot.bootstrapScript({
       mountId: MOUNT,
       globalName: 'APCSAnalysis',
