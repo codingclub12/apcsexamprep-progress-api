@@ -261,6 +261,30 @@ const PAGES = [
     description: 'AP CSA Unit 4, the largest and most heavily tested unit on the exam, covers arrays, ArrayLists, 2D arrays, searching, sorting, and recursion.',
     why: 'description was scraped breadcrumb text, and the title carried an em dash',
   },
+
+  // Found by the 2026-09-14 daily crawl, shard 6/7: three more CSA Unit 4
+  // lesson pages carrying the same scraped Command Center nav furniture
+  // ("AP CSA Hub Unit 4 4.1 Lesson Ex 1 Ex 2 Quiz 4.2 ...") as their meta
+  // description, and a default title-plus-brand tag that had never been
+  // set by hand.
+  {
+    handle: 'ap-csa-lesson-4-2-introduction-to-using-data-sets',
+    title: 'AP CSA Lesson 4.2: Introduction to Using Data Sets',
+    description: 'AP CSA Lesson 4.2 introduces one dimensional arrays: declaring and initializing a data set, accessing elements by index, and array length versus last index.',
+    why: 'description was scraped Command Center nav furniture; title was the default page-title-plus-brand tag',
+  },
+  {
+    handle: 'ap-csa-lesson-4-4-traversing-arrays',
+    title: 'AP CSA Lesson 4.4: Traversing Arrays',
+    description: 'AP CSA Lesson 4.4 covers traversing arrays with for and enhanced for loops, reading and modifying elements during a pass, and avoiding off by one index errors.',
+    why: 'description was scraped Command Center nav furniture; title was the default page-title-plus-brand tag',
+  },
+  {
+    handle: 'ap-csa-lesson-4-5-algorithms-with-arrays',
+    title: 'AP CSA Lesson 4.5: Algorithms with Arrays',
+    description: 'AP CSA Lesson 4.5 builds standard array algorithms: a minimum or maximum, a running sum or average, linear search, and counting elements that match a rule.',
+    why: 'description was scraped Command Center nav furniture; title was the default page-title-plus-brand tag',
+  },
 ];
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
