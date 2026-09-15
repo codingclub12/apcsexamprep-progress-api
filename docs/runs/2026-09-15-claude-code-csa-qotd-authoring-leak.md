@@ -129,3 +129,95 @@ and nothing was lost.
 so the tag was gone before the rule saw it. It read as a sensible rule, it sat in
 the list, and it was dead. That is the same shape as the two hollow guards of
 2026-09-02 and the third of 2026-09-03, and per-rule mutation is what catches it.
+
+---
+
+## Imported, same day
+
+Tanner asked for the nine as one file, imported it, and said so. What the live
+storefront says now:
+
+```
+npm run verify:qotdauthoring
+  ok  ap-csa-u1-c1-day-22-math-random-range           7/7  4 nbsp -> plain space, board 292
+  ok  ap-csa-u2-c2-day-4-iii-loop-equivalence         4/4  4 nbsp -> plain space, board 292
+  ok  ap-csa-u1-c2-day-7-error-method-calls           4/4  4 nbsp -> plain space, board 292
+  ok  ap-csa-u1-c1-day-15-chained-string-methods      5/5  4 nbsp -> plain space, board 292
+  ok  ap-csa-u1-c2-day-20-iii-expression-evaluation   4/4  4 nbsp -> plain space, board 292
+  ok  ap-csa-u1-c2-day-28-comprehensive-final-review  4/4  4 nbsp -> plain space, board 292
+  ok  unit-4-day-19-arraylist-shifting                6/6  byte-identical to the sheet
+  ok  unit-4-cycle-2-day-25-selection-sort-iteration  8/8  byte-identical to the sheet
+  ok  unit4-cycle2-day-25-selection-sort-iteration    8/8  4 nbsp -> plain space, board 292
+
+All 9 repaired articles are live and none of them talks to itself.
+```
+
+Today's question serves `var correct = 'C'` and reads `Answer: (C) I and III only`.
+
+### The only deviation from the sheets, and it is board 292
+
+Every live body was compared to the sheet that produced it, character by
+character. Across all nine, the differences are 4 per article and every one of
+them is the same substitution: `U+00A0` to `U+0020`. Zero differences of any
+other kind.
+
+That is the known Matrixify behaviour on board 292, and it is not caused by
+anything in this run: the four non-breaking spaces sat between the option letter
+and its text in the LIVE body before any of this, and the sheets carried them
+through untouched. What a student sees change is the gap after `(A)` narrowing
+from about two spaces to one, on the seven articles that had them.
+
+Two articles had no non-breaking spaces and came back byte-identical, which is
+the control: it rules out the substitution being something the extraction or the
+comparison does on its own.
+
+The twins are now byte-identical to each other, because those four characters
+were the only thing left that distinguished them. Board 333.
+
+### A verifier that was wrong, and what was done about it
+
+The first run after the import reported day 19 as "not live yet". The import was
+fine. The assertion was this:
+
+```js
+['trace is the i++ trace', 'size stays exactly 3 ahead of i forever']
+```
+
+and the repaired body breaks that sentence across a `</span>` and a newline, so
+the needle could never match anything, on any import, ever. It read like a
+sensible assertion and it sat in the list through a PR, a CI run and a merge.
+**A wrong verifier is worse than no verifier**: it sends somebody to re-import a
+page that is already correct.
+
+Two changes, and the second is the one that matters:
+
+- The primary assertion is now byte for byte against the sheet, with one named
+  tolerance for board 292 and nothing else. That cannot be phrased wrongly.
+- `smoke/csa-qotd-authoring-repair.js` now checks the checks offline. Every
+  `must` needle has to be findable in the repaired body it describes AND absent
+  from the pre-import one; every `mustNot` needle the reverse. Three mutations
+  cover it, and the first one is the exact bug that shipped:
+
+```
+mutation 1  the original unmatchable needle
+  FAIL  must-needle "trace is the i++ trace" is not in the repaired body,
+        so it can never pass on a correct import
+mutation 2  a must-needle that was already true before the repair
+  FAIL  must-needle "key is C" was already in the body before the repair,
+        so it asserts nothing
+mutation 3  a mustNot that was never there to begin with
+  FAIL  mustNot-needle "old key A" was not in the body before the repair
+        either, so it asserts nothing
+```
+
+### What this cost and what it teaches
+
+Nothing, this time, because the byte comparison was run before anyone acted on
+the false report. It could easily have cost a second unreviewed MERGE over a
+live body, which is the one thing the split-sheet rule exists to prevent.
+
+The lesson is the one already written at the top of this file, turned back on
+itself. The repair was careful to re-derive every answer key by running Java
+rather than by reading the explanation. The verifier was not held to the same
+standard: its needles were written by reading the diff and never run against the
+case they describe. **A check is content too, and content gets verified.**
