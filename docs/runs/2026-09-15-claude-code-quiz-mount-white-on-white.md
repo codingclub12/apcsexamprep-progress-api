@@ -120,46 +120,67 @@ The last line is the one worth having. It proves the synthetic host catches
 something the live fixture cannot see, so the second case is not a copy of the
 first.
 
-## Still open, and it is the half that reaches students
+## The Files object was replaced, and it still did not reach a student
 
-**Merging PR #115 does not change what a student loads.** The 23 live pages do
-not load the mount from the theme. They load it from Shopify Files:
+Tanner authorised the replacement and it ran at 17:53 UTC.
+`stagedUploadsCreate`, a POST of the 18,970 byte build, then `fileUpdate` with
+`originalSource` against `gid://shopify/GenericFile/38250791960791`. The object
+came back `READY`, same id, `originalFileSize` 18,970, no `fileErrors`. That part
+worked exactly as documented.
 
-    https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736
+It changed nothing for a student, and the reason is one query parameter.
 
-That object is `gid://shopify/GenericFile/38250791960791`, uploaded 2026-08-26,
-`originalFileSize` 14,986 bytes, which is the pre-fix theme source byte for
-byte. The CDN serves an 8,436 byte minified render of it, and that is the file
-the 1.1:1 measurement above was taken against.
+Every one of the 23 pages loads the script as
+`apcs-quiz-mount.js?v=1787764736`, and Shopify's file CDN treats `v` as part of
+the cache key. Measured immediately after, and again over six minutes:
 
-So the theme repo is the source of truth for the FILE and the deploy is a
-separate act: replace the Files object with the new build. `fileUpdate` with
-`originalSource` is the way, and Shopify's own documentation for it says it
-updates the content "while maintaining the same file ID and URL structure", so
-no page body needs to change.
+    ?v=1787764736   8,434 bytes   no qz-opt-text    the OLD build
+    no query        9,614 bytes   has qz-opt-text   the NEW build
+    ?v=1789494839   9,627 bytes   has qz-opt-text   the NEW build
 
-    stagedUploadsCreate  resource FILE, filename apcs-quiz-mount.js,
-                         mimeType application/javascript, httpMethod POST
-    POST the new bytes to the staged target
-    fileUpdate(files: [{ id: "gid://shopify/GenericFile/38250791960791",
-                         originalSource: "<the staged resourceUrl>" }])
+with `cache-control: public, max-age=31557600` and `age: 1730209` on the pinned
+one. A one year immutable entry, roughly twenty days old. It will keep serving
+the pre-fix file for about another 345 days, and replacing the object again would
+change nothing, because the pages would still be asking for that version.
 
-This session could not run it: the Shopify mutation is blocked here as a
-production deploy. Saying so rather than appearing to have shipped it.
+So the replacement was safe and insufficient. Nothing regressed: all 23 pages
+were pinned to the same URL, so all 23 saw exactly what they saw before.
 
-**After the replace, check the URL the pages actually name**, with its stale
-`?v=1787764736`, not just the canonical one. If that exact URL still serves the
-old 8,436 byte build once the CDN has caught up, then `v` is part of the cache
-key and the 23 script tags need repointing, which is a Matrixify pass split per
-unit. Check it before assuming either way.
+## What is left, and it is a page change
 
-The re-check is one command, against the file students load:
+`scripts/csa-cyber-quiz-mount-unpin-csv.js` drops `?v=1787764736` from the one
+script tag on each page, thirteen bytes, so the pages ask for the file instead of
+a snapshot of it. After that, replacing the Files object reaches students with no
+page edit, which closes the trap rather than stepping around it once.
 
-    cd APCSExamPrep-theme
-    curl -sS -o /tmp/cdn.js "https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-quiz-mount.js?v=1787764736"
-    QUIZ_MOUNT_ASSET=/tmp/cdn.js npm run verify:quiz-contrast
+Six sheets, ordered, smallest blast radius first:
 
-Red today. Green is the deploy.
+    1  quiz-mount-unpin-1-csa-1-1.csv        1 page    the reported page
+    2  quiz-mount-unpin-2-cyber-unit-1.csv   5 pages
+    3  quiz-mount-unpin-3-cyber-unit-2.csv   3 pages
+    4  quiz-mount-unpin-4-cyber-unit-3.csv   5 pages
+    5  quiz-mount-unpin-5-cyber-unit-4.csv   3 pages
+    6  quiz-mount-unpin-6-cyber-unit-5.csv   6 pages
+
+Sheet 1 answers the student's report on its own. The five cyber sheets are the
+same one-line change on pages that are NOT broken: they render at 10.31:1 today
+and will render identically after. They exist so the next replacement is not
+silently ignored on 22 pages, and there is no hurry about any of them.
+
+Expected end state per step: the page's script src loses its `?v=`, nothing else
+in the body moves, and the page starts loading the 9,614 byte build.
+
+`scripts/verify-quiz-mount-unpin-live.js` is the check, and it is written to be
+run BEFORE the import as well as after. It follows the URL the page actually
+names and looks for `qz-opt-text` in the bytes, so a page repointed at something
+that still serves the old file fails rather than passes. Read on 2026-09-15,
+after the Files replacement and before any import:
+
+    0 of 23 pages load a build that carries the fix
+
+Its rules are mutation tested per rule, and that caught one of its own: rule 6
+asked `out.includes('data-apcs-quiz')`, which is TRUE of `data-apcs-quiz-OFF`, so
+a mangled mount read as a present one. It is an attribute match now.
 
 ## What this is worth remembering for
 
