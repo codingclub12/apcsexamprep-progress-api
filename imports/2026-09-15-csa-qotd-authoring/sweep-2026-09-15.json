@@ -1,0 +1,221 @@
+{
+  "blog": "ap-csa-daily-practice",
+  "scanned": 429,
+  "as_of": "2026-09-15T15:06:27.079Z",
+  "hits": [
+    {
+      "handle": "unit4-cycle2-day-25-selection-sort-iteration",
+      "strict": [
+        {
+          "id": "fence",
+          "kind": "scaffold",
+          "excerpt": "ONE pass of selection sort on this array what is the result? A) ```java int[] arr = {5, 2, 8, 1, 9}; // After first pass of selection sort ``` B) [1, 2, 8, 5, 9]"
+        },
+        {
+          "id": "fence",
+          "kind": "scaffold",
+          "excerpt": "A) ```java int[] arr = {5, 2, 8, 1, 9}; // After first pass of selection sort ``` B) [1, 2, 8, 5, 9] C) [2, 5, 8, 1, 9] D) [1, 5, 2, 8, 9] Submit Answer"
+        }
+      ],
+      "report_only": []
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-9-while-removal",
+      "strict": [],
+      "report_only": [
+        {
+          "id": "rechecking",
+          "excerpt": "le loop with conditional increment: only advance i when no removal occurs. After removal, re-check the same index since a new element shifted in. AP Exam Tip Three safe removal patterns: (1) backward"
+        }
+      ]
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-12-equals-override",
+      "strict": [],
+      "report_only": [
+        {
+          "id": "actually",
+          "excerpt": "ve identical suit and rank, so equals returns true. (C) The cast succeeds because c2 is actually a Card object. (D) The equals method correctly overrides Object's equals(Object). Common Mistake The"
+        }
+      ]
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-4-iii-loop-equivalence",
+      "strict": [
+        {
+          "id": "wait",
+          "kind": "self-correction",
+          "excerpt": "pdate (i += 3). Why Not the Others? (B) i <= 10 would include i=9, then i=12 fails. Wait, 9+3=12 > 10. Actually B gives: 0 3 6 9 same output. But the while uses < not <= . For this specific case they"
+        }
+      ],
+      "report_only": [
+        {
+          "id": "actually",
+          "excerpt": "Why Not the Others? (B) i <= 10 would include i=9, then i=12 fails. Wait, 9+3=12 > 10. Actually B gives: 0 3 6 9 same output. But the while uses < not <= . For this specific case they match, but A is the dir"
+        }
+      ]
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-28-comprehensive-final-review",
+      "strict": [
+        {
+          "id": "blank-entity",
+          "kind": "artifact",
+          "excerpt": "ets the space character instead of \"S\". Trace with \"John Smith\" : J(0) o(1) h(2) n(3) &blank;(4) S(5) m(6) i(7) t(8) h(9) space: indexOf(\" \") = 4. first: substring(0, 1) = \"J\" . Correct. last: subs"
+        }
+      ],
+      "report_only": []
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-20-iii-expression-evaluation",
+      "strict": [
+        {
+          "id": "wait",
+          "kind": "self-correction",
+          "excerpt": "h with x = 14 , y = 4 : I: 14 / 4 + 14 % 4 = 3 + 2 = 5 . Is 5 == 14 ? No, it is false . Wait, but we proved earlier that (a/b)*b + a%b == a . Note: x/y + x%y is NOT the same as (x/y)*y + x%y . Here it is"
+        }
+      ],
+      "report_only": [
+        {
+          "id": "first-person",
+          "excerpt": "14 , y = 4 : I: 14 / 4 + 14 % 4 = 3 + 2 = 5 . Is 5 == 14 ? No, it is false . Wait, but we proved earlier that (a/b)*b + a%b == a . Note: x/y + x%y is NOT the same as (x/y)*y + x%y . Here it is addition without the"
+        }
+      ]
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-7-error-method-calls",
+      "strict": [
+        {
+          "id": "wait",
+          "kind": "self-correction",
+          "excerpt": "error. (D): Valid. add returns int (10), which widens to double (10.0) automatically. Wait - both (B) and (C) have errors. But (B) passes int to a String parameter. Actually, in Java, an int cannot be au"
+        }
+      ],
+      "report_only": []
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-22-math-random-range",
+      "strict": [
+        {
+          "id": "seems-right",
+          "kind": "key-doubt",
+          "excerpt": "es 12. III: INCORRECT. Math.random() * 8 + 5 gives [5.0, 13.0). Cast to int gives 5-12, which seems right. But when Math.random() is close to 1, 8 * 0.999... + 5 = 12.99... , cast to 12. Actually this does produce 5"
+        },
+        {
+          "id": "wait",
+          "kind": "self-correction",
+          "excerpt": "close to 1, 8 * 0.999... + 5 = 12.99... , cast to 12. Actually this does produce 5-12... Wait. Let me recheck: Math.random() * 8 is [0.0, 8.0), so + 5 gives [5.0, 13.0). (int) of [5.0, 13.0) gives 5 throu"
+        },
+        {
+          "id": "let-me",
+          "kind": "self-correction",
+          "excerpt": "to 1, 8 * 0.999... + 5 = 12.99... , cast to 12. Actually this does produce 5-12... Wait. Let me recheck: Math.random() * 8 is [0.0, 8.0), so + 5 gives [5.0, 13.0). (int) of [5.0, 13.0) gives 5 through 12. This is"
+        },
+        {
+          "id": "seems-right",
+          "kind": "key-doubt",
+          "excerpt": "m() * 8 is [0.0, 8.0), so + 5 gives [5.0, 13.0). (int) of [5.0, 13.0) gives 5 through 12. This is actually correct too. Correction: Both I and III produce values in the range 5-12. The answer should evaluate III more caref"
+        },
+        {
+          "id": "correction-label",
+          "kind": "self-correction",
+          "excerpt": "ives [5.0, 13.0). (int) of [5.0, 13.0) gives 5 through 12. This is actually correct too. Correction: Both I and III produce values in the range 5-12. The answer should evaluate III more carefully. Why Not t"
+        },
+        {
+          "id": "answer-should",
+          "kind": "key-doubt",
+          "excerpt": "s is actually correct too. Correction: Both I and III produce values in the range 5-12. The answer should evaluate III more carefully. Why Not the Others? (B) The multiplier must be 8 (the count of values from"
+        }
+      ],
+      "report_only": [
+        {
+          "id": "actually",
+          "excerpt": "ms right. But when Math.random() is close to 1, 8 * 0.999... + 5 = 12.99... , cast to 12. Actually this does produce 5-12... Wait. Let me recheck: Math.random() * 8 is [0.0, 8.0), so + 5 gives [5.0, 13.0). (int) o"
+        },
+        {
+          "id": "rechecking",
+          "excerpt": "8 * 0.999... + 5 = 12.99... , cast to 12. Actually this does produce 5-12... Wait. Let me recheck: Math.random() * 8 is [0.0, 8.0), so + 5 gives [5.0, 13.0). (int) of [5.0, 13.0) gives 5 through 12. This is"
+        }
+      ]
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-15-chained-string-methods",
+      "strict": [
+        {
+          "id": "wait",
+          "kind": "self-correction",
+          "excerpt": "substring(2, 8): Characters at indices 2-7: \"VA PR\" (J(0) A(1) V(2) A(3) (4)P(5) R(6) ... wait, let me recount). J(0) A(1) V(2) A(3) &blank;(4) P(5) R(6) A(7) C(8)... indices 2 through 7 = \"VA PR\" . Actual"
+        },
+        {
+          "id": "let-me",
+          "kind": "self-correction",
+          "excerpt": "ing(2, 8): Characters at indices 2-7: \"VA PR\" (J(0) A(1) V(2) A(3) (4)P(5) R(6) ... wait, let me recount). J(0) A(1) V(2) A(3) &blank;(4) P(5) R(6) A(7) C(8)... indices 2 through 7 = \"VA PR\" . Actually: index 2=V,"
+        },
+        {
+          "id": "blank-entity",
+          "kind": "artifact",
+          "excerpt": "\"VA PR\" (J(0) A(1) V(2) A(3) (4)P(5) R(6) ... wait, let me recount). J(0) A(1) V(2) A(3) &blank;(4) P(5) R(6) A(7) C(8)... indices 2 through 7 = \"VA PR\" . Actually: index 2=V, 3=A, 4=space, 5=P, 6=R. That i"
+        },
+        {
+          "id": "blank-entity",
+          "kind": "artifact",
+          "excerpt": "racters. AP Exam Tip Write out the string with index numbers: J(0) A(1) V(2) A(3) &blank;(4) P(5) R(6) A(7) C(8) T(9) I(10) C(11) E(12). This makes substring operations visual and accurate. Rev"
+        }
+      ],
+      "report_only": []
+    },
+    {
+      "handle": "unit-4-cycle-2-day-25-selection-sort-iteration",
+      "strict": [
+        {
+          "id": "fence",
+          "kind": "scaffold",
+          "excerpt": "ter ONE pass of selection sort on this array what is the val? A) ```java int[] arr = {5, 2, 8, 1, 9}; // After first pass of selection sort ``` B) [1, 2, 8, 5, 9]"
+        },
+        {
+          "id": "fence",
+          "kind": "scaffold",
+          "excerpt": "A) ```java int[] arr = {5, 2, 8, 1, 9}; // After first pass of selection sort ``` B) [1, 2, 8, 5, 9] C) [2, 5, 8, 1, 9] D) [1, 5, 2, 8, 9] Submit Answer"
+        }
+      ],
+      "report_only": []
+    },
+    {
+      "handle": "unit-4-day-19-arraylist-shifting",
+      "strict": [
+        {
+          "id": "wait",
+          "kind": "self-correction",
+          "excerpt": "e = 5 // i=4: add(\"X\" at 4), list = [X, A, X, B, X, C], size = 6 // i=6: 6 < 6? NO... wait, size is now 6! // i=6: add(\"X\" at 6), list grows to size 7 // i=8: 8 < 7? NO... but we just added, now si"
+        },
+        {
+          "id": "wait",
+          "kind": "self-correction",
+          "excerpt": "very insertion increases size() // i always catches up: 0<3, 2<4, 4<5, 6<6? NO // But wait: after i=4 insert, size=6, then i=6, 6<6 is FALSE // Let me retrace more carefully: // i=0: 0<3? YES, ins"
+        },
+        {
+          "id": "let-me",
+          "kind": "self-correction",
+          "excerpt": "3, 2<4, 4<5, 6<6? NO // But wait: after i=4 insert, size=6, then i=6, 6<6 is FALSE // Let me retrace more carefully: // i=0: 0<3? YES, insert, size=4 // i=2: 2<4? YES, insert, size=5 // i=4: 4<5? YES, in"
+        },
+        {
+          "id": "wait",
+          "kind": "self-correction",
+          "excerpt": "YES, insert, size=5 // i=4: 4<5? YES, insert, size=6 // i=6: 6<6? NO, loop ends // WAIT - rechecking: i increments by 2 each time // But size increases by 1 each insertion // So i gains 2, size ga"
+        },
+        {
+          "id": "let-me",
+          "kind": "self-correction",
+          "excerpt": "insertion // So i gains 2, size gains 1 = i will eventually exceed // NOT infinite... let me reconsider the trace // Actually with small list, terminates. With larger list // or if i += 1, it would be infinit"
+        }
+      ],
+      "report_only": [
+        {
+          "id": "rechecking",
+          "excerpt": "sert, size=5 // i=4: 4<5? YES, insert, size=6 // i=6: 6<6? NO, loop ends // WAIT - rechecking: i increments by 2 each time // But size increases by 1 each insertion // So i gains 2, size gains 1 = i"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
