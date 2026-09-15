@@ -38,34 +38,42 @@ function scoreExpression(body) {
   return m ? m[1].trim() : null;
 }
 
+/** The total the page prices itself at, read from its own declaration. */
+function pageTotal(body) {
+  const m = body.match(/var\s+totalPts\s*=\s*(\d+)/) || body.match(/var\s+TOTAL\s*=\s*(\d+)/);
+  return m ? Number(m[1]) : null;
+}
+
 /**
- * Does the denominator this expression prints move with the step count?
+ * What denominator does this expression print as the step count climbs?
  *
- * The expression is evaluated with the names the lab template uses. Anything
- * it reaches for that is not supplied comes back undefined and the evaluation
- * is reported as unreadable rather than guessed at.
+ * The expression is evaluated with the names the lab template uses and with
+ * the page's own total. Anything it reaches for that is not supplied comes
+ * back undefined and the evaluation is reported as unreadable rather than
+ * guessed at.
  */
-function denominatorMoves(expr) {
+function denominators(expr, total) {
   const names = ['te', 'comp', 'totalPts', 'totalSteps', 't', 'TOTAL', 'score', 'total'];
   let f;
   try { f = new Function(...names, 'return ' + expr); } catch (e) { return { readable: false, why: e.message }; }
-  const denomAt = (comp) => {
+  const at = (comp) => {
     let text;
-    try { text = String(f(10, comp, 30, 6, 10, 30, 10, 30)); } catch (e) { return null; }
+    try { text = String(f(10, comp, total, 6, 10, total, 10, total)); } catch (e) { return null; }
     const m = text.match(/(-?\d{1,3})\s*(?:\/|\bout\s+of\b|\bof\b)\s*(\d{1,3})/i);
     return m ? Number(m[2]) : null;
   };
-  const seen = [2, 3, 4, 5, 6].map(denomAt);
+  const seen = [2, 3, 4, 5, 6].map(at);
   if (seen.some((d) => d === null)) return { readable: false, why: 'no pair printed' };
   const distinct = [...new Set(seen)];
-  return { readable: true, moves: distinct.length > 1, seen };
+  return { readable: true, moves: distinct.length > 1, seen, constant: distinct.length === 1 ? distinct[0] : null };
 }
 
 function main() {
   const liveIdx = process.argv.indexOf('--live');
   const liveDir = liveIdx > 0 ? process.argv[liveIdx + 1] : null;
+  const ships = new Set(HANDLES);
 
-  const affected = [], clean = [], unreadable = [], missing = [];
+  const moving = [], fixed = [], other = [], wrongConstant = [], unreadable = [], missing = [];
   for (const h of CANDIDATES) {
     let body;
     try {
@@ -77,34 +85,48 @@ function main() {
       throw e;
     }
     const expr = scoreExpression(body);
-    if (!expr) { clean.push([h, 'no #score-display assignment']); continue; }
-    const v = denominatorMoves(expr);
+    if (!expr) { other.push([h, 'no #score-display assignment']); continue; }
+    const total = pageTotal(body);
+    const v = denominators(expr, total == null ? 30 : total);
     if (!v.readable) { unreadable.push([h, expr, v.why]); continue; }
-    if (v.moves) affected.push([h, expr, v.seen.join(',')]);
-    else clean.push([h, expr]);
+    if (v.moves) { moving.push([h, expr, v.seen.join(',')]); continue; }
+    //  Constant is not the same as correct. A page printing a constant that is
+    //  not the total it prices itself at is still misreporting, and that is the
+    //  exact shape of the mutation the suite keeps: totalSteps where totalPts
+    //  belongs prints a steady 6 on a thirty point lab.
+    if (ships.has(h) && total != null && v.constant !== total) { wrongConstant.push([h, expr, v.constant, total]); continue; }
+    if (ships.has(h)) fixed.push([h, expr, v.constant]);
+    else other.push([h, expr]);
   }
 
   console.log('\nREDERIVE  cyber lab running denominator, decided by evaluating each page expression\n');
-  for (const [h, expr, seen] of affected) console.log(`  MOVES     ${h.padEnd(30)} ${expr}   denominators seen: ${seen}`);
-  for (const [h, expr] of clean) console.log(`  ok        ${h.padEnd(30)} ${expr}`);
+  for (const [h, expr, seen] of moving) console.log(`  MOVES     ${h.padEnd(30)} ${expr}   denominators seen: ${seen}`);
+  for (const [h, expr, c, t] of wrongConstant) console.log(`  WRONG     ${h.padEnd(30)} ${expr}   prints a steady ${c} on a ${t} point lab`);
+  for (const [h, expr, c] of fixed) console.log(`  fixed     ${h.padEnd(30)} ${expr}   steady ${c}`);
+  for (const [h, expr] of other) console.log(`  ok        ${h.padEnd(30)} ${expr}`);
   for (const [h, expr, why] of unreadable) console.log(`  UNREAD    ${h.padEnd(30)} ${expr}  (${why})`);
   if (missing.length) console.log(`\n  ${missing.length} candidate handle(s) are not pages: ${missing.join(', ')}`);
 
-  const found = affected.map(([h]) => h).sort();
-  const ships = [...HANDLES].sort();
-  const onlyHere = found.filter((h) => !ships.includes(h));
-  const onlyThere = ships.filter((h) => !found.includes(h));
+  //  Two failures, and they are the two directions this can be wrong in.
+  //  A page outside the sheet that moves is a student still being misgraded by
+  //  a page nobody is fixing. A page inside the sheet that is neither moving
+  //  nor correctly steady is a page being rewritten for a reason nobody checked.
+  const strayMoving = moving.map(([h]) => h).filter((h) => !ships.has(h));
+  const accounted = new Set([...moving.map(([h]) => h), ...fixed.map(([h]) => h)]);
+  const unaccounted = [...ships].filter((h) => !accounted.has(h));
 
   console.log('');
+  console.log(`  state: ${fixed.length} fixed, ${moving.filter(([h]) => ships.has(h)).length} still moving, of ${ships.size} pages in the sheet`);
   if (unreadable.length) console.log(`  ${unreadable.length} expression(s) could not be evaluated, so this sweep is not complete`);
-  if (onlyHere.length) console.log(`  FAIL  the sweep found pages the sheet does not fix: ${onlyHere.join(', ')}`);
-  if (onlyThere.length) console.log(`  FAIL  the sheet fixes pages this sweep does not see as broken: ${onlyThere.join(', ')}`);
-  if (!onlyHere.length && !onlyThere.length && !unreadable.length) {
-    console.log(`OK - two implementations agree on the same ${found.length} pages`);
+  if (strayMoving.length) console.log(`  FAIL  the sweep found pages the sheet does not fix: ${strayMoving.join(', ')}`);
+  if (wrongConstant.length) console.log(`  FAIL  a sheet page prints a steady denominator that is not its own total: ${wrongConstant.map(([h]) => h).join(', ')}`);
+  if (unaccounted.length) console.log(`  FAIL  a sheet page is neither moving nor correctly steady: ${unaccounted.join(', ')}`);
+  if (!strayMoving.length && !wrongConstant.length && !unaccounted.length && !unreadable.length) {
+    console.log(`OK - two implementations agree on the same ${ships.size} pages`);
     process.exit(0);
   }
   process.exit(1);
 }
 
-module.exports = { scoreExpression, denominatorMoves, CANDIDATES };
+module.exports = { scoreExpression, denominators, pageTotal, CANDIDATES };
 if (require.main === module) main();

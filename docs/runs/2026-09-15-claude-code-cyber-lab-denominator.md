@@ -135,12 +135,61 @@ attribute.
 
 **The inflated percentages already stored.** Board 329.
 
+## Imported, and what the live check says
+
+Tanner imported both sheets on 2026-09-15. Unit 2 landed at 12:18:11 local and
+unit 3 at 12:19:24, read off the pages' own `updated_at`.
+
+`npm run verify:cyberlabdenom`, against the live bodies:
+
+```
+10 lab pages: 10 imported, 0 not imported, 0 stale, 0 unreadable
+OK - every lab page prints its score out of the whole lab
+```
+
+That assertion was false until 17:18Z and the same command had reported
+`0 imported, 10 not imported` every time it ran before, so it measures the
+change rather than describing it. It also checks the two things the
+substitution must not have disturbed, the completion test and the results panel
+total, on all ten pages.
+
+`node scripts/deploy-gate.js deploy-gates/2026-09-15-cyber-lab-denominator.json`
+now passes on four independent kinds: suite, rederive, mutation and live.
+
+The first `/pages/ap-cyber-unit-3-lesson-1-lab.json` fetch after the import
+answered 503 and the verifier threw rather than reporting it. Worth knowing
+before somebody reads a thrown stack as a failed import: it was transient, the
+immediate re-run was clean, and the verifier failing loudly on an unreadable
+fetch is the right behaviour rather than the alternative this repo keeps
+relearning, which is a check that reads a challenge page and reports a
+confident false result.
+
+## Two things the import taught, both about the checks rather than the change
+
+**The rederive was written for a world that ended at 17:18.** It decided a page
+was broken by asking whether the printed denominator MOVED, which was exactly
+right while the pages were broken and became a guaranteed false alarm the
+moment they were fixed: a fixed page does not move either, so the sweep found
+zero broken pages, disagreed with the sheet's list of ten, and failed. Worse,
+"does not move" would have called the `totalSteps` mutation correct, because a
+steady 6 on a thirty point lab is perfectly steady.
+
+It now reads the total the page prices itself at and compares, so it
+distinguishes three states rather than two: moving, steady at the page's own
+total, and steady at something else. The suite asserts all three, including the
+one that matters, that steadiness alone would pass the mutation.
+
+**A check that can only be true BEFORE the change is not a gate check.** The
+first version of this manifest carried the pre-import freshness check, expecting
+`0 imported, 10 not imported`. It passed at 17:14Z, went red the instant the
+sheets landed, and would have stayed red forever. That is the mirror image of
+the mistake this gate was built to stop: the gate's own first manifest asserted
+`"status":"ok"` from `/api/health`, which was true before and after. Both are
+decoration in a gate. The freshness check is a runbook step and it lives in the
+runbook, where it ran and did its job.
+
 ## Still open
 
-- **The sheets need a human to import them.** Two files, one import per unit,
-  and the second `live` check in the gate cannot pass until they land. It is
-  false today by construction: the same command reports 0 of 10 imported right
-  now.
 - **The reporter still prefers a running total to a final one.** `score-display`
   is first in `RESULT_IDS` on every graded cyber page, not only these ten, so
   any page whose running display disagrees with its results panel has this

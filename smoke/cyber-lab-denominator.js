@@ -225,6 +225,26 @@ console.log('\n  the grade the reporter would record, before and after');
   check(same, 'a finished run records exactly what it recorded before, for every score 0 to 30');
 }
 
+//  THE REDERIVE'S CLASSIFIER, which the deploy gate leans on and which has to
+//  keep working after the import. Before the sheets landed it decided a page by
+//  asking whether the denominator moved; a page that has been fixed does not
+//  move either, so "does not move" on its own would call the totalSteps
+//  mutation correct. It reads the page's own total and compares.
+console.log('\n  the rederive classifier, in all three states');
+{
+  const red = require('../scripts/cyber-lab-denominator-rederive.js');
+  const pre = red.denominators("te+' / '+(comp*5)", 30);
+  const fix = red.denominators("te+' / '+totalPts", 30);
+  const wrong = red.denominators("te+' / '+totalSteps", 30);
+
+  check(pre.readable && pre.moves, 'before the import the denominator moves, 10 through 30');
+  check(fix.readable && !fix.moves && fix.constant === 30, 'after the import it is a steady 30, the page total');
+  check(wrong.readable && !wrong.moves && wrong.constant === 6,
+    'the totalSteps mutation is steady too, so steady alone would pass it');
+  check(wrong.constant !== 30, 'and it is caught by comparing the constant to the page total, not by steadiness');
+  check(red.pageTotal('x var totalPts=30; y') === 30, 'the page total is read from the page own declaration');
+}
+
 console.log('\n  csv round trip, which the parse-back check leans on');
 {
   const hard = 'a,"b"" , with a quote and comma","line\nbreak"';

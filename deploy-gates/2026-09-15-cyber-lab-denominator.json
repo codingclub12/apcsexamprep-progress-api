@@ -28,7 +28,17 @@
     "",
     "The change is one substitution per page, te + ' / ' + (comp*5) becoming",
     "te + ' / ' + totalPts, to a variable the page already declares and already",
-    "uses for its results panel."
+    "uses for its results panel.",
+    "",
+    "A NOTE ON A CHECK THAT IS NOT IN HERE. The first version of this manifest",
+    "carried the pre-import freshness check as a gate check, expecting 0 of 10",
+    "imported. That is the mirror image of the mistake this gate was built to",
+    "stop: the gate own first manifest asserted something true before AND after,",
+    "and this one asserted something that could only be true BEFORE, so it went",
+    "red the moment the change shipped and would have stayed red forever. It is",
+    "a runbook step and it lives in the runbook, where it ran and passed at",
+    "17:14Z. A gate check has to be false before and true after, or it is not",
+    "measuring the change."
   ],
   "checks": [
     {
@@ -107,17 +117,10 @@
     },
     {
       "kind": "live",
-      "name": "the sheet still matches the live pages, checked BEFORE the import",
-      "_why": "A generated sheet goes stale. On 2026-09-08 a day old sheet would have merged a pre-renumbering body over a better fix and nothing in the file would have said so. This regenerates the fix from each page as it is right now and requires it to reproduce the committed sheet row byte for byte, so a page that moved after the sheet was built stops the import instead of being silently reverted by it. Run again after the import, where it becomes the post import check.",
-      "command": "node scripts/verify-cyber-lab-denominator-live.js || true",
-      "expect": "10 lab pages: 0 imported, 10 not imported, 0 stale, 0 unreadable"
-    },
-    {
-      "kind": "live",
-      "name": "AFTER THE IMPORT: every lab prints its score out of the whole lab",
-      "_credential": "NOT RUN YET AND CANNOT BE. It is false today by construction, which is the requirement: the same command above reports 0 imported right now, and the two sheets have to be imported by a human before this can pass. Run it per unit, expecting 5 imported after the first sheet and 10 after the second.",
+      "name": "every lab prints its score out of the whole lab",
       "command": "node scripts/verify-cyber-lab-denominator-live.js",
-      "expect": "OK - every lab page prints its score out of the whole lab"
+      "expect": "OK - every lab page prints its score out of the whole lab",
+      "_why": "FALSE BEFORE THE IMPORT and measured that way: the same command reported '10 lab pages: 0 imported, 10 not imported' continuously until 2026-09-15 17:18Z, and it reads the live page bodies rather than the sheet. It also asserts the two things the substitution must not have disturbed, the completion test and the results panel total, so a sheet that landed the fix and broke the page around it fails here rather than reading as success."
     }
   ]
 }
