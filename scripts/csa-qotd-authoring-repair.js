@@ -287,6 +287,35 @@ const REPAIRS = [
     });
   });
 
+// ── the order a human works them in ──────────────────────────────────────────
+//  Day 22 first because it is today's question. The rest run worst-first by what
+//  a student actually experiences: an item with no correct answer, then an item
+//  with two, then the cosmetic pair. The combined sheet is written in this order
+//  too, so a partial import lands the urgent rows rather than an arbitrary set.
+const IMPORT_ORDER = [
+  'ap-csa-u1-c1-day-22-math-random-range',
+  'unit-4-day-19-arraylist-shifting',
+  'ap-csa-u1-c1-day-15-chained-string-methods',
+  'ap-csa-u2-c2-day-4-iii-loop-equivalence',
+  'ap-csa-u1-c2-day-7-error-method-calls',
+  'unit-4-cycle-2-day-25-selection-sort-iteration',
+  'unit4-cycle2-day-25-selection-sort-iteration',
+  'ap-csa-u1-c2-day-20-iii-expression-evaluation',
+  'ap-csa-u1-c2-day-28-comprehensive-final-review',
+];
+
+//  A handle in one list and not the other is how a repair silently stops
+//  shipping, so this is checked rather than trusted.
+function checkOrder() {
+  const declared = REPAIRS.map((r) => r.handle).sort();
+  const ordered = IMPORT_ORDER.slice().sort();
+  if (declared.length !== ordered.length || declared.some((h, i) => h !== ordered[i])) {
+    throw new Error('IMPORT_ORDER and REPAIRS name different articles: '
+      + 'only in REPAIRS [' + declared.filter((h) => IMPORT_ORDER.indexOf(h) === -1).join(', ') + '], '
+      + 'only in IMPORT_ORDER [' + ordered.filter((h) => !REPAIRS.some((r) => r.handle === h)).join(', ') + ']');
+  }
+}
+
 // ── applying an edit, and proving it touched nothing else ────────────────────
 //  Every anchor is matched against the LIVE body, never against a
 //  partly-edited one, and the spans are spliced in one pass. Two reasons, both
@@ -380,6 +409,48 @@ function parseCsv(text) {
   return rows;
 }
 
+// ── one file or nine, and the proof they are the same nine ───────────────────
+//  Tanner asked for a single sheet. The repo's rule is to split by unit, and the
+//  reason is blast radius: one MERGE over nine rows rewrites nine live bodies on
+//  one click with nothing to check between them. That is his call, so both
+//  shapes ship and the nine stay on disk as the fallback.
+//
+//  What is not his call is whether the combination is LOSSLESS, and the cyber
+//  quiz split is the precedent: prove it by parsing both back, never by
+//  assuming that a writer that emitted nine rows emitted the right nine. A
+//  combined sheet that drops a row is worse than nine files, because nothing
+//  announces it, and a combined sheet that repeats one writes that body twice.
+//
+//  `singles` maps handle to the Body HTML as read back out of that article's own
+//  sheet. Returns the row count so a caller can print something true.
+function checkCombined(csvText, singles, label) {
+  const name = label || 'combined sheet';
+  const rows = parseCsv(csvText);
+  if (!rows.length) throw new Error(name + ': parsed back as no rows at all');
+  if (rows[0].join(',') !== COLS.join(',')) throw new Error(name + ': header changed in the round trip');
+  if (rows.length - 1 !== singles.size) {
+    throw new Error(name + ': carries ' + (rows.length - 1) + ' rows but there are ' + singles.size + ' articles');
+  }
+
+  const seen = new Set();
+  rows.slice(1).forEach((row, i) => {
+    const [blog, handle, command, body] = row;
+    if (blog !== BLOG) throw new Error(name + ' row ' + (i + 1) + ': blog handle is ' + JSON.stringify(blog));
+    if (command !== 'MERGE') throw new Error(name + ' row ' + (i + 1) + ': command is ' + JSON.stringify(command));
+    if (seen.has(handle)) throw new Error(name + ': ' + handle + ' appears twice, so one import would write that body twice');
+    seen.add(handle);
+    if (!singles.has(handle)) throw new Error(name + ': ' + handle + ' is not one of the articles this repair covers');
+    if (singles.get(handle) !== body) {
+      throw new Error(name + ': ' + handle + ' differs from its own sheet ('
+        + singles.get(handle).length + ' vs ' + body.length + ' characters)');
+    }
+  });
+
+  const missing = [...singles.keys()].filter((h) => !seen.has(h));
+  if (missing.length) throw new Error(name + ': dropped ' + missing.join(', '));
+  return seen.size;
+}
+
 // ── one article, and every guard it has to clear ─────────────────────────────
 //  Exported so the smoke suite can call it with a deliberately broken repair and
 //  require a refusal. A guard that is only reachable through main() is a guard
@@ -421,6 +492,7 @@ function main(argv) {
   }
   fs.mkdirSync(outDir, { recursive: true });
   const manifest = [];
+  const bodies = new Map();
 
   REPAIRS.forEach((r) => {
     const src = path.join(bodiesDir, r.handle + '.html');
@@ -428,6 +500,7 @@ function main(argv) {
     const live = fs.readFileSync(src, 'utf8');
 
     const { out, captured, had } = repairOne(live, r);
+    bodies.set(r.handle, out);
 
     const name = 'csa-qotd-repair-' + r.handle + '-blog-posts.csv';
     const csv = sheet([{ handle: r.handle, body: out }]);
@@ -453,12 +526,40 @@ function main(argv) {
       + (r.edits.some((e) => e.authored) ? '  AUTHORED' : ''));
   });
 
-  fs.writeFileSync(path.join(outDir, 'manifest.json'), JSON.stringify({ blog: BLOG, built_at: new Date().toISOString(), articles: manifest }, null, 2));
-  console.log('\n' + manifest.length + ' sheets in ' + outDir);
+  // ── the all-in-one sheet, and the proof that it is the same nine ───────────
+  //  Tanner asked for one file. The repo's rule is to split, and the reason is
+  //  blast radius: one MERGE here overwrites nine live bodies with no undo and
+  //  nothing to check between them. That is his call to make, so both shapes
+  //  ship and the nine stay on disk as the fallback.
+  //
+  //  What is NOT optional is proving the combination lossless, the same way the
+  //  cyber quiz split had to prove itself: parse BOTH back with a reader that
+  //  did not write either, and require the same nine handles with byte-identical
+  //  bodies, nothing dropped and nothing appearing twice. A combined sheet that
+  //  quietly loses a row is worse than nine files, because nothing announces it.
+  checkOrder();
+  const combinedName = 'csa-qotd-repair-ALL-NINE-blog-posts.csv';
+  const combinedRows = IMPORT_ORDER.map((h) => ({ handle: h, body: bodies.get(h) }));
+  fs.writeFileSync(path.join(outDir, combinedName), sheet(combinedRows), 'utf8');
+
+  //  singles come off DISK, not from memory, so this compares two files rather
+  //  than comparing a file against the thing that wrote it.
+  const singles = new Map(manifest.map((m) => {
+    const rows = parseCsv(fs.readFileSync(path.join(outDir, m.sheet), 'utf8'));
+    return [m.handle, rows[1][3]];
+  }));
+  const n = checkCombined(fs.readFileSync(path.join(outDir, combinedName), 'utf8'), singles, combinedName);
+  console.log('\n  ' + combinedName + '  ' + n + ' rows, each byte-identical to its own sheet');
+
+  fs.writeFileSync(path.join(outDir, 'manifest.json'), JSON.stringify({
+    blog: BLOG, built_at: new Date().toISOString(),
+    combined_sheet: combinedName, import_order: IMPORT_ORDER, articles: manifest,
+  }, null, 2));
+  console.log('\n' + manifest.length + ' single-article sheets plus one combined sheet in ' + outDir);
   return manifest;
 }
 
-module.exports = { REPAIRS, applyEdits, reverse, checkAuthored, repairOne, sheet, parseCsv, main, BLOG, COLS };
+module.exports = { REPAIRS, IMPORT_ORDER, checkOrder, checkCombined, applyEdits, reverse, checkAuthored, repairOne, sheet, parseCsv, main, BLOG, COLS };
 if (require.main === module) {
   try { main(process.argv.slice(2)); }
   catch (e) { console.error('\n  REFUSED: ' + e.message + '\n'); process.exit(1); }

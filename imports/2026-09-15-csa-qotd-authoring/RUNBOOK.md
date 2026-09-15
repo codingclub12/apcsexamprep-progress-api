@@ -1,12 +1,31 @@
 # AP CSA daily practice: nine articles that published their author's thinking
 
-Nine Matrixify sheets, one article each, MERGE, Blog Posts. Import them one at a
-time in the order below and run the check after each one.
+Matrixify Blog Posts, MERGE. Two shapes of the same nine repairs, pick one.
 
-Why one article per file: MERGE overwrites a live body with no undo, so the blast
-radius of a click is however many rows are in the file. These nine are unrelated
-questions across four unit families, each with its own assertion, so there is
-nothing to gain by batching them and a whole live body to lose.
+## One file (what Tanner asked for)
+
+`csa-qotd-repair-ALL-NINE-blog-posts.csv` carries all nine rows, 139 KB, in the
+order of the steps below. Import it once and run the check once.
+
+Know what you are clicking: MERGE overwrites a live body with no undo, so one
+import rewrites nine live article bodies at once with nothing to check in
+between. That is the whole reason this repo normally splits a sheet by unit. The
+nine single-article files are still here, so if a row looks wrong you can go back
+to the split version rather than unpicking a nine-page import.
+
+The combination is proved rather than assumed: `npm run smoke:qotdrepair` parses
+the combined file and all nine single files back with a reader that wrote
+neither, and requires the same nine handles with byte-identical bodies, none
+dropped and none repeated. Six mutations cover the ways that could go wrong, and
+hollowing the guard turns all six red.
+
+Day 22 is row 1 on purpose. If an import only gets partway, today's question is
+the row that landed.
+
+## Nine files (the fallback)
+
+One article each. Import in the order below and run the check after each one.
+Slower, but the blast radius of a click is one page.
 
 ## What this fixes
 
@@ -30,7 +49,9 @@ next to it, because the explanation is the thing that was wrong.
 
 ## Steps
 
-Each step: import the one file, then run
+These are also the rows of the combined sheet, in order.
+
+Importing one at a time: import the file, then run
 
 ```
 npm run verify:qotdauthoring
@@ -38,6 +59,9 @@ npm run verify:qotdauthoring
 
 which reads all nine off the live storefront. Expect that article's line to go to
 full marks and the rest to stay short until you get to them. All nine at the end.
+
+Importing the combined sheet: run that command once afterwards and expect all
+nine at full marks in one go.
 
 ### 1. ap-csa-u1-c1-day-22-math-random-range  (today's question, do this one first)
 

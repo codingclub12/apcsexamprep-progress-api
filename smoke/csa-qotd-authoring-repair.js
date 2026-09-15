@@ -99,6 +99,85 @@ refuses('a repair that leaves a tell behind', (r) => {
   if (R.parseCsv(R.sheet([{ handle: 'x', body }]))[1][3] !== body) bad('a 16KB repaired body did not survive the CSV round trip');
 }
 
+// ── part 2b: one file or nine, and the guard that they are the same nine ────
+//  main() runs end to end into a temp dir, which is the only way to exercise the
+//  real chain: nine sheets on disk, a combined sheet, and checkCombined reading
+//  both back. Then each way the combination could quietly go wrong is broken on
+//  its own.
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'qotdsheets-'));
+  const log = console.log;
+  console.log = () => {};
+  let manifest = null;
+  try { manifest = R.main([FIXTURES, dir]); } finally { console.log = log; }
+
+  const combined = path.join(dir, 'csa-qotd-repair-ALL-NINE-blog-posts.csv');
+  if (!fs.existsSync(combined)) bad('main() wrote no combined sheet');
+  else {
+    //  Re-derived here rather than trusting the generator's own pass: read the
+    //  nine single sheets off disk and compare them to the combined file.
+    const singles = new Map(manifest.map((m) => [m.handle, R.parseCsv(fs.readFileSync(path.join(dir, m.sheet), 'utf8'))[1][3]]));
+    const rows = R.parseCsv(fs.readFileSync(combined, 'utf8'));
+    if (rows.length - 1 !== R.REPAIRS.length) bad('combined sheet has ' + (rows.length - 1) + ' rows, expected ' + R.REPAIRS.length);
+    const handles = rows.slice(1).map((r) => r[1]);
+    if (new Set(handles).size !== handles.length) bad('combined sheet repeats a handle');
+    R.REPAIRS.forEach((r) => { if (handles.indexOf(r.handle) === -1) bad('combined sheet dropped ' + r.handle); });
+    handles.forEach((h, i) => {
+      if (singles.get(h) !== rows[i + 1][3]) bad('combined sheet row for ' + h + ' is not byte-identical to its own sheet');
+    });
+    //  Today's question is the one a partial import must land, so it goes first.
+    if (handles[0] !== 'ap-csa-u1-c1-day-22-math-random-range') {
+      bad('combined sheet does not open with the day 22 row, so a partial import may not land today\'s question');
+    }
+
+    // ── mutations, one per way this can go wrong ──────────────────────────────
+    const text = fs.readFileSync(combined, 'utf8');
+    const refusesCombined = (label, mutateText, mutateSingles) => {
+      const t = mutateText ? mutateText(text) : text;
+      const sing = mutateSingles ? mutateSingles(new Map(singles)) : singles;
+      try { R.checkCombined(t, sing, 'mutated'); } catch (e) { return; }
+      bad('combined guard did not refuse: ' + label);
+    };
+    const lines = text.split('\r\n');
+    refusesCombined('a dropped row', (t) => {
+      const l = t.split('\r\n'); l.splice(1, 1); return l.join('\r\n');
+    });
+    refusesCombined('a repeated row', (t) => {
+      const l = t.split('\r\n'); l.splice(1, 0, l[1]); return l.join('\r\n');
+    });
+    refusesCombined('a row whose body drifted from its own sheet', null, (m) => {
+      m.set('ap-csa-u1-c1-day-22-math-random-range', m.get('ap-csa-u1-c1-day-22-math-random-range') + ' ');
+      return m;
+    });
+    refusesCombined('a row for an article this repair does not cover', (t) => {
+      const l = t.split('\r\n');
+      l[1] = l[1].replace('"ap-csa-u1-c1-day-22-math-random-range"', '"some-other-article"');
+      return l.join('\r\n');
+    });
+    refusesCombined('a row switched off MERGE', (t) => t.replace('"MERGE"', '"UPDATE"'));
+    refusesCombined('a row pointed at another blog', (t) => t.replace('"ap-csa-daily-practice"', '"ap-csp-daily-practice"'));
+    if (lines.length < 2) bad('combined sheet is not CRLF terminated between rows');
+  }
+
+  //  IMPORT_ORDER and REPAIRS naming different articles is how a repair stops
+  //  shipping without anything going red.
+  const realOrder = R.IMPORT_ORDER.slice();
+  const tryOrder = (label, mutate) => {
+    R.IMPORT_ORDER.length = 0;
+    mutate(R.IMPORT_ORDER, realOrder);
+    let refused = false;
+    try { R.checkOrder(); } catch (e) { refused = true; }
+    R.IMPORT_ORDER.length = 0;
+    realOrder.forEach((h) => R.IMPORT_ORDER.push(h));
+    if (!refused) bad('checkOrder did not refuse: ' + label);
+  };
+  tryOrder('an article missing from the import order', (o, real) => real.slice(1).forEach((h) => o.push(h)));
+  tryOrder('an article in the import order that has no repair', (o, real) => { real.forEach((h) => o.push(h)); o.push('not-a-real-handle'); });
+  try { R.checkOrder(); } catch (e) { bad('checkOrder refused the real order: ' + e.message); }
+
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+
 // ── part 3: javac and the JVM ────────────────────────────────────────────────
 const JAVA = `
 import java.util.ArrayList;
@@ -282,6 +361,7 @@ if (java) {
 
 console.log(failed === 0
   ? '\ncsa-qotd-authoring-repair: 9 articles, ' + R.REPAIRS.reduce((n, r) => n + r.edits.length, 0)
-    + ' declared edits, 10 guard mutations, and every key re-derived on the JVM. All pass.'
+    + ' declared edits, 18 guard mutations, one combined sheet proved row for row against the nine, '
+    + 'and every key re-derived on the JVM. All pass.'
   : '\ncsa-qotd-authoring-repair: ' + failed + ' failure(s).');
 process.exit(failed ? 1 : 0);
