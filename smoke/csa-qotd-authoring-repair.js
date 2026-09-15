@@ -27,6 +27,7 @@ const path = require('path');
 const { execFileSync, spawnSync } = require('child_process');
 
 const R = require('../scripts/csa-qotd-authoring-repair.js');
+const V = require('../scripts/verify-csa-qotd-authoring-live.js');
 const tells = require('../lib/authoring-tells.js');
 
 const FIXTURES = path.join(__dirname, 'fixtures', 'csa-qotd-authoring-2026-09-15');
@@ -176,6 +177,55 @@ refuses('a repair that leaves a tell behind', (r) => {
   try { R.checkOrder(); } catch (e) { bad('checkOrder refused the real order: ' + e.message); }
 
   fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// ── part 2c: checking the check ──────────────────────────────────────────────
+//  A needle that can never match reads exactly like a needle that works. On
+//  2026-09-15 the live verifier shipped with
+//
+//      ['trace is the i++ trace', 'size stays exactly 3 ahead of i forever']
+//
+//  and the repaired body breaks that sentence across a </span> and a newline, so
+//  it reported a correct import as "not live yet" and sent somebody to re-import
+//  a page that was already right. Nothing offline could have caught it, because
+//  nothing offline looked.
+//
+//  Now it does. Every `must` needle has to be findable in the repaired body it
+//  claims to describe, and every `mustNot` needle in the PRE-import fixture: a
+//  mustNot that was not there beforehand asserts nothing, the same way a live
+//  check that was already true before a deploy asserts nothing.
+{
+  const repaired = {};
+  R.REPAIRS.forEach((r) => { repaired[r.handle] = R.repairOne(live(r.handle), r).out; });
+
+  if (V.EXPECT.length !== R.REPAIRS.length) {
+    bad('the live verifier covers ' + V.EXPECT.length + ' articles and there are ' + R.REPAIRS.length + ' repairs');
+  }
+  R.REPAIRS.forEach((r) => {
+    if (!V.EXPECT.some((e) => e.handle === r.handle)) bad('the live verifier does not cover ' + r.handle);
+  });
+
+  V.EXPECT.forEach((e) => {
+    const after = repaired[e.handle];
+    const before = fs.existsSync(path.join(FIXTURES, e.handle + '.html')) ? live(e.handle) : null;
+    if (!after) { bad('the live verifier covers ' + e.handle + ', which is not one of the repairs'); return; }
+    e.must.forEach(([label, needle]) => {
+      if (after.indexOf(needle) === -1) {
+        bad(e.handle + ': must-needle "' + label + '" is not in the repaired body, so it can never pass on a correct import');
+      }
+      if (before && before.indexOf(needle) !== -1) {
+        bad(e.handle + ': must-needle "' + label + '" was already in the body before the repair, so it asserts nothing');
+      }
+    });
+    e.mustNot.forEach(([label, needle]) => {
+      if (after.indexOf(needle) !== -1) {
+        bad(e.handle + ': mustNot-needle "' + label + '" is still in the repaired body, so this import can never pass');
+      }
+      if (before && before.indexOf(needle) === -1) {
+        bad(e.handle + ': mustNot-needle "' + label + '" was not in the body before the repair either, so it asserts nothing');
+      }
+    });
+  });
 }
 
 // ── part 3: javac and the JVM ────────────────────────────────────────────────
@@ -362,6 +412,7 @@ if (java) {
 console.log(failed === 0
   ? '\ncsa-qotd-authoring-repair: 9 articles, ' + R.REPAIRS.reduce((n, r) => n + r.edits.length, 0)
     + ' declared edits, 18 guard mutations, one combined sheet proved row for row against the nine, '
+    + V.EXPECT.reduce((n, e) => n + e.must.length + e.mustNot.length, 0) + ' live needles proved matchable offline, '
     + 'and every key re-derived on the JVM. All pass.'
   : '\ncsa-qotd-authoring-repair: ' + failed + ' failure(s).');
 process.exit(failed ? 1 : 0);
