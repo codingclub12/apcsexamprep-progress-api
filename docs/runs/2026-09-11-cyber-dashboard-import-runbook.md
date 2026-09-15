@@ -89,3 +89,57 @@ The teacher dashboard is one of two gradebook surfaces. The operator side,
 at five levels and is fixed in the API, in PR #660. The two are independent
 deploys: merging that PR does nothing to this page, and importing this sheet
 does nothing to that API.
+
+---
+
+## Re-checked 2026-09-15, four days later, and the cargo was opened
+
+The sheet sat unimported from the 11th to the 15th. Everything below was run
+again on the 15th by a session that did not build it.
+
+**Still fresh, so still safe.** `node scripts/verify-dashboard-rollup-live.js`
+reports the live page at 104858 bytes, `updated_at 2026-09-07T07:00:28-05:00`,
+unchanged since the sheet was built. Nobody has fixed the page another way, so
+this is not the stale-sheet case the section above warns about.
+
+**Preflight it with the command it was built with.**
+
+    node scripts/matrixify-preflight.js matrixify/cyber-dashboard-gradebook-rollup-pages.csv --expect-command UPDATE
+
+Without `--expect-command UPDATE` the preflight defaults to MERGE and reports
+`1 PROBLEM(S). Do not import.` on a sheet that is fine. `UPDATE` is what
+`scripts/page-body-csv.js` writes for every sheet built from a repo mirror, and
+it is the safer of the two here: MERGE would CREATE a page if the handle were
+ever wrong, UPDATE skips. With the flag it reads `clear to import.`
+
+**The loss guard, re-run against the live page today**, names four deletions and
+only four: `rt-lesson`, `rt-ex`, `rt-quiz`, `rt-exam`. Those are the dead
+SAVING SOON switches change 2 removes on purpose. Nothing else the live page has
+is dropped by this import, which is the question that matters when a body is
+replaced outright.
+
+**The two passed-along changes are now checked rather than passed along again.**
+
+- Change 2, the retry panel. `PATCH /api/teacher/classes/:code/retry` exists on
+  `main` AND is deployed: unauthenticated it answers `401 Teacher auth required`
+  while a made-up route beside it answers `404`. That is the check that mattered,
+  because a panel whose save target does not exist is worse than the dead
+  switches it replaces: it looks live and fails on every click. The three mode
+  blurbs are byte-verbatim from `retry-policy.js` MODE_DESCRIPTIONS. The three
+  labels are deliberately NOT verbatim and the page's own comment claimed they
+  were, which is corrected in this sheet.
+- Change 3, the unenforceable-lock warning. Now covered by section 12 of
+  `npm run smoke:tchdashpage`, which had nothing on it before, and mutation
+  tested three ways.
+
+**Two comment-only edits** went into the body, both proved to be the only
+difference: one differing region with 60452 identical characters before it and
+51320 after. The second one matters more than it looks. The comment explaining
+"never write this glyph as an HTML entity" was itself spelling the entity out,
+and Shopify decodes entities on import, so the live body and the repo mirror
+would have differed by one character from the moment the sheet landed and the
+next regeneration would have seen a page that had drifted.
+
+`deploy-gates/2026-09-15-cyber-dashboard-rollup.json` passes `--pre` on suite,
+rederive and three mutations. Its live check is the run in the section above and
+is false until you import.
