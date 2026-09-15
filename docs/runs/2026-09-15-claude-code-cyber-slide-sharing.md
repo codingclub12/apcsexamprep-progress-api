@@ -121,13 +121,59 @@ claim, not a result. The conversion called setSharing and moved on. That single
 missing read-back is the entire bug, and it is why the repair script reads every
 file back and refuses to count a deck fixed on the strength of a clean write.
 
+## FIXED, same day
+
+Tanner ran the repair script the afternoon this was filed.
+
+preview(), reading Drive's own API from inside rather than fetching from
+outside, agreed with the diagnosis exactly:
+
+    already view-only  : 0
+    closed, need fixing: 70
+    open but WRITABLE  : 0
+    unreadable         : 0
+
+Two instruments pointing in opposite directions at the same number is what made
+this safe to act on. The 0 unreadable also ruled out the wrong-account case
+before start() touched anything.
+
+start() then reported:
+
+    fixed now        : 70
+    already correct  : 0
+    FAILED           : 0
+
+And the independent check, from outside Google with no credentials:
+
+    reachable anonymously : 70/70
+
+The specific deck the teacher reported, cyber 1-3 day 1 teacher, went from
+`http=401 size=9148` with ServiceLogin in the body to `http=200 size=15767359`
+rendering a real Slides viewer with no sign-in markers anywhere. That is the
+assertion worth keeping, because it was false before the repair and could not
+have passed by accident.
+
+## What the repair told us about the cause
+
+diagnose() was never needed, and its not being needed is the answer. All 70
+setSharing calls succeeded and all 70 read back open. An admin policy forbidding
+link sharing would have thrown on the first one. So link sharing is permitted on
+that drive, and the original conversion's setSharing simply did not take effect,
+or was undone afterwards.
+
+Which of those two it was still matters, and the honest answer is that we cannot
+tell from here. If something revokes public links on a schedule, this comes back.
+That is precisely what the daily watch is for, and it is the reason the watch was
+worth building even on the day the bug got fixed by hand.
+
 ## Still open
 
-- The repair itself. Tanner runs preview() then start(), then
-  `npm run verify:sharing ap-cybersecurity` must print 70/70. Until that number
-  moves, this is diagnosed and not fixed.
-- Why it happened. diagnose() answers it, and the answer decides whether the
-  repair holds or gets undone again next month.
+- Whether it recurs. The first scheduled run of `slide-sharing-watch.yml` is the
+  thing to look at, and a second failure would mean something is actively
+  revoking these links rather than one bad conversion run.
 - Units 3, 4 and 5 have no converted decks at all, deliberately, per the
   conversion script's header. Unrelated to this, but a teacher on a Unit 3
   lesson page sees the "still being prepared" panel rather than decks.
+- The teacher who reported it has not been told it works now. They said they
+  already had the decks and were not asking for a fix, so nobody is waiting,
+  but they are the reason this was found.
