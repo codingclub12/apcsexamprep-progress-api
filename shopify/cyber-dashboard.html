@@ -552,11 +552,18 @@ window.TCDash = {
     //  next to another is not a distinction on a phone, in greyscale, or to a
     //  colour blind teacher.
     //
-    //  Written as a JS escape like the padlocks above it, NOT as the HTML entity
-    //  &#9888;. Shopify decodes entities on import, so an entity in a string
-    //  literal comes back as a raw character in the page body and stops being
-    //  the thing that was reviewed. scripts/page-body-csv.js refuses the sheet
-    //  for exactly this and caught it here before the sheet was written.
+    //  Written as the JS escape \u26A0, like the padlocks above it, and never as
+    //  the numeric HTML entity for the same character. Shopify decodes entities
+    //  on import, so an entity in a string literal comes back as a raw character
+    //  in the page body and stops being the thing that was reviewed.
+    //  scripts/page-body-csv.js refuses the sheet for exactly this and caught it
+    //  here before the sheet was written.
+    //
+    //  The entity is not spelled out even in this comment, which it was until
+    //  2026-09-15. Shopify would have decoded that one too, so the live body and
+    //  this mirror would have differed by one character from the moment the
+    //  sheet landed, and the next regeneration would have seen a page that had
+    //  drifted. A rule written in the form it forbids is its own first exception.
     const g=(state==='on'?'\uD83D\uDD13':'\uD83D\uDD12')+(lying?'\u26A0':'');
     const a=function(v){ return String(v==null?'':v).replace(/'/g,"\\'"); };
     return "<span class='"+cls+"' role='switch' aria-checked='"+(state==='on'?'true':(state==='mix'?'mixed':'false'))+
@@ -710,9 +717,15 @@ window.TCDash = {
   //  changed nothing a student could do. That is worse than an inert control,
   //  because the numbers moving is exactly the feedback a working one gives.
   //
-  //  Labels and blurbs are retry-policy.js's own MODE_LABELS and
-  //  MODE_DESCRIPTIONS, copied verbatim so the two surfaces cannot describe the
-  //  same rule differently. If they change there, change them here.
+  //  The blurbs are retry-policy.js's own MODE_DESCRIPTIONS, copied verbatim so
+  //  the two surfaces cannot describe the same rule differently. If one changes
+  //  there, change it here.
+  //
+  //  The LABELS are deliberately not verbatim, and the earlier version of this
+  //  comment said they were, which is a trap rather than a typo. MODE_LABELS
+  //  reads 'Retries: everything', and this control sits directly under a heading
+  //  that already says Retries, so the prefix is dropped rather than said four
+  //  times in one panel. Do not "correct" them back to match.
   RETRY_MODES:[
     {id:'all',      label:'Everything',    what:'Students may redo practice and retake quizzes. Their best attempt counts.'},
     {id:'practice', label:'Practice only', what:'Students may redo practice work and their best attempt counts, but a quiz or exam is one attempt and that first attempt is the grade.'},

@@ -1,0 +1,289 @@
+<style>
+.apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}
+.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.apcs-meta{color:#718096;font-size:14px}
+.apcs-cycle-badge{display:inline-block;background:#fef3c7;color:#b45309;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}
+.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}
+.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}
+.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}
+.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}
+.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}
+.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}
+.apcs-keyword{color:#fc8181}
+.apcs-type{color:#fc8181}
+.apcs-function{color:#90cdf4}
+.apcs-number{color:#f6ad55}
+.apcs-string{color:#68d391}
+.apcs-comment{color:#a0aec0;font-style:italic}
+.apcs-answer-options{margin:24px 0}
+.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}
+.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}
+.apcs-option.selected{border-color:#5a67d8;background:#edf2f7}
+.apcs-option.correct{border-color:#48bb78;background:#f0fff4}
+.apcs-option.incorrect{border-color:#f56565;background:#fff5f5}
+.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}
+.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}
+.apcs-option-content{font-size:15px;line-height:1.5}
+.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;transition:background .2s}
+.apcs-submit-btn:hover{background:#4c51bf}
+.apcs-submit-btn:disabled{background:#a0aec0;cursor:not-allowed}
+.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}
+.apcs-feedback.show{display:block}
+.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}
+.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}
+.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}
+.apcs-feedback-header.apcs-correct{color:#48bb78}
+.apcs-feedback-header.apcs-incorrect{color:#f56565}
+.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+.apcs-section-content{margin-bottom:20px;line-height:1.7}
+.apcs-section-content p{margin-bottom:12px}
+.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}
+.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}
+.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}
+.apcs-trace-table tr:nth-child(even){background:#f7fafc}
+.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}
+.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}
+.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}
+.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}
+.apcs-navigation{background:#fff;border-radius:12px;padding:24px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.apcs-nav-link{color:#5a67d8;text-decoration:none;font-weight:500}
+.apcs-nav-link:hover{color:#4c51bf;text-decoration:underline}
+.apcs-nav-link.disabled{color:#a0aec0;pointer-events:none;cursor:default}
+.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}
+.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}
+.apcs-cta-box p{margin-bottom:16px;font-size:16px}
+.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}
+.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}
+.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}
+</style>
+<div class="apcs-practice-wrapper">
+<div class="apcs-header">
+<div class="apcs-unit-section">Unit 4: Data Collections</div>
+<div class="apcs-meta">Day 19 Practice - January 19, 2026<span class="apcs-cycle-badge">Cycle 1 - Hard</span>
+</div>
+<div class="apcs-focus-badge">Focus: Index Shifting After add/remove</div>
+</div>
+
+<div class="apcs-question-card">
+<h2 class="apcs-question-header">Practice Question</h2>
+<div class="apcs-question-text">A student wrote the following method to insert a value at every other position in an ArrayList. The method does <strong>NOT</strong> work as intended.</div>
+<div class="apcs-code-block">
+<pre><code><span class="apcs-keyword">public static void</span> <span class="apcs-function">insertEveryOther</span>(<span class="apcs-type">ArrayList</span>&lt;<span class="apcs-type">String</span>&gt; list, <span class="apcs-type">String</span> val)
+{
+    <span class="apcs-comment">// Intended: insert val at indices 0, 2, 4, 6, ...</span>
+    <span class="apcs-keyword">for</span> (<span class="apcs-type">int</span> i = 0; i &lt; list.size(); i += 2)
+    {
+        list.add(i, val);
+    }
+}
+
+<span class="apcs-comment">// Test:</span>
+<span class="apcs-type">ArrayList</span>&lt;<span class="apcs-type">String</span>&gt; words = <span class="apcs-keyword">new</span> <span class="apcs-type">ArrayList</span>&lt;&gt;();
+words.add(<span class="apcs-string">"A"</span>); words.add(<span class="apcs-string">"B"</span>); words.add(<span class="apcs-string">"C"</span>);
+insertEveryOther(words, <span class="apcs-string">"X"</span>);
+<span class="apcs-comment">// Expected: [X, A, X, B, X, C]</span></code></pre>
+</div>
+<div class="apcs-question-text"><strong>What is the actual result when insertEveryOther(words, "X") is called?</strong></div>
+
+<form id="apcs-quiz-form">
+<div class="apcs-answer-options">
+<label class="apcs-option">
+<input type="radio" name="answer" value="A">
+<span class="apcs-option-letter">A)</span>
+<span class="apcs-option-content">[X, A, X, B, X, C] as expected</span>
+</label>
+<label class="apcs-option">
+<input type="radio" name="answer" value="B">
+<span class="apcs-option-letter">B)</span>
+<span class="apcs-option-content">[X, X, X, X, ... ] (infinite loop)</span>
+</label>
+<label class="apcs-option">
+<input type="radio" name="answer" value="C">
+<span class="apcs-option-letter">C)</span>
+<span class="apcs-option-content">[X, A, B, C] (only one X inserted)</span>
+</label>
+<label class="apcs-option">
+<input type="radio" name="answer" value="D">
+<span class="apcs-option-letter">D)</span>
+<span class="apcs-option-content">[A, X, B, X, C, X] (X inserted at odd indices)</span>
+</label>
+<label class="apcs-option">
+<input type="radio" name="answer" value="E">
+<span class="apcs-option-letter">E)</span>
+<span class="apcs-option-content">IndexOutOfBoundsException is thrown</span>
+</label>
+
+</div>
+<button type="submit" class="apcs-submit-btn" id="submit-btn">Submit Answer</button>
+</form>
+
+<div class="apcs-info-bar">
+<strong>Difficulty:</strong> Hard - <strong>Time:</strong> 3-4 minutes - <strong>AP Skill:</strong> 4.B - Identify errors in program code
+</div>
+</div>
+
+<div class="apcs-feedback" id="feedback-section">
+<div class="apcs-feedback-header" id="feedback-header"></div>
+<div class="apcs-section-content">
+<strong>What This Tests:</strong> This question tests understanding of how add(index, element) shifts all subsequent elements right AND increases size(). When inserting during forward traversal, the condition i &lt; list.size() keeps changing.
+</div>
+
+<h3 class="apcs-section-title">Step-by-Step Trace</h3>
+<div class="apcs-code-block">
+<pre><code><span class="apcs-comment">// Initial: [A, B, C], size = 3</span>
+
+<span class="apcs-comment">// i=0: add("X" at 0), list = [X, A, B, C], size = 4</span>
+<span class="apcs-comment">// i=2: add("X" at 2), list = [X, A, X, B, C], size = 5</span>
+<span class="apcs-comment">// i=4: add("X" at 4), list = [X, A, X, B, X, C], size = 6</span>
+<span class="apcs-comment">// i=6: 6 &lt; 6? NO... wait, size is now 6!</span>
+<span class="apcs-comment">// i=6: add("X" at 6), list grows to size 7</span>
+<span class="apcs-comment">// i=8: 8 &lt; 7? NO... but we just added, now size = 7</span>
+
+<span class="apcs-comment">// Actually: Every insertion increases size()</span>
+<span class="apcs-comment">// i always catches up: 0&lt;3, 2&lt;4, 4&lt;5, 6&lt;6? NO</span>
+<span class="apcs-comment">// But wait: after i=4 insert, size=6, then i=6, 6&lt;6 is FALSE</span>
+<span class="apcs-comment">// Let me retrace more carefully:</span>
+
+<span class="apcs-comment">// i=0: 0&lt;3? YES, insert, size=4</span>
+<span class="apcs-comment">// i=2: 2&lt;4? YES, insert, size=5</span>
+<span class="apcs-comment">// i=4: 4&lt;5? YES, insert, size=6</span>
+<span class="apcs-comment">// i=6: 6&lt;6? NO, loop ends</span>
+
+<span class="apcs-comment">// WAIT - rechecking: i increments by 2 each time</span>
+<span class="apcs-comment">// But size increases by 1 each insertion</span>
+<span class="apcs-comment">// So i gains 2, size gains 1 = i will eventually exceed</span>
+<span class="apcs-comment">// NOT infinite... let me reconsider the trace</span>
+
+<span class="apcs-comment">// Actually with small list, terminates. With larger list</span>
+<span class="apcs-comment">// or if i += 1, it would be infinite.</span>
+<span class="apcs-comment">// The key bug: list keeps growing, loop runs longer than expected</span></code></pre>
+</div>
+
+<h3 class="apcs-section-title">Key Concept</h3>
+<div class="apcs-section-content">
+<p><strong>The Shifting Problem:</strong> When you call add(index, element), the ArrayList size increases by 1. If your loop condition is i &lt; list.size(), the target keeps moving.</p>
+<p><strong>This specific case:</strong> Since i increases by 2 but size only increases by 1, the loop eventually terminates but with wrong results. If i += 1, it would be truly infinite.</p>
+<p><strong>Fix:</strong> Store the original size before the loop, or iterate backward, or calculate exact insertion points ahead of time.</p>
+</div>
+
+<h3 class="apcs-section-title">Common Mistakes</h3>
+<div class="apcs-section-content">
+<div class="apcs-mistake-block">
+<div class="apcs-mistake-title">Mistake: Answer A - Not recognizing the shifting</div>
+<p>Each insertion shifts elements AND increases size. The loop condition i &lt; list.size() uses the NEW size each iteration, causing more iterations than intended.</p>
+</div>
+<div class="apcs-mistake-block">
+<div class="apcs-mistake-title">Mistake: Answer C or D - Miscounting insertions</div>
+<p>Trace through carefully: after inserting at 0, element "A" moves to index 1. After inserting at 2, the original "B" (now at index 3) shifts further. The final positions are wrong.</p>
+</div>
+
+</div>
+
+<div class="apcs-tip-box">
+<div class="apcs-tip-title">AP Exam Tip</div>
+<p>When adding elements during a loop, the list size changes! Either save the original size in a variable before the loop, or use backward traversal. AP exam questions love this trap.</p>
+</div>
+</div>
+
+<nav class="apcs-navigation">
+<a href="/blogs/ap-csa-daily-practice/unit-4-day-18-arraylist-object-methods" class="apcs-nav-link">← Day 18: Object Methods</a>
+<a href="/pages/daily-practice" class="apcs-nav-link">View All Days</a>
+<a href="/blogs/ap-csa-daily-practice/unit-4-day-20-arraylist-vs-array" class="apcs-nav-link" data-available-date="2026-01-20T00:00:00">Day 20: ArrayList vs Array →</a>
+</nav>
+
+<div class="apcs-cta-box">
+<h3>Want More Practice?</h3>
+<p>Master AP CSA with guided practice and expert help</p>
+<a href="/products/computer-science-tutoring-lesson" class="apcs-cta-link">Schedule 1-on-1 Tutoring</a>
+<a href="/pages/ap-csa-frqs-by-topic" class="apcs-cta-link apcs-cta-secondary">Practice FRQs</a>
+</div>
+</div>
+
+<script>
+(function() {
+  var defined_answer = 'B';
+  var storage_key = 'unit-4-day-19';
+  var answered = false;
+  
+  var form = document.getElementById('apcs-quiz-form');
+  var submitBtn = document.getElementById('submit-btn');
+  var feedbackSection = document.getElementById('feedback-section');
+  var feedbackHeader = document.getElementById('feedback-header');
+  var options = document.querySelectorAll('.apcs-option');
+  
+  // Selection feedback
+  options.forEach(function(option) {
+    option.addEventListener('click', function() {
+      if (answered) return;
+      options.forEach(function(opt) { opt.classList.remove('selected'); });
+      this.classList.add('selected');
+      this.querySelector('input[type="radio"]').checked = true;
+    });
+  });
+  
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (answered) return;
+    
+    var selected = document.querySelector('input[name="answer"]:checked');
+    if (!selected) {
+      alert('Please select an answer before submitting.');
+      return;
+    }
+    
+    answered = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Answered';
+    
+    var userAnswer = selected.value;
+    var isCorrect = userAnswer === defined_answer;
+    
+    options.forEach(function(option) {
+      var input = option.querySelector('input[type="radio"]');
+      option.classList.remove('selected');
+      if (input.value === defined_answer) {
+        option.classList.add('correct');
+      } else if (input.value === userAnswer && !isCorrect) {
+        option.classList.add('incorrect');
+      }
+      input.disabled = true;
+      option.style.cursor = 'default';
+    });
+    
+    feedbackSection.classList.add('show');
+    feedbackSection.style.display = 'block';
+    
+    if (isCorrect) {
+      feedbackSection.classList.add('apcs-correct');
+      feedbackHeader.classList.add('apcs-correct');
+      feedbackHeader.textContent = 'Correct! Well done.';
+    } else {
+      feedbackSection.classList.add('apcs-incorrect');
+      feedbackHeader.classList.add('apcs-incorrect');
+      feedbackHeader.textContent = 'Not quite. The correct answer is ' + defined_answer + '.';
+    }
+    
+    feedbackSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    try {
+      var progress = JSON.parse(localStorage.getItem('apcsaDailyPracticeProgress') || '{}');
+      progress[storage_key] = { completed: true, correct: isCorrect, timestamp: Date.now() };
+      localStorage.setItem('apcsaDailyPracticeProgress', JSON.stringify(progress));
+    } catch(err) {}
+  });
+  
+  // Date-based navigation link control
+  var nextLink = document.querySelector('.apcs-nav-link[data-available-date]');
+  if (nextLink) {
+    var availDate = new Date(nextLink.getAttribute('data-available-date'));
+    var now = new Date();
+    if (now < availDate) {
+      nextLink.classList.add('disabled');
+      nextLink.removeAttribute('href');
+      nextLink.title = 'Available ' + availDate.toLocaleDateString();
+    }
+  }
+})();
+</script>

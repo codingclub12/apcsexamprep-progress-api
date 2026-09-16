@@ -1,0 +1,478 @@
+<title>Hub Architecture Audit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ground:#f3f6f4; --surface:#ffffff; --sunk:#eaeeec;
+    --ink:#15212a; --body:#31424c; --mute:#6a7c84;
+    --rule:#d7dfdc; --rule-firm:#b9c6c2;
+    --accent:#0f6d6d; --accent-soft:#e2efee;
+    --bad:#a8322a; --bad-soft:#f7e6e4;
+    --warn:#8c6410; --warn-soft:#f8efd9;
+    --ok:#2c6a4a; --ok-soft:#e2efe7;
+    --shadow:0 1px 2px rgba(21,33,42,.06),0 6px 18px -10px rgba(21,33,42,.18);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#10181d; --surface:#17222a; --sunk:#121b21;
+      --ink:#e9efed; --body:#bcc9cd; --mute:#8b9ba1;
+      --rule:#27353d; --rule-firm:#3a4c55;
+      --accent:#5cc0b8; --accent-soft:#16302f;
+      --bad:#e98a80; --bad-soft:#331e1c;
+      --warn:#e0b45f; --warn-soft:#312814;
+      --ok:#74c39a; --ok-soft:#162c22;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px -10px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#10181d; --surface:#17222a; --sunk:#121b21;
+    --ink:#e9efed; --body:#bcc9cd; --mute:#8b9ba1;
+    --rule:#27353d; --rule-firm:#3a4c55;
+    --accent:#5cc0b8; --accent-soft:#16302f;
+    --bad:#e98a80; --bad-soft:#331e1c;
+    --warn:#e0b45f; --warn-soft:#312814;
+    --ok:#74c39a; --ok-soft:#162c22;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px -10px rgba(0,0,0,.6);
+  }
+
+  body{background:var(--ground);color:var(--body);
+    font-family:"Source Sans 3",ui-sans-serif,system-ui,sans-serif;
+    font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1000px;margin:0 auto;padding-inline:20px;padding-block:0 72px;}
+  .col{max-width:68ch;}
+
+  h1,h2,h3,.slab{font-family:"Zilla Slab",Georgia,serif;color:var(--ink);text-wrap:balance;}
+  h1{font-size:clamp(2rem,5.2vw,3rem);line-height:1.08;font-weight:700;letter-spacing:-.015em;margin:0 0 14px;}
+  h2{font-size:clamp(1.35rem,3vw,1.75rem);font-weight:600;line-height:1.2;margin:0 0 6px;}
+  h3{font-size:1.06rem;font-weight:600;margin:0 0 6px;letter-spacing:-.005em;}
+  p{margin:0 0 15px;} a{color:var(--accent);}
+  strong{color:var(--ink);font-weight:600;}
+  code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.85em;}
+  code{background:var(--sunk);padding:.1em .38em;border-radius:3px;color:var(--ink);}
+
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--accent);font-weight:600;}
+
+  header.mast{border-bottom:2px solid var(--ink);padding-block:44px 22px;margin-bottom:34px;}
+  .runline{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:20px;
+    font-family:"IBM Plex Mono",monospace;font-size:.76rem;color:var(--mute);}
+  .runline span b{color:var(--ink);font-weight:600;}
+
+  section{margin-block:52px;}
+  .lede{font-size:1.12rem;color:var(--body);}
+
+  /* chips */
+  .chip{display:inline-flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;
+    font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;font-weight:600;
+    padding:.24em .6em;border-radius:3px;white-space:nowrap;}
+  .c-fix{background:var(--ok-soft);color:var(--ok);}
+  .c-stag{background:var(--warn-soft);color:var(--warn);}
+  .c-open{background:var(--bad-soft);color:var(--bad);}
+  .c-dec{background:var(--accent-soft);color:var(--accent);}
+
+  /* ledger */
+  .scroll{overflow-x:auto;margin-block:20px;border:1px solid var(--rule);
+    border-radius:6px;background:var(--surface);box-shadow:var(--shadow);}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:.88rem;}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--mute);font-weight:600;
+    background:var(--sunk);border-bottom:1px solid var(--rule-firm);}
+  tbody tr:last-child td{border-bottom:none;}
+  td.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap;}
+  .v-held{color:var(--ok);font-weight:600;}
+  .v-worse{color:var(--bad);font-weight:600;}
+  .v-wrong{color:var(--warn);font-weight:600;}
+  .v-unk{color:var(--mute);font-weight:600;}
+
+  /* findings */
+  .find{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;
+    padding-block:22px;border-top:1px solid var(--rule);}
+  .find:first-of-type{border-top:2px solid var(--rule-firm);}
+  .rank{font-family:"IBM Plex Mono",monospace;font-size:1.5rem;font-weight:600;
+    color:var(--rule-firm);line-height:1;padding-top:3px;font-variant-numeric:tabular-nums;}
+  .find-hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;margin-bottom:5px;}
+  .find p{margin-bottom:10px;max-width:64ch;}
+  .find p:last-child{margin-bottom:0;}
+
+  /* proportion bars */
+  .bars{background:var(--surface);border:1px solid var(--rule);border-radius:6px;
+    padding:20px 22px;box-shadow:var(--shadow);margin-block:22px;}
+  .bar-row{margin-bottom:18px;}
+  .bar-row:last-child{margin-bottom:0;}
+  .bar-lab{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:6px;}
+  .bar-lab .t{font-weight:600;color:var(--ink);font-size:.92rem;}
+  .bar-lab .n{font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--mute);
+    font-variant-numeric:tabular-nums;}
+  .track{display:flex;height:26px;border-radius:4px;overflow:hidden;background:var(--sunk);}
+  .seg{display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;
+    font-size:.68rem;font-weight:600;color:#fff;min-width:0;overflow:hidden;white-space:nowrap;}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;
+    font-size:.78rem;color:var(--mute);}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;
+    vertical-align:baseline;}
+
+  /* callout */
+  .call{border-left:3px solid var(--accent);background:var(--accent-soft);
+    padding:16px 20px;border-radius:0 5px 5px 0;margin-block:22px;}
+  .call.warn{border-left-color:var(--warn);background:var(--warn-soft);}
+  .call p:last-child{margin-bottom:0;}
+  .call .eyebrow{color:inherit;opacity:.75;display:block;margin-bottom:5px;}
+
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:22px 0 0;}
+  ol.steps li{counter-increment:s;position:relative;padding-left:44px;margin-bottom:18px;max-width:64ch;}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:-1px;
+    width:27px;height:27px;border-radius:50%;background:var(--ink);color:var(--ground);
+    font-family:"IBM Plex Mono",monospace;font-size:.78rem;font-weight:600;
+    display:flex;align-items:center;justify-content:center;}
+  ol.steps li b{color:var(--ink);}
+
+  footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--rule);
+    font-size:.82rem;color:var(--mute);}
+  @media (max-width:560px){
+    .find{grid-template-columns:1fr;gap:2px;}
+    .rank{font-size:1.1rem;}
+  }
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">Live measurement, 16 September 2026</div>
+  <h1>Hub Architecture Audit</h1>
+  <p class="lede col">Two navigation systems render on every page, and a site wide breadcrumb
+  snippet has been telling Google that 147 Cybersecurity, Networking and Intro to Java pages
+  belong to AP Computer Science A. The breadcrumb half shipped today and is confirmed live. The
+  rest is ranked below by what it costs.</p>
+  <div class="runline">
+    <span><b>1,360</b> page handles in the sitemap</span>
+    <span><b>60</b> pages fetched live, 0 refused</span>
+    <span><b>0</b> inherited numbers taken on trust</span>
+  </div>
+</header>
+
+<section>
+  <div class="eyebrow">Method</div>
+  <h2>What was measured, and what was not</h2>
+  <p class="col">Every figure on this page marked as measured came from fetching the live
+  storefront today through <code>lib/storefront-fetch.js</code>, which refuses a body that is not
+  provably a rendered page. The sample is 60 pages taken at a fixed stride across all 1,360
+  handles in <code>sitemap_pages_1.xml</code>, so it is spread across every course rather than
+  clustered.</p>
+  <p class="col">The branch logic was checked a second way: the parent assignment was
+  re-derived for <strong>all 1,360 handles</strong> by parsing the branch order back out of the
+  Liquid file rather than from any memory of what it should say.</p>
+  <div class="call warn">
+    <span class="eyebrow">Not verified here</span>
+    <p>The Search Console half of the original audit, every position and impression figure,
+    could not be re-derived. The Ahrefs GSC connector answers <em>No GSC data available for the
+    requested date range</em> for this project on every range tried. Those numbers are repeated
+    below where they matter, and they are labelled. Nothing was redirected on the strength of
+    traffic nobody could read.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Ledger</div>
+  <h2>Which claims survived contact</h2>
+  <p class="col">The audit that came in was mostly right, and one of its headline items was
+  wrong in a way that would have wasted a deploy. This is the reconciliation.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Claim as received</th><th>Measured today</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>93 of 200 pages emit two BreadcrumbList blocks</td>
+          <td class="num">29 of 60 (48%)</td>
+          <td class="v-held">Held</td>
+        </tr>
+        <tr>
+          <td>103 of 200 name the 404 parent</td>
+          <td class="num">35 of 60 (58%)</td>
+          <td class="v-worse">Worse</td>
+        </tr>
+        <tr>
+          <td>Schema uses non-www, canonicals use www</td>
+          <td class="num">60 of 60</td>
+          <td class="v-held">Held, universal</td>
+        </tr>
+        <tr>
+          <td>1,251 pages carry two H1s</td>
+          <td class="num">59 of 60 (98%)</td>
+          <td class="v-held">Held</td>
+        </tr>
+        <tr>
+          <td><strong>The old Dawn mega-menu, 151 links, hidden with CSS</strong></td>
+          <td class="num">No Dawn menu exists</td>
+          <td class="v-wrong">Misattributed</td>
+        </tr>
+        <tr>
+          <td>A typical lesson page has 289 links</td>
+          <td class="num">407 on a lesson page, 356 mean</td>
+          <td class="v-worse">Worse</td>
+        </tr>
+        <tr>
+          <td>Six hub URLs are empty pages</td>
+          <td class="num">6 of 6, all 200</td>
+          <td class="v-held">Held</td>
+        </tr>
+        <tr>
+          <td>Cyber unit exam pages are noindex</td>
+          <td class="num">5 of 5</td>
+          <td class="v-held">Held</td>
+        </tr>
+        <tr>
+          <td>Hub pages rank below their destination pages</td>
+          <td class="num">not re-derivable</td>
+          <td class="v-unk">Unread</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="call">
+    <span class="eyebrow">The correction that matters</span>
+    <p>There is no leftover Dawn mega-menu. <code>snippets/header-mega-menu.liquid</code>,
+    <code>ap-csa-megamenu.liquid</code> and <code>ap-cyber-megamenu.liquid</code> are dead files:
+    nothing renders them, so they contribute zero links to any page. Deleting them, which is what
+    the original order of work asked for first, would have changed nothing on the live site while
+    reading as though the problem was solved.</p>
+    <p>The duplication is real, and it is bigger. <code>sections/header.liquid</code> carries its
+    own custom mega menu of 144 links and renders on every page, while
+    <code>snippets/apcs-nav-source.liquid</code> renders a second, newer nav of 118 links from
+    <code>theme.liquid</code>. Both ship. The first has no layout CSS left, which is why the site
+    looks rebuilt while the markup is not.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Evidence</div>
+  <h2>What a lesson page is made of</h2>
+  <div class="bars">
+    <div class="bar-row">
+      <div class="bar-lab"><span class="t">407 links on one Cybersecurity lesson page</span>
+        <span class="n">measured live</span></div>
+      <div class="track" role="img" aria-label="144 legacy header nav links, 118 new nav links, 16 footer links, 129 body and other links">
+        <div class="seg" style="flex:144;background:var(--bad);">144 legacy nav</div>
+        <div class="seg" style="flex:118;background:var(--warn);">118 new nav</div>
+        <div class="seg" style="flex:16;background:var(--mute);"></div>
+        <div class="seg" style="flex:129;background:var(--accent);">129 body</div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--bad)"></i>sections/header.liquid, 9 top level plus 135 dropdown</span>
+        <span><i style="background:var(--warn)"></i>apcs-nav-source.liquid, 12 plus 53 desktop plus 53 mobile</span>
+        <span><i style="background:var(--mute)"></i>16 footer</span>
+        <span><i style="background:var(--accent)"></i>129 body, page content and in-page anchors</span>
+      </div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-lab"><span class="t">Breadcrumb schema across the 60 page sample</span>
+        <span class="n">blocks per page</span></div>
+      <div class="track" role="img" aria-label="29 pages with two conflicting blocks, 16 with only the broken theme block, 15 with one clean block">
+        <div class="seg" style="flex:29;background:var(--bad);">29 two blocks</div>
+        <div class="seg" style="flex:16;background:var(--warn);">16 broken only</div>
+        <div class="seg" style="flex:15;background:var(--ok);">15 clean</div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--bad)"></i>two blocks naming different parents</span>
+        <span><i style="background:var(--warn)"></i>the broken theme block is the only one present</span>
+        <span><i style="background:var(--ok)"></i>one block, sound parent</span>
+      </div>
+    </div>
+  </div>
+  <p class="col">That middle band is why the snippet could not simply be deleted. On 16 of 60
+  pages, roughly a quarter of the site, the broken block is the only breadcrumb schema the page
+  has. Removing it would have traded a wrong parent for no parent.</p>
+
+  <h3 style="margin-top:34px;">After the merge</h3>
+  <p class="col">The same 60 page sample, re-run against the live storefront once the deploy
+  landed. Every figure in the right column was false before it.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>On the 60 page sample</th><th>Before</th><th>Now</th></tr></thead>
+      <tbody>
+        <tr><td>Pages emitting two BreadcrumbList blocks</td><td class="num">29</td><td class="num v-held">0</td></tr>
+        <tr><td>Pages naming the 404 parent</td><td class="num">35</td><td class="num v-held">0</td></tr>
+        <tr><td>Pages with exactly one block</td><td class="num">31</td><td class="num v-held">60</td></tr>
+        <tr><td>Pages with no breadcrumb schema at all</td><td class="num">0</td><td class="num v-held">0</td></tr>
+        <tr><td>Non-www host anywhere in the schema</td><td class="num">60</td><td class="num v-wrong">14</td></tr>
+        <tr><td>Pages carrying both navs</td><td class="num">60</td><td class="num v-worse">60</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="col">The fourth row is the one that was worth the care: nothing lost its breadcrumb.
+  The fifth is a new finding rather than a miss. Those 14 pages carry a non-www URL inside the
+  breadcrumb that was written into their <em>page body</em> on 2026-09-10, which no theme change
+  can reach. That is a Matrixify fix, and it is small now that it is the only source left.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Findings</div>
+  <h2>Ranked by what it costs</h2>
+  <p class="col">Ordered by consequence, not by effort. The numbering is the ranking.</p>
+
+  <div class="find">
+    <div class="rank">01</div>
+    <div>
+      <div class="find-hd"><h3>Breadcrumb schema named the wrong course and a dead page</h3>
+        <span class="chip c-fix">Shipped and verified</span></div>
+      <p>The branch chain tested <code>unit-1</code> through <code>unit-4</code> inside its first
+      branch, so <code>ap-cybersecurity-unit-1-social-engineering</code> matched
+      <strong>AP Computer Science A</strong> and never reached the Cybersecurity branch. 147
+      handles were affected. The parent it named, <code>/pages/ap-csa-exam-prep</code>, is a 404,
+      and three more named parents are 301s. All 30 URLs were hardcoded on the non-www host while
+      every canonical is www.</p>
+      <p>Fixed in <strong>PR #120</strong>, merged into the connected branch and live: course branches reordered, targets repointed to pages
+      that answer 200, hosts read <code>shop.url</code>, and the snippet now stands down where the
+      page body already states its trail. Re-derived across all 1,360 handles at zero wrong-course
+      parents, and mutation tested by restoring the old order, which puts it back to 147.</p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="rank">02</div>
+    <div>
+      <div class="find-hd"><h3>Two full navigation systems in every page</h3>
+        <span class="chip c-open">Open, next push</span></div>
+      <p>144 links from <code>sections/header.liquid</code> and 118 from
+      <code>apcs-nav-source.liquid</code>, on all 60 sampled pages. Around 262 of a lesson page's
+      407 links are navigation chrome repeated on every URL on the site.</p>
+      <p>The fix is to delete the mega nav markup from <code>sections/header.liquid</code>, not the
+      three dead snippets. It needs a visual check after the push, because that section still
+      carries the pill styling that the surviving nav does not define.</p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="rank">03</div>
+    <div>
+      <div class="find-hd"><h3>Six hub URLs serve an empty shell</h3>
+        <span class="chip c-stag">Sheet staged</span></div>
+      <p><code>/pages/ap-csa</code>, <code>ap-csp</code>, <code>practice-exams</code>,
+      <code>flashcards</code>, <code>bundles</code> and <code>quick-reference</code> each return 200
+      with the same content: a title and the global contact widget. Measured inside
+      <code>&lt;main&gt;</code> they run 2,314 to 2,315 words, all of it shared chrome. The last four
+      share a slug with a real collection they have been competing against.</p>
+      <p>The redirect sheet is written and every target was status checked at 200 before its row
+      existed. It is a no-op until somebody unpublishes the pages, which is why it ships with an
+      ordered runbook rather than as a file to import.</p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="rank">04</div>
+    <div>
+      <div class="find-hd"><h3>Two H1s on effectively every page</h3>
+        <span class="chip c-open">Open</span></div>
+      <p>59 of 60. This is a template defect rather than a content one, so it is one fix in the
+      layout rather than 1,300 page edits. It sits below the nav work because a second H1 costs
+      less than 262 repeated links.</p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="rank">05</div>
+    <div>
+      <div class="find-hd"><h3>Hub pages compete with the pages they should feed</h3>
+        <span class="chip c-open">Needs the traffic data</span></div>
+      <p>Several pages per course answer the same query, and the reported pattern is that the hub
+      style pages sit at positions 20 to 68 while the destination pages sit at 5 to 10. That
+      pattern is the reason for the architecture below.</p>
+      <p>These positions are the part this session could not read. The consolidation is worth
+      doing on structure alone, but which URL keeps the role is a decision that needs the numbers,
+      and picking wrong costs a ranking page.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Target state</div>
+  <h2>Six roles, one URL each</h2>
+  <p class="col">Every course gets the same six roles: <strong>Course hub, Unit hubs, Study,
+  Practice, Exam, Teachers</strong>. Each role belongs to exactly one URL, and the nav, the
+  homepage, the visible breadcrumb and the schema all name that same URL. Small courses fold roles
+  into the course hub rather than growing empty pages for them.</p>
+  <p class="col">Three rules decide every individual case. Keep the URL that already ranks and
+  redirect the competitors into it. Give distinct sub-topics their own child pages, linked both
+  ways, the way FRQs by year and FRQs by topic are genuinely different questions. Never rename
+  anything that earns clicks.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Course</th><th>Keeps the course hub role</th><th>Merges into it</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cybersecurity</strong></td><td class="mono">complete-course-guide</td>
+          <td><span class="mono">ap-cybersecurity</span>, topics, 5 unit-practice pages, the
+          what-is duplicate, exam-format-scoring, 4 retired Unit 2 pages</td></tr>
+        <tr><td><strong>CSA</strong></td><td class="mono">ap-csa-course</td>
+          <td><span class="mono">exam-prep-hub</span>, <span class="mono">ap-csa</span>, topics,
+          exam-review, 3 practice duplicates, 2 unit guides</td></tr>
+        <tr><td><strong>CSP</strong></td><td class="mono">ap-csp-course</td>
+          <td><span class="mono">resources</span>, <span class="mono">ap-csp-info</span>,
+          <span class="mono">ap-csp</span>; study-guides folds into
+          <span class="mono">ap-csp-topics</span></td></tr>
+        <tr><td><strong>Networking</strong></td><td class="mono">ap-networking</td>
+          <td>curriculum, exam, practice-exam</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="col">That is roughly 36 redirects. The nav drops to about 7 items per course, because
+  <em>Course Hub</em> and <em>Full Course</em> stop being two different things. CSP still needs an
+  exam format page built rather than merged.</p>
+  <div class="call">
+    <span class="eyebrow">Already aligned</span>
+    <p>The breadcrumb fix shipped today points CSA at <code>ap-csa-course</code> and CSP at
+    <code>ap-csp-course</code>, which are the hubs this table keeps. So the schema is already
+    pointing at the target architecture rather than at the current one, and the merges will not
+    need a second pass through that snippet.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Sequence</div>
+  <h2>Order of work</h2>
+  <ol class="steps">
+    <li><b>Breadcrumb schema.</b> Shipped. PR #120 merged into the connected branch, deploy
+      confirmed against the live storefront: duplicates 29 to 0, dead parent 35 to 0, and no page
+      lost its schema.</li>
+    <li><b>Delete the mega nav from <code>sections/header.liquid</code>.</b> The section itself,
+      not the three dead snippets. Re-check button and title colours after the push, since that
+      section defines pill styling nothing else does.</li>
+    <li><b>Unpublish the six empty pages, then import the stage 1 redirects.</b> In that order.
+      Shopify ignores a redirect while a page still resolves, so importing first produces six
+      redirects that silently never fire and a log that looks like success.</li>
+    <li><b>Cyber consolidation</b>, before October and ahead of the November 1 indexing deadline.</li>
+    <li><b>CSA and CSP hub merges</b>, updating breadcrumb root, nav and homepage in the same push
+      so the four never disagree.</li>
+    <li><b>Port content first</b> for the pages that need it, the two CSA unit guides, exam-review,
+      CSP study-guides and the Networking exam page, and only then redirect them.</li>
+    <li><b>Fix the 14 non-www breadcrumb URLs in page bodies</b>, which the theme cannot reach.</li>
+    <li><b>Repair the broken links and re-crawl</b>, including the 31 self-redirecting links on
+      <span class="mono">ap-csa-frqs-by-topic</span> that reload the page a student just clicked
+      away from.</li>
+  </ol>
+</section>
+
+<section>
+  <div class="eyebrow">Your call</div>
+  <h2>One decision</h2>
+  <div class="find" style="border-top:2px solid var(--rule-firm);">
+    <div class="rank" style="color:var(--accent);">?</div>
+    <div>
+      <div class="find-hd"><h3>The five cyber unit exam pages are noindex</h3>
+        <span class="chip c-dec">Needs Tanner</span></div>
+      <p>Confirmed today: all five of <code>ap-cyber-unit-1-exam</code> through
+      <code>unit-5-exam</code> serve a noindex. Unit 1 still drew 38 clicks in two weeks, which
+      means it is ranking on links alone.</p>
+      <p>If the noindex is there for test integrity, leave it and this is closed. If it was
+      inherited rather than chosen, removing it is the cheapest traffic win on this page. Nobody
+      should guess which, because the two answers point opposite ways.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Board task 339. Measurements taken 16 September 2026 against the live storefront through
+  <code>lib/storefront-fetch.js</code>, which sends no User-Agent and refuses any body that is not
+  provably a rendered page. Search Console figures are repeated from the earlier audit and were
+  not re-derived here.</p>
+</footer>
+
+</div>

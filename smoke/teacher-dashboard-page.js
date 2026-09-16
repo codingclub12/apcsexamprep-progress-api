@@ -440,6 +440,46 @@ for (const [row, wantMode, wantQuiz] of [
   ok('    the mode is unchanged after a 403', T.state.retryMode === 'practice', T.state.retryMode);
   ok('    and so is the grid it draws', T.state.retryTypes.quiz === false, T.state.retryTypes);
 
+  //  ── 12. THE UNENFORCEABLE LOCK SAYS SO IN SHAPE, NOT ONLY IN COLOUR ──────
+  //  Board 260. Some activities keep their questions in the page body, so a
+  //  teacher closing one changes nothing a student cannot walk around. The page
+  //  used to mark those with a colour filter alone, and one tinted padlock
+  //  beside another is not a distinction on a phone, in greyscale, or to a
+  //  colour blind teacher.
+  //
+  //  This rode along on the board 318 sheet, built 2026-09-07 by another
+  //  session and handed over unverified twice. Asserted here rather than read,
+  //  because a glyph nobody tests is a glyph that quietly stops being appended.
+  console.log('\n12. An unenforceable lock is marked by shape, not by colour alone');
+  {
+    const WARN = '\u26A0';
+    const shut = T.lkHtml('act', 'unit-1', '1.1', 'quiz', 'off', false, 'Quiz', false);
+    const real = T.lkHtml('act', 'unit-1', '1.1', 'quiz', 'off', true, 'Quiz', false);
+    const open = T.lkHtml('act', 'unit-1', '1.1', 'quiz', 'on', false, 'Quiz', false);
+
+    ok('  a lock that cannot be enforced carries the warning sign', shut.includes(WARN), shut.slice(-120));
+    ok('  a lock that CAN be enforced does not', !real.includes(WARN), real.slice(-120));
+    ok('  and an open column does not, enforceable or not', !open.includes(WARN), open.slice(-120));
+    ok('  the unenforceable one is still marked in the class too, for the eye',
+      /class='lk[^']*\bnf\b/.test(shut), shut.slice(0, 90));
+
+    //  The aria-label used to read "Quiz: Not assigned", which tells a screen
+    //  reader the opposite of what the tooltip tells everybody else.
+    ok('  a screen reader hears WHY it cannot be enforced, not just that it is off',
+      /aria-label='[^']*Cannot be enforced/.test(shut), shut.slice(0, 200));
+    ok('  and the sighted tooltip says the same thing', /title='[^']*Cannot be enforced/.test(shut));
+
+    //  Shopify decodes entities on import, so an entity in a JS string literal
+    //  comes back as a raw character and stops being the reviewed thing.
+    //  Shopify decodes entities on import, so an entity anywhere in this body,
+    //  a comment included, comes back as a raw character and the mirror drifts
+    //  from the live page by that character. The entity is spelled from its code
+    //  point here so this assertion does not become the thing it forbids.
+    const ENTITY = '&#' + 0x26A0.toString(10) + ';';
+    ok('  the glyph ships as a JS escape, and the entity appears nowhere in the body',
+      !html.includes(ENTITY), html.indexOf(ENTITY));
+  }
+
   //  The tally spelling every other suite here uses, and the one
   //  scripts/gate-suite-floor.js parses. This file printed "(72 passed)" with no
   //  failure count, so a deploy gate could not read a verdict off it and refused

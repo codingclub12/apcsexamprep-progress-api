@@ -149,8 +149,46 @@ async function main() {
     console.log('anonymous fetch cannot open them, so a teacher would get a dead iframe:');
     for (const b of bad.slice(0, 25)) console.log(`  ${b.status}  ${b.label}  ${b.id}`);
     if (bad.length > 25) console.log(`  ...and ${bad.length - 25} more`);
-    console.log('\nMost likely the conversion created the file but did not set sharing to');
-    console.log('"anyone with the link can view". Re-run the Apps Script; it is idempotent.');
+
+    // 401 and 404 are different diagnoses and used to print as one line of
+    // advice. They send you to different places, so they are split here.
+    const unauthorized = bad.filter((b) => b.status === 401).length;
+    const missing = bad.filter((b) => b.status === 404).length;
+    const other = bad.length - unauthorized - missing;
+
+    console.log('');
+    console.log(`  401 exists, not shared : ${unauthorized}`);
+    console.log(`  404 no such file       : ${missing}`);
+    if (other) console.log(`  other/timeout          : ${other}`);
+
+    if (unauthorized) {
+      console.log('');
+      console.log('A 401 means the file IS there and Google is asking for a sign-in, which');
+      console.log('is what renders as "You need access" with a Request access button. Every');
+      console.log('entitled teacher who presses that deck sends an access request to whoever');
+      console.log('owns the file, and none of those requests can be granted the right way,');
+      console.log('because the gating is supposed to be the APCSExamPrep token and not a');
+      console.log('Google account.');
+      console.log('');
+      console.log('DO NOT fix this by re-running the conversion Apps Script. It skips every');
+      console.log('deck the map sheet already records as OK, which is all of them: the copy');
+      console.log('worked, the sharing is what did not stick, so it would log "0 to convert"');
+      console.log('and exit green. Clearing the sheet to force it would mint new file ids and');
+      console.log('invalidate the embeds config.');
+      console.log('');
+      console.log('For AP Cybersecurity the repair script is generated and in this repo:');
+      console.log('  npm run cyber:reshare       (regenerate it from the embeds config)');
+      console.log('  scripts/cyber-slides-reshare.gs, pasted into script.google.com');
+      console.log('Run preview() there first, then start(), then re-run THIS check.');
+    }
+
+    if (missing) {
+      console.log('');
+      console.log('A 404 is not a sharing problem. The id in the config points at nothing,');
+      console.log('so the config is stale or crossed. Regenerate it from the map sheet');
+      console.log('rather than re-sharing: there is no file at that id to share.');
+    }
+
     process.exit(1);
   }
 
