@@ -39,7 +39,7 @@
 //  pages, and there is no hurry about any of them.
 //
 //    node scripts/csa-cyber-quiz-mount-unpin-csv.js           write the sheets
-//    node scripts/csa-cyber-quiz-mount-unpin-csv.js --check   re-verify on disk
+//    node scripts/csa-cyber-quiz-mount-unpin-csv.js --check   re-verify against LIVE
 //
 //  Zero PII: public page markup only. Pure ASCII, no em-dashes.
 // -----------------------------------------------------------------------------
@@ -161,7 +161,18 @@ function main() {
   for (const g of GROUPS) {
     const rows = [];
     for (const handle of g.handles) {
-      const live = check && snap[handle] ? snap[handle] : sf.pageBody(handle).body_html;
+      //  --check REFETCHES. It used to read the snapshot back when one existed,
+      //  which made the one failure this mode is for invisible: a sheet goes
+      //  STALE when somebody edits the live page after it was generated, and a
+      //  check that reads the file the sheet was built from can never see that.
+      //  One nearly reverted a Command Center fix on 2026-09-08. Compare to the
+      //  snapshot and SAY SO rather than quietly agreeing with yourself.
+      const live = sf.pageBody(handle).body_html;
+      if (check && snap[handle] && snap[handle] !== live) {
+        problems.push(handle + ': STALE. The live body is ' + live.length +
+          ' bytes, the sheet was built from ' + snap[handle].length +
+          '. Regenerate before importing; this sheet would MERGE an old body over it.');
+      }
       snap[handle] = live;
       const r = build(handle, live);
       problems.push(...r.problems);
@@ -198,6 +209,9 @@ function main() {
   if (new Set(all).size !== all.length) problems.push('a handle appears in more than one sheet');
   if (pages !== all.length) problems.push('built ' + pages + ' pages for ' + all.length + ' handles');
 
+  //  Only a real run rewrites the snapshot. If --check saved what it just
+  //  fetched, the next --check would compare the live page against itself and
+  //  every sheet would read fresh forever.
   if (!check) {
     fs.mkdirSync(path.dirname(SNAP), { recursive: true });
     fs.writeFileSync(SNAP, JSON.stringify(snap));
