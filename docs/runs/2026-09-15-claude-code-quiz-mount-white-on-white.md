@@ -146,6 +146,75 @@ change nothing, because the pages would still be asking for that version.
 So the replacement was safe and insufficient. Nothing regressed: all 23 pages
 were pinned to the same URL, so all 23 saw exactly what they saw before.
 
+## A theme-side fence went up while the import waits
+
+Seven hours after the Files replacement the count was still `0 of 23`, so the
+question was whether the pin is a stale edge entry that would age out on its own
+or a fact. It is a fact. Measured 2026-09-16 00:45 UTC:
+
+    ?v=1787764736   8,436 bytes   no qz-opt-text   age 1754769   cf-cache-status HIT
+    no query        9,616 bytes   has qz-opt-text  last-modified 2026-09-15 17:55:33Z
+
+`age` had grown by exactly the elapsed wall clock since the reading six hours
+earlier, so the edge is aging rather than revalidating, against a one year
+`max-age`. Nothing about waiting improves this.
+
+So the storefront got a fence, in [PR #117](https://github.com/codingclub12/APCSExamPrep-theme/pull/117):
+`snippets/apcs-quiz-mount-contrast-shim.liquid`, one selector and two
+properties, rendered from `theme.liquid`.
+
+The shape of it is the part worth keeping. It states NO COLOUR OF ITS OWN:
+`color: inherit` hands the option span whatever the widget already decided for
+the label around it, which the shipped build sets to `#374151`. A theme rule
+restating this widget's palette would be a second opinion about colours the
+inline `INK` and `PAPER` tables were added to own, and would be the same defect
+one level up.
+
+Scope is one element type, and that came from measuring rather than guessing.
+Run against the build students actually load, the harness reports the only text
+below floor on the live page is the option span: the stem, the header and the
+result panel are `div`s and a `<b>`, none of which the page's
+`span, li, strong, em, p` rule names. The shipped build creates exactly one
+`span` and gives it no class, so the fence cannot reach anything else.
+
+**It deletes itself.** The Liquid gate is the pin: a page stops matching the
+moment a sheet drops its `?v=`. There is nothing for a future session to
+remember to remove, which matters more than it sounds, because a stopgap that
+needs remembering is how the next cascade defect gets built.
+
+Evidence, against the pinned build:
+
+| host | result |
+|---|---|
+| live | 8 spans at 1.1:1, which is today's storefront |
+| shimmed | worst 4.57:1, every text element at or above the floor |
+| hostile | still red, deliberately |
+
+`hostile` staying red is the honest reading rather than a gap. The fence is
+scoped to the live defect; closing the CLASS of defect is the asset's job and
+the asset already does it, which is why all three hosts are green against the
+repo build.
+
+Mutation, per property, each required to turn the shimmed host red alone:
+
+| mutant | result |
+|---|---|
+| `color: inherit` deleted | red |
+| `-webkit-text-fill-color` deleted | red |
+| the id dropped from the selector | red |
+| `!important` dropped | red |
+| selector pointed at the wrong widget class | red |
+
+The second one earns its place: correcting `color` alone leaves WebKit painting
+the old fill, so the page would still have looked broken while every `color`
+value read correct. That is CONVENTIONS.md rule 14 doing real work.
+
+The harness reads the CSS out of the snippet that deploys rather than holding a
+copy, so it cannot keep passing against a shim somebody has edited.
+
+What the fence does NOT do: it does not unpin anything, so the sheets below are
+still the fix. It buys the pages time, it does not buy them correctness.
+
 ## What is left, and it is a page change
 
 `scripts/csa-cyber-quiz-mount-unpin-csv.js` drops `?v=1787764736` from the one
