@@ -250,6 +250,12 @@ const PAGES = [
     why: 'description was scraped breadcrumb text',
   },
   {
+    handle: 'ap-csa-unit-3-course',
+    title: 'AP CSA Unit 3: Class Creation',
+    description: 'AP CSA Unit 3 covers class creation: designing Java classes, constructors, accessors and mutators, static versus instance members, scope, and the this keyword.',
+    why: 'description was scraped breadcrumb and nav text and carried an em dash, found 2026-09-12: the same fix already shipped for the sibling unit-1, unit-2 and unit-4 course pages had never covered this one',
+  },
+  {
     handle: 'ap-csa-unit-3-practice-exam-part-2',
     title: 'AP CSA Unit 3 Practice Exam, Part 2: Class Creation',
     description: 'Part 2 of the AP CSA Unit 3 practice exam, questions 26 to 50: methods, static versus instance, scope, the this keyword, toString, equals, and class design.',
