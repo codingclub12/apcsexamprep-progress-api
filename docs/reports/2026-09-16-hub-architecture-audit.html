@@ -141,8 +141,8 @@
   <h1>Hub Architecture Audit</h1>
   <p class="lede col">Two navigation systems render on every page, and a site wide breadcrumb
   snippet has been telling Google that 147 Cybersecurity, Networking and Intro to Java pages
-  belong to AP Computer Science A. The breadcrumb half is fixed and in review. The rest is
-  ranked below by what it costs.</p>
+  belong to AP Computer Science A. The breadcrumb half shipped today and is confirmed live. The
+  rest is ranked below by what it costs.</p>
   <div class="runline">
     <span><b>1,360</b> page handles in the sitemap</span>
     <span><b>60</b> pages fetched live, 0 refused</span>
@@ -281,6 +281,27 @@
   <p class="col">That middle band is why the snippet could not simply be deleted. On 16 of 60
   pages, roughly a quarter of the site, the broken block is the only breadcrumb schema the page
   has. Removing it would have traded a wrong parent for no parent.</p>
+
+  <h3 style="margin-top:34px;">After the merge</h3>
+  <p class="col">The same 60 page sample, re-run against the live storefront once the deploy
+  landed. Every figure in the right column was false before it.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>On the 60 page sample</th><th>Before</th><th>Now</th></tr></thead>
+      <tbody>
+        <tr><td>Pages emitting two BreadcrumbList blocks</td><td class="num">29</td><td class="num v-held">0</td></tr>
+        <tr><td>Pages naming the 404 parent</td><td class="num">35</td><td class="num v-held">0</td></tr>
+        <tr><td>Pages with exactly one block</td><td class="num">31</td><td class="num v-held">60</td></tr>
+        <tr><td>Pages with no breadcrumb schema at all</td><td class="num">0</td><td class="num v-held">0</td></tr>
+        <tr><td>Non-www host anywhere in the schema</td><td class="num">60</td><td class="num v-wrong">14</td></tr>
+        <tr><td>Pages carrying both navs</td><td class="num">60</td><td class="num v-worse">60</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="col">The fourth row is the one that was worth the care: nothing lost its breadcrumb.
+  The fifth is a new finding rather than a miss. Those 14 pages carry a non-www URL inside the
+  breadcrumb that was written into their <em>page body</em> on 2026-09-10, which no theme change
+  can reach. That is a Matrixify fix, and it is small now that it is the only source left.</p>
 </section>
 
 <section>
@@ -292,14 +313,14 @@
     <div class="rank">01</div>
     <div>
       <div class="find-hd"><h3>Breadcrumb schema named the wrong course and a dead page</h3>
-        <span class="chip c-fix">Fixed, in review</span></div>
+        <span class="chip c-fix">Shipped and verified</span></div>
       <p>The branch chain tested <code>unit-1</code> through <code>unit-4</code> inside its first
       branch, so <code>ap-cybersecurity-unit-1-social-engineering</code> matched
       <strong>AP Computer Science A</strong> and never reached the Cybersecurity branch. 147
       handles were affected. The parent it named, <code>/pages/ap-csa-exam-prep</code>, is a 404,
       and three more named parents are 301s. All 30 URLs were hardcoded on the non-www host while
       every canonical is www.</p>
-      <p>Fixed in <strong>PR #120</strong>: course branches reordered, targets repointed to pages
+      <p>Fixed in <strong>PR #120</strong>, merged into the connected branch and live: course branches reordered, targets repointed to pages
       that answer 200, hosts read <code>shop.url</code>, and the snippet now stands down where the
       page body already states its trail. Re-derived across all 1,360 handles at zero wrong-course
       parents, and mutation tested by restoring the old order, which puts it back to 147.</p>
@@ -408,7 +429,9 @@
   <div class="eyebrow">Sequence</div>
   <h2>Order of work</h2>
   <ol class="steps">
-    <li><b>Breadcrumb schema.</b> Done, PR #120, awaiting merge into the connected branch.</li>
+    <li><b>Breadcrumb schema.</b> Shipped. PR #120 merged into the connected branch, deploy
+      confirmed against the live storefront: duplicates 29 to 0, dead parent 35 to 0, and no page
+      lost its schema.</li>
     <li><b>Delete the mega nav from <code>sections/header.liquid</code>.</b> The section itself,
       not the three dead snippets. Re-check button and title colours after the push, since that
       section defines pill styling nothing else does.</li>
@@ -420,6 +443,7 @@
       so the four never disagree.</li>
     <li><b>Port content first</b> for the pages that need it, the two CSA unit guides, exam-review,
       CSP study-guides and the Networking exam page, and only then redirect them.</li>
+    <li><b>Fix the 14 non-www breadcrumb URLs in page bodies</b>, which the theme cannot reach.</li>
     <li><b>Repair the broken links and re-crawl</b>, including the 31 self-redirecting links on
       <span class="mono">ap-csa-frqs-by-topic</span> that reload the page a student just clicked
       away from.</li>

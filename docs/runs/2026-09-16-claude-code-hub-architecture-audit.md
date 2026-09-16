@@ -135,3 +135,30 @@ which is what made the one wrong item dangerous: it arrived with the same
 confidence as the eight that held, and it was the item at the top of the order of
 work. Checking whether a file is RENDERED is one grep and it reverses the whole
 instruction.
+
+## Post-deploy (appended after the merge)
+
+Theme PR #120 merged into `claude/site-linking-audit-yhufjk` at
+`7bf084fdc26c825b8d29f69a3d7b5e1587ece5e2`, on the same sha CI passed on
+(`bff975a`). All five theme workflows green: verify-nav, verify-ad-gate,
+verify-csa-slides, verify-quiz-contrast, verify-qotd.
+
+The same 60 page sample, re-run live after the deploy:
+
+| on the 60 page sample | before | now |
+|---|---|---|
+| two BreadcrumbList blocks | 29 | 0 |
+| names the 404 parent | 35 | 0 |
+| exactly one block | 31 | 60 |
+| no breadcrumb schema at all | 0 | 0 |
+| non-www host in schema | 60 | 14 |
+| both navs present | 60 | 60 |
+
+Row four is the one the conditional guard existed for. Deleting the snippet
+would have put it at 16.
+
+**New finding from the after-run.** 14 pages still carry a non-www URL in their
+breadcrumb. It is not the theme any more: it is inside the breadcrumb written
+into those PAGE BODIES on 2026-09-10, so no theme change can reach it. That is a
+Matrixify fix and it is now the only remaining source of the host mismatch.
+Not opened as a board task yet.
