@@ -261,6 +261,61 @@ const PAGES = [
     description: 'AP CSA Unit 4, the largest and most heavily tested unit on the exam, covers arrays, ArrayLists, 2D arrays, searching, sorting, and recursion.',
     why: 'description was scraped breadcrumb text, and the title carried an em dash',
   },
+
+  // Found by the 2026-09-16 daily crawl, shard 1/7. Six more lesson/lab pages
+  // carrying scraped Command Center nav furniture or breadcrumb glyphs as
+  // their meta description, same defect as every prior batch in this table.
+  // Cross-checked against every seed row already sitting in the eight open,
+  // unmerged daily-audit PRs (#579, #619, #642, #659, #664, #665, #669, #674)
+  // before writing these: none of these eight handles appears in any of them.
+  {
+    handle: 'ap-csa-lesson-2-6-comparing-boolean-expressions',
+    title: 'AP CSA Lesson 2.6: Comparing Boolean Expressions',
+    description: "AP CSA Lesson 2.6 covers comparing boolean expressions: truth tables, De Morgan's Laws, comparing objects with .equals() versus ==, and handling null.",
+    why: 'description was scraped breadcrumb text',
+  },
+  {
+    handle: 'ap-csa-lesson-2-8-for-loops',
+    title: 'AP CSA Lesson 2.8: for Loops',
+    description: 'AP CSA Lesson 2.8 teaches for loops: the three header parts, tracing execution order, converting to and from while loops, and spotting off by one errors.',
+    why: 'description was scraped breadcrumb text',
+  },
+  {
+    handle: 'ap-csa-lesson-4-1-ethical-social-issues-data-collection',
+    title: 'AP CSA Lesson 4.1: Ethical Issues in Data Collection',
+    description: 'AP CSA Lesson 4.1 covers ethics in data collection: privacy risks, personally identifiable information, bias in data sets, and legal versus ethical practice.',
+    why: 'description was scraped Command Center nav furniture',
+  },
+  {
+    handle: 'ap-csa-lesson-4-11-2d-array-creation-and-access',
+    title: 'AP CSA Lesson 4.11: 2D Array Creation and Access',
+    description: 'AP CSA Lesson 4.11 covers 2D arrays: declaring and initializing with new and initializer lists, indexing with arr[row][col], and finding size with length.',
+    why: 'description was scraped Command Center nav furniture',
+  },
+  {
+    handle: 'ap-csa-lesson-4-8-arraylist-methods',
+    title: 'AP CSA Lesson 4.8: ArrayList Methods',
+    description: 'AP CSA Lesson 4.8 covers the six ArrayList methods on the AP Java Quick Reference: add, remove, get, set, size, and contains, including index shifts on removal.',
+    why: 'description was scraped Command Center nav furniture',
+  },
+  {
+    handle: 'ap-csa-lesson-4-9-traversing-arraylists',
+    title: 'AP CSA Lesson 4.9: Traversing ArrayLists',
+    description: 'AP CSA Lesson 4.9 covers traversing ArrayLists with standard and for-each loops, and the skipped-element bugs that appear when modifying a list mid-loop.',
+    why: 'description was scraped Command Center nav furniture',
+  },
+  {
+    handle: 'ap-cybersecurity-lab-units-3-4',
+    title: 'AP Cybersecurity Lab: Units 3 and 4, SOC Operator',
+    description: 'A hands-on AP Cybersecurity simulation for Units 3 and 4: scan a host, hunt indicators of compromise in logs, build a firewall ACL, and capture three flags.',
+    why: 'description was scraped lab-hub breadcrumb text',
+  },
+  {
+    handle: 'ap-cybersecurity-unit-2-protecting-physical-spaces',
+    title: 'AP Cybersecurity 2.3: Protecting Physical Spaces',
+    description: 'AP Cybersecurity Topic 2.3 covers physical controls: security awareness training, workstation policy, fencing, locks, access control vestibules, and UPS.',
+    why: 'description was scraped Command Center nav furniture, concatenated with no spaces',
+  },
 ];
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
