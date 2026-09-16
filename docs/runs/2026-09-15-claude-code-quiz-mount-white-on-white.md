@@ -291,6 +291,23 @@ Its rules are mutation tested per rule, and that caught one of its own: rule 6
 asked `out.includes('data-apcs-quiz')`, which is TRUE of `data-apcs-quiz-OFF`, so
 a mangled mount read as a present one. It is an attribute match now.
 
+The generator's own `--check` had the same shape of hole, found on 2026-09-16 and
+fixed the same day. It READ THE SNAPSHOT when one existed, so it compared the
+sheet against the file the sheet was built from and agreed with itself every
+time. The one failure that mode exists for is a sheet going stale because
+somebody edited the live page afterwards, which is precisely what it could not
+see. It refetches now and refuses with the byte counts:
+
+    ap-csa-lesson-1-1-intro-algorithms: STALE. The live body is 99805 bytes, the
+    sheet was built from 99825. Regenerate before importing; this sheet would
+    MERGE an old body over it.
+
+Mutation: age the snapshot by 22 bytes and `--check` exits 1; restore it and it
+exits 0. Run against the live storefront after the shim deployed, all 23 bodies
+are byte-identical to the snapshot, so the sheets are current. That also confirms
+the shim comes from the theme rather than from a page body, which is what makes
+it removable.
+
 ## What this is worth remembering for
 
 A widget that renders into somebody else's page owns half a contrast ratio and
