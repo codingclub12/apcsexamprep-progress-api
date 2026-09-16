@@ -215,6 +215,46 @@ copy, so it cannot keep passing against a shim somebody has edited.
 What the fence does NOT do: it does not unpin anything, so the sheets below are
 still the fix. It buys the pages time, it does not buy them correctness.
 
+### It is live, and measured on the live page
+
+Merged into the connected branch at 00:53 UTC, which IS the deploy, and read back
+with `scripts/verify-quiz-contrast-live.js` in the theme repo. That script takes
+the page body Shopify is serving now, the exact bytes at the script src that body
+names, and the payload the real quiz API returns, then measures what resolves when
+the three meet:
+
+    the page still names apcs-quiz-mount.js?v=1787764736
+    that URL still serves 8,436 bytes with no qz-opt-text, the pre-fix build
+    the eight answer choices resolve at 10.31:1, up from 1.1:1
+    8 passed, 0 failed
+
+The middle line is what makes the last one mean anything. The asset a student
+downloads is unchanged and still the pinned one, so the whole of the improvement
+is the fence. `rgb(55,65,81)` is `#374151`, which is the widget's own value for
+that label, arrived at through `inherit` rather than restated.
+
+The gate was asked of the STOREFRONT rather than of the Liquid: the shim is
+present on 1.1 and absent on `ap-cyber-unit-1-lesson-1-quiz`. Reading the
+condition out of the snippet would have proved nothing about how Shopify
+evaluates it.
+
+Two things this container forced, recorded because the next session will hit
+them. Its Chromium does not carry the agent proxy's CA, so every https resource
+on a real page dies `ERR_CERT_AUTHORITY_INVALID`. And its proxy is unreliable for
+the Shopify CDN, so the script is downloaded by curl first and served locally; a
+run that silently skipped the script because a proxy dropped it would measure a
+blank page and call it a pass.
+
+One more that cost twenty minutes: **no User-Agent and curl's own User-Agent are
+different requests.** `lib/storefront-fetch.js` sends no OVERRIDE, which leaves
+curl sending `curl/8.x` and gets 200. A Node `https` client sends no such header
+at all and this storefront answers it 403. The convention is not to spoof a
+browser; it is not to strip the header either.
+
+I wrote the shim, so this is the worker measuring the worker, and rule 4 stands.
+The script is committed so anybody can re-derive it: it needs no credential and
+reads only public page markup.
+
 ## What is left, and it is a page change
 
 `scripts/csa-cyber-quiz-mount-unpin-csv.js` drops `?v=1787764736` from the one
