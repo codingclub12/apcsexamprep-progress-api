@@ -134,10 +134,15 @@ needs its own plan.
 ## One more thing the guards caught, on this branch
 
 `npm run smoke:encoding` went red on **this suite's own test data**. The mojibake
-mutation was written as `â€¢` in a shell heredoc and arrived in the
+mutation was written as a backslash-u escape in a shell heredoc and arrived in the
 file as the bytes themselves, so the repository-wide scan correctly reported
 `smoke/csa-past-frq-pages.js` as corrupt. CLAUDE.md warns about exactly this and
 the warning was not enough; the fixture is built from code points now.
+
+This paragraph cannot quote the escape it is about, and that is the third
+instance of the same trap in one session: writing the sequence here puts the
+bytes in this file and turns the guard red on the run note describing the fix.
+Name the mechanism, never the characters.
 
 Worth the interruption, because fixing it surfaced a second problem. The
 fixture that landed was the DOUBLE-pass form of a bullet, and the single-pass
