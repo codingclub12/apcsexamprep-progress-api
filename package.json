@@ -330,7 +330,8 @@
     "bodyyear": "node scripts/body-year-csv.js",
     "smoke:csa2026frq": "node smoke/csa-past-frq-pages.js",
     "csa:2026frq": "node scripts/verify-csa-2026-frq.js --mutate",
-    "csa:2026frqsheet": "node scripts/csa-past-frq-pages-csv.js"
+    "csa:2026frqsheet": "node scripts/csa-past-frq-pages-csv.js",
+    "smoke:hubcard": "node smoke/csa-unit-hub-resource-card.js"
   },
   "keywords": [],
   "author": "",
