@@ -323,7 +323,9 @@
     "verify:qotdauthoring": "node scripts/verify-csa-qotd-authoring-live.js",
     "smoke:qotditems": "node smoke/csa-qotd-item-audit.js",
     "csa:qotdaudit": "node scripts/csa-qotd-item-audit.js",
-    "csa:qotdrederive": "node scripts/csa-qotd-key-rederive.js"
+    "csa:qotdrederive": "node scripts/csa-qotd-key-rederive.js",
+    "smoke:bodyyear": "node smoke/body-year-csv.js",
+    "bodyyear": "node scripts/body-year-csv.js"
   },
   "keywords": [],
   "author": "",
