@@ -1,0 +1,349 @@
+{
+  "_comment": [
+    "CANONICAL DATA for the four 2026 AP CSA free-response questions.",
+    "",
+    "Read docs/csa-past-frq-pages.md before changing anything in here.",
+    "",
+    "Every field below was read out of two first-party College Board PDFs, whose",
+    "sha256 and byte length are recorded under `sources`. Nothing here was",
+    "retyped from memory or from a secondary summary, for the same reason",
+    "config/cyber-topics.json is built from the CED extracts rather than typed:",
+    "a retyped identifier is how site topic 3.3 and 3.4 became each other's.",
+    "",
+    "THE POINT TOTALS ARE THE THING TO NOTICE. 2026 is the first exam under the",
+    "4-unit CED and the free-response section was rebuilt with it. Every question",
+    "from 2004 through 2025 was worth 9 points and the section was 36. In 2026",
+    "the four questions are worth 7, 7, 5 and 6, the section is 25, and only",
+    "question 1 has parts. A page that prints `Points: 9` on a 2026 question is",
+    "not a stale detail, it is a wrong denominator on a self-grading tool.",
+    "",
+    "`modelSolution` and `alternateSolutions` are College Board's own, typed from",
+    "the scoring guidelines. scripts/verify-csa-2026-frq.js compiles and RUNS",
+    "every one of them against the examples the questions themselves state, and",
+    "refuses to pass a solution it cannot reproduce. No expected value in this",
+    "file is hand-asserted."
+  ],
+  "year": 2026,
+  "course": "ap-csa",
+  "sources": [
+    {
+      "id": "ap26-frq-pdf",
+      "url": "https://apcentral.collegeboard.org/media/pdf/ap26-frq-computer-science-a.pdf",
+      "sha256": "1ff0e5ded91f52723894350f270defe776a37b60f29e9890ea5d0d1e4dcf96f2",
+      "bytes": 277439,
+      "read_on": "2026-09-17"
+    },
+    {
+      "id": "ap26-sg-pdf",
+      "url": "https://apcentral.collegeboard.org/media/pdf/ap26-sg-computer-science-a.pdf",
+      "sha256": "e62e4c8df09f3076cf96d4042366ae2073687fa8940eee6f5dee32950a27da4a",
+      "bytes": 434415,
+      "read_on": "2026-09-17"
+    },
+    {
+      "id": "csa-exam-page",
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-a/exam",
+      "read_on": "2026-09-17",
+      "note": "Section weightings, question counts and the next exam date come from here."
+    }
+  ],
+  "exam": {
+    "sectionOneQuestions": 42,
+    "sectionOneMinutes": 90,
+    "sectionOnePercent": 55,
+    "sectionTwoQuestions": 4,
+    "sectionTwoMinutes": 90,
+    "sectionTwoPercent": 45,
+    "sectionTwoPoints": 25,
+    "minutesPerQuestion": 22,
+    "nextExamDate": "Wednesday, May 12, 2027",
+    "nextExamSession": "Session 2",
+    "digital": true,
+    "_note": [
+      "55/45 and 42 questions are the CURRENT numbers and they are NOT what the",
+      "archive pages say. Section I used to be 40 questions at 50 percent.",
+      "",
+      "minutesPerQuestion is 22 because the section is 90 minutes for 4 questions.",
+      "It is a pacing default and not a College Board instruction: the questions",
+      "are no longer worth the same, so a student who is strong on question 2 has",
+      "a real argument for spending unequal time. The page says so rather than",
+      "printing 22:00 as though it came from the exam."
+    ]
+  },
+  "questions": [
+    {
+      "number": 1,
+      "slug": "account",
+      "className": "Account",
+      "typeLabel": "Methods and Control Structures",
+      "typeKey": "methods-and-control",
+      "points": 7,
+      "pdfPage": 3,
+      "unit": "Units 1 and 2",
+      "teaches": "writing a constructor and a String method with loops and conditionals",
+      "summary": "Write the Account constructor and the getShortenedName method. The constructor has to keep asking a provided helper whether a username is free, appending 1, then 2, then 3 until one is. getShortenedName walks the username and drops every hyphen along with the character in front of it.",
+      "parts": [
+        {
+          "label": "A",
+          "points": 4,
+          "signature": "public Account(String requestedName)",
+          "asks": "Complete the Account constructor. You must use isAvailable appropriately in order to receive full credit.",
+          "requirements": [
+            "If requestedName is available, assign it to the instance variable username and stop. The response has to handle this case; a loop that always appends a number fails it.",
+            "Otherwise append successive integers beginning with 1 to requestedName, checking availability each time, until isAvailable returns true.",
+            "Assign the first available name found to username. A constructor that returns a value instead of assigning the instance variable earns nothing on the algorithm point."
+          ],
+          "examples": [
+            "requestedName is \"Luis-Cruz\" and it is taken, so the constructor checks \"Luis-Cruz1\", then \"Luis-Cruz2\", then \"Luis-Cruz3\", and assigns the first one that is free.",
+            "requestedName is \"PSmith\" and it is free, so \"PSmith\" is assigned unchanged."
+          ]
+        },
+        {
+          "label": "B",
+          "points": 3,
+          "signature": "public String getShortenedName()",
+          "asks": "Complete method getShortenedName.",
+          "requirements": [
+            "Return username with every hyphen and the character immediately before it removed.",
+            "If username holds no hyphen, return it unchanged.",
+            "Leave username itself alone. The postcondition says username is unchanged, and the algorithm point is refused outright to a response that modifies it."
+          ],
+          "examples": [
+            "username is \"Amy-Marie-Lin\", so getShortenedName returns \"AmMariLin\".",
+            "username is \"SammyB3\", so getShortenedName returns \"SammyB3\"."
+          ]
+        }
+      ],
+      "given": "public class Account\n{\n    private String username;   // To be initialized in part (a)\n\n    /** Creates a username based on the parameter requestedName. If the\n     *  username is unavailable, appends successive integers, beginning\n     *  with 1, to requestedName until an available username is found,\n     *  as described in part (a).\n     */\n    public Account(String requestedName)\n    { /* to be implemented in part (a) */ }\n\n    /** Returns true if the parameter str is an available username;\n     *  returns false otherwise.\n     */\n    public static boolean isAvailable(String str)\n    { /* implementation not shown */ }\n\n    /** Returns a shortened version of username with each hyphen (\"-\")\n     *  and the character before it removed, as described in part (b)\n     *  Preconditions: username does not start or end with a hyphen.\n     *                 username does not contain consecutive hyphens.\n     *                 username.length() >= 2\n     *  Postcondition: username is unchanged.\n     */\n    public String getShortenedName()\n    { /* to be implemented in part (b) */ }\n\n    /* There may be instance variables, constructors, and methods\n       that are not shown. */\n}",
+      "modelSolution": {
+        "A": "public Account(String requestedName)\n{\n    if (isAvailable(requestedName))\n    {\n        username = requestedName;\n    }\n    else\n    {\n        int count = 1;\n        while (!isAvailable(requestedName + count))\n        {\n            count++;\n        }\n        username = requestedName + count;\n    }\n}",
+        "B": "public String getShortenedName()\n{\n    String result = username;\n    while (result.indexOf(\"-\") >= 0)\n    {\n        int j = result.indexOf(\"-\");\n        result = result.substring(0, j - 1) + result.substring(j + 1);\n    }\n    return result;\n}"
+      },
+      "alternateSolutions": [
+        {
+          "part": "A",
+          "why": "Starts from the requested name and lets the loop do the first check too, so there is no separate available-straight-away branch to forget.",
+          "code": "public Account(String requestedName)\n{\n    String temp = requestedName;\n    int count = 1;\n    while (!isAvailable(temp))\n    {\n        temp = requestedName + count;\n        count++;\n    }\n    username = temp;\n}"
+        },
+        {
+          "part": "B",
+          "why": "Splits on the hyphen and drops the last character of every piece except the final one.",
+          "code": "public String getShortenedName()\n{\n    String[] temp = username.split(\"-\");\n    String result = \"\";\n    for (int j = 0; j < temp.length - 1; j++)\n    {\n        result += temp[j].substring(0, temp[j].length() - 1);\n    }\n    result += temp[temp.length - 1];\n    return result;\n}"
+        },
+        {
+          "part": "B",
+          "why": "Walks the string one index at a time and skips a character when the next one is a hyphen.",
+          "code": "public String getShortenedName()\n{\n    String result = \"\";\n    for (int j = 1; j < username.length(); j++)\n    {\n        String curr = username.substring(j, j + 1);\n        if (curr.equals(\"-\"))\n        {\n            j++;\n        }\n        else\n        {\n            result += username.substring(j - 1, j);\n        }\n    }\n    result += username.substring(username.length() - 1);\n    return result;\n}"
+        }
+      ],
+      "rubric": [
+        { "id": "A1", "points": 1, "criterion": "Calls isAvailable with a String argument.", "earnedEvenIf": ["the returned value is never saved or used", "isAvailable is called with a String other than the parameter"], "notEarnedIf": ["any call to isAvailable is incorrect", "isAvailable is called on anything other than the class Account or this"] },
+        { "id": "A2", "points": 1, "criterion": "Updates potential usernames until an available one is found.", "earnedEvenIf": ["isAvailable is called incorrectly", "requestedName is never used", "the potential username is updated incorrectly"], "notEarnedIf": ["the availability check is never called", "availability is checked without a potential username", "the potential username is not updated in the loop body"] },
+        { "id": "A3", "points": 1, "criterion": "Increments a count in the context of a loop.", "earnedEvenIf": ["the count is never used as part of a possible username", "the count is not initialized"], "notEarnedIf": [] },
+        { "id": "A4", "points": 1, "criterion": "Assigns a correct value to username based on requestedName and the availability check. This is the algorithm point.", "earnedEvenIf": ["the updated username is not passed to isAvailable", "the availability check is wrong", "the count is incremented incorrectly"], "notEarnedIf": ["the count is missing or wrongly initialized", "availability is never checked", "no integer is appended when one is needed", "the case where requestedName is already available is not handled", "username is never initialized", "a value is printed or returned instead of initializing username"] },
+        { "id": "B1", "points": 1, "criterion": "Considers multiple parts or indices of username inside a loop whose body is not empty.", "earnedEvenIf": ["a String method is called incorrectly", "the loop bound is wrong but the loop variable still indexes username", "the method returns early, as long as the bounds would otherwise reach several indices"], "notEarnedIf": ["split is called but the result is never indexed", "the loop condition is never true", "the loop condition is always true and nothing else stops the loop"] },
+        { "id": "B2", "points": 1, "criterion": "Identifies a location of a hyphen inside username, and every String call is syntactically valid.", "earnedEvenIf": ["characters are accessed out of bounds", "split is called correctly but the result is not used"], "notEarnedIf": ["any String method is called incorrectly", "words are not separated on the hyphen", "the return value of the locating call is neither stored nor used", "array bracket notation is used on the String"] },
+        { "id": "B3", "points": 1, "criterion": "Returns the correct shortened string. This is the algorithm point.", "earnedEvenIf": ["a String method is called incorrectly"], "notEarnedIf": ["the string is not returned", "the string is built incorrectly, including an early return", "there are bounds errors", "username itself is modified", "the string is printed rather than returned"] }
+      ],
+      "mistakes": [
+        { "title": "Appending a number even when the requested name is free", "detail": "The first thing the constructor has to decide is whether requestedName is already available. A loop that starts by testing requestedName + 1 turns \"PSmith\" into \"PSmith1\" and loses A4, which is the algorithm point.", "part": "A" },
+        { "title": "Starting the counter at 0", "detail": "The question says successive integers beginning with 1. A counter that starts at 0 checks \"Luis-Cruz0\" first, which is a name College Board never asked about, and A4 refuses the point for failing to append the correct integer." },
+        { "title": "Calling isAvailable on an object", "detail": "isAvailable is static. Calling it on some other object is an incorrect call, and A1 says the point is refused for calling it on anything other than the class or this." },
+        { "title": "Cutting only the hyphen in part B", "detail": "substring(0, j) + substring(j + 1) removes the hyphen and leaves the letter in front of it, so \"Amy-Marie-Lin\" comes back as \"AmyMarieLin\" instead of \"AmMariLin\". The index you want is j - 1.", "part": "B" },
+        { "title": "Reassigning username inside part B", "detail": "The postcondition says username is unchanged. Looping with username = username.substring(...) gets the right answer and still loses B3, because B3 refuses the point to a response that modifies username. Work on a local copy.", "part": "B" },
+        { "title": "Printing instead of returning", "detail": "Both algorithm points, A4 and B3, are refused for printing the answer in addition to or instead of assigning and returning it. There is no console on the exam to print to." }
+      ],
+      "faq": [
+        { "q": "What does 2026 AP CSA FRQ 1 Account test?", "a": "A constructor that loops until a provided helper reports success, and a String method that removes a character pair. Part A is conditional and loop logic around a call to a static helper, and part B is String work with indexOf and substring, which is what the current exam description says part B of question 1 will always be." },
+        { "q": "How many points is 2026 FRQ 1 worth?", "a": "7 points, split 4 for part A and 3 for part B. That is a change: every free-response question from 2004 through 2025 was worth 9. The 2026 section is 25 points across four questions rather than 36." },
+        { "q": "Why does the constructor need a special case for an available name?", "a": "Because rubric criterion A4 names it. The constructor has to assign requestedName unchanged when isAvailable(requestedName) is true, and A4 refuses the algorithm point to a response that fails to handle that case. The alternate model solution avoids a separate branch by seeding a local variable with requestedName and letting the while condition do the first check." },
+        { "q": "Why is AmMariLin the answer and not AmyMarieLin?", "a": "Each hyphen takes the character immediately before it with it. \"Amy-Marie-Lin\" loses the y with the first hyphen and the e with the second, leaving \"AmMariLin\". A solution that deletes only the hyphen returns \"AmyMarieLin\" and misses the algorithm point." },
+        { "q": "Can I use split for part B?", "a": "Yes. One of College Board's own alternate solutions splits on the hyphen and trims the last character off every piece except the final one. Criterion B1 does warn that calling split and then never indexing the result earns nothing." }
+      ]
+    },
+    {
+      "number": 2,
+      "slug": "bottle",
+      "className": "Bottle",
+      "typeLabel": "Class Design",
+      "typeKey": "class",
+      "points": 7,
+      "pdfPage": 6,
+      "unit": "Unit 3",
+      "teaches": "designing a complete class from a table of sample calls and their return values",
+      "summary": "Write the whole Bottle class from a description and a table of calls. A bottle is built full to its capacity. Taking liquid out reduces the amount, and if that would leave less than a quarter of the capacity the bottle refills itself instead.",
+      "parts": [
+        {
+          "label": "",
+          "points": 7,
+          "signature": "public class Bottle",
+          "asks": "Write the complete Bottle class. Your implementation must meet all specifications and conform to the examples shown in the table.",
+          "requirements": [
+            "A public class header, private instance variables for the capacity and the amount remaining, and a constructor taking one double.",
+            "The constructor fills the bottle: both the capacity and the current amount start at the parameter.",
+            "updateAmount(double) subtracts the amount used, and if what is left is less than 25 percent of the capacity it resets the amount to the full capacity.",
+            "updateAmount returns the amount remaining after the update, as a double."
+          ],
+          "examples": [
+            "new Bottle(1000.0), then updateAmount(400.0) returns 600.0, then updateAmount(100.0) returns 500.0, then updateAmount(300.0) returns 1000.0 because 200 is below the 250 threshold and the bottle refills.",
+            "new Bottle(40.0), then updateAmount(30.0) returns 10.0, then updateAmount(1.0) returns 40.0 because 9 is below the 10 threshold and the bottle refills."
+          ]
+        }
+      ],
+      "given": "// Nothing is given. The whole class is the answer.\n//\n// From the question:\n//   Bottle objects are created by a constructor with a double parameter for\n//   the bottle's capacity in millilitres, which is the maximum amount of\n//   liquid it holds. Assume the value is greater than or equal to 0. Each\n//   Bottle is filled to its capacity when it is constructed.\n//\n//   updateAmount has a double parameter for the amount of liquid to remove.\n//   Its precondition is that the parameter is greater than zero and no larger\n//   than the amount remaining. If the update would leave less than 25% of the\n//   capacity, the bottle is filled and reset to the capacity. updateAmount\n//   returns the amount remaining after the update.",
+      "modelSolution": {
+        "": "public class Bottle\n{\n    private double capacity;\n    private double currentAmount;\n\n    public Bottle(double start)\n    {\n        capacity = start;\n        currentAmount = start;\n    }\n\n    public double updateAmount(double amountUsed)\n    {\n        currentAmount -= amountUsed;\n        if (currentAmount < capacity * 0.25)\n        {\n            currentAmount = capacity;\n        }\n        return currentAmount;\n    }\n}"
+      },
+      "alternateSolutions": [],
+      "rubric": [
+        { "id": "1", "points": 1, "criterion": "Declares the class header: class Bottle.", "earnedEvenIf": [], "notEarnedIf": ["the class is declared private or anything other than public", "there is code outside the class", "the class header carries parentheses"] },
+        { "id": "2", "points": 1, "criterion": "Declares all necessary private instance variables of appropriate types for the remaining amount and the capacity.", "earnedEvenIf": ["the instance variables are initialized incorrectly", "the capacity is declared int rather than double"], "notEarnedIf": ["any instance variable is static", "private is omitted on any of them", "an instance variable is declared inside the constructor", "a variable is declared outside the class"] },
+        { "id": "3", "points": 1, "criterion": "Declares the constructor header Bottle(double ...).", "earnedEvenIf": [], "notEarnedIf": ["the constructor is private or static", "it carries a return type or returns a value"] },
+        { "id": "4", "points": 1, "criterion": "The constructor assigns the correct initial value to the capacity instance variable.", "earnedEvenIf": ["the remaining-amount variable is left to default initialization"], "notEarnedIf": ["no capacity instance variable is declared or initialized", "the parameter is not used", "the initial value is assigned to a local variable rather than the instance variable", "the value assigned has an incompatible type"] },
+        { "id": "5", "points": 1, "criterion": "Declares the method header public double updateAmount(double ...).", "earnedEvenIf": ["extra methods are declared, correctly or not"], "notEarnedIf": ["public is missing", "the method name is wrong", "the return type or the parameter type is wrong"] },
+        { "id": "6", "points": 1, "criterion": "Calculates and updates the correct remaining amount, including the refill. This is the algorithm point.", "earnedEvenIf": ["the correct amount is not returned or is printed instead"], "notEarnedIf": ["the below-25-percent case is not handled", "the remaining-amount instance variable is not updated", "the right amount is computed and a different value is returned", "an early return produces the wrong amount"] },
+        { "id": "7", "points": 1, "criterion": "Returns the calculated remaining amount from inside updateAmount.", "earnedEvenIf": ["the amount returned is wrong", "the method returns early"], "notEarnedIf": ["some handled case returns no value", "a value is returned without computation", "the value returned is not numeric", "the value is printed as well as or instead of returned"] }
+      ],
+      "mistakes": [
+        { "title": "Testing the threshold before removing the liquid", "detail": "The refill is decided on what is LEFT. Checking currentAmount before subtracting reads the old amount, so the 1000 mL bottle never refills at the third call and returns 200.0 where the table says 1000.0. Criterion 6 is the algorithm point and it goes." },
+        { "title": "Using <= instead of < on the threshold", "detail": "The question says the refill happens if the update would leave LESS THAN 25 percent. A bottle left at exactly 250 of 1000 does not refill. Getting this backwards is invisible on the sample table, because none of its rows land exactly on the boundary, which is exactly why it survives a quick test." },
+        { "title": "Returning the capacity rather than the amount", "detail": "After a refill the two happen to be equal, which hides the bug on every refill row. On a non-refill row it returns 1000.0 where the table says 600.0." },
+        { "title": "Declaring the instance variables inside the constructor", "detail": "A local named capacity declared inside the constructor compiles, assigns, and vanishes. Criterion 2 refuses the point outright for declaring an instance variable inside the constructor, and every later call reads 0.0." },
+        { "title": "Leaving off private", "detail": "Criterion 2 refuses the point if private is omitted from any instance variable declaration. This is a free point that costs nothing to keep." },
+        { "title": "Hardcoding 250 or 10", "detail": "Those are the thresholds for the two bottles in the table, not the rule. The threshold is capacity * 0.25 and it has to be computed from the instance variable." }
+      ],
+      "faq": [
+        { "q": "What does 2026 AP CSA FRQ 2 Bottle test?", "a": "Writing an entire class from a specification and a table of calls: the class header, private instance variables, a constructor, one method, and the logic inside it. There is no starter code at all, which is what makes question 2 different from the other three." },
+        { "q": "How many points is 2026 FRQ 2 worth?", "a": "7 points, and unlike question 1 they are not split into parts. Five of the seven are structural, which is unusual: the class header, the instance variables, the constructor header, the constructor assignment and the method header are one point each before any logic is graded." },
+        { "q": "Do I need a getter or a toString?", "a": "No. The rubric asks for a class header, instance variables, a constructor and updateAmount. Criterion 5 explicitly allows extra methods without penalty, so writing them is not wrong, it just spends time no point is waiting on." },
+        { "q": "What should the constructor parameter be called?", "a": "Anything. The rubric writes it as Bottle(double ...) with the name left open, and a parameter renamed from the question is on College Board's published list of errors to ignore." },
+        { "q": "Does the bottle refill at exactly 25 percent?", "a": "No. The condition is strictly less than 25 percent of capacity, so a 1000 mL bottle sitting at exactly 250.0 stays where it is. Neither example in the table lands on the boundary, so this is a case you have to get from the wording rather than from the table." }
+      ]
+    },
+    {
+      "number": 3,
+      "slug": "attendance",
+      "className": "Attendance",
+      "typeLabel": "Data Analysis with ArrayList",
+      "typeKey": "array-arraylist",
+      "points": 5,
+      "pdfPage": 8,
+      "unit": "Unit 4",
+      "teaches": "comparing two ArrayLists of objects and counting the pairs that match on one field and differ on another",
+      "summary": "Write moreHistoryThanMathAbsences. Two ArrayLists of CourseRecord objects hold the students in a history course and a math course. Count the students who appear in both and have more absences in history than in math.",
+      "parts": [
+        {
+          "label": "",
+          "points": 5,
+          "signature": "public int moreHistoryThanMathAbsences()",
+          "asks": "Write the Attendance method moreHistoryThanMathAbsences. The method should return the number of students who are enrolled in both the history course and the math course but have more absences in the history course than the math course.",
+          "requirements": [
+            "Compare every history record against every math record. A student is in both courses when the two getStudentID values are equal.",
+            "Count a student only when the history absences are strictly greater than the math absences.",
+            "Compare IDs with equals, never with ==. Criterion 5 refuses the algorithm point for using == on Strings.",
+            "Leave both lists alone. The postcondition says historyList and mathList are unchanged."
+          ],
+          "examples": [
+            "Four IDs appear in both lists: \"dr03\", \"ot32\", \"sq98\" and \"ry00\". Only \"ot32\" and \"sq98\" have more history absences than math absences, so the method returns 2."
+          ]
+        }
+      ],
+      "given": "public class CourseRecord\n{\n    /** Returns a unique ID for the student associated with this CourseRecord */\n    public String getStudentID()\n    { /* implementation not shown */ }\n\n    /** Returns a nonnegative integer representing the number of times the\n     *  student associated with this CourseRecord has been absent in the course\n     */\n    public int getAbsences()\n    { /* implementation not shown */ }\n\n    /* There may be instance variables, constructors, and methods\n       that are not shown. */\n}\n\npublic class Attendance\n{\n    /* The students enrolled in a history course */\n    private ArrayList<CourseRecord> historyList;\n\n    /* The students enrolled in a math course */\n    private ArrayList<CourseRecord> mathList;\n\n    /** Returns the number of students who are enrolled in both the history\n     *  course and the math course but have more absences in the history\n     *  course than the math course\n     *  Preconditions: No student ID appears multiple times in historyList.\n     *                 No student ID appears multiple times in mathList.\n     *                 historyList and mathList do not contain any null elements.\n     *  Postcondition: historyList and mathList are unchanged.\n     */\n    public int moreHistoryThanMathAbsences()\n    { /* to be implemented */ }\n\n    /* There may be instance variables, constructors, and methods\n       that are not shown. */\n}",
+      "modelSolution": {
+        "": "public int moreHistoryThanMathAbsences()\n{\n    int count = 0;\n\n    for (CourseRecord hst : historyList)\n    {\n        for (CourseRecord mth : mathList)\n        {\n            if (hst.getStudentID().equals(mth.getStudentID())\n                    && hst.getAbsences() > mth.getAbsences())\n            {\n                count++;\n            }\n        }\n    }\n    return count;\n}"
+      },
+      "alternateSolutions": [],
+      "rubric": [
+        { "id": "1", "points": 1, "criterion": "Accesses all elements in historyList and mathList, with no bounds errors.", "earnedEvenIf": ["an enhanced for loop variable is unused in the body", "the accessed value is not used", "the method returns early, as long as the bounds would otherwise reach every element"], "notEarnedIf": ["an indexed loop has correct bounds but never accesses an element", "only one of the lists is traversed", "elements are accessed incorrectly", "array bracket notation is used on an ArrayList"] },
+        { "id": "2", "points": 1, "criterion": "Calls getStudentID and getAbsences on an element from one of the lists.", "earnedEvenIf": ["array bracket notation is used on the ArrayList", "there is a bounds error"], "notEarnedIf": ["either method is called on something that is not a CourseRecord", "either method is ever called incorrectly"] },
+        { "id": "3", "points": 1, "criterion": "Determines whether an element from one list has more absences than an element from the other.", "earnedEvenIf": ["a CourseRecord or the ArrayList is accessed incorrectly", "getAbsences is called incorrectly", "records with different IDs are compared"], "notEarnedIf": ["the comparison uses the wrong operator, such as >= for >", "absences are compared with == or !=", "the absences method is never called"] },
+        { "id": "4", "points": 1, "criterion": "Initializes a count and increments it inside a conditional, in the context of a loop.", "earnedEvenIf": ["the count is initialized incorrectly", "not every qualifying student is found", "the method returns early", "getStudentID or getAbsences is called incorrectly or not at all"], "notEarnedIf": ["the count is never initialized or is reset inside a loop", "the count is incremented with no conditional around it"] },
+        { "id": "5", "points": 1, "criterion": "Returns the count of all and only the students who qualify. This is the algorithm point.", "earnedEvenIf": ["a CourseRecord or the ArrayList is accessed incorrectly", "a bound stops the loop early or late", "array bracket notation is used on an ArrayList"], "notEarnedIf": ["the computed value is not returned", "an early return produces the wrong value", "not every necessary pair is compared", "Strings are compared with ==", "either list is modified", "both the ID and the absences are not compared", "the count is printed as well as or instead of returned"] }
+      ],
+      "mistakes": [
+        { "title": "Comparing student IDs with ==", "detail": "Criterion 5 names this one directly: using == on Strings costs the algorithm point. Two IDs that read the same are different objects, and == asks whether they are the same object. Use equals." },
+        { "title": "Walking the two lists with one index", "detail": "A single loop over i that compares historyList.get(i) with mathList.get(i) only ever matches students who happen to sit at the same position in both lists, and it throws as soon as the lists are different lengths. Every history record has to be offered every math record." },
+        { "title": "Using >= for more absences", "detail": "A student with 3 in both is enrolled in both and does not have MORE absences in history. Criterion 3 calls out >= instead of > as the way to lose the point. In the worked example that error returns 4 rather than 2." },
+        { "title": "Counting the ID match rather than the absence comparison", "detail": "Both conditions have to hold before count goes up. Incrementing inside the ID check and testing the absences afterwards counts every shared student, which is 4 in the worked example." },
+        { "title": "Breaking out of the inner loop after the first ID match", "detail": "This one is usually harmless and occasionally not. The precondition says an ID appears at most once per list, so after a match there is nothing left to find. A break placed after the increment rather than after the comparison, though, can skip the absence test." },
+        { "title": "Sorting or removing to make the matching easier", "detail": "The postcondition says both lists are unchanged, and criterion 5 refuses the point to a response that modifies either. Copy first if you want to sort." }
+      ],
+      "faq": [
+        { "q": "What does 2026 AP CSA FRQ 3 Attendance test?", "a": "Traversing two ArrayLists of objects at once, matching them on one accessor and comparing them on another, and counting the pairs that satisfy both. It is the data-analysis question, which the current exam description says will always be built on an ArrayList." },
+        { "q": "How many points is 2026 FRQ 3 worth?", "a": "5 points, the smallest of the four. That is worth knowing for pacing: question 3 carries 5 of the 25 free-response points, where question 1 and question 2 carry 7 each." },
+        { "q": "Do I need a nested loop?", "a": "Yes, or something equivalent. Every history record has to be compared against every math record, because nothing says the two lists are in the same order or the same length. College Board's model solution is a nested enhanced for." },
+        { "q": "Why does the example return 2 and not 4?", "a": "Four IDs appear in both lists, but being in both courses is only half of the condition. Only \"ot32\" and \"sq98\" also have more history absences than math absences." },
+        { "q": "Is an enhanced for loop safe here?", "a": "Yes, and it is what the model solution uses. The enhanced for is only a problem when you need an index or you are modifying the list, and this method does neither." }
+      ]
+    },
+    {
+      "number": 4,
+      "slug": "gameboard",
+      "className": "GameBoard",
+      "typeLabel": "2D Array",
+      "typeKey": "two-d-array",
+      "points": 6,
+      "pdfPage": 11,
+      "unit": "Unit 4",
+      "teaches": "traversing one row of a 2D array while tracking a running sum and a running condition",
+      "summary": "Write getPointsForRow. A 2D array of Space objects is the board. Return the sum of the points in the requested row, doubled when every space in that row is the same colour.",
+      "parts": [
+        {
+          "label": "",
+          "points": 6,
+          "signature": "public int getPointsForRow(int targetRow)",
+          "asks": "Write the GameBoard method getPointsForRow. The method should return the point value of the spaces in the row specified by the parameter targetRow.",
+          "requirements": [
+            "Sum getPoints() over every space in row targetRow.",
+            "Decide whether every space in that row returns the same getColor().",
+            "Return the sum, or twice the sum when the row is all one colour.",
+            "Compare colours with equals. Criterion 3 refuses the point for == or != on the colour."
+          ],
+          "examples": [
+            "getPointsForRow(0) returns 1300. Row 0 is not all one colour, so the plain sum is returned.",
+            "getPointsForRow(2) returns 2000. Row 2 sums to 1000 and every space in it is the same colour, so the sum doubles."
+          ]
+        }
+      ],
+      "given": "public class Space\n{\n    /** Returns the color of the space */\n    public String getColor()\n    { /* implementation not shown */ }\n\n    /** Returns the point value of the space */\n    public int getPoints()\n    { /* implementation not shown */ }\n\n    /* There may be instance variables, constructors, and methods\n       that are not shown. */\n}\n\npublic class GameBoard\n{\n    private Space[][] board;\n\n    /** Returns the point value of the row in board specified by the\n     *  parameter. The point value is the sum of the points in the row,\n     *  or two times the sum of the points in the row if all spaces in\n     *  the row are the same color.\n     *  Preconditions: No elements of board are null.\n     *                 board has at least two rows and at least two columns.\n     *                 targetRow is a valid row index.\n     */\n    public int getPointsForRow(int targetRow)\n    { /* to be implemented */ }\n\n    /* There may be instance variables, constructors, and methods\n       that are not shown. */\n}",
+      "modelSolution": {
+        "": "public int getPointsForRow(int targetRow)\n{\n    boolean sameColor = true;\n    int total = 0;\n    String firstColor = board[targetRow][0].getColor();\n\n    for (Space spc : board[targetRow])\n    {\n        String currentColor = spc.getColor();\n        if (!currentColor.equals(firstColor))\n        {\n            sameColor = false;\n        }\n        total += spc.getPoints();\n    }\n\n    if (sameColor)\n    {\n        return total * 2;\n    }\n    return total;\n}"
+      },
+      "alternateSolutions": [
+        {
+          "part": "",
+          "why": "Sums first, then looks for any neighbouring pair whose colours differ and returns the plain sum the moment it finds one.",
+          "code": "public int getPointsForRow(int targetRow)\n{\n    int sum = 0;\n    for (Space s : board[targetRow])\n    {\n        sum += s.getPoints();\n    }\n    for (int i = 1; i < board[targetRow].length; i++)\n    {\n        if (!board[targetRow][i - 1].getColor()\n                .equals(board[targetRow][i].getColor()))\n        {\n            return sum;\n        }\n    }\n    return sum * 2;\n}"
+        },
+        {
+          "part": "",
+          "why": "Counts matching neighbouring pairs and doubles only when every pair matched.",
+          "code": "public int getPointsForRow(int targetRow)\n{\n    int sum = 0;\n    int matches = 0;\n    int numCols = board[targetRow].length;\n    for (int i = 0; i < numCols - 1; i++)\n    {\n        sum += board[targetRow][i].getPoints();\n        if (board[targetRow][i].getColor()\n                .equals(board[targetRow][i + 1].getColor()))\n        {\n            matches++;\n        }\n    }\n    sum += board[targetRow][numCols - 1].getPoints();\n    if (matches == numCols - 1)\n    {\n        return sum * 2;\n    }\n    else\n    {\n        return sum;\n    }\n}"
+        }
+      ],
+      "rubric": [
+        { "id": "1", "points": 1, "criterion": "Accesses all elements of board[targetRow], with no bounds error.", "earnedEvenIf": ["an enhanced for loop variable is unused in the body", "the accessed element is not used", "the method returns early, as long as the bounds would otherwise reach every necessary element"], "notEarnedIf": ["elements of board are accessed incorrectly or not at all"] },
+        { "id": "2", "points": 1, "criterion": "Calls getColor or getPoints on an element of the 2D array.", "earnedEvenIf": ["an element is accessed incorrectly", "there is a bounds error"], "notEarnedIf": ["neither method is ever called", "either is called incorrectly", "either is called on something that is not a Space", "the 2D array is never accessed"] },
+        { "id": "3", "points": 1, "criterion": "Determines whether two different Space objects have the same colour.", "earnedEvenIf": ["getColor is called incorrectly", "an element is accessed incorrectly", "rows and columns are confused"], "notEarnedIf": ["colours are compared with == or !=", "the colour method is never called"] },
+        { "id": "4", "points": 1, "criterion": "Initializes a point variable and accumulates points inside a loop.", "earnedEvenIf": ["the point variable is initialized incorrectly", "the sum is wrong, as long as it is built from obtained point values", "getPoints is called incorrectly", "rows and columns are confused", "a row other than the target is traversed", "an element is accessed incorrectly"], "notEarnedIf": ["the point variable is never initialized", "the point method is never called"] },
+        { "id": "5", "points": 1, "criterion": "Determines whether all considered spaces are the same colour. This is an algorithm point.", "earnedEvenIf": ["spaces in more than one row are considered", "a bounds error misses some elements", "elements beyond the bounds are read", "an element is accessed incorrectly", "getColor is called incorrectly", "rows and columns are confused"], "notEarnedIf": ["the spaces are not visited in a loop", "an early return means not every space is considered", "a count of same-colour pairs is compared against an expected count that does not match the number of pairs the loop actually considered"] },
+        { "id": "6", "points": 1, "criterion": "Computes and returns the correct point value for the target row based on that determination. This is an algorithm point.", "earnedEvenIf": ["the same-colour determination is wrong", "an element is accessed incorrectly"], "notEarnedIf": ["the point variable is initialized incorrectly", "spaces outside the target row are counted", "the sum is computed incorrectly", "the sum is taken down a column rather than across a row", "the value is not returned in every case", "an early return gives the wrong value", "the result is printed rather than returned"] }
+      ],
+      "mistakes": [
+        { "title": "Indexing board[column][row]", "detail": "The question says the first index is the row. Swapping them reads down a column instead of across a row, and criterion 6 refuses the algorithm point for summing a column. On a square board it silently returns a plausible wrong number rather than throwing." },
+        { "title": "Comparing colours with ==", "detail": "Criterion 3 refuses the point for == or != on the colour. Two Strings holding the same letters can be different objects, which makes an all-red row look mixed." },
+        { "title": "Returning as soon as two colours differ", "detail": "Criterion 5 refuses the point when an early return means not every space was considered. If you want the early-exit shape, use College Board's own alternate: sum the whole row FIRST, then scan for a mismatch." },
+        { "title": "Comparing every space to its neighbour and tracking a boolean badly", "detail": "sameColor = current.equals(previous) inside the loop overwrites the answer each pass, so only the last pair survives and a row of red, blue, red reports true. Set the flag to false and never set it back." },
+        { "title": "Doubling inside the loop", "detail": "total += spc.getPoints() * 2 while the row still might turn out mixed cannot be undone once a later space breaks the colour run. Decide at the end." },
+        { "title": "Assuming the board is square", "detail": "The precondition guarantees at least two rows and two columns and nothing more. board.length is the number of rows and board[targetRow].length is the number of columns, and on a 2 by 4 board they are not the same number." }
+      ],
+      "faq": [
+        { "q": "What does 2026 AP CSA FRQ 4 GameBoard test?", "a": "Traversing a single row of a 2D array while carrying two things at once: a running sum of points and a running answer to whether every space so far has been the same colour. It is the 2D array question, which the current exam description says question 4 will always be." },
+        { "q": "How many points is 2026 FRQ 4 worth?", "a": "6 points, two of which are algorithm points: criterion 5 for deciding the all-one-colour question and criterion 6 for returning the right total based on that decision." },
+        { "q": "Do I have to traverse the whole 2D array?", "a": "No, only row targetRow. board[targetRow] is a one-dimensional array of Space, so an enhanced for over it reads exactly the row you were asked about and nothing else." },
+        { "q": "Can I return early once I see two different colours?", "a": "Only if you have already summed the row. Criterion 5 refuses the point when an early return means not every space was considered, and College Board's own alternate solution handles it by summing in one loop and checking colours in a second." },
+        { "q": "What if the row has only one space?", "a": "The precondition guarantees at least two columns, so that case cannot arise. It is still worth noticing that the model solution handles it anyway: firstColor is the only colour and the sum doubles." }
+      ]
+    }
+  ]
+}
