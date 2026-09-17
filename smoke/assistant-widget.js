@@ -256,6 +256,29 @@ for (const [p, title, course, unit, lesson, type] of FIXTURES) {
   ok('AND IT DOES NOT PRUNE the index it could not confirm',
     pageIndex.count() === beforeRows, { before: beforeRows, after: pageIndex.count() });
 
+  // ── 3b) A cold or stale index rebuilds itself ────────────────────────────
+  //
+  // THE BUG THIS PINS was found on production, not here: the find endpoint
+  // deployed green against an EMPTY table and answered every question with
+  // nothing, which looks exactly like a working search answering a bad question.
+  // Only the decision is tested, never the act: build() goes to the network and
+  // this suite does not.
+  ok('a freshly seeded index needs no rebuild', pageIndex.needsRebuild() === null, pageIndex.needsRebuild());
+  ok('and ensureFresh therefore starts nothing', pageIndex.ensureFresh() === false);
+  ok('a populated index has a measurable age', pageIndex.ageHours() < 1, pageIndex.ageHours());
+  ok('an index older than the window is stale',
+    pageIndex.needsRebuild({ staleHours: 0 }) === 'stale', pageIndex.needsRebuild({ staleHours: 0 }));
+
+  db.prepare('DELETE FROM page_index').run();
+  ok('an EMPTY index reports empty rather than fresh',
+    pageIndex.needsRebuild() === 'empty', pageIndex.needsRebuild());
+  ok('an empty index has no age at all', pageIndex.ageHours() === Infinity, pageIndex.ageHours());
+  for (const [p2, title, course, unit, lesson, type] of FIXTURES) {
+    stSeed.run(p2, 'https://www.apcsexamprep.com' + p2, p2.split('/').pop(), title, course, unit, lesson, type,
+      p2.startsWith('/blogs/') ? 'article' : 'page');
+  }
+  ok('and it is fresh again once refilled', pageIndex.needsRebuild() === null);
+
   // ── 4) ACCEPTANCE 7: exactly one thank-you ───────────────────────────────
   sent = [];
   const rep = await post('/api/assistant/report', {
