@@ -83,9 +83,25 @@ function isExecutableInline(script) {
   return EXECUTABLE_TYPES.has(type.toLowerCase());
 }
 
-/** rule 1. Returns null when it compiles, or the error message when it does not. */
-function syntaxError(source) {
+/**
+ * rule 1. Returns null when it compiles, or the error message when it does not.
+ *
+ * `goal` is 'script' or 'module'. A MODULE is not compiled at all, and that is
+ * a deliberate gap rather than an oversight: vm.Script compiles in script goal,
+ * where top-level await and import/export are syntax errors even though they
+ * are perfectly legal in a module. Compiling module goal needs
+ * vm.SourceTextModule behind --experimental-vm-modules, which is not something
+ * to hang a nightly check on.
+ *
+ * This was found by running the scanner over the site rather than by reasoning
+ * about it: /pages/ap-csa-topics was reported broken for a top-level await
+ * inside Shopify's own injected shop-follow-button loader, which is correct
+ * code. A checker that cries wolf is the failure this whole instrument exists
+ * to avoid, so the module gets the ASI rule and not the compile rule.
+ */
+function syntaxError(source, goal) {
   if (!source.trim()) return null;
+  if (goal === 'module') return null;
   try {
     // eslint-disable-next-line no-new
     new vm.Script(source);
@@ -93,6 +109,12 @@ function syntaxError(source) {
   } catch (e) {
     return e && e.message ? e.message : String(e);
   }
+}
+
+/** 'module' when the tag says so, otherwise 'script'. */
+function goalOf(script) {
+  const type = attrValue(script.attrs, 'type');
+  return type && type.trim().toLowerCase() === 'module' ? 'module' : 'script';
 }
 
 // rule 2. `obj.getAtt` ending a line, a bare identifier opening the next, and a
@@ -139,7 +161,7 @@ function scanBody(html) {
   for (const s of scripts) {
     if (!isExecutableInline(s)) continue;
     checked++;
-    const err = syntaxError(s.source);
+    const err = syntaxError(s.source, goalOf(s));
     if (err) {
       findings.push({ rule: 'syntax', bytes: s.source.length, detail: err });
     }
@@ -156,7 +178,7 @@ function scanBody(html) {
 }
 
 module.exports = {
-  extractScripts, isExecutableInline, syntaxError, asiSplits, scanBody, attrValue,
+  extractScripts, isExecutableInline, syntaxError, asiSplits, scanBody, attrValue, goalOf,
 };
 
 // ── the network half ───────────────────────────────────────────────────────
