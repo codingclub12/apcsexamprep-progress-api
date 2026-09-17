@@ -120,11 +120,38 @@ function board(html, lessonRoll, items) {
   await D.toggleGate(null, 'unit', 'unit-1', '', '');
   ok('  a closed unit opens', !!(D._posted && D._posted.open === true), D._posted);
 
-  console.log('\n5. The retry panel the live page carries is still there');
-  //  The repo mirror is missing these four ids, so an import built from it would
-  //  delete them. Asserted here so a future sheet cannot quietly drop them.
-  for (const id of ['rt-lesson', 'rt-ex', 'rt-quiz', 'rt-exam']) {
-    ok('  ' + id + ' survives', html.indexOf(id) !== -1);
+  console.log('\n5. The page still has a retry control, in whichever shape is current');
+  //  THIS USED TO PIN FOUR ELEMENT IDS AND IT WAS WRONG, corrected 2026-09-17.
+  //
+  //  It asserted rt-lesson, rt-ex, rt-quiz and rt-exam survive, on the reading
+  //  that the repo mirror was MISSING them and an import built from it would
+  //  delete them. The mirror is not missing them. It deletes them on purpose:
+  //  they are the four dead SAVING SOON switches, and board 302 is the task
+  //  that killed them. They wrote to page state and called renderAll, so a
+  //  teacher turning Quizzes off watched the grades move and changed nothing a
+  //  student could do. The board 318 sheet replaces them with three modes that
+  //  PATCH /api/teacher/classes/:code/retry and redraw from the answer.
+  //
+  //  So the old form of this check would have gone red on a correct import and
+  //  reported the fix as a regression. What it was actually protecting is worth
+  //  keeping: a sheet must not drop the retry panel altogether. That is what is
+  //  asserted now, in a way that survives the import instead of forbidding it.
+  const LEGACY = ['rt-lesson', 'rt-ex', 'rt-quiz', 'rt-exam'];
+  const legacy = LEGACY.filter((id) => html.indexOf(id) !== -1);
+  const modern = html.indexOf('gb-retryseg') !== -1;
+  ok('  the page offers a retry control of some kind',
+    modern || legacy.length === LEGACY.length,
+    { modern, legacy });
+  if (modern) {
+    ok('  it is the three-mode control, so it saves to the class',
+      /setRetryMode/.test(html) && /classes\/'\+this\.classCode\+'\/retry/.test(html));
+    ok('  and the four dead switches are gone, which is the point of board 302',
+      legacy.length === 0, legacy);
+  } else {
+    console.log('  [note]  still the four SAVING SOON switches. They change nothing a');
+    console.log('          student can do. The board 318 sheet replaces them.');
+    ok('  all four legacy switches are present, none half removed',
+      legacy.length === LEGACY.length, legacy);
   }
 
   console.log(`\n  ${pass} passed, ${fail} failed`);
