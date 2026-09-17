@@ -870,6 +870,10 @@ router.get('/api/assistant/widget-version', helpLimit, (req, res) => {
 router.get('/api/assistant/find', helpLimit, async (req, res) => {
   try {
     const q = typeof req.query.q === 'string' ? req.query.q.slice(0, 200) : '';
+    // A cold or stale index answers every question with nothing, and does it in
+    // exactly the way a working search answers a bad question. Kick off one
+    // background rebuild and carry on; this request is not held up by it.
+    require('../lib/assistant/page-index').ensureFresh();
     const out = await find.answer(q);
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Cache-Control', 'public, max-age=60');
