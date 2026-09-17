@@ -143,3 +143,43 @@ next regeneration would have seen a page that had drifted.
 `deploy-gates/2026-09-15-cyber-dashboard-rollup.json` passes `--pre` on suite,
 rederive and three mutations. Its live check is the run in the section above and
 is false until you import.
+
+---
+
+## Re-checked and REGENERATED 2026-09-17. The sheet you were handed on the 15th is stale.
+
+Do not import a copy saved before today. The live page moved on 2026-09-16 at
+19:54 local, when the lesson padlock fix landed
+(`docs/runbooks/2026-09-16-lesson-padlock.md`, board 340). The sheet built on
+the 15th was generated from the 2026-09-07 body, so importing it now would have
+reverted that fix, which is exactly the hazard the section above describes and
+the reason to re-run the check before importing rather than only after.
+
+**It is fixed rather than parked, and the fix was easy**, because the repo
+mirror already carried both changes. `shopify/cyber-dashboard.html` on `main`
+has the rollup, the three-mode retry control, the lock disclosure AND the
+2026-09-16 padlock branch, so regenerating from it produces one sheet that
+carries everything. The file in `matrixify/` is that regeneration.
+
+Checked today against the page as it is now:
+
+    loss guard          4 deletions named, and only 4: rt-lesson, rt-ex,
+                        rt-quiz, rt-exam, the dead SAVING SOON switches.
+                        Nothing of the padlock work is dropped.
+    rollup              6 checks, against the exact bytes the sheet writes
+    padlock             scripts/verify-lesson-padlock.js, 9 of 9 against those
+                        same bytes, so the import preserves board 340
+    page suite          smoke:tchdashpage, 94 passed
+    lock toggle suite   smoke:dashlocktoggle, 13 passed
+    preflight           clear to import, with --expect-command UPDATE
+
+**`matrixify/cyber-dashboard-lesson-padlock-pages.csv` is deleted.** It is
+already imported and it no longer carries the rollup, the retry control or the
+lock disclosure, so importing it after this one would take all three off the
+page. Same reason the retry-panel sheet was deleted on the 11th: two live sheets
+for one page is how a fix gets reverted by somebody being helpful.
+
+**Board 342 is answered.** It reads "the mirror is missing 4 elements the LIVE
+page has". The mirror is not missing them, it removes them on purpose under
+board 302: they are switches that moved the displayed grade and changed nothing
+a student could do.

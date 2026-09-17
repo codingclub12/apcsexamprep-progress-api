@@ -574,8 +574,33 @@ window.TCDash = {
   async toggleGate(ev,kind,unit,lesson,act){
     if(ev){ ev.stopPropagation(); ev.preventDefault(); }   // the header cell also navigates
     if(!this.gates) return;
+    //  EACH SCOPE ASKS ITS OWN ROLLUP. The lesson branch is new on 2026-09-16 and
+    //  the line it replaces could only ever CLOSE.
+    //
+    //  A lesson switch passes act='', so the old single expression looked the
+    //  lesson up as a COLUMN: colItem({unit,dl:lesson,da:''}) keys the items map
+    //  at ""unit-1|1.1|"" which never exists. That is undefined, undefined.locked
+    //  is falsy, so cur read 'on' for every lesson whatever its real state, and
+    //  open=(cur!=='on') came out false on every click. The padlock DISPLAYED the
+    //  truth, because the header above uses lessonState, and then clicking it
+    //  sent the opposite. There was no click that opened a lesson, and because a
+    //  lesson-scope write clears the rows under it, each attempt also deleted any
+    //  per-column opens the teacher had already made.
+    //
+    //  Reported 2026-09-16 by a teacher: ""the 1.1 lab is still locked for my
+    //  students, even though I have unlocked it on my account."" She had unlocked
+    //  it, repeatedly, and every attempt closed it again.
+    //
+    //  lessonState has been sitting right beside unitState the whole time. This
+    //  is one expression per scope so a fourth scope cannot inherit the wrong one.
     const cur=kind==='unit'?this.unitState(unit)
+      :kind==='lesson'?this.lessonState(unit,lesson)
       :((this.colItem({unit:unit,dl:lesson,da:act})||{}).locked?'off':'on');
+    //  No rollup for this scope means the switch was never drawn, so a click here
+    //  is not something a teacher can have meant. Guessing would write a gate row
+    //  from a state nobody could see, which is the failure the two comments above
+    //  the render path already warn about.
+    if(!cur) return;
     // A mixed switch settles everything under it OPEN on the first click. The
     // destructive direction should never be the one you get by accident.
     const open=(cur==='mix')?true:(cur!=='on');
