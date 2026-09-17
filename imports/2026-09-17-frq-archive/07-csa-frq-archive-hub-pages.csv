@@ -1,0 +1,1201 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At"
+"ap-csa-frq-archive","MERGE","AP CSA FRQ Archive: Every Past Free Response Question, 2004 to 2026","<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""FAQPage"",""mainEntity"":[{""@type"":""Question"",""name"":""What is the AP CSA FRQ Archive?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""This archive contains complete Java solutions, 9-point scoring rubrics, and exam tips for every AP Computer Science A free response question from 2004 through 2025. All solutions are verified against official College Board PDFs.""}},
+    {""@type"":""Question"",""name"":""How many FRQs are on the AP CSA exam?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The AP CSA exam has 4 FRQs in Section II, worth 45% of your total score. From the 2026 exam the section is 25 points and the questions are not equal: Question 1 is 7, Question 2 is 7, Question 3 is 5, Question 4 is 6. Before 2026 every question was 9 points and the section was 36. You have 90 minutes for the section, or about 22 minutes per question.""}},
+    {""@type"":""Question"",""name"":""What are the four AP CSA FRQ types?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""FRQ 1: Methods and Control Structures (loops, conditionals, helper method calls). FRQ 2: Class Writing (constructors, instance variables, methods). FRQ 3: ArrayList operations. FRQ 4: 2D Array traversal and algorithms.""}},
+    {""@type"":""Question"",""name"":""Which years have complete solutions?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Years 2018 through 2025 have full Holy Grail solutions including interactive code editors, 22-minute timers, scoring rubrics, mistake analysis, and exam tips. Years 2004-2017 have year hub pages.""}},
+    {""@type"":""Question"",""name"":""How do I use this archive to study?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Work through one FRQ per session: attempt the problem cold with the timer running, then reveal the solution and compare. Pay special attention to the Common Mistakes section to avoid the traps that cost students partial credit.""}},
+    {""@type"":""Question"",""name"":""What is the exam weight of AP CSA FRQs?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The free response section (Section II) accounts for 45% of your AP score. The multiple choice section (Section I, 42 questions) accounts for the other 55%. Improving your FRQ performance has a significant impact on your final score.""}}]}</script>
+<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""AP CSA Home"",""item"":""https://www.apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":2,""name"":""FRQ Archive"",""item"":""https://www.apcsexamprep.com/pages/ap-csa-frq-archive""}]}</script>
+<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""Article"",""headline"":""AP Computer Science A FRQ Archive, 2004 to 2026: Complete Solutions"",""description"":""Complete AP CSA FRQ archive with Java solutions, scoring rubrics, and exam tips for every free response question from 2004 to 2025. Verified from official College Board PDFs."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.wyzant.com/tutors/tannerc12""},""publisher"":{""@type"":""Organization"",""name"":""AP CS Exam Prep"",""url"":""https://www.apcsexamprep.com""},""dateModified"":""2026-03-14"",""educationalLevel"":""AP""}</script>
+<div id=""frq-archive"">
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important}
+#frq-archive{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;color:#1e293b!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 64px!important;-webkit-font-smoothing:antialiased!important;background:#ffffff!important}
+#frq-archive *{box-sizing:border-box!important}
+#frq-archive h1{font-size:1.95em!important;font-weight:800!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;margin:0 0 8px!important;line-height:1.2!important;border:none!important;padding:0!important}
+#frq-archive h2{font-size:1.3em!important;font-weight:700!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:36px 0 14px!important;padding-left:12px!important;border-left:4px solid #60a5fa!important;border-bottom:none!important;line-height:1.3!important}
+#frq-archive h3{font-size:1.05em!important;font-weight:600!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:20px 0 8px!important;line-height:1.3!important}
+#frq-archive p{margin:0 0 14px!important;color:#1e293b!important;font-size:15px!important;line-height:1.7!important}
+#frq-archive a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important}
+#frq-archive a:link,#frq-archive a:visited{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important}
+#frq-archive a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;text-decoration:underline!important}
+#frq-archive strong{font-weight:700!important;color:#1e293b!important}
+#frq-archive ul{margin:0 0 14px!important;padding-left:22px!important}
+#frq-archive li{margin:0 0 6px!important;font-size:15px!important;line-height:1.7!important;color:#1e293b!important}
+#frq-archive table{width:100%!important;border-collapse:collapse!important;margin:16px 0!important;font-size:14px!important}
+#frq-archive th{background:#f8fafc!important;color:#475569!important;font-weight:600!important;padding:10px 14px!important;text-align:left!important;border-bottom:2px solid #e2e8f0!important;font-size:12px!important;text-transform:uppercase!important;letter-spacing:0.4px!important}
+#frq-archive td{padding:11px 14px!important;border-bottom:1px solid #f1f5f9!important;color:#1e293b!important;vertical-align:middle!important;font-size:14px!important}
+#frq-archive tr:last-child td{border-bottom:none!important}
+#frq-archive .breadcrumb{font-size:13px!important;color:#64748b!important;margin-bottom:20px!important;display:block!important}
+#frq-archive .breadcrumb a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:none!important;font-size:13px!important}
+#frq-archive .breadcrumb a:link,#frq-archive .breadcrumb a:visited{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important}
+#frq-archive .year-label{display:inline-block!important;background:#dbeafe!important;color:#1e40af!important;font-size:12px!important;font-weight:600!important;padding:3px 10px!important;border-radius:4px!important;margin-bottom:8px!important;letter-spacing:0.5px!important;text-transform:uppercase!important}
+#frq-archive .subtitle{color:#64748b!important;font-size:15px!important;margin:0 0 20px!important;line-height:1.6!important}
+#frq-archive .stat-row{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:10px!important;margin:20px 0 28px!important}
+#frq-archive .stat-box{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;padding:14px 10px!important;text-align:center!important}
+#frq-archive .stat-num{display:block!important;font-size:1.55em!important;font-weight:800!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;line-height:1.1!important}
+#frq-archive .stat-label{display:block!important;font-size:11px!important;color:#64748b!important;margin-top:3px!important;font-weight:500!important}
+#frq-archive .jumplinks{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:0 0 28px!important;padding:13px 0!important;border-top:1px solid #e5e7eb!important;border-bottom:1px solid #e5e7eb!important}
+#frq-archive .jumplinks a{display:inline-block!important;padding:5px 12px!important;background:#f1f5f9!important;color:#334155!important;-webkit-text-fill-color:#334155!important;border-radius:5px!important;font-size:12px!important;font-weight:600!important;text-decoration:none!important}
+#frq-archive .jumplinks a:link,#frq-archive .jumplinks a:visited{color:#334155!important;-webkit-text-fill-color:#334155!important;text-decoration:none!important}
+#frq-archive .jumplinks a:hover{background:#e2e8f0!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important}
+#frq-archive .frq-cards{display:flex!important;flex-direction:column!important;gap:12px!important;margin:16px 0!important}
+#frq-archive .frq-card{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:10px!important;padding:16px 20px!important;display:flex!important;gap:16px!important;align-items:flex-start!important;text-decoration:none!important}
+#frq-archive a.frq-card:link,#frq-archive a.frq-card:visited{text-decoration:none!important}
+#frq-archive .frq-card:hover{border-color:#3b82f6!important;background:#fafcff!important}
+#frq-archive .card-num{font-size:1.55em!important;font-weight:800!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;min-width:28px!important;padding-top:2px!important;line-height:1!important}
+#frq-archive .card-body{flex:1!important;min-width:0!important}
+#frq-archive .card-body h3{font-size:1em!important;font-weight:700!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;margin:0 0 4px!important}
+#frq-archive .card-body p{font-size:13px!important;color:#475569!important;margin:0 0 8px!important;line-height:1.55!important}
+#frq-archive .badges{display:flex!important;flex-wrap:wrap!important;gap:5px!important;align-items:center!important}
+#frq-archive .badge{display:inline-block!important;font-size:11px!important;font-weight:600!important;padding:2px 8px!important;border-radius:10px!important;line-height:1.5!important}
+#frq-archive .b-mc{background:#dbeafe!important;color:#1d4ed8!important}
+#frq-archive .b-cw{background:#ede9fe!important;color:#6d28d9!important}
+#frq-archive .b-al{background:#dcfce7!important;color:#15803d!important}
+#frq-archive .b-2d{background:#fef3c7!important;color:#92400e!important}
+#frq-archive .b-pts{background:#f1f5f9!important;color:#334155!important}
+#frq-archive .b-easy{background:#dcfce7!important;color:#15803d!important}
+#frq-archive .b-med{background:#fef3c7!important;color:#92400e!important}
+#frq-archive .b-hard{background:#fee2e2!important;color:#b91c1c!important}
+#frq-archive .strategy-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-radius:10px!important;padding:20px 24px!important;margin:24px 0!important}
+#frq-archive .strategy-box h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important;font-size:1em!important}
+#frq-archive .strategy-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;margin-top:12px!important}
+#frq-archive .strategy-item{background:#fff!important;border:1px solid #bfdbfe!important;border-radius:6px!important;padding:10px 14px!important}
+#frq-archive .strategy-item .si-label{font-size:11px!important;font-weight:600!important;text-transform:uppercase!important;color:#64748b!important;letter-spacing:0.4px!important;display:block!important;margin-bottom:3px!important}
+#frq-archive .strategy-item .si-val{font-size:14px!important;font-weight:700!important;color:#1e293b!important;display:block!important}
+#frq-archive .pattern-box{background:#fefce8!important;border:1px solid #fde68a!important;border-radius:10px!important;padding:20px 24px!important;margin:24px 0!important}
+#frq-archive .pattern-box h3{color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:0 0 10px!important;font-size:1em!important}
+#frq-archive .pattern-item{display:flex!important;align-items:flex-start!important;gap:10px!important;margin-bottom:10px!important;font-size:14px!important;color:#1e293b!important}
+#frq-archive .pattern-item:last-child{margin-bottom:0!important}
+#frq-archive .pattern-tag{background:#fef3c7!important;color:#92400e!important;font-size:11px!important;font-weight:700!important;padding:2px 8px!important;border-radius:10px!important;white-space:nowrap!important;margin-top:1px!important}
+#frq-archive .tutor-cta{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:26px!important;margin:32px 0!important}
+#frq-archive .tutor-cta h3{color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;margin:0 0 8px!important;font-size:1.05em!important}
+#frq-archive .tutor-stats{display:flex!important;gap:20px!important;flex-wrap:wrap!important;margin:12px 0 16px!important}
+#frq-archive .ts-val{font-size:18px!important;font-weight:700!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;display:block!important}
+#frq-archive .ts-label{font-size:11px!important;color:#64748b!important}
+#frq-archive .btn{display:inline-block!important;padding:11px 22px!important;background:#3b82f6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;border-radius:6px!important;font-weight:600!important;font-size:14px!important;border:none!important;cursor:pointer!important;opacity:1!important;visibility:visible!important}
+#frq-archive .btn:hover{background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important}
+#frq-archive a.btn:link,#frq-archive a.btn:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important}
+#frq-archive .btn-sm{padding:7px 14px!important;font-size:13px!important}
+#frq-archive .btn-outline{background:transparent!important;border:2px solid #3b82f6!important;color:#3b82f6!important;-webkit-text-fill-color:#3b82f6!important}
+#frq-archive a.btn-outline:link,#frq-archive a.btn-outline:visited{color:#3b82f6!important;-webkit-text-fill-color:#3b82f6!important;text-decoration:none!important}
+#frq-archive .btn-outline:hover{background:#3b82f6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important}
+#frq-archive .year-nav{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:12px!important;padding:20px 0!important;border-top:1px solid #e5e7eb!important;margin-top:40px!important;flex-wrap:wrap!important}
+#frq-archive .faq-item{border-bottom:1px solid #f1f5f9!important;padding:16px 0!important}
+#frq-archive .faq-item:last-child{border-bottom:none!important}
+#frq-archive .faq-q{font-weight:600!important;color:#1e293b!important;font-size:15px!important;margin:0 0 6px!important}
+#frq-archive .faq-a{color:#475569!important;font-size:14px!important;line-height:1.7!important;margin:0!important}
+#frq-archive .footer-links{text-align:center!important;margin:16px 0 0!important;font-size:13px!important;color:#64748b!important}
+#frq-archive .footer-links a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;font-size:13px!important}
+#frq-archive .covid-note{background:#fef3c7!important;border:1px solid #fde68a!important;border-radius:8px!important;padding:14px 18px!important;margin:0 0 24px!important;font-size:14px!important;color:#1e293b!important}
+#frq-archive .score-total td{font-weight:700!important;background:#f8fafc!important;border-top:2px solid #cbd5e1!important}
+@media(max-width:600px){
+#frq-archive .stat-row{grid-template-columns:repeat(2,1fr)!important}
+#frq-archive .strategy-grid{grid-template-columns:1fr!important}
+#frq-archive .year-nav{flex-direction:column!important;align-items:stretch!important;text-align:center!important}
+}
+</style>
+<div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA Home</a> › FRQ Archive</div>
+<h1>AP Computer Science A FRQ Archive, 2004 to 2026</h1>
+<!--APCS-TOOLKIT-START--><style>#apcs-toolkit-csa,#apcs-toolkit-csa *{all:initial!important;box-sizing:border-box!important;font-family:Georgia,serif!important;}#apcs-toolkit-csa{display:block!important;margin:16px 0!important;padding:14px 16px!important;background:#F5F3FF!important;border:1px solid #DDD6FE!important;border-radius:12px!important;}#apcs-toolkit-csa .tk-label{display:block!important;font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 10px 0!important;}#apcs-toolkit-csa .tk-row{display:flex!important;flex-wrap:wrap!important;gap:10px!important;}#apcs-toolkit-csa a.tk-btn,#apcs-toolkit-csa a.tk-btn:link,#apcs-toolkit-csa a.tk-btn:visited{display:inline-block!important;background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;font-size:14px!important;font-weight:700!important;padding:10px 16px!important;border-radius:8px!important;line-height:1.2!important;}#apcs-toolkit-csa a.tk-btn:hover{background:#1d4ed8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}</style>
+<div id=""apcs-toolkit-csa"">
+<span class=""tk-label"">Your AP CSA toolkit</span><div class=""tk-row"">
+<a href=""/pages/ap-csa-course"" class=""tk-btn"">Full Course</a><a href=""/pages/ap-csa-score-calculator"" class=""tk-btn"">Score Calculator</a><a href=""/pages/ap-csa-study-guides"" class=""tk-btn"">All Study Guides</a>
+</div>
+</div>
+<!--APCS-TOOLKIT-END-->
+<p class=""subtitle"">Complete Java solutions, scoring rubrics, common mistakes, and exam tips for every AP CSA free response question. All content verified from official College Board PDFs.</p>
+<!-- ============================================================
+     FRQ ARCHIVE — STATS STRIP + URGENCY + CTA REDESIGN
+     Replace: Everything from AFTER the subtitle paragraph
+              (""Complete Java solutions, scoring rubrics..."")
+              through the old stats boxes + old inline CTA card.
+     Stop before: the tab navigation (By Type | By Year | ...)
+     ============================================================ -->
+
+<style>
+/* === SCOPED UNDER #frq-top-section === */
+#frq-top-section,
+#frq-top-section *,
+#frq-top-section *::before,
+#frq-top-section *::after {
+  all: initial !important;
+  box-sizing: border-box !important;
+}
+#frq-top-section {
+  display: block !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+  line-height: 1.5 !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* --- URGENCY BANNER --- */
+#frq-top-section .frq-urgency {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 14px 20px !important;
+  border-radius: 10px !important;
+  margin: 0 0 24px 0 !important;
+  text-align: center !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  flex-wrap: wrap !important;
+}
+#frq-top-section .frq-urgency-icon {
+  display: inline-block !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+#frq-top-section .frq-urgency strong {
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#frq-top-section .frq-urgency-days {
+  display: inline-block !important;
+  background: rgba(255,255,255,0.2) !important;
+  padding: 3px 10px !important;
+  border-radius: 6px !important;
+  font-weight: 800 !important;
+  font-size: 16px !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* --- STATS STRIP --- */
+#frq-top-section .frq-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 14px !important;
+  margin: 0 0 20px 0 !important;
+}
+@media (max-width: 680px) {
+  #frq-top-section .frq-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+#frq-top-section .frq-stat-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #f0f4ff !important;
+  border: 1px solid #dbeafe !important;
+  border-radius: 10px !important;
+  padding: 22px 14px !important;
+  text-align: center !important;
+  min-height: 110px !important;
+}
+#frq-top-section .frq-stat-number {
+  display: block !important;
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  line-height: 1.1 !important;
+  margin: 0 0 6px 0 !important;
+}
+#frq-top-section .frq-stat-label {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+}
+#frq-top-section .frq-stat-sub {
+  display: block !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+  margin: 4px 0 0 0 !important;
+  line-height: 1.2 !important;
+}
+
+/* --- TUTORING CTA BANNER --- */
+#frq-top-section .frq-cta-banner {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 20px 24px !important;
+  border-radius: 10px !important;
+  margin: 0 0 28px 0 !important;
+  flex-wrap: wrap !important;
+}
+#frq-top-section .frq-cta-text {
+  flex: 1 1 320px !important;
+  min-width: 0 !important;
+}
+#frq-top-section .frq-cta-headline {
+  display: block !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  margin: 0 0 6px 0 !important;
+  line-height: 1.3 !important;
+}
+#frq-top-section .frq-cta-sub {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #bfdbfe !important;
+  -webkit-text-fill-color: #bfdbfe !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+#frq-top-section .frq-cta-stats-row {
+  display: flex !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+}
+#frq-top-section .frq-cta-stat {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  min-width: 70px !important;
+}
+#frq-top-section .frq-cta-stat-val {
+  display: block !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+}
+#frq-top-section .frq-cta-stat-lbl {
+  display: block !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  margin: 2px 0 0 0 !important;
+}
+#frq-top-section .frq-cta-divider {
+  display: block !important;
+  width: 1px !important;
+  height: 36px !important;
+  background: rgba(255,255,255,0.25) !important;
+}
+#frq-top-section .frq-cta-btn,
+#frq-top-section a.frq-cta-btn,
+#frq-top-section a.frq-cta-btn:link,
+#frq-top-section a.frq-cta-btn:visited {
+  display: inline-block !important;
+  background: #ffffff !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  padding: 10px 22px !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: background 0.2s ease, transform 0.15s ease !important;
+}
+#frq-top-section a.frq-cta-btn:hover {
+  background: #eff6ff !important;
+  transform: translateY(-1px) !important;
+}
+@media (max-width: 600px) {
+  #frq-top-section .frq-cta-banner {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 14px !important;
+  }
+  #frq-top-section .frq-cta-stats-row {
+    justify-content: center !important;
+  }
+  #frq-top-section .frq-cta-divider {
+    display: none !important;
+  }
+}
+</style>
+
+<div id=""frq-top-section"">
+
+  <!-- EXAM URGENCY COUNTDOWN -->
+  <div class=""frq-urgency"">
+    <span class=""frq-urgency-icon"">⏰</span>
+    <span>AP CSA Exam: <strong>May 12, 2027</strong></span>
+    <span class=""frq-urgency-days"" id=""frq-countdown-days"">counting down</span>
+    <span>FRQs = 45% of your score</span>
+  </div>
+
+  <!-- STATS STRIP — 4 equal cards -->
+  <div class=""frq-stats-grid"">
+    <div class=""frq-stat-card"">
+      <span class=""frq-stat-number"">90</span>
+      <span class=""frq-stat-label"">FRQs Total</span>
+      <span class=""frq-stat-sub"">2004 to 2026</span>
+    </div>
+    <div class=""frq-stat-card"">
+      <span class=""frq-stat-number"">23 yr</span>
+      <span class=""frq-stat-label"">Coverage</span>
+      <span class=""frq-stat-sub"">Every released exam, 2004 to 2026</span>
+    </div>
+    <div class=""frq-stat-card"">
+      <span class=""frq-stat-number"">4</span>
+      <span class=""frq-stat-label"">Question Types</span>
+      <span class=""frq-stat-sub"">Q1 · Q2 · Q3 · Q4</span>
+    </div>
+    <div class=""frq-stat-card"">
+      <span class=""frq-stat-number"">45%</span>
+      <span class=""frq-stat-label"">Of Your AP Score</span>
+      <span class=""frq-stat-sub"">25 points, 90 min</span>
+    </div>
+  </div>
+
+  <!-- TUTORING CTA — separate banner, not crammed into a stat card -->
+  <div class=""frq-cta-banner"">
+    <div class=""frq-cta-text"">
+      <span class=""frq-cta-headline"">Reading solutions ≠ writing them under pressure.</span>
+      <span class=""frq-cta-sub"">Work 1-on-1 with Tanner — AP CSA teacher, 11+ years. $125/hr (3-pack) or $110/hr (5-pack).</span>
+    </div>
+    <div class=""frq-cta-stats-row"">
+      <div class=""frq-cta-stat"">
+        <span class=""frq-cta-stat-val"">54.5%</span>
+        <span class=""frq-cta-stat-lbl"">Score 5s</span>
+      </div>
+      <span class=""frq-cta-divider""></span>
+      <div class=""frq-cta-stat"">
+        <span class=""frq-cta-stat-val"">1,845+</span>
+        <span class=""frq-cta-stat-lbl"">Hours</span>
+      </div>
+      <span class=""frq-cta-divider""></span>
+      <div class=""frq-cta-stat"">
+        <span class=""frq-cta-stat-val"">5.0</span>
+        <span class=""frq-cta-stat-lbl"">451+ reviews</span>
+      </div>
+    </div>
+    <a class=""frq-cta-btn"" href=""/pages/ap-computer-science-a-tutor"">Get FRQ Help →</a>
+  </div>
+
+</div>
+
+<!-- COUNTDOWN JS — computes days remaining dynamically -->
+<script>
+(function(){
+  var examDate = new Date('2027-05-12T00:00:00');
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var diff = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+  var el = document.getElementById('frq-countdown-days');
+  if (el) {
+    if (diff > 0) {
+      el.textContent = diff + ' days left';
+    } else if (diff === 0) {
+      el.textContent = 'TODAY';
+    } else {
+      el.textContent = 'Exam passed';
+    }
+  }
+})();
+</script>
+
+<div class=""jumplinks"">
+<a href=""#archive-by-topic"">By Type</a>
+<a href=""#archive-by-year"">By Year</a>
+<a href=""#archive-overview"">Exam Overview</a>
+<a href=""#archive-how"">How to Use</a>
+<a href=""#archive-faq"">FAQ</a>
+</div>
+<div id=""archive-by-topic"">
+<h2>Browse by FRQ Type</h2>
+<p style=""font-size:14px!important;color:#475569!important;margin:0 0 20px!important;"">Jump directly to any FRQ by the skill it tests. Each type appears on every exam — knowing the patterns for each gives you a major edge.</p>
+<div style=""margin:0 0 20px!important;padding:16px 20px!important;background:#f8fafc!important;border-radius:8px!important;border:1px solid #e2e8f0!important;"">
+<div style=""display:flex!important;align-items:center!important;gap:10px!important;margin-bottom:10px!important;"">
+<span class=""badge b-mc"">Q1</span>
+<strong style=""font-size:15px!important;color:#1e293b!important"">Methods &amp; Control Structures</strong>
+</div>
+<p style=""font-size:14px!important;color:#475569!important;margin:0 0 8px!important;line-height:1.6!important""><a href=""/pages/ap-csa-2025-frq-1-dogwalker"">2025 DogWalker</a> • <a href=""/pages/ap-csa-2024-frq-1-feeder"">2024 Feeder</a> • <a href=""/pages/ap-csa-2023-frq-1-appointmentbook"">2023 AppointmentBook</a> • <a href=""/pages/ap-csa-2022-frq-1-game"">2022 Game</a> • <a href=""/pages/ap-csa-2021-frq-1-wordmatch"">2021 WordMatch</a> • <a href=""/pages/ap-csa-2020-frq-2-checkdigit"">2020 CheckDigit</a> • <a href=""/pages/ap-csa-2019-frq-1-apcalendar"">2019 APCalendar</a> • <a href=""/pages/ap-csa-2018-frq-1-frogsimulation"">2018 FrogSimulation</a></p>
+</div>
+<div style=""margin:0 0 20px!important;padding:16px 20px!important;background:#f8fafc!important;border-radius:8px!important;border:1px solid #e2e8f0!important;"">
+<div style=""display:flex!important;align-items:center!important;gap:10px!important;margin-bottom:10px!important;"">
+<span class=""badge b-cw"">Q2</span>
+<strong style=""font-size:15px!important;color:#1e293b!important"">Class Writing</strong>
+</div>
+<p style=""font-size:14px!important;color:#475569!important;margin:0 0 8px!important;line-height:1.6!important""><a href=""/pages/ap-csa-2025-frq-2-signedtext"">2025 SignedText</a> • <a href=""/pages/ap-csa-2024-frq-2-scoreboard"">2024 Scoreboard</a> • <a href=""/pages/ap-csa-2023-frq-2-sign"">2023 Sign</a> • <a href=""/pages/ap-csa-2022-frq-2-textbook"">2022 Textbook</a> • <a href=""/pages/ap-csa-2021-frq-2-combinedtable"">2021 CombinedTable</a> • <a href=""/pages/ap-csa-2019-frq-2-steptracker"">2019 StepTracker</a> • <a href=""/pages/ap-csa-2018-frq-3-codewordchecker"">2018 CodeWordChecker</a></p>
+</div>
+<div style=""margin:0 0 20px!important;padding:16px 20px!important;background:#f8fafc!important;border-radius:8px!important;border:1px solid #e2e8f0!important;"">
+<div style=""display:flex!important;align-items:center!important;gap:10px!important;margin-bottom:10px!important;"">
+<span class=""badge b-al"">Q3</span>
+<strong style=""font-size:15px!important;color:#1e293b!important"">ArrayList</strong>
+</div>
+<p style=""font-size:14px!important;color:#475569!important;margin:0 0 8px!important;line-height:1.6!important""><a href=""/pages/ap-csa-2025-frq-3-round"">2025 Round</a> • <a href=""/pages/ap-csa-2024-frq-3-wordchecker"">2024 WordChecker</a> • <a href=""/pages/ap-csa-2023-frq-3-weatherdata"">2023 WeatherData</a> • <a href=""/pages/ap-csa-2022-frq-3-reviewanalysis"">2022 ReviewAnalysis</a> • <a href=""/pages/ap-csa-2021-frq-3-clubmembers"">2021 ClubMembers</a> • <a href=""/pages/ap-csa-2020-frq-1-gizmo"">2020 Gizmo</a> • <a href=""/pages/ap-csa-2019-frq-3-delimiters"">2019 Delimiters</a> • <a href=""/pages/ap-csa-2018-frq-2-wordpairlist"">2018 WordPairList</a></p>
+</div>
+<div style=""margin:0 0 20px!important;padding:16px 20px!important;background:#f8fafc!important;border-radius:8px!important;border:1px solid #e2e8f0!important;"">
+<div style=""display:flex!important;align-items:center!important;gap:10px!important;margin-bottom:10px!important;"">
+<span class=""badge b-2d"">Q4</span>
+<strong style=""font-size:15px!important;color:#1e293b!important"">2D Array</strong>
+</div>
+<p style=""font-size:14px!important;color:#475569!important;margin:0 0 8px!important;line-height:1.6!important""><a href=""/pages/ap-csa-2025-frq-4-sumorsame"">2025 SumOrSameGame</a> • <a href=""/pages/ap-csa-2024-frq-4-gridpath"">2024 GridPath</a> • <a href=""/pages/ap-csa-2023-frq-4-boxofcandy"">2023 BoxOfCandy</a> • <a href=""/pages/ap-csa-2022-frq-4-data"">2022 Data</a> • <a href=""/pages/ap-csa-2021-frq-4-arrayresizer"">2021 ArrayResizer</a> • <a href=""/pages/ap-csa-2019-frq-4-lightboard"">2019 LightBoard</a> • <a href=""/pages/ap-csa-2018-frq-4-arraytester"">2018 ArrayTester</a></p>
+</div>
+</div>
+<div id=""archive-by-year"">
+<h2>Browse by Year</h2>
+<p style=""font-size:14px!important;color:#475569!important;margin:0 0 16px!important;"">Years with <strong>★ Full Solutions</strong> include interactive editors, timers, scoring rubrics, and mistake analysis for every individual FRQ.</p>
+<div style=""display:grid!important;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))!important;gap:10px!important;margin-bottom:24px!important;"">
+<a href=""/pages/ap-csa-frq-2026"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2026</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2025"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2025</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2024"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2024</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2023"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2023</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2022"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2022</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2021"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2021</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2020"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2020</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">2 FRQs (COVID) ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2019"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2019</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2018"" style=""display:block!important;padding:12px 14px!important;background:#eff6ff!important;border:1px solid #3b82f6!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2018</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs ★ Full Solutions</span>
+</a><a href=""/pages/ap-csa-frq-2017"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2017</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2016"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2016</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2015"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2015</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2014"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2014</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2013"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2013</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2012"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2012</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2011"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2011</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2010"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2010</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2009"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2009</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2008"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2008</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2007"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2007</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2006"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2006</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2005"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2005</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a><a href=""/pages/ap-csa-frq-2004"" style=""display:block!important;padding:12px 14px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:inherit!important;"">
+<strong style=""font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;display:block!important"">2004</strong>
+<span style=""font-size:11px!important;color:#64748b!important;display:block!important;margin-top:2px!important"">4 FRQs</span>
+</a>
+</div>
+</div>
+<div id=""archive-overview"">
+<h2>AP CSA FRQ Exam Overview</h2>
+<table>
+<tr>
+<th>Section</th>
+<th>Content</th>
+<th>Time</th>
+<th>Weight</th>
+</tr>
+<tr>
+<td>Section I</td>
+<td>42 multiple-choice questions (A–D)</td>
+<td>90 min</td>
+<td>55%</td>
+</tr>
+<tr>
+<td>Section II</td>
+<td>4 free-response questions in Java</td>
+<td>90 min</td>
+<td>45%</td>
+</tr>
+</table>
+<table style=""margin-top:16px!important"">
+<tr>
+<th>FRQ Type</th>
+<th>Typical Question</th>
+<th>Key Skills</th>
+<th>Points</th>
+</tr>
+<tr>
+<td>
+<span class=""badge b-mc"">Q1</span> Methods &amp; Control Structures</td>
+<td>Write 2 methods in an existing class</td>
+<td>Loops, conditionals, helper method calls</td>
+<td>9</td>
+</tr>
+<tr>
+<td>
+<span class=""badge b-cw"">Q2</span> Class Writing</td>
+<td>Write a complete class from scratch</td>
+<td>Constructor, instance variables, access modifiers</td>
+<td>9</td>
+</tr>
+<tr>
+<td>
+<span class=""badge b-al"">Q3</span> ArrayList</td>
+<td>Write 2 methods working with ArrayList</td>
+<td>Traversal, add/remove, backwards iteration</td>
+<td>9</td>
+</tr>
+<tr>
+<td>
+<span class=""badge b-2d"">Q4</span> 2D Array</td>
+<td>Write 2 methods on a 2D int or boolean array</td>
+<td>Nested loops, row/column access, specified traversal</td>
+<td>9</td>
+</tr>
+<tr>
+<td colspan=""3""><strong>Total</strong></td>
+<td><strong>36</strong></td>
+</tr>
+</table>
+</div>
+<div id=""archive-how"">
+<h2>How to Use This Archive</h2>
+<ol style=""font-size:15px!important;color:#1e293b!important;line-height:1.9!important;"">
+<li>
+<strong>Pick a year</strong> and open a specific FRQ (or use the by-type links to practice a particular skill).</li>
+<li>
+<strong>Start the timer</strong> (22 minutes) and attempt the problem before reading any solution.</li>
+<li>
+<strong>Check your answer</strong> using the collapsible solution reveal — then compare line by line.</li>
+<li>
+<strong>Read the mistakes section</strong> to understand the traps that cost partial credit.</li>
+<li>
+<strong>Track patterns</strong> across years — the consecutive-run counter, backwards ArrayList traversal, and two-condition balance checks all reappear regularly.</li>
+</ol>
+</div>
+
+<div id=""archive-faq"">
+<h2>Frequently Asked Questions</h2>
+<div class=""faq-item"">
+<p class=""faq-q"">What is the AP CSA FRQ Archive?</p>
+<p class=""faq-a"">This archive contains complete Java solutions, 9-point rubrics, and exam tips for every AP CSA FRQ from 2004 through 2025. Years 2018-2025 have full interactive solutions.</p>
+</div>
+<div class=""faq-item"">
+<p class=""faq-q"">How many FRQs are on the AP CSA exam?</p>
+<p class=""faq-a"">4 FRQs in Section II, worth 45% of your score. From 2026 the section is 25 points, split 7, 7, 5, 6 rather than 9 each. About 22 minutes per question.</p>
+</div>
+<div class=""faq-item"">
+<p class=""faq-q"">What are the four AP CSA FRQ types?</p>
+<p class=""faq-a"">Q1: Methods &amp; Control Structures. Q2: Class Writing. Q3: ArrayList. Q4: 2D Array.</p>
+</div>
+<div class=""faq-item"">
+<p class=""faq-q"">Which years have full interactive solutions?</p>
+<p class=""faq-a"">2018-2025 have full Holy Grail solutions with interactive editors, timers, rubrics, and mistake analysis.</p>
+</div>
+<div class=""faq-item"">
+<p class=""faq-q"">How should I use this archive to study?</p>
+<p class=""faq-a"">Attempt each FRQ cold with the timer running, then check the solution. Focus on the Patterns section to recognize recurring algorithmic structures across years.</p>
+</div>
+</div>
+<div class=""footer-links"">
+<a href=""/pages/ap-csa-frq-archive"">FRQ Archive</a> •
+<a href=""/pages/ap-csa-frqs-by-topic"">FRQs by Topic</a> •
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA Home</a>
+</div>
+
+<section style=""margin-top:2rem;padding-top:1.5rem;border-top:2px solid #e5e7eb;text-align:center"">
+<p style=""color:#4b5563;margin-bottom:.75rem;font-size:.95rem"">New to FRQs? Start here before diving into solutions.</p>
+<a href=""/pages/ap-csa-frq-strategy-guide"" style=""display:inline-block;padding:.75rem 1.5rem;background:#1d4ed8;color:#fff;border-radius:8px;font-weight:700;text-decoration:none;font-size:.95rem"">How to Think Through an FRQ →</a>
+</section>
+<!-- AP Tools CTA -->
+<div style=""display:block !important;font-family:system-ui,-apple-system,sans-serif !important;margin:32px auto !important;padding:24px !important;background:linear-gradient(135deg,#006298 0%,#324dc7 100%) !important;border-radius:12px !important;text-align:center !important;box-sizing:border-box !important;max-width:800px !important;width:100% !important;overflow:visible !important;visibility:visible !important;opacity:1 !important;height:auto !important;position:relative !important;"">
+<div style=""display:block !important;font-size:20px !important;font-weight:700 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 8px !important;line-height:1.3 !important;visibility:visible !important;opacity:1 !important;"">AP CSA Exam Tools</div>
+<div style=""display:block !important;font-size:14px !important;color:rgba(255,255,255,0.9) !important;-webkit-text-fill-color:rgba(255,255,255,0.9) !important;margin:0 0 16px !important;line-height:1.5 !important;visibility:visible !important;opacity:1 !important;"">Predict your AP score and find out which colleges accept it for credit.</div>
+<div style=""display:flex !important;justify-content:center !important;gap:12px !important;flex-wrap:wrap !important;"">
+<a href=""/pages/ap-csa-score-calculator"" style=""display:inline-block !important;padding:10px 24px !important;background:#fff !important;color:#006298 !important;-webkit-text-fill-color:#006298 !important;font-size:14px !important;font-weight:600 !important;font-family:system-ui,-apple-system,sans-serif !important;border-radius:6px !important;text-decoration:none !important;cursor:pointer !important;border:none !important;line-height:1.4 !important;opacity:1 !important;visibility:visible !important;"">Score Calculator →</a>
+<a href=""/pages/ap-college-credit-policy-search"" style=""display:inline-block !important;padding:10px 24px !important;background:rgba(255,255,255,0.15) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;font-size:14px !important;font-weight:600 !important;font-family:system-ui,-apple-system,sans-serif !important;border-radius:6px !important;text-decoration:none !important;cursor:pointer !important;border:2px solid rgba(255,255,255,0.5) !important;line-height:1.4 !important;opacity:1 !important;visibility:visible !important;"">College Credit Lookup →</a>
+</div>
+</div>
+<!-- /AP Tools CTA -->
+</div>
+
+<!-- ===== PREP PATH SECTION ===== -->
+<!--
+  AP CSA PREP PATH SECTION
+  ========================
+  Purpose : Date-aware funnel section — routes students to the right
+            product/resource based on how close the exam is.
+  Wrapper : #apcs-prep-path  (all CSS scoped here)
+  Deploy  : Shopify Custom Liquid OR paste into Body HTML via Matrixify
+            (only include Body HTML column when updating this section)
+
+  CSP VERSION: change EXAM_DATE to '2026-05-14T08:00:00'
+               and update product/page URLs in CONFIG block below.
+
+  PRODUCT URL PLACEHOLDERS — update before going live:
+    kit4wk  : /products/ap-csa-4-week-cram-kit-day-by-day-study-plan
+    kit2wk  : live Apr 25 — update handle when published
+    kit7d   : live May 5  — update handle when published
+-->
+
+<style>
+/* ── RESET ─────────────────────────────────────────────────────────────── */
+#apcs-prep-path{
+  all:initial!important;
+  display:block!important;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;
+  color:#111827!important;
+  -webkit-font-smoothing:antialiased!important;
+  line-height:1.5!important;
+}
+#apcs-prep-path *{box-sizing:border-box!important;margin:0!important;padding:0!important;}
+
+/* ── HEADER ─────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-header{
+  background:#0f172a!important;
+  padding:36px 24px 32px!important;
+  text-align:center!important;
+}
+#apcs-prep-path .pp-eyebrow{
+  font-size:11px!important;
+  font-weight:600!important;
+  letter-spacing:2px!important;
+  text-transform:uppercase!important;
+  color:#94a3b8!important;
+  display:block!important;
+  margin-bottom:10px!important;
+}
+#apcs-prep-path .pp-heading{
+  font-size:26px!important;
+  font-weight:700!important;
+  color:#f8fafc!important;
+  -webkit-text-fill-color:#f8fafc!important;
+  line-height:1.25!important;
+  margin-bottom:8px!important;
+}
+#apcs-prep-path .pp-subheading{
+  font-size:15px!important;
+  color:#94a3b8!important;
+  margin-bottom:20px!important;
+}
+#apcs-prep-path .pp-countdown-bar{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  background:#1e293b!important;
+  border:1px solid #334155!important;
+  border-radius:40px!important;
+  padding:8px 20px!important;
+  font-size:13px!important;
+  color:#cbd5e1!important;
+}
+#apcs-prep-path .pp-countdown-num{
+  font-size:22px!important;
+  font-weight:700!important;
+  color:#f97316!important;
+  -webkit-text-fill-color:#f97316!important;
+  line-height:1!important;
+}
+#apcs-prep-path .pp-countdown-num.urgent{
+  color:#ef4444!important;
+  -webkit-text-fill-color:#ef4444!important;
+}
+#apcs-prep-path .pp-countdown-num.very-urgent{
+  color:#dc2626!important;
+  -webkit-text-fill-color:#dc2626!important;
+  animation:pp-pulse 1.4s ease-in-out infinite!important;
+}
+@keyframes pp-pulse{0%,100%{opacity:1}50%{opacity:.65}}
+
+/* ── GRID ───────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,1fr)!important;
+  gap:0!important;
+  background:#f1f5f9!important;
+  padding:28px 24px!important;
+}
+@media(max-width:900px){
+  #apcs-prep-path .pp-grid{
+    grid-template-columns:repeat(2,1fr)!important;
+    gap:12px!important;
+    padding:20px 16px!important;
+  }
+}
+@media(max-width:600px){
+  #apcs-prep-path .pp-grid{
+    grid-template-columns:1fr!important;
+    gap:16px!important;
+    padding:20px 16px!important;
+  }
+}
+
+/* ── CARD ───────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-card{
+  background:#ffffff!important;
+  border:1px solid #e2e8f0!important;
+  border-radius:0!important;
+  padding:24px 22px 22px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:0!important;
+  position:relative!important;
+  transition:box-shadow .2s!important;
+  border-left:4px solid #e2e8f0!important;
+  margin:0 -0.5px!important;
+}
+#apcs-prep-path .pp-card:first-child{border-radius:10px 0 0 10px!important;}
+#apcs-prep-path .pp-card:last-child{border-radius:0 10px 10px 0!important;}
+@media(max-width:900px){
+  #apcs-prep-path .pp-card{border-radius:10px!important;margin:0!important;}
+  #apcs-prep-path .pp-card:first-child{border-radius:10px!important;}
+  #apcs-prep-path .pp-card:last-child{border-radius:10px!important;}
+}
+@media(max-width:600px){
+  #apcs-prep-path .pp-card{border-radius:10px!important;margin:0!important;}
+}
+#apcs-prep-path .pp-card.c-blue{border-left-color:#2563eb!important;}
+#apcs-prep-path .pp-card.c-green{border-left-color:#16a34a!important;}
+#apcs-prep-path .pp-card.c-amber{border-left-color:#d97706!important;}
+#apcs-prep-path .pp-card.c-red{border-left-color:#dc2626!important;}
+
+/* Recommended state */
+#apcs-prep-path .pp-card.pp-recommended{
+  background:#fafbff!important;
+  border-color:#3b82f6!important;
+  border-top-width:2px!important;
+  box-shadow:0 4px 20px rgba(59,130,246,.12)!important;
+  z-index:2!important;
+  margin-top:-4px!important;
+  margin-bottom:-4px!important;
+}
+#apcs-prep-path .pp-card.pp-recommended.c-amber{
+  border-color:#d97706!important;
+  box-shadow:0 4px 20px rgba(217,119,6,.12)!important;
+  background:#fffbf0!important;
+}
+#apcs-prep-path .pp-card.pp-recommended.c-red{
+  border-color:#dc2626!important;
+  box-shadow:0 4px 20px rgba(220,38,38,.13)!important;
+  background:#fff8f8!important;
+}
+#apcs-prep-path .pp-card.pp-dimmed{opacity:.55!important;}
+#apcs-prep-path .pp-card.pp-hidden{display:none!important;}
+
+/* ── BADGE ──────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-badge{
+  display:none!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  letter-spacing:1px!important;
+  text-transform:uppercase!important;
+  padding:3px 8px!important;
+  border-radius:4px!important;
+  margin-bottom:10px!important;
+  width:fit-content!important;
+}
+#apcs-prep-path .pp-recommended .pp-badge{display:inline-block!important;}
+#apcs-prep-path .c-blue .pp-badge{background:#dbeafe!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcs-prep-path .c-green .pp-badge{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+#apcs-prep-path .c-amber .pp-badge{background:#fef3c7!important;color:#b45309!important;-webkit-text-fill-color:#b45309!important;}
+#apcs-prep-path .c-red .pp-badge{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+
+/* ── PHASE LABEL ────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-phase{
+  font-size:10px!important;
+  font-weight:600!important;
+  letter-spacing:1.5px!important;
+  text-transform:uppercase!important;
+  color:#94a3b8!important;
+  margin-bottom:6px!important;
+  display:block!important;
+}
+#apcs-prep-path .c-blue .pp-phase{color:#93c5fd!important;}
+#apcs-prep-path .c-green .pp-phase{color:#86efac!important;}
+#apcs-prep-path .c-amber .pp-phase{color:#fcd34d!important;}
+#apcs-prep-path .c-red .pp-phase{color:#fca5a5!important;}
+
+/* ── CARD CONTENT ───────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-title{
+  font-size:18px!important;
+  font-weight:700!important;
+  color:#0f172a!important;
+  -webkit-text-fill-color:#0f172a!important;
+  line-height:1.2!important;
+  margin-bottom:6px!important;
+}
+#apcs-prep-path .pp-for{
+  font-size:12px!important;
+  color:#64748b!important;
+  font-style:italic!important;
+  margin-bottom:12px!important;
+  padding-bottom:12px!important;
+  border-bottom:1px solid #f1f5f9!important;
+}
+#apcs-prep-path .pp-body{
+  font-size:13.5px!important;
+  color:#374151!important;
+  line-height:1.65!important;
+  margin-bottom:18px!important;
+  flex:1!important;
+}
+
+/* ── BUTTONS ────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-cta{
+  display:block!important;
+  text-align:center!important;
+  padding:12px 16px!important;
+  border-radius:7px!important;
+  font-size:14px!important;
+  font-weight:600!important;
+  text-decoration:none!important;
+  margin-bottom:10px!important;
+  cursor:pointer!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+}
+#apcs-prep-path a.pp-cta:link,
+#apcs-prep-path a.pp-cta:visited{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  text-decoration:none!important;
+}
+#apcs-prep-path a.pp-cta:hover{opacity:.9!important;text-decoration:none!important;}
+#apcs-prep-path .c-blue .pp-cta{background:#2563eb!important;}
+#apcs-prep-path .c-green .pp-cta{background:#16a34a!important;}
+#apcs-prep-path .c-amber .pp-cta{background:#d97706!important;}
+#apcs-prep-path .c-red .pp-cta{background:#dc2626!important;}
+
+#apcs-prep-path .pp-secondary{
+  display:block!important;
+  text-align:center!important;
+  font-size:12.5px!important;
+  color:#6b7280!important;
+  -webkit-text-fill-color:#6b7280!important;
+  text-decoration:none!important;
+  padding:4px!important;
+}
+#apcs-prep-path a.pp-secondary:link,
+#apcs-prep-path a.pp-secondary:visited{
+  color:#6b7280!important;
+  -webkit-text-fill-color:#6b7280!important;
+  text-decoration:none!important;
+}
+#apcs-prep-path a.pp-secondary:hover{
+  color:#374151!important;
+  -webkit-text-fill-color:#374151!important;
+  text-decoration:underline!important;
+}
+
+/* ── MINI COUNTDOWN (inside Final Days card) ─────────────────────────────── */
+#apcs-prep-path .pp-mini-countdown{
+  background:#fef2f2!important;
+  border:1px solid #fecaca!important;
+  border-radius:6px!important;
+  padding:10px 12px!important;
+  text-align:center!important;
+  margin-bottom:14px!important;
+}
+#apcs-prep-path .pp-mini-countdown-num{
+  font-size:28px!important;
+  font-weight:800!important;
+  color:#dc2626!important;
+  -webkit-text-fill-color:#dc2626!important;
+  line-height:1!important;
+  display:block!important;
+}
+#apcs-prep-path .pp-mini-countdown-label{
+  font-size:11px!important;
+  color:#991b1b!important;
+  letter-spacing:.5px!important;
+  text-transform:uppercase!important;
+}
+
+/* ── POST-EXAM MESSAGE ──────────────────────────────────────────────────── */
+#apcs-prep-path .pp-post-exam{
+  display:none!important;
+  background:#f0fdf4!important;
+  border:1px solid #bbf7d0!important;
+  border-radius:10px!important;
+  padding:32px 24px!important;
+  text-align:center!important;
+  margin:28px 24px!important;
+}
+#apcs-prep-path .pp-post-exam-title{
+  font-size:22px!important;
+  font-weight:700!important;
+  color:#14532d!important;
+  -webkit-text-fill-color:#14532d!important;
+  margin-bottom:8px!important;
+}
+#apcs-prep-path .pp-post-exam-body{
+  font-size:14px!important;
+  color:#166534!important;
+  margin-bottom:16px!important;
+}
+</style>
+
+<div id=""apcs-prep-path"">
+
+  <!-- HEADER -->
+  <div class=""pp-header"">
+    <span class=""pp-eyebrow"">AP CSA Exam — May 12, 2027</span>
+    <div class=""pp-heading"">Where are you right now?</div>
+    <div class=""pp-subheading"">Choose the prep path that matches your situation — not just a product.</div>
+    <div class=""pp-countdown-bar"">
+      <span id=""pp-days-label"" style=""font-size:13px;color:#cbd5e1;"">Days until exam:</span>
+      <span class=""pp-countdown-num"" id=""pp-days-num"">—</span>
+      <span style=""font-size:13px;color:#64748b;"">days</span>
+    </div>
+  </div>
+
+  <!-- CARDS GRID -->
+  <div class=""pp-grid"" id=""pp-grid"">
+
+    <!-- CARD 1: Just Getting Started -->
+    <div class=""pp-card c-blue"" id=""pp-card-start"">
+      <span class=""pp-badge"" id=""pp-badge-start"">Best for you now</span>
+      <span class=""pp-phase"">Phase 1 — Study</span>
+      <div class=""pp-title"">Just Getting Started</div>
+      <div class=""pp-for"">You have time to build a real foundation</div>
+      <div class=""pp-body"">
+        Work through the unit study guides in order. Understanding
+        the material deeply now means less panic later — and
+        higher scores on both the MCQ and FRQ.
+      </div>
+      <a class=""pp-cta"" href=""/pages/ap-csa-exam-prep-hub"" id=""pp-cta-start"">Start with Study Guides →</a>
+      <a class=""pp-secondary"" href=""/pages/daily-practice"">
+        Free: try a daily practice question
+      </a>
+      <a class=""pp-secondary"" href=""/products/ap-csa-4-week-cram-kit"" style=""margin-top:2px!important;color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;"">
+        Or get a day-by-day plan from the start →
+      </a>
+    </div>
+
+    <!-- CARD 2: Need Reps -->
+    <div class=""pp-card c-green"" id=""pp-card-reps"">
+      <span class=""pp-badge"" id=""pp-badge-reps"">Best for you now</span>
+      <span class=""pp-phase"">Phase 2 — Practice</span>
+      <div class=""pp-title"">I Know It — I Need Reps</div>
+      <div class=""pp-for"">You understand the concepts but haven't tested yourself yet</div>
+      <div class=""pp-body"">
+        The fastest way to find gaps is a full exam under timed
+        conditions. Your weak spots will surface immediately —
+        and you'll know exactly where to focus your remaining time.
+      </div>
+      <a class=""pp-cta"" href=""/pages/ap-csa-practice-exams"" id=""pp-cta-reps"">Take a Full Practice Exam →</a>
+      <a class=""pp-secondary"" href=""/pages/ap-csa-frq-archive"">
+        Free: browse the FRQ archive (2019–2025) →
+      </a>
+      <a class=""pp-secondary"" href=""/products/ap-csa-2025-frq-year-pack"" style=""margin-top:2px!important;color:#16a34a!important;-webkit-text-fill-color:#16a34a!important;"">
+        Or get the 2025 FRQ Year Pack with full solutions →
+      </a>
+    </div>
+
+    <!-- CARD 3: Running Out of Time -->
+    <div class=""pp-card c-amber"" id=""pp-card-runnin"">
+      <span class=""pp-badge"" id=""pp-badge-runnin"">Best for you now</span>
+      <span class=""pp-phase"">Phase 3 — Focused Review</span>
+      <div class=""pp-title"">Running Out of Time</div>
+      <div class=""pp-for"">1–3 weeks out and you need a focused plan</div>
+      <div class=""pp-body"">
+        Stop browsing random topics. A day-by-day cram plan tells
+        you exactly what to cover each day so nothing important
+        gets skipped and nothing gets over-studied.
+      </div>
+      <a class=""pp-cta"" href=""/products/ap-csa-4-week-cram-kit"" id=""pp-cta-runnin"">Get the Cram Kit →</a>
+      <a class=""pp-secondary"" href=""/pages/ap-csa-reference-sheet"" id=""pp-sec-runnin"">Free: grab the Quick Reference Sheet</a>
+      <a class=""pp-secondary"" href=""/pages/ap-computer-science-a-tutor"" style=""margin-top:2px!important;color:#d97706!important;-webkit-text-fill-color:#d97706!important;"">
+        Or add expert tutoring alongside the plan →
+      </a>
+    </div>
+
+    <!-- CARD 4: Final Days -->
+    <div class=""pp-card c-red"" id=""pp-card-final"">
+      <span class=""pp-badge"" id=""pp-badge-final"">Best for you now</span>
+      <span class=""pp-phase"">Phase 4 — Exam Mode</span>
+      <div class=""pp-title"">Exam Is Days Away</div>
+      <div class=""pp-for"">You need the fastest path to points right now</div>
+
+      <!-- Mini countdown inside this card -->
+      <div class=""pp-mini-countdown"" id=""pp-mini-countdown"">
+        <span class=""pp-mini-countdown-num"" id=""pp-mini-days"">—</span>
+        <span class=""pp-mini-countdown-label"">days until AP CSA exam</span>
+      </div>
+
+      <div class=""pp-body"">
+        One focused tutoring session with someone who knows exactly
+        what the exam tests is worth more than 10 more hours
+        studying solo. Lock in a slot before they fill up.
+      </div>
+      <a class=""pp-cta"" href=""/pages/ap-computer-science-a-tutor"" id=""pp-cta-final"">Book a Tutor Session →</a>
+      <a class=""pp-secondary"" href=""/products/ap-csa-4-week-cram-kit"" id=""pp-sec-final"">Or get the Cram Kit for a self-study plan</a>
+    </div>
+
+  </div>
+<!-- /pp-grid -->
+
+  <!-- POST-EXAM MESSAGE (hidden until after May 15) -->
+  <div class=""pp-post-exam"" id=""pp-post-exam"">
+    <div class=""pp-post-exam-title"">Exam's done — good luck on scores.</div>
+    <div class=""pp-post-exam-body"">
+      AP CSA scores release in July. In the meantime, check out what
+      your score means for college credit and what to expect next.
+    </div>
+    <a class=""pp-cta c-green"" href=""/pages/ap-csa-exam-prep-hub"" style=""display:inline-block!important;padding:12px 28px!important;background:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:7px!important;font-weight:600!important;font-size:14px!important;text-decoration:none!important;"">
+      Browse All AP CSA Resources →
+    </a>
+  </div>
+
+</div><!-- /apcs-prep-path -->
+
+<script>
+(function(){
+  /* ── CONFIG ── update URLs when products go live ─────────────────────── */
+  var CFG = {
+    examDate      : new Date('2026-05-15T08:00:00'),
+
+    /* Cram kit go-live dates */
+    kit2wkDate    : new Date('2026-04-25T00:00:00'),
+    kit7dDate     : new Date('2026-05-05T00:00:00'),
+
+    /* Product URLs */
+    kit4wk        : '/products/ap-csa-4-week-cram-kit',
+    kit2wk        : '/products/ap-csa-2-week-cram-kit',
+    kit7d         : '/products/ap-csa-7-day-emergency-kit',
+    tutor         : '/pages/ap-computer-science-a-tutor',
+  };
+
+  /* ── HELPERS ─────────────────────────────────────────────────────────── */
+  function daysTo(d){ return Math.ceil((d - new Date()) / 86400000); }
+  function el(id){ return document.getElementById(id); }
+  function setAttr(id, attr, val){ var e=el(id); if(e) e[attr]=val; }
+  function addClass(id, cls){ var e=el(id); if(e) e.classList.add(cls); }
+  function removeClass(id, cls){ var e=el(id); if(e) e.classList.remove(cls); }
+
+  /* ── MAIN ────────────────────────────────────────────────────────────── */
+  var today    = new Date();
+  var days     = daysTo(CFG.examDate);
+  var postExam = days <= 0;
+
+  /* -- Countdown displays -- */
+  var daysDisplay = postExam ? 0 : days;
+  var daysEl = el('pp-days-num');
+  if(daysEl){
+    daysEl.textContent = daysDisplay;
+    if(days <= 7)  daysEl.classList.add('very-urgent');
+    else if(days <= 21) daysEl.classList.add('urgent');
+  }
+  setAttr('pp-mini-days', 'textContent', daysDisplay);
+
+  /* -- Dynamic cram kit CTA URLs -- */
+  var ctaRunning  = el('pp-cta-runnin');
+  var secRunning  = el('pp-sec-runnin');
+  var ctaFinal    = el('pp-cta-final');
+  var secFinal    = el('pp-sec-final');
+
+  /* Running Out of Time card: use 2-wk kit if available, else 4-wk */
+  if(ctaRunning){
+    if(today >= CFG.kit2wkDate){
+      ctaRunning.href        = CFG.kit2wk;
+      ctaRunning.textContent = 'Get the 2-Week Cram Kit \u2192';
+    } else {
+      ctaRunning.href        = CFG.kit4wk;
+      ctaRunning.textContent = 'Get the 4-Week Cram Kit \u2192';
+    }
+  }
+
+  /* Final Days card: use 7-day kit as secondary if available */
+  if(secFinal){
+    if(today >= CFG.kit7dDate){
+      secFinal.href        = CFG.kit7d;
+      secFinal.textContent = 'Or get the 7-Day Emergency Kit';
+    } else if(today >= CFG.kit2wkDate){
+      secFinal.href        = CFG.kit2wk;
+      secFinal.textContent = 'Or get the 2-Week Cram Kit for a structured plan';
+    }
+    /* else defaults stay: links to 4-wk kit */
+  }
+
+  /* ── PHASE LOGIC — which cards are recommended / dimmed / hidden ─────── */
+  /*
+    > 45 days  : all 4 equal weight, ""Just Getting Started"" recommended
+    21-45 days : ""Need Reps"" + ""Running Out of Time"" recommended; start dimmed
+    7-21 days  : ""Running Out of Time"" + ""Final Days"" recommended; start hidden
+    1-7 days   : only ""Final Days"" + ""Running Out of Time"" visible; start hidden
+    <= 0 days  : post-exam message
+  */
+
+  if(postExam){
+    /* Hide grid, show post-exam message */
+    var grid = el('pp-grid');
+    if(grid) grid.style.display = 'none';
+    var pe = el('pp-post-exam');
+    if(pe) pe.style.display = 'block';
+
+  } else if(days > 45){
+    addClass('pp-card-start', 'pp-recommended');
+    el('pp-badge-start') && (el('pp-badge-start').textContent = 'Best for you now');
+
+  } else if(days > 21){
+    addClass('pp-card-start',  'pp-dimmed');
+    addClass('pp-card-reps',   'pp-recommended');
+    addClass('pp-card-runnin', 'pp-recommended');
+    el('pp-badge-reps')   && (el('pp-badge-reps').textContent   = 'Best for you now');
+    el('pp-badge-runnin') && (el('pp-badge-runnin').textContent = 'Best for you now');
+
+  } else if(days > 7){
+    addClass('pp-card-start',  'pp-hidden');
+    addClass('pp-card-reps',   'pp-dimmed');
+    addClass('pp-card-runnin', 'pp-recommended');
+    addClass('pp-card-final',  'pp-recommended');
+    el('pp-badge-runnin') && (el('pp-badge-runnin').textContent = 'Best for you now');
+    el('pp-badge-final')  && (el('pp-badge-final').textContent  = 'Best for you now');
+
+  } else {
+    /* Final 7 days: hide cards 1 + 2, full urgency */
+    addClass('pp-card-start', 'pp-hidden');
+    addClass('pp-card-reps',  'pp-hidden');
+    addClass('pp-card-runnin','pp-recommended');
+    addClass('pp-card-final', 'pp-recommended');
+    el('pp-badge-runnin') && (el('pp-badge-runnin').textContent = 'You are here');
+    el('pp-badge-final')  && (el('pp-badge-final').textContent  = 'You are here');
+    var daysLabel = el('pp-days-label');
+    if(daysLabel) daysLabel.textContent = 'Exam in:';
+  }
+
+})();
+</script>","TRUE","2026-03-01 12:00:00"

@@ -326,7 +326,10 @@
     "csa:qotdrederive": "node scripts/csa-qotd-key-rederive.js",
     "smoke:csa2026frq": "node smoke/csa-past-frq-pages.js",
     "csa:2026frq": "node scripts/verify-csa-2026-frq.js --mutate",
-    "csa:2026frqsheet": "node scripts/csa-past-frq-pages-csv.js"
+    "csa:2026frqsheet": "node scripts/csa-past-frq-pages-csv.js",
+    "smoke:csafrqrepair": "node smoke/csa-frq-archive-repair.js",
+    "csa:frqrepairsheets": "node scripts/csa-frq-archive-repair-csv.js imports/2026-09-17-frq-archive",
+    "csa:frqrepairlive": "node scripts/verify-csa-frq-archive-live.js"
   },
   "keywords": [],
   "author": "",
