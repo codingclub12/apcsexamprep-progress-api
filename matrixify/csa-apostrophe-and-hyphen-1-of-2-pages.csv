@@ -1,0 +1,1191 @@
+﻿"Handle","Command","Body HTML"
+"ap-csa-accessors-mutators","MERGE","<script>
+(function() {
+  var originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.indexOf('emkc.org/api/v2/piston') !== -1) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', '3596176c-098d-4aae-9955-8a1715997264');
+      } else {
+        options.headers['Authorization'] = '3596176c-098d-4aae-9955-8a1715997264';
+      }
+    }
+    return originalFetch.call(this, url, options);
+  };
+})();
+</script>
+<script type=""application/ld+json"">
+[{
+  ""@context"":""https://schema.org"",
+  ""@type"":""BreadcrumbList"",
+  ""itemListElement"":[
+    {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com/""},
+    {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+    {""@type"":""ListItem"",""position"":3,""name"":""Unit 3: Class Creation"",""item"":""https://apcsexamprep.com/pages/ap-csa-unit-3-class-creation-study-guide""},
+    {""@type"":""ListItem"",""position"":4,""name"":""Accessor and Mutator Methods in AP CSA (2025-2026)"",""item"":""https://apcsexamprep.com/pages/ap-csa-accessors-mutators""}
+  ]
+},
+{
+  ""@context"":""https://schema.org"",
+  ""@type"":""Person"",
+  ""name"":""Tanner Crow"",
+  ""url"":""https://www.wyzant.com/tutors/tannerc12"",
+  ""jobTitle"":""AP Computer Science Teacher"",
+  ""worksFor"":{""@type"":""Organization"",""name"":""Blue Valley North High School""},
+  ""description"":""AP Computer Science teacher with 11+ years experience. 1,845+ tutoring hours, 5.0 Wyzant rating.""
+}]
+</script>
+<style>
+#apcsa-accessmut{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;}
+#apcsa-accessmut *{box-sizing:border-box!important;}
+#apcsa-accessmut h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important;}
+#apcsa-accessmut h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important;}
+#apcsa-accessmut h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important;}
+#apcsa-accessmut p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;}
+#apcsa-accessmut a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important;}
+#apcsa-accessmut a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcsa-accessmut ul,#apcsa-accessmut ol{margin:0 0 16px 24px!important;padding:0!important;color:#1e1e2e!important;}
+#apcsa-accessmut li{margin-bottom:6px!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;}
+#apcsa-accessmut code{background:#f1f5f9!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:2px 6px!important;border-radius:4px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;}
+#apcsa-accessmut .info-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-left:4px solid #3b82f6!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-accessmut .warn-box{background:#fffbeb!important;border:1px solid #fde68a!important;border-left:4px solid #f59e0b!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-accessmut .warn-box strong{color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#apcsa-accessmut .exam-tip{background:#f0fdf4!important;border:1px solid #bbf7d0!important;border-left:4px solid #22c55e!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-accessmut .exam-tip strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-accessmut pre{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:20px!important;border-radius:10px!important;overflow-x:auto!important;margin:20px 0!important;font-family:'Courier New',monospace!important;font-size:0.92em!important;line-height:1.6!important;white-space:pre!important;}
+#apcsa-accessmut pre code{background:transparent!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:0!important;font-size:1em!important;}
+#apcsa-accessmut table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important;}
+#apcsa-accessmut th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;}
+#apcsa-accessmut td{padding:9px 14px!important;border-bottom:1px solid #e2e8f0!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;vertical-align:top!important;}
+#apcsa-accessmut tr:nth-child(even) td{background:#f8fafc!important;}
+#apcsa-accessmut .breadcrumb{font-size:0.85em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:20px!important;}
+#apcsa-accessmut .breadcrumb a{color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-decoration:none!important;}
+#apcsa-accessmut .breadcrumb a:hover{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;}
+#apcsa-accessmut .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:22px!important;margin:28px 0!important;}
+#apcsa-accessmut .mcq-block h3{margin-top:0!important;}
+#apcsa-accessmut .mcq-option{display:block!important;padding:10px 14px!important;margin:6px 0!important;border-radius:7px!important;border:1.5px solid #e2e8f0!important;cursor:pointer!important;font-size:0.97em!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#fff!important;width:100%!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;transition:border-color 0.15s,background 0.15s!important;}
+#apcsa-accessmut .mcq-option:hover{border-color:#3b82f6!important;background:#eff6ff!important;}
+#apcsa-accessmut .mcq-option.correct{background:#f0fdf4!important;border-color:#22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-accessmut .mcq-option.wrong{background:#fef2f2!important;border-color:#ef4444!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-accessmut .mcq-feedback{margin-top:12px!important;padding:12px 16px!important;border-radius:7px!important;font-size:0.95em!important;display:none!important;}
+#apcsa-accessmut .mcq-feedback.show{display:block!important;}
+#apcsa-accessmut .mcq-feedback.correct{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-accessmut .mcq-feedback.wrong{background:#fef2f2!important;border:1px solid #fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-accessmut .sandbox-wrap{background:#0f172a!important;border-radius:12px!important;padding:20px!important;margin:28px 0!important;}
+#apcsa-accessmut .sandbox-wrap label{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:0.8em!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;display:block!important;margin-bottom:8px!important;}
+#apcsa-accessmut .sandbox-editor{width:100%!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;border:1px solid #334155!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;line-height:1.6!important;resize:vertical!important;min-height:160px!important;box-sizing:border-box!important;}
+#apcsa-accessmut .run-btn{margin-top:12px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;padding:9px 22px!important;font-size:0.95em!important;font-weight:700!important;cursor:pointer!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}
+#apcsa-accessmut .run-btn:hover{background:#2563eb!important;}
+#apcsa-accessmut .sandbox-output{margin-top:12px!important;background:#0a0f1a!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.88em!important;min-height:48px!important;white-space:pre-wrap!important;display:none!important;}
+#apcsa-accessmut .sandbox-output.show{display:block!important;}
+#apcsa-accessmut .nav-links{display:flex!important;gap:12px!important;margin-top:48px!important;padding-top:24px!important;border-top:1px solid #e2e8f0!important;flex-wrap:wrap!important;}
+#apcsa-accessmut .nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 18px!important;border-radius:8px!important;font-size:0.92em!important;font-weight:600!important;text-decoration:none!important;border:1.5px solid #bfdbfe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;}
+#apcsa-accessmut .nav-link:hover{background:#dbeafe!important;border-color:#93c5fd!important;}
+#apcsa-accessmut .nav-link.primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-accessmut .nav-link.primary:hover{background:#1d4ed8!important;}
+</style>
+<div id=""apcsa-accessmut"">
+  <div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a> › <a href=""/pages/ap-csa-unit-3-class-creation-study-guide"">Unit 3</a> › Accessors &amp; Mutators</div>
+  <h1>Accessor and Mutator Methods in AP CSA</h1>
+  <p>Because instance variables are <code>private</code>, outside code can’t read or modify them directly. Accessor and mutator methods are the controlled gateway — this design principle is called <strong>encapsulation</strong>.</p>
+
+  <h2>Accessor Methods (Getters)</h2>
+  <p>Return the value of a private instance variable. Always have a return type that matches the variable. Never <code>void</code>.</p>
+  <pre><code>public class Student {
+    private String name;
+    private int grade;
+
+    // Accessor -- returns the value
+    public String getName() {
+        return name;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+}</code></pre>
+
+  <h2>Mutator Methods (Setters)</h2>
+  <p>Modify a private instance variable. Almost always <code>void</code>. Can include validation logic.</p>
+  <pre><code>    // Mutator -- modifies the value
+    public void setGrade(int newGrade) {
+        if (newGrade &gt;= 0 &amp;&amp; newGrade &lt;= 100) {
+            grade = newGrade;   // only update if valid
+        }
+    }</code></pre>
+
+  <div class=""info-box"">
+<strong>Naming Convention:</strong> Accessors start with <code>get</code>. Mutators start with <code>set</code>. The AP exam and FRQ rubrics expect this convention. <code>getName()</code> not <code>fetchName()</code>.</div>
+
+  <div class=""sandbox-wrap"">
+  <label>💻 Try It — Java Sandbox</label>
+  <textarea class=""sandbox-editor"" id=""apcsa-accessmut-sb1"">public class Main {
+    public static void main(String[] args) {
+        Student s = new Student(""Alex"", 85);
+        System.out.println(s.getName());
+        System.out.println(s.getGrade());
+        s.setGrade(92);
+        System.out.println(s.getGrade());
+        s.setGrade(110); // invalid -- should not change
+        System.out.println(s.getGrade());
+    }
+}
+
+class Student {
+    private String name;
+    private int grade;
+    
+    public Student(String name, int grade) {
+        this.name = name;
+        this.grade = grade;
+    }
+    
+    public String getName() { return name; }
+    public int getGrade() { return grade; }
+    public void setGrade(int newGrade) {
+        if (newGrade &gt;= 0 &amp;&amp; newGrade &lt;= 100) grade = newGrade;
+    }
+}</textarea>
+  <button class=""run-btn"" onclick=""runCode_apcsa_accessmut_1()"">▶ Run Code</button>
+  <div class=""sandbox-output"" id=""apcsa-accessmut-out1""></div>
+</div>
+<script>
+function runCode_apcsa_accessmut_1() {
+  var code = document.getElementById('apcsa-accessmut-sb1').value;
+  var out = document.getElementById('apcsa-accessmut-out1');
+  out.textContent = 'Running...';
+  out.classList.add('show');
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({language:'java',version:'15.0.2',files:[{content:code}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output : (d.message || 'No output');
+  }).catch(function(){out.textContent='Error connecting to sandbox.';});
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 1</h3>
+  <p>Which of the following is a correctly written accessor method for a private <code>double</code> instance variable named <code>price</code>?</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_accessmut_1(this,0,1)"">A) public void getPrice() { return price; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_accessmut_1(this,1,1)"">B) public double getPrice() { return price; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_accessmut_1(this,2,1)"">C) public double getPrice() { price = 0; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_accessmut_1(this,3,1)"">D) private double getPrice() { return price; }</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-accessmut-fb1""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_accessmut_1(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-accessmut-fb1');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! An accessor must return the variable\'s type (double), be public so outside code can use it, and simply return the value without modifying it.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. An accessor must return the variable\'s type (double), be public so outside code can use it, and simply return the value without modifying it.';
+  }
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 2</h3>
+  <p>A <code>BankAccount</code> class has a private <code>balance</code> field. Which of the following mutator designs BEST demonstrates encapsulation?</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_accessmut_2(this,0,1)"">A) public void setBalance(double b) { balance = b; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_accessmut_2(this,1,1)"">B) public void setBalance(double b) { if (b &gt;= 0) balance = b; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_accessmut_2(this,2,1)"">C) public double setBalance(double b) { balance = b; return balance; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_accessmut_2(this,3,1)"">D) public void setBalance() { balance = 0; }</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-accessmut-fb2""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_accessmut_2(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-accessmut-fb2');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! Option B validates the input before modifying the field. This is the core benefit of encapsulation: the class controls what values are allowed.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. Option B validates the input before modifying the field. This is the core benefit of encapsulation: the class controls what values are allowed.';
+  }
+}
+</script>
+
+  <div class=""exam-tip"">
+<strong>✅ Exam Tip:</strong> FRQ #2 almost always requires writing at least one accessor and one mutator. The accessor must have the correct return type and use <code>return</code>. The mutator must be <code>void</code> and actually assign the parameter to the instance variable.</div>
+
+  <div class=""nav-links"">
+  <a class=""nav-link"" href=""/pages/ap-csa-unit-3-class-creation-study-guide"">← Unit 3: Class Creation</a>
+  <a class=""nav-link"" href=""/pages/ap-csa-topics"">All AP CSA Topics</a>
+  <a class=""nav-link primary"" href=""/pages/ap-csa-practice-exams"">Practice Exams →</a>
+</div>
+</div>"
+"ap-csa-adjacent-elements","MERGE","<script>
+(function() {
+  var originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.indexOf('emkc.org/api/v2/piston') !== -1) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', '3596176c-098d-4aae-9955-8a1715997264');
+      } else {
+        options.headers['Authorization'] = '3596176c-098d-4aae-9955-8a1715997264';
+      }
+    }
+    return originalFetch.call(this, url, options);
+  };
+})();
+</script>
+<script type=""application/ld+json"">
+[{
+  ""@context"":""https://schema.org"",
+  ""@type"":""BreadcrumbList"",
+  ""itemListElement"":[
+    {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com/""},
+    {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+    {""@type"":""ListItem"",""position"":3,""name"":""Unit 4: Data Collections"",""item"":""https://apcsexamprep.com/pages/ap-csa-unit-4-data-collections-study-guide""},
+    {""@type"":""ListItem"",""position"":4,""name"":""Adjacent Element Patterns in AP CSA (2025-2026)"",""item"":""https://apcsexamprep.com/pages/ap-csa-adjacent-elements""}
+  ]
+},
+{
+  ""@context"":""https://schema.org"",
+  ""@type"":""Person"",
+  ""name"":""Tanner Crow"",
+  ""url"":""https://www.wyzant.com/tutors/tannerc12"",
+  ""jobTitle"":""AP Computer Science Teacher"",
+  ""worksFor"":{""@type"":""Organization"",""name"":""Blue Valley North High School""},
+  ""description"":""AP Computer Science teacher with 11+ years experience. 1,845+ tutoring hours, 5.0 Wyzant rating.""
+}]
+</script>
+<style>
+#apcsa-adjacent{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;}
+#apcsa-adjacent *{box-sizing:border-box!important;}
+#apcsa-adjacent h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important;}
+#apcsa-adjacent h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important;}
+#apcsa-adjacent h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important;}
+#apcsa-adjacent p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;}
+#apcsa-adjacent a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important;}
+#apcsa-adjacent a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcsa-adjacent ul,#apcsa-adjacent ol{margin:0 0 16px 24px!important;padding:0!important;color:#1e1e2e!important;}
+#apcsa-adjacent li{margin-bottom:6px!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;}
+#apcsa-adjacent code{background:#f1f5f9!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:2px 6px!important;border-radius:4px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;}
+#apcsa-adjacent .info-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-left:4px solid #3b82f6!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-adjacent .warn-box{background:#fffbeb!important;border:1px solid #fde68a!important;border-left:4px solid #f59e0b!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-adjacent .warn-box strong{color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#apcsa-adjacent .exam-tip{background:#f0fdf4!important;border:1px solid #bbf7d0!important;border-left:4px solid #22c55e!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-adjacent .exam-tip strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-adjacent pre{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:20px!important;border-radius:10px!important;overflow-x:auto!important;margin:20px 0!important;font-family:'Courier New',monospace!important;font-size:0.92em!important;line-height:1.6!important;white-space:pre!important;}
+#apcsa-adjacent pre code{background:transparent!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:0!important;font-size:1em!important;}
+#apcsa-adjacent table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important;}
+#apcsa-adjacent th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;}
+#apcsa-adjacent td{padding:9px 14px!important;border-bottom:1px solid #e2e8f0!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;vertical-align:top!important;}
+#apcsa-adjacent tr:nth-child(even) td{background:#f8fafc!important;}
+#apcsa-adjacent .breadcrumb{font-size:0.85em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:20px!important;}
+#apcsa-adjacent .breadcrumb a{color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-decoration:none!important;}
+#apcsa-adjacent .breadcrumb a:hover{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;}
+#apcsa-adjacent .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:22px!important;margin:28px 0!important;}
+#apcsa-adjacent .mcq-block h3{margin-top:0!important;}
+#apcsa-adjacent .mcq-option{display:block!important;padding:10px 14px!important;margin:6px 0!important;border-radius:7px!important;border:1.5px solid #e2e8f0!important;cursor:pointer!important;font-size:0.97em!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#fff!important;width:100%!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;transition:border-color 0.15s,background 0.15s!important;}
+#apcsa-adjacent .mcq-option:hover{border-color:#3b82f6!important;background:#eff6ff!important;}
+#apcsa-adjacent .mcq-option.correct{background:#f0fdf4!important;border-color:#22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-adjacent .mcq-option.wrong{background:#fef2f2!important;border-color:#ef4444!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-adjacent .mcq-feedback{margin-top:12px!important;padding:12px 16px!important;border-radius:7px!important;font-size:0.95em!important;display:none!important;}
+#apcsa-adjacent .mcq-feedback.show{display:block!important;}
+#apcsa-adjacent .mcq-feedback.correct{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-adjacent .mcq-feedback.wrong{background:#fef2f2!important;border:1px solid #fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-adjacent .sandbox-wrap{background:#0f172a!important;border-radius:12px!important;padding:20px!important;margin:28px 0!important;}
+#apcsa-adjacent .sandbox-wrap label{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:0.8em!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;display:block!important;margin-bottom:8px!important;}
+#apcsa-adjacent .sandbox-editor{width:100%!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;border:1px solid #334155!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;line-height:1.6!important;resize:vertical!important;min-height:160px!important;box-sizing:border-box!important;}
+#apcsa-adjacent .run-btn{margin-top:12px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;padding:9px 22px!important;font-size:0.95em!important;font-weight:700!important;cursor:pointer!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}
+#apcsa-adjacent .run-btn:hover{background:#2563eb!important;}
+#apcsa-adjacent .sandbox-output{margin-top:12px!important;background:#0a0f1a!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.88em!important;min-height:48px!important;white-space:pre-wrap!important;display:none!important;}
+#apcsa-adjacent .sandbox-output.show{display:block!important;}
+#apcsa-adjacent .nav-links{display:flex!important;gap:12px!important;margin-top:48px!important;padding-top:24px!important;border-top:1px solid #e2e8f0!important;flex-wrap:wrap!important;}
+#apcsa-adjacent .nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 18px!important;border-radius:8px!important;font-size:0.92em!important;font-weight:600!important;text-decoration:none!important;border:1.5px solid #bfdbfe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;}
+#apcsa-adjacent .nav-link:hover{background:#dbeafe!important;border-color:#93c5fd!important;}
+#apcsa-adjacent .nav-link.primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-adjacent .nav-link.primary:hover{background:#1d4ed8!important;}
+</style>
+<div id=""apcsa-adjacent"">
+  <div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a> › <a href=""/pages/ap-csa-unit-4-data-collections-study-guide"">Unit 4</a> › Adjacent Element Patterns</div>
+  <h1>Adjacent Element Patterns in AP CSA</h1>
+  <p>Many array algorithms compare or combine neighboring elements — <code>arr[i]</code> and <code>arr[i+1]</code>. The critical detail: your loop must stop <strong>one short</strong> of the last index to avoid an <code>ArrayIndexOutOfBoundsException</code>.</p>
+
+  <h2>The Pattern</h2>
+  <pre><code>// Loop condition: i &lt; arr.length - 1 (NOT i &lt; arr.length)
+for (int i = 0; i &lt; arr.length - 1; i++) {
+    // Now safe to access arr[i] AND arr[i+1]
+    if (arr[i] &gt; arr[i + 1]) {
+        System.out.println(""Drop at index "" + i);
+    }
+}</code></pre>
+
+  <h2>Common Adjacent-Element Tasks</h2>
+  <table>
+    <tr>
+<th>Task</th>
+<th>Pattern</th>
+</tr>
+    <tr>
+<td>Find where array decreases</td>
+<td><code>arr[i] &gt; arr[i+1]</code></td>
+</tr>
+    <tr>
+<td>Check if sorted</td>
+<td>If any <code>arr[i] &gt; arr[i+1]</code>, not sorted</td>
+</tr>
+    <tr>
+<td>Count adjacent equal pairs</td>
+<td><code>arr[i] == arr[i+1]</code></td>
+</tr>
+    <tr>
+<td>Sum of adjacent pairs</td>
+<td><code>arr[i] + arr[i+1]</code></td>
+</tr>
+  </table>
+
+  <div class=""sandbox-wrap"">
+  <label>💻 Try It — Java Sandbox</label>
+  <textarea class=""sandbox-editor"" id=""apcsa-adjacent-sb1"">public class Main {
+    public static void main(String[] args) {
+        int[] data = {3, 7, 7, 2, 9, 4};
+        
+        // Count adjacent equal pairs
+        int equalPairs = 0;
+        for (int i = 0; i &lt; data.length - 1; i++) {
+            if (data[i] == data[i + 1]) equalPairs++;
+        }
+        System.out.println(""Equal pairs: "" + equalPairs); // 1 (the two 7s)
+        
+        // Check if sorted ascending
+        boolean sorted = true;
+        for (int i = 0; i &lt; data.length - 1; i++) {
+            if (data[i] &gt; data[i + 1]) { sorted = false; break; }
+        }
+        System.out.println(""Sorted: "" + sorted);
+    }
+}</textarea>
+  <button class=""run-btn"" onclick=""runCode_apcsa_adjacent_1()"">▶ Run Code</button>
+  <div class=""sandbox-output"" id=""apcsa-adjacent-out1""></div>
+</div>
+<script>
+function runCode_apcsa_adjacent_1() {
+  var code = document.getElementById('apcsa-adjacent-sb1').value;
+  var out = document.getElementById('apcsa-adjacent-out1');
+  out.textContent = 'Running...';
+  out.classList.add('show');
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({language:'java',version:'15.0.2',files:[{content:code}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output : (d.message || 'No output');
+  }).catch(function(){out.textContent='Error connecting to sandbox.';});
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 1</h3>
+  <p>What is the correct loop condition when comparing <code>arr[i]</code> with <code>arr[i+1]</code> for an array of length <code>n</code>?</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_adjacent_1(this,0,2)"">A) i &lt; arr.length</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_adjacent_1(this,1,2)"">B) i &lt;= arr.length - 1</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_adjacent_1(this,2,2)"">C) i &lt; arr.length - 1</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_adjacent_1(this,3,2)"">D) i &lt;= arr.length</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-adjacent-fb1""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_adjacent_1(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-adjacent-fb1');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! Options A and B are equivalent and both cause ArrayIndexOutOfBoundsException when i = arr.length-1 because arr[i+1] = arr[arr.length] doesn\'t exist. Only i < arr.length - 1 is safe.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. Options A and B are equivalent and both cause ArrayIndexOutOfBoundsException when i = arr.length-1 because arr[i+1] = arr[arr.length] doesn\'t exist. Only i < arr.length - 1 is safe.';
+  }
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 2</h3>
+  <p>What does the following method return when called with <code>{2, 4, 3, 5, 5, 1}</code>?<br></p>
+<pre style=""background:#0f172a;color:#e2e8f0;padding:12px;border-radius:6px;font-family:monospace;"">public static int mystery(int[] arr) {
+    int count = 0;
+    for (int i = 0; i &lt; arr.length - 1; i++)
+        if (arr[i] &gt;= arr[i+1]) {
+            count++;
+        }
+    return count;
+}</pre>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_adjacent_2(this,0,1)"">A) 1</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_adjacent_2(this,1,1)"">B) 2</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_adjacent_2(this,2,1)"">C) 3</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_adjacent_2(this,3,1)"">D) 4</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-adjacent-fb2""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_adjacent_2(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-adjacent-fb2');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! Check each adjacent pair: 2<4(no), 4>3(yes,count=1), 3<5(no), 5=5(yes,count=2), 5>1(yes,count=3). Returns 3.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. Check each adjacent pair: 2<4(no), 4>3(yes,count=1), 3<5(no), 5=5(yes,count=2), 5>1(yes,count=3). Returns 3.';
+  }
+}
+</script>
+
+  <div class=""exam-tip"">
+<strong>✅ Exam Tip:</strong> Adjacent element questions are a staple of AP FRQs. The loop bound <code>i &lt; arr.length - 1</code> is the single most important thing to get right. Any other bound risks an exception or skipping the last pair.</div>
+
+  <div class=""nav-links"">
+  <a class=""nav-link"" href=""/pages/ap-csa-unit-4-data-collections-study-guide"">← Unit 4: Data Collections</a>
+  <a class=""nav-link"" href=""/pages/ap-csa-topics"">All AP CSA Topics</a>
+  <a class=""nav-link primary"" href=""/pages/ap-csa-practice-exams"">Practice Exams →</a>
+</div>
+</div>"
+"ap-csa-array-shifting","MERGE","<script>
+(function() {
+  var originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.indexOf('emkc.org/api/v2/piston') !== -1) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', '3596176c-098d-4aae-9955-8a1715997264');
+      } else {
+        options.headers['Authorization'] = '3596176c-098d-4aae-9955-8a1715997264';
+      }
+    }
+    return originalFetch.call(this, url, options);
+  };
+})();
+</script>
+<script type=""application/ld+json"">
+[{
+  ""@context"":""https://schema.org"",
+  ""@type"":""BreadcrumbList"",
+  ""itemListElement"":[
+    {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com/""},
+    {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+    {""@type"":""ListItem"",""position"":3,""name"":""Unit 4: Data Collections"",""item"":""https://apcsexamprep.com/pages/ap-csa-unit-4-data-collections-study-guide""},
+    {""@type"":""ListItem"",""position"":4,""name"":""Shifting Elements in Arrays (AP CSA): Complete Guide (2025-2026)"",""item"":""https://apcsexamprep.com/pages/ap-csa-array-shifting""}
+  ]
+},
+{
+  ""@context"":""https://schema.org"",
+  ""@type"":""Person"",
+  ""name"":""Tanner Crow"",
+  ""url"":""https://www.wyzant.com/tutors/tannerc12"",
+  ""jobTitle"":""AP Computer Science Teacher"",
+  ""worksFor"":{""@type"":""Organization"",""name"":""Blue Valley North High School""},
+  ""description"":""AP Computer Science teacher with 11+ years experience. 1,845+ tutoring hours, 5.0 Wyzant rating.""
+}]
+</script>
+<style>
+#apcsa-arrshift{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;}
+#apcsa-arrshift *{box-sizing:border-box!important;}
+#apcsa-arrshift h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important;}
+#apcsa-arrshift h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important;}
+#apcsa-arrshift h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important;}
+#apcsa-arrshift p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;}
+#apcsa-arrshift a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important;}
+#apcsa-arrshift a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcsa-arrshift ul,#apcsa-arrshift ol{margin:0 0 16px 24px!important;padding:0!important;color:#1e1e2e!important;}
+#apcsa-arrshift li{margin-bottom:6px!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;}
+#apcsa-arrshift code{background:#f1f5f9!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:2px 6px!important;border-radius:4px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;}
+#apcsa-arrshift .info-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-left:4px solid #3b82f6!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-arrshift .warn-box{background:#fffbeb!important;border:1px solid #fde68a!important;border-left:4px solid #f59e0b!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-arrshift .warn-box strong{color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#apcsa-arrshift .exam-tip{background:#f0fdf4!important;border:1px solid #bbf7d0!important;border-left:4px solid #22c55e!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-arrshift .exam-tip strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-arrshift pre{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:20px!important;border-radius:10px!important;overflow-x:auto!important;margin:20px 0!important;font-family:'Courier New',monospace!important;font-size:0.92em!important;line-height:1.6!important;white-space:pre!important;}
+#apcsa-arrshift pre code{background:transparent!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:0!important;font-size:1em!important;}
+#apcsa-arrshift table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important;}
+#apcsa-arrshift th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;}
+#apcsa-arrshift td{padding:9px 14px!important;border-bottom:1px solid #e2e8f0!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;vertical-align:top!important;}
+#apcsa-arrshift tr:nth-child(even) td{background:#f8fafc!important;}
+#apcsa-arrshift .breadcrumb{font-size:0.85em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:20px!important;}
+#apcsa-arrshift .breadcrumb a{color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-decoration:none!important;}
+#apcsa-arrshift .breadcrumb a:hover{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;}
+#apcsa-arrshift .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:22px!important;margin:28px 0!important;}
+#apcsa-arrshift .mcq-block h3{margin-top:0!important;}
+#apcsa-arrshift .mcq-option{display:block!important;padding:10px 14px!important;margin:6px 0!important;border-radius:7px!important;border:1.5px solid #e2e8f0!important;cursor:pointer!important;font-size:0.97em!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#fff!important;width:100%!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;transition:border-color 0.15s,background 0.15s!important;}
+#apcsa-arrshift .mcq-option:hover{border-color:#3b82f6!important;background:#eff6ff!important;}
+#apcsa-arrshift .mcq-option.correct{background:#f0fdf4!important;border-color:#22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-arrshift .mcq-option.wrong{background:#fef2f2!important;border-color:#ef4444!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-arrshift .mcq-feedback{margin-top:12px!important;padding:12px 16px!important;border-radius:7px!important;font-size:0.95em!important;display:none!important;}
+#apcsa-arrshift .mcq-feedback.show{display:block!important;}
+#apcsa-arrshift .mcq-feedback.correct{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-arrshift .mcq-feedback.wrong{background:#fef2f2!important;border:1px solid #fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-arrshift .sandbox-wrap{background:#0f172a!important;border-radius:12px!important;padding:20px!important;margin:28px 0!important;}
+#apcsa-arrshift .sandbox-wrap label{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:0.8em!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;display:block!important;margin-bottom:8px!important;}
+#apcsa-arrshift .sandbox-editor{width:100%!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;border:1px solid #334155!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;line-height:1.6!important;resize:vertical!important;min-height:160px!important;box-sizing:border-box!important;}
+#apcsa-arrshift .run-btn{margin-top:12px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;padding:9px 22px!important;font-size:0.95em!important;font-weight:700!important;cursor:pointer!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}
+#apcsa-arrshift .run-btn:hover{background:#2563eb!important;}
+#apcsa-arrshift .sandbox-output{margin-top:12px!important;background:#0a0f1a!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.88em!important;min-height:48px!important;white-space:pre-wrap!important;display:none!important;}
+#apcsa-arrshift .sandbox-output.show{display:block!important;}
+#apcsa-arrshift .nav-links{display:flex!important;gap:12px!important;margin-top:48px!important;padding-top:24px!important;border-top:1px solid #e2e8f0!important;flex-wrap:wrap!important;}
+#apcsa-arrshift .nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 18px!important;border-radius:8px!important;font-size:0.92em!important;font-weight:600!important;text-decoration:none!important;border:1.5px solid #bfdbfe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;}
+#apcsa-arrshift .nav-link:hover{background:#dbeafe!important;border-color:#93c5fd!important;}
+#apcsa-arrshift .nav-link.primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-arrshift .nav-link.primary:hover{background:#1d4ed8!important;}
+</style>
+<div id=""apcsa-arrshift"">
+  <div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a> › <a href=""/pages/ap-csa-unit-4-data-collections-study-guide"">Unit 4</a> › Shifting Elements</div>
+  <h1>Shifting Elements in Arrays (AP CSA)</h1>
+  <p>Shifting means moving elements left or right within an array. Since arrays are fixed-size, shifting doesn’t resize — it overwrites. The direction determines your loop order.</p>
+
+  <h2>Shift Left (remove-style)</h2>
+  <p>Move each element one position to the left. Traverse <strong>forward</strong> (low to high index).</p>
+  <pre><code>int[] arr = {10, 20, 30, 40, 50};
+
+// Shift everything left by 1
+for (int i = 0; i &lt; arr.length - 1; i++) {
+    arr[i] = arr[i + 1];
+}
+arr[arr.length - 1] = 0;  // clear last slot
+
+// Result: [20, 30, 40, 50, 0]</code></pre>
+
+  <h2>Shift Right (insert-style)</h2>
+  <p>Move each element one position to the right. Traverse <strong>backward</strong> (high to low index) to avoid overwriting.</p>
+  <pre><code>// Shift everything right by 1 (starting from index 1)
+for (int i = arr.length - 1; i &gt; 0; i--) {
+    arr[i] = arr[i - 1];
+}
+arr[0] = 0;  // clear first slot
+
+// Result: [0, 10, 20, 30, 40]</code></pre>
+
+  <div class=""warn-box"">
+<strong>⚠ Loop Direction Matters:</strong> Shifting left needs a forward loop. Shifting right needs a backward loop. Using the wrong direction overwrites elements before they’re copied, corrupting the array.</div>
+
+  <div class=""sandbox-wrap"">
+  <label>💻 Try It — Java Sandbox</label>
+  <textarea class=""sandbox-editor"" id=""apcsa-arrshift-sb1"">public class Main {
+    public static void main(String[] args) {
+        int[] arr = {10, 20, 30, 40, 50};
+        
+        // Shift left
+        for (int i = 0; i &lt; arr.length - 1; i++) {
+            arr[i] = arr[i + 1];
+        }
+        arr[arr.length - 1] = 0;
+        
+        for (int v : arr) System.out.print(v + "" "");
+        System.out.println();
+    }
+}</textarea>
+  <button class=""run-btn"" onclick=""runCode_apcsa_arrshift_1()"">▶ Run Code</button>
+  <div class=""sandbox-output"" id=""apcsa-arrshift-out1""></div>
+</div>
+<script>
+function runCode_apcsa_arrshift_1() {
+  var code = document.getElementById('apcsa-arrshift-sb1').value;
+  var out = document.getElementById('apcsa-arrshift-out1');
+  out.textContent = 'Running...';
+  out.classList.add('show');
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({language:'java',version:'15.0.2',files:[{content:code}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output : (d.message || 'No output');
+  }).catch(function(){out.textContent='Error connecting to sandbox.';});
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 1</h3>
+  <p>Which loop correctly shifts all elements in array <code>data</code> one position to the RIGHT?</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrshift_1(this,0,1)"">A) for (int i = 0; i &lt; data.length - 1; i++) { data[i+1] = data[i]; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrshift_1(this,1,1)"">B) for (int i = data.length - 1; i &gt; 0; i--) { data[i] = data[i-1]; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrshift_1(this,2,1)"">C) for (int i = 1; i &lt; data.length; i++) { data[i-1] = data[i]; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrshift_1(this,3,1)"">D) for (int i = 0; i &lt; data.length; i++) { data[i] = data[i+1]; }</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-arrshift-fb1""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_arrshift_1(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-arrshift-fb1');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! Shifting right requires traversing backward (from high index to low) so elements aren\'t overwritten before being copied. Option A traverses forward and overwrites before copying.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. Shifting right requires traversing backward (from high index to low) so elements aren\'t overwritten before being copied. Option A traverses forward and overwrites before copying.';
+  }
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 2</h3>
+  <p>After the following code runs, what are the contents of <code>arr</code>?<br></p>
+<pre style=""background:#0f172a;color:#e2e8f0;padding:12px;border-radius:6px;font-family:monospace;"">int[] arr = {1, 2, 3, 4, 5};
+for (int i = 0; i &lt; arr.length - 1; i++) {
+    arr[i] = arr[i + 1];
+}
+arr[arr.length - 1] = 0;</pre>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrshift_2(this,0,1)"">A) {0, 1, 2, 3, 4}</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrshift_2(this,1,1)"">B) {2, 3, 4, 5, 0}</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrshift_2(this,2,1)"">C) {1, 2, 3, 4, 0}</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrshift_2(this,3,1)"">D) {2, 2, 3, 4, 5}</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-arrshift-fb2""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_arrshift_2(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-arrshift-fb2');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! The loop copies each element from position i+1 to position i, shifting everything left. The last position is set to 0. Result: {2, 3, 4, 5, 0}.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. The loop copies each element from position i+1 to position i, shifting everything left. The last position is set to 0. Result: {2, 3, 4, 5, 0}.';
+  }
+}
+</script>
+
+  <div class=""exam-tip"">
+<strong>✅ Exam Tip:</strong> Shifting questions on the AP exam almost always ask you to trace through the loop manually. Write out the array state after each iteration. The loop direction (forward vs backward) is the key detail.</div>
+
+  <div class=""nav-links"">
+  <a class=""nav-link"" href=""/pages/ap-csa-unit-4-data-collections-study-guide"">← Unit 4: Data Collections</a>
+  <a class=""nav-link"" href=""/pages/ap-csa-topics"">All AP CSA Topics</a>
+  <a class=""nav-link primary"" href=""/pages/ap-csa-practice-exams"">Practice Exams →</a>
+</div>
+</div>"
+"ap-csa-array-traversal","MERGE","<script>
+(function() {
+  var originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.indexOf('emkc.org/api/v2/piston') !== -1) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', '3596176c-098d-4aae-9955-8a1715997264');
+      } else {
+        options.headers['Authorization'] = '3596176c-098d-4aae-9955-8a1715997264';
+      }
+    }
+    return originalFetch.call(this, url, options);
+  };
+})();
+</script>
+<script type=""application/ld+json"">
+[{
+  ""@context"":""https://schema.org"",
+  ""@type"":""BreadcrumbList"",
+  ""itemListElement"":[
+    {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com/""},
+    {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+    {""@type"":""ListItem"",""position"":3,""name"":""Unit 4: Data Collections"",""item"":""https://apcsexamprep.com/pages/ap-csa-unit-4-data-collections-study-guide""},
+    {""@type"":""ListItem"",""position"":4,""name"":""Array Traversal in AP CSA: Complete Guide (2025-2026)"",""item"":""https://apcsexamprep.com/pages/ap-csa-array-traversal""}
+  ]
+},
+{
+  ""@context"":""https://schema.org"",
+  ""@type"":""Person"",
+  ""name"":""Tanner Crow"",
+  ""url"":""https://www.wyzant.com/tutors/tannerc12"",
+  ""jobTitle"":""AP Computer Science Teacher"",
+  ""worksFor"":{""@type"":""Organization"",""name"":""Blue Valley North High School""},
+  ""description"":""AP Computer Science teacher with 11+ years experience. 1,845+ tutoring hours, 5.0 Wyzant rating.""
+}]
+</script>
+<style>
+#apcsa-arrtrav{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;}
+#apcsa-arrtrav *{box-sizing:border-box!important;}
+#apcsa-arrtrav h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important;}
+#apcsa-arrtrav h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important;}
+#apcsa-arrtrav h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important;}
+#apcsa-arrtrav p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;}
+#apcsa-arrtrav a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important;}
+#apcsa-arrtrav a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcsa-arrtrav ul,#apcsa-arrtrav ol{margin:0 0 16px 24px!important;padding:0!important;color:#1e1e2e!important;}
+#apcsa-arrtrav li{margin-bottom:6px!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;}
+#apcsa-arrtrav code{background:#f1f5f9!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:2px 6px!important;border-radius:4px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;}
+#apcsa-arrtrav .info-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-left:4px solid #3b82f6!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-arrtrav .warn-box{background:#fffbeb!important;border:1px solid #fde68a!important;border-left:4px solid #f59e0b!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-arrtrav .warn-box strong{color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#apcsa-arrtrav .exam-tip{background:#f0fdf4!important;border:1px solid #bbf7d0!important;border-left:4px solid #22c55e!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-arrtrav .exam-tip strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-arrtrav pre{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:20px!important;border-radius:10px!important;overflow-x:auto!important;margin:20px 0!important;font-family:'Courier New',monospace!important;font-size:0.92em!important;line-height:1.6!important;white-space:pre!important;}
+#apcsa-arrtrav pre code{background:transparent!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:0!important;font-size:1em!important;}
+#apcsa-arrtrav table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important;}
+#apcsa-arrtrav th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;}
+#apcsa-arrtrav td{padding:9px 14px!important;border-bottom:1px solid #e2e8f0!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;vertical-align:top!important;}
+#apcsa-arrtrav tr:nth-child(even) td{background:#f8fafc!important;}
+#apcsa-arrtrav .breadcrumb{font-size:0.85em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:20px!important;}
+#apcsa-arrtrav .breadcrumb a{color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-decoration:none!important;}
+#apcsa-arrtrav .breadcrumb a:hover{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;}
+#apcsa-arrtrav .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:22px!important;margin:28px 0!important;}
+#apcsa-arrtrav .mcq-block h3{margin-top:0!important;}
+#apcsa-arrtrav .mcq-option{display:block!important;padding:10px 14px!important;margin:6px 0!important;border-radius:7px!important;border:1.5px solid #e2e8f0!important;cursor:pointer!important;font-size:0.97em!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#fff!important;width:100%!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;transition:border-color 0.15s,background 0.15s!important;}
+#apcsa-arrtrav .mcq-option:hover{border-color:#3b82f6!important;background:#eff6ff!important;}
+#apcsa-arrtrav .mcq-option.correct{background:#f0fdf4!important;border-color:#22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-arrtrav .mcq-option.wrong{background:#fef2f2!important;border-color:#ef4444!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-arrtrav .mcq-feedback{margin-top:12px!important;padding:12px 16px!important;border-radius:7px!important;font-size:0.95em!important;display:none!important;}
+#apcsa-arrtrav .mcq-feedback.show{display:block!important;}
+#apcsa-arrtrav .mcq-feedback.correct{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-arrtrav .mcq-feedback.wrong{background:#fef2f2!important;border:1px solid #fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-arrtrav .sandbox-wrap{background:#0f172a!important;border-radius:12px!important;padding:20px!important;margin:28px 0!important;}
+#apcsa-arrtrav .sandbox-wrap label{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:0.8em!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;display:block!important;margin-bottom:8px!important;}
+#apcsa-arrtrav .sandbox-editor{width:100%!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;border:1px solid #334155!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;line-height:1.6!important;resize:vertical!important;min-height:160px!important;box-sizing:border-box!important;}
+#apcsa-arrtrav .run-btn{margin-top:12px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;padding:9px 22px!important;font-size:0.95em!important;font-weight:700!important;cursor:pointer!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}
+#apcsa-arrtrav .run-btn:hover{background:#2563eb!important;}
+#apcsa-arrtrav .sandbox-output{margin-top:12px!important;background:#0a0f1a!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.88em!important;min-height:48px!important;white-space:pre-wrap!important;display:none!important;}
+#apcsa-arrtrav .sandbox-output.show{display:block!important;}
+#apcsa-arrtrav .nav-links{display:flex!important;gap:12px!important;margin-top:48px!important;padding-top:24px!important;border-top:1px solid #e2e8f0!important;flex-wrap:wrap!important;}
+#apcsa-arrtrav .nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 18px!important;border-radius:8px!important;font-size:0.92em!important;font-weight:600!important;text-decoration:none!important;border:1.5px solid #bfdbfe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;}
+#apcsa-arrtrav .nav-link:hover{background:#dbeafe!important;border-color:#93c5fd!important;}
+#apcsa-arrtrav .nav-link.primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-arrtrav .nav-link.primary:hover{background:#1d4ed8!important;}
+</style>
+<div id=""apcsa-arrtrav"">
+  <div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a> › <a href=""/pages/ap-csa-unit-4-data-collections-study-guide"">Unit 4</a> › Array Traversal</div>
+  <h1>Array Traversal in AP CSA</h1>
+  <p>Traversal means visiting every element in an array. The AP exam tests two traversal styles: the standard <code>for</code> loop (gives you index access) and the enhanced <code>for-each</code> loop (simpler, read-only).</p>
+
+  <h2>Standard for Loop</h2>
+  <p>Use when you need the index — to modify elements, compare neighbors, or traverse backwards.</p>
+  <pre><code>int[] scores = {85, 92, 78, 95, 88};
+
+// Forward traversal
+for (int i = 0; i &lt; scores.length; i++) {
+    System.out.println(scores[i]);
+}
+
+// Backward traversal
+for (int i = scores.length - 1; i &gt;= 0; i--) {
+    System.out.println(scores[i]);
+}</code></pre>
+
+  <h2>Enhanced for-each Loop</h2>
+  <p>Use when you only need to read values — cleaner syntax, but no index and cannot modify the array elements.</p>
+  <pre><code>for (int score : scores) {
+    System.out.println(score);  // read-only
+    // score = 100;  // does NOT change the array!
+}</code></pre>
+
+  <div class=""warn-box"">
+<strong>⚠ for-each Cannot Modify Arrays:</strong> Assigning to the loop variable in a for-each loop does NOT change the array. You need a standard for loop with the index to modify elements.</div>
+
+  <div class=""sandbox-wrap"">
+  <label>💻 Try It — Java Sandbox</label>
+  <textarea class=""sandbox-editor"" id=""apcsa-arrtrav-sb1"">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {3, 7, 2, 9, 1};
+        
+        // Find the sum using standard for loop
+        int sum = 0;
+        for (int i = 0; i &lt; nums.length; i++) {
+            sum += nums[i];
+        }
+        System.out.println(""Sum: "" + sum);
+        
+        // Find max using for-each
+        int max = nums[0];
+        for (int n : nums) {
+            if (n &gt; max) max = n;
+        }
+        System.out.println(""Max: "" + max);
+    }
+}</textarea>
+  <button class=""run-btn"" onclick=""runCode_apcsa_arrtrav_1()"">▶ Run Code</button>
+  <div class=""sandbox-output"" id=""apcsa-arrtrav-out1""></div>
+</div>
+<script>
+function runCode_apcsa_arrtrav_1() {
+  var code = document.getElementById('apcsa-arrtrav-sb1').value;
+  var out = document.getElementById('apcsa-arrtrav-out1');
+  out.textContent = 'Running...';
+  out.classList.add('show');
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({language:'java',version:'15.0.2',files:[{content:code}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output : (d.message || 'No output');
+  }).catch(function(){out.textContent='Error connecting to sandbox.';});
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 1</h3>
+  <p>Which of the following code segments correctly doubles every element in array <code>vals</code>?</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrtrav_1(this,0,2)"">A) for (int v : vals) { v = v * 2; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrtrav_1(this,1,2)"">B) for (int i = 0; i &lt;= vals.length; i++) { vals[i] = vals[i] * 2; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrtrav_1(this,2,2)"">C) for (int i = 0; i &lt; vals.length; i++) { vals[i] = vals[i] * 2; }</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrtrav_1(this,3,2)"">D) for (int i = 1; i &lt; vals.length; i++) { vals[i] = vals[i] * 2; }</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-arrtrav-fb1""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_arrtrav_1(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-arrtrav-fb1');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! Option A doesn\'t modify the array (for-each loop variable). Option B causes ArrayIndexOutOfBoundsException (i <= length). Option D skips index 0. Only C correctly traverses all indices and modifies in place.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. Option A doesn\'t modify the array (for-each loop variable). Option B causes ArrayIndexOutOfBoundsException (i <= length). Option D skips index 0. Only C correctly traverses all indices and modifies in place.';
+  }
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 2</h3>
+  <p>What is printed by the following code?<br></p>
+<pre style=""background:#0f172a;color:#e2e8f0;padding:12px;border-radius:6px;font-family:monospace;"">int[] arr = {2, 4, 6, 8};
+int result = 0;
+for (int i = arr.length - 1; i &gt;= 0; i--) {
+    result += arr[i];
+    if (result &gt; 10) {
+        break;
+    }
+}
+System.out.println(result);</pre>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrtrav_2(this,0,1)"">A) 20</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrtrav_2(this,1,1)"">B) 14</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrtrav_2(this,2,1)"">C) 8</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_arrtrav_2(this,3,1)"">D) 6</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-arrtrav-fb2""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_arrtrav_2(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-arrtrav-fb2');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! Traverses backward: arr[3]=8 (result=8), arr[2]=6 (result=14 > 10, break). Output is 14.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. Traverses backward: arr[3]=8 (result=8), arr[2]=6 (result=14 > 10, break). Output is 14.';
+  }
+}
+</script>
+
+  <div class=""exam-tip"">
+<strong>✅ Exam Tip:</strong> The AP exam frequently shows for-each loops being used to modify arrays and asks if the code is correct. The answer is always: for-each cannot modify array elements. Use a standard for loop with index when modification is needed.</div>
+
+  <div class=""nav-links"">
+  <a class=""nav-link"" href=""/pages/ap-csa-unit-4-data-collections-study-guide"">← Unit 4: Data Collections</a>
+  <a class=""nav-link"" href=""/pages/ap-csa-topics"">All AP CSA Topics</a>
+  <a class=""nav-link primary"" href=""/pages/ap-csa-practice-exams"">Practice Exams →</a>
+</div>
+</div>"
+"ap-csa-casting-type-conversion","MERGE","<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""FAQPage"",""mainEntity"":[{""@type"":""Question"",""name"":""What is casting in Java AP CSA?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Casting is explicitly converting a value from one type to another. In AP CSA, the most common cast is (int) on a double to truncate the decimal, or (double) on an int to force floating-point division.""}},
+    {""@type"":""Question"",""name"":""What is the difference between integer division and double division?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""When both operands are int, Java performs integer division which truncates the decimal. 7/2 = 3, not 3.5. To get 3.5, cast at least one operand: (double)7/2 or 7/2.0.""}},
+    {""@type"":""Question"",""name"":""What does truncation mean in casting?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Truncation means the decimal part is discarded (not rounded). (int)3.9 gives 3, not 4. (int)(-2.1) gives -2, not -3.""}},
+    {""@type"":""Question"",""name"":""What is narrowing vs widening conversion?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Widening conversion (int to double) happens automatically because no data is lost. Narrowing conversion (double to int) requires an explicit cast because the decimal is discarded.""}}]}</script><script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""AP CSA Topics"",""item"":""https://www.apcsexamprep.com/pages/ap-csa-topics""},{""@type"":""ListItem"",""position"":2,""name"":""Casting and Type Conversion"",""item"":""https://www.apcsexamprep.com/pages/ap-csa-casting-type-conversion""}]}</script><script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""Article"",""headline"":""Casting and Type Conversion in AP CSA Java"",""description"":""Complete guide to casting in Java for AP CSA: (int) and (double) casts, integer division trap, truncation vs rounding, and widening vs narrowing conversions."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.wyzant.com/tutors/tannerc12""},""publisher"":{""@type"":""Organization"",""name"":""AP CS Exam Prep"",""url"":""https://www.apcsexamprep.com""},""dateModified"":""2026-03-14"",""educationalLevel"":""AP""}</script>
+<div id=""apcsa-casting"">
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important}
+#apcsa-casting{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;-webkit-font-smoothing:antialiased!important;background:#ffffff!important}
+#apcsa-casting *{box-sizing:border-box!important}
+#apcsa-casting h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important}
+#apcsa-casting h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important}
+#apcsa-casting h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important}
+#apcsa-casting h4{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1em!important;font-weight:700!important;margin:18px 0 8px!important}
+#apcsa-casting p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;line-height:1.7!important}
+#apcsa-casting a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important}
+#apcsa-casting a:link,#apcsa-casting a:visited{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important}
+#apcsa-casting ul,#apcsa-casting ol{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;padding-left:24px!important;margin:0 0 16px!important}
+#apcsa-casting li{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin-bottom:6px!important;font-size:1em!important}
+#apcsa-casting strong{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-weight:700!important}
+#apcsa-casting pre{background:#1e1e2e!important;color:#cdd6f4!important;-webkit-text-fill-color:#cdd6f4!important;padding:20px!important;border-radius:8px!important;overflow-x:auto!important;font-family:Consolas,Monaco,'Courier New',monospace!important;font-size:0.9em!important;line-height:1.55!important;white-space:pre!important;margin:14px 0!important;border:none!important}
+#apcsa-casting code{font-family:Consolas,Monaco,'Courier New',monospace!important}
+#apcsa-casting p code,#apcsa-casting li code,#apcsa-casting td code{background:#eff6ff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;padding:2px 6px!important;border-radius:4px!important;font-size:0.88em!important}
+#apcsa-casting table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important}
+#apcsa-casting th{background:#eff6ff!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;border-bottom:2px solid #bfdbfe!important}
+#apcsa-casting td{padding:10px 14px!important;border-bottom:1px solid #e5e7eb!important;color:#1e1e2e!important;vertical-align:top!important}
+#apcsa-casting .info-box{background:#eff6ff!important;border-left:4px solid #3b82f6!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important}
+#apcsa-casting .warning-box{background:#fef3c7!important;border-left:4px solid #f59e0b!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important}
+#apcsa-casting .error-box{background:#fef2f2!important;border-left:4px solid #ef4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important}
+#apcsa-casting .success-box{background:#f0fdf4!important;border-left:4px solid #22c55e!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important}
+#apcsa-casting .info-box p,#apcsa-casting .warning-box p,#apcsa-casting .error-box p,#apcsa-casting .success-box p{margin:0!important;color:#1e1e2e!important}
+#apcsa-casting .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:20px 24px!important;margin:24px 0!important}
+#apcsa-casting .mcq-stem{font-weight:600!important;color:#1a1a2e!important;margin:0 0 14px!important;font-size:1em!important;line-height:1.55!important}
+#apcsa-casting .mcq-options{list-style:none!important;padding:0!important;margin:0 0 14px!important}
+#apcsa-casting .mcq-options li{padding:8px 12px!important;border:1px solid #e2e8f0!important;border-radius:6px!important;margin:6px 0!important;cursor:pointer!important;color:#1e1e2e!important;font-size:0.95em!important;transition:background 0.15s!important}
+#apcsa-casting .mcq-options li:hover{background:#eff6ff!important;border-color:#bfdbfe!important}
+#apcsa-casting .mcq-reveal{display:none!important;padding:12px 16px!important;border-radius:6px!important;margin-top:8px!important;font-size:0.95em!important}
+#apcsa-casting .mcq-reveal.show{display:block!important}
+#apcsa-casting .mcq-reveal.correct{background:#f0fdf4!important;border:1px solid #86efac!important;color:#166534!important;-webkit-text-fill-color:#166534!important}
+#apcsa-casting .mcq-reveal.wrong{background:#fef2f2!important;border:1px solid #fca5a5!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important}
+#apcsa-casting .mcq-btn{display:inline-block!important;padding:8px 18px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:6px!important;cursor:pointer!important;font-size:0.9em!important;font-weight:600!important;margin-top:4px!important;opacity:1!important;visibility:visible!important}
+#apcsa-casting .mcq-btn:hover{background:#2563eb!important}
+#apcsa-casting .new-badge{display:inline-block!important;background:#dcfce7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;font-size:0.75em!important;font-weight:700!important;padding:2px 10px!important;border-radius:12px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;margin-left:10px!important;vertical-align:middle!important}
+#apcsa-casting .breadcrumb{font-size:0.85em!important;color:#64748b!important;margin-bottom:18px!important;display:block!important}
+#apcsa-casting .breadcrumb a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:none!important}
+#apcsa-casting .breadcrumb a:link,#apcsa-casting .breadcrumb a:visited{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important}
+#apcsa-casting .related-links{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))!important;gap:10px!important;margin:16px 0!important}
+#apcsa-casting .related-link{display:block!important;padding:12px 16px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:600!important;font-size:0.9em!important}
+#apcsa-casting .related-link:link,#apcsa-casting .related-link:visited{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;text-decoration:none!important}
+#apcsa-casting .related-link:hover{border-color:#3b82f6!important;background:#eff6ff!important}
+#apcsa-casting .unit-tag{display:inline-block!important;font-size:0.78em!important;font-weight:700!important;padding:2px 10px!important;border-radius:12px!important;margin-bottom:16px!important}
+#apcsa-casting .u1-tag{background:#dbeafe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important}
+#apcsa-casting .u3-tag{background:#fef9c3!important;color:#854d0e!important;-webkit-text-fill-color:#854d0e!important}
+@media(max-width:640px){#apcsa-casting{padding:16px 14px 40px!important}#apcsa-casting h1{font-size:1.6em!important}}
+</style>
+<div class=""breadcrumb"">
+<a href=""/pages/ap-csa-topics"">AP CSA Topics</a> › Casting &amp; Type Conversion</div>
+<span class=""unit-tag u1-tag"">Unit 1 — Using Objects &amp; Methods</span>
+<h1>Casting &amp; Type Conversion <span class=""new-badge"">New in 2026</span>
+</h1>
+<p>Casting is one of the most-tested Unit 1 topics on the AP CSA exam. Questions on integer division, truncation, and forced floating-point division appear in nearly every exam. The 2025-2026 curriculum gives casting explicit treatment in section 1.5.</p>
+
+<h2>The Integer Division Trap</h2>
+<p>When both operands of <code>/</code> are <code>int</code>, Java performs <strong>integer division</strong> — the result is truncated to an integer. This is not a bug; it is designed behavior.</p>
+<pre>int a = 7;
+int b = 2;
+System.out.println(a / b);      // prints 3, not 3.5
+System.out.println(7 / 2);      // prints 3
+System.out.println(7.0 / 2);    // prints 3.5
+System.out.println((double)7 / 2); // prints 3.5</pre>
+<div class=""error-box""><p><strong>Most common exam mistake:</strong> Computing an average as <code>sum / count</code> when both are <code>int</code>. The result is truncated. Fix: cast one operand to <code>double</code> first.</p></div>
+
+<h2>Explicit Casting Syntax</h2>
+<pre>double x = 9.7;
+int n = (int) x;        // n = 9 (truncated, not rounded)
+
+int p = 5;
+int q = 2;
+double result = (double) p / q;  // 2.5 — cast p FIRST, then divide
+double wrong  = (double)(p / q); // 2.0 — divides first, then casts result</pre>
+
+<h2>Truncation vs Rounding</h2>
+<p>Casting <code>double</code> to <code>int</code> <strong>truncates</strong> (drops the decimal), it does NOT round. This applies to both positive and negative values.</p>
+<table>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+<th>Explanation</th>
+</tr>
+<tr>
+<td><code>(int) 3.9</code></td>
+<td><code>3</code></td>
+<td>Drops .9 — NOT rounded to 4</td>
+</tr>
+<tr>
+<td><code>(int) 3.1</code></td>
+<td><code>3</code></td>
+<td>Drops .1</td>
+</tr>
+<tr>
+<td><code>(int) -2.9</code></td>
+<td><code>-2</code></td>
+<td>Truncates toward zero, NOT -3</td>
+</tr>
+<tr>
+<td><code>(int) -2.1</code></td>
+<td><code>-2</code></td>
+<td>Truncates toward zero</td>
+</tr>
+<tr>
+<td><code>(int)(3.9 + 0.5)</code></td>
+<td><code>4</code></td>
+<td>Add 0.5 before casting to round</td>
+</tr>
+</table>
+<div class=""info-box""><p>To <strong>round</strong> a <code>double</code> to the nearest <code>int</code>, add 0.5 before casting: <code>(int)(x + 0.5)</code>. Or use <code>Math.round(x)</code> which returns a <code>long</code>.</p></div>
+
+<h2>Widening vs Narrowing Conversion</h2>
+<h3>Widening (automatic — no cast needed)</h3>
+<p>Widening moves to a type that can hold all values of the original. No data is lost, so Java does it automatically.</p>
+<pre>int n = 42;
+double d = n;     // widening: int automatically becomes double (42.0)
+long L = n;       // widening: int to long (also automatic)</pre>
+<h3>Narrowing (requires explicit cast)</h3>
+<p>Narrowing moves to a smaller type. Data may be lost, so Java requires an explicit cast to show you’re aware.</p>
+<pre>double d = 9.99;
+int n = (int) d;  // narrowing: requires explicit cast, n = 9
+
+double pi = 3.14159;
+int truncated = (int) pi;   // truncated = 3</pre>
+
+<h2>Casting with Math.random()</h2>
+<p>The standard pattern for generating a random integer in a range combines <code>Math.random()</code> (which returns a double in [0.0, 1.0)) with casting and scaling.</p>
+<pre>// Random int from 0 to 9 inclusive
+int n = (int)(Math.random() * 10);
+
+// Random int from 1 to 6 inclusive (die roll)
+int die = (int)(Math.random() * 6) + 1;
+
+// Random int from min to max inclusive
+int rand = (int)(Math.random() * (max - min + 1)) + min;</pre>
+<div class=""info-box""><p>The cast must wrap the entire product: <code>(int)(Math.random() * 6)</code>. Writing <code>(int)Math.random() * 6</code> first casts <code>Math.random()</code> to <code>int</code> (always 0), then multiplies — giving 0 every time.</p></div>
+
+<h2>Overflow and Integer Range</h2>
+<p>An <code>int</code> holds values from -2,147,483,648 to 2,147,483,647. If arithmetic produces a value outside this range, it <em>wraps around</em> without error. This is called integer overflow.</p>
+<pre>int max = Integer.MAX_VALUE;   // 2147483647
+System.out.println(max + 1);  // -2147483648 (overflow! wraps to MIN_VALUE)</pre>
+
+<h2>Practice MCQs</h2>
+
+<div class=""mcq-block"">
+<p class=""mcq-stem"">What is the value of <code>result</code> after the following executes?<br><br>
+<code>int a = 10;</code><br>
+<code>int b = 3;</code><br>
+<code>double result = (double)(a / b);</code></p>
+<ul class=""mcq-options"">
+<li data-key=""A"">(A) 3.3333...</li>
+<li data-key=""B"">(B) 3.0</li>
+<li data-key=""C"">(C) 3</li>
+<li data-key=""D"">(D) A compile error occurs.</li>
+</ul>
+<button class=""mcq-btn"" onclick=""apcsa_castingCheck(this,'B','The parentheses cause (a / b) to execute first as integer division: 10/3 = 3. Then (double) casts the integer 3 to 3.0. To get 3.3333, you would need to cast before the division: (double)a / b.')"">Check Answer</button>
+<div class=""mcq-reveal""></div>
+</div>
+
+<div class=""mcq-block"">
+<p class=""mcq-stem"">What is printed by the following?<br><br>
+<code>System.out.println((int)(-3.8));</code></p>
+<ul class=""mcq-options"">
+<li data-key=""A"">(A) <code>-4</code>
+</li>
+<li data-key=""B"">(B) <code>-3</code>
+</li>
+<li data-key=""C"">(C) <code>4</code>
+</li>
+<li data-key=""D"">(D) <code>3</code>
+</li>
+</ul>
+<button class=""mcq-btn"" onclick=""apcsa_castingCheck(this,'B','Casting to int truncates toward zero, not toward negative infinity. (int)(-3.8) discards the decimal and moves toward 0, giving -3 (not -4). This is a critical distinction from mathematical floor(), which would give -4.')"">Check Answer</button>
+<div class=""mcq-reveal""></div>
+</div>
+
+<div class=""mcq-block"">
+<p class=""mcq-stem"">Which expression produces a random <code>int</code> from 1 to 10 inclusive?</p>
+<ul class=""mcq-options"">
+<li data-key=""A"">(A) <code>(int)(Math.random() * 10)</code>
+</li>
+<li data-key=""B"">(B) <code>(int)(Math.random() * 10) + 1</code>
+</li>
+<li data-key=""C"">(C) <code>(int)Math.random() * 10 + 1</code>
+</li>
+<li data-key=""D"">(D) <code>(int)(Math.random() * 11)</code>
+</li>
+</ul>
+<button class=""mcq-btn"" onclick=""apcsa_castingCheck(this,'B','(A) gives 0-9. (B) gives 0-9 shifted to 1-10: correct. (C) casts Math.random() first (always 0), then *10+1 = always 1. (D) gives 0-10 (11 possible values, not 10). The general formula is: (int)(Math.random() * N) + start gives start to start+N-1.')"">Check Answer</button>
+<div class=""mcq-reveal""></div>
+</div>
+
+<div class=""mcq-block"">
+<p class=""mcq-stem"">An <code>ArrayList<integer></integer></code> called <code>scores</code> contains several values. Consider:<br><br>
+<code>int total = 0;</code><br>
+<code>for (int s : scores) total += s;</code><br>
+<code>double avg = total / scores.size();</code><br><br>
+Which best describes the issue with computing <code>avg</code>?</p>
+<ul class=""mcq-options"">
+<li data-key=""A"">(A) <code>scores.size()</code> returns a <code>double</code>, causing a compile error.</li>
+<li data-key=""B"">(B) <code>total / scores.size()</code> performs integer division, truncating the decimal.</li>
+<li data-key=""C"">(C) The enhanced for loop incorrectly unboxes Integer to int.</li>
+<li data-key=""D"">(D) <code>total</code> must be declared as <code>long</code> to avoid overflow.</li>
+</ul>
+<button class=""mcq-btn"" onclick=""apcsa_castingCheck(this,'B','total is int and scores.size() returns int. int / int = integer division (truncated). Fix: cast first: (double) total / scores.size()')"">Check Answer</button>
+<div class=""mcq-reveal""></div>
+</div>
+
+<h2>Common Mistakes</h2>
+<ul>
+<li>
+<strong>Integer division in averages:</strong> <code>sum / count</code> when both are <code>int</code> truncates. Cast first: <code>(double) sum / count</code>.</li>
+<li>
+<strong>Casting after division:</strong> <code>(double)(sum/count)</code> casts the truncated integer, not the true average.</li>
+<li>
+<strong>Thinking truncation rounds:</strong> <code>(int)3.9</code> is 3, not 4. Add 0.5 before casting to round.</li>
+<li>
+<strong>Casting Math.random() too early:</strong> <code>(int)Math.random() * N</code> casts Math.random() first (always 0). Always wrap the full product: <code>(int)(Math.random() * N)</code>.</li>
+<li>
+<strong>Confusion with negative truncation:</strong> <code>(int)(-2.9)</code> = <code>-2</code>, not <code>-3</code>. Truncation is toward zero.</li>
+</ul>
+
+<h2>Related Topics</h2>
+<div class=""related-links"">
+<a href=""/pages/ap-csa-unit-1-complete-study-guide"" class=""related-link"">Unit 1 Study Guide</a>
+<a href=""/pages/ap-csa-wrapper-classes"" class=""related-link"">Wrapper Classes &amp; Autoboxing</a>
+<a href=""/pages/ap-csa-accumulators-patterns"" class=""related-link"">Accumulators &amp; Averages</a>
+<a href=""/pages/ap-csa-common-loop-bugs"" class=""related-link"">Common Loop Bugs</a>
+</div>
+</div>
+<script>
+(function(){
+function apcsa_castingCheck(btn,correct,explanation){
+  var block=btn.closest ? btn.closest('.mcq-block') : btn.parentNode;
+  var opts=block.querySelectorAll('.mcq-options li');
+  var chosen=null;
+  opts.forEach(function(li){if(li.classList.contains('selected'))chosen=li;});
+  if(!chosen){alert('Select an answer first.');return;}
+  var rev=block.querySelector('.mcq-reveal');
+  var letter=chosen.getAttribute('data-key');
+  rev.className='mcq-reveal show '+(letter===correct?'correct':'wrong');
+  rev.innerHTML=(letter===correct?'<strong>Correct!</strong> ':'<strong>Incorrect.</strong> ')+explanation;
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('#apcsa-casting .mcq-options li').forEach(function(li){
+    li.addEventListener('click',function(){
+      var opts=this.closest('.mcq-options').querySelectorAll('li');
+      opts.forEach(function(o){o.classList.remove('selected');o.style.background='';o.style.borderColor='';o.style.fontWeight='';});
+      this.classList.add('selected');
+      this.style.background='#dbeafe';
+      this.style.borderColor='#3b82f6';
+      this.style.fontWeight='600';
+    });
+  });
+});
+window.apcsa_castingCheck=function(btn,correct,explanation){ apcsa_castingCheck(btn,correct,explanation); };
+})();
+</script>"
