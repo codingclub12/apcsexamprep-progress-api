@@ -40,6 +40,8 @@
     "smoke:assistantreport": "node smoke/assistant-report.js",
     "smoke:assistantrouting": "node smoke/assistant-report-routing.js",
     "smoke:assistantroutingmutation": "node smoke/assistant-report-routing-mutation.js",
+    "smoke:assistantwidget": "node smoke/assistant-widget.js",
+    "pageindex": "node scripts/build-page-index.js",
     "smoke:assistantdiag": "node smoke/assistant-diagnostics.js",
     "smoke:assistantkb": "node smoke/assistant-kb.js",
     "smoke:quizauthoring": "node smoke/quiz-bank-authoring.js",
