@@ -172,6 +172,13 @@ const MUT = [
   //  Two rows, because the rule is two-sided: a page that had the date must end
   //  with none, and a page that never had one must not gain one.
   ['a repair that leaves the stale date in', (a) => a + '<p>May 15, 2026</p>', /still names it/],
+  //  THE ONE THAT GOT THROUGH. The hub carried three countdown scripts, not
+  //  two, and the third wrote the time as T08:00:00 where the others wrote
+  //  T00:00:00. Every visible date on the page was correct and it went on
+  //  counting down to a dead exam. A rule that only reads what a human sees
+  //  cannot catch a date living in a script.
+  ['a repair that leaves an ISO stale date in a countdown script',
+    (a) => a + "<script>var d = new Date('2026-05-15T08:00:00');</script>", /still names it|added a reference to/],
   ['a repair that reintroduces the retired curriculum', (a) => a + '<p>Unit 1: Primitive Types</p>', /added the retired 10-unit curriculum/],
   ['a repair that unbalances the divs', (a) => a + '<div>', /div balance changed/],
   ['a repair that leaves a script element open', (a) => a + '<script>', /unbalanced script/],

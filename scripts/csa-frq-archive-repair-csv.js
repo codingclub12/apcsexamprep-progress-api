@@ -77,7 +77,8 @@ function hubEdits() {
     { why: 'the FRQ count, which counted 22 years times 4 and got 88 where 86 exist',
       needs2026: true,
       findRe: /<span class="frq-stat-number">88<\/span>(\s*)<span class="frq-stat-label">FRQs Total<\/span>/,
-      to: '<span class="frq-stat-number">90</span>$1<span class="frq-stat-label">FRQs Total</span>' },
+      to: '<span class="frq-stat-number">90</span>$1<span class="frq-stat-label">FRQs Total</span>',
+      applied: '<span class="frq-stat-number">90</span>' },
     { why: 'the coverage range, which stopped at 2025 and used an en dash',
       needs2026: true,
       findRe: /<span class="frq-stat-sub">2004 \u2013 2025<\/span>/,
@@ -102,8 +103,15 @@ function hubEdits() {
     { why: 'the hardcoded countdown, which has read 46 days left since May',
       find: '<span class="frq-urgency-days" id="frq-countdown-days">46 days left</span>',
       to: '<span class="frq-urgency-days" id="frq-countdown-days">counting down</span>' },
-    { why: 'both countdown scripts, still targeting a date four months past',
-      find: "new Date('2026-05-15T00:00:00')", to: "new Date('2027-05-12T00:00:00')" },
+    //  THREE countdown scripts, not two, and the third was found only after the
+    //  hub had already been imported. It writes the time as T08:00:00 where the
+    //  other two write T00:00:00, so a literal find matched two of three and the
+    //  page went on counting down to a dead date. Matched by pattern now, and
+    //  the ISO form is a stale-date string the body rule checks for, so this
+    //  class cannot recur silently.
+    { why: 'all three countdown scripts, still targeting a date four months past',
+      findRe: /new Date\('2026-05-15T\d\d:\d\d:\d\d'\)/g,
+      to: "new Date('2027-05-12T08:00:00')" },
     { why: 'the FAQ answer, which states the retired 36 point section and 9 points a question',
       find: 'The AP CSA exam has 4 FRQs in Section II, worth 45% of your total score (36 points). Each FRQ is worth 9 points. You have 90 minutes for the section, or about 22 minutes per question.',
       to: 'The AP CSA exam has 4 FRQs in Section II, worth ' + E.sectionTwoPercent + '% of your total score. From the 2026 exam the section is ' + total + ' points and the questions are not equal: '
@@ -156,18 +164,39 @@ function addYearCard(body) {
 function buildHub(page, opts) {
   let body = page.body_html;
   const changes = [];
+  //  IDEMPOTENT ON PURPOSE. Every sheet here is MERGE, so re-importing the same
+  //  file has to be safe, which means regenerating has to work against a body
+  //  that already carries the repair. An edit whose `find` is gone AND whose
+  //  `to` is already present has simply already run. An edit where NEITHER is
+  //  present is a genuine miss and still refuses.
   for (const e of hubEdits()) {
     if (e.needs2026 && opts.skip2026) continue;
+    //  `to` can carry a $1 backreference, which never appears literally in the
+    //  finished body, so an edit may declare `applied`: a distinctive fragment
+    //  that IS in the result. Without it the idempotency probe reads false and
+    //  a second generation refuses a page that is already correct.
+    const already = body.indexOf(e.applied || e.to) >= 0;
     if (e.findRe) {
-      if (!e.findRe.test(body)) throw new repair.Refused(spec.hub.handle, 'does not contain ' + e.findRe);
+      //  A global regex carries lastIndex between calls, so test on a fresh one.
+      const probe = new RegExp(e.findRe.source, e.findRe.flags.replace('g', ''));
+      if (!probe.test(body)) {
+        if (already) continue;
+        throw new repair.Refused(spec.hub.handle, 'contains neither ' + e.findRe + ' nor its replacement');
+      }
       body = body.replace(e.findRe, e.to);
     } else {
-      if (body.indexOf(e.find) < 0) throw new repair.Refused(spec.hub.handle, 'does not contain ' + JSON.stringify(e.find.slice(0, 60)));
+      if (body.indexOf(e.find) < 0) {
+        if (already) continue;
+        throw new repair.Refused(spec.hub.handle, 'contains neither ' + JSON.stringify(e.find.slice(0, 60)) + ' nor its replacement');
+      }
       body = body.split(e.find).join(e.to);
     }
     if (e.why) changes.push(e.why);
   }
-  if (!opts.skip2026) { body = addYearCard(body); changes.push('a 2026 card in the year grid'); }
+  if (!opts.skip2026 && body.indexOf('/pages/ap-csa-frq-2026') < 0) {
+    body = addYearCard(body);
+    changes.push('a 2026 card in the year grid');
+  }
   return { body, changes };
 }
 
@@ -299,7 +328,11 @@ function checkBody(handle, before, after) {
   //  checked HERE is the only thing this layer can honestly check, which is that
   //  the repair did not make either worse.
   const count = (s, re) => (s.match(re) || []).length;
-  const staleRe = new RegExp(spec.dates.staleExam.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+  //  BOTH FORMS. The first draft checked only "May 15, 2026", which is what a
+  //  reader sees, and missed a countdown script carrying 2026-05-15. The page
+  //  went on counting down to a dead date with every visible date correct.
+  const staleRe = new RegExp(
+    spec.dates.staleExam.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '|2026-05-15', 'g');
   //  Two-sided, which is stronger than either half. A page that named the stale
   //  date must come back naming it zero times, because the generator only runs
   //  fixDates when the string is there. A page that never named it must not
