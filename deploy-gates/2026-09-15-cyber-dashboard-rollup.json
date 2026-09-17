@@ -72,7 +72,8 @@
       "name": "AFTER THE IMPORT: the live page returns 50 and 86, not 61 and 70",
       "_credential": "NOT RUN YET AND FALSE BY CONSTRUCTION. The same command has reported 'this body has no classAvg/colAvg. The sheet is NOT imported' on every run since 2026-09-07, most recently at 18:10Z today. It reads the live page rather than the repo, so it cannot pass until a human imports the sheet.",
       "command": "node scripts/verify-dashboard-rollup-live.js",
-      "expect": "OK - this body rolls up marks (6 checks)"
+      "expect": "OK - the live dashboard rolls up marks (6 checks)",
+      "_why": "WORDING NOTE: scripts/verify-dashboard-rollup-live.js prints 'this body' under --file and 'the live dashboard' without it, and this expect string was first copied from the --file run, so the gate refused a correct import on 2026-09-17 with a string mismatch that read like a failed page. The rederive check above uses --file and keeps the other wording on purpose."
     }
   ]
 }
