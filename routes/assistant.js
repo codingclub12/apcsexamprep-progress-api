@@ -54,6 +54,8 @@ const report = require('../lib/assistant/report');
 const junk = require('../lib/assistant/junk-filter');
 const turnstile = require('../lib/assistant/turnstile');
 const find = require('../lib/assistant/find');
+const thanks = require('../lib/assistant/thanks');
+const morning = require('../lib/assistant/morning');
 const reads = require('../lib/assistant/reads');
 const kb = require('../lib/assistant/kb');
 const chat = require('../lib/assistant/chat');
@@ -204,6 +206,38 @@ function hasAdminKey(req) {
   const provided = req.get('x-admin-key') || '';
   if (!configured || !provided || configured.length < 20) return false;
   const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
+  try { return crypto.timingSafeEqual(digest(provided), digest(configured)); } catch (_) { return false; }
+}
+
+// Fail-closed admin auth for the report endpoints, in the same shape
+// routes/admin.js uses: no key configured means the endpoint is OFF, never open.
+//
+// `readOnly` accepts ADMIN_READ_KEY as well, and exists for one specific reason.
+// The morning routine's DRY RUN, which is the default and the whole of its first
+// fourteen days, only ever READS: it pulls reports, reproduces them against the
+// live site, and writes nothing. Requiring the full read-write admin key for
+// that would mean putting a credential that can rewrite any class on a scheduled
+// session in order to run a routine that cannot write at all.
+function requireReportAdmin(opts) {
+  const readOnly = !!(opts && opts.readOnly);
+  return function (req, res, next) {
+    const full = process.env.ADMIN_KEY || '';
+    if (full.length < 20) {
+      return res.status(503).json({ error: 'Admin API disabled. Set a strong ADMIN_KEY (>= 20 chars) in the environment.' });
+    }
+    if (hasAdminKey(req)) return next();
+    if (readOnly && hasAdminReadKey(req)) return next();
+    return res.status(403).json({ error: 'Invalid or missing admin key.' });
+  };
+}
+
+// The read-only key, checked AFTER the full key everywhere it is accepted, so
+// that if both are set to the same value the full key wins.
+function hasAdminReadKey(req) {
+  const configured = process.env.ADMIN_READ_KEY || '';
+  const provided = req.get('x-admin-key') || '';
+  if (!configured || !provided || configured.length < 20) return false;
+  const digest = (s2) => crypto.createHash('sha256').update(String(s2)).digest();
   try { return crypto.timingSafeEqual(digest(provided), digest(configured)); } catch (_) { return false; }
 }
 
@@ -446,14 +480,7 @@ router.post('/api/assistant/report', reportLimit, async (req, res) => {
 // already runs on a schedule and already holds the admin key, and wiring it is
 // handoff section 6. Until that lands the default mode is 'each', so nothing is
 // waiting on this and nothing is stranded by it.
-router.post('/api/assistant/reports/digest/flush', async (req, res) => {
-  const configured = process.env.ADMIN_KEY || '';
-  if (configured.length < 20) {
-    return res.status(503).json({ error: 'Admin API disabled. Set a strong ADMIN_KEY (>= 20 chars) in the environment.' });
-  }
-  if (!hasAdminKey(req)) {
-    return res.status(403).json({ error: 'Invalid or missing admin key.' });
-  }
+router.post('/api/assistant/reports/digest/flush', requireReportAdmin(), async (req, res) => {
   try {
     const out = await report.flushDigest();
     res.json(out);
@@ -856,6 +883,103 @@ router.get('/api/assistant/widget-version', helpLimit, (req, res) => {
     widget_url: `/apcs-widget.js?v=${v['apcs-widget.js']}`,
     flag_url: `/apcs-flag.js?v=${v['apcs-flag.js']}`,
   });
+});
+
+// ── THE MORNING ROUTINE'S ENDPOINTS (handoff section 6.1) ────────────────────
+//
+//  GET   /api/assistant/reports?since=<iso>&status=open
+//  PATCH /api/assistant/reports/:id   { status, resolution_note }
+//
+//  The GET accepts the read-only admin key as well as the full one, because the
+//  routine's dry run only reads. The PATCH does not: it writes a status that
+//  can send a teacher an email, so it needs the full key.
+router.get('/api/assistant/reports', requireReportAdmin({ readOnly: true }), (req, res) => {
+  try {
+    const since = typeof req.query.since === 'string' && req.query.since.trim()
+      ? req.query.since.trim().slice(0, 40)
+      : null;
+    const status = typeof req.query.status === 'string' && req.query.status.trim()
+      ? req.query.status.trim().slice(0, 40)
+      : null;
+    if (status && !morning.STATUS_SET.has(status)) {
+      return res.status(400).json({ error: 'Unknown status.', statuses: morning.STATUSES });
+    }
+    const limit = Math.min(Math.max(Number(req.query.limit) || 100, 1), 500);
+
+    // Built as one statement with bound parameters rather than concatenated SQL.
+    // The columns are named rather than SELECT *, so a column added later cannot
+    // start leaking through this endpoint by accident.
+    const where = ['1 = 1'];
+    const args = [];
+    if (since) { where.push('created_at >= ?'); args.push(since); }
+    if (status) { where.push('status = ?'); args.push(status); }
+    args.push(limit);
+
+    const rows = db.prepare(`
+      SELECT id, category, severity, role, page_url, page_scope, course, summary,
+             detail_json, bodies_retained, status, junk_label, junk_reason,
+             ai_summary, ai_severity, thread_key, thread_seq, reporter_email,
+             email_status, thanked_at, resolution_note, created_at, resolved_at
+      FROM chat_escalations
+      WHERE ${where.join(' AND ')}
+      ORDER BY created_at DESC
+      LIMIT ?
+    `).all(...args);
+
+    res.json({
+      count: rows.length,
+      since,
+      status,
+      // The junk count the morning mail reports, so the routine does not have to
+      // ask a second time for a number it always needs.
+      dismissed_since: since ? report.dismissedSince(since) : null,
+      reports: rows.map((r) => {
+        let detail = {};
+        try { detail = JSON.parse(r.detail_json || '{}'); } catch (_) { /* keep empty */ }
+        const out = Object.assign({}, r, { detail });
+        delete out.detail_json;
+        return out;
+      }),
+    });
+  } catch (e) {
+    console.error('assistant/reports:', e);
+    res.status(500).json({ error: 'Could not read reports.' });
+  }
+});
+
+router.patch('/api/assistant/reports/:id', requireReportAdmin(), async (req, res) => {
+  try {
+    const id = String(req.params.id || '').slice(0, 64);
+    const body = (req && req.body) || {};
+    const status = typeof body.status === 'string' ? body.status.trim() : '';
+    const note = report.clip(body.resolution_note, 1000);
+
+    if (!morning.STATUS_SET.has(status)) {
+      return res.status(400).json({ error: 'Unknown status.', statuses: morning.STATUSES });
+    }
+    const row = db.prepare('SELECT id, status, thread_key FROM chat_escalations WHERE id = ?').get(id);
+    if (!row) return res.status(404).json({ error: 'No such report.' });
+
+    // 'fixed' is the one status with a side effect, and it goes through
+    // lib/assistant/thanks.js rather than being written here: that module owns
+    // the once-only guarantee, and a second place that sets status='fixed' would
+    // be a second place that has to remember it.
+    if (status === 'fixed') {
+      const out = await thanks.markFixed(id, note);
+      return res.json({ ok: true, id, status: 'fixed', thanked: out.thanked, skipped: out.skipped });
+    }
+
+    db.prepare(`
+      UPDATE chat_escalations
+      SET status = ?, resolution_note = ?,
+          resolved_at = CASE WHEN ? IN ('dismissed', 'cannot_reproduce') THEN datetime('now') ELSE resolved_at END
+      WHERE id = ?
+    `).run(status, note, status, id);
+    res.json({ ok: true, id, status });
+  } catch (e) {
+    console.error('assistant/reports PATCH:', e);
+    res.status(500).json({ error: 'Could not update the report.' });
+  }
 });
 
 // ── FIND A PAGE (handoff section 4.4) ────────────────────────────────────────
