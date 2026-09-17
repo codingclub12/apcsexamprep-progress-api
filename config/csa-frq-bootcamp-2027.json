@@ -1,0 +1,48 @@
+{
+  "_comment": [
+    "The FRQ Bootcamp page and its products, repointed.",
+    "",
+    "WHAT TANNER DECIDED, 2026-09-17, in his words: 'Repoint the next live",
+    "session to 2027 but offer the 2026 video at $29.99 by itself. That is the",
+    "current product.'",
+    "",
+    "So there is ONE thing for sale, the recording, and the live session is an",
+    "announcement rather than an offer. The three tiers that sold live access to",
+    "a session on 16 April 2026 are unpublished, not deleted: deleting a product",
+    "breaks the order history of everybody who bought one.",
+    "",
+    "NO 2027 DATE IS INVENTED HERE. Tanner has not set one and this file does not",
+    "guess. The page says spring 2027, ahead of the 12 May exam, and that the",
+    "date is announced closer to the time. When he sets it, it goes in `liveDate`",
+    "and the generator fills it in; the smoke suite refuses a page that states a",
+    "specific day while `liveDate` is null."
+  ],
+  "page": {
+    "handle": "ap-csa-frq-bootcamp-2026",
+    "title": "AP CSA FRQ Bootcamp: 2026 Recording, 2027 Live Session"
+  },
+  "recording": {
+    "handle": "ap-csa-frq-bootcamp-2026-recording",
+    "title": "AP CSA FRQ Bootcamp 2026: Full Session Recording",
+    "price": "29.99",
+    "productType": "Bootcamp",
+    "vendor": "APCSExamPrep",
+    "tags": "2026, recording, frq, ap-csa",
+    "includes": [
+      "The full recorded session, four FRQ types worked end to end",
+      "The FRQ scoring rubric reference sheet",
+      "Annotated model answers for all four question types",
+      "The FRQ strategy cheat sheet"
+    ]
+  },
+  "retire": [
+    "ap-csa-frq-bootcamp-basic",
+    "ap-csa-frq-bootcamp-standard",
+    "ap-csa-frq-bootcamp-premium"
+  ],
+  "live": {
+    "season": "spring 2027",
+    "liveDate": null,
+    "_liveDateNote": "Set this to a string like 'Thursday, April 15, 2027' once the date is fixed, and rerun the generator."
+  }
+}

@@ -1,0 +1,266 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At"
+"ap-csa-frq-bootcamp-2026","MERGE","AP CSA FRQ Bootcamp: 2026 Recording, 2027 Live Session","<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#csa-frq-bootcamp{
+  all:initial!important;display:block!important;
+  font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;
+  background:#fff!important;line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;
+}
+#csa-frq-bootcamp *{box-sizing:border-box!important;}
+
+/* HERO */
+#csa-frq-bootcamp .hero{
+  background:linear-gradient(135deg,#1E3A8A 0%,#1E40AF 50%,#2563EB 100%)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  padding:52px 24px 44px!important;text-align:center!important;
+  position:relative!important;overflow:hidden!important;
+}
+#csa-frq-bootcamp .hero::before{content:''!important;position:absolute!important;top:-60px!important;right:-60px!important;width:300px!important;height:300px!important;border-radius:50%!important;background:rgba(96,165,250,.15)!important;pointer-events:none!important;}
+#csa-frq-bootcamp .hero::after{content:''!important;position:absolute!important;bottom:-80px!important;left:-40px!important;width:250px!important;height:250px!important;border-radius:50%!important;background:rgba(37,99,235,.12)!important;pointer-events:none!important;}
+#csa-frq-bootcamp .hero-eyebrow{display:inline-block!important;background:rgba(96,165,250,.25)!important;border:1px solid rgba(96,165,250,.5)!important;color:#BFDBFE!important;-webkit-text-fill-color:#BFDBFE!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:6px 16px!important;border-radius:20px!important;margin-bottom:18px!important;}
+#csa-frq-bootcamp .hero-title{font-family:'Georgia',serif!important;font-size:clamp(26px,5vw,42px)!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 12px!important;line-height:1.2!important;}
+#csa-frq-bootcamp .hero-sub{font-size:16px!important;color:#BFDBFE!important;-webkit-text-fill-color:#BFDBFE!important;font-family:'Georgia',serif!important;margin:0 0 24px!important;max-width:560px!important;margin-left:auto!important;margin-right:auto!important;}
+#csa-frq-bootcamp .hero-meta{display:flex!important;justify-content:center!important;gap:28px!important;flex-wrap:wrap!important;margin-bottom:8px!important;}
+#csa-frq-bootcamp .hero-meta-item{font-family:'Georgia',serif!important;font-size:14px!important;color:#BFDBFE!important;-webkit-text-fill-color:#BFDBFE!important;display:flex!important;align-items:center!important;gap:6px!important;}
+#csa-frq-bootcamp .hero-meta-item strong{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+
+/* URGENCY BAR */
+#csa-frq-bootcamp .urgency-bar{background:#FEF3C7!important;border-top:3px solid #F59E0B!important;border-bottom:1px solid #FDE68A!important;padding:12px 24px!important;text-align:center!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#csa-frq-bootcamp .urgency-bar strong{color:#B45309!important;-webkit-text-fill-color:#B45309!important;}
+
+/* CONTAINER */
+#csa-frq-bootcamp .container{max-width:880px!important;margin:0 auto!important;padding:0 20px!important;}
+#csa-frq-bootcamp .section{padding:44px 20px!important;}
+#csa-frq-bootcamp .section-title{font-family:'Georgia',serif!important;font-size:22px!important;font-weight:700!important;color:#1E3A8A!important;-webkit-text-fill-color:#1E3A8A!important;margin:0 0 6px!important;text-align:center!important;}
+#csa-frq-bootcamp .section-sub{font-family:'Georgia',serif!important;font-size:15px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin:0 0 32px!important;text-align:center!important;}
+
+/* TIER CARDS */
+#csa-frq-bootcamp .tier-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important;gap:20px!important;max-width:880px!important;margin:0 auto!important;padding:0 20px!important;}
+#csa-frq-bootcamp .tier-card{border:2px solid #E5E7EB!important;border-radius:14px!important;overflow:hidden!important;background:#fff!important;display:flex!important;flex-direction:column!important;}
+#csa-frq-bootcamp .tier-card.popular{border-color:#2563EB!important;box-shadow:0 0 0 3px rgba(37,99,235,.12)!important;position:relative!important;}
+#csa-frq-bootcamp .popular-badge{position:absolute!important;top:-1px!important;left:50%!important;transform:translateX(-50%)!important;background:#2563EB!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;padding:4px 16px!important;border-radius:0 0 8px 8px!important;}
+#csa-frq-bootcamp .tier-header{padding:24px 22px 18px!important;background:#F8FAFF!important;border-bottom:1px solid #E5E7EB!important;}
+#csa-frq-bootcamp .tier-card.popular .tier-header{background:#EFF6FF!important;border-color:#BFDBFE!important;}
+#csa-frq-bootcamp .tier-name{font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;text-transform:uppercase!important;letter-spacing:1.5px!important;margin:0 0 8px!important;}
+#csa-frq-bootcamp .tier-card.popular .tier-name{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important;}
+#csa-frq-bootcamp .tier-price{font-family:'Georgia',serif!important;font-size:36px!important;font-weight:700!important;color:#1E3A8A!important;-webkit-text-fill-color:#1E3A8A!important;margin:0 0 4px!important;line-height:1!important;}
+#csa-frq-bootcamp .tier-price-sub{font-family:'Georgia',serif!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;margin:0!important;}
+#csa-frq-bootcamp .tier-body{padding:20px 22px!important;flex:1!important;}
+#csa-frq-bootcamp .tier-feature{display:flex!important;align-items:flex-start!important;gap:10px!important;margin-bottom:12px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#csa-frq-bootcamp .tier-check{width:18px!important;height:18px!important;border-radius:50%!important;background:#DBEAFE!important;color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;flex-shrink:0!important;margin-top:2px!important;}
+#csa-frq-bootcamp .tier-card.popular .tier-check{background:#DBEAFE!important;color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important;}
+#csa-frq-bootcamp .tier-footer{padding:0 22px 22px!important;}
+#csa-frq-bootcamp .tier-btn{display:block!important;width:100%!important;background:#1E3A8A!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;padding:13px 20px!important;border-radius:8px!important;text-decoration:none!important;text-align:center!important;border:none!important;cursor:pointer!important;}
+#csa-frq-bootcamp a.tier-btn:link,#csa-frq-bootcamp a.tier-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+#csa-frq-bootcamp a.tier-btn:hover{background:#1E40AF!important;opacity:1!important;}
+#csa-frq-bootcamp .tier-card.popular .tier-btn{background:#2563EB!important;}
+#csa-frq-bootcamp .tier-card.popular a.tier-btn:hover{background:#1D4ED8!important;}
+
+/* FRQ LINEUP */
+#csa-frq-bootcamp .frq-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))!important;gap:14px!important;max-width:880px!important;margin:0 auto!important;padding:0 20px!important;}
+#csa-frq-bootcamp .frq-card{background:#F8FAFF!important;border:1px solid #BFDBFE!important;border-radius:10px!important;padding:18px!important;}
+#csa-frq-bootcamp .frq-num{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;color:#2563EB!important;-webkit-text-fill-color:#2563EB!important;text-transform:uppercase!important;letter-spacing:1.5px!important;margin:0 0 6px!important;}
+#csa-frq-bootcamp .frq-name{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:#1E3A8A!important;-webkit-text-fill-color:#1E3A8A!important;margin:0 0 4px!important;}
+#csa-frq-bootcamp .frq-year{font-family:'Georgia',serif!important;font-size:12px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin:0 0 8px!important;}
+#csa-frq-bootcamp .frq-why{font-family:'Georgia',serif!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin:0!important;line-height:1.5!important;}
+#csa-frq-bootcamp .frq-tag{display:inline-block!important;background:#DBEAFE!important;color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:20px!important;margin-bottom:8px!important;}
+
+/* WHAT YOU GET */
+#csa-frq-bootcamp .gets-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;gap:16px!important;max-width:880px!important;margin:0 auto!important;padding:0 20px!important;}
+#csa-frq-bootcamp .get-card{background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px!important;}
+#csa-frq-bootcamp .get-icon{font-size:22px!important;display:block!important;margin-bottom:10px!important;}
+#csa-frq-bootcamp .get-title{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;color:#1E3A8A!important;-webkit-text-fill-color:#1E3A8A!important;margin:0 0 6px!important;}
+#csa-frq-bootcamp .get-desc{font-family:'Georgia',serif!important;font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin:0!important;line-height:1.5!important;}
+
+/* INSTRUCTOR */
+#csa-frq-bootcamp .instructor-bar{background:#EFF6FF!important;border:1px solid #BFDBFE!important;border-radius:12px!important;padding:24px 28px!important;max-width:880px!important;margin:0 auto!important;display:flex!important;align-items:flex-start!important;gap:20px!important;flex-wrap:wrap!important;}
+#csa-frq-bootcamp .instructor-text{flex:1!important;min-width:220px!important;}
+#csa-frq-bootcamp .instructor-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;color:#2563EB!important;-webkit-text-fill-color:#2563EB!important;text-transform:uppercase!important;letter-spacing:1.5px!important;margin:0 0 6px!important;}
+#csa-frq-bootcamp .instructor-name{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:#1E3A8A!important;-webkit-text-fill-color:#1E3A8A!important;margin:0 0 8px!important;}
+#csa-frq-bootcamp .instructor-desc{font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin:0!important;line-height:1.6!important;}
+#csa-frq-bootcamp .instructor-stats{display:flex!important;gap:24px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+#csa-frq-bootcamp .istat{text-align:center!important;}
+#csa-frq-bootcamp .istat-num{display:block!important;font-family:'Georgia',serif!important;font-size:22px!important;font-weight:700!important;color:#1E3A8A!important;-webkit-text-fill-color:#1E3A8A!important;}
+#csa-frq-bootcamp .istat-lbl{font-family:'Georgia',serif!important;font-size:11px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
+
+/* CTA */
+#csa-frq-bootcamp .cta-section{background:linear-gradient(135deg,#1E3A8A,#1E40AF)!important;padding:48px 24px!important;text-align:center!important;}
+#csa-frq-bootcamp .cta-title{font-family:'Georgia',serif!important;font-size:26px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 10px!important;}
+#csa-frq-bootcamp .cta-sub{font-family:'Georgia',serif!important;font-size:15px!important;color:#BFDBFE!important;-webkit-text-fill-color:#BFDBFE!important;margin:0 0 28px!important;}
+#csa-frq-bootcamp .cta-btn{display:inline-block!important;background:#fff!important;color:#1E3A8A!important;-webkit-text-fill-color:#1E3A8A!important;font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;padding:14px 32px!important;border-radius:8px!important;text-decoration:none!important;border:none!important;cursor:pointer!important;margin:0 8px 8px!important;}
+#csa-frq-bootcamp a.cta-btn:link,#csa-frq-bootcamp a.cta-btn:visited{color:#1E3A8A!important;-webkit-text-fill-color:#1E3A8A!important;text-decoration:none!important;}
+#csa-frq-bootcamp a.cta-btn:hover{background:#EFF6FF!important;opacity:1!important;}
+
+/* DIVIDER */
+#csa-frq-bootcamp .divider{border:none!important;border-top:1px solid #E5E7EB!important;margin:0!important;}
+
+@media(max-width:600px){
+  #csa-frq-bootcamp .hero-meta{gap:16px!important;}
+  #csa-frq-bootcamp .tier-grid{grid-template-columns:1fr!important;}
+}
+</style>
+<div id=""csa-frq-bootcamp"">
+<div class=""hero"">
+<div class=""hero-eyebrow"">2026 Recording Available Now</div>
+<h1 class=""hero-title"">AP CSA FRQ Bootcamp</h1>
+<p class=""hero-sub"">A walkthrough of the four hardest FRQ types, hand-picked across four exam years. The April 2026 session is recorded and available on its own. The next live one is spring 2027, ahead of the May 12, 2027 exam.</p>
+<div class=""hero-meta"">
+<div class=""hero-meta-item""><strong>Full session recording</strong></div>
+<div class=""hero-meta-item""><strong>$29.99</strong></div>
+<div class=""hero-meta-item""><strong>Watch any time</strong></div>
+<div class=""hero-meta-item""><strong>Next live: spring 2027</strong></div>
+</div>
+</div>
+</div>
+<div class=""urgency-bar""><strong>The next AP CSA exam is Wednesday, May 12, 2027.</strong> Free response is 45% of the score, and from 2026 the section is 25 points rather than 36.</div>
+<!-- TIER CARDS -->
+<div class=""section"">
+<div class=""container"">
+<h2 class=""section-title"">What Is Available</h2>
+<p class=""section-sub"">The April 2026 session is recorded and on sale by itself. The next live bootcamp is spring 2027, ahead of the May 12, 2027 exam and is not on sale yet.</p>
+</div>
+<div class=""tier-grid"">
+<div class=""tier-card popular"">
+<div class=""popular-badge"">Available now</div>
+<div class=""tier-header"">
+<div class=""tier-name"">2026 Session Recording</div>
+<div class=""tier-price"">$29.99</div>
+<div class=""tier-price-sub"">One-time payment, yours to keep</div>
+</div>
+<div class=""tier-body"">
+<div class=""tier-feature""><span class=""tier-check"">&#10003;</span>The full recorded session, four FRQ types worked end to end</div>
+<div class=""tier-feature""><span class=""tier-check"">&#10003;</span>The FRQ scoring rubric reference sheet</div>
+<div class=""tier-feature""><span class=""tier-check"">&#10003;</span>Annotated model answers for all four question types</div>
+<div class=""tier-feature""><span class=""tier-check"">&#10003;</span>The FRQ strategy cheat sheet</div>
+</div>
+<div class=""tier-footer""><a class=""tier-btn"" href=""/products/ap-csa-frq-bootcamp-2026-recording"">Get the recording</a></div>
+</div>
+<div class=""tier-card"">
+<div class=""tier-header"">
+<div class=""tier-name"">Next Live Bootcamp</div>
+<div class=""tier-price"">Spring 2027</div>
+<div class=""tier-price-sub"">Date announced closer to the time</div>
+</div>
+<div class=""tier-body"">
+<div class=""tier-feature""><span class=""tier-check"">&#10003;</span>Rebuilt for the May 2027 exam, which scores free response out of 25 points rather than 36</div>
+<div class=""tier-feature""><span class=""tier-check"">&#10003;</span>Worked live, with the recording included</div>
+<div class=""tier-feature""><span class=""tier-check"">&#10003;</span>Not on sale yet. The 2026 recording is the thing to get today</div>
+</div>
+<div class=""tier-footer""><a class=""tier-btn"" href=""/pages/ap-csa-frq-2026"">See the 2026 questions</a></div>
+</div>
+</div>
+<hr class=""divider"">
+<!-- FRQ LINEUP -->
+<div class=""section"">
+<div class=""container"">
+<h2 class=""section-title"">The FRQ Lineup</h2>
+<p class=""section-sub"">4 questions. 4 different years. Hand-picked for difficulty and exam relevance.</p>
+</div>
+<div class=""frq-grid"">
+<div class=""frq-card"">
+<p class=""frq-num"">Question 1</p>
+<p class=""frq-tag"">Methods &amp; Control Flow</p>
+<p class=""frq-name"">AppointmentBook</p>
+<p class=""frq-year"">2023 AP CSA Exam</p>
+<p class=""frq-why"">Multi-method interaction with complex boolean logic. Most students write each method correctly in isolation but break the class as a whole.</p>
+</div>
+<div class=""frq-card"">
+<p class=""frq-num"">Question 2</p>
+<p class=""frq-tag"">Class Creation</p>
+<p class=""frq-name"">StepTracker</p>
+<p class=""frq-year"">2019 AP CSA Exam</p>
+<p class=""frq-why"">Edge case on getAverageSteps when no active days. Instance variable management trips up students who skip careful reading.</p>
+</div>
+<div class=""frq-card"">
+<p class=""frq-num"">Question 3</p>
+<p class=""frq-tag"">ArrayList</p>
+<p class=""frq-name"">WordPairList</p>
+<p class=""frq-year"">2018 AP CSA Exam</p>
+<p class=""frq-why"">Paired-element traversal logic with removal traps. One of the highest partial-credit failure rates of any released ArrayList FRQ.</p>
+</div>
+<div class=""frq-card"">
+<p class=""frq-num"">Question 4</p>
+<p class=""frq-tag"">2D Array</p>
+<p class=""frq-name"">SumOrSame</p>
+<p class=""frq-year"">2025 AP CSA Exam</p>
+<p class=""frq-why"">The most recent released exam. Multi-condition 2D array logic that requires careful index management — exactly what the May 2027 exam will test.</p>
+</div>
+</div>
+</div>
+<hr class=""divider"">
+<!-- WHAT YOU GET -->
+<div class=""section"">
+<div class=""container"">
+<h2 class=""section-title"">What Happens During the Session</h2>
+<p class=""section-sub"">This is not a lecture. Every FRQ was worked live, start to finish, and the recording keeps all of it.</p>
+</div>
+<div class=""gets-grid"">
+<div class=""get-card"">
+<span class=""get-icon"" aria-label=""Read"">📖</span>
+<p class=""get-title"">Read &amp; Decompose</p>
+<p class=""get-desc"">Break down exactly what each question is asking before writing a single line of code.</p>
+</div>
+<div class=""get-card"">
+<span class=""get-icon"" aria-label=""Write"">✍</span>
+<p class=""get-title"">Live Code Walkthrough</p>
+<p class=""get-desc"">Full solution written live with commentary on every decision — not just what, but why.</p>
+</div>
+<div class=""get-card"">
+<span class=""get-icon"" aria-label=""Scoring"">📋</span>
+<p class=""get-title"">Scoring Breakdown</p>
+<p class=""get-desc"">Each rubric point explained so you know exactly where students lose credit and how to avoid it.</p>
+</div>
+<div class=""get-card"">
+<span class=""get-icon"" aria-label=""Mistakes"">🚫</span>
+<p class=""get-title"">Common Mistakes</p>
+<p class=""get-desc"">The specific errors that cost students points every year — and how to spot them in your own work.</p>
+</div>
+<div class=""get-card"">
+<span class=""get-icon"" aria-label=""Q&amp;A"">⁇</span>
+<p class=""get-title"">Live Q&amp;A</p>
+<p class=""get-desc"">Questions taken throughout. Premium tier gets priority access to ask anything during the session.</p>
+</div>
+<div class=""get-card"">
+<span class=""get-icon"" aria-label=""Recording"">▶</span>
+<p class=""get-title"">Full Recording</p>
+<p class=""get-desc"">Can’t make 7pm? The complete recording is delivered to all registered attendees after the session.</p>
+</div>
+</div>
+</div>
+<hr class=""divider"">
+<!-- INSTRUCTOR -->
+<div class=""section"">
+<div class=""container"">
+<div class=""instructor-bar"">
+<div class=""instructor-text"">
+<p class=""instructor-label"">Your Instructor</p>
+<p class=""instructor-name"">Tanner Crow</p>
+<p class=""instructor-desc"">AP Computer Science teacher at Blue Valley North High School with 11+ years of classroom experience. On Wyzant, Tanner has 451+ five-star reviews and 1,845+ verified tutoring hours. 54.5% of his AP CSA students score 5s — compared to 25.5% nationally.</p>
+<div class=""instructor-stats"">
+<div class=""istat"">
+<span class=""istat-num"">54.5%</span><span class=""istat-lbl"">Score 5s</span>
+</div>
+<div class=""istat"">
+<span class=""istat-num"">451+</span><span class=""istat-lbl"">5-Star Reviews</span>
+</div>
+<div class=""istat"">
+<span class=""istat-num"">1,845+</span><span class=""istat-lbl"">Tutoring Hours</span>
+</div>
+<div class=""istat"">
+<span class=""istat-num"">11+</span><span class=""istat-lbl"">Years Teaching</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- CTA -->
+<div class=""cta-section"">
+<h2 class=""cta-title"">Get the Recording</h2>
+<p class=""cta-sub"">The full April 2026 session, worked end to end, yours to keep.</p>
+<a href=""/products/ap-csa-frq-bootcamp-2026-recording"" class=""cta-btn"">2026 Recording, $29.99</a> </div>
+<div style=""text-align: center!important; padding: 20px!important; font-size: 12px!important; color: #9ca3af!important; -webkit-text-fill-color: #9CA3AF!important; font-family: 'Georgia',serif!important;"">AP® is a registered trademark of the College Board, which was not involved in the production of this event.</div>
+</div>","TRUE","2026-03-01 12:00:00"
