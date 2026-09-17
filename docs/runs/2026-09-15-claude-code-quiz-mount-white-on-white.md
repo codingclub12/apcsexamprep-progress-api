@@ -389,3 +389,24 @@ ignored on 22 pages, which is the trap that cost this whole run.
 pinned page WITH an `.apcsa-mastery` section and no live page is both. Deleting
 it is safe once all 23 are unpinned and pointless before then, since it renders
 nowhere and costs nothing. Not worth a deploy on its own.
+
+## A deploy check pinned to your own sha is a check that can hang
+
+Not about the contrast bug, but found by it and worth the four lines.
+
+The live check after merging #702 waited for `/api/health` to report `4a09bed`,
+my own squash commit. It did, so nothing broke. It nearly did not: another
+session merged #701 forty-six seconds later, `main` went to `b2e81fb`, and a
+second deploy queued behind mine. Had the two coalesced, production would have
+jumped straight to `b2e81fb` and the watcher would have waited for a sha that
+never served, reporting a failed deploy on a deploy that worked.
+
+`main` moves under you here, within the minute, because other sessions merge
+too. So the assertion to make is not "production reports MY sha", it is
+"production serves a commit that CONTAINS my change":
+
+    git merge-base --is-ancestor <my-sha> <serving-sha>
+
+That is true of my own commit and of every commit that lands on top of it, which
+is the actual question. Pinning the exact sha only works while nobody else is
+working, and that is not this repo.
