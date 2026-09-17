@@ -325,7 +325,12 @@
     "csa:qotdaudit": "node scripts/csa-qotd-item-audit.js",
     "csa:qotdrederive": "node scripts/csa-qotd-key-rederive.js",
     "smoke:qotd344": "node smoke/csa-qotd-distractor-repair.js",
-    "csa:qotd344": "node scripts/csa-qotd-distractor-repair.js"
+    "csa:qotd344": "node scripts/csa-qotd-distractor-repair.js",
+    "smoke:bodyyear": "node smoke/body-year-csv.js",
+    "bodyyear": "node scripts/body-year-csv.js",
+    "smoke:csa2026frq": "node smoke/csa-past-frq-pages.js",
+    "csa:2026frq": "node scripts/verify-csa-2026-frq.js --mutate",
+    "csa:2026frqsheet": "node scripts/csa-past-frq-pages-csv.js"
   },
   "keywords": [],
   "author": "",

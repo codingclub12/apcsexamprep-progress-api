@@ -1,0 +1,108 @@
+{
+  "change": "the 2026 AP CSA FRQ pages: canonical data, a renderer, a Java verifier, a sheet validator and a Matrixify sheet, plus the audit of the 86 archive pages that motivated them",
+  "_context": [
+    "THIS MANIFEST HAS NO LIVE CHECK, AND THAT IS THE ONE THING IN IT WORTH",
+    "ARGUING ABOUT.",
+    "",
+    "The merge deploys the API to Railway and changes nothing the API does. No",
+    "route is added, no schema changes, nothing at runtime reads",
+    "config/csa-frq-2026.json: grep across routes/, server.js, utils.js,",
+    "middleware.js and lib/page-bootstrap.js finds no reader. The new files are a",
+    "generator, a verifier, a validator, a suite and documents.",
+    "",
+    "So there is nothing on the deployed system that this change makes true and",
+    "that was false before it. Writing a live check anyway would mean asserting",
+    "something true yesterday, during, and if the deploy never happened, which is",
+    "exactly the defect this gate's own first manifest carried when it expected",
+    "'status':'ok' from /api/health. The honest answer is that the live kind does",
+    "not apply here, so the gate is satisfied on mutation plus rederive, which is",
+    "the combination it explicitly allows.",
+    "",
+    "The live observation this change DOES eventually earn belongs to the import,",
+    "not to the merge. Five storefront pages answer 404 today and must answer 200",
+    "with a closed reveal panel afterwards, and that check is a runbook step in",
+    "imports/2026-09-17/RUNBOOK-csa-2026-frq.md where it can run against the",
+    "thing it measures. A gate check has to be false before and true after, and",
+    "merging this does not move it.",
+    "",
+    "WHY THE MUTATIONS TARGET THE SHIPPED FILE RATHER THAN THE SUITE.",
+    "smoke/csa-past-frq-pages.js already mutates its own fixtures twenty-two times",
+    "and asserts on the message each rule emits. That proves the suite's harness",
+    "works. It does not prove the RULE in scripts/csa-past-frq-pages-csv.js is",
+    "load-bearing, because a rule could be dead code and the suite's own copy of",
+    "the expectation would still pass. Each mutation below disables one rule in",
+    "the shipped validator and requires the suite to go red naming that rule.",
+    "",
+    "The mojibake mutation injects SINGLE-pass corruption. A mutation built from",
+    "the double-pass form goes green against a detector blind to the depth",
+    "actually seen on live pages, and that green report is worse than none. This",
+    "session shipped the double-pass fixture first and the repository scan caught",
+    "it, twice, which is recorded in the run note."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the pages, the sheet round trip, and twenty-two rules broken one at a time",
+      "_why": "Seventy-two assertions over five generated pages. The sections that matter are 3 and 6: section 3 takes every distinctive line of every model solution and requires none of it to appear above the reveal panel, which is the difference between a practice page and a published answer key; section 6 writes the sheet, reads it back with an RFC 4180 parser that shares no code with the writer, and diffs every cell.",
+      "command": "npm run --silent smoke:csa2026frq",
+      "expect": "72 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "College Board's own solutions, run against the examples the questions state",
+      "_why": "The solutions in config/csa-frq-2026.json were typed out of a PDF, and a typed answer key is a guess until something executes it. This compiles all nine model and alternate solutions with real javac and checks them against expectations lifted from the question PROSE rather than from the solutions: the two username cases for Q1, the six rows of the Bottle table for Q2, the worked roster for Q3, the two getPointsForRow calls for Q4. It is a second path to the same conclusion from the same raw artifact, and it caught the thing it was built for on its first run, an en dash where 'j - 1' belongs in a Q1 alternate. Two of its expected lines are invariants rather than answers: Q1 reprints username to prove part B did not modify it, and Q3 prints both list sizes to prove neither list was touched, both of which the rubric refuses the algorithm point for.",
+      "command": "npm run --silent csa:2026frq",
+      "expect": "9 of 9 solution run(s) reproduce the question's own examples,  4 of 4 mutants caught"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE RULE THAT MAKES THIS A PRACTICE PAGE: a solution may appear above the reveal panel",
+      "_why": "Without this rule a page that rendered its answer in the open would ship as a success. It is the only check standing between the generator and four published answer keys.",
+      "file": "scripts/csa-past-frq-pages-csv.js",
+      "find": "        if (above.indexOf(renderer.esc(line)) >= 0) {",
+      "replace": "        if (false) {",
+      "command": "npm run --silent smoke:csa2026frq",
+      "expect_failure": "caught: the answer moved above the reveal"
+    },
+    {
+      "kind": "mutation",
+      "name": "the point total no longer has to be the question's own",
+      "_why": "This is the defect the whole change exists to stop repeating. 74 archive pages print 9 points on a question the 2026 rubric scores out of 7, 5 or 6, and a generator that could do the same thing silently would be worse than the hand-authored pages it replaces. The mutation is scored against a total of 8 rather than 9 on purpose: the blanket 9-point rule masks the parity rule, and the first version of this manifest passed on that masking until the gate refused it.",
+      "file": "scripts/csa-past-frq-pages-csv.js",
+      "find": "    if (n !== q.points) bad.push('prints ' + n + ' points where the canonical data says ' + q.points);",
+      "replace": "    if (false) bad.push('prints ' + n + ' points where the canonical data says ' + q.points);",
+      "command": "npm run --silent smoke:csa2026frq",
+      "expect_failure": "caught: a point total that is wrong without being 9"
+    },
+    {
+      "kind": "mutation",
+      "name": "mojibake stops being checked, tested with SINGLE pass corruption",
+      "_why": "A page body is 50KB of generated markup and mojibake is valid UTF-8 that parses, lints and serves, so nothing else in this suite can see it. The fixture is a bullet corrupted once, not twice, because a detector blind to single pass passes a double-pass mutation and reports itself healthy.",
+      "file": "scripts/csa-past-frq-pages-csv.js",
+      "find": "  if (hits && hits.length) bad.push('mojibake: ' + hits.length + ' run(s)');\n\n  // 3  Title parity",
+      "replace": "  if (false) bad.push('mojibake: ' + hits.length + ' run(s)');\n\n  // 3  Title parity",
+      "command": "npm run --silent smoke:csa2026frq",
+      "expect_failure": "caught: mojibake, single pass"
+    },
+    {
+      "kind": "mutation",
+      "name": "an internal link no longer has to point at a page that exists",
+      "_why": "The five pages cross-link to each other and to a year index that does not exist yet, so this rule is what stopped the first draft shipping four pages pointing at a 404. It is also the rule that forced the year index to be built at all rather than discovered missing after the import.",
+      "file": "scripts/csa-past-frq-pages-csv.js",
+      "find": "      if (!live.has(m[1]) && !willExist.has(m[1])) {\n        bad.push('links to /pages/' + m[1] + ', which is not a live handle');\n      }",
+      "replace": "      if (false) {\n        bad.push('links to /pages/' + m[1] + ', which is not a live handle');\n      }",
+      "command": "npm run --silent smoke:csa2026frq",
+      "expect_failure": "caught: a link to a handle that does not exist"
+    },
+    {
+      "kind": "mutation",
+      "name": "the title no longer has to match the canonical data",
+      "_why": "Sixteen live archive pages are titled 'Ap Csa 2022 Frq 3 Reviewanalysis' because a slug-to-title pass ran and nothing checked it. This is the rule that makes that class of defect impossible here, and it is worth proving rather than assuming because a title is the one field a reviewer reading a diff of generated markup will not notice. The mutation uses a correctly cased title that simply is not the canonical one, because a mangled title trips the acronym rule too and proves neither.",
+      "file": "scripts/csa-past-frq-pages-csv.js",
+      "find": "  if (p.title !== want) bad.push('title is ' + JSON.stringify(p.title) + ', canonical says ' + JSON.stringify(want));",
+      "replace": "  if (false) bad.push('title is ' + JSON.stringify(p.title) + ', canonical says ' + JSON.stringify(want));",
+      "command": "npm run --silent smoke:csa2026frq",
+      "expect_failure": "caught: a title that drifts from canonical without mangling its casing"
+    }
+  ]
+}
