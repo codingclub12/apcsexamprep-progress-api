@@ -129,6 +129,31 @@ console.log('\nthings that are NOT faults');
     s.asiSplits("var a = obj.prop\nif (a) { go(); }").length === 0);
 
   ok('an empty script is not a syntax error', s.syntaxError('   \n  ') === null);
+
+  // Found by running the scanner over the live site, not by reasoning about it.
+  // /pages/ap-csa-topics carries Shopify's own injected loader as type="module"
+  // with a top-level await, which is legal in a module and a syntax error in a
+  // script. vm.Script compiles in script goal, so the scanner called correct
+  // code broken. Modules get the ASI rule and not the compile rule.
+  const MODULE_SRC = '\n  await import("//example.com/loader.esm.js");\n';
+  ok('top-level await really is a script-goal error',
+    typeof s.syntaxError(MODULE_SRC, 'script') === 'string');
+  ok('but a module is not compiled, so it is not a finding',
+    s.syntaxError(MODULE_SRC, 'module') === null);
+  ok('goalOf reads type="module"',
+    s.goalOf({ attrs: ' type="module"' }) === 'module');
+  ok('goalOf defaults to script', s.goalOf({ attrs: '' }) === 'script');
+  ok('a module script produces no syntax finding end to end',
+    s.scanBody(page(js(MODULE_SRC, 'type="module"'))).findings.length === 0,
+    JSON.stringify(s.scanBody(page(js(MODULE_SRC, 'type="module"'))).findings));
+  ok('and it is still counted as executable, so it is not silently skipped',
+    s.scanBody(page(js(MODULE_SRC, 'type="module"'))).checked === 1);
+
+  // The real defect class found on 19 CSA pages: a page slug interpolated into
+  // a function NAME, hyphens and all. Not valid JavaScript.
+  ok('a hyphen in a function name is caught',
+    s.scanBody(page(js('function runCode_apcsa-accessmut_1() { return 1; }'))).findings
+      .some((f) => f.rule === 'syntax'));
 }
 
 // ---- 3. THE TWO REAL DEFECTS, each on its own ------------------------------
