@@ -1,0 +1,149 @@
+name: Inline script watch
+
+# Can a student actually USE the page, or does it just look right.
+#
+# WHY THIS RUNS AT ALL
+#   Board 175. On 2026-09-03 two live pages were serving JavaScript that could
+#   not run, and nothing in this repo could see it. A page with a dead inline
+#   script still answers 200, still carries every string a link check or a
+#   content check looks for, and still renders all of its markup. Only the
+#   interaction is gone.
+#
+#   On CSA 1.9 that meant the Java editor never appeared and Check answer did
+#   nothing, on the free preview unit, at the start of the school year. The
+#   click handler set data-answered before it threw, so a student got no
+#   feedback and the question stayed locked on their first pick forever. It was
+#   found by a person opening the page in a browser, which is the detector this
+#   replaces.
+#
+# WHY TWO RULES
+#   The 1.9 MCQ defect PARSES. ASI inserts a semicolon after the split
+#   identifier, so a syntax check is green and the failure only appears at
+#   runtime. Rule 2 looks for the split itself. Either rule alone would have
+#   missed one of the two faults found that day.
+#
+# WHY IT RUNS HERE AND NOT IN A SESSION
+#   Same reason as drive-watch.yml and slide-sharing-watch.yml: Actions runners
+#   have open egress and a session goes through the agent proxy.
+#
+# WHY A SHARD AND NOT THE WHOLE SITE
+#   The sitemap advertises about 2,000 URLs and this repo has already paid twice
+#   for crawling hard: board 79 is "46 pages returned 429 during crawl", and
+#   smoke.yml records rapid runs making the storefront serve EMPTY pages, which
+#   would read here as pages that lost their scripts. So the scan is sequential
+#   and takes one seventh of the pages a night. The whole site is covered every
+#   week, and a fault found on a Tuesday is still found.
+
+on:
+  schedule:
+    # Daily, 09:10 UTC (04:10 US Central). Clear of the jobs already on the
+    # clock: auto-dispatch 06:00, browser smoke 07:00, board sweep 08:00,
+    # ced-watch 09:30, drive-watch Mondays 10:30, slide-sharing 11:30.
+    #
+    # schedule only fires from the DEFAULT BRANCH, so this does nothing until merged.
+    - cron: '10 9 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Cap the page count (blank scans the whole shard)'
+        required: false
+        default: ''
+
+concurrency:
+  group: inline-script-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Does the JavaScript on these pages run
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The shard rotates by day of year, so seven days covers the site and the
+      # slice is stable rather than random: the same page lands in the same
+      # shard every week, which is what makes "new since last week" meaningful.
+      - name: Pick tonight's shard
+        id: shard
+        run: echo "n=$(( $(date -u +%j) % 7 ))" >> "$GITHUB_OUTPUT"
+
+      # Not piped into anything. A pipeline reports the LAST command's status,
+      # which is how this workflow's sibling once shipped a dead script as a
+      # green tick.
+      - name: Scan
+        id: scan
+        run: |
+          set +e
+          LIMIT=""
+          if [ -n "${{ github.event.inputs.limit }}" ]; then
+            LIMIT="--limit ${{ github.event.inputs.limit }}"
+          fi
+          node scripts/scan-inline-scripts.js --from-sitemap \
+            --shard ${{ steps.shard.outputs.n }} --shards 7 $LIMIT > report.txt 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          cat report.txt
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Inline script scan, shard ${{ steps.shard.outputs.n }} of 7"
+            echo ""
+            echo '```'
+            cat report.txt 2>/dev/null || echo "(no output at all)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Exit 1 is a dead script on a live page. Exit 2 means nothing was read,
+      # which is NOT a pass and must not read as one: a run that measured
+      # nothing is the green tick this repo keeps getting caught by.
+      - name: Fail on a dead script
+        if: always() && steps.scan.outputs.code != '0'
+        run: |
+          if [ "${{ steps.scan.outputs.code }}" = "2" ]; then
+            echo "::error title=Inline script scan measured nothing::Every page failed to fetch. See the summary."
+          else
+            echo "::error title=A live page has JavaScript that cannot run::See the summary."
+            echo "The page answers 200 and looks correct. The interaction is gone."
+            echo "Repair the page body through a Matrixify sheet, never by hand."
+          fi
+          exit 1
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  source==linkcheck: this finding is a page on the storefront, and
+      #  whoever picks it up needs to go to the page and ship a sheet. That is
+      #  the same surface a link check finding routes to, which is why it is
+      #  filed as one rather than as an api finding.
+      #
+      #  `if: always()` so it still reports after the step above exits 1;
+      #  `job.status != 'cancelled'` so a cancelled run, which scanned nothing,
+      #  reports neither pass nor fail; continue-on-error so the observer cannot
+      #  turn this red by itself; a missing TODO_KEY skips rather than fails.
+      - name: Report to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="shard ${{ steps.shard.outputs.n }}/7 exit ${{ steps.scan.outputs.code }} run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"linkcheck\",\"check_id\":\"inline-scripts\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"
