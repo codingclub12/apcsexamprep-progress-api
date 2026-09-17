@@ -1,0 +1,1800 @@
+﻿"Handle","Command","Body HTML"
+"linear-search-ap-csa","MERGE","<style>
+#spoke-linearsearch{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-linearsearch *{box-sizing:border-box}
+#spoke-linearsearch h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-linearsearch h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-linearsearch h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-linearsearch p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-linearsearch ul,#spoke-linearsearch ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-linearsearch li{margin-bottom:6px}
+#spoke-linearsearch a:link,#spoke-linearsearch a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-linearsearch a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-linearsearch strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-linearsearch .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-linearsearch .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-linearsearch .sp-toc ol{margin:0;padding-left:20px}
+#spoke-linearsearch .sp-toc a:link,#spoke-linearsearch .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-linearsearch pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-linearsearch code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-linearsearch pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-linearsearch .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-linearsearch .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-linearsearch .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-linearsearch .sp-run-btn:link,#spoke-linearsearch .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-linearsearch .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-linearsearch .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-linearsearch .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-linearsearch .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-linearsearch .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-linearsearch .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-linearsearch .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-linearsearch .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-linearsearch .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-linearsearch .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-linearsearch .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-linearsearch .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-linearsearch .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-linearsearch .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-linearsearch .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-linearsearch .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-linearsearch .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-linearsearch .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-linearsearch .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-linearsearch .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-linearsearch .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-linearsearch .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-linearsearch .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-linearsearch .sp-faq-q:hover{background:#eff6ff}
+#spoke-linearsearch .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-linearsearch .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-linearsearch .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-linearsearch .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-linearsearch .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-linearsearch .sp-tutor-btn:link,#spoke-linearsearch .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-linearsearch .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-linearsearch .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-linearsearch .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-linearsearch .sp-rel-btn:link,#spoke-linearsearch .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-linearsearch .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-linearsearch .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-linearsearch .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-linearsearch"">
+<h1>Linear Search in AP CSA: Complete Guide (2025-2026)</h1>
+<p><strong>Linear search</strong> is the go-to algorithm for finding a value in an unsorted array or ArrayList. It is Unit 4 content (Data Collections, 30–40% of the exam) and appears in both MCQ trace questions and FRQ method-writing. Master first-match, last-match, and count variants—and never confuse returning the value vs. the index.</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#ls-how"">How Linear Search Works</a></li>
+<li><a href=""#ls-variants"">Search Variants</a></li>
+<li><a href=""#ls-examples"">Code Examples</a></li>
+<li><a href=""#ls-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#ls-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#ls-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""ls-how"">How Linear Search Works</h2>
+<p>Iterate from index 0 to <code>arr.length - 1</code>. For each element, check if it matches the target. Return the index (or value, or boolean) on a match. Return a sentinel (-1 or false) after the loop if no match was found.</p>
+<div class=""sp-concept-box""><p><strong>Runtime:</strong> O(n) worst case. Works on <em>unsorted</em> data—making it the default AP CSA search algorithm since sorted arrays are rarely guaranteed.</p></div>
+
+<h2 id=""ls-variants"">Search Variants</h2>
+<ul>
+<li>
+<strong>First-match:</strong> <code>return i</code> immediately inside loop; <code>return -1</code> after</li>
+<li>
+<strong>Last-match:</strong> update a variable on every match; return it after loop</li>
+<li>
+<strong>Count:</strong> increment counter on every match; return after loop</li>
+<li>
+<strong>Boolean exists:</strong> <code>return true</code> on first match; <code>return false</code> after loop</li>
+</ul>
+
+<h2 id=""ls-examples"">Code Examples</h2>
+<h3>Example 1: First-Match Linear Search</h3>
+<div class=""sp-predict"">What does search(arr, 7) return for arr = {4, 7, 2, 7}?</div>
+<pre>public class Search {
+    public static int firstMatch(int[] arr, int target) {
+        for (int i = 0; i &lt; arr.length; i++) {
+            if (arr[i] == target) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public static void main(String[] args) {
+        int[] arr = {4, 7, 2, 7};
+        System.out.println(firstMatch(arr, 7));   // first 7
+        System.out.println(firstMatch(arr, 99));  // not found
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""ls-btn1"" onclick=""window.runPiston('ls-btn1','ls1','ls-out1')"">Run Code</button>
+<div class=""sp-output"" id=""ls-out1""></div>
+
+<h3>Example 2: Count and Last-Match</h3>
+<div class=""sp-predict"">How many times does 5 appear, and what is its last index?</div>
+<pre>public class MultiSearch {
+    public static int countOf(int[] arr, int t) {
+        int count = 0;
+        for (int v : arr) if (v == t) count++;
+        return count;
+    }
+    public static int lastMatch(int[] arr, int t) {
+        int lastIdx = -1;
+        for (int i = 0; i &lt; arr.length; i++)
+            if (arr[i] == t) {
+                lastIdx = i;
+            }
+        return lastIdx;
+    }
+    public static void main(String[] args) {
+        int[] data = {5, 3, 5, 9, 5};
+        System.out.println(""Count: "" + countOf(data, 5));
+        System.out.println(""Last idx: "" + lastMatch(data, 5));
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""ls-btn2"" onclick=""window.runPiston('ls-btn2','ls2','ls-out2')"">Run Code</button>
+<div class=""sp-output"" id=""ls-out2""></div>
+
+<h3>Example 3: String Array Search</h3>
+<div class=""sp-predict"">Does .equals() correctly identify matching Strings?</div>
+<pre>public class WordSearch {
+    public static boolean contains(String[] words, String target) {
+        for (String w : words) {
+            if (w.equals(target)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static void main(String[] args) {
+        String[] vocab = {""alpha"", ""beta"", ""gamma""};
+        System.out.println(contains(vocab, ""beta""));
+        System.out.println(contains(vocab, ""delta""));
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""ls-btn3"" onclick=""window.runPiston('ls-btn3','ls3','ls-out3')"">Run Code</button>
+<div class=""sp-output"" id=""ls-out3""></div>
+
+<h2 id=""ls-pitfalls"">Common Pitfalls</h2>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Returning the Value Instead of the Index</div>
+<p>Returning <code>arr[i]</code> instead of <code>i</code> is the single most common linear search error. Re-read the method contract before writing.</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Using == for String Comparison</div>
+<p>Always use <code>.equals()</code> when searching String arrays. <code>==</code> compares references and gives false even for identical content.</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. First-Match vs Last-Match Pattern</div>
+<p>First-match: <code>return i</code> INSIDE the loop. Last-match: update a variable inside the loop, return it AFTER.</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. ArrayList Off-by-One</div>
+<p>Use <code>i &lt; list.size()</code>, never <code>i &lt;= list.size()</code>. Last valid index is <code>size() - 1</code>.</p>
+</div>
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> FRQ parts saying ""find the first occurrence"" vs ""find the last occurrence"" need different patterns. Circle the word and code the pattern deliberately.</div>
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> A backward loop returning on first match gives the <em>last</em> forward occurrence. The MCQ tests this distinction.</div>
+
+<h2 id=""ls-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. A linear search method should return an index. <span class=""sp-q-keyword"">IDENTIFY</span> the bug.<br><pre>public static int search(int[] arr, int target) {{
+    for (int i = 0; i &lt; arr.length; i++) {{
+        if (arr[i] == target) {
+            return arr[i];
+        }
+    }}
+    return -1;
+}}</pre>
+</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> The loop bound should be arr.length - 1 to avoid out-of-bounds</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> The method returns arr[i] (the element value) instead of i (the index)</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> The sentinel -1 should be 0 when the element is not found</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> == cannot compare int values inside an array</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. Three patterns for finding the <em>last</em> index where target appears. <span class=""sp-q-keyword"">WHICH</span> are correct?<br><br>I. <code>int idx=-1; for(int i=0;i<a.length if idx=""i;"" return><br>II. <code>for(int i=a.length-1;i&gt;=0;i--) if(a[i]==t) return i; return -1;</code><br>III. <code>for(int i=0;i<a.length if return i></a.length></code></a.length></code>
+</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> II only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> I and II</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> II and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. What is returned by <code>search({{5,3,5,8}}, 5)</code>? <span class=""sp-q-keyword"">PREDICT.</span><br><pre>public static int search(int[] a, int t) {{
+    for (int i = 0; i &lt; a.length; i++)
+        if (a[i] == t) {
+            return i;
+        }
+    return -1;
+}}</pre>
+</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> -1</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> 0</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> 2</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> 5</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. Linear search on an array of length n. <span class=""sp-q-keyword"">WHICH</span> describes its worst-case comparison count?</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> 1, because the target might be at index 0</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> log₂n, because it halves the search space each step</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> n, because the target might be the last element or absent</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> n/2, which is both average and worst case</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. Searching a String array for a target. <span class=""sp-q-keyword"">WHICH</span> conditions correctly identify a match?<br><br>I. <code>if (words[i] == target)</code><br>II. <code>if (words[i].equals(target))</code><br>III. <code>if (words[i].compareTo(target) == 0)</code>
+</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> II only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> I and II</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> II and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. What does <code>firstNegative({{4,-2,7,-1,3}})</code> return? <span class=""sp-q-keyword"">PREDICT.</span><br><pre>public static int firstNegative(int[] arr) {{
+    for (int i = arr.length - 1; i &gt;= 0; i--) {{
+        if (arr[i] &lt; 0) {
+            return i;
+        }
+    }}
+    return -1;
+}}</pre>
+</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> 1</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> 3</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> -2</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> -1</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. <span class=""sp-q-keyword"">WHICH</span> scenario requires linear search rather than direct access?</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> Finding the value at a known index</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> Checking whether a value exists anywhere in an unsorted array</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> Accessing the last element of an array</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> Reading the length of an array</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. Bug hunt on an ArrayList search. <span class=""sp-q-keyword"">WHICH</span> line is wrong?<br><pre>1: public static int findWord(ArrayList<string> words, String w) {{
+2:   for (int i = 0; i &lt;= words.size(); i++) {{
+3:     if (words.get(i).equals(w)) return i;
+4:   }}
+5:   return -1;
+6: }}</string></pre>
+</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> Line 2 — condition must be i &lt; words.size(), not i &lt;= words.size()</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> Line 3 — ArrayList requires == instead of .equals()</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> Line 5 — should return null instead of -1</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> Line 1 — parameter should be List<string></string></button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+<h2 id=""ls-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">When should I use linear vs binary search?</button><div class=""sp-faq-a""><p>Linear search works on unsorted data. Binary search requires a sorted array and runs in O(log n). AP CSA FRQs almost always use linear search because sorted arrays are rarely guaranteed.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can linear search be used on an ArrayList?</button><div class=""sp-faq-a""><p>Yes. Replace arr[i] with list.get(i) and arr.length with list.size(). Use i &lt; list.size() as the loop condition.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What sentinel value should I return when the target is not found?</button><div class=""sp-faq-a""><p>For index searches: -1. For boolean searches: false. For count: 0 (or the count, which might be 0). The FRQ spec always tells you which.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can I use an enhanced for loop for a search that returns an index?</button><div class=""sp-faq-a""><p>No. Enhanced for loops give you the value, not the index. Use a standard indexed for loop when you need to return the position.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What if the array is empty?</button><div class=""sp-faq-a""><p>An empty array causes the loop body to never execute, so the method correctly returns -1 or false. No AIOOB occurs because arr.length = 0 makes 0 &lt; 0 false immediately.</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>Array search and traversal are the backbone of the AP CSA FRQ. Work with an expert whose students score 5s at twice the national rate.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/array-algorithms-ap-csa"">Array Algorithms</a>
+<a class=""sp-rel-btn"" href=""/pages/sorting-algorithms-ap-csa"">Sorting Algorithms</a>
+<a class=""sp-rel-btn"" href=""/pages/2d-array-neighbors-ap-csa"">2D Array Neighbors</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['ls1']=`public class Search {
+    public static int firstMatch(int[] arr, int target) {
+        for (int i = 0; i < arr.length; i++) if (arr[i] == target) return i;
+        return -1;
+    }
+    public static void main(String[] args) {
+        int[] arr = {4, 7, 2, 7};
+        System.out.println(firstMatch(arr, 7));
+        System.out.println(firstMatch(arr, 99));
+    }
+}`;
+window.CODES['ls2']=`public class MultiSearch {
+    public static int countOf(int[] arr, int t) { int c=0; for(int v:arr) if(v==t) c++; return c; }
+    public static int lastMatch(int[] arr, int t) { int idx=-1; for(int i=0;i<arr.length;i++) if(arr[i]==t) idx=i; return idx; }
+    public static void main(String[] args) {
+        int[] data = {5,3,5,9,5};
+        System.out.println(""Count: "" + countOf(data,5));
+        System.out.println(""Last idx: "" + lastMatch(data,5));
+    }
+}`;
+window.CODES['ls3']=`public class WordSearch {
+    public static boolean contains(String[] words, String target) {
+        for (String w : words) if (w.equals(target)) return true;
+        return false;
+    }
+    public static void main(String[] args) {
+        String[] vocab = {""alpha"",""beta"",""gamma""};
+        System.out.println(contains(vocab,""beta""));
+        System.out.println(contains(vocab,""delta""));
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-linearsearch');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""B"", explanation: ""The method's contract is to return an INDEX. arr[i] is the VALUE at that index. If target=42 is at index 3, the method returns 42 instead of 3. Fix: return i;"" },
+  q2: { correct: ""C"", explanation: 'Pattern I keeps overwriting idx on every match, so after the loop it holds the last occurrence. Pattern II iterates backward, so the first match returned is the last occurrence. Pattern III returns the FIRST match. Both I and II are correct.' },
+  q3: { correct: ""B"", explanation: 'The method exits on the FIRST match. a[0]=5 matches t=5, so return 0 immediately. Index 2 is never reached.' },
+  q4: { correct: ""C"", explanation: 'Linear search checks elements left-to-right. Worst case: target is last or absent, requiring n comparisons. Binary search is log n but requires a sorted array. n/2 is the average, not worst case.' },
+  q5: { correct: ""D"", explanation: '== compares references (wrong for String content). .equals() compares content correctly. .compareTo() returns 0 when strings are equal, so it also works. Both II and III are correct.' },
+  q6: { correct: ""B"", explanation: 'The loop runs BACKWARD. Checks: arr[4]=3 (no), arr[3]=-1 (negative, return 3). The backward loop finds the LAST negative index (3), not the first (1).' },
+  q7: { correct: ""B"", explanation: 'Options A, C, and D are O(1) direct-access operations. Option B requires checking each element sequentially because the array is unsorted — the definition of linear search.' },
+  q8: { correct: ""A"", explanation: 'Valid indices are 0 through size()-1. i <= words.size() allows i = size(), then words.get(size()) throws IndexOutOfBoundsException. Fix: i < words.size().' }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@graph"":[
+{""@type"":""Article"",""headline"":""Linear Search in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""}},
+{""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""Linear Search"",""item"":""https://apcsexamprep.com/pages/linear-search-ap-csa""}]}
+]}
+</script>
+</div>"
+"sorting-algorithms-ap-csa","MERGE","<style>
+#spoke-sorting{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-sorting *{box-sizing:border-box}
+#spoke-sorting h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-sorting h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-sorting h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-sorting p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-sorting ul,#spoke-sorting ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-sorting li{margin-bottom:6px}
+#spoke-sorting a:link,#spoke-sorting a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-sorting a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-sorting strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-sorting .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-sorting .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-sorting .sp-toc ol{margin:0;padding-left:20px}
+#spoke-sorting .sp-toc a:link,#spoke-sorting .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-sorting pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-sorting code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-sorting pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-sorting .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-sorting .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-sorting .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-sorting .sp-run-btn:link,#spoke-sorting .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-sorting .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-sorting .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-sorting .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-sorting .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-sorting .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-sorting .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-sorting .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-sorting .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-sorting .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-sorting .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-sorting .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-sorting .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-sorting .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-sorting .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-sorting .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-sorting .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-sorting .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-sorting .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-sorting .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-sorting .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-sorting .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-sorting .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-sorting .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-sorting .sp-faq-q:hover{background:#eff6ff}
+#spoke-sorting .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-sorting .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-sorting .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-sorting .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-sorting .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-sorting .sp-tutor-btn:link,#spoke-sorting .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-sorting .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-sorting .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-sorting .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-sorting .sp-rel-btn:link,#spoke-sorting .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-sorting .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-sorting .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-sorting .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-sorting"">
+<h1>Sorting Algorithms in AP CSA: Complete Guide (2025-2026)</h1>
+<p>AP CSA tests two sorting algorithms: <strong>selection sort</strong> and <strong>insertion sort</strong>. Both are O(n²) and sort in place. You need to trace them step by step, spot broken swap code, and calculate comparison counts. This is Unit 4 content (Data Collections, 30–40% of the exam).</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#sort-sel"">Selection Sort</a></li>
+<li><a href=""#sort-ins"">Insertion Sort</a></li>
+<li><a href=""#sort-examples"">Code Examples</a></li>
+<li><a href=""#sort-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#sort-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#sort-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""sort-sel"">Selection Sort</h2>
+<ul>
+<li>Outer loop: i from 0 to arr.length − 2</li>
+<li>Inner loop: j from i+1 to arr.length − 1 — finds minimum index in unsorted portion</li>
+<li>Swap arr[i] with arr[minIdx]</li>
+<li>After pass i, arr[0..i] is in final position</li>
+<li>Always makes exactly n(n−1)/2 comparisons</li>
+</ul>
+
+<h2 id=""sort-ins"">Insertion Sort</h2>
+<ul>
+<li>Outer loop: i from 1 to arr.length − 1</li>
+<li>Save key = arr[i]; shift elements greater than key rightward</li>
+<li>Place key in the gap</li>
+<li>After pass i, arr[0..i] is sorted</li>
+<li>Efficient on nearly-sorted data</li>
+</ul>
+<div class=""sp-concept-box""><p>Exam tip: trace questions ask “after k passes”—not after fully sorted. Always trace exactly k outer-loop iterations, not more.</p></div>
+
+<h2 id=""sort-examples"">Code Examples</h2>
+<h3>Example 1: Selection Sort</h3>
+<div class=""sp-predict"">After sorting {64, 25, 12, 22}, what does the output show?</div>
+<pre>public class SelectSort {
+    public static void selectionSort(int[] arr) {
+        for (int i = 0; i &lt; arr.length - 1; i++) {
+            int minIdx = i;
+            for (int j = i + 1; j &lt; arr.length; j++)
+                if (arr[j] &lt; arr[minIdx]) {
+                    minIdx = j;
+                }
+            int tmp = arr[i];
+            arr[i] = arr[minIdx];
+            arr[minIdx] = tmp;
+        }
+    }
+    public static void main(String[] args) {
+        int[] data = {64, 25, 12, 22};
+        selectionSort(data);
+        for (int v : data) System.out.print(v + "" "");
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""sort-btn1"" onclick=""window.runPiston('sort-btn1','sort1','sort-out1')"">Run Code</button>
+<div class=""sp-output"" id=""sort-out1""></div>
+
+<h3>Example 2: Insertion Sort</h3>
+<div class=""sp-predict"">What sorted order does {5, 3, 8, 1, 4} produce?</div>
+<pre>public class InsertSort {
+    public static void insertionSort(int[] arr) {
+        for (int i = 1; i &lt; arr.length; i++) {
+            int key = arr[i];
+            int j = i - 1;
+            while (j &gt;= 0 &amp;&amp; arr[j] &gt; key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+        }
+    }
+    public static void main(String[] args) {
+        int[] data = {5, 3, 8, 1, 4};
+        insertionSort(data);
+        for (int v : data) System.out.print(v + "" "");
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""sort-btn2"" onclick=""window.runPiston('sort-btn2','sort2','sort-out2')"">Run Code</button>
+<div class=""sp-output"" id=""sort-out2""></div>
+
+<h3>Example 3: Tracing Pass-by-Pass</h3>
+<div class=""sp-predict"">What does {3, 1, 4, 2} look like after each selection sort pass?</div>
+<pre>public class SortTrace {
+    public static void main(String[] args) {
+        int[] arr = {3, 1, 4, 2};
+        for (int i = 0; i &lt; arr.length - 1; i++) {
+            int minIdx = i;
+            for (int j = i + 1; j &lt; arr.length; j++)
+                if (arr[j] &lt; arr[minIdx]) {
+                    minIdx = j;
+                }
+            int tmp = arr[i]; arr[i] = arr[minIdx]; arr[minIdx] = tmp;
+            System.out.print(""Pass "" + (i+1) + "": "");
+            for (int v : arr) System.out.print(v + "" "");
+            System.out.println();
+        }
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""sort-btn3"" onclick=""window.runPiston('sort-btn3','sort3','sort-out3')"">Run Code</button>
+<div class=""sp-output"" id=""sort-out3""></div>
+
+<h2 id=""sort-pitfalls"">Common Pitfalls</h2>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Broken Swap</div>
+<p>Save the original value FIRST: <code>tmp=arr[i]; arr[i]=arr[minIdx]; arr[minIdx]=tmp;</code>. Skipping tmp destroys the original value.</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Off-by-One on Outer Loop</div>
+<p>Both sorts: outer loop ends at <code>arr.length - 1</code>. The last element lands in place automatically.</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. Wrong Pass Count</div>
+<p>After k passes, the first k elements are finalized. Pass k corresponds to outer loop iteration i = k−1.</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. Assuming Selection Sort Can Exit Early</div>
+<p>Selection sort always makes n(n−1)/2 comparisons. It does NOT detect a sorted array.</p>
+</div>
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> Trace sort questions require showing exactly which elements swapped or shifted. Work it out on scratch paper before choosing an answer.</div>
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> MCQ asks ""after k passes,"" not ""after sorting is complete."" Do NOT sort the whole array in your head—trace exactly k outer-loop iterations.</div>
+
+<h2 id=""sort-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. After one outer-loop pass of selection sort on <code>{{6, 2, 8, 1, 4}}</code>, what is the array? <span class=""sp-q-keyword"">PREDICT.</span>
+</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> {1, 6, 8, 2, 4}</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> {1, 2, 8, 6, 4}</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> {2, 6, 8, 1, 4}</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> {1, 2, 6, 8, 4}</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. After one pass of insertion sort on <code>{{5, 3, 8, 1}}</code>, what is the array? <span class=""sp-q-keyword"">PREDICT.</span>
+</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> {1, 3, 5, 8}</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> {3, 5, 8, 1}</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> {3, 5, 1, 8}</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> {1, 5, 3, 8}</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. Spot the bug. <span class=""sp-q-keyword"">WHICH</span> line is wrong in this selection sort?<br><pre>int minIdx = i;
+for (int j = i+1; j &lt; arr.length; j++)
+    if (arr[j] &lt; arr[minIdx]) {
+        minIdx = j;
+    }
+int tmp = arr[i];
+arr[i] = arr[minIdx];
+arr[minIdx] = arr[i];   // ← line X</pre>
+</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> minIdx should initialize to 0, not i</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> Inner loop should start at j = i, not j = i+1</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> Line X: arr[minIdx] = arr[i] stores the already-overwritten value, breaking the swap</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> Outer loop must go to arr.length, not arr.length - 1</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. How many total comparisons does selection sort make on an array of length 5? <span class=""sp-q-keyword"">PREDICT.</span>
+</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> 5</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> 10</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> 20</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> 25</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. Three statements about selection and insertion sort. <span class=""sp-q-keyword"">WHICH</span> are true?<br><br>I. Selection sort always makes the same number of comparisons regardless of input order.<br>II. Insertion sort is more efficient on nearly-sorted arrays than selection sort.<br>III. Both have O(n²) worst-case runtime.</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> III only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> I and III only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> II and III only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> I, II, and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. After 2 outer-loop passes of insertion sort on <code>{{9, 4, 2, 7}}</code>, what is the array? <span class=""sp-q-keyword"">PREDICT.</span>
+</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> {2, 4, 7, 9}</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> {4, 9, 2, 7}</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> {2, 4, 9, 7}</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> {2, 9, 4, 7}</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. <span class=""sp-q-keyword"">WHICH</span> correctly completes the three-line swap in selection sort?<br><pre>int tmp = arr[i];
+arr[i] = arr[minIdx];
+________ = tmp;</pre>
+</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> arr[i]</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> arr[minIdx]</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> arr[tmp]</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> tmp</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. A student says insertion sort exits early once the array is sorted. <span class=""sp-q-keyword"">WHICH</span> best describes the standard AP CSA implementation?</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> It detects sorting and terminates early automatically</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> The standard implementation runs all n-1 outer iterations even if the array is already sorted</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> It terminates early only if a boolean flag is added</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> It detects completion only on the final pass</button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+<h2 id=""sort-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Does AP CSA test merge sort or quicksort?</button><div class=""sp-faq-a""><p>No. Only selection sort and insertion sort are in the 2025-2026 curriculum.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Which is faster?</button><div class=""sp-faq-a""><p>Both are O(n²) worst case. Insertion sort is faster on nearly-sorted arrays because it makes fewer shifts. Selection sort always runs the same number of comparisons.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can I use a for loop for insertion sort's inner part?</button><div class=""sp-faq-a""><p>Yes: for (int j = i-1; j &gt;= 0 &amp;&amp; arr[j] &gt; key; j--) arr[j+1] = arr[j]; arr[j+1] = key;. Both while and for versions are correct.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">How do I know how many elements are in final position after k passes of selection sort?</button><div class=""sp-faq-a""><p>Exactly k elements are in their final sorted positions at the front of the array after k passes.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Does insertion sort work correctly on an already-sorted array?</button><div class=""sp-faq-a""><p>Yes. The inner loop never shifts anything, so it runs in O(n) time on a fully sorted array (the best case).</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>Sorting traces trip up even strong students. A targeted session with an AP CSA expert locks in the patterns before exam day.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/linear-search-ap-csa"">Linear Search</a>
+<a class=""sp-rel-btn"" href=""/pages/array-algorithms-ap-csa"">Array Algorithms</a>
+<a class=""sp-rel-btn"" href=""/pages/2d-array-neighbors-ap-csa"">2D Array Neighbors</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['sort1']=`public class SelectSort {
+    public static void selectionSort(int[] arr) {
+        for (int i = 0; i < arr.length-1; i++) {
+            int minIdx = i;
+            for (int j = i+1; j < arr.length; j++) if (arr[j]<arr[minIdx]) minIdx=j;
+            int tmp=arr[i]; arr[i]=arr[minIdx]; arr[minIdx]=tmp;
+        }
+    }
+    public static void main(String[] args) {
+        int[] data={64,25,12,22}; selectionSort(data);
+        for (int v:data) System.out.print(v+"" "");
+    }
+}`;
+window.CODES['sort2']=`public class InsertSort {
+    public static void insertionSort(int[] arr) {
+        for (int i=1; i<arr.length; i++) {
+            int key=arr[i]; int j=i-1;
+            while (j>=0 && arr[j]>key) { arr[j+1]=arr[j]; j--; }
+            arr[j+1]=key;
+        }
+    }
+    public static void main(String[] args) {
+        int[] data={5,3,8,1,4}; insertionSort(data);
+        for (int v:data) System.out.print(v+"" "");
+    }
+}`;
+window.CODES['sort3']=`public class SortTrace {
+    public static void main(String[] args) {
+        int[] arr={3,1,4,2};
+        for (int i=0; i<arr.length-1; i++) {
+            int minIdx=i;
+            for (int j=i+1; j<arr.length; j++) if (arr[j]<arr[minIdx]) minIdx=j;
+            int tmp=arr[i]; arr[i]=arr[minIdx]; arr[minIdx]=tmp;
+            System.out.print(""Pass ""+(i+1)+"": "");
+            for (int v:arr) System.out.print(v+"" "");
+            System.out.println();
+        }
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-sorting');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""B"", explanation: 'Pass 1: min of entire array = 1 at index 3. Swap arr[0]=6 with arr[3]=1. Result: {1, 2, 8, 6, 4}. Only positions 0 and 3 change; 2 stays at index 1 because it was never part of a swap.' },
+  q2: { correct: ""B"", explanation: 'Insertion sort pass 1 (i=1): key=3. Compare 3 vs 5: 3 < 5, shift 5 right. Place 3 at index 0. Result: {3, 5, 8, 1}. Only the first two elements are in sorted order after one pass.' },
+  q3: { correct: ""C"", explanation: 'After arr[i] = arr[minIdx], arr[i] now holds the minimum. arr[minIdx] = arr[i] stores that same minimum back into arr[minIdx] instead of the original arr[i]. Fix: arr[minIdx] = tmp (the saved original).' },
+  q4: { correct: ""B"", explanation: 'Pass i=0: 4 comparisons. Pass i=1: 3. Pass i=2: 2. Pass i=3: 1. Total = 4+3+2+1 = 10. Formula: n(n-1)/2 = 5*4/2 = 10.' },
+  q5: { correct: ""D"", explanation: 'I: True — selection sort always does n(n-1)/2 comparisons. II: True — nearly-sorted input means very few shifts in insertion sort, approaching O(n). III: True — both are O(n²) worst case. All three statements are correct.' },
+  q6: { correct: ""C"", explanation: 'Pass 1 (i=1): key=4, 4<9 so shift 9, place 4: {4,9,2,7}. Pass 2 (i=2): key=2, 2<9 shift, 2<4 shift, place 2: {2,4,9,7}. After 2 passes: {2, 4, 9, 7}.' },
+  q7: { correct: ""B"", explanation: 'Save original arr[i] as tmp. Place the min at arr[i]. Restore the original arr[i] value (stored in tmp) into arr[minIdx]. The blank is arr[minIdx] = tmp.' },
+  q8: { correct: ""B"", explanation: 'The standard AP CSA insertion sort always runs all n-1 passes. On a sorted array, the while/inner loop body never executes (no shifts), but the outer loop still completes all iterations. Early termination requires an explicit modification not tested on AP.' }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@graph"":[
+{""@type"":""Article"",""headline"":""Sorting Algorithms in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""}},
+{""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""Sorting Algorithms"",""item"":""https://apcsexamprep.com/pages/sorting-algorithms-ap-csa""}]}
+]}
+</script>
+</div>"
+"static-vs-instance-variables-ap-csa","MERGE","<style>
+#spoke-staticinstance{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-staticinstance *{box-sizing:border-box}
+#spoke-staticinstance h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-staticinstance h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-staticinstance h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-staticinstance p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-staticinstance ul,#spoke-staticinstance ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-staticinstance li{margin-bottom:6px}
+#spoke-staticinstance a:link,#spoke-staticinstance a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-staticinstance a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-staticinstance strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-staticinstance .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-staticinstance .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-staticinstance .sp-toc ol{margin:0;padding-left:20px}
+#spoke-staticinstance .sp-toc a:link,#spoke-staticinstance .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-staticinstance pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-staticinstance code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-staticinstance pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-staticinstance .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-staticinstance .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-staticinstance .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-staticinstance .sp-run-btn:link,#spoke-staticinstance .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-staticinstance .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-staticinstance .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-staticinstance .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-staticinstance .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-staticinstance .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-staticinstance .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-staticinstance .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-staticinstance .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-staticinstance .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-staticinstance .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-staticinstance .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-staticinstance .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-staticinstance .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-staticinstance .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-staticinstance .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-staticinstance .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-staticinstance .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-staticinstance .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-staticinstance .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-staticinstance .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-staticinstance .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-staticinstance .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-staticinstance .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-staticinstance .sp-faq-q:hover{background:#eff6ff}
+#spoke-staticinstance .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-staticinstance .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-staticinstance .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-staticinstance .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-staticinstance .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-staticinstance .sp-tutor-btn:link,#spoke-staticinstance .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-staticinstance .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-staticinstance .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-staticinstance .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-staticinstance .sp-rel-btn:link,#spoke-staticinstance .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-staticinstance .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-staticinstance .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-staticinstance .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-staticinstance"">
+
+<h1>Static vs Instance Variables in AP CSA: Complete Guide (2025-2026)</h1>
+
+<p>Understanding the difference between <strong>static</strong> (class-level) and <strong>instance</strong> (object-level) variables is one of the most-tested Unit 3 concepts on the AP CSA exam. Static variables are shared across all objects; instance variables are unique to each object. Getting this wrong in a trace or FRQ can cascade into several lost points.</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#si-instance"">Instance Variables</a></li>
+<li><a href=""#si-static"">Static Variables and Methods</a></li>
+<li><a href=""#si-examples"">Code Examples</a></li>
+<li><a href=""#si-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#si-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#si-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""si-instance"">Instance Variables</h2>
+<ul>
+<li>Declared without the <code>static</code> keyword inside a class but outside any method</li>
+<li>Each object gets its own separate copy</li>
+<li>Accessed via <code>this.field</code> or just <code>field</code> inside instance methods</li>
+<li>Destroyed when the object is garbage-collected</li>
+</ul>
+
+<h2 id=""si-static"">Static Variables and Methods</h2>
+<ul>
+<li>Declared with the <code>static</code> keyword</li>
+<li>Shared by all instances — one copy exists regardless of how many objects are created</li>
+<li>Accessed via <code>ClassName.field</code> (preferred) or via any object reference</li>
+<li>Static methods: no implicit <code>this</code>, cannot access instance variables directly</li>
+<li>Common use: counters, constants shared across all objects</li>
+</ul>
+
+<div class=""sp-concept-box""><p>On the 2025-2026 exam: static vs instance is Unit 3 content (10–18%). The most common MCQ scenario is a class that uses a static counter to track how many objects have been created, then asks what value each object sees.</p></div>
+
+<h2 id=""si-examples"">Code Examples</h2>
+
+<h3>Example 1: Static Counter Pattern</h3>
+<div class=""sp-predict"">After creating 3 Tickets, what is each object's number?</div>
+<pre>public class Ticket {
+    private static int nextId = 1;  // shared across all Tickets
+    private int ticketId;           // unique per Ticket
+
+    public Ticket() {
+        ticketId = nextId;
+        nextId++;
+    }
+
+        public int getId() {
+        return ticketId;
+    }
+        public static int getNextId() {
+        return nextId;
+    }
+
+    public static void main(String[] args) {
+        Ticket t1 = new Ticket();
+        Ticket t2 = new Ticket();
+        Ticket t3 = new Ticket();
+        System.out.println(t1.getId() + "" "" + t2.getId() + "" "" + t3.getId());
+        System.out.println(""Next will be: "" + Ticket.getNextId());
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""si-btn1"" onclick=""window.runPiston('si-btn1','si1','si-out1')"">Run Code</button>
+<div class=""sp-output"" id=""si-out1""></div>
+
+<h3>Example 2: Static Method Cannot Access Instance Variable</h3>
+<div class=""sp-predict"">Does this compile? What does it print if you fix the error?</div>
+<pre>public class Converter {
+    private double ratio = 2.54;
+
+    // This method is static but tries to use ratio (instance var)
+    // public static double convert(double inches) {
+    //     return inches * ratio; // COMPILE ERROR
+    // }
+
+    // Fixed: make ratio static, or pass it as parameter
+    private static final double CM_PER_IN = 2.54;
+    public static double convert(double inches) {
+        return inches * CM_PER_IN;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Converter.convert(12.0));
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""si-btn2"" onclick=""window.runPiston('si-btn2','si2','si-out2')"">Run Code</button>
+<div class=""sp-output"" id=""si-out2""></div>
+
+<h3>Example 3: Shared vs Per-Object State</h3>
+<div class=""sp-predict"">Which variables are shared after two objects are created?</div>
+<pre>public class Fleet {
+    private static int totalShips = 0; // class-level
+    private int crew;                  // per-object
+
+    public Fleet(int crew) {
+        this.crew = crew;
+        totalShips++;
+    }
+
+    public static void main(String[] args) {
+        Fleet f1 = new Fleet(50);
+        Fleet f2 = new Fleet(30);
+        System.out.println(""Total ships: "" + Fleet.totalShips);
+        System.out.println(""f1 crew: "" + f1.crew);
+        System.out.println(""f2 crew: "" + f2.crew);
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""si-btn3"" onclick=""window.runPiston('si-btn3','si3','si-out3')"">Run Code</button>
+<div class=""sp-output"" id=""si-out3""></div>
+
+<h2 id=""si-pitfalls"">Common Pitfalls</h2>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Accessing Instance Variables from Static Methods</div>
+<p>Static methods have no <code>this</code> reference. They cannot directly access instance fields. The fix: accept the object as a parameter, or make the field static if it truly should be shared.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Assuming Static Variables Reset Per Object</div>
+<p>Static variables do NOT reset when new objects are created. A static counter continues accumulating across all constructor calls.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. Confusing Which Copy Is Modified</div>
+<p>When two objects share a static variable and one modifies it, the change is visible to all. When an instance variable is modified, only that object is affected.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. Calling Static Methods via Object References</div>
+<p><code>obj.staticMethod()</code> compiles but is considered poor style. Always use <code>ClassName.staticMethod()</code> to make the static nature clear.</p>
+</div>
+
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> When you see a class with a static variable and the question asks what each object's value is, trace through every constructor call in order. The static variable accumulates across all of them.</div>
+
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> A static method accessing an instance variable is a compile error, not a runtime error. The MCQ will ask you to identify which line fails to compile—look for a static method body that references a non-static field without an object reference.</div>
+
+<h2 id=""si-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. After executing the code below, what does the last println print? <span class=""sp-q-keyword"">PREDICT</span> before reading.<br><pre>public class Widget {{<br>    private int serialNum;<br>    private static int count = 0;<br>    public Widget() {{<br>        count++;<br>        serialNum = count;<br>    }}<br>}}<br>Widget a = new Widget();<br>Widget b = new Widget();<br>Widget c = new Widget();<br>System.out.println(b.serialNum);</pre>
+</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> 0</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> 1</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> 2</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> 3</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. A class has <code>static int total = 0</code>. <span class=""sp-q-keyword"">WHICH</span> of the following correctly describes its behavior?<br><br>I. Every object of the class shares the same <code>total</code> variable.<br>II. <code>total</code> is reset to 0 each time a new object is created.<br>III. <code>total</code> can be accessed as <code>ClassName.total</code> from outside the class (if public).</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> I and II</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> I and III</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> I, II, and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. Spot the error. <span class=""sp-q-keyword"">WHICH</span> line causes a compile error?<br><pre>1: public class Stats {{<br>2:   private int localVal;<br>3:   private static int sharedVal = 100;<br>4:   public static void printBoth() {{<br>5:     System.out.println(sharedVal); <br>6:     System.out.println(localVal);<br>7:   }}<br>8: }}</pre>
+</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> Line 3 — static fields cannot be initialized at declaration</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> Line 5 — sharedVal requires an object reference to access</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> Line 6 — a static method cannot reference a non-static instance variable</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> Line 4 — static methods must be declared in a static class</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. Two objects of class <code>Circuit</code> are created. <code>Circuit</code> has <code>static int power = 10</code> and <code>int load = 5</code>. After executing:<br><pre>Circuit x = new Circuit();<br>Circuit y = new Circuit();<br>x.load = 20;<br>Circuit.power = 50;</pre>What are <code>y.load</code> and <code>y.power</code>?</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> y.load = 5, y.power = 50</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> y.load = 20, y.power = 50</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> y.load = 5, y.power = 10</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> y.load = 20, y.power = 10</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. <span class=""sp-q-keyword"">WHICH</span> statement about static methods in AP CSA is <span class=""sp-q-keyword"">ALWAYS</span> true?</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> Static methods must be called using an object reference (e.g., obj.method())</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> Static methods can access both static and instance variables of the class</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> Static methods can be called on the class name without creating an object</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> A class can have at most one static method</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. A student writes a static method that should count vowels in a String. <span class=""sp-q-keyword"">WHICH</span> header is correctly declared?</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> <code>public int countVowels(String s)</code></button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> <code>public static void countVowels(String s)</code></button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> <code>public static int countVowels(String s)</code></button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> <code>private static int countVowels()</code></button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. Code trace: <span class=""sp-q-keyword"">PREDICT</span> the output.<br><pre>public class Relay {{<br>    static int baton = 0;<br>    int runner;<br>    Relay(int r) {{ runner = r; baton++; }}<br>}}<br>Relay p = new Relay(1);<br>Relay q = new Relay(2);<br>System.out.println(p.baton + "" "" + q.baton + "" "" + p.runner);</pre>
+</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> 1 2 1</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> 2 2 1</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> 1 1 1</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> 0 0 1</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. Consider a class <code>Config</code> with <code>public static String appName = ""MyApp""</code>. A developer changes it: <code>Config.appName = ""NewApp""</code>. Then a second object <code>Config c2 = new Config()</code> is created. What is <code>c2.appName</code>?</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> ""MyApp"" — because new objects reset static fields to their initial value</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> ""NewApp"" — because static fields are shared and persist across all instances</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> null — because newly created objects do not inherit changed static values</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> A compile error, because static fields cannot be accessed via object references</button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+<h2 id=""si-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">When should I use a static variable?</button>
+<div class=""sp-faq-a""><p>Use static for data shared across ALL objects of a class: counters, configuration constants, cached values. Use instance variables for data that is unique per object.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can a static method call a non-static method?</button>
+<div class=""sp-faq-a""><p>Only if it has an object reference. A static method can call instanceMethod() on an object it receives as a parameter or creates internally, but it cannot call this.instanceMethod() since static has no this.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can I call a static method on an object instead of the class name?</button>
+<div class=""sp-faq-a""><p>Yes, it compiles, but it's poor practice and the AP exam will test your understanding that the result is identical to calling it on the class name. The static method does not use the object at all.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Is 'public static void main' an example of a static method?</button>
+<div class=""sp-faq-a""><p>Yes. main is static because the JVM calls it before any objects exist. That's why you cannot access instance variables from main unless you first create an object.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Do static variables get default values like instance variables?</button>
+<div class=""sp-faq-a""><p>Yes. Static variables follow the same default initialization rules: int = 0, double = 0.0, boolean = false, object references = null.</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>Static vs instance tripping you up? Get targeted help from an AP CSA teacher with a proven track record of doubling student five-rates.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/constructors-in-ap-csa"">Constructors</a>
+<a class=""sp-rel-btn"" href=""/pages/encapsulation-access-modifiers-ap-csa"">Encapsulation</a>
+<a class=""sp-rel-btn"" href=""/pages/array-algorithms-ap-csa"">Array Algorithms</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['si1'] = `public class Ticket {
+    private static int nextId = 1;
+    private int ticketId;
+    public Ticket() { ticketId = nextId; nextId++; }
+    public int getId() { return ticketId; }
+    public static int getNextId() { return nextId; }
+    public static void main(String[] args) {
+        Ticket t1 = new Ticket();
+        Ticket t2 = new Ticket();
+        Ticket t3 = new Ticket();
+        System.out.println(t1.getId() + "" "" + t2.getId() + "" "" + t3.getId());
+        System.out.println(""Next will be: "" + Ticket.getNextId());
+    }
+}`;
+window.CODES['si2'] = `public class Converter {
+    private static final double CM_PER_IN = 2.54;
+    public static double convert(double inches) { return inches * CM_PER_IN; }
+    public static void main(String[] args) {
+        System.out.println(Converter.convert(12.0));
+    }
+}`;
+window.CODES['si3'] = `public class Fleet {
+    private static int totalShips = 0;
+    private int crew;
+    public Fleet(int crew) { this.crew = crew; totalShips++; }
+    public static void main(String[] args) {
+        Fleet f1 = new Fleet(50);
+        Fleet f2 = new Fleet(30);
+        System.out.println(""Total ships: "" + Fleet.totalShips);
+        System.out.println(""f1 crew: "" + f1.crew);
+        System.out.println(""f2 crew: "" + f2.crew);
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-staticinstance');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""C"", explanation: 'Each constructor increments the shared static count then assigns it to serialNum. After a: count=1, a.serialNum=1. After b: count=2, b.serialNum=2. After c: count=3, c.serialNum=3. b.serialNum is 2.' },
+  q2: { correct: ""C"", explanation: 'Statement I is true: static variables are shared across all instances. Statement II is false: static variables persist across object creations; they are only reset if code explicitly resets them. Statement III is true: static members can be referenced via ClassName.member. So I and III.' },
+  q3: { correct: ""C"", explanation: ""A static method has no implicit 'this' reference and does not belong to any particular object. Therefore it cannot access instance variables (localVal), which require an object to exist. Line 6 causes: 'Cannot make a static reference to the non-static field localVal.'"" },
+  q4: { correct: ""A"", explanation: ""load is an instance variable: x.load=20 only changes x's copy. y.load remains 5. power is static (shared): setting it to 50 affects ALL objects, so y.power is now 50."" },
+  q5: { correct: ""C"", explanation: 'Option A is false: static methods are normally called via ClassName.method() without an object. Option B is false: static methods cannot access instance variables directly. Option D is false: unlimited static methods are allowed. Option C is true: static methods belong to the class, not to an instance.' },
+  q6: { correct: ""C"", explanation: 'The method must be static (no object needed), must return int (the count), must accept a String parameter, and should be public if called externally. Option A is missing static. Option B returns void instead of int. Option D takes no parameter.' },
+  q7: { correct: ""B"", explanation: 'baton is static and shared. After new Relay(1): baton=1. After new Relay(2): baton=2. Both p.baton and q.baton refer to the same static variable, now 2. p.runner is the instance variable set to 1.' },
+  q8: { correct: ""B"", explanation: ""Static variables are class-level, not instance-level. Changing appName via Config.appName changes it for all existing and future instances. c2.appName sees the current value 'NewApp'. (Note: accessing static via instance reference is allowed but not recommended.)"" }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+
+<script type=""application/ld+json"">
+{
+  ""@context"":""https://schema.org"",
+  ""@graph"":[
+    {""@type"":""Article"",""headline"":""Static vs Instance Variables in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://apcsexamprep.com""},""url"":""https://apcsexamprep.com/pages/static-vs-instance-variables-ap-csa""},
+    {""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""Static vs Instance"",""item"":""https://apcsexamprep.com/pages/static-vs-instance-variables-ap-csa""}]}
+  ]
+}
+</script>
+
+</div>"
+"tostring-equals-ap-csa","MERGE","<style>
+#spoke-tostringequals{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-tostringequals *{box-sizing:border-box}
+#spoke-tostringequals h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-tostringequals h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-tostringequals h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-tostringequals p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-tostringequals ul,#spoke-tostringequals ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-tostringequals li{margin-bottom:6px}
+#spoke-tostringequals a:link,#spoke-tostringequals a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-tostringequals a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-tostringequals strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-tostringequals .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-tostringequals .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-tostringequals .sp-toc ol{margin:0;padding-left:20px}
+#spoke-tostringequals .sp-toc a:link,#spoke-tostringequals .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-tostringequals pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-tostringequals code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-tostringequals pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-tostringequals .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-tostringequals .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-tostringequals .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-tostringequals .sp-run-btn:link,#spoke-tostringequals .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-tostringequals .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-tostringequals .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-tostringequals .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-tostringequals .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-tostringequals .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-tostringequals .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-tostringequals .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-tostringequals .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-tostringequals .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-tostringequals .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-tostringequals .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-tostringequals .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-tostringequals .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-tostringequals .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-tostringequals .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-tostringequals .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-tostringequals .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-tostringequals .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-tostringequals .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-tostringequals .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-tostringequals .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-tostringequals .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-tostringequals .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-tostringequals .sp-faq-q:hover{background:#eff6ff}
+#spoke-tostringequals .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-tostringequals .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-tostringequals .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-tostringequals .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-tostringequals .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-tostringequals .sp-tutor-btn:link,#spoke-tostringequals .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-tostringequals .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-tostringequals .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-tostringequals .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-tostringequals .sp-rel-btn:link,#spoke-tostringequals .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-tostringequals .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-tostringequals .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-tostringequals .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-tostringequals"">
+
+<h1>toString and equals Methods in AP CSA: Complete Guide (2025-2026)</h1>
+
+<p>The <code>toString</code> and <code>equals</code> methods are core Unit 3 class design skills. <code>toString</code> defines how an object appears as a string, while <code>equals</code> defines what it means for two objects to be logically identical. Both appear frequently on the AP CSA exam and contain several non-obvious traps that cause students to lose easy points.</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#te-tostring"">The toString Method</a></li>
+<li><a href=""#te-equals"">The equals Method</a></li>
+<li><a href=""#te-examples"">Code Examples</a></li>
+<li><a href=""#te-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#te-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#te-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""te-tostring"">The toString Method</h2>
+<p>Every Java class inherits a <code>toString()</code> from <code>Object</code>. That default returns an unreadable hash like <code>MyClass@1a2b3c</code>. You override it to return something meaningful:</p>
+<ul>
+<li>Signature: <code>public String toString()</code>
+</li>
+<li>Returns a String (no parameters, no void)</li>
+<li>Called automatically when the object is printed or concatenated with a String</li>
+</ul>
+
+<h2 id=""te-equals"">The equals Method</h2>
+<p>The inherited <code>equals</code> from Object compares <em>references</em> (same as <code>==</code>). To compare by field values, override it:</p>
+<ul>
+<li>Signature: <code>public boolean equals(Object other)</code> — the parameter <em>must</em> be <code>Object</code>
+</li>
+<li>Cast <code>other</code> to the class type before accessing fields</li>
+<li>Compare String fields with <code>.equals()</code>, not <code>==</code>
+</li>
+<li>Compare primitive fields with <code>==</code>
+</li>
+</ul>
+
+<div class=""sp-concept-box""><p>On the 2025-2026 AP CSA exam, Unit 3 (Class Creation) accounts for 10–18% of the score. Both toString and equals are explicit learning objectives. Expect at least one MCQ that tests the == vs .equals() distinction for Strings inside an equals method.</p></div>
+
+<h2 id=""te-examples"">Code Examples</h2>
+
+<h3>Example 1: Writing toString</h3>
+<div class=""sp-predict"">What does println print when given a Book object?</div>
+<pre>public class Book {
+    private String title;
+    private int pages;
+
+    public Book(String title, int pages) {
+        this.title = title;
+        this.pages = pages;
+    }
+
+    public String toString() {
+        return title + "" ("" + pages + "" pages)"";
+    }
+
+    public static void main(String[] args) {
+        Book b = new Book(""Dune"", 412);
+        System.out.println(b);           // toString called automatically
+        System.out.println(""Read: "" + b); // same
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""te-btn1"" onclick=""window.runPiston('te-btn1','te1','te-out1')"">Run Code</button>
+<div class=""sp-output"" id=""te-out1""></div>
+
+<h3>Example 2: Writing equals</h3>
+<div class=""sp-predict"">Does a.equals(b) return true or false?</div>
+<pre>public class Point {
+    private int x, y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public boolean equals(Object other) {
+        Point p = (Point) other;
+        return this.x == p.x &amp;&amp; this.y == p.y;
+    }
+
+    public static void main(String[] args) {
+        Point a = new Point(3, 4);
+        Point b = new Point(3, 4);
+        Point c = new Point(1, 2);
+        System.out.println(a.equals(b)); // same fields
+        System.out.println(a.equals(c)); // different fields
+        System.out.println(a == b);      // reference comparison
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""te-btn2"" onclick=""window.runPiston('te-btn2','te2','te-out2')"">Run Code</button>
+<div class=""sp-output"" id=""te-out2""></div>
+
+<h3>Example 3: String Field in equals — The Critical Case</h3>
+<div class=""sp-predict"">Which version of equals gives the wrong answer?</div>
+<pre>public class Badge {
+    private String code;
+        public Badge(String code) {
+        this.code = code;
+    }
+
+    // CORRECT equals:
+    public boolean equals(Object other) {
+        Badge b = (Badge) other;
+        return this.code.equals(b.code);  // .equals for String fields
+    }
+
+    public static void main(String[] args) {
+        Badge x = new Badge(""AP101"");
+        Badge y = new Badge(""AP101"");
+        System.out.println(x.equals(y)); // should print true
+        System.out.println(x.code == y.code); // false (different refs)
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""te-btn3"" onclick=""window.runPiston('te-btn3','te3','te-out3')"">Run Code</button>
+<div class=""sp-output"" id=""te-out3""></div>
+
+<h2 id=""te-pitfalls"">Common Pitfalls</h2>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Using == for String Fields in equals</div>
+<p>This is the single most tested mistake. <code>this.name == other.name</code> compares memory addresses. Two equal strings in different objects fail this test. Always use <code>this.name.equals(other.name)</code>.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Wrong Parameter Type in equals</div>
+<p>Writing <code>equals(MyClass other)</code> instead of <code>equals(Object other)</code> does NOT override Object.equals—it creates an overloaded method. The inherited reference-comparison equals is still in play.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. toString With int + int + """"</div>
+<p><code>return x + y + """"</code> adds x and y numerically first, then converts to String. To concatenate separately, write <code>return """" + x + y</code> or <code>return x + "", "" + y</code>.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. Declaring toString as void</div>
+<p>A <code>void toString()</code> does not override Object.toString(). It is a compile error because void and String cannot both define the same method signature.</p>
+</div>
+
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> When a FRQ asks you to write equals, always cast to the class type and use .equals() for any String fields. When asked to write toString, remember that println calls it automatically—no need to call .toString() explicitly.</div>
+
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> On the MCQ, watch for questions showing <code>==</code> used to compare two objects and asking whether the result is true or false. If an equals override exists and compares fields, the answer may be true even though the objects are different references.</div>
+
+<h2 id=""te-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. A student writes this <code>equals</code> method. <span class=""sp-q-keyword"">IDENTIFY</span> the defect.<br><pre>public boolean equals(Object other) { {
+    <br>    Widget w = (Widget) other;<br>    return this.serial == w.serial;<br>}
+}</pre>where <code>serial</code> is a <code>String</code>.</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> The parameter must be of type Widget, not Object</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> The method uses == to compare String objects, which compares references, not content</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> The return type must be int, not boolean</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> A cast from Object to Widget is never allowed in AP CSA</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. Consider three <code>toString</code> implementations for a class with <code>int x</code> and <code>int y</code>. <span class=""sp-q-keyword"">WHICH</span> return exactly the string <code>""(3, 7)""</code> when x=3 and y=7?<br><br>I. <code>return ""("" + x + "", "" + y + "")"";</code><br>II. <code>return ""("" + (x + y) + "")"";</code><br>III. <code>return String.format(""(%d, %d)"", x, y);</code>
+</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> III only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> I and III</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> I, II, and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. What is the output? <span class=""sp-q-keyword"">PREDICT</span> before reading the choices.<br><pre>public class Tag {{<br>    private String label;<br>    public Tag(String label) {{ this.label = label; }}<br>    public String toString() {{ return ""["" + label + ""]""; }}<br>}}<br>Tag t = new Tag(""urgent"");<br>System.out.println(""Status: "" + t);</pre>
+</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> Status: Tag@1a2b3c</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> Status: urgent</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> Status: [urgent]</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> Compile error: cannot concatenate an object with a String</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. A student wants to override the <code>equals</code> method but writes:<br><pre>public boolean equals(Widget other) {{ ... }}</pre>What is the problem with this signature?</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> The method name must be isEqual, not equals</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> The parameter type is Widget, not Object, so this overloads rather than overrides Object.equals</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> The return type must be void for methods that override Object methods</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> Access modifier must be private to prevent outside tampering</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. Which statements about <code>toString</code> are <span class=""sp-q-keyword"">ALWAYS</span> true in AP CSA?<br><br>I. If you do not write a <code>toString</code>, Java prints a default hash-code-based string when the object is used in a println.<br>II. <code>toString</code> must always return the values of all instance variables.<br>III. Concatenating an object to a String automatically calls its <code>toString</code>.</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> I and II only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> I and III only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> II and III only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> I, II, and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. Given the class below, what does <code>a.equals(b)</code> return? <span class=""sp-q-keyword"">PREDICT.</span><br><pre>public class Coord {{<br>    private int row, col;<br>    public Coord(int r, int c) {{ row=r; col=c; }}<br>    public boolean equals(Object o) {{<br>        Coord c = (Coord) o;<br>        return row == c.row &amp;&amp; col == c.col;<br>    }}<br>}}<br>Coord a = new Coord(2, 5);<br>Coord b = new Coord(2, 5);</pre>
+</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> false, because a and b are different objects in memory</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> true, because the overridden equals compares field values</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> A ClassCastException is thrown at runtime</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> Compile error: Coord cannot be cast to Coord</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. <span class=""sp-q-keyword"">WHICH</span> of the following <code>toString</code> methods is <span class=""sp-q-keyword"">NOT</span> a valid override of the method inherited from Object?</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> <code>public String toString() {{ return name + "" "" + score; }}</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> <code>public String toString() {{ return """"; }}</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> <code>public void toString() {{ System.out.println(name); }}</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> <code>public String toString() {{ return String.valueOf(score); }}</code></button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. A class <code>Pair</code> stores two ints: <code>first</code> and <code>second</code>. Its <code>toString</code> is:<br><pre>public String toString() { {
+    <br>    return first + second + """";<br>}
+}</pre>What does <code>new Pair(3, 7).toString()</code> return? <span class=""sp-q-keyword"">PREDICT.</span>
+</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> ""37""</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> ""10""</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> ""3 + 7""</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> ""10""—same as B but by a different path</button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+<h2 id=""te-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Does println call toString automatically?</button>
+<div class=""sp-faq-a""><p>Yes. System.out.println(obj) and string concatenation obj + '' both invoke obj.toString() automatically. You only need to call .toString() explicitly when you need the String for some other purpose.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What if the object passed to equals is null?</button>
+<div class=""sp-faq-a""><p>Calling other.equals(...) or casting null to your class type when other is null causes a NullPointerException. Robust implementations check for null first. The AP exam typically designs test cases to avoid null inputs, but knowing this is tested in MCQ traps.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Must equals be symmetric?</button>
+<div class=""sp-faq-a""><p>Yes, logically: if a.equals(b) is true, then b.equals(a) must also be true. The AP exam may test this by asking whether a given equals implementation is symmetric.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can toString return an empty string?</button>
+<div class=""sp-faq-a""><p>Technically yes, any String is valid. But an empty or null return would be unusual and might cause issues when the result is used. On the exam, return a descriptive String as specified in the problem.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Why do we cast 'other' to our class type inside equals?</button>
+<div class=""sp-faq-a""><p>Because the parameter is declared as Object, we need to cast it to access our class's specific fields. The AP exam will not test ClassCastException handling; assume other is always the correct type unless the question says otherwise.</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>toString and equals confusing you? Work directly with an AP CSA teacher who has helped students achieve a 54% five-rate on the exam.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/constructors-in-ap-csa"">Constructors</a>
+<a class=""sp-rel-btn"" href=""/pages/getters-setters-ap-csa"">Getters &amp; Setters</a>
+<a class=""sp-rel-btn"" href=""/pages/encapsulation-access-modifiers-ap-csa"">Encapsulation</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['te1'] = `public class Book {
+    private String title;
+    private int pages;
+    public Book(String title, int pages) { this.title=title; this.pages=pages; }
+    public String toString() { return title + "" ("" + pages + "" pages)""; }
+    public static void main(String[] args) {
+        Book b = new Book(""Dune"", 412);
+        System.out.println(b);
+        System.out.println(""Read: "" + b);
+    }
+}`;
+window.CODES['te2'] = `public class Point {
+    private int x, y;
+    public Point(int x, int y) { this.x=x; this.y=y; }
+    public boolean equals(Object other) {
+        Point p = (Point) other;
+        return this.x == p.x && this.y == p.y;
+    }
+    public static void main(String[] args) {
+        Point a = new Point(3, 4);
+        Point b = new Point(3, 4);
+        Point c = new Point(1, 2);
+        System.out.println(a.equals(b));
+        System.out.println(a.equals(c));
+        System.out.println(a == b);
+    }
+}`;
+window.CODES['te3'] = `public class Badge {
+    private String code;
+    public Badge(String code) { this.code = code; }
+    public boolean equals(Object other) {
+        Badge b = (Badge) other;
+        return this.code.equals(b.code);
+    }
+    public static void main(String[] args) {
+        Badge x = new Badge(""AP101"");
+        Badge y = new Badge(""AP101"");
+        System.out.println(x.equals(y));
+        System.out.println(x.code == y.code);
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-tostringequals');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""B"", explanation: 'String fields must be compared with .equals(), not ==. Using == compares memory addresses (references), which gives incorrect results when two logically equal strings are different objects.' },
+  q2: { correct: ""C"", explanation: 'Option I concatenates correctly: (3, 7). Option II computes x+y=10 first because + between two ints is addition before the string context, yielding (10). Option III uses String.format correctly. So I and III are correct.' },
+  q3: { correct: ""C"", explanation: 'When an object is concatenated with a String using +, Java automatically calls the object\'s toString() method. Tag.toString() returns ""[urgent]"", so the output is ""Status: [urgent]"".' },
+  q4: { correct: ""B"", explanation: 'Object.equals has the signature equals(Object other). Writing equals(Widget other) creates a NEW overloaded method with a different signature, not an override. The original Object.equals is still in effect, using reference equality.' },
+  q5: { correct: ""B"", explanation: 'Statement I is true. Statement II is false: toString can return any String representation; it is not required to include all fields. Statement III is true: the + operator triggers toString on non-String objects. So I and III.' },
+  q6: { correct: ""B"", explanation: 'The overridden equals checks row and col values. Both have row=2 and col=5, so the method returns true regardless of the objects being different references.' },
+  q7: { correct: ""C"", explanation: 'Object.toString() returns a String. Option C declares void as the return type, which does not override Object.toString(); it is instead a separate void method that happens to share the same name (overload of different signature is not possible here since parameters are the same). This causes a compile error because the return type alone cannot distinguish overloads.' },
+  q8: { correct: ""B"", explanation: 'Java evaluates left-to-right: first + second is int + int = 10 (arithmetic). Then 10 + """" is int + String = ""10"" (concatenation). The result is the string ""10"", not ""37"". If ""37"" were desired, parentheses would be needed: """" + first + second.' }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+
+<script type=""application/ld+json"">
+{
+  ""@context"":""https://schema.org"",
+  ""@graph"":[
+    {""@type"":""Article"",""headline"":""toString and equals Methods in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://apcsexamprep.com""},""url"":""https://apcsexamprep.com/pages/tostring-equals-ap-csa""},
+    {""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""toString and equals"",""item"":""https://apcsexamprep.com/pages/tostring-equals-ap-csa""}]},
+    {""@type"":""FAQPage"",""mainEntity"":[{""@type"":""Question"",""name"":""Does println call toString automatically?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Yes, System.out.println(obj) automatically calls obj.toString().""}},{""@type"":""Question"",""name"":""Must I use .equals() for String fields in equals()?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Yes. Using == compares references, not content. Always use .equals() for String fields.""}}]}
+  ]
+}
+</script>
+
+</div>"
