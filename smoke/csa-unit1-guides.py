@@ -120,6 +120,44 @@ def paragraphs(path):
     return out
 
 
+# Headings that legitimately contain other headings or a table, so "followed by
+# another heading" is correct for them rather than a defect.
+CONTAINER_HEADINGS = {'Learning objectives', 'How the days run', 'Differentiation',
+                      'On the website (students)', 'Support', 'Stretch'}
+DAY_HEADING = re.compile(r'^Day \d+$')
+LIST_STYLE = 'w:val="ListParagraph"'
+BOLD = re.compile(r'<w:b/>')
+SIZE = re.compile(r'<w:sz w:val="(\d+)"/>')
+
+
+def shaped(path):
+    """(kind, text) per paragraph, where kind is heading, bullet or body.
+
+    Read from the run properties in the XML rather than through python-docx, so
+    this stays a second implementation. A heading is bold at 11pt or larger,
+    which is what _heading and _segment emit; a bullet carries ListParagraph.
+    """
+    with zipfile.ZipFile(path) as z:
+        xml = z.read('word/document.xml').decode('utf-8')
+    out = []
+    for chunk in P_SPLIT.split(xml)[1:]:
+        body = chunk.split('</w:p>')[0]
+        text = TAG.sub('', ''.join(TEXT.findall(body)))
+        text = (text.replace('&amp;', '&').replace('&lt;', '<')
+                    .replace('&gt;', '>').replace('&quot;', '"')
+                    .replace('&apos;', "'")).strip()
+        if not text:
+            continue
+        if LIST_STYLE in body:
+            kind = 'bullet'
+        else:
+            sz = SIZE.search(body)
+            kind = ('heading' if BOLD.search(body) and sz and int(sz.group(1)) >= 22
+                    else 'body')
+        out.append((kind, text))
+    return out
+
+
 def diff_span(paras):
     """The Differentiation block, which the voice rule deliberately skips."""
     try:
@@ -227,6 +265,21 @@ def check(root):
         if not any(p.startswith('AP is a trademark') for p in paras):
             bad(f'rule 9  {topic}: no College Board trademark line')
 
+        # rule 11: no heading prints with nothing under it. Rule 6 pinned the
+        # two that were broken when it was written; this one is the general
+        # form, and it is what caught the nine "Stop and think, then assign
+        # homework" headings and the 43 structural rows that printed bare
+        # alongside them. A heading over empty space is a promise of a section
+        # the teacher then does not get.
+        shape = shaped(path)
+        for j, (kind, text) in enumerate(shape):
+            if kind != 'heading' or text in CONTAINER_HEADINGS or DAY_HEADING.match(text):
+                continue
+            nxt = shape[j + 1] if j + 1 < len(shape) else None
+            if nxt is None or nxt[0] == 'heading':
+                bad(f'rule 11 {topic}: "{text[:48]}" is a heading with nothing '
+                    f'under it')
+
         # rule 10: the teaching content survived. This is a repair, not a
         # rewrite, so every teaching bullet the shipped guide carried has to
         # still be in the rebuilt one. Without it the other nine rules are
@@ -271,7 +324,7 @@ def main():
             print(f'... and {len(fails) - 40} more')
         print(f'\n{len(fails)} failures')
         return 1
-    print(f'10 rules, 15 guides, 0 failures   ({root})')
+    print(f'11 rules, 15 guides, 0 failures   ({root})')
     return 0
 
 

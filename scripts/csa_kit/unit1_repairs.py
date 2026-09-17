@@ -1116,3 +1116,79 @@ STOPTHINK['1.5'] = {
      'class still shaky on which operand a cast grabs will not get the overflow '
      'work either.'],
 }
+
+
+# ── the nine missing wrap-up notes ───────────────────────────────────────────
+# Thirteen topics carry a "Stop and think, then assign homework" segment and
+# four of them had anything to say under it, so nine headings printed with
+# nothing beneath. The four that were filled all do the same job: they say what
+# the NEXT day depends on, or which idea must not be left fuzzy overnight. 1.15
+# is the clearest, "String immutability is the idea students otherwise carry all
+# the way into Unit 4."
+#
+# So these nine are written to that pattern rather than invented freely, and
+# every one of them names the specific day-2 material that rests on the day-1
+# idea. A note that could be pasted into any topic would be filler, and filler
+# under a heading is not better than the empty heading it replaced.
+STOPTHINK['1.2'] = {
+ 1: ['Day 2 turns the three types into a choice: which one the specification '
+     'allows. That rests on today\'s exclusion list, because eliminating long, '
+     'short, byte, float and char answers half the items before the reasoning '
+     'starts.'],
+}
+STOPTHINK['1.3'] = {
+ 1: ['Integer division is the rule day 2 builds its precedence traps on. A '
+     'student who still reads 7 / 2 as 3.5 will miss every compound expression '
+     'tomorrow, not only the divisions.'],
+}
+STOPTHINK['1.4'] = {
+ 1: ['The two-line swap is the trace day 2\'s widening and narrowing rules sit '
+     'on top of. Until the third variable is automatic, tomorrow\'s assignment '
+     'items read as arbitrary rather than as consequences.'],
+}
+STOPTHINK['1.9'] = {
+ 1: ['Call-by-value is what day 2 uses to explain why a return value is the '
+     'only route back to the caller. Overloading needs today\'s signature '
+     'definition exactly as stated, because the return type being outside it is '
+     'what makes that compile error make sense.'],
+}
+STOPTHINK['1.10'] = {
+ 1: ['Tomorrow\'s range formula is a cast applied to a class-method result, so '
+     'today\'s return-type rule is the part doing the work in it. Without '
+     'knowing Math.random returns a double, the cast looks decorative.'],
+}
+STOPTHINK['1.11'] = {
+ 1: ['The range formula on day 2 is the cast rule and the return-type rule '
+     'applied together. Both have to be automatic today, or the formula becomes '
+     'something to memorize rather than something to derive.'],
+}
+STOPTHINK['1.12'] = {
+ 1: ['Everything on day 2 is the address idea applied: aliasing, reassignment '
+     'and == all follow from a reference holding where the object is rather '
+     'than what it contains. That one sentence is what tomorrow is built on.'],
+}
+STOPTHINK['1.13'] = {
+ 1: ['Day 2 opens the creation statement up and asks what each part does, in '
+     'order. Today\'s four parts are the labels it uses, so the shape has to be '
+     'automatic before the mechanism underneath it means anything.'],
+}
+STOPTHINK['1.14'] = {
+ 1: ['Day 2 is two consequences of an instance method needing an object: two '
+     'names can lead to one object, and a name can lead to none. Both land only '
+     'if what sits to the left of the dot is settled today.'],
+}
+
+# ── the two structural rows that also printed bare ───────────────────────────
+# Every day's schedule opens with "Objectives and guided-notes preview" and ends
+# with "Exit ticket", and neither had a line under it, so 43 more headings
+# printed empty across the 15 guides. Both are fixed by saying something true
+# that points at a file the teacher actually has in the same folder, rather than
+# by deleting the row: the guided-notes packet and the exit ticket are real
+# documents, and a heading that names one is doing a teacher a service.
+OBJECTIVES_NOTE = (
+ 'The objectives above, and the guided-notes packet for this day, '
+ 'Guided_Notes/Day{day}_Notes_STUDENT.docx in this lesson folder. The KEY '
+ 'alongside it has the same pages filled in.')
+EXIT_NOTE = (
+ '{n} items, with the answers and a short why for each in the Exit ticket '
+ 'section at the end of this guide. Do not hand that page to students.')

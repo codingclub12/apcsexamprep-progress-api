@@ -237,6 +237,7 @@ def assemble(topic, guide, lesson_pages):
         day = {
             'day': n,
             'focus': d['focus'],
+            'objectives_note': R.OBJECTIVES_NOTE.format(day=n),
             'schedule': schedule,
             'sections': sections,
             'warmup': R.WARMUP[topic][n],
@@ -273,6 +274,11 @@ def assemble(topic, guide, lesson_pages):
                  f'{"ABCD"[idx]}. The two documents would disagree.')
         quiz.append({'stem': parsed['stem'], 'options': opts,
                      'answer_index': idx, 'why': a['why']})
+
+    for day in days:
+        if any(str(lab).lower().startswith('exit ticket')
+               for _m, lab in day['schedule']):
+            day['exit_note'] = R.EXIT_NOTE.format(n=len(quiz))
 
     return {
         'topic': topic, 'title': guide['title'], 'handle': HANDLES[topic],

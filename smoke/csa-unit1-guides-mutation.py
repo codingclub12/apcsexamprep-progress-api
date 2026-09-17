@@ -109,6 +109,16 @@ MUTATIONS = [
          x, "Successful compilation means the code follows Java's rules",
          "If it compiles, it works: Successful compilation means the code follows Java's rules"))),
 
+    ('a wrap-up note is emptied, leaving a bare heading', 'rule 11',
+     lambda root: edit(root, G1, lambda x: re.sub(
+         r'<w:t>The error types are a full block of their own[^<]*</w:t>',
+         '<w:t></w:t>', x, count=1))),
+
+    ('the exit-ticket pointer is emptied', 'rule 11',
+     lambda root: edit(root, G1, lambda x: re.sub(
+         r'<w:t>\d+ items, with the answers and a short why[^<]*</w:t>',
+         '<w:t></w:t>', x, count=1))),
+
     ('a teaching bullet quietly goes missing', 'rule 10',
      lambda root: edit(root, G1, lambda x: re.sub(
          r'<w:t>An algorithm is a step-by-step process[^<]*</w:t>',
