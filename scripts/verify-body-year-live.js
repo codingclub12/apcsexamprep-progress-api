@@ -36,7 +36,7 @@ if (!specs.length) { console.error(`no page named ${only} in seed/body-year-rewr
 //  the entity comes back carrying U+00A0. Compare on a normalized form.
 const norm = (s) => s.replace(/&nbsp;/g, ' ');
 
-let pending = 0, done = 0, broken = 0;
+let pending = 0, done = 0, partial = 0, broken = 0;
 
 for (const spec of specs) {
   let body;
@@ -64,14 +64,26 @@ for (const spec of specs) {
   if (state === 'DONE') done++;
   else if (state === 'PENDING') pending++;
   else {
-    broken++;
-    console.log('  PARTIAL is the state worth stopping on: some edits landed and some did not.');
-    for (const e of stillStale) console.log(`    still stale: ${JSON.stringify(e.find.slice(0, 56))}`);
+    partial++;
+    //  PARTIAL used to be reported as a thing to stop on, and that was right
+    //  while a page shipped as one all-or-nothing sheet. It is now a normal
+    //  state: the CSA score calculator was imported on 2026-09-17 with 13 edits
+    //  and a fourteenth was added afterwards, so the generator emits a
+    //  follow-up sheet and skips what is already live. What matters is whether
+    //  the outstanding edits have a sheet waiting, so name them.
+    console.log('  PARTIAL: some edits are live and some are not. Outstanding:');
+    for (const e of stillStale) console.log(`    ${JSON.stringify(e.find.slice(0, 56))}`);
+    console.log('  Regenerate to get a sheet for just these: node scripts/body-year-csv.js out/dir');
   }
   if (shortBody) broken++;
 }
 
-console.log(`\n  ${done} done, ${pending} pending, ${broken} needing attention.\n`);
-if (pending && !done) console.log('  Nothing imported yet. This is the expected state before step 1.\n');
-//  Non-zero only on a state a human must look at. Pending is normal beforehand.
+console.log(`\n  ${done} done, ${partial} partly imported, ${pending} pending`
+  + `${broken ? `, ${broken} NEEDING ATTENTION` : ''}.\n`);
+if (!done && !partial) console.log('  Nothing imported yet. This is the expected state before step 1.\n');
+else if (partial) console.log('  A partly imported page is normal when edits were added after its import.\n'
+  + '  Regenerating writes a sheet carrying only what is still outstanding.\n');
+//  Non-zero only on a state a human must actually look at, which now means a
+//  truncated body or an unreachable page. Pending and partial are both normal
+//  points in a staged import.
 process.exit(broken ? 1 : 0);

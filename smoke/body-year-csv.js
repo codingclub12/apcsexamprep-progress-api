@@ -6,7 +6,7 @@
 //  Run: npm run smoke:bodyyear
 // ─────────────────────────────────────────────────────────────────────────────
 const G = require('../scripts/body-year-csv');
-const { PAGES, EXAM } = require('../seed/body-year-rewrites');
+const { PAGES, EXAM, TITLES } = require('../seed/body-year-rewrites');
 
 let pass = 0, fail = 0;
 function ok(label, cond) {
@@ -62,6 +62,53 @@ ok('a last-updated stamp is a timestamp, not a stale exam claim',
 ok('a bare Updated stamp is exempt too', stale('Updated June 2026') === 0);
 ok('THE EXEMPTION IS NOT A HOLE: an exam year beside a stamp is still caught',
   stale('Last Updated September 2026. The 2026 AP CSA exam is digital.') > 0);
+
+console.log('\n  Idempotency, and the hole it nearly opened\n');
+//  A spec that cannot be re-run after a PARTIAL import gets hand-edited under
+//  pressure, so an edit that is already live is skipped rather than refused.
+//  The first version tested that with `replace count >= expected`, which the
+//  mutation run broke immediately: a one-character replacement occurs hundreds
+//  of times, so a find-string that was simply MISSING read as already done.
+const D = require('path').join(__dirname, '..');
+const fakeBody = '<h1>Title 2027</h1> everything else stays put and mentions 2027 once';
+//  checkApplied is exercised through buildOne, so these go through the real path
+//  using a tiny on-disk body.
+const fs2 = require('fs'), os2 = require('os'), path2 = require('path');
+const tmp = fs2.mkdtempSync(path2.join(os2.tmpdir(), 'bodyyear-'));
+fs2.writeFileSync(path2.join(tmp, 'p.html'), fakeBody);
+const spec = (edits) => ({ handle: 'p', why: 'test fixture for the idempotency rule', edits });
+
+ok('an edit whose replacement is already live is skipped, not refused', (() => {
+  const r = G.buildOne(spec([{ count: 1, why: 'x', find: '<h1>Title 2026</h1>', replace: '<h1>Title 2027</h1>' }]), tmp, 2027);
+  return r.problems.length === 0 && r.noop === true;
+})());
+ok('a MISSING find whose replacement occurs incidentally is still refused', (() => {
+  const r = G.buildOne(spec([{ count: 1, why: 'x', find: 'NOT IN THE BODY', replace: 'e' }]), tmp, 2027);
+  return r.problems.length > 0 && /found 0/.test(r.problems[0]);
+})());
+ok('a MISSING find with a short replacement is still refused', (() => {
+  const r = G.buildOne(spec([{ count: 1, why: 'x', find: 'ALSO NOT THERE', replace: '2027' }]), tmp, 2027);
+  return r.problems.length > 0;
+})());
+ok('a replacement present the WRONG number of times is refused, not assumed done', (() => {
+  const r = G.buildOne(spec([{ count: 2, why: 'x', find: '<h1>Title 2026</h1>', replace: '<h1>Title 2027</h1>' }]), tmp, 2027);
+  return r.problems.length > 0;
+})());
+
+console.log('\n  The title sheet is a separate file on purpose\n');
+ok('a title sheet carrying Body HTML is refused', (() => {
+  try { G.assertTitleHeaderIsSafe(['Handle', 'Command', 'Title', 'Body HTML']); return false; } catch (e) { return true; }
+})());
+ok('a title sheet with no Title column is refused', (() => {
+  try { G.assertTitleHeaderIsSafe(['Handle', 'Command']); return false; } catch (e) { return true; }
+})());
+ok('the shipped title header is allowed', (() => {
+  try { G.assertTitleHeaderIsSafe(G.TITLE_HEADER); return true; } catch (e) { return false; }
+})());
+ok('no title rewrite blanks a page name', TITLES.every((t) => t.to.trim().length > 0));
+ok('no title rewrite reintroduces a year that has passed',
+  TITLES.every((t) => G.staleYears(t.to, 2027).length === 0));
+ok('every title rewrite says why', TITLES.every((t) => typeof t.why === 'string' && t.why.length > 10));
 
 console.log('\n  The shipped spec\n');
 ok('every page names why it is being changed',

@@ -42,7 +42,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { PAGES } = require('../seed/body-year-rewrites');
+const { PAGES, TITLES } = require('../seed/body-year-rewrites');
 
 const HEADER = ['Handle', 'Command', 'Body HTML'];
 //  A column that could change anything other than the body. `Title` and
@@ -107,20 +107,45 @@ function buildOne(spec, fromDir, examYear) {
   const before = loadBody(spec.handle, fromDir);
 
   let after = before;
+  let applied = 0, already = 0;
   for (const e of spec.edits) {
     const n = before.split(e.find).length - 1;
-    if (n !== e.count) {
-      problems.push(`${spec.handle}: expected ${e.count} of ${JSON.stringify(e.find.slice(0, 48))}, found ${n}. `
-        + 'The live body has moved since the spec was written; re-read it before shipping.');
-      continue;
-    }
-    after = after.split(e.find).join(e.replace);
+    if (n === e.count) { after = after.split(e.find).join(e.replace); applied += e.count; continue; }
+
+    //  ── AN EDIT THAT IS ALREADY LIVE IS NOT A FAILURE ────────────────────────
+    //  The CSA score calculator was imported on 2026-09-17 carrying 13 of these,
+    //  and the follow-up sheet had to add four more. Regenerating refused the
+    //  whole page, because the 13 find-strings it had just fixed were gone. A
+    //  spec that cannot be re-run after a partial import is a spec that gets
+    //  edited by hand under pressure, which is how a body sheet goes wrong.
+    //
+    //  So: find absent AND replace present at the expected count means somebody
+    //  already imported this edit. Skip it and say so. Anything else still
+    //  refuses, because those are the two states that are actually ambiguous.
+    //  The test has to be EXACT, and the first draft was not. It accepted
+    //  `r >= e.count`, so an edit whose replacement happened to occur elsewhere
+    //  in the body read as already applied and was skipped silently. The
+    //  mutation run caught it with a one-character replacement: 'y' appears
+    //  hundreds of times, so a find-string that was simply MISSING looked done.
+    //  Requiring the replacement to appear exactly as often as the edit would
+    //  have produced it, and to be long enough to be distinctive, closes that:
+    //  any other count means something is off and the sheet refuses.
+    const r = before.split(e.replace).length - 1;
+    if (n === 0 && r === e.count && e.replace.length >= 8) { already += e.count; continue; }
+
+    problems.push(`${spec.handle}: expected ${e.count} of ${JSON.stringify(e.find.slice(0, 48))}, found ${n}`
+      + (r ? ` (and ${r} of the replacement, which is neither absent nor a full match)` : '')
+      + '. The live body has moved since the spec was written; re-read it before shipping.');
   }
   if (problems.length) return { problems };
+  if (applied === 0) return { problems: [], noop: true, already, before, after: before, nbsp: 0, stale: [], edits: 0 };
 
   //  Refusal 2: reversing every replacement must give the original back.
   let reversed = after;
-  for (const e of spec.edits) reversed = reversed.split(e.replace).join(e.find);
+  for (const e of spec.edits) {
+    if (before.split(e.find).length - 1 !== e.count) continue;   // skipped above
+    reversed = reversed.split(e.replace).join(e.find);
+  }
   if (reversed !== before) {
     problems.push(`${spec.handle}: the edit is not surgical. Reversing the replacements did not `
       + 'return the original body, so something outside the intended spans moved.');
@@ -142,8 +167,42 @@ function buildOne(spec, fromDir, examYear) {
   //  Refusal 4.
   const stale = staleYears(shipped, examYear);
 
-  return { problems: [], before, after: shipped, nbsp, stale,
-    edits: spec.edits.reduce((n, e) => n + e.count, 0) };
+  return { problems: [], before, after: shipped, nbsp, stale, already, edits: applied };
+}
+
+//  ── THE TITLE SHEET, WHICH IS A DIFFERENT AND SMALLER RISK ──────────────────
+//  `Title` is forbidden in a body sheet because a wrong value there renames a
+//  live page. It gets its own file, with no `Body HTML` beside it, so the two
+//  can never go wrong together. The handle is not a column here at all beyond
+//  addressing the row, so nothing in this sheet can move a page or break a link.
+const TITLE_HEADER = ['Handle', 'Command', 'Title'];
+
+function assertTitleHeaderIsSafe(header) {
+  if (header.includes('Body HTML')) {
+    throw new Error('refusing to write a title sheet that also carries Body HTML. '
+      + 'Those are separate imports precisely so one cannot take the other down with it.');
+  }
+  if (!header.includes('Title')) throw new Error('a title sheet with no Title column changes nothing');
+}
+
+function buildTitles(fromDir) {
+  const { pageBody } = fromDir ? { pageBody: null } : require('../lib/storefront-fetch');
+  const rows = [], problems = [], already = [];
+  for (const t of TITLES) {
+    if (!t.to.trim()) { problems.push(`${t.handle}: empty title, which would blank the page name`); continue; }
+    if (!pageBody) { rows.push(t); continue; }
+    let live;
+    try { live = pageBody(t.handle).title; }
+    catch (e) { problems.push(`${t.handle}: could not read the live title: ${String(e.message).slice(0, 60)}`); continue; }
+    if (live === t.to) { already.push(t.handle); continue; }
+    if (live !== t.from) {
+      problems.push(`${t.handle}: live title is ${JSON.stringify(live)}, which is neither the `
+        + 'value this sheet expects to replace nor the one it writes. Somebody changed it; re-read before shipping.');
+      continue;
+    }
+    rows.push(t);
+  }
+  return { rows, problems, already };
 }
 
 function main() {
@@ -160,9 +219,11 @@ function main() {
 
   const built = [];
   const allProblems = [];
+  const noops = [];
   for (const spec of PAGES) {
     const r = buildOne(spec, fromDir, examYear);
     if (r.problems.length) { allProblems.push(...r.problems); continue; }
+    if (r.noop) { noops.push(spec.handle); continue; }
     built.push({ spec, ...r });
   }
   if (allProblems.length) {
@@ -180,14 +241,38 @@ function main() {
     fs.writeFileSync(file, csv);
     console.log(`  ${b.spec.handle}`);
     console.log(`      ${String(b.edits).padStart(2)} replacements   ${b.before.length} -> ${b.after.length} chars`
+      + (b.already ? `   (${b.already} already live, skipped)` : '')
       + (b.nbsp ? `   ${b.nbsp} nbsp sent as an entity` : ''));
     if (b.stale.length) console.log(`      NOTE ${b.stale.length} past year(s) remain, review: ${b.stale[0].slice(0, 60)}`);
     console.log(`      ${file}`);
   }
-  console.log(`\n  ${built.length} sheets. Command is MERGE, so a typo'd handle is a no-op rather than a new page.`);
+  for (const h of noops) console.log(`  ${h}\n      every edit is already live. No sheet written; there is nothing to import.`);
+  //  The title sheet, written beside the body sheets but imported separately.
+  assertTitleHeaderIsSafe(TITLE_HEADER);
+  const t = buildTitles(fromDir);
+  if (t.problems.length) {
+    console.error('\nREFUSING TO WRITE THE TITLE SHEET:\n');
+    for (const p of t.problems) console.error(`  ${p}`);
+    process.exit(1);
+  }
+  if (t.rows.length) {
+    const csv = '\ufeff' + TITLE_HEADER.map(cell).join(',') + '\r\n'
+      + t.rows.map((r) => [r.handle, 'MERGE', r.to].map(cell).join(',')).join('\r\n') + '\r\n';
+    const file = path.join(outDir, 'titles-page-year.csv');
+    fs.writeFileSync(file, csv);
+    console.log(`\n  page titles: ${t.rows.length} rows`
+      + (t.already.length ? `, ${t.already.length} already correct and left out` : ''));
+    for (const r of t.rows) console.log(`      ${r.handle}\n          ${JSON.stringify(r.from)}\n       -> ${JSON.stringify(r.to)}`);
+    console.log(`      ${file}`);
+  } else {
+    console.log(`\n  page titles: nothing to do, all ${TITLES.length} are already correct.`);
+  }
+
+  console.log(`\n  ${built.length} body sheets. Command is MERGE, so a typo'd handle is a no-op rather than a new page.`);
   console.log('  Import ONE at a time and run the verifier between each.\n');
 }
 
 if (require.main === module) main();
 
-module.exports = { buildOne, assertHeaderIsSafe, dangerousEntities, staleYears, FORBIDDEN_COLUMNS, HEADER };
+module.exports = { buildOne, buildTitles, assertHeaderIsSafe, assertTitleHeaderIsSafe,
+  dangerousEntities, staleYears, FORBIDDEN_COLUMNS, HEADER, TITLE_HEADER };
