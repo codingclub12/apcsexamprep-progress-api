@@ -53,6 +53,7 @@ const { pageScope } = require('../lib/assistant/scope');
 const report = require('../lib/assistant/report');
 const junk = require('../lib/assistant/junk-filter');
 const turnstile = require('../lib/assistant/turnstile');
+const find = require('../lib/assistant/find');
 const reads = require('../lib/assistant/reads');
 const kb = require('../lib/assistant/kb');
 const chat = require('../lib/assistant/chat');
@@ -792,6 +793,91 @@ router.get('/apcs-report.js', (req, res) => {
   res.set('Cache-Control', 'public, max-age=3600');
   res.type('application/javascript');
   res.sendFile(require('path').join(__dirname, '..', 'public', 'apcs-report.js'));
+});
+
+// ── THE REPORT-FIRST WIDGET (handoff section 4) ──────────────────────────────
+//
+//  /apcs-widget.js   the corner button: report, suggest, find a page
+//  /apcs-flag.js     "Flag this question", which may load on assessment pages
+//
+//  TWO FILES, and the split is the rule rather than a preference. The widget
+//  must not load on a quiz or test page at all; the flag link is asked for on
+//  graded quiz pages after submission. One file with a mode flag would put both
+//  rules behind one condition, and the condition somebody edits later is the one
+//  that was protecting the other rule.
+//
+//  VERSIONING. TODO #241 measured Cloudflare returning every JS asset this
+//  server sends as max-age=14400 whatever the route asks for, so a fix here can
+//  sit behind a browser cache for four hours and read as a failed deploy. The
+//  theme appends ?v= from the endpoint below, which changes when the file
+//  changes, so a new URL is a new cache entry.
+function serveAsset(name) {
+  return (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    // Long, because the URL carries the version. An unversioned request gets the
+    // same bytes and the same four hour Cloudflare TTL it was always going to.
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.type('application/javascript');
+    res.sendFile(require('path').join(__dirname, '..', 'public', name));
+  };
+}
+router.get('/apcs-widget.js', serveAsset('apcs-widget.js'));
+router.get('/apcs-flag.js', serveAsset('apcs-flag.js'));
+
+// The version token the theme puts in ?v=. Content-derived rather than a build
+// number, so it changes exactly when the file does and never when it does not.
+// Computed once per process: these files change on deploy, and a deploy is a new
+// process.
+let _assetVersions = null;
+function assetVersions() {
+  if (_assetVersions) return _assetVersions;
+  const fs = require('fs'), path = require('path'), crypto = require('crypto');
+  const out = {};
+  for (const name of ['apcs-widget.js', 'apcs-flag.js']) {
+    try {
+      const buf = fs.readFileSync(path.join(__dirname, '..', 'public', name));
+      out[name] = crypto.createHash('sha256').update(buf).digest('hex').slice(0, 12);
+    } catch (_) {
+      out[name] = 'missing';
+    }
+  }
+  _assetVersions = out;
+  return out;
+}
+
+router.get('/api/assistant/widget-version', helpLimit, (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Cache-Control', 'public, max-age=300');
+  const v = assetVersions();
+  res.json({
+    widget: v['apcs-widget.js'],
+    flag: v['apcs-flag.js'],
+    // Ready-made, so the Liquid snippet does no string building of its own.
+    widget_url: `/apcs-widget.js?v=${v['apcs-widget.js']}`,
+    flag_url: `/apcs-flag.js?v=${v['apcs-flag.js']}`,
+  });
+});
+
+// ── FIND A PAGE (handoff section 4.4) ────────────────────────────────────────
+//
+//  Public, read-only, and it returns LINKS FROM THE PAGE INDEX AND NOTHING ELSE.
+//  lib/assistant/find.js is where that property is enforced and explained: the
+//  model is handed a numbered shortlist and may return integers, so it can
+//  reorder and drop but cannot invent a destination.
+//
+//  Rate limited on the same window as help search, because it can spend a model
+//  call and it is open to the internet.
+router.get('/api/assistant/find', helpLimit, async (req, res) => {
+  try {
+    const q = typeof req.query.q === 'string' ? req.query.q.slice(0, 200) : '';
+    const out = await find.answer(q);
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Cache-Control', 'public, max-age=60');
+    res.json(out);
+  } catch (e) {
+    console.error('assistant/find:', e);
+    res.status(500).json({ error: 'Search is unavailable right now.', results: [] });
+  }
 });
 
 module.exports = router;
