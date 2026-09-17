@@ -93,6 +93,13 @@ Both statements are on the same screen, four lines apart.
 
 The next exam is **Wednesday, May 12, 2027, Session 2**.
 
+Board 346 landed the same afternoon as this audit and is the adjacent job rather
+than this one. It fixes stale exam years in SEO **titles and meta descriptions**
+through `seed/seo-rewrites.js`, and its 16 new records touch **no FRQ handle at
+all**. The 13 instances above are in page BODIES, which that table does not
+reach. Two surfaces, no overlap, and worth keeping straight so a future session
+does not read one as having covered the other.
+
 The bootcamp page is the one to look at first, because it is the only item in
 this report that can take money for something that cannot be delivered. Pricing
 is on the `NEVER_AUTO` list, so what to do with it is a decision rather than a
