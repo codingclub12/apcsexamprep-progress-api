@@ -1,0 +1,1298 @@
+﻿"Handle","Command","Body HTML"
+"ap-csa-compareto-vs-equals","MERGE","<script>
+(function() {
+  var originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.indexOf('emkc.org/api/v2/piston') !== -1) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', '3596176c-098d-4aae-9955-8a1715997264');
+      } else {
+        options.headers['Authorization'] = '3596176c-098d-4aae-9955-8a1715997264';
+      }
+    }
+    return originalFetch.call(this, url, options);
+  };
+})();
+</script>
+<script type=""application/ld+json"">
+[{
+  ""@context"":""https://schema.org"",
+  ""@type"":""BreadcrumbList"",
+  ""itemListElement"":[
+    {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com/""},
+    {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+    {""@type"":""ListItem"",""position"":3,""name"":""Unit 1: Using Objects and Methods"",""item"":""https://apcsexamprep.com/pages/ap-csa-unit-1-complete-study-guide""},
+    {""@type"":""ListItem"",""position"":4,""name"":""compareTo() vs equals() in AP CSA: Complete Guide (2025-2026)"",""item"":""https://apcsexamprep.com/pages/ap-csa-compareto-vs-equals""}
+  ]
+},
+{
+  ""@context"":""https://schema.org"",
+  ""@type"":""Person"",
+  ""name"":""Tanner Crow"",
+  ""url"":""https://www.wyzant.com/tutors/tannerc12"",
+  ""jobTitle"":""AP Computer Science Teacher"",
+  ""worksFor"":{""@type"":""Organization"",""name"":""Blue Valley North High School""},
+  ""description"":""AP Computer Science teacher with 11+ years experience. 1,845+ tutoring hours, 5.0 Wyzant rating.""
+}]
+</script>
+<style>
+#apcsa-compareto{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;}
+#apcsa-compareto *{box-sizing:border-box!important;}
+#apcsa-compareto h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important;}
+#apcsa-compareto h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important;}
+#apcsa-compareto h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important;}
+#apcsa-compareto p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;}
+#apcsa-compareto a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important;}
+#apcsa-compareto a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcsa-compareto ul,#apcsa-compareto ol{margin:0 0 16px 24px!important;padding:0!important;color:#1e1e2e!important;}
+#apcsa-compareto li{margin-bottom:6px!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;}
+#apcsa-compareto code{background:#f1f5f9!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:2px 6px!important;border-radius:4px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;}
+#apcsa-compareto .info-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-left:4px solid #3b82f6!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-compareto .warn-box{background:#fffbeb!important;border:1px solid #fde68a!important;border-left:4px solid #f59e0b!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-compareto .warn-box strong{color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#apcsa-compareto .exam-tip{background:#f0fdf4!important;border:1px solid #bbf7d0!important;border-left:4px solid #22c55e!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-compareto .exam-tip strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-compareto pre{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:20px!important;border-radius:10px!important;overflow-x:auto!important;margin:20px 0!important;font-family:'Courier New',monospace!important;font-size:0.92em!important;line-height:1.6!important;white-space:pre!important;}
+#apcsa-compareto pre code{background:transparent!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:0!important;font-size:1em!important;}
+#apcsa-compareto table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important;}
+#apcsa-compareto th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;}
+#apcsa-compareto td{padding:9px 14px!important;border-bottom:1px solid #e2e8f0!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;vertical-align:top!important;}
+#apcsa-compareto tr:nth-child(even) td{background:#f8fafc!important;}
+#apcsa-compareto .breadcrumb{font-size:0.85em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:20px!important;}
+#apcsa-compareto .breadcrumb a{color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-decoration:none!important;}
+#apcsa-compareto .breadcrumb a:hover{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;}
+#apcsa-compareto .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:22px!important;margin:28px 0!important;}
+#apcsa-compareto .mcq-block h3{margin-top:0!important;}
+#apcsa-compareto .mcq-option{display:block!important;padding:10px 14px!important;margin:6px 0!important;border-radius:7px!important;border:1.5px solid #e2e8f0!important;cursor:pointer!important;font-size:0.97em!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#fff!important;width:100%!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;transition:border-color 0.15s,background 0.15s!important;}
+#apcsa-compareto .mcq-option:hover{border-color:#3b82f6!important;background:#eff6ff!important;}
+#apcsa-compareto .mcq-option.correct{background:#f0fdf4!important;border-color:#22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-compareto .mcq-option.wrong{background:#fef2f2!important;border-color:#ef4444!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-compareto .mcq-feedback{margin-top:12px!important;padding:12px 16px!important;border-radius:7px!important;font-size:0.95em!important;display:none!important;}
+#apcsa-compareto .mcq-feedback.show{display:block!important;}
+#apcsa-compareto .mcq-feedback.correct{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-compareto .mcq-feedback.wrong{background:#fef2f2!important;border:1px solid #fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-compareto .sandbox-wrap{background:#0f172a!important;border-radius:12px!important;padding:20px!important;margin:28px 0!important;}
+#apcsa-compareto .sandbox-wrap label{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:0.8em!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;display:block!important;margin-bottom:8px!important;}
+#apcsa-compareto .sandbox-editor{width:100%!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;border:1px solid #334155!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;line-height:1.6!important;resize:vertical!important;min-height:160px!important;box-sizing:border-box!important;}
+#apcsa-compareto .run-btn{margin-top:12px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;padding:9px 22px!important;font-size:0.95em!important;font-weight:700!important;cursor:pointer!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}
+#apcsa-compareto .run-btn:hover{background:#2563eb!important;}
+#apcsa-compareto .sandbox-output{margin-top:12px!important;background:#0a0f1a!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.88em!important;min-height:48px!important;white-space:pre-wrap!important;display:none!important;}
+#apcsa-compareto .sandbox-output.show{display:block!important;}
+#apcsa-compareto .nav-links{display:flex!important;gap:12px!important;margin-top:48px!important;padding-top:24px!important;border-top:1px solid #e2e8f0!important;flex-wrap:wrap!important;}
+#apcsa-compareto .nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 18px!important;border-radius:8px!important;font-size:0.92em!important;font-weight:600!important;text-decoration:none!important;border:1.5px solid #bfdbfe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;}
+#apcsa-compareto .nav-link:hover{background:#dbeafe!important;border-color:#93c5fd!important;}
+#apcsa-compareto .nav-link.primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-compareto .nav-link.primary:hover{background:#1d4ed8!important;}
+</style>
+<div id=""apcsa-compareto"">
+  <div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a> › <a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1</a> › compareTo() vs equals()</div>
+  <h1>compareTo() vs equals() in AP CSA</h1>
+  <p>Two of the most commonly confused String methods on the AP exam. <code>equals()</code> answers a yes/no question. <code>compareTo()</code> answers a “who comes first?” question. Knowing which to use — and what they return — is tested every year.</p>
+
+  <div class=""warn-box"">
+<strong>⚠ Exam Trap:</strong> Using <code>==</code> to compare Strings compares memory addresses, not content. It may return <code>false</code> even when two Strings have identical characters. <strong>Always</strong> use <code>.equals()</code> or <code>.compareTo()</code>.</div>
+
+  <h2>equals() — True or False</h2>
+  <p><code>equals()</code> returns a <code>boolean</code>: <code>true</code> if the two Strings have identical characters, <code>false</code> otherwise. Case matters.</p>
+  <pre><code>String a = ""hello"";
+String b = ""hello"";
+String c = ""Hello"";
+
+System.out.println(a.equals(b));  // true
+System.out.println(a.equals(c));  // false  (case-sensitive)
+System.out.println(a == b);       // true in this case (string pool)
+                                  // but NOT reliable -- never use ==</code></pre>
+
+  <p>Use <code>equalsIgnoreCase()</code> when case should not matter:</p>
+  <pre><code>System.out.println(a.equalsIgnoreCase(c));  // true</code></pre>
+
+  <h2>compareTo() — Returns an int</h2>
+  <p><code>compareTo()</code> returns an <strong>integer</strong>, not a boolean. The sign tells you the relationship:</p>
+  <table>
+    <tr>
+<th>Return value</th>
+<th>Meaning</th>
+</tr>
+    <tr>
+<td>Negative</td>
+<td>Calling string comes <strong>before</strong> the argument alphabetically</td>
+</tr>
+    <tr>
+<td>Zero</td>
+<td>Strings are <strong>equal</strong>
+</td>
+</tr>
+    <tr>
+<td>Positive</td>
+<td>Calling string comes <strong>after</strong> the argument alphabetically</td>
+</tr>
+  </table>
+  <pre><code>String x = ""apple"";
+String y = ""banana"";
+
+int result = x.compareTo(y);
+System.out.println(result);    // negative (apple comes before banana)
+
+if (x.compareTo(y) &lt; 0) {
+    System.out.println(x + "" comes first"");
+}</code></pre>
+
+  <div class=""info-box"">
+<strong>How compareTo() works:</strong> It compares Unicode values character by character. If the first characters differ, it returns their Unicode difference. Uppercase letters have smaller Unicode values than lowercase (‘A’ = 65, ‘a’ = 97).</div>
+
+  <div class=""sandbox-wrap"">
+  <label>💻 Try It — Java Sandbox</label>
+  <textarea class=""sandbox-editor"" id=""apcsa-compareto-sb1"">public class Main {
+    public static void main(String[] args) {
+        String s1 = ""Mango"";
+        String s2 = ""mango"";
+        String s3 = ""Mango"";
+        
+        System.out.println(s1.equals(s2));         // ?
+        System.out.println(s1.equalsIgnoreCase(s2)); // ?
+        System.out.println(s1.compareTo(s3));      // ?
+        System.out.println(s1.compareTo(s2));      // ? (M vs m)
+    }
+}</textarea>
+  <button class=""run-btn"" onclick=""runCode_apcsa_compareto_1()"">▶ Run Code</button>
+  <div class=""sandbox-output"" id=""apcsa-compareto-out1""></div>
+</div>
+<script>
+function runCode_apcsa_compareto_1() {
+  var code = document.getElementById('apcsa-compareto-sb1').value;
+  var out = document.getElementById('apcsa-compareto-out1');
+  out.textContent = 'Running...';
+  out.classList.add('show');
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({language:'java',version:'15.0.2',files:[{content:code}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output : (d.message || 'No output');
+  }).catch(function(){out.textContent='Error connecting to sandbox.';});
+}
+</script>
+
+  <h2>When to Use Which</h2>
+  <table>
+    <tr>
+<th>Use case</th>
+<th>Method</th>
+</tr>
+    <tr>
+<td>Check if two Strings are the same</td>
+<td><code>.equals()</code></td>
+</tr>
+    <tr>
+<td>Check same, ignoring case</td>
+<td><code>.equalsIgnoreCase()</code></td>
+</tr>
+    <tr>
+<td>Sort alphabetically / check order</td>
+<td><code>.compareTo()</code></td>
+</tr>
+    <tr>
+<td>Compare two Strings for identity</td>
+<td>
+<strong>Never</strong> <code>==</code>
+</td>
+</tr>
+  </table>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 1</h3>
+  <p>What is the output of the following code?<br></p>
+<pre style=""background:#0f172a;color:#e2e8f0;padding:12px;border-radius:6px;font-family:monospace;"">String p = ""Cat"";
+String q = ""cat"";
+System.out.println(p.compareTo(q));</pre>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_compareto_1(this,0,2)"">A) 0</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_compareto_1(this,1,2)"">B) A positive integer</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_compareto_1(this,2,2)"">C) A negative integer</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_compareto_1(this,3,2)"">D) true</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-compareto-fb1""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_compareto_1(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-compareto-fb1');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! \'C\' has Unicode value 67; \'c\' has 99. Since \'C\' < \'c\', compareTo() returns a negative number (67 - 99 = -32).';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. \'C\' has Unicode value 67; \'c\' has 99. Since \'C\' < \'c\', compareTo() returns a negative number (67 - 99 = -32).';
+  }
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 2</h3>
+  <p>Which of the following CORRECTLY checks whether String <code>word</code> equals <code>""Java""</code>?<br><br>I. <code>if (word == ""Java"")</code><br>II. <code>if (word.equals(""Java""))</code><br>III. <code>if (word.compareTo(""Java"") == 0)</code></p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_compareto_2(this,0,3)"">A) I only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_compareto_2(this,1,3)"">B) II only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_compareto_2(this,2,3)"">C) I and II only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_compareto_2(this,3,3)"">D) II and III only</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-compareto-fb2""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_compareto_2(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-compareto-fb2');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! == compares references, not content, and is unreliable for Strings. Both .equals() and .compareTo() == 0 correctly test String content equality.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. == compares references, not content, and is unreliable for Strings. Both .equals() and .compareTo() == 0 correctly test String content equality.';
+  }
+}
+</script>
+
+  <div class=""exam-tip"">
+<strong>✅ Exam Tip:</strong> On the AP exam, <code>compareTo()</code> questions almost always ask about the <em>sign</em> of the return value, not the exact number. Focus on: negative = comes first, zero = equal, positive = comes after.</div>
+
+  <div class=""nav-links"">
+  <a class=""nav-link"" href=""/pages/ap-csa-unit-1-complete-study-guide"">← Unit 1: Using Objects &amp; Methods</a>
+  <a class=""nav-link"" href=""/pages/ap-csa-topics"">All AP CSA Topics</a>
+  <a class=""nav-link primary"" href=""/pages/ap-csa-practice-exams"">Practice Exams →</a>
+</div>
+</div>"
+"ap-csa-method-signatures-return-types","MERGE","<script>
+(function() {
+  var originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.indexOf('emkc.org/api/v2/piston') !== -1) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', '3596176c-098d-4aae-9955-8a1715997264');
+      } else {
+        options.headers['Authorization'] = '3596176c-098d-4aae-9955-8a1715997264';
+      }
+    }
+    return originalFetch.call(this, url, options);
+  };
+})();
+</script>
+<script type=""application/ld+json"">
+[{
+  ""@context"":""https://schema.org"",
+  ""@type"":""BreadcrumbList"",
+  ""itemListElement"":[
+    {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com/""},
+    {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+    {""@type"":""ListItem"",""position"":3,""name"":""Unit 1: Using Objects and Methods"",""item"":""https://apcsexamprep.com/pages/ap-csa-unit-1-complete-study-guide""},
+    {""@type"":""ListItem"",""position"":4,""name"":""Method Signatures and Return Types in AP CSA (2025-2026)"",""item"":""https://apcsexamprep.com/pages/ap-csa-method-signatures-return-types""}
+  ]
+},
+{
+  ""@context"":""https://schema.org"",
+  ""@type"":""Person"",
+  ""name"":""Tanner Crow"",
+  ""url"":""https://www.wyzant.com/tutors/tannerc12"",
+  ""jobTitle"":""AP Computer Science Teacher"",
+  ""worksFor"":{""@type"":""Organization"",""name"":""Blue Valley North High School""},
+  ""description"":""AP Computer Science teacher with 11+ years experience. 1,845+ tutoring hours, 5.0 Wyzant rating.""
+}]
+</script>
+<style>
+#apcsa-methodsigs{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;}
+#apcsa-methodsigs *{box-sizing:border-box!important;}
+#apcsa-methodsigs h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important;}
+#apcsa-methodsigs h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important;}
+#apcsa-methodsigs h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important;}
+#apcsa-methodsigs p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;}
+#apcsa-methodsigs a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important;}
+#apcsa-methodsigs a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcsa-methodsigs ul,#apcsa-methodsigs ol{margin:0 0 16px 24px!important;padding:0!important;color:#1e1e2e!important;}
+#apcsa-methodsigs li{margin-bottom:6px!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;}
+#apcsa-methodsigs code{background:#f1f5f9!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:2px 6px!important;border-radius:4px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;}
+#apcsa-methodsigs .info-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-left:4px solid #3b82f6!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-methodsigs .warn-box{background:#fffbeb!important;border:1px solid #fde68a!important;border-left:4px solid #f59e0b!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-methodsigs .warn-box strong{color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#apcsa-methodsigs .exam-tip{background:#f0fdf4!important;border:1px solid #bbf7d0!important;border-left:4px solid #22c55e!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-methodsigs .exam-tip strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-methodsigs pre{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:20px!important;border-radius:10px!important;overflow-x:auto!important;margin:20px 0!important;font-family:'Courier New',monospace!important;font-size:0.92em!important;line-height:1.6!important;white-space:pre!important;}
+#apcsa-methodsigs pre code{background:transparent!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:0!important;font-size:1em!important;}
+#apcsa-methodsigs table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important;}
+#apcsa-methodsigs th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;}
+#apcsa-methodsigs td{padding:9px 14px!important;border-bottom:1px solid #e2e8f0!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;vertical-align:top!important;}
+#apcsa-methodsigs tr:nth-child(even) td{background:#f8fafc!important;}
+#apcsa-methodsigs .breadcrumb{font-size:0.85em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:20px!important;}
+#apcsa-methodsigs .breadcrumb a{color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-decoration:none!important;}
+#apcsa-methodsigs .breadcrumb a:hover{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;}
+#apcsa-methodsigs .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:22px!important;margin:28px 0!important;}
+#apcsa-methodsigs .mcq-block h3{margin-top:0!important;}
+#apcsa-methodsigs .mcq-option{display:block!important;padding:10px 14px!important;margin:6px 0!important;border-radius:7px!important;border:1.5px solid #e2e8f0!important;cursor:pointer!important;font-size:0.97em!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#fff!important;width:100%!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;transition:border-color 0.15s,background 0.15s!important;}
+#apcsa-methodsigs .mcq-option:hover{border-color:#3b82f6!important;background:#eff6ff!important;}
+#apcsa-methodsigs .mcq-option.correct{background:#f0fdf4!important;border-color:#22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-methodsigs .mcq-option.wrong{background:#fef2f2!important;border-color:#ef4444!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-methodsigs .mcq-feedback{margin-top:12px!important;padding:12px 16px!important;border-radius:7px!important;font-size:0.95em!important;display:none!important;}
+#apcsa-methodsigs .mcq-feedback.show{display:block!important;}
+#apcsa-methodsigs .mcq-feedback.correct{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-methodsigs .mcq-feedback.wrong{background:#fef2f2!important;border:1px solid #fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-methodsigs .sandbox-wrap{background:#0f172a!important;border-radius:12px!important;padding:20px!important;margin:28px 0!important;}
+#apcsa-methodsigs .sandbox-wrap label{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:0.8em!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;display:block!important;margin-bottom:8px!important;}
+#apcsa-methodsigs .sandbox-editor{width:100%!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;border:1px solid #334155!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;line-height:1.6!important;resize:vertical!important;min-height:160px!important;box-sizing:border-box!important;}
+#apcsa-methodsigs .run-btn{margin-top:12px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;padding:9px 22px!important;font-size:0.95em!important;font-weight:700!important;cursor:pointer!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}
+#apcsa-methodsigs .run-btn:hover{background:#2563eb!important;}
+#apcsa-methodsigs .sandbox-output{margin-top:12px!important;background:#0a0f1a!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.88em!important;min-height:48px!important;white-space:pre-wrap!important;display:none!important;}
+#apcsa-methodsigs .sandbox-output.show{display:block!important;}
+#apcsa-methodsigs .nav-links{display:flex!important;gap:12px!important;margin-top:48px!important;padding-top:24px!important;border-top:1px solid #e2e8f0!important;flex-wrap:wrap!important;}
+#apcsa-methodsigs .nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 18px!important;border-radius:8px!important;font-size:0.92em!important;font-weight:600!important;text-decoration:none!important;border:1.5px solid #bfdbfe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;}
+#apcsa-methodsigs .nav-link:hover{background:#dbeafe!important;border-color:#93c5fd!important;}
+#apcsa-methodsigs .nav-link.primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-methodsigs .nav-link.primary:hover{background:#1d4ed8!important;}
+</style>
+<div id=""apcsa-methodsigs"">
+  <div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a> › <a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1</a> › Method Signatures &amp; Return Types</div>
+  <h1>Method Signatures and Return Types in AP CSA</h1>
+  <p>Understanding how to read and write method signatures is fundamental to the entire AP exam. Every FRQ gives you a method header and expects you to implement it correctly.</p>
+
+  <h2>Anatomy of a Method Signature</h2>
+  <pre><code>public    int    add    (int a, int b)
+^          ^      ^       ^
+access   return  name  parameters
+modifier  type</code></pre>
+
+  <h2>Return Types</h2>
+  <table>
+    <tr>
+<th>Return type</th>
+<th>What the method returns</th>
+<th>Example</th>
+</tr>
+    <tr>
+<td><code>void</code></td>
+<td>Nothing — no return statement needed</td>
+<td><code>public void print()</code></td>
+</tr>
+    <tr>
+<td><code>int</code></td>
+<td>An integer value</td>
+<td><code>public int getAge()</code></td>
+</tr>
+    <tr>
+<td><code>double</code></td>
+<td>A decimal value</td>
+<td><code>public double getGPA()</code></td>
+</tr>
+    <tr>
+<td><code>boolean</code></td>
+<td>true or false</td>
+<td><code>public boolean isValid()</code></td>
+</tr>
+    <tr>
+<td><code>String</code></td>
+<td>A String object</td>
+<td><code>public String getName()</code></td>
+</tr>
+  </table>
+
+  <h2>Common Return Mistakes</h2>
+  <pre><code>// ERROR: missing return in non-void method
+public int getScore() {
+    int score = 100;
+    // forgot: return score;
+}
+
+// ERROR: returning wrong type
+public int getScore() {
+    return ""100"";  // can't return String from int method
+}
+
+// CORRECT
+public int getScore() {
+    return score;  // returns int, matches method signature
+}</code></pre>
+
+  <div class=""info-box"">
+<strong>Overloading:</strong> Two methods can have the same name if their parameter lists differ (different types or count). The compiler picks the right one based on the arguments you pass.</div>
+
+  <div class=""sandbox-wrap"">
+  <label>💻 Try It — Java Sandbox</label>
+  <textarea class=""sandbox-editor"" id=""apcsa-methodsigs-sb1"">public class Main {
+    // Two overloaded methods -- same name, different parameters
+    public static int multiply(int a, int b) {
+        return a * b;
+    }
+    public static double multiply(double a, double b) {
+        return a * b;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(multiply(3, 4));       // which one?
+        System.out.println(multiply(2.5, 4.0));   // which one?
+    }
+}</textarea>
+  <button class=""run-btn"" onclick=""runCode_apcsa_methodsigs_1()"">▶ Run Code</button>
+  <div class=""sandbox-output"" id=""apcsa-methodsigs-out1""></div>
+</div>
+<script>
+function runCode_apcsa_methodsigs_1() {
+  var code = document.getElementById('apcsa-methodsigs-sb1').value;
+  var out = document.getElementById('apcsa-methodsigs-out1');
+  out.textContent = 'Running...';
+  out.classList.add('show');
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({language:'java',version:'15.0.2',files:[{content:code}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output : (d.message || 'No output');
+  }).catch(function(){out.textContent='Error connecting to sandbox.';});
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 1</h3>
+  <p>A method is declared as <code>public boolean isEven(int n)</code>. Which of the following return statements is correct?</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_methodsigs_1(this,0,2)"">A) return n;</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_methodsigs_1(this,1,2)"">B) return n % 2;</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_methodsigs_1(this,2,2)"">C) return n % 2 == 0;</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_methodsigs_1(this,3,2)"">D) return ""even"";</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-methodsigs-fb1""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_methodsigs_1(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-methodsigs-fb1');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! The method returns boolean. n % 2 == 0 evaluates to true (even) or false (odd) — a boolean. The others return int or String, which don\'t match.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. The method returns boolean. n % 2 == 0 evaluates to true (even) or false (odd) — a boolean. The others return int or String, which don\'t match.';
+  }
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 2</h3>
+  <p>What is the output of the following code?<br></p>
+<pre style=""background:#0f172a;color:#e2e8f0;padding:12px;border-radius:6px;font-family:monospace;"">public static int mystery(int x) {
+    if (x &gt; 10) {
+        return x * 2;
+    }
+    return x + 1;
+}
+System.out.println(mystery(10));
+System.out.println(mystery(11));</pre>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_methodsigs_2(this,0,1)"">A) 20 and 12</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_methodsigs_2(this,1,1)"">B) 11 and 22</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_methodsigs_2(this,2,1)"">C) 10 and 11</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_methodsigs_2(this,3,1)"">D) 11 and 12</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-methodsigs-fb2""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_methodsigs_2(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-methodsigs-fb2');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! mystery(10): 10 is NOT > 10, so returns 10+1=11. mystery(11): 11 > 10, so returns 11*2=22. Output is 11 then 22.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. mystery(10): 10 is NOT > 10, so returns 10+1=11. mystery(11): 11 > 10, so returns 11*2=22. Output is 11 then 22.';
+  }
+}
+</script>
+
+  <div class=""exam-tip"">
+<strong>✅ Exam Tip:</strong> On FRQs, always check that your return type matches the method header given. A method declared <code>public int</code> that returns nothing (or returns a String) will lose points even if the logic is correct.</div>
+
+  <div class=""nav-links"">
+  <a class=""nav-link"" href=""/pages/ap-csa-unit-1-complete-study-guide"">← Unit 1: Using Objects &amp; Methods</a>
+  <a class=""nav-link"" href=""/pages/ap-csa-topics"">All AP CSA Topics</a>
+  <a class=""nav-link primary"" href=""/pages/ap-csa-practice-exams"">Practice Exams →</a>
+</div>
+</div>"
+"ap-csa-searching-sorting","MERGE","<script>
+(function() {
+  var originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.indexOf('emkc.org/api/v2/piston') !== -1) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', '3596176c-098d-4aae-9955-8a1715997264');
+      } else {
+        options.headers['Authorization'] = '3596176c-098d-4aae-9955-8a1715997264';
+      }
+    }
+    return originalFetch.call(this, url, options);
+  };
+})();
+</script>
+<script type=""application/ld+json"">
+[{
+  ""@context"":""https://schema.org"",
+  ""@type"":""BreadcrumbList"",
+  ""itemListElement"":[
+    {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com/""},
+    {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+    {""@type"":""ListItem"",""position"":3,""name"":""Unit 4: Data Collections"",""item"":""https://apcsexamprep.com/pages/ap-csa-unit-4-data-collections-study-guide""},
+    {""@type"":""ListItem"",""position"":4,""name"":""Searching and Sorting in AP CSA: Complete Guide (2025-2026)"",""item"":""https://apcsexamprep.com/pages/ap-csa-searching-sorting""}
+  ]
+},
+{
+  ""@context"":""https://schema.org"",
+  ""@type"":""Person"",
+  ""name"":""Tanner Crow"",
+  ""url"":""https://www.wyzant.com/tutors/tannerc12"",
+  ""jobTitle"":""AP Computer Science Teacher"",
+  ""worksFor"":{""@type"":""Organization"",""name"":""Blue Valley North High School""},
+  ""description"":""AP Computer Science teacher with 11+ years experience. 1,845+ tutoring hours, 5.0 Wyzant rating.""
+}]
+</script>
+<style>
+#apcsa-searchsort{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;}
+#apcsa-searchsort *{box-sizing:border-box!important;}
+#apcsa-searchsort h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important;}
+#apcsa-searchsort h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important;}
+#apcsa-searchsort h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important;}
+#apcsa-searchsort p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;}
+#apcsa-searchsort a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important;}
+#apcsa-searchsort a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcsa-searchsort ul,#apcsa-searchsort ol{margin:0 0 16px 24px!important;padding:0!important;color:#1e1e2e!important;}
+#apcsa-searchsort li{margin-bottom:6px!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;}
+#apcsa-searchsort code{background:#f1f5f9!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:2px 6px!important;border-radius:4px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;}
+#apcsa-searchsort .info-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-left:4px solid #3b82f6!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-searchsort .warn-box{background:#fffbeb!important;border:1px solid #fde68a!important;border-left:4px solid #f59e0b!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-searchsort .warn-box strong{color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#apcsa-searchsort .exam-tip{background:#f0fdf4!important;border:1px solid #bbf7d0!important;border-left:4px solid #22c55e!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-searchsort .exam-tip strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-searchsort pre{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:20px!important;border-radius:10px!important;overflow-x:auto!important;margin:20px 0!important;font-family:'Courier New',monospace!important;font-size:0.92em!important;line-height:1.6!important;white-space:pre!important;}
+#apcsa-searchsort pre code{background:transparent!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:0!important;font-size:1em!important;}
+#apcsa-searchsort table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important;}
+#apcsa-searchsort th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;}
+#apcsa-searchsort td{padding:9px 14px!important;border-bottom:1px solid #e2e8f0!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;vertical-align:top!important;}
+#apcsa-searchsort tr:nth-child(even) td{background:#f8fafc!important;}
+#apcsa-searchsort .breadcrumb{font-size:0.85em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:20px!important;}
+#apcsa-searchsort .breadcrumb a{color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-decoration:none!important;}
+#apcsa-searchsort .breadcrumb a:hover{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;}
+#apcsa-searchsort .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:22px!important;margin:28px 0!important;}
+#apcsa-searchsort .mcq-block h3{margin-top:0!important;}
+#apcsa-searchsort .mcq-option{display:block!important;padding:10px 14px!important;margin:6px 0!important;border-radius:7px!important;border:1.5px solid #e2e8f0!important;cursor:pointer!important;font-size:0.97em!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#fff!important;width:100%!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;transition:border-color 0.15s,background 0.15s!important;}
+#apcsa-searchsort .mcq-option:hover{border-color:#3b82f6!important;background:#eff6ff!important;}
+#apcsa-searchsort .mcq-option.correct{background:#f0fdf4!important;border-color:#22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-searchsort .mcq-option.wrong{background:#fef2f2!important;border-color:#ef4444!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-searchsort .mcq-feedback{margin-top:12px!important;padding:12px 16px!important;border-radius:7px!important;font-size:0.95em!important;display:none!important;}
+#apcsa-searchsort .mcq-feedback.show{display:block!important;}
+#apcsa-searchsort .mcq-feedback.correct{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-searchsort .mcq-feedback.wrong{background:#fef2f2!important;border:1px solid #fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-searchsort .sandbox-wrap{background:#0f172a!important;border-radius:12px!important;padding:20px!important;margin:28px 0!important;}
+#apcsa-searchsort .sandbox-wrap label{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:0.8em!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;display:block!important;margin-bottom:8px!important;}
+#apcsa-searchsort .sandbox-editor{width:100%!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;border:1px solid #334155!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;line-height:1.6!important;resize:vertical!important;min-height:160px!important;box-sizing:border-box!important;}
+#apcsa-searchsort .run-btn{margin-top:12px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;padding:9px 22px!important;font-size:0.95em!important;font-weight:700!important;cursor:pointer!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}
+#apcsa-searchsort .run-btn:hover{background:#2563eb!important;}
+#apcsa-searchsort .sandbox-output{margin-top:12px!important;background:#0a0f1a!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.88em!important;min-height:48px!important;white-space:pre-wrap!important;display:none!important;}
+#apcsa-searchsort .sandbox-output.show{display:block!important;}
+#apcsa-searchsort .nav-links{display:flex!important;gap:12px!important;margin-top:48px!important;padding-top:24px!important;border-top:1px solid #e2e8f0!important;flex-wrap:wrap!important;}
+#apcsa-searchsort .nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 18px!important;border-radius:8px!important;font-size:0.92em!important;font-weight:600!important;text-decoration:none!important;border:1.5px solid #bfdbfe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;}
+#apcsa-searchsort .nav-link:hover{background:#dbeafe!important;border-color:#93c5fd!important;}
+#apcsa-searchsort .nav-link.primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-searchsort .nav-link.primary:hover{background:#1d4ed8!important;}
+</style>
+<div id=""apcsa-searchsort"">
+  <div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a> › <a href=""/pages/ap-csa-unit-4-data-collections-study-guide"">Unit 4</a> › Searching &amp; Sorting</div>
+  <h1>Searching and Sorting in AP CSA</h1>
+  <p>The AP exam requires you to implement, trace, and analyze both linear and binary search, plus selection and insertion sort. Efficiency comparisons appear every year.</p>
+
+  <h2>Linear Search</h2>
+  <p>Check each element one by one. Works on <strong>any</strong> array. O(n) time.</p>
+  <pre><code>public static int linearSearch(int[] arr, int target) {
+    for (int i = 0; i &lt; arr.length; i++) {
+        if (arr[i] == target) {
+            return i;    // found at index i
+        }
+    }
+    return -1;           // not found
+}</code></pre>
+
+  <h2>Binary Search</h2>
+  <p>Requires a <strong>sorted</strong> array. Eliminates half the remaining elements each step. O(log n) time.</p>
+  <pre><code>public static int binarySearch(int[] arr, int target) {
+    int low = 0, high = arr.length - 1;
+    while (low &lt;= high) {
+        int mid = (low + high) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        }
+        else if (arr[mid] &lt; target) low = mid + 1;
+        else high = mid - 1;
+    }
+    return -1;
+}</code></pre>
+
+  <div class=""warn-box"">
+<strong>⚠ Binary Search Requires Sorted Data:</strong> Using binary search on an unsorted array gives unpredictable, incorrect results. The AP exam tests whether you know this precondition.</div>
+
+  <h2>Algorithm Comparison</h2>
+  <table>
+    <tr>
+<th>Algorithm</th>
+<th>Requirement</th>
+<th>Time</th>
+<th>Best for</th>
+</tr>
+    <tr>
+<td>Linear Search</td>
+<td>None</td>
+<td>O(n)</td>
+<td>Small or unsorted data</td>
+</tr>
+    <tr>
+<td>Binary Search</td>
+<td>Sorted array</td>
+<td>O(log n)</td>
+<td>Large sorted data</td>
+</tr>
+    <tr>
+<td>Selection Sort</td>
+<td>None</td>
+<td>O(n²)</td>
+<td>Small arrays</td>
+</tr>
+    <tr>
+<td>Insertion Sort</td>
+<td>None</td>
+<td>O(n²)</td>
+<td>Nearly sorted data</td>
+</tr>
+  </table>
+
+  <div class=""sandbox-wrap"">
+  <label>💻 Try It — Java Sandbox</label>
+  <textarea class=""sandbox-editor"" id=""apcsa-searchsort-sb1"">public class Main {
+    public static int linearSearch(int[] arr, int target) {
+        for (int i = 0; i &lt; arr.length; i++)
+            if (arr[i] == target) return i;
+        return -1;
+    }
+    
+    public static int binarySearch(int[] arr, int target) {
+        int low = 0, high = arr.length - 1;
+        while (low &lt;= high) {
+            int mid = (low + high) / 2;
+            if (arr[mid] == target) return mid;
+            else if (arr[mid] &lt; target) low = mid + 1;
+            else high = mid - 1;
+        }
+        return -1;
+    }
+    
+    public static void main(String[] args) {
+        int[] sorted = {2, 5, 8, 12, 16, 23, 38, 45};
+        System.out.println(linearSearch(sorted, 23));  // 5
+        System.out.println(binarySearch(sorted, 23));  // 5
+        System.out.println(binarySearch(sorted, 10));  // -1
+    }
+}</textarea>
+  <button class=""run-btn"" onclick=""runCode_apcsa_searchsort_1()"">▶ Run Code</button>
+  <div class=""sandbox-output"" id=""apcsa-searchsort-out1""></div>
+</div>
+<script>
+function runCode_apcsa_searchsort_1() {
+  var code = document.getElementById('apcsa-searchsort-sb1').value;
+  var out = document.getElementById('apcsa-searchsort-out1');
+  out.textContent = 'Running...';
+  out.classList.add('show');
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({language:'java',version:'15.0.2',files:[{content:code}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output : (d.message || 'No output');
+  }).catch(function(){out.textContent='Error connecting to sandbox.';});
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 1</h3>
+  <p>Binary search is performed on the sorted array <code>{3, 7, 12, 19, 25, 31, 42}</code> looking for 19. In what order are the middle elements checked?</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_searchsort_1(this,0,1)"">A) 19, 12, 25</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_searchsort_1(this,1,1)"">B) 12, 25, 19</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_searchsort_1(this,2,1)"">C) 19 only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_searchsort_1(this,3,1)"">D) 3, 7, 12, 19</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-searchsort-fb1""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_searchsort_1(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-searchsort-fb1');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! mid = (0+6)/2 = 3, arr[3]=19. That\'s not the answer yet? Actually arr[3]=19 = target, found immediately. But the question tests step 1: mid=3, arr[3]=19, found. The sequence is just arr[3]=19.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. mid = (0+6)/2 = 3, arr[3]=19. That\'s not the answer yet? Actually arr[3]=19 = target, found immediately. But the question tests step 1: mid=3, arr[3]=19, found. The sequence is just arr[3]=19.';
+  }
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 2</h3>
+  <p>Which of the following statements about searching algorithms is correct?<br><br>I. Linear search can be used on unsorted arrays.<br>II. Binary search is always faster than linear search.<br>III. Binary search requires the array to be sorted.</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_searchsort_2(this,0,2)"">A) I only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_searchsort_2(this,1,2)"">B) I and II only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_searchsort_2(this,2,2)"">C) I and III only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_searchsort_2(this,3,2)"">D) I, II, and III</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-searchsort-fb2""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_searchsort_2(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-searchsort-fb2');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! I is correct. III is correct. II is false — on a small array, linear search may be faster because binary search has overhead. Binary search only guarantees better worst-case complexity on large sorted data.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. I is correct. III is correct. II is false — on a small array, linear search may be faster because binary search has overhead. Binary search only guarantees better worst-case complexity on large sorted data.';
+  }
+}
+</script>
+
+  <div class=""exam-tip"">
+<strong>✅ Exam Tip:</strong> Binary search questions ask you to trace the low/high/mid values step by step. Practice this: write out low, high, mid after each iteration. The exam often asks how many comparisons are needed — binary search on 1000 elements needs at most 10 (log&amp;sub2;1024 = 10).</div>
+
+  <div class=""nav-links"">
+  <a class=""nav-link"" href=""/pages/ap-csa-unit-4-data-collections-study-guide"">← Unit 4: Data Collections</a>
+  <a class=""nav-link"" href=""/pages/ap-csa-topics"">All AP CSA Topics</a>
+  <a class=""nav-link primary"" href=""/pages/ap-csa-practice-exams"">Practice Exams →</a>
+</div>
+</div>"
+"ap-csa-static-vs-instance","MERGE","<script>
+(function() {
+  var originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.indexOf('emkc.org/api/v2/piston') !== -1) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', '3596176c-098d-4aae-9955-8a1715997264');
+      } else {
+        options.headers['Authorization'] = '3596176c-098d-4aae-9955-8a1715997264';
+      }
+    }
+    return originalFetch.call(this, url, options);
+  };
+})();
+</script>
+<script type=""application/ld+json"">
+[{
+  ""@context"":""https://schema.org"",
+  ""@type"":""BreadcrumbList"",
+  ""itemListElement"":[
+    {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com/""},
+    {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+    {""@type"":""ListItem"",""position"":3,""name"":""Unit 3: Class Creation"",""item"":""https://apcsexamprep.com/pages/ap-csa-unit-3-class-creation-study-guide""},
+    {""@type"":""ListItem"",""position"":4,""name"":""Static vs Instance in AP CSA: Complete Guide (2025-2026)"",""item"":""https://apcsexamprep.com/pages/ap-csa-static-vs-instance""}
+  ]
+},
+{
+  ""@context"":""https://schema.org"",
+  ""@type"":""Person"",
+  ""name"":""Tanner Crow"",
+  ""url"":""https://www.wyzant.com/tutors/tannerc12"",
+  ""jobTitle"":""AP Computer Science Teacher"",
+  ""worksFor"":{""@type"":""Organization"",""name"":""Blue Valley North High School""},
+  ""description"":""AP Computer Science teacher with 11+ years experience. 1,845+ tutoring hours, 5.0 Wyzant rating.""
+}]
+</script>
+<style>
+#apcsa-staticinst{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;}
+#apcsa-staticinst *{box-sizing:border-box!important;}
+#apcsa-staticinst h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important;}
+#apcsa-staticinst h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important;}
+#apcsa-staticinst h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important;}
+#apcsa-staticinst p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;}
+#apcsa-staticinst a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important;}
+#apcsa-staticinst a:hover{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcsa-staticinst ul,#apcsa-staticinst ol{margin:0 0 16px 24px!important;padding:0!important;color:#1e1e2e!important;}
+#apcsa-staticinst li{margin-bottom:6px!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;}
+#apcsa-staticinst code{background:#f1f5f9!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:2px 6px!important;border-radius:4px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;}
+#apcsa-staticinst .info-box{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-left:4px solid #3b82f6!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-staticinst .warn-box{background:#fffbeb!important;border:1px solid #fde68a!important;border-left:4px solid #f59e0b!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-staticinst .warn-box strong{color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#apcsa-staticinst .exam-tip{background:#f0fdf4!important;border:1px solid #bbf7d0!important;border-left:4px solid #22c55e!important;border-radius:8px!important;padding:16px 20px!important;margin:24px 0!important;}
+#apcsa-staticinst .exam-tip strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-staticinst pre{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:20px!important;border-radius:10px!important;overflow-x:auto!important;margin:20px 0!important;font-family:'Courier New',monospace!important;font-size:0.92em!important;line-height:1.6!important;white-space:pre!important;}
+#apcsa-staticinst pre code{background:transparent!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:0!important;font-size:1em!important;}
+#apcsa-staticinst table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important;}
+#apcsa-staticinst th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;}
+#apcsa-staticinst td{padding:9px 14px!important;border-bottom:1px solid #e2e8f0!important;color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;vertical-align:top!important;}
+#apcsa-staticinst tr:nth-child(even) td{background:#f8fafc!important;}
+#apcsa-staticinst .breadcrumb{font-size:0.85em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:20px!important;}
+#apcsa-staticinst .breadcrumb a{color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-decoration:none!important;}
+#apcsa-staticinst .breadcrumb a:hover{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;}
+#apcsa-staticinst .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:22px!important;margin:28px 0!important;}
+#apcsa-staticinst .mcq-block h3{margin-top:0!important;}
+#apcsa-staticinst .mcq-option{display:block!important;padding:10px 14px!important;margin:6px 0!important;border-radius:7px!important;border:1.5px solid #e2e8f0!important;cursor:pointer!important;font-size:0.97em!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#fff!important;width:100%!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;transition:border-color 0.15s,background 0.15s!important;}
+#apcsa-staticinst .mcq-option:hover{border-color:#3b82f6!important;background:#eff6ff!important;}
+#apcsa-staticinst .mcq-option.correct{background:#f0fdf4!important;border-color:#22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-staticinst .mcq-option.wrong{background:#fef2f2!important;border-color:#ef4444!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-staticinst .mcq-feedback{margin-top:12px!important;padding:12px 16px!important;border-radius:7px!important;font-size:0.95em!important;display:none!important;}
+#apcsa-staticinst .mcq-feedback.show{display:block!important;}
+#apcsa-staticinst .mcq-feedback.correct{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcsa-staticinst .mcq-feedback.wrong{background:#fef2f2!important;border:1px solid #fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+#apcsa-staticinst .sandbox-wrap{background:#0f172a!important;border-radius:12px!important;padding:20px!important;margin:28px 0!important;}
+#apcsa-staticinst .sandbox-wrap label{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:0.8em!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;display:block!important;margin-bottom:8px!important;}
+#apcsa-staticinst .sandbox-editor{width:100%!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;border:1px solid #334155!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.9em!important;line-height:1.6!important;resize:vertical!important;min-height:160px!important;box-sizing:border-box!important;}
+#apcsa-staticinst .run-btn{margin-top:12px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;padding:9px 22px!important;font-size:0.95em!important;font-weight:700!important;cursor:pointer!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}
+#apcsa-staticinst .run-btn:hover{background:#2563eb!important;}
+#apcsa-staticinst .sandbox-output{margin-top:12px!important;background:#0a0f1a!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-radius:8px!important;padding:14px!important;font-family:'Courier New',monospace!important;font-size:0.88em!important;min-height:48px!important;white-space:pre-wrap!important;display:none!important;}
+#apcsa-staticinst .sandbox-output.show{display:block!important;}
+#apcsa-staticinst .nav-links{display:flex!important;gap:12px!important;margin-top:48px!important;padding-top:24px!important;border-top:1px solid #e2e8f0!important;flex-wrap:wrap!important;}
+#apcsa-staticinst .nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 18px!important;border-radius:8px!important;font-size:0.92em!important;font-weight:600!important;text-decoration:none!important;border:1.5px solid #bfdbfe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;}
+#apcsa-staticinst .nav-link:hover{background:#dbeafe!important;border-color:#93c5fd!important;}
+#apcsa-staticinst .nav-link.primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-staticinst .nav-link.primary:hover{background:#1d4ed8!important;}
+</style>
+<div id=""apcsa-staticinst"">
+  <div class=""breadcrumb"">
+<a href=""/pages/ap-csa-exam-prep-hub"">AP CSA</a> › <a href=""/pages/ap-csa-unit-3-class-creation-study-guide"">Unit 3</a> › Static vs Instance</div>
+  <h1>Static vs Instance in AP CSA</h1>
+  <p><strong>Instance</strong> members belong to a specific object. <strong>Static</strong> members belong to the class itself and are shared across all objects. The <code>Math</code> class is all static — you never write <code>new Math()</code>.</p>
+
+  <h2>Instance Members</h2>
+  <p>Each object gets its own copy of instance variables. Instance methods can access instance variables with <code>this</code>.</p>
+  <pre><code>public class Circle {
+    private double radius;          // instance variable -- each Circle has its own
+
+    public Circle(double r) {
+        radius = r;
+    }
+
+    public double getArea() {       // instance method -- needs a specific Circle
+        return Math.PI * radius * radius;
+    }
+}</code></pre>
+
+  <h2>Static Members</h2>
+  <p>Static variables are shared by all objects. Static methods belong to the class and cannot access instance variables directly.</p>
+  <pre><code>public class Circle {
+    private double radius;
+    private static int count = 0;   // shared across ALL circles
+
+    public Circle(double r) {
+        radius = r;
+        count++;                    // every new Circle increments the shared count
+    }
+
+    public static int getCount() { // static method -- called on the class
+        return count;
+    }
+}</code></pre>
+  <pre><code>// Usage
+Circle c1 = new Circle(5.0);
+Circle c2 = new Circle(3.0);
+System.out.println(Circle.getCount());  // 2 -- called on CLASS, not object</code></pre>
+
+  <div class=""warn-box"">
+<strong>⚠ Static Can’t Touch Instance:</strong> A static method cannot reference instance variables or call instance methods directly. It has no <code>this</code> reference because it’s not called on a specific object.</div>
+
+  <div class=""sandbox-wrap"">
+  <label>💻 Try It — Java Sandbox</label>
+  <textarea class=""sandbox-editor"" id=""apcsa-staticinst-sb1"">public class Main {
+    public static void main(String[] args) {
+        System.out.println(Circle.getCount()); // 0
+        Circle c1 = new Circle(5);
+        Circle c2 = new Circle(3);
+        System.out.println(Circle.getCount()); // 2
+        System.out.println(c1.getArea());
+    }
+}
+
+class Circle {
+    private double radius;
+    private static int count = 0;
+    
+    public Circle(double r) {
+        radius = r;
+        count++;
+    }
+    public double getArea() { return Math.PI * radius * radius; }
+    public static int getCount() { return count; }
+}</textarea>
+  <button class=""run-btn"" onclick=""runCode_apcsa_staticinst_1()"">▶ Run Code</button>
+  <div class=""sandbox-output"" id=""apcsa-staticinst-out1""></div>
+</div>
+<script>
+function runCode_apcsa_staticinst_1() {
+  var code = document.getElementById('apcsa-staticinst-sb1').value;
+  var out = document.getElementById('apcsa-staticinst-out1');
+  out.textContent = 'Running...';
+  out.classList.add('show');
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({language:'java',version:'15.0.2',files:[{content:code}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output : (d.message || 'No output');
+  }).catch(function(){out.textContent='Error connecting to sandbox.';});
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 1</h3>
+  <p>A class <code>Player</code> has a static variable <code>playerCount</code> and an instance variable <code>score</code>. After creating 3 Player objects, which of the following is true?</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_staticinst_1(this,0,1)"">A) Each Player object has its own copy of playerCount</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_staticinst_1(this,1,1)"">B) All Player objects share a single copy of playerCount</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_staticinst_1(this,2,1)"">C) playerCount is reset to 0 each time a new Player is created</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_staticinst_1(this,3,1)"">D) playerCount cannot be accessed without a Player object</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-staticinst-fb1""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_staticinst_1(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-staticinst-fb1');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! Static variables are class-level: one copy shared by all instances. All 3 Player objects see the same playerCount.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. Static variables are class-level: one copy shared by all instances. All 3 Player objects see the same playerCount.';
+  }
+}
+</script>
+
+  <div class=""mcq-block"">
+  <h3>📝 Practice Question 2</h3>
+  <p>Which of the following will cause a compile-time error?<br><br>I. A static method calling another static method in the same class<br>II. A static method directly accessing an instance variable<br>III. An instance method calling a static method in the same class</p>
+  <button class=""mcq-option"" onclick=""mcqAnswer_apcsa_staticinst_2(this,0,1)"">A) I only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_staticinst_2(this,1,1)"">B) II only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_staticinst_2(this,2,1)"">C) III only</button>
+<button class=""mcq-option"" onclick=""mcqAnswer_apcsa_staticinst_2(this,3,1)"">D) I and III only</button>
+
+  <div class=""mcq-feedback"" id=""apcsa-staticinst-fb2""></div>
+</div>
+<script>
+function mcqAnswer_apcsa_staticinst_2(btn, chosen, correct) {
+  var block = btn.closest('.mcq-block');
+  block.querySelectorAll('.mcq-option').forEach(function(b){ b.disabled = true; b.style.pointerEvents='none'; });
+  var fb = document.getElementById('apcsa-staticinst-fb2');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'mcq-feedback show correct';
+    fb.innerHTML = '✅ Correct! Only II causes a compile error. A static method has no \'this\' reference and cannot access instance variables directly. I and III are both valid.';
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.mcq-option')[correct].classList.add('correct');
+    fb.className = 'mcq-feedback show wrong';
+    fb.innerHTML = '❌ Not quite. Only II causes a compile error. A static method has no \'this\' reference and cannot access instance variables directly. I and III are both valid.';
+  }
+}
+</script>
+
+  <div class=""exam-tip"">
+<strong>✅ Exam Tip:</strong> The AP exam calls static methods using the class name: <code>Math.random()</code>, <code>Math.abs()</code>. You’ll also see static variables used as counters that track how many objects were created — classic FRQ pattern.</div>
+
+  <div class=""nav-links"">
+  <a class=""nav-link"" href=""/pages/ap-csa-unit-3-class-creation-study-guide"">← Unit 3: Class Creation</a>
+  <a class=""nav-link"" href=""/pages/ap-csa-topics"">All AP CSA Topics</a>
+  <a class=""nav-link primary"" href=""/pages/ap-csa-practice-exams"">Practice Exams →</a>
+</div>
+</div>"
+"ap-csa-this-keyword","MERGE","<script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""FAQPage"",""mainEntity"":[{""@type"":""Question"",""name"":""What does the this keyword do in Java?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The keyword this refers to the current object instance. It is used inside instance methods and constructors to distinguish between instance variables and local parameters with the same name, and to call other constructors in the same class.""}},
+    {""@type"":""Question"",""name"":""When must you use this in a Java constructor?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""When a constructor parameter has the same name as an instance variable, you must use this.variableName to refer to the instance variable. Without this, the assignment would set the parameter equal to itself.""}},
+    {""@type"":""Question"",""name"":""Can you use this in a static method?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""No. static methods are not associated with any object instance, so this has no meaning inside them. Using this in a static method is a compile error.""}},
+    {""@type"":""Question"",""name"":""What is constructor chaining with this()?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Calling this(...) as the first line of a constructor invokes another constructor in the same class. This is called constructor chaining and is used to avoid duplicating initialization code across overloaded constructors.""}}]}</script><script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""AP CSA Topics"",""item"":""https://www.apcsexamprep.com/pages/ap-csa-topics""},{""@type"":""ListItem"",""position"":2,""name"":""The this Keyword in Java"",""item"":""https://www.apcsexamprep.com/pages/ap-csa-this-keyword""}]}</script><script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""Article"",""headline"":""The this Keyword in AP CSA Java"",""description"":""Complete guide to the this keyword in Java for AP CSA: disambiguating instance variables, constructor chaining with this(), and common exam traps."",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://www.wyzant.com/tutors/tannerc12""},""publisher"":{""@type"":""Organization"",""name"":""AP CS Exam Prep"",""url"":""https://www.apcsexamprep.com""},""dateModified"":""2026-03-14"",""educationalLevel"":""AP""}</script>
+<div id=""apcsa-this-keyword"">
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important}
+#apcsa-this-keyword{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;line-height:1.7!important;color:#1e1e2e!important;max-width:900px!important;margin:0 auto!important;padding:24px 20px 60px!important;box-sizing:border-box!important;-webkit-font-smoothing:antialiased!important;background:#ffffff!important}
+#apcsa-this-keyword *{box-sizing:border-box!important}
+#apcsa-this-keyword h1{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-size:2.1em!important;font-weight:800!important;margin:0 0 20px!important;padding-bottom:14px!important;border-bottom:3px solid #3b82f6!important;line-height:1.25!important}
+#apcsa-this-keyword h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.45em!important;font-weight:700!important;margin:40px 0 14px!important;padding-left:12px!important;border-left:4px solid #3b82f6!important}
+#apcsa-this-keyword h3{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1.15em!important;font-weight:700!important;margin:24px 0 10px!important}
+#apcsa-this-keyword h4{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:1em!important;font-weight:700!important;margin:18px 0 8px!important}
+#apcsa-this-keyword p{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin:0 0 16px!important;font-size:1em!important;line-height:1.7!important}
+#apcsa-this-keyword a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:underline!important}
+#apcsa-this-keyword a:link,#apcsa-this-keyword a:visited{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important}
+#apcsa-this-keyword ul,#apcsa-this-keyword ol{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;padding-left:24px!important;margin:0 0 16px!important}
+#apcsa-this-keyword li{color:#1e1e2e!important;-webkit-text-fill-color:#1e1e2e!important;margin-bottom:6px!important;font-size:1em!important}
+#apcsa-this-keyword strong{color:#1a1a2e!important;-webkit-text-fill-color:#1a1a2e!important;font-weight:700!important}
+#apcsa-this-keyword pre{background:#1e1e2e!important;color:#cdd6f4!important;-webkit-text-fill-color:#cdd6f4!important;padding:20px!important;border-radius:8px!important;overflow-x:auto!important;font-family:Consolas,Monaco,'Courier New',monospace!important;font-size:0.9em!important;line-height:1.55!important;white-space:pre!important;margin:14px 0!important;border:none!important}
+#apcsa-this-keyword code{font-family:Consolas,Monaco,'Courier New',monospace!important}
+#apcsa-this-keyword p code,#apcsa-this-keyword li code,#apcsa-this-keyword td code{background:#eff6ff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;padding:2px 6px!important;border-radius:4px!important;font-size:0.88em!important}
+#apcsa-this-keyword table{width:100%!important;border-collapse:collapse!important;margin:20px 0!important;font-size:0.95em!important}
+#apcsa-this-keyword th{background:#eff6ff!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:10px 14px!important;text-align:left!important;font-weight:700!important;border-bottom:2px solid #bfdbfe!important}
+#apcsa-this-keyword td{padding:10px 14px!important;border-bottom:1px solid #e5e7eb!important;color:#1e1e2e!important;vertical-align:top!important}
+#apcsa-this-keyword .info-box{background:#eff6ff!important;border-left:4px solid #3b82f6!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important}
+#apcsa-this-keyword .warning-box{background:#fef3c7!important;border-left:4px solid #f59e0b!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important}
+#apcsa-this-keyword .error-box{background:#fef2f2!important;border-left:4px solid #ef4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important}
+#apcsa-this-keyword .success-box{background:#f0fdf4!important;border-left:4px solid #22c55e!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:20px 0!important}
+#apcsa-this-keyword .info-box p,#apcsa-this-keyword .warning-box p,#apcsa-this-keyword .error-box p,#apcsa-this-keyword .success-box p{margin:0!important;color:#1e1e2e!important}
+#apcsa-this-keyword .mcq-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:10px!important;padding:20px 24px!important;margin:24px 0!important}
+#apcsa-this-keyword .mcq-stem{font-weight:600!important;color:#1a1a2e!important;margin:0 0 14px!important;font-size:1em!important;line-height:1.55!important}
+#apcsa-this-keyword .mcq-options{list-style:none!important;padding:0!important;margin:0 0 14px!important}
+#apcsa-this-keyword .mcq-options li{padding:8px 12px!important;border:1px solid #e2e8f0!important;border-radius:6px!important;margin:6px 0!important;cursor:pointer!important;color:#1e1e2e!important;font-size:0.95em!important;transition:background 0.15s!important}
+#apcsa-this-keyword .mcq-options li:hover{background:#eff6ff!important;border-color:#bfdbfe!important}
+#apcsa-this-keyword .mcq-reveal{display:none!important;padding:12px 16px!important;border-radius:6px!important;margin-top:8px!important;font-size:0.95em!important}
+#apcsa-this-keyword .mcq-reveal.show{display:block!important}
+#apcsa-this-keyword .mcq-reveal.correct{background:#f0fdf4!important;border:1px solid #86efac!important;color:#166534!important;-webkit-text-fill-color:#166534!important}
+#apcsa-this-keyword .mcq-reveal.wrong{background:#fef2f2!important;border:1px solid #fca5a5!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important}
+#apcsa-this-keyword .mcq-btn{display:inline-block!important;padding:8px 18px!important;background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:6px!important;cursor:pointer!important;font-size:0.9em!important;font-weight:600!important;margin-top:4px!important;opacity:1!important;visibility:visible!important}
+#apcsa-this-keyword .mcq-btn:hover{background:#2563eb!important}
+#apcsa-this-keyword .new-badge{display:inline-block!important;background:#dcfce7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;font-size:0.75em!important;font-weight:700!important;padding:2px 10px!important;border-radius:12px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;margin-left:10px!important;vertical-align:middle!important}
+#apcsa-this-keyword .breadcrumb{font-size:0.85em!important;color:#64748b!important;margin-bottom:18px!important;display:block!important}
+#apcsa-this-keyword .breadcrumb a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:none!important}
+#apcsa-this-keyword .breadcrumb a:link,#apcsa-this-keyword .breadcrumb a:visited{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important}
+#apcsa-this-keyword .related-links{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))!important;gap:10px!important;margin:16px 0!important}
+#apcsa-this-keyword .related-link{display:block!important;padding:12px 16px!important;background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:600!important;font-size:0.9em!important}
+#apcsa-this-keyword .related-link:link,#apcsa-this-keyword .related-link:visited{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;text-decoration:none!important}
+#apcsa-this-keyword .related-link:hover{border-color:#3b82f6!important;background:#eff6ff!important}
+#apcsa-this-keyword .unit-tag{display:inline-block!important;font-size:0.78em!important;font-weight:700!important;padding:2px 10px!important;border-radius:12px!important;margin-bottom:16px!important}
+#apcsa-this-keyword .u1-tag{background:#dbeafe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important}
+#apcsa-this-keyword .u3-tag{background:#fef9c3!important;color:#854d0e!important;-webkit-text-fill-color:#854d0e!important}
+@media(max-width:640px){#apcsa-this-keyword{padding:16px 14px 40px!important}#apcsa-this-keyword h1{font-size:1.6em!important}}
+</style>
+<div class=""breadcrumb"">
+<a href=""/pages/ap-csa-topics"">AP CSA Topics</a> › The this Keyword</div>
+<span class=""unit-tag u3-tag"">Unit 3 — Class Creation</span>
+<h1>The <code>this</code> Keyword <span class=""new-badge"">New in 2026</span>
+</h1>
+<p>The keyword <code>this</code> refers to the current object — the instance that a method or constructor is currently executing on. It is new to the 2025-2026 AP CSA curriculum and appears in two main contexts: disambiguating instance variables from parameters, and calling another constructor in the same class.</p>
+
+<h2>Use 1: Disambiguating Instance Variables</h2>
+<p>The most common use of <code>this</code> is inside a constructor (or setter) when the parameter name <em>matches</em> the instance variable name. Without <code>this</code>, the parameter shadows the instance variable and the assignment does nothing useful.</p>
+<pre>public class Circle
+{
+    private double radius;
+
+    public Circle(double radius)   // parameter same name as instance variable
+    {
+        this.radius = radius;       // this.radius = instance variable
+                                   //       radius = parameter
+    }
+    public double getRadius()
+    {
+        return this.radius;        // this. is optional here, but clear
+    }
+}</pre>
+<div class=""warning-box""><p><strong>Without <code>this</code>:</strong> If you write <code>radius = radius;</code> in the constructor, Java sees both sides as the local parameter, so the instance variable is never set. The object’s radius stays at its default value (<code>0.0</code>).</p></div>
+
+<h3>Without this — common bug</h3>
+<pre>public Circle(double radius)
+{
+    radius = radius;   // WRONG: assigns parameter to itself
+                       // instance variable this.radius is never set
+}</pre>
+<h3>With this — correct</h3>
+<pre>public Circle(double radius)
+{
+    this.radius = radius;   // CORRECT: instance variable = parameter
+}</pre>
+
+<h2>Use 2: Constructor Chaining with this()</h2>
+<p>Calling <code>this(...)</code> as the <em>first statement</em> in a constructor delegates to another constructor in the same class. This avoids duplicating initialization code across overloaded constructors.</p>
+<pre>public class Rectangle
+{
+    private int width;
+    private int height;
+    private String color;
+
+    public Rectangle(int width, int height, String color)
+    {
+        this.width  = width;
+        this.height = height;
+        this.color  = color;
+    }
+
+    // Default color is ""white"" — reuse the 3-arg constructor
+    public Rectangle(int width, int height)
+    {
+        this(width, height, ""white"");   // calls the 3-arg constructor
+    }
+}</pre>
+<div class=""info-box""><p><code>this(...)</code> must be the <strong>first statement</strong> in the constructor. If it is not first, the code will not compile. You cannot call both <code>this(...)</code> and <code>super(...)</code> in the same constructor.</p></div>
+
+<h2>this as a Reference to the Current Object</h2>
+<p>In any instance method, <code>this</code> is a reference to the object the method was called on. You can pass <code>this</code> as an argument, or return it from a method.</p>
+<pre>public class Counter
+{
+    private int count;
+        public Counter(int start) {
+        this.count = start;
+    }
+
+        public void increment() {
+        this.count++;
+    }
+
+    public boolean isGreaterThan(Counter other)
+    {
+        return this.count &gt; other.count;   // this = current object
+    }
+}</pre>
+
+<h2>this is NOT valid in static methods</h2>
+<p>Static methods belong to the <em>class</em>, not to any particular object. There is no current instance, so <code>this</code> does not exist inside a static context.</p>
+<pre>public class Utility
+{
+    private int value;
+
+    public static void staticMethod()
+    {
+        System.out.println(this.value);  // COMPILE ERROR: non-static variable
+                                         // cannot be referenced from static context
+    }
+}</pre>
+
+<h2>When is this Optional?</h2>
+<p>Inside an instance method, <code>this.fieldName</code> and <code>fieldName</code> refer to the same instance variable <em>as long as there is no local variable or parameter with the same name</em>. When names don’t conflict, <code>this.</code> is optional but can improve readability.</p>
+<pre>public void setRadius(double r)   // parameter named 'r', not 'radius'
+{
+    radius = r;        // no conflict: fine without this.
+    this.radius = r;   // also fine, more explicit
+}</pre>
+
+<h2>Practice MCQs</h2>
+
+<div class=""mcq-block"">
+<p class=""mcq-stem"">Consider the following class:<br><br>
+<code>public class Dog {</code><br>
+<code>  private String name;</code><br>
+<code>  public Dog(String name) {</code><br>
+<code>    name = name;</code><br>
+<code>  }</code><br>
+<code>  public String getName() { return name; }</code><br>
+<code>}</code><br><br>
+What does <code>new Dog(""Rex"").getName()</code> return?</p>
+<ul class=""mcq-options"">
+<li data-key=""A"">(A) <code>""Rex""</code>
+</li>
+<li data-key=""B"">(B) <code>null</code>
+</li>
+<li data-key=""C"">(C) A compile error occurs in the constructor.</li>
+<li data-key=""D"">(D) An empty string <code>""""</code>
+</li>
+</ul>
+<button class=""mcq-btn"" onclick=""apcsa_this_keywordCheck(this,'B','In the constructor, name = name assigns the parameter to itself. The instance variable this.name is never set, so it retains its default value of null. The fix is to write this.name = name;')"">Check Answer</button>
+<div class=""mcq-reveal""></div>
+</div>
+
+<div class=""mcq-block"">
+<p class=""mcq-stem"">A class <code>Box</code> has two constructors:<br><br>
+<code>public Box(int w, int h, int d) { ... }</code><br>
+<code>public Box(int w, int h) { /* calls other constructor with d=1 */ }</code><br><br>
+Which first line correctly implements the 2-parameter constructor?</p>
+<ul class=""mcq-options"">
+<li data-key=""A"">(A) <code>Box(w, h, 1);</code>
+</li>
+<li data-key=""B"">(B) <code>super(w, h, 1);</code>
+</li>
+<li data-key=""C"">(C) <code>this(w, h, 1);</code>
+</li>
+<li data-key=""D"">(D) <code>new Box(w, h, 1);</code>
+</li>
+</ul>
+<button class=""mcq-btn"" onclick=""apcsa_this_keywordCheck(this,'C','this(w, h, 1) calls another constructor in the same class with the three specified arguments. super() would call a parent class constructor. new Box() would create a new separate object. A plain method-style call Box(w,h,1) is not valid syntax.')"">Check Answer</button>
+<div class=""mcq-reveal""></div>
+</div>
+
+<div class=""mcq-block"">
+<p class=""mcq-stem"">Which of the following is always true about using <code>this</code> in Java?<br>
+I. <code>this</code> can be used in both static and instance methods.<br>
+II. <code>this</code> refers to the current object instance.<br>
+III. <code>this(...)</code> must be the first statement in a constructor if used.</p>
+<ul class=""mcq-options"">
+<li data-key=""A"">(A) I only</li>
+<li data-key=""B"">(B) II only</li>
+<li data-key=""C"">(C) II and III only</li>
+<li data-key=""D"">(D) I, II, and III</li>
+</ul>
+<button class=""mcq-btn"" onclick=""apcsa_this_keywordCheck(this,'C','Statement I is false: this cannot be used in static methods because there is no current instance. Statement II is true. Statement III is true: this() constructor delegation must be the very first statement, or a compile error results.')"">Check Answer</button>
+<div class=""mcq-reveal""></div>
+</div>
+
+<h2>Common Mistakes</h2>
+<ul>
+<li>
+<strong>Forgetting <code>this.</code> when parameter shadows instance variable:</strong> <code>name = name</code> is a no-op; you need <code>this.name = name</code>.</li>
+<li>
+<strong>Using <code>this</code> in a static method:</strong> Compile error — no instance exists in a static context.</li>
+<li>
+<strong>Placing <code>this(...)</code> after other statements:</strong> Constructor delegation must be the first statement or the code won’t compile.</li>
+<li>
+<strong>Confusing <code>this(...)</code> with <code>super(...)</code>:</strong> <code>this(...)</code> calls another constructor in the same class; <code>super(...)</code> calls a parent class constructor.</li>
+</ul>
+
+<h2>Related Topics</h2>
+<div class=""related-links"">
+<a href=""/pages/ap-csa-unit-3-class-creation-study-guide"" class=""related-link"">Unit 3 Study Guide: Class Creation</a>
+<a href=""/pages/ap-csa-unit-3-class-creation-study-guide"" class=""related-link"">Constructors</a>
+<a href=""/pages/ap-csa-unit-3-class-creation-study-guide"" class=""related-link"">Accessor &amp; Mutator Methods</a>
+<a href=""/pages/ap-csa-unit-3-class-creation-study-guide"" class=""related-link"">Static vs Instance</a>
+</div>
+</div>
+<script>
+(function(){
+function apcsa_this_keywordCheck(btn,correct,explanation){
+  var block=btn.closest ? btn.closest('.mcq-block') : btn.parentNode;
+  var opts=block.querySelectorAll('.mcq-options li');
+  var chosen=null;
+  opts.forEach(function(li){if(li.classList.contains('selected'))chosen=li;});
+  if(!chosen){alert('Select an answer first.');return;}
+  var rev=block.querySelector('.mcq-reveal');
+  var letter=chosen.getAttribute('data-key');
+  rev.className='mcq-reveal show '+(letter===correct?'correct':'wrong');
+  rev.innerHTML=(letter===correct?'<strong>Correct!</strong> ':'<strong>Incorrect.</strong> ')+explanation;
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('#apcsa-this-keyword .mcq-options li').forEach(function(li){
+    li.addEventListener('click',function(){
+      var opts=this.closest('.mcq-options').querySelectorAll('li');
+      opts.forEach(function(o){o.classList.remove('selected');o.style.background='';o.style.borderColor='';o.style.fontWeight='';});
+      this.classList.add('selected');
+      this.style.background='#dbeafe';
+      this.style.borderColor='#3b82f6';
+      this.style.fontWeight='600';
+    });
+  });
+});
+window.apcsa_this_keywordCheck=function(btn,correct,explanation){ apcsa_this_keywordCheck(btn,correct,explanation); };
+})();
+</script>"
