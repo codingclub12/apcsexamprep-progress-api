@@ -1,0 +1,412 @@
+{
+  "blog": "ap-csa-daily-practice",
+  "built_at": "2026-09-15T17:10:09.001Z",
+  "combined_sheet": "csa-qotd-repair-ALL-NINE-blog-posts.csv",
+  "import_order": [
+    "ap-csa-u1-c1-day-22-math-random-range",
+    "unit-4-day-19-arraylist-shifting",
+    "ap-csa-u1-c1-day-15-chained-string-methods",
+    "ap-csa-u2-c2-day-4-iii-loop-equivalence",
+    "ap-csa-u1-c2-day-7-error-method-calls",
+    "unit-4-cycle-2-day-25-selection-sort-iteration",
+    "unit4-cycle2-day-25-selection-sort-iteration",
+    "ap-csa-u1-c2-day-20-iii-expression-evaluation",
+    "ap-csa-u1-c2-day-28-comprehensive-final-review"
+  ],
+  "articles": [
+    {
+      "handle": "ap-csa-u1-c1-day-22-math-random-range",
+      "sheet": "csa-qotd-repair-ap-csa-u1-c1-day-22-math-random-range-blog-posts.csv",
+      "why": "Keys (A) I only. Java: I gives 5..12 and III gives 5..12, so (C).",
+      "key_from": "A",
+      "key_to": "C",
+      "edits": [
+        {
+          "id": "key",
+          "authored": false,
+          "bytes_was": 18,
+          "bytes_now": 18
+        },
+        {
+          "id": "heading",
+          "authored": false,
+          "bytes_was": 27,
+          "bytes_now": 35
+        },
+        {
+          "id": "iii-para",
+          "authored": false,
+          "bytes_was": 636,
+          "bytes_now": 404
+        },
+        {
+          "id": "why-not",
+          "authored": false,
+          "bytes_was": 604,
+          "bytes_now": 553
+        }
+      ],
+      "authored": false,
+      "tells_before": [
+        "seems-right",
+        "wait",
+        "let-me",
+        "correction-label",
+        "answer-should"
+      ],
+      "bytes_before": 16667,
+      "bytes_after": 16392
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-4-iii-loop-equivalence",
+      "sheet": "csa-qotd-repair-ap-csa-u2-c2-day-4-iii-loop-equivalence-blog-posts.csv",
+      "why": "Options (A) and (B) both print 0 3 6 9, so the item had two right answers.",
+      "key_from": "A",
+      "key_to": "A",
+      "edits": [
+        {
+          "id": "option-b",
+          "authored": true,
+          "bytes_was": 66,
+          "bytes_now": 66
+        },
+        {
+          "id": "why-not-b",
+          "authored": false,
+          "bytes_was": 323,
+          "bytes_now": 224
+        }
+      ],
+      "authored": true,
+      "tells_before": [
+        "wait"
+      ],
+      "bytes_before": 16034,
+      "bytes_after": 15935
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-7-error-method-calls",
+      "sheet": "csa-qotd-repair-ap-csa-u1-c2-day-7-error-method-calls-blog-posts.csv",
+      "why": "Options (B) and (C) are both compile errors. javac confirms both.",
+      "key_from": "C",
+      "key_to": "C",
+      "edits": [
+        {
+          "id": "option-b",
+          "authored": true,
+          "bytes_was": 30,
+          "bytes_now": 40
+        },
+        {
+          "id": "b-analysis",
+          "authored": false,
+          "bytes_was": 244,
+          "bytes_now": 225
+        },
+        {
+          "id": "trailing-deliberation",
+          "authored": false,
+          "bytes_was": 374,
+          "bytes_now": 0
+        },
+        {
+          "id": "why-not-b",
+          "authored": false,
+          "bytes_was": 270,
+          "bytes_now": 277
+        }
+      ],
+      "authored": true,
+      "tells_before": [
+        "wait"
+      ],
+      "bytes_before": 17164,
+      "bytes_after": 16788
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-15-chained-string-methods",
+      "sheet": "csa-qotd-repair-ap-csa-u1-c1-day-15-chained-string-methods-blog-posts.csv",
+      "why": "Keys \"VA PR5\". Java prints \"VA PRA6\", which was not on the page at all.",
+      "key_from": "B",
+      "key_to": "B",
+      "edits": [
+        {
+          "id": "option-b",
+          "authored": false,
+          "bytes_was": 90,
+          "bytes_now": 91
+        },
+        {
+          "id": "heading",
+          "authored": false,
+          "bytes_was": 27,
+          "bytes_now": 28
+        },
+        {
+          "id": "substring-trace",
+          "authored": false,
+          "bytes_was": 366,
+          "bytes_now": 278
+        },
+        {
+          "id": "length",
+          "authored": false,
+          "bytes_was": 103,
+          "bytes_now": 228
+        },
+        {
+          "id": "concat",
+          "authored": false,
+          "bytes_was": 101,
+          "bytes_now": 193
+        },
+        {
+          "id": "why-not-a",
+          "authored": false,
+          "bytes_was": 232,
+          "bytes_now": 196
+        },
+        {
+          "id": "why-not-c",
+          "authored": false,
+          "bytes_was": 223,
+          "bytes_now": 261
+        },
+        {
+          "id": "why-not-d",
+          "authored": false,
+          "bytes_was": 133,
+          "bytes_now": 198
+        },
+        {
+          "id": "tip-blank",
+          "authored": false,
+          "bytes_was": 80,
+          "bytes_now": 74
+        }
+      ],
+      "authored": false,
+      "tells_before": [
+        "wait",
+        "let-me",
+        "blank-entity"
+      ],
+      "bytes_before": 16458,
+      "bytes_after": 16650
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-20-iii-expression-evaluation",
+      "sheet": "csa-qotd-repair-ap-csa-u1-c2-day-20-iii-expression-evaluation-blog-posts.csv",
+      "why": "Key (D) is right. Only the digression in statement I had to go.",
+      "key_from": "D",
+      "key_to": "D",
+      "edits": [
+        {
+          "id": "statement-i",
+          "authored": false,
+          "bytes_was": 404,
+          "bytes_now": 380
+        }
+      ],
+      "authored": false,
+      "tells_before": [
+        "wait"
+      ],
+      "bytes_before": 16189,
+      "bytes_after": 16165
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-28-comprehensive-final-review",
+      "sheet": "csa-qotd-repair-ap-csa-u1-c2-day-28-comprehensive-final-review-blog-posts.csv",
+      "why": "A stray &blank; renders as literal text in the index listing.",
+      "key_from": null,
+      "key_to": null,
+      "edits": [
+        {
+          "id": "blank-entity",
+          "authored": false,
+          "bytes_was": 24,
+          "bytes_now": 18
+        }
+      ],
+      "authored": false,
+      "tells_before": [
+        "blank-entity"
+      ],
+      "bytes_before": 16566,
+      "bytes_after": 16560
+    },
+    {
+      "handle": "unit-4-day-19-arraylist-shifting",
+      "sheet": "csa-qotd-repair-unit-4-day-19-arraylist-shifting-blog-posts.csv",
+      "why": "Keys \"infinite loop\". The posted i += 2 loop works for every n, so the stem premise was false. The update is the error the item is about.",
+      "key_from": "B",
+      "key_to": "B",
+      "edits": [
+        {
+          "id": "loop-update",
+          "authored": true,
+          "bytes_was": 108,
+          "bytes_now": 105
+        },
+        {
+          "id": "trace",
+          "authored": false,
+          "bytes_was": 1799,
+          "bytes_now": 1013
+        },
+        {
+          "id": "key-concept",
+          "authored": false,
+          "bytes_was": 190,
+          "bytes_now": 249
+        },
+        {
+          "id": "mistake-a",
+          "authored": false,
+          "bytes_was": 255,
+          "bytes_now": 289
+        },
+        {
+          "id": "mistake-cd",
+          "authored": false,
+          "bytes_was": 272,
+          "bytes_now": 252
+        }
+      ],
+      "authored": true,
+      "tells_before": [
+        "wait",
+        "let-me"
+      ],
+      "bytes_before": 15842,
+      "bytes_after": 15126
+    },
+    {
+      "handle": "unit-4-cycle-2-day-25-selection-sort-iteration",
+      "sheet": "csa-qotd-repair-unit-4-cycle-2-day-25-selection-sort-iteration-blog-posts.csv",
+      "why": "The stem was sliced apart: option (A) holds the array as a markdown fence and the grader compares a radio value to an array string, so every answer is marked wrong against a fifth answer that is not on the page and is not right.",
+      "key_from": "[1, 5, 8, 2, 9]",
+      "key_to": "B",
+      "edits": [
+        {
+          "id": "stem-text",
+          "authored": false,
+          "bytes_was": 53,
+          "bytes_now": 59
+        },
+        {
+          "id": "code-block",
+          "authored": false,
+          "bytes_was": 40,
+          "bytes_now": 52
+        },
+        {
+          "id": "option-a",
+          "authored": true,
+          "bytes_was": 119,
+          "bytes_now": 56
+        },
+        {
+          "id": "grader",
+          "authored": false,
+          "bytes_was": 38,
+          "bytes_now": 24
+        },
+        {
+          "id": "grader-message",
+          "authored": false,
+          "bytes_was": 103,
+          "bytes_now": 105
+        },
+        {
+          "id": "why-this-answer",
+          "authored": false,
+          "bytes_was": 105,
+          "bytes_now": 349
+        },
+        {
+          "id": "common-mistake",
+          "authored": false,
+          "bytes_was": 186,
+          "bytes_now": 200
+        },
+        {
+          "id": "exam-strategy",
+          "authored": false,
+          "bytes_was": 114,
+          "bytes_now": 252
+        }
+      ],
+      "authored": true,
+      "tells_before": [
+        "fence"
+      ],
+      "bytes_before": 12575,
+      "bytes_after": 12914
+    },
+    {
+      "handle": "unit4-cycle2-day-25-selection-sort-iteration",
+      "sheet": "csa-qotd-repair-unit4-cycle2-day-25-selection-sort-iteration-blog-posts.csv",
+      "why": "The stem was sliced apart: option (A) holds the array as a markdown fence and the grader compares a radio value to an array string, so every answer is marked wrong against a fifth answer that is not on the page and is not right.",
+      "key_from": "[1, 5, 8, 2, 9]",
+      "key_to": "B",
+      "edits": [
+        {
+          "id": "stem-text",
+          "authored": false,
+          "bytes_was": 53,
+          "bytes_now": 59
+        },
+        {
+          "id": "code-block",
+          "authored": false,
+          "bytes_was": 43,
+          "bytes_now": 52
+        },
+        {
+          "id": "option-a",
+          "authored": true,
+          "bytes_was": 119,
+          "bytes_now": 56
+        },
+        {
+          "id": "grader",
+          "authored": false,
+          "bytes_was": 38,
+          "bytes_now": 24
+        },
+        {
+          "id": "grader-message",
+          "authored": false,
+          "bytes_was": 103,
+          "bytes_now": 105
+        },
+        {
+          "id": "why-this-answer",
+          "authored": false,
+          "bytes_was": 105,
+          "bytes_now": 349
+        },
+        {
+          "id": "common-mistake",
+          "authored": false,
+          "bytes_was": 186,
+          "bytes_now": 200
+        },
+        {
+          "id": "exam-strategy",
+          "authored": false,
+          "bytes_was": 114,
+          "bytes_now": 252
+        }
+      ],
+      "authored": true,
+      "tells_before": [
+        "fence"
+      ],
+      "bytes_before": 12578,
+      "bytes_after": 12914
+    }
+  ]
+}

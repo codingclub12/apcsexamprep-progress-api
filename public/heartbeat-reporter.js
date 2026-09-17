@@ -47,7 +47,14 @@
       // Best-effort fallbacks; override via window.APCS_HEARTBEAT.getToken to
       // match the existing tracker's storage key.
       try {
+        //  apcse_token FIRST, and it was missing here until 2026-09-14. It is the
+        //  key shopify/join.html writes at sign-in and the only one the theme
+        //  reads, so this fallback resolved to "" for every real signed-in
+        //  student and the heartbeat went out unattributed. Same defect as the
+        //  1.1 analysis lab, found by grepping the other consumers rather than
+        //  by a second report. lib/student-token-keys.js is the authority.
         return window.APCS_STUDENT_TOKEN ||
+          localStorage.getItem("apcse_token") ||
           localStorage.getItem("apcs_student_token") ||
           localStorage.getItem("student_token") || "";
       } catch (e) { return ""; }

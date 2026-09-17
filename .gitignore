@@ -30,6 +30,7 @@ report.md
 # Generated teacher-kit output and render previews. Rebuild with
 # scripts/build-csa-teacher-kit.py; the content source is what is tracked.
 build/csa-kit/
+build/csa-unit1-guides/
 build/preview/
 
 # CSP exercise answer keys, fetched by scripts/fetch-csp-keys.js for citation
@@ -43,3 +44,5 @@ build/preview/
 out/
 smoke/smoke-health-integrity.db*
 __pycache__/
+tools/cyber-bundle-ced-voice/repairs.json
+tools/cyber-bundle-ced-voice/worklist.json

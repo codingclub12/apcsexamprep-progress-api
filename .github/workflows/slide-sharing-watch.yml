@@ -1,0 +1,153 @@
+name: Slide sharing watch
+
+# Can a teacher actually open the decks they paid for.
+#
+# WHY THIS RUNS AT ALL
+#   On 2026-09-15 all 70 converted AP Cybersecurity decks answered 401 to an
+#   anonymous fetch: the files were there, the sharing was not. Every entitled
+#   teacher who pressed a deck on a lesson page got Google's "You need access"
+#   wall and a Request access button, and those requests landed in a Drive
+#   inbox that could not grant them, because the gating is supposed to be the
+#   APCSExamPrep teacher token rather than a Google account.
+#
+#   Nothing in this repo noticed for nineteen days. The conversion recorded all
+#   70 as OK, config/cyber-slide-embeds.js was well-formed, routes/slides.js
+#   handed the ids out correctly, and every offline suite was green. The check
+#   that would have caught it existed the whole time as scripts/verify-slide-
+#   sharing.js, and was never wired to anything that runs on its own. A check
+#   nobody runs is a check nobody has.
+#
+#   It surfaced because a teacher mentioned it in passing while emailing about
+#   something else. That is the worst possible detector and the reason this
+#   file exists.
+#
+# WHY IT RUNS HERE AND NOT IN A SESSION
+#   Same reason as drive-watch.yml and ced-watch.yml: Actions runners have open
+#   egress and a session goes through the agent proxy.
+#
+# IT NEEDS NO GOOGLE CREDENTIAL, AND THAT IS THE WHOLE POINT
+#   The decks are meant to be reachable by a stranger holding the link, so the
+#   watcher reads them exactly as a teacher's browser does. A service account
+#   would authenticate straight past the one permission problem most likely to
+#   break a customer, which is how an authenticated check would have reported
+#   these 70 decks healthy every day for nineteen days.
+#
+# WHY BOTH COURSES
+#   CSP was fine on the day cyber was broken, and that contrast is what proved
+#   it was these files rather than a Google-wide policy. Watching one course
+#   would lose the comparison, and CSP's 224 decks can rot the same way.
+
+on:
+  schedule:
+    # Daily, 11:30 UTC (06:30 US Central). Clear of the jobs already on the
+    # clock: auto-dispatch at 06:00, the browser smoke at 07:00, the board
+    # sweep at 08:00, ced-watch at 09:30 and drive-watch at 10:30.
+    #
+    # Daily rather than weekly because this one is customer-facing and silent:
+    # a broken deck does not announce itself, it just sends a teacher to a wall.
+    # It is roughly 300 anonymous GETs to Google per run.
+    #
+    # schedule only fires from the DEFAULT BRANCH, so this does nothing until merged.
+    - cron: '30 11 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: slide-sharing-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  watch:
+    name: Are the decks reachable
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Not piped into anything. A pipeline reports the LAST command's status,
+      # which is how this workflow's sibling once shipped a dead script as a
+      # green tick. Each course is captured separately so one course's failure
+      # cannot hide the other's result.
+      - name: AP Cybersecurity
+        id: cyber
+        run: |
+          set +e
+          node scripts/verify-slide-sharing.js ap-cybersecurity > cyber.txt 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          cat cyber.txt
+
+      - name: AP CSP
+        id: csp
+        if: always()
+        run: |
+          set +e
+          node scripts/verify-slide-sharing.js ap-csp > csp.txt 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          cat csp.txt
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Slide sharing"
+            echo ""
+            echo "### AP Cybersecurity"
+            echo '```'
+            cat cyber.txt 2>/dev/null || echo "(no output)"
+            echo '```'
+            echo ""
+            echo "### AP CSP"
+            echo '```'
+            cat csp.txt 2>/dev/null || echo "(no output)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Exit 1 from the script means decks are unreachable. Exit 2 means the
+      # controls did not behave, so the run measured nothing: that is NOT a
+      # pass, and it must not read as one. Both go red.
+      - name: Fail if a deck is unreachable
+        if: always() && (steps.cyber.outputs.code != '0' || steps.csp.outputs.code != '0')
+        run: |
+          echo "::error title=Slide decks are not reachable::cyber=${{ steps.cyber.outputs.code }} csp=${{ steps.csp.outputs.code }}. See the summary."
+          echo "A teacher pressing one of these decks gets Google's Request access wall."
+          echo "For AP Cybersecurity the repair script is scripts/cyber-slides-reshare.gs."
+          echo "Do NOT re-run the conversion script: it skips every deck already recorded OK."
+          exit 1
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  source==drive, same reasoning as drive-watch.yml: this finding is a
+      #  permission on a file in Google Drive, so whoever picks it up needs to
+      #  go to Drive. Filing it as a linkcheck would send them to the
+      #  storefront, where there is nothing wrong and nothing to fix.
+      #
+      #  `if: always()` so it still reports after the step above exits 1;
+      #  `job.status != 'cancelled'` so a cancelled run, which measured nothing,
+      #  reports neither pass nor fail; continue-on-error so the observer cannot
+      #  turn this red by itself; a missing TODO_KEY skips rather than fails.
+      - name: Report to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="cyber=${{ steps.cyber.outputs.code }} csp=${{ steps.csp.outputs.code }} run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"drive\",\"check_id\":\"slide-sharing\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"

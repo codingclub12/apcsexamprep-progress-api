@@ -1,0 +1,212 @@
+TEACHER GUIDE
+
+Topic 1.13: Object Creation and Storage (Instantiation)
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.13.A | Identify, using its signature, the correct constructor being called. |
+| 1.13.B | Develop code to declare variables of the correct types to hold object references. |
+| 1.13.C | Develop code to create an object by calling a constructor. |
+
+Students will be able to
+
+I can write a complete object creation statement with all four parts: the type, the variable name, the keyword new, and a constructor call with matching arguments.
+
+I can look at a set of overloaded constructors and say which one a given call invokes, using the number, order, and types of the arguments.
+
+I can describe what new does and what the constructor does, in order, and say when the line after the creation statement runs.
+
+I can predict the output when two variables hold references to the same object and one of them changes the object's data.
+
+How the days run
+
+Day 1
+
+The four parts of an object creation statement; Constructor signatures and overloading
+
+Bell ringer: Build me one of each (6 min)
+
+On the board, a class somebody else wrote:  
+class Box {  
+ int size;  
+ Box() {  
+ size = 1;  
+ }  
+ Box(int s) {  
+ size = s;  
+ }  
+}  
+Write one line that creates a Box whose size is 12. Then write one line that creates a Box using the other constructor. Four minutes.
+
+Debrief: The two lines are Box b = new Box(12); and Box c = new Box(); Circle the four parts of the first one on the board: the type Box, the variable name b, the keyword new, and the constructor call Box(12). Then ask how Java knew which of the two constructors to run. It was the argument list and nothing else. Last, point at both constructor headers and ask what is missing compared with every other method they have seen. There is no return type, not even void.
+
+Objectives and guided-notes preview (3 min)
+
+The four parts of an object creation statement (14 min)
+
+The pattern is always the same: ClassName variableName = new ClassName(arguments); Memorize it as a shape, because free response questions ask you to produce it under time pressure.
+
+The left side declares a reference variable of that class type. That variable does not hold an object, it holds a reference to one, exactly as in Topic 1.12.
+
+The right side does the real work. The keyword new allocates memory for a brand new object, the constructor runs and fills in that object's attributes, and then the reference to the finished object is handed back and stored in the variable.
+
+The class name appears twice for two different reasons: on the left it is the type of the variable, and on the right it is the constructor being called. They match, and mismatching them is a compile error.
+
+The most common instantiation mistake by a wide margin is leaving out new. Without new, no object is created and the line does not compile.
+
+Worked example at the board (9 min)
+
+new, constructor, reference assignment, in that order, narrating each step. Students conflate declaring with instantiating.
+
+Constructor signatures and overloading (14 min)
+
+A constructor has the same name as its class and no return type at all. Not int, not void, nothing. If you see a return type on it, it is an ordinary method, not a constructor.
+
+A constructor's signature is its name plus the ordered list of parameter types. Box() and Box(int) are two different signatures, so both can exist in the same class. That is overloading.
+
+Java selects the constructor at the call site by matching the number, the order, and the types of your arguments against the available signatures. If nothing matches, it is a compile error, not a guess.
+
+Type rules cut one way only. An int argument fits a double parameter automatically, so new BankAccount("Bob", 500) works. A double argument does not fit an int parameter without an explicit cast, so new Point(3.0, 4.0) with Point(int, int) is a compile error.
+
+You will see the pattern this.size = size; inside constructors when you write your own classes in Unit 3. For now, just recognize that the constructor's job is to fill in the new object's attributes.
+
+Misconception check: A constructor has no return type (6 min)
+
+A constructor has no return type: Constructors have the same name as the class and no return type written on them at all, not even void. Adding void turns the constructor into an ordinary method, so calls with new stop matching it. The exam asks this as a NOT-true item, so read those stems carefully.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+What actually happens when new runs; Storing the reference: null, aliasing, and passing objects
+
+Bell ringer: retrieval on the previous day (5 min)
+
+What are the three things that happen when you call new?
+
+Objectives and guided-notes preview (3 min)
+
+What actually happens when new runs (7 min)
+
+Instantiation interrupts the normal top-to-bottom flow. Execution jumps into the constructor body, runs it completely, and only then comes back to finish the line that called new.
+
+Nothing runs in parallel and nothing is deferred. The line after the creation statement does not start until the constructor has finished.
+
+The constructor runs exactly once per object. Creating two objects runs a constructor twice, once for each.
+
+Arguments are passed by value: the parameter receives a copy of the argument's value. For an int argument that means a copy of the number, and for a reference argument that means a copy of the address, which still leads to the same object.
+
+Worked walkthrough (10 min)
+
+Two constructors on one class, and which one a given call selects.
+
+Storing the reference: null, aliasing, and passing objects (9 min)
+
+The variable on the left of a creation statement stores a reference. Everything you learned in Topic 1.12 about addresses applies to objects you create yourself.
+
+Box b = null; is legal and sometimes deliberate: it declares a Box variable that intentionally holds no object yet. Calling b.size on it throws a NullPointerException at run time.
+
+Assigning one reference variable to another copies the address, so both names lead to one object. Changing that object's data through either name is visible through the other name.
+
+Reassigning a variable and changing an object are different actions. Reassigning points a name somewhere else; changing an object edits the thing both names lead to.
+
+This is also why passing an object into a method and modifying the object inside is visible to the caller. The method got a copy of the address, and that copy leads to the same object.
+
+Guided practice on the live lesson page (12 min)
+
+Move the class to the live lesson page (Unit 1 Link Sheet, row 1.13). Students run the Java editor exercise, then work the Tier 2 AP Practice set of eight questions in pairs with the four-part creation pattern visible. Close with one game and the Tier 3 Mastery Challenge, The Bank Account.
+
+Run the 1.13 Java editor exercise as written and confirm the expected output.
+
+Break it on purpose: delete the keyword new from a creation line, run it, and read the compiler message out loud. Then restore it.
+
+Break it a second way: pass a double literal to a constructor whose parameter is an int, run it, and compare that message with the previous one.
+
+Work the eight Tier 2 practice questions with a partner. For every question with overloaded constructors, write the matching signature in the margin before choosing.
+
+Choose one game: Output Predictor for Object Creation (six questions, with the class definitions available behind the View class definition control) or Bug Hunt for Instantiation (seven snippets, one buggy line each).
+
+Finish with Tier 3, The Bank Account, Parts A, B, and C. Part C asks for a third overloaded no-arg constructor plus an explanation of why three constructors may share one name, so write it in complete sentences.
+
+Independent practice (9 min)
+
+Offline instantiation practice on paper. Class definitions are printed on the handout, so no compiler is needed.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. Class Box has constructors Box() and Box(int s). Which line correctly creates a Box with size 5?
+
+Answer: C
+
+2\. Which statement about constructors is NOT true?  
+I. A constructor has the same name as its class.  
+II. A constructor must have the return type void.  
+III. Constructors can be overloaded.
+
+Answer: B
+
+3\. What is printed?  
+Box a = new Box(10);  
+Box b = a;  
+a.size = 99;  
+System.out.println(b.size);
+
+Answer: C
+
+Traps this topic sets
+
+A constructor has no return type. Constructors have the same name as the class and no return type written on them at all, not even void. Adding void turns the constructor into an ordinary method, so calls with new stop matching it. The exam asks this as a NOT-true item, so read those stems carefully.
+
+Forgetting new. Box b = Box(12); does not create anything and does not compile. Object creation always requires the keyword new followed by a constructor call. Also watch for the reverse mistake, a line with new but no declared type on the left.
+
+Argument types must match the signature. Java picks the constructor by the number, order, and types of the arguments. An int argument fits a double parameter automatically, but a double argument does not fit an int parameter without an explicit cast, so new Point(3.0, 4.0) against Point(int, int) is a compile error. Reordering arguments changes which signature you are calling, or whether any matches at all.
+
+Assignment copies the reference, not the object. Box b = a; makes b lead to the very same object that a leads to, so editing the object through either name shows up through both. Only a second new call produces a second object. Count the new calls to count the objects.
+
+Differentiation
+
+Support
+
+Give a printed fill-in strip with four labeled slots, type, variable name, new, constructor call, and have struggling students write every creation statement into the strip before writing it as a line of Java.
+
+Provide the class definitions on a separate card that stays face up on the desk. Most errors in this topic come from students trying to remember the constructor signatures instead of reading them.
+
+Restrict early signature-matching practice to two constructors that differ only in the number of parameters, then add a pair that differ in type once the counting is automatic.
+
+Pair the trace tables: one partner reads the line aloud, the other updates the object drawing on the board or on paper, then swap after each snippet.
+
+Stretch
+
+Give a class with three overloaded constructors and ask students to write one call for each signature, plus two calls that look plausible but do not compile, with the reason stated for each.
+
+Ask them to explain in writing why new Box(10) twice produces two objects while Box b = a; produces none, and to support the explanation with a memory drawing.
+
+Have advanced students write a short program in which a constructor prints a message and then predict the exact output order before running it, then add a second object creation and predict again.
+
+Challenge: given a constructor with parameters (String, double), explain why passing an int as the second argument compiles but passing a double as the first argument does not, in terms of which conversions Java performs automatically.
+
+Homework
+
+Vocabulary: write the ten terms with definitions in your own words. For constructor, constructor signature, overloaded constructors, and new, include one line of Java that illustrates the term.
+
+Creation drill: eight scenarios on the handout, each naming a class and the attribute values wanted. Write the complete creation statement for each and label the four parts on the first three.
+
+Signature matching: given three overloaded constructors on the handout, decide for each of eight calls which signature it matches or write does not compile with a one-line reason.
+
+Trace table: the aliasing snippet on the handout with two variables and one attribute change. Fill in a row per line, give the exact output, and write one sentence stating how many objects exist and why.
+
+Write and predict: on paper, write four lines that create two objects of the same class with the same starting values, then change one of them, then print both. State the exact output and explain in one sentence why the second object did not change.
+
+Optional online: replay the Output Predictor and Bug Hunt games on the lesson page (Unit 1 Link Sheet, row 1.13) until you catch all seven bugs.
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.13 teacher guide Page

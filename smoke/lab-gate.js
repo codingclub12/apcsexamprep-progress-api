@@ -125,13 +125,18 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   ok('  it is a 200, so the player can say "not opened yet" rather than "missing"', r.status === 200, r.status);
 
   console.log('\n3. What must stay true: a lab nobody closed is still public');
-  //  Anonymous is refused THIS lab, because a class has closed it. That is the
-  //  2026-09-07 change: it used to be served, which made the lock one click wide.
+  //  BOARD 277, decided 2026-09-14: "Labs should be open as long as the specific
+  //  teacher doesn't lock it." From 2026-09-07 to that date this was the
+  //  opposite, so anonymous was refused a lab ANY class had closed. The reasoning
+  //  for that is in routes/labs.js and has not been forgotten: without it the
+  //  lock is one click wide. Tanner was given that cost and took the other side,
+  //  because one school was otherwise taking the lab dark for the whole public
+  //  internet.
   r = await call('GET', URL);
-  ok('  an anonymous visitor is refused a lab some class has closed',
-    r.status === 200 && r.body.locked === true, r.body && r.body.reason);
-  ok('  and the spec is NOT on the wire for them either',
-    r.body && r.body.lab === null && !r.body.brief, Object.keys(r.body || {}));
+  ok('  an anonymous visitor gets a lab another class has closed',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
+  ok('  and the spec IS on the wire for them, so public practice is intact',
+    r.body && !!r.body.brief, Object.keys(r.body || {}));
   //  The half that must not regress. Public practice pays for this feature, so a
   //  lab NO class has closed stays open and indexable to anyone.
   r = await call('GET', OPEN_URL);
@@ -149,8 +154,8 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   //  with a status code, so the page still renders "not opened" rather than
   //  "could not be loaded".
   ok('  a junk token degrades to anonymous rather than 401ing', r.status === 200, r.status);
-  ok('  and lands on the anonymous rule, not on a class rule',
-    r.body && r.body.locked === true && /^anonymous-/.test(r.body.reason || ''), r.body && r.body.reason);
+  ok('  and anonymous means no class, so no class rule reaches it',
+    r.body && !r.body.locked, r.body && r.body.reason);
 
   console.log('\n4. The scopes reach labs, not just the exact activity');
   run('DELETE FROM activity_gates WHERE class_id = ?', 'c1');
@@ -223,10 +228,8 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   run('DELETE FROM activity_gates');
   await setGate({ lesson: LAB.lesson_id, activity_type: ACT, open: false });
   r = await call('GET', URL);
-  ok('  signing out no longer opens a closed lab',
-    r.status === 200 && r.body.locked === true, r.body && r.body.reason);
-  ok('  and the refusal names the anonymous rule, so an operator can tell which fired',
-    r.body && /^anonymous-/.test(r.body.reason || ''), r.body && r.body.reason);
+  ok('  signing out opens a closed lab, which board 277 chose deliberately',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
   r = await call('GET', OPEN_URL);
   ok('  a lab nobody closed is still open signed out',
     r.status === 200 && !r.body.locked, r.body && r.body.reason);
@@ -332,8 +335,8 @@ const setGate = (b) => call('POST', `/api/teacher/classes/${CODE}/gate`, { cours
   ok('  a student whose own class closed it is told about their class',
     r.body && r.body.locked_for === 'class', r.body && r.body.locked_for);
   r = await call('GET', URL);
-  ok('  a signed-out visitor is told it is the anonymous rule',
-    r.body && r.body.locked_for === 'anonymous', r.body && r.body.locked_for);
+  ok('  a signed-out visitor is told nothing, because they are not refused',
+    !r.body.locked && r.body.locked_for === undefined, r.body && r.body.locked_for);
   //  A student of a class that has NOT closed this lab, signed out, is the case
   //  the wording was wrong for. Signed in they get the lab; signed out they hit
   //  the anonymous rule, and must not be told their teacher closed anything.

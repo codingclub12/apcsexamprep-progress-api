@@ -77,10 +77,40 @@ const MUTATIONS = [
     name: 'signing out walks past it again: anonymous goes back to automatic self-study',
     file: 'route',
     suite: 'gate',
-    find: "    const hit = lockedForAnyClass(anyGateStmt.all(spec.course, unit), lesson, acts);\n    if (hit.locked) return { open: false, reason: 'anonymous-' + hit.reason, scope: hit.scope };",
-    repl: '    if (false) return { open: false };',
-    must: ['a signed-OUT student is refused too'],
+    find: "    return { open: true, reason: 'self-study' };\n  }\n  const cls = classStmt.get(stu.class_id);",
+    repl: "    return { open: false, reason: 'anonymous-closed-for-activity' };\n  }\n  const cls = classStmt.get(stu.class_id);",
+    //  Named on the SECTION 1 assertion rather than the section 3 one, because
+    //  this mutation refuses every anonymous caller and section 1 is where the
+    //  first of them asks. The suite stops there (the next line reads
+    //  activity.specimens on a null activity), so section 3 never runs and naming
+    //  it would make this entry fail for bookkeeping rather than for the rule.
+    must: ['an anonymous visitor gets the activity'],
   },
+  //  ── TWO MUTATIONS RETIRED 2026-09-14, BOARD 277 ────────────────────────────
+  //  They mutated the teacher-preview branch: one deleted it outright, one
+  //  dropped its `role === 'teacher'` check. Both were real when they were
+  //  written on 2026-09-14, because an anonymous caller was refused whenever any
+  //  class had closed the activity, so the branch decided whether a teacher got
+  //  in and the role check decided who counted as one.
+  //
+  //  Board 277, later the same day, opened the anonymous case. Every caller
+  //  without a student row now gets the activity, so deleting the teacher branch
+  //  changes nothing observable and this battery reported both mutations GREEN,
+  //  which is a FAILED check by the rule at the top of this file. They are
+  //  retired rather than repaired because there is nothing left to repair: the
+  //  behaviour they defended is now produced by the branch below them.
+  //
+  //  THE BRANCH ITSELF IS KEPT, and that is deliberate rather than an oversight.
+  //  It is a permit and not a guard: redundant code that grants what is already
+  //  granted is harmless, while a MUTATION claiming to prove something it cannot
+  //  is the hollow thing, so the mutations go and the four lines stay. If the
+  //  anonymous rule is ever narrowed again, that branch is what keeps a teacher
+  //  out of the support queue, and the mutation directly above this comment is
+  //  what makes narrowing it a visible act.
+  //
+  //  The role check still decides something real elsewhere: the lab ANSWER KEY.
+  //  smoke:labkey and smoke:labteacherpreview assert a forged, expired, student
+  //  and stale token are each refused it.
   {
     //  The overcorrection. Refusing everyone everything closes the hole and takes
     //  the public practice layer dark, which is the trade Tanner did not choose.

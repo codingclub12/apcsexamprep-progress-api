@@ -1,0 +1,577 @@
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"Quiz","headline":"AP Cybersecurity 2.1 Lab: Phases of a Cyberattack","description":"Assign forensic observations to the phases of a cyberattack — reconnaissance through evading detection — using matching, fill-in-the-blank, select-all, multiple choice, and written analysis. AP Cybersecurity Topic 2.1.","author":{"@type":"Person","name":"Tanner Crow"},"publisher":{"@type":"Organization","name":"APCSExamPrep.com"},"educationalLevel":"High School","inLanguage":"en-US"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.apcsexamprep.com"},{"@type":"ListItem","position":2,"name":"AP Cybersecurity","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"},{"@type":"ListItem","position":3,"name":"Unit 2","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit2"},{"@type":"ListItem","position":4,"name":"2.1 Lab","item":"https://www.apcsexamprep.com/pages/ap-cyber-unit-2-lesson-1-lab"}]}]
+</script>
+<style>
+
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+#apcyber-wrapper{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+#apcyber-wrapper .exhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#apcyber-wrapper .exhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .exhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#apcyber-wrapper .exhero p{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;}
+#apcyber-wrapper .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#apcyber-wrapper .score-val{font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;}
+#apcyber-wrapper .scenario-card{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#apcyber-wrapper .sc-inner{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#apcyber-wrapper .sc-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .sc-title{font-family:Georgia,serif!important;font-size:18px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 10px!important;}
+#apcyber-wrapper .sc-text{font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;}
+#apcyber-wrapper .sc-text p{margin:0 0 8px!important;}
+/* question blocks */
+#apcyber-wrapper .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#apcyber-wrapper .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#apcyber-wrapper .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#apcyber-wrapper .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#apcyber-wrapper .q-topic{font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .q-stem{padding:18px 18px 4px!important;font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;}
+#apcyber-wrapper .q-stem .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .options{padding:4px 18px 16px!important;}
+#apcyber-wrapper .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .option-label.correct-opt{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .option-label.wrong-opt{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .option-label.neutral-opt{opacity:0.55!important;}
+#apcyber-wrapper .check-btn{
+  display:block!important;margin:0 18px 16px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#apcyber-wrapper .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#apcyber-wrapper .feedback-box{display:none!important;margin:0 18px 18px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .feedback-box.show{display:block!important;}
+#apcyber-wrapper .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#apcyber-wrapper .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#apcyber-wrapper .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+/* textarea/select for Ex2 format */
+#apcyber-wrapper .field-group{margin-bottom:14px!important;}
+#apcyber-wrapper .field-label{display:block!important;font-size:13px!important;font-weight:700!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .field-select{width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;appearance:auto!important;-webkit-appearance:auto!important;}
+#apcyber-wrapper .field-textarea{width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;resize:vertical!important;line-height:1.5!important;}
+#apcyber-wrapper .field-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:3px!important;}
+#apcyber-wrapper .pts-badge{display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;font-weight:700!important;padding:3px 10px!important;border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;}
+#apcyber-wrapper .submit-part{display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:8px!important;}
+#apcyber-wrapper .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* part blocks for Ex2/Lab */
+#apcyber-wrapper .part-block{border:1px solid #E5E7EB!important;border-radius:10px!important;margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;}
+#apcyber-wrapper .part-header{background:#F5F0FF!important;padding:16px 18px!important;border-bottom:1px solid #DDD6FE!important;}
+#apcyber-wrapper .part-num{display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;font-family:Georgia,serif!important;margin-right:8px!important;}
+#apcyber-wrapper .part-title{font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;}
+#apcyber-wrapper .part-body{padding:18px!important;}
+#apcyber-wrapper .part-context{background:#F9FAFB!important;border-left:3px solid #A855F7!important;padding:12px 14px!important;border-radius:0 6px 6px 0!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt{font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;}
+#apcyber-wrapper .part-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+#apcyber-wrapper .part-feedback{display:none!important;margin-top:16px!important;border-radius:8px!important;padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;}
+#apcyber-wrapper .part-feedback.show{display:block!important;}
+#apcyber-wrapper .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .fb-model{background:#F5F0FF!important;border-left:3px solid #7C3AED!important;padding:10px 14px!important;border-radius:0 6px 6px 0!important;margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcyber-wrapper .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+/* results */
+#apcyber-wrapper .results-panel{display:none!important;max-width:800px!important;margin:0 auto 32px!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;}
+#apcyber-wrapper .results-panel.show{display:block!important;}
+#apcyber-wrapper .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#apcyber-wrapper .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#apcyber-wrapper .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#apcyber-wrapper .results-btn{display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;}
+#apcyber-wrapper a.results-btn:link,#apcyber-wrapper a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#apcyber-wrapper .nav-links{max-width:800px!important;margin:0 auto 40px!important;display:flex!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;}
+#apcyber-wrapper .nav-link{display:inline-block!important;padding:10px 20px!important;border:1px solid #DDD6FE!important;border-radius:6px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;}
+#apcyber-wrapper a.nav-link:link,#apcyber-wrapper a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+
+
+/* ===== CHECKBOX (select all that apply) ===== */
+#apcyber-wrapper .cb-group{padding:4px 18px 16px!important;}
+#apcyber-wrapper .cb-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;border-radius:6px!important;margin-bottom:8px!important;
+  cursor:pointer!important;transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#apcyber-wrapper .cb-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#apcyber-wrapper .cb-label input[type="checkbox"]{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#apcyber-wrapper .cb-label.cb-correct{background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;}
+#apcyber-wrapper .cb-label.cb-wrong{background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#apcyber-wrapper .cb-label.cb-missed{background:#FEF3C7!important;border-color:#FDE68A!important;color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .cb-label.cb-neutral{opacity:0.55!important;}
+
+/* ===== MATCHING ===== */
+#apcyber-wrapper .match-container{padding:4px 18px 16px!important;}
+#apcyber-wrapper .match-row{
+  display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:10px!important;
+  align-items:center!important;margin-bottom:10px!important;
+}
+#apcyber-wrapper .match-term{
+  background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:6px!important;
+  padding:10px 14px!important;font-family:Georgia,serif!important;font-size:14px!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;font-weight:600!important;
+}
+#apcyber-wrapper .match-arrow{color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-size:18px!important;text-align:center!important;}
+#apcyber-wrapper .match-select{
+  width:100%!important;padding:10px 12px!important;border:1px solid #D1D5DB!important;
+  border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;
+  appearance:auto!important;-webkit-appearance:auto!important;
+}
+#apcyber-wrapper .match-select.match-correct{border-color:#86EFAC!important;background:#DCFCE7!important;}
+#apcyber-wrapper .match-select.match-wrong{border-color:#FCA5A5!important;background:#FEE2E2!important;}
+
+/* ===== CLOZE / FILL-BLANK ===== */
+#apcyber-wrapper .cloze-container{padding:4px 18px 16px!important;}
+#apcyber-wrapper .cloze-text{
+  font-family:Georgia,serif!important;font-size:15px!important;color:#1E1B4B!important;
+  -webkit-text-fill-color:#1E1B4B!important;line-height:2.2!important;
+}
+#apcyber-wrapper .cloze-blank{
+  display:inline-block!important;min-width:140px!important;padding:4px 10px!important;
+  border:2px dashed #C4B5FD!important;border-radius:4px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;
+  color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;
+  background:#F5F0FF!important;text-align:center!important;
+}
+#apcyber-wrapper .cloze-blank:focus{border-color:#6B21A8!important;outline:none!important;box-shadow:0 0 0 2px #EDE9FE!important;}
+#apcyber-wrapper .cloze-blank.cloze-correct{border-color:#86EFAC!important;background:#DCFCE7!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;border-style:solid!important;}
+#apcyber-wrapper .cloze-blank.cloze-wrong{border-color:#FCA5A5!important;background:#FEE2E2!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;border-style:solid!important;}
+
+/* ===== STEP BLOCKS (replaces q-block for labs) ===== */
+#apcyber-wrapper .step-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:24px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#apcyber-wrapper .step-header{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;padding:16px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;
+}
+#apcyber-wrapper .step-num{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-weight:700!important;font-size:11px!important;padding:3px 10px!important;border-radius:20px!important;
+  font-family:Georgia,serif!important;margin-right:8px!important;letter-spacing:0.5px!important;
+}
+#apcyber-wrapper .step-type{
+  display:inline-block!important;background:rgba(168,85,247,0.15)!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;
+  font-size:10px!important;font-weight:700!important;padding:2px 8px!important;border-radius:10px!important;
+  font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:1px!important;margin-left:6px!important;
+}
+#apcyber-wrapper .step-title{
+  font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;
+}
+#apcyber-wrapper .step-body{padding:18px!important;}
+#apcyber-wrapper .step-context{
+  background:#F9FAFB!important;border-left:3px solid #A855F7!important;
+  padding:12px 14px!important;border-radius:0 6px 6px 0!important;
+  font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;
+  -webkit-text-fill-color:#374151!important;margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;
+}
+#apcyber-wrapper .step-prompt{
+  font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;
+  -webkit-text-fill-color:#1E1B4B!important;margin-bottom:14px!important;line-height:1.6!important;
+}
+#apcyber-wrapper .step-prompt .kw{font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+
+/* step feedback */
+#apcyber-wrapper .step-feedback{
+  display:none!important;margin:16px 0 0!important;border-radius:8px!important;
+  padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;
+}
+#apcyber-wrapper .step-feedback.show{display:block!important;}
+#apcyber-wrapper .step-feedback.sf-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#apcyber-wrapper .step-feedback.sf-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#apcyber-wrapper .step-feedback.sf-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#apcyber-wrapper .sf-score{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#apcyber-wrapper .sf-good .sf-score{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#apcyber-wrapper .sf-partial .sf-score{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#apcyber-wrapper .sf-wrong .sf-score{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+
+</style>
+
+<div id="apcyber-wrapper" data-lesson-id="2.1">
+
+  <div class="exhero">
+    <div class="exhero-badge">Unit 2 • 2.1 • Lab</div>
+    <nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;"><a href="/" style="color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;">Unit 2 › 2.1 › Lab</span></nav>
+    <h1>Lab — Operation Nightjar: Tracing the Phases of a Cyberattack</h1>
+    <p>6 steps, 30 points — Mixed formats: matching, fill-blank, select-all, MCQ, and written analysis</p>
+  </div>
+
+  <div class="score-bar">
+    <span>Score: <span class="score-val" id="score-display">0 / 30</span></span>
+    <span style="font-size:13px;color:#6B7280;-webkit-text-fill-color:#6B7280;">Each step uses a different assessment format</span>
+  </div>
+
+  <div class="scenario-card"><div class="sc-inner">
+<div class="sc-label">Incident Under Review</div>
+<div class="sc-title">Northgate Regional Credit Union</div>
+<div class="sc-text"><p>Over eleven days an adversary moved from outside Northgate Regional Credit Union all the way to its domain controller. The incident response team has recovered a partial timeline: public-source research on staff, a spoofed invoice attachment opened by a finance clerk, a scheduled task that reloaded malware at every boot, a harvested service account used to reach the backup server and then the domain controller, 14 GB of member records compressed and uploaded to an external host, the payroll file share encrypted in place, and cleared security event logs. Your job is to place each observation in the phase of the cyberattack it belongs to, and to say where Northgate could have broken the chain.</p></div>
+</div></div>
+
+  <!-- STEP 1: MATCHING -->
+  <div style="max-width:800px;margin:24px auto;padding:0 20px;">
+    <div class="step-block" id="step-1">
+      <div class="step-header">
+<span class="step-num">Step 1</span><span class="step-type">Matching</span><div class="step-title">Classify Each Attack Phase</div>
+</div>
+      <div class="step-body">
+        <div class="step-context">Match each analyst note to the phase of the cyberattack it belongs to. Decide the phase in your head before you open the menu.</div>
+        <div class="match-container">
+          <div class="match-row">
+<div class="match-term">Scraped the public staff directory, conference talk pages, and job postings to build a list of names, roles, and the company email format</div>
+<div class="match-arrow">→</div>
+<select class="match-select" id="m1"><option value="">Select...</option>
+<option value="RC">Reconnaissance</option>
+<option value="IA">Initial access</option>
+<option value="PS">Persistence</option>
+<option value="LM">Lateral movement</option>
+<option value="TA">Taking action</option>
+<option value="ED">Evading detection</option></select>
+</div>
+          <div class="match-row">
+<div class="match-term">Used a harvested service account to authenticate to the backup server and then the domain controller, gaining permissions the clerk never had</div>
+<div class="match-arrow">→</div>
+<select class="match-select" id="m2"><option value="">Select...</option>
+<option value="RC">Reconnaissance</option>
+<option value="IA">Initial access</option>
+<option value="PS">Persistence</option>
+<option value="LM">Lateral movement</option>
+<option value="TA">Taking action</option>
+<option value="ED">Evading detection</option></select>
+</div>
+          <div class="match-row">
+<div class="match-term">Cleared the security event log entries for the compromised account and deleted the dropped malware binaries from disk</div>
+<div class="match-arrow">→</div>
+<select class="match-select" id="m3"><option value="">Select...</option>
+<option value="RC">Reconnaissance</option>
+<option value="IA">Initial access</option>
+<option value="PS">Persistence</option>
+<option value="LM">Lateral movement</option>
+<option value="TA">Taking action</option>
+<option value="ED">Evading detection</option></select>
+</div>
+        </div>
+        <button class="check-btn" onclick="scoreStep(1)">Check Matches</button>
+        <div class="step-feedback" id="fb-s1">
+<div class="sf-score" id="sf-s1"></div>
+<div class="fb-exp">Note 1 = <strong>Reconnaissance</strong> — gathering freely available information about the target, which is open-source intelligence (EK 2.1.C.2). Note 2 = <strong>Lateral movement</strong> — reaching accounts and computers with elevated permissions the first foothold did not have (EK 2.1.C.5). Note 3 = <strong>Evading detection</strong> — removing or editing log files and erasing planted files (EK 2.1.C.7).</div>
+<div class="fb-tip">
+<strong>Exam Tip:</strong> Sort by what the adversary <strong>gains</strong>. Information about the target → reconnaissance. New permissions → lateral movement. Less evidence left behind → evading detection.</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: CLOZE -->
+  <div style="max-width:800px;margin:24px auto;padding:0 20px;">
+    <div class="step-block" id="step-2">
+      <div class="step-header">
+<span class="step-num">Step 2</span><span class="step-type">Fill in the Blank</span><div class="step-title">Complete the Incident Timeline</div>
+</div>
+      <div class="step-body">
+        <div class="step-context">Fill in each blank with the correct term from Topic 2.1.</div>
+        <div class="cloze-container"><div class="cloze-text">
+          <p style="margin-bottom:14px!important;">Day 1: The adversary collected freely available information about Northgate from public sources — the staff directory, recorded conference talks, and job postings. Publicly available information used this way is called <input type="text" class="cloze-blank" id="c1" placeholder="???" autocomplete="off"> (acronym).</p>
+          <p style="margin-bottom:14px!important;">Day 3: A finance clerk opened a spoofed invoice attachment and the adversary gained its first foothold on the network. That phase is called initial <input type="text" class="cloze-blank" id="c2" placeholder="???" autocomplete="off">.</p>
+          <p style="margin-bottom:14px!important;">Day 4: A scheduled task re-launched the malware at every boot and beaconed out for instructions to the adversary’s command and <input type="text" class="cloze-blank" id="c3" placeholder="???" autocomplete="off"> server.</p>
+          <p style="margin-bottom:14px!important;">Day 6: The adversary used a harvested service account to reach the domain controller. Moving to accounts and computers with elevated permissions is <input type="text" class="cloze-blank" id="c4" placeholder="???" autocomplete="off"> movement.</p>
+          <p>Day 9: 14 GB of member records were compressed and uploaded to an external host. Transferring data out of the organization without authorization is data <input type="text" class="cloze-blank" id="c5" placeholder="???" autocomplete="off">.</p>
+        </div></div>
+        <button class="check-btn" onclick="scoreStep(2)">Check Answers</button>
+        <div class="step-feedback" id="fb-s2">
+<div class="sf-score" id="sf-s2"></div>
+<div class="fb-exp">Answers: (1) <strong>OSINT</strong>, open-source intelligence (2) initial <strong>access</strong> (3) command and <strong>control</strong> (4) <strong>lateral</strong> movement (5) data <strong>exfiltration</strong>
+</div>
+<div class="fb-tip">
+<strong>Exam Tip:</strong> The phase names are testable vocabulary. Reconnaissance uses OSINT; initial access is the first foothold; persistence keeps that foothold through a command and control channel; lateral movement escalates permissions; taking action collects, exfiltrates, disrupts, or destroys.</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: CHECKBOXES -->
+  <div style="max-width:800px;margin:24px auto;padding:0 20px;">
+    <div class="step-block" id="step-3">
+      <div class="step-header">
+<span class="step-num">Step 3</span><span class="step-type">Select All That Apply</span><div class="step-title">Identify Every Indicator of Persistence</div>
+</div>
+      <div class="step-body">
+        <div class="step-prompt">Six findings appear in the forensic report. Select <span class="kw">ALL</span> of them that are evidence of the <strong>persistence</strong> phase — and only those. Wrong selections subtract.</div>
+        <div class="cb-group">
+          <label class="cb-label"><input type="checkbox" id="cb1" value="1"> <span>A scheduled task that re-launches the remote access trojan at every system boot</span></label>
+          <label class="cb-label"><input type="checkbox" id="cb2" value="1"> <span>A new local administrator account created on the file server and left dormant for six days</span></label>
+          <label class="cb-label"><input type="checkbox" id="cb3" value="1"> <span>An autostart registry entry pointing to a renamed copy of the malware in a temporary directory</span></label>
+          <label class="cb-label"><input type="checkbox" id="cb4" value="0"> <span>The spoofed invoice attachment that first gave the adversary a shell on the clerk’s workstation</span></label>
+          <label class="cb-label"><input type="checkbox" id="cb5" value="1"> <span>Outbound beacons every ten minutes to an external command and control server</span></label>
+          <label class="cb-label"><input type="checkbox" id="cb6" value="0"> <span>The cleared security event log entries found after the payroll share was encrypted</span></label>
+        </div>
+        <button class="check-btn" onclick="scoreStep(3)">Check Selections</button>
+        <div class="step-feedback" id="fb-s3">
+<div class="sf-score" id="sf-s3"></div>
+<div class="fb-exp">Correct: the scheduled task, the dormant administrator account, the autostart registry entry, and the command and control beacons. All four let the adversary keep access without having to regain it (EK 2.1.C.4). The invoice attachment is initial access (2.1.C.3), and the cleared log entries are evading detection (2.1.C.7).</div>
+<div class="fb-tip">
+<strong>Exam Tip:</strong> Persistence answers one question: if the adversary were kicked off right now, what would let them back in automatically? Anything that only got them in once, or that only hides them, belongs to a different phase.</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: MCQ -->
+  <div style="max-width:800px;margin:24px auto;padding:0 20px;">
+    <div class="step-block" id="step-4">
+      <div class="step-header">
+<span class="step-num">Step 4</span><span class="step-type">Multiple Choice</span><div class="step-title">Audit the Analyst’s Phase Assignments</div>
+</div>
+      <div class="step-body">
+        <div class="step-prompt">An analyst assigns three findings to phases. <strong>I.</strong> The harvested service account used to reach the domain controller is lateral movement. <strong>II.</strong> Deleting the dropped malware binaries is taking action, because it changes data on disk. <strong>III.</strong> Compressing and uploading 14 GB of member records is taking action. Which assignments are <span class="kw">correct</span>?</div>
+        <div class="options">
+          <label class="option-label"><input type="radio" name="s4q" value="A"> <span>(A) I only — only the lateral-movement assignment holds</span></label>
+          <label class="option-label"><input type="radio" name="s4q" value="B"> <span>(B) I and II only — the lateral-movement and binary-deletion assignments</span></label>
+          <label class="option-label"><input type="radio" name="s4q" value="C"> <span>(C) I and III only — the lateral-movement and member-record assignments</span></label>
+          <label class="option-label"><input type="radio" name="s4q" value="D"> <span>(D) II and III only — the binary-deletion and member-record assignments</span></label>
+        </div>
+        <button class="check-btn" onclick="scoreStep(4)">Check Answer</button>
+        <div class="step-feedback" id="fb-s4">
+<div class="sf-score" id="sf-s4"></div>
+<div class="fb-exp">
+<strong>C.</strong> Statement I is correct (EK 2.1.C.5), and statement III is correct — collecting and exfiltrating targeted data is taking action (EK 2.1.C.6). Statement II is wrong: deleting the malware binaries is evading detection (EK 2.1.C.7). Taking action means acting on the adversary’s objective — collecting, exfiltrating, disrupting, or destroying — not cleaning up afterward.</div>
+<div class="fb-tip">
+<strong>Exam Tip:</strong> On a roman-numeral item, rule each statement true or false on its own before you read the combinations. One false statement eliminates every option containing it — here II is false, so B and D are gone immediately.</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: SELECT + TEXTAREA -->
+  <div style="max-width:800px;margin:24px auto;padding:0 20px;">
+    <div class="step-block" id="step-5">
+      <div class="step-header">
+<span class="step-num">Step 5</span><span class="step-type">Analysis</span><div class="step-title">Rule on a Junior Analyst’s Claim</div>
+</div>
+      <div class="step-body">
+        <div class="step-context">Three weeks later Northgate logs a second, unrelated intrusion. Responders find reconnaissance against the member portal, initial access through a reused password, and one failed attempt to reach a file server. No elevated account was ever obtained and no data left the network.</div>
+        <div class="step-prompt">
+<strong>5a.</strong> A junior analyst writes: “This one showed no lateral movement at all, so it should not be logged as a cyberattack.” Select the <span class="kw">BEST</span> correction:</div>
+        <div class="field-group"><select class="field-select" id="s5-select"><option value="">-- Select --</option>
+<option value="A">The analyst is right — without escalation to an elevated account the event is an attempted attack, not a cyberattack</option>
+<option value="B">The analyst is wrong — adversaries work in phases, and not every phase is used in every attack</option>
+<option value="C">The analyst is wrong — lateral movement is the first phase of every attack, so it occurred and simply went unlogged</option>
+<option value="D">The analyst is right — an intrusion counts as a cyberattack only once data has been exfiltrated to an external host</option></select></div>
+        <div class="step-prompt">
+<strong>5b.</strong> Name the phases this second intrusion <span class="kw">did</span> reach, and explain why a missing phase does not disqualify it as a cyberattack.</div>
+        <div class="field-group">
+<textarea class="field-textarea" id="s5-text" placeholder="Phases reached + why a missing phase does not disqualify the incident..."></textarea><div class="field-hint">Key terms: reconnaissance, initial access, phases, not every attack, order, objective, skipped, foothold</div>
+</div>
+        <button class="check-btn" onclick="scoreStep(5)">Submit</button>
+        <div class="step-feedback" id="fb-s5">
+<div class="sf-score" id="sf-s5"></div>
+<div class="fb-exp">
+<strong>B</strong> is correct. EK 2.1.C.1 states that adversaries work in phases which may not all be used in every attack, so a missing phase does not disqualify an intrusion. This second incident reached reconnaissance and initial access and then stalled — it is still a cyberattack and it is still reportable.</div>
+<div class="fb-tip">
+<strong>Exam Tip:</strong> The phase model describes how adversaries usually work; it is not a checklist an incident has to complete. Do not require every phase, and do not assume the phases always run in the printed order.</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6: TEXTAREA -->
+  <div style="max-width:800px;margin:24px auto;padding:0 20px;">
+    <div class="step-block" id="step-6">
+      <div class="step-header">
+<span class="step-num">Step 6</span><span class="step-type">Written Response</span><div class="step-title">Write the Countermeasure Recommendation</div>
+</div>
+      <div class="step-body">
+        <div class="step-prompt">Northgate’s board wants one specific control for three phases — <span class="kw">reconnaissance</span>, initial access, and taking action. For each, name the control and say exactly what the adversary would have run into instead.</div>
+        <div class="field-group">
+<textarea class="field-textarea" id="s6-text" placeholder="Reconnaissance: [control] — the adversary would have...
+Initial access: [control] — the adversary would have...
+Taking action: [control] — the adversary would have..." style="min-height:160px!important;"></textarea><div class="field-hint">Key terms: OSINT, job posting, directory, awareness training, phishing, attachment, sandbox, email filter, least privilege, MFA, DLP, egress, monitor, detect, alert, log, block</div>
+</div>
+        <button class="check-btn" onclick="scoreStep(6)">Submit</button>
+        <div class="step-feedback" id="fb-s6">
+<div class="sf-score" id="sf-s6"></div>
+<div class="fb-exp">
+<strong>Model:</strong> Reconnaissance — shrink the public footprint: review job postings and the staff directory so OSINT collection no longer yields the email format and role list (EK 2.1.C.2). Initial access — attachment sandboxing plus phishing awareness training, so the spoofed invoice is detonated and blocked before the clerk can open it (2.1.C.3). Taking action — data loss prevention with egress monitoring, alerting on a 14 GB outbound upload and blocking it mid-transfer (2.1.C.6).</div>
+<div class="fb-tip">
+<strong>Exam Tip:</strong> Every phase is a chance to break the chain. Name the control, name the phase, and say what the adversary loses — that three-part structure is what earns credit on a free-response.</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div style="max-width:800px;margin:0 auto;padding:0 20px;">
+    <div class="results-panel" id="results-panel">
+      <div class="results-score" id="r-score"></div>
+      <div class="results-label">Total Points</div>
+      <div class="results-msg" id="r-msg"></div>
+      <a href="/pages/ap-cyber-unit-2-lesson-1-quiz" class="results-btn">Quiz 2.1 →</a>
+      <a href="/pages/ap-cybersecurity-complete-course-guide" class="results-btn">Course Hub</a>
+    </div>
+  </div>
+  <div class="nav-links">
+<a href="/pages/ap-cyber-unit-2-lesson-1-exercise-2" class="nav-link">← Exercise 2</a><a href="/pages/ap-cyber-unit-2-lesson-1-quiz" class="nav-link">Quiz 2.1 →</a>
+</div>
+  <div style="text-align:center!important;padding:20px!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;">AP Cybersecurity 2.1 Lab | APCSExamPrep.com | Built by Tanner Crow, AP CS Teacher (11+ years)<br>AP® is a registered trademark of the College Board.</div>
+</div>
+
+<script>
+(function(){
+  var stepScores={};var totalSteps=6;var totalPts=30;
+
+  function scoreStep(n){
+    if(stepScores[n]!==undefined)return;
+    var pts=0;var fb=document.getElementById('fb-s'+n);var scoreEl=document.getElementById('sf-s'+n);
+
+    if(n===1){
+      var ans={m1:'RC',m2:'LM',m3:'ED'};var correct=0;
+      for(var k in ans){var sel=document.getElementById(k);if(sel.value===ans[k]){correct++;sel.classList.add('match-correct');}else if(sel.value!==''){sel.classList.add('match-wrong');}sel.disabled=true;}
+      pts=correct===3?5:correct===2?3:correct===1?1:0;
+      scoreEl.textContent='Step 1: '+pts+'/5 ('+correct+'/3 correct)';
+    }
+    else if(n===2){
+      var ca={c1:['osint','open source intelligence','open-source intelligence','open source intel'],c2:['access'],c3:['control'],c4:['lateral'],c5:['exfiltration','exfiltrate','exfil']};
+      var correct=0;
+      for(var k in ca){var inp=document.getElementById(k);var val=inp.value.trim().toLowerCase();var matched=false;
+        for(var i=0;i<ca[k].length;i++){if(val===ca[k][i]||val.indexOf(ca[k][i])!==-1){matched=true;break;}}
+        if(matched){correct++;inp.classList.add('cloze-correct');}else if(val!==''){inp.classList.add('cloze-wrong');}inp.disabled=true;}
+      pts=correct>=5?5:correct>=4?4:correct>=3?3:correct>=2?2:correct>=1?1:0;
+      scoreEl.textContent='Step 2: '+pts+'/5 ('+correct+'/5 correct)';
+    }
+    else if(n===3){
+      var correctSet=['cb1','cb2','cb3','cb5'];var hits=0;var fp=0;var miss=0;
+      for(var i=1;i<=6;i++){var cb=document.getElementById('cb'+i);var lbl=cb.parentElement;var shouldBe=correctSet.indexOf('cb'+i)!==-1;
+        if(cb.checked&&shouldBe){hits++;lbl.classList.add('cb-correct');}
+        else if(cb.checked&&!shouldBe){fp++;lbl.classList.add('cb-wrong');}
+        else if(!cb.checked&&shouldBe){miss++;lbl.classList.add('cb-missed');}
+        else{lbl.classList.add('cb-neutral');}cb.disabled=true;}
+      var sc=hits-fp;pts=sc>=4?5:sc===3?4:sc===2?3:sc===1?2:0;
+      scoreEl.textContent='Step 3: '+pts+'/5 ('+hits+' correct, '+fp+' incorrect, '+miss+' missed)';
+    }
+    else if(n===4){
+      var chosen=document.querySelector('input[name="s4q"]:checked');
+      if(!chosen){alert('Please select an answer.');return;}
+      document.querySelectorAll('#step-4 .option-label').forEach(function(lbl){var inp=lbl.querySelector('input');inp.disabled=true;
+        if(inp.value==='C')lbl.classList.add('correct-opt');else if(inp.value===chosen.value&&chosen.value!=='C')lbl.classList.add('wrong-opt');else lbl.classList.add('neutral-opt');});
+      pts=chosen.value==='C'?5:0;
+      scoreEl.textContent='Step 4: '+pts+'/5'+(pts===5?' (correct)':' (incorrect — the answer is C)');
+    }
+    else if(n===5){
+      var sel=document.getElementById('s5-select');var selPts=sel.value==='B'?2:0;sel.disabled=true;
+      var text=document.getElementById('s5-text').value.trim().toLowerCase();document.getElementById('s5-text').disabled=true;document.getElementById('s5-text').style.setProperty('opacity','0.7','important');
+      var kw=['reconnaissance','recon','initial access','phase','not every','not all','skip','objective','goal','order','sequence','foothold','password','portal','model'];
+      var hits=0;for(var i=0;i<kw.length;i++){if(text.indexOf(kw[i])!==-1)hits++;}
+      var tPts=hits>=4?3:hits>=2?2:hits>=1?1:0;pts=selPts+tPts;
+      scoreEl.textContent='Step 5: '+pts+'/5 (select: '+selPts+'/2, analysis: '+tPts+'/3)';
+    }
+    else if(n===6){
+      var text=document.getElementById('s6-text').value.trim().toLowerCase();document.getElementById('s6-text').disabled=true;document.getElementById('s6-text').style.setProperty('opacity','0.7','important');
+      var kw=['osint','job posting','directory','awareness','training','phish','attachment','sandbox','email filter','least privilege','mfa','multifactor','dlp','egress','monitor','detect','alert','log','block','segmentation','reconnaissance','initial access','exfiltrat','footprint'];
+      var hits=0;for(var i=0;i<kw.length;i++){if(text.indexOf(kw[i])!==-1)hits++;}
+      pts=hits>=8?5:hits>=6?4:hits>=4?3:hits>=2?2:hits>=1?1:0;
+      scoreEl.textContent='Step 6: '+pts+'/5 ('+hits+' key concepts)';
+    }
+
+    stepScores[n]=pts;
+    if(pts>=4)fb.classList.add('sf-good');else if(pts>=2)fb.classList.add('sf-partial');else fb.classList.add('sf-wrong');
+    fb.classList.add('show');
+    var btn=document.querySelector('#step-'+n+' .check-btn');if(btn)btn.disabled=true;
+    var te=0;for(var k in stepScores)te+=stepScores[k];var comp=Object.keys(stepScores).length;
+    document.getElementById('score-display').textContent=te+' / '+(comp*5);
+    if(comp===totalSteps){var panel=document.getElementById('results-panel');document.getElementById('r-score').textContent=te+'/'+totalPts;
+      var pct=Math.round(te/totalPts*100);var msg=pct>=83?'Excellent work — you can place an observation in the right phase and name where the chain breaks.':pct>=60?'Good work. Review the feedback on the steps where you lost points.':'More practice needed. Revisit Lesson 2.1 on the phases of a cyberattack.';
+      document.getElementById('r-msg').textContent=msg;panel.classList.add('show');panel.scrollIntoView({behavior:'smooth',block:'start'});}
+  }
+  window.scoreStep=scoreStep;
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 2 · Lesson 2.1 · Lab</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-2-cyber-foundations">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-2-lesson-1-exercise-1">Exercise 1</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-2-lesson-1-exercise-2">Exercise 2</a><span class="aan-sep">•</span><span class="aan-chip cur">Lab</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-2-lesson-1-quiz">Quiz →</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-2-cyber-foundations">Lesson 2.1</a><a href="/pages/ap-cybersecurity-unit-2-securing-spaces">Unit 2 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

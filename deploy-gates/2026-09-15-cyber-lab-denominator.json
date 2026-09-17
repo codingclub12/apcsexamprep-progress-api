@@ -1,0 +1,126 @@
+{
+  "change": "ten AP Cyber lab pages print, and report, a score out of the steps the student has finished rather than out of the whole lab",
+  "_context": [
+    "Every one of these labs has six steps worth five points, so the lab is out",
+    "of 30. The running display is written as te + ' / ' + (comp*5), where comp",
+    "is the number of steps CHECKED SO FAR. Two steps in, a student who earned",
+    "10 sees '10 / 10'.",
+    "",
+    "It is a grade and not only a display. The deployed apcs-score-reporter.js",
+    "reads RESULT_IDS in order and score-display is first, so the correct",
+    "r-score element beside it is never reached. A result-tier hit is reported",
+    "immediately with no settle delay, and apcs-tracker.js posts that pair to",
+    "/api/student/score and round(earned/possible*100) to /api/student/progress.",
+    "So an abandoned run is stored as (te, 5*comp): two steps of six at full",
+    "marks is recorded 10 out of 10, at 100 percent, on a 30 point lab.",
+    "",
+    "A FINISHED run is correct and always was, because the denominator arrives",
+    "at 30 by itself and the rollup takes MAX(points) over MAX(max_points).",
+    "Only the student who stops early is misreported, which is why this",
+    "survived, and that is also the student a teacher looks at first.",
+    "",
+    "Board 313 records the mechanism as a percent over 100 being refused, which",
+    "would mean these pages record nothing. That is not what the deployed code",
+    "does today: parseScore refuses earned > possible and te is never more than",
+    "5*comp, so nothing over 100 can leave the page. The live 483 percent",
+    "predates that guard. The fix is the same either way, but nothing is",
+    "waiting to be recovered once this lands.",
+    "",
+    "The change is one substitution per page, te + ' / ' + (comp*5) becoming",
+    "te + ' / ' + totalPts, to a variable the page already declares and already",
+    "uses for its results panel.",
+    "",
+    "A NOTE ON A CHECK THAT IS NOT IN HERE. The first version of this manifest",
+    "carried the pre-import freshness check as a gate check, expecting 0 of 10",
+    "imported. That is the mirror image of the mistake this gate was built to",
+    "stop: the gate own first manifest asserted something true before AND after,",
+    "and this one asserted something that could only be true BEFORE, so it went",
+    "red the moment the change shipped and would have stayed red forever. It is",
+    "a runbook step and it lives in the runbook, where it ran and passed at",
+    "17:14Z. A gate check has to be false before and true after, or it is not",
+    "measuring the change."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "twenty rules broken one at a time, plus the grade the reporter would record",
+      "_why": "Ten body rules are tested by mutating the live 2.1 Lab body and each must produce exactly one message, so a case that trips a neighbouring rule reads as red rather than green. Ten substitution rules cannot fail against an index splice, so they are reached through an injectable substitution and each is given a saboteur of its own. The last section is the one that matters to a student: the page's own expression is pulled out of the body and evaluated, so 100 percent before and 33 percent after is the page's arithmetic rather than a restatement of it.",
+      "command": "npm run --silent smoke:cyberlabdenom",
+      "expect": "all green (10 body rules, 10 substitution rules)"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation finds the same ten pages by running each page's own expression",
+      "_why": "The generator knows the page set from a handle list and recognises the defect by matching one exact string, and both can be wrong in the same direction. This sweeps all 30 possible cyber lab handles, pulls whatever each page assigns to #score-display, evaluates it for two through six finished steps, and calls it broken when the printed denominator moves. It shares no token and no handle list with the generator, and it fails in both directions: a page the sheet misses and a page the sheet touches that this cannot see as broken.",
+      "command": "npm run --silent rederive:cyberlabdenom",
+      "expect": "OK - two implementations agree on the same 10 pages"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE GUARD THAT MAKES THE SUBSTITUTION SAFE: totalPts no longer has to be the total the steps add up to",
+      "_why": "This is the rule that stops the fix being applied to a page priced at something other than 5 times its step count, where swapping the denominator would change what a finishing student is shown.",
+      "file": "scripts/cyber-lab-denominator-csv.js",
+      "find": "if (Number(mPts[1]) !== Number(mSteps[1]) * 5) {",
+      "replace": "if (false) {",
+      "command": "npm run --silent smoke:cyberlabdenom",
+      "expect_failure": "FAIL  the page prices itself at a total the steps do not add up to"
+    },
+    {
+      "kind": "mutation",
+      "name": "the declaration no longer has to share a script block with the line being fixed",
+      "_why": "A totalPts declared in a different block is a ReferenceError at runtime, and the student sees no score at all rather than a wrong one.",
+      "file": "scripts/cyber-lab-denominator-csv.js",
+      "find": "if (blockOf(decl) === -1 || blockOf(decl) !== blockOf(use)) {",
+      "replace": "if (false) {",
+      "command": "npm run --silent smoke:cyberlabdenom",
+      "expect_failure": "FAIL  totalPts is declared in a different script block"
+    },
+    {
+      "kind": "mutation",
+      "name": "the completion test no longer has to be the shape this was written for",
+      "_why": "comp is used twice on these pages and the second use fires the results panel. A page where that test reads differently is a page where comp may mean something else, and the substitution is no longer known to be safe.",
+      "file": "scripts/cyber-lab-denominator-csv.js",
+      "find": "if (!body.includes(KEEP)) {",
+      "replace": "if (false) {",
+      "command": "npm run --silent smoke:cyberlabdenom",
+      "expect_failure": "FAIL  the completion test is a different shape, so comp may mean something else here"
+    },
+    {
+      "kind": "mutation",
+      "name": "a half fixed page is rewritten again instead of refused",
+      "_why": "If one sheet has already landed and a page carries both shapes, the safe answer is to stop and look rather than to write a second copy of the fixed line.",
+      "file": "scripts/cyber-lab-denominator-csv.js",
+      "find": "if (body.includes(GOOD)) {",
+      "replace": "if (false) {",
+      "command": "npm run --silent smoke:cyberlabdenom",
+      "expect_failure": "FAIL  a half fixed page, where the good line is already present beside the bad one"
+    },
+    {
+      "kind": "mutation",
+      "name": "mojibake stops being checked, tested with SINGLE pass corruption",
+      "_why": "A mutation built from the double-pass form goes green against a detector blind to the single-pass bug actually seen on live pages, so the fixture injects a bullet corrupted once, not twice. The sheet rewrites live bodies that already carry bullets and arrows, which is exactly where this would land.",
+      "file": "scripts/cyber-lab-denominator-csv.js",
+      "find": "  if (mo && mo.length) fail.push(`${handle}: mojibake in the result`);",
+      "replace": "  if (false) fail.push(`${handle}: mojibake in the result`);",
+      "command": "npm run --silent smoke:cyberlabdenom",
+      "expect_failure": "FAIL  the substitution carries single pass mojibake into the body"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT PROVES THE SUITE IS ABOUT A GRADE: the fix is applied but fixes nothing",
+      "_why": "Every other check here would pass a substitution that swaps one wrong denominator for another. This one writes totalSteps where totalPts belongs, which is a clean, compiling, reversible, single substitution that still misreports the student. The section that catches it is the one that evaluates the page's own expression.",
+      "file": "scripts/cyber-lab-denominator-csv.js",
+      "find": "const GOOD = \"document.getElementById('score-display').textContent=te+' / '+totalPts\";",
+      "replace": "const GOOD = \"document.getElementById('score-display').textContent=te+' / '+totalSteps\";",
+      "command": "npm run --silent smoke:cyberlabdenom",
+      "expect_failure": "FAIL  after: the same run records 33 percent"
+    },
+    {
+      "kind": "live",
+      "name": "every lab prints its score out of the whole lab",
+      "command": "node scripts/verify-cyber-lab-denominator-live.js",
+      "expect": "OK - every lab page prints its score out of the whole lab",
+      "_why": "FALSE BEFORE THE IMPORT and measured that way: the same command reported '10 lab pages: 0 imported, 10 not imported' continuously until 2026-09-15 17:18Z, and it reads the live page bodies rather than the sheet. It also asserts the two things the substitution must not have disturbed, the completion test and the results panel total, so a sheet that landed the fix and broke the page around it fails here rather than reading as success."
+    }
+  ]
+}

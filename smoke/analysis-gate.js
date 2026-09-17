@@ -10,10 +10,18 @@
 //  View Source.
 //
 //  This suite is what "moved to the server" has to mean:
-//    the activity is withheld when a class has closed it, from a signed-in
-//    student AND from a signed-out one, the answer key is never on the wire at
-//    all, grading is re-checked at submit rather than only at render, and the
-//    student's typed prose is never echoed, stored or storable.
+//    the activity is withheld from a student whose OWN class has closed it, the
+//    answer key is never on the wire at all, grading is re-checked at submit
+//    rather than only at render, and the student's typed prose is never echoed,
+//    stored or storable.
+//
+//  WHO IS REFUSED CHANGED ON 2026-09-14, board 277. It used to be withheld from
+//  a signed-OUT caller too, whenever any class anywhere had closed it. Tanner
+//  decided the other way: "Labs should be open as long as the specific teacher
+//  doesn't lock it." One school closing a lesson was taking the activity dark
+//  for the whole public internet, and a gate is meant to answer "is this open
+//  for MY class". The cost, stated plainly because it is real: a student who
+//  signs out walks past their teacher's lock. That is now chosen, not missed.
 //
 //  What must ALSO stay true, and is asserted rather than assumed: an activity
 //  nobody has closed is still served to anyone, because the public practice
@@ -31,7 +39,7 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 
 const express = require('express');
 const db = require('../db');
-const { signStudentToken } = require('../utils');
+const { signStudentToken, signTeacherToken } = require('../utils');
 const specs = require('../lib/analysis-spec');
 const grader = require('../lib/analysis-grade');
 
@@ -67,9 +75,16 @@ run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s1','c1',
 run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,quiz_lock_default)
      VALUES ('c2','t1','CYBER-ANA2','Leaves it open','ap-cybersecurity',1,0)`);
 run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s2','c2','B','x')`);
+//  A THIRD class under a DIFFERENT teacher, for section 9. The cross-class rule
+//  fires on a lock set by someone the caller has never met, so the fixture has to
+//  contain someone the caller has never met.
+run(`INSERT INTO teachers (id,name,email,password_hash) VALUES ('t2','U','u@s.org','x')`);
+run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,quiz_lock_default)
+     VALUES ('c3','t2','CYBER-ANA3','Another school','ap-cybersecurity',1,0)`);
 
 const ST = signStudentToken({ id: 's1', class_id: 'c1' });
 const OTHER = signStudentToken({ id: 's2', class_id: 'c2' });
+const TEACHER = signTeacherToken({ id: 't1', email: 't@s.org' });
 
 const close = (lesson, act) => run(
   `INSERT OR REPLACE INTO activity_gates (class_id,course,unit,lesson,activity_type,open) VALUES ('c1',?,?,?,?,0)`,
@@ -118,9 +133,17 @@ const TYPED = 'the decisive detail is';
   ok('  the signed-in student is refused', r.body && r.body.locked === true, r.body);
   ok('  and the activity is NOT on the wire', r.body.activity === null && !JSON.stringify(r.body).includes('Specimen'), Object.keys(r.body));
   ok('  it is a 200, so the page can say "not opened" rather than "missing"', r.status === 200, r.status);
+  //  BOARD 277, decided 2026-09-14: a lab is open unless the caller's OWN teacher
+  //  locked it. Between 2026-09-07 and that date this assertion was the opposite,
+  //  and the reason it flipped is written in routes/analysis.js rather than here.
+  //  The lock is now real for the students it names and porous to anyone signed
+  //  out, deliberately.
   r = await call('GET', URL);
-  ok('  a signed-OUT student is refused too', r.body && r.body.locked === true, r.body && r.body.reason);
-  ok('  and that refusal names the anonymous rule', /^anonymous-/.test(r.body.reason || ''), r.body && r.body.reason);
+  ok('  a signed-OUT visitor still gets it, because no teacher of theirs closed it',
+    r.status === 200 && !r.body.locked && !!r.body.activity, r.body && r.body.reason);
+  ok('  and it is the whole activity, so the public practice layer stays intact',
+    r.body.activity && r.body.activity.specimens.length === SPEC.specimens.length,
+    r.body.activity && r.body.activity.specimens && r.body.activity.specimens.length);
 
   console.log('\n4. What must stay true');
   r = await call('GET', URL, null, OTHER);
@@ -168,6 +191,75 @@ const TYPED = 'the decisive detail is';
     item && item.lock_enforceable === true, item && item.lock_enforceable);
   ok('  so it is no longer named among the locks that cannot be enforced',
     !gb.gates.locked_but_unenforceable.includes(item && item.item_key), gb.gates.locked_but_unenforceable);
+
+  console.log('\n9. A TEACHER IS NOT ANONYMOUS');
+  //  Reported 2026-09-14 as "the 1.1 lab will not unlock even when it's unlocked".
+  //  student() answers for STUDENTS, so a signed-in teacher returned null and the
+  //  route read that null as "nobody is signed in" and ran the cross-class rule on
+  //  her. That rule refuses whenever ANY class anywhere has closed the activity, so
+  //  a lock set by a teacher at another school shut her out of a lab she had open,
+  //  and her own class's row was never consulted. The chip read open, the page read
+  //  shut, and nothing she could click reconciled them.
+  //
+  //  routes/labs.js settled this on 2026-09-09 off the same complaint. This route
+  //  was written two days earlier and never got the port.
+  run('DELETE FROM activity_gates');
+  //  Her class pins the lab OPEN. Her Command Center chip reads unlocked.
+  run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open)
+       VALUES ('c1',?,?,?,'lab',1)`, SPEC.course, SPEC.unit, SPEC.lesson_id);
+  //  A class she has never seen closes the whole of lesson 1.1.
+  run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open)
+       VALUES ('c3',?,?,?,'*',0)`, SPEC.course, SPEC.unit, SPEC.lesson_id);
+
+  r = await call('GET', URL, null, TEACHER);
+  ok('  the teacher gets the activity she opened', r.status === 200 && !r.body.locked,
+    r.body && r.body.reason);
+  ok('  and it is the whole thing, not an empty shell',
+    !!r.body.activity && r.body.activity.specimens.length === SPEC.specimens.length,
+    r.body && r.body.activity && r.body.activity.specimens && r.body.activity.specimens.length);
+
+  //  And the other class's lock reaches nobody outside that class, which is the
+  //  whole of board 277.
+  r = await call('GET', URL);
+  ok('  a signed-out visitor gets it too, over another class\'s lock',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
+
+  //  Her own students are unaffected, which is the case that was already right.
+  r = await call('GET', URL, null, ST);
+  ok('  her signed-in student still gets it', r.status === 200 && !r.body.locked,
+    r.body && r.body.reason);
+
+  //  A refusal that IS the caller's own class still says so, so the page can word
+  //  the two differently.
+  run('DELETE FROM activity_gates');
+  close(SPEC.lesson_id, 'lab');
+  r = await call('GET', URL, null, ST);
+  ok('  a student closed out by their OWN class is told so', r.body.locked_for === 'class',
+    r.body && r.body.locked_for);
+
+  //  A STALE TOKEN IS NOW UNREMARKABLE, and that is worth stating rather than
+  //  quietly dropping. student() returns null when the student ROW is gone, so a
+  //  180 day JWT from a deleted roster entry resolves to nobody. Until board 277
+  //  that mattered: such a token would have taken the teacher-preview branch and
+  //  walked past every class's lock, so the role check on that branch was
+  //  load-bearing and is asserted here. After 277 it gets exactly what any
+  //  signed-out visitor gets, which is the activity, so there is no longer a
+  //  privilege to escalate to on THIS route.
+  //
+  //  The role check still bites where a secret is involved, and that is the lab
+  //  answer key rather than the gate: smoke:labkey asserts that no token, a
+  //  garbage token, a student token, an unentitled teacher and a tampered teacher
+  //  token are all refused it. This route ships no key at all, which section 2
+  //  above asserts independently.
+  run(`DELETE FROM activity_gates`);
+  run(`INSERT INTO activity_gates (class_id,course,unit,lesson,activity_type,open)
+       VALUES ('c3',?,?,?,'*',0)`, SPEC.course, SPEC.unit, SPEC.lesson_id);
+  const GHOST = signStudentToken({ id: 'deleted-student', class_id: 'c1' });
+  r = await call('GET', URL, null, GHOST);
+  ok('  a token whose student row is gone is treated as a passer-by, not a teacher',
+    r.status === 200 && !r.body.locked, r.body && r.body.reason);
+  ok('  and it carries no answer key, which is what the role check protects',
+    !JSON.stringify(r.body).includes('senderKey'), Object.keys(r.body));
 
   console.log(`\n  ${pass} passed, ${fail} failed`);
   server.close();

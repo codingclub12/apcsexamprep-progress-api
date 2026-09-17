@@ -1,0 +1,3257 @@
+{
+  "as_of": "2026-09-17T17:19:51.074Z",
+  "tally": {
+    "agrees": 159,
+    "not-applicable": 179,
+    "mismatch": 2,
+    "not-runnable": 63,
+    "no-match": 18,
+    "ambiguous": 4,
+    "agrees-flattened": 4
+  },
+  "rows": [
+    {
+      "handle": "ap-csa-u1-c1-day-1-declaring-variables",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "3.0 3",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-10-creating-objects",
+      "key": "A",
+      "stem": "Consider the following statements about objects in Java. Which of the statements are correct?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-11-calling-void-methods",
+      "key": "B",
+      "stem": "A class Printer has the following method. Which of the following code segments will cause a compile-time error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-12-return-values",
+      "key": "A",
+      "stem": "Consider the following method. What is returned by the call mystery(17, 5) ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-13-string-concatenation-mixed",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "7 val\nval 34",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-14-substring-indexof",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "PUTE",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-15-chained-string-methods",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "VA PRA6",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-16-length-extracting-chars",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "BY6",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-17-equals-vs-doubleequals",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "false\ntrue",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-18-compareto-ordering",
+      "key": "A",
+      "stem": "Consider the following code segment. Which of the following is true about the values of r1 and r2 ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-19-autoboxing-unboxing",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "10 10 15",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-2-primitive-ranges",
+      "key": "B",
+      "stem": "Consider the following variable declarations. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "0 2.0",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-20-wrapper-equals-trap",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "false true true",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-21-math-abs-pow",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "16",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-22-math-random-range",
+      "key": "C",
+      "stem": "A programmer wants to generate a random integer between 5 and 12, inclusive. Consider the following expressions. Which o",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-23-math-sqrt-casting",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "7 49 false",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-24-mixed-types-review",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "2.75 | 2 R3",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-25-string-method-edge-cases",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "true",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-26-objects-methods-returns",
+      "key": "A",
+      "stem": "Consider the following method. What is returned by the call convert(185) ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-27-tracing-multiple-ops",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "CS15",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-28-comprehensive-review",
+      "key": "C",
+      "stem": "A student writes the following method intended to return a random integer between low and high , inclusive. Which of the",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-3-boolean-type-behavior",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "false",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-4-operator-precedence",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "13 15",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-5-modulo-integer-division",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "5 hours 17 minutes",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-6-compound-assignment",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "20",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-7-increment-decrement-modulo",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "4 9",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-8-casting-double-to-int",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "9 10 10",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c1-day-9-mixed-type-arithmetic",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "2 3.5",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-1-tricky-casting",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "7.0 8.0",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-10-concat-evaluation-order",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "54\n234",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-11-equals-ignorecase-traps",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "false true true",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-12-error-string-bounds",
+      "key": "C",
+      "stem": "Consider the following code segment. Which line will cause a runtime error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-13-iii-wrapper-behavior",
+      "key": "C",
+      "stem": "Consider the following statements about wrapper classes. Which of the statements are correct?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-14-math-random-analysis",
+      "key": "A",
+      "stem": "A game requires a random even number between 10 and 20, inclusive. Consider the following expressions. Which of the expr",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-15-complex-string-manipulation",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "ACEG 4",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-16-casting-precision-loss",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "mismatch",
+      "out": "$19.98",
+      "should_be": "B",
+      "keys": "A",
+      "keyed": "$19.99"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-17-wrapper-null-safety",
+      "key": "A",
+      "stem": "Consider the following code segment. What happens when this code segment is executed?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-18-multi-concept-cast-div-mod",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "543",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-19-error-math-methods",
+      "key": "A",
+      "stem": "A student writes the following code. Which line contains an error? Which line will cause a compile-time error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-2-order-ops-mixed-types",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "2.0 2.5 2.0",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-20-iii-expression-evaluation",
+      "key": "D",
+      "stem": "Consider the following expressions where x = 14 and y = 4 . Which of the above statements are correct?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-21-string-building-conditionals",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "ECA",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-22-error-type-mismatch",
+      "key": "C",
+      "stem": "Consider the following code segment. Which line will cause a compile-time error? Which line causes the error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-23-compareto-prefix-strings",
+      "key": "A",
+      "stem": "Consider the following code segment. Which of the following is true about the values of r1 and r2 ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-24-complex-return-tracing",
+      "key": "A",
+      "stem": "Consider the following methods. What is returned by the call puzzle(3) ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-25-iii-mixed-concepts",
+      "key": "A",
+      "stem": "Consider the following statements. Which of the statements are correct?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-26-tracing-concat-methods",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "TING 4",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-27-comprehensive-expression-tracing",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "2.12",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-28-comprehensive-final-review",
+      "key": "B",
+      "stem": "A method is intended to extract the initials from a full name. Consider the following implementation. The call getInitia",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-3-error-spotting-assignment",
+      "key": "C",
+      "stem": "A student writes the following code. Which line will cause a compile-time error? Which line causes the error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-4-iii-integer-division",
+      "key": "C",
+      "stem": "Consider the following expressions where a = 23 and b = 7 . Which of the expressions evaluate to true ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-5-compound-narrowing",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "12",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-6-multi-step-reassignment",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "3 5",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-7-error-method-calls",
+      "key": "C",
+      "stem": "A class Calculator has these methods: Which of the following code segments will cause a compile-time error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-8-iii-string-behavior",
+      "key": "B",
+      "stem": "Consider the following statements about Strings in Java. Which of the statements are correct?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u1-c2-day-9-nested-method-calls",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "PROMMING 8",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-1-boolean-expressions",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "true true false",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-10-comparing-objects",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "false\ntrue\ntrue",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-11-while-loop-basics",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "15",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-12-while-condition-change",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "7",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-13-infinite-loop",
+      "key": "C",
+      "stem": "A student writes the following code segment. What happens when it executes? What is the result of executing the code seg",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-14-for-loop-tracing",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "30",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-15-for-loop-counting",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "6",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-16-loop-running-max",
+      "key": "C",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "9",
+      "letter": "C"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-17-string-traversal",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "3",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-18-string-building-traversal",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "olleH",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-19-nested-loop-pattern",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "*\n* *\n* * *",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-2-relational-operators",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "false\ntrue\ntrue",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-20-nested-loop-counting",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "12",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-21-nested-loop-accumulator",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "6",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-22-loop-errors",
+      "key": "C",
+      "stem": "A method is intended to return the sum of all elements in an array. Consider the following implementation. What happens ",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-23-if-else-loop",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "26",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-24-while-string-processing",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "2",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-25-for-loop-boundary",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "10 7 4 1",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-26-demorgans-applied",
+      "key": "B",
+      "stem": "Consider the following two code segments. For which values of x and y do Segment 1 and Segment 2 produce different outpu",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-27-loop-conditional-tracing",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "oai",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-28-comprehensive-review",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "120",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-3-boolean-variables",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "GO MORE",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-4-if-statement",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "B",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-5-if-else",
+      "key": "C",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "zero done",
+      "letter": "C"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-6-else-if-chain",
+      "key": "C",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "warm",
+      "letter": "C"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-7-compound-boolean",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "eligible",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-8-short-circuit",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "no",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c1-day-9-de-morgans-laws",
+      "key": "B",
+      "stem": "Consider the following boolean expression where a and b are boolean variables. Which of the following is equivalent to t",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-1-nested-if-compound",
+      "key": "D",
+      "stem": "Consider the following two code segments. For which values of x do Segments A and B produce different output?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-10-complex-string-traversal",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "ABCD",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-11-error-loop-modify",
+      "key": "A",
+      "stem": "A method is intended to count even numbers in a string of digits. The call countEven(\"1234\") causes an error. What is th",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-12-while-complex-condition",
+      "key": "A",
+      "stem": "Consider the following code segment. What is the value of steps when x starts at 4?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-13-iii-if-else-outcomes",
+      "key": "A",
+      "stem": "Consider the following code segment where n is a positive integer. Which values of n result in val being \"Z\" ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-14-nested-loop-string",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "1234-234-34-4-",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-15-compound-string-conditions",
+      "key": "A",
+      "stem": "Consider the following code segment. What is the value of r ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-16-for-multiple-updates",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "5 5",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-17-error-scope",
+      "key": "D",
+      "stem": "A student writes the following code. Which line causes a compile-time error? Which line causes the error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-18-nested-conditional-logic",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "7",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-19-loop-digit-sum",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "30",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-2-demorgans-complex",
+      "key": "A",
+      "stem": "Consider the following boolean expression. Which of the following is equivalent to the expression above?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-20-iii-loop-behavior",
+      "key": "B",
+      "stem": "Consider the following loops. Which of the statements are correct?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-21-string-conditional-replace",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "Java_is_fun",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-22-error-dangling-else",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "B",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-23-loop-early-return",
+      "key": "B",
+      "stem": "Consider the following method. What does mystery(15) return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-24-complex-nested-trace",
+      "key": "C",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "30",
+      "letter": "C"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-25-iii-string-patterns",
+      "key": "D",
+      "stem": "Consider the following code applied to String s = \"racecar\" . Which of the statements are correct?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-26-palindrome-check",
+      "key": "A",
+      "stem": "Consider the following method. What does check(\"abba\") return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-27-complex-conditional-loop",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "3",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-28-comprehensive-final-review",
+      "key": "A",
+      "stem": "Consider the following method. What does mystery(\"hello\") return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-3-error-off-by-one",
+      "key": "B",
+      "stem": "A method is intended to count the number of even numbers from 2 to n, inclusive. The call countEvens(10) returns 4 inste",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-4-iii-loop-equivalence",
+      "key": "A",
+      "stem": "Consider the following while loop. Which of the following for loops produces the same output?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-5-short-circuit-side-effects",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "5 10",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-6-elseif-vs-sequential",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "ABC",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-7-while-state-tracking",
+      "key": "D",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "7 34",
+      "letter": "D"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-8-iii-boolean-equivalence",
+      "key": "D",
+      "stem": "Consider the following boolean expressions where x is an int . Which of the expressions are logically equivalent to each",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u2-c2-day-9-nested-loop-early-exit",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed as a result of executing the code segment?",
+      "state": "agrees",
+      "out": "0 4",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-1-class-anatomy",
+      "key": "A",
+      "stem": "Consider the following class declaration. Which of the following correctly creates a Dog object and prints its name?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-10-this-keyword",
+      "key": "A",
+      "stem": "Consider the following class. What does the following code print? Player p1 = new Player(\"A\", 50); Player p2 = new Playe",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-11-inheritance-basics",
+      "key": "B",
+      "stem": "Consider the following classes. What does new Cat().speak() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-12-super-constructor",
+      "key": "A",
+      "stem": "Consider the following classes. What does new Car(60, 4).getSpeed() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-13-overriding-methods",
+      "key": "B",
+      "stem": "Consider the following classes. What does new Square(5).describe() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-14-polymorphic-references",
+      "key": "B",
+      "stem": "Consider the following class hierarchy where Dog and Cat extend Animal. What does the following code print? Animal a = n",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-15-polymorphism-method-calls",
+      "key": "C",
+      "stem": "Consider classes where Dog extends Animal. Dog has a method fetch() not in Animal. Which line causes a compile-time erro",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-16-tostring-equals",
+      "key": "B",
+      "stem": "Consider the following class. What does the following code print? Coin a = new Coin(\"Quarter\", 0.25); Coin b = new Coin(",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-17-encapsulation",
+      "key": "B",
+      "stem": "Consider the following code. Which statement best describes a problem with this class design?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-18-method-design",
+      "key": "C",
+      "stem": "Consider the following class. What does new StringHelper(\"banana\").countChar(\"a\") return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-19-method-interaction",
+      "key": "A",
+      "stem": "Consider the following class. What is printed? Wallet w = new Wallet(100); w.deposit(50); w.withdraw(30); w.withdraw(200",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-2-constructor-overloading",
+      "key": "A",
+      "stem": "Consider the following class. What does System.out.println(new Point(3, 7)); print?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-20-calling-super-methods",
+      "key": "B",
+      "stem": "Consider the following classes. What does new Manager(\"Jo\", 50000, 10000).pay() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-21-constructor-chaining",
+      "key": "B",
+      "stem": "Consider the following classes. What is printed when new C() is executed?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-22-polymorphism-arrays",
+      "key": "B",
+      "stem": "Consider classes Dog and Cat that extend Animal, each overriding sound() . What is printed?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-23-comparing-objects-same-class",
+      "key": "A",
+      "stem": "Consider the following class. What does the following code print? Box a = new Box(10); Box b = new Box(20); System.out.p",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-24-complete-class",
+      "key": "A",
+      "stem": "A GradeBook class stores a student name and list of scores. Consider the following partial class. What does new GradeBoo",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-25-inheritance-method-availability",
+      "key": "B",
+      "stem": "Consider the following hierarchy. Which methods can be called on a Washer object?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-26-constructor-method-tracing",
+      "key": "C",
+      "stem": "Consider the following class. What does new mystery(0).add(5).add(3).getVal() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-27-inheritance-tracing",
+      "key": "B",
+      "stem": "Consider the following classes. What does new C().show() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-28-comprehensive-review",
+      "key": "A",
+      "stem": "Consider the following code. What is printed?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-3-constructor-param-vs-field",
+      "key": "B",
+      "stem": "Consider the following constructor. What does new Student(\"Alice\", 10).getName() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-4-accessor-methods",
+      "key": "A",
+      "stem": "Consider the following class. Which of the following is a valid accessor method in the class above?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-5-mutator-methods",
+      "key": "B",
+      "stem": "Consider the following class. What is printed after executing the following code? mystery c = new mystery(); c.increment",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-6-methods-with-params",
+      "key": "C",
+      "stem": "Consider the following class. What is printed after executing: Rectangle r = new Rectangle(3, 4); r.scale(2); System.out",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-7-static-vs-instance",
+      "key": "A",
+      "stem": "Consider the following class. What is printed after executing: Ticket t1 = new Ticket(); Ticket t2 = new Ticket(); Ticke",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-8-static-methods",
+      "key": "B",
+      "stem": "Consider the following class. What does MathHelper.sumOfSquares(3, 4) return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c1-day-9-scope-access",
+      "key": "B",
+      "stem": "Consider the following code. What is the scope of the variable pi ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-1-iii-constructor-behavior",
+      "key": "A",
+      "stem": "Consider the following class. Which of the following statements are true? I. new Item(\"Pen\") creates an Item with qty = ",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-10-what-to-override",
+      "key": "A",
+      "stem": "Consider the following class hierarchy. What does System.out.println(new Rectangle(3, 4)); print?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-11-complex-polymorphism",
+      "key": "B",
+      "stem": "Consider the following classes. What does new B().display() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-12-equals-override",
+      "key": "A",
+      "stem": "Consider the following class. What does the following return? Card c1 = new Card(\"Hearts\", 10); Card c2 = new Card(\"Hear",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-13-iii-static-behavior",
+      "key": "C",
+      "stem": "Consider the following class. After executing Tracker a = new Tracker(); Tracker b = new Tracker(); , which statements a",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-14-multi-level-override",
+      "key": "C",
+      "stem": "Consider the following classes. What does new Z().val() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-15-polymorphic-array-processing",
+      "key": "A",
+      "stem": "Consider classes where Circle and Square extend Shape, each overriding area() . What is printed?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-16-constructor-validation",
+      "key": "B",
+      "stem": "Consider the following class. What does new Score(150).getValue() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-17-super-tostring",
+      "key": "B",
+      "stem": "Consider the following classes. What does System.out.println(new Pet(\"Max\", \"Jo\")); print?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-18-scope-error-local-instance",
+      "key": "B",
+      "stem": "Consider the following class. After executing Timer t = new Timer(10); t.tick(); System.out.println(t.getSeconds()); , w",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-19-iii-encapsulation",
+      "key": "A",
+      "stem": "Consider these statements about encapsulation. Which of the statements are true?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-2-error-missing-super",
+      "key": "B",
+      "stem": "Consider the following classes. What happens when this code is compiled?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-20-polymorphism-object-sort",
+      "key": "B",
+      "stem": "Consider the following code. What is printed?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-21-method-object-param",
+      "key": "B",
+      "stem": "Consider the following class. What is printed? Circle big = new Circle(10); Circle small = new Circle(3); System.out.pri",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-22-error-incorrect-override",
+      "key": "B",
+      "stem": "Consider the following classes. Does Dog's equals method override Animal's equals method?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-23-constructor-chain-super",
+      "key": "C",
+      "stem": "Consider the following classes. What does new C(5).mystery() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-24-mutable-reference-return",
+      "key": "D",
+      "stem": "Consider the following class. What is the potential problem with this design?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-25-polymorphism-multiple-calls",
+      "key": "B",
+      "stem": "Consider the following classes. What does new Sub().info() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-26-class-collection-field",
+      "key": "B",
+      "stem": "Consider the following class. After executing Playlist p = new Playlist(3); p.add(\"A\"); p.add(\"B\"); p.add(\"C\"); p.add(\"D",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-27-comprehensive-inheritance",
+      "key": "B",
+      "stem": "Consider the following classes. What does new Bar().process(4) return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-28-comprehensive-final",
+      "key": "B",
+      "stem": "Consider the following hierarchy. What does System.out.println(new Circle(10)); print?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-3-compile-vs-runtime",
+      "key": "C",
+      "stem": "Consider the following hierarchy. Which of the following causes a compile-time error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-4-this-method-chaining",
+      "key": "B",
+      "stem": "Consider the following class. What does new Builder().add(\"A\").add(\"B\").add(\"C\").build() return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-5-static-instance-error",
+      "key": "B",
+      "stem": "Consider the following class. Which method causes a compile-time error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-6-override-vs-overload",
+      "key": "B",
+      "stem": "Consider the following classes. Which statement is correct about the Child class?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-7-iii-inheritance-rules",
+      "key": "A",
+      "stem": "Consider a class hierarchy where Dog extends Animal . Which of the statements are true?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-8-polymorphism-tostring",
+      "key": "B",
+      "stem": "Consider the following classes. What does System.out.println(new Truck(5)); print?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "ap-csa-u3-c2-day-9-error-private-parent",
+      "key": "B",
+      "stem": "Consider the following classes. What happens when this code is compiled?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-1-array-declaration",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "0",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-10-arraylist-basics",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "[A, X, B, C]",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-11-arraylist-remove",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "3 C",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-12-arraylist-set-get",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-13-arraylist-traversal-removal",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-14-arraylist-from-array",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "[8]",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-15-forward-removal-bug",
+      "key": "B",
+      "stem": "Consider the following code segment intended to remove all \"X\" values. What is printed?",
+      "state": "agrees",
+      "out": "[X, Y]",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-16-linear-search",
+      "key": "B",
+      "stem": "Consider the following method. What does search(new int[]{4, 8, 2, 7, 1}, 7) return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-17-binary-search",
+      "key": "B",
+      "stem": "Consider a binary search on the following sorted array. How many comparisons does binary search need to find 23 in this ",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-18-selection-sort",
+      "key": "A",
+      "stem": "Consider the following array being sorted with selection sort. What does the array look like after the FIRST pass of sel",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-19-insertion-sort",
+      "key": "A",
+      "stem": "Consider the following array being sorted with insertion sort. What does the array look like after inserting the element",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-2-array-initializer",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "25",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-20-comparing-sorts",
+      "key": "B",
+      "stem": "Consider the following statements about sorting algorithms. Which statements are true?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-21-2d-array-basics",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "7",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-22-2d-row-traversal",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "21",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-23-2d-column-traversal",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "1 4 2 5 3 6",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-24-2d-row-sums",
+      "key": "C",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "24",
+      "letter": "C"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-25-2d-counting",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "5",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-26-array-vs-arraylist",
+      "key": "B",
+      "stem": "Consider the following statements about arrays and ArrayLists. Which statements are true?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-27-mixed-algorithms",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "9 7",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-28-comprehensive-review",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-3-array-bounds",
+      "key": "C",
+      "stem": "Consider the following code segment. What happens when this code executes?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-4-for-loop-traversal",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "30",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-5-enhanced-for",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "APCSA",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-6-enhanced-for-modify",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "1 5",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-7-finding-max",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "9",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-8-counting-matches",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "2",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c1-day-9-shifting-elements",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "20 50 50",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-1-array-aliasing-trap",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "99",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-10-2d-diagonal",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "15",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-11-iii-arraylist-ops",
+      "key": "B",
+      "stem": "Given ArrayList list = [5, 10, 15, 20] , consider these operations applied independently. Which statements correctly des",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-12-2d-column-sum",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "15",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-13-reverse-in-place",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "4 2",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-14-removing-duplicates",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-15-2d-border",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "40",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-16-frequency-table",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "2 2",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-17-compareto-sorting",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-18-2d-transpose",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "3 2",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-19-iii-search-sort",
+      "key": "A",
+      "stem": "Consider the following statements. Which are true?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-2-iii-traversal-patterns",
+      "key": "B",
+      "stem": "Consider the following code segments that process int[] arr = {1, 2, 3, 4, 5} . Which segments produce the same sum?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-20-merge-sorted",
+      "key": "B",
+      "stem": "Consider the following merge algorithm. What is printed?",
+      "state": "agrees",
+      "out": "4",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-21-2d-linear-search",
+      "key": "B",
+      "stem": "Consider the following method. For grid = {{5,3},{9,7}} , what does find(grid, 9) return?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-22-type-safety",
+      "key": "A",
+      "stem": "Consider the following code segments. Which segment(s) compile without error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-23-broken-reversal",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "[50, 40, 30, 40, 50]",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-24-consecutive-duplicates",
+      "key": "B",
+      "stem": "Consider the following method. For which array does the method return true ?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-25-2d-checkerboard",
+      "key": "B",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "0 1",
+      "letter": "B"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-26-2d-to-arraylist",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "4 8",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-27-counting-ascending",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "4",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-28-comprehensive-final",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-3-off-by-one-adjacent",
+      "key": "A",
+      "stem": "Consider the following method intended to check if an array is sorted ascending. What is wrong with this method?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-4-integer-removal",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "[10, 30]",
+      "letter": "A"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-5-concurrent-modification",
+      "key": "C",
+      "stem": "Consider the following code segment. What happens when this code executes?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-6-binary-search-precondition",
+      "key": "A",
+      "stem": "A student uses binary search on the following array. What is the problem?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-7-selection-sort-trace",
+      "key": "A",
+      "stem": "Consider selection sort on the following array. What does the array look like after TWO complete passes?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-8-insertion-sort-worst",
+      "key": "B",
+      "stem": "Consider insertion sort on a reverse-sorted array. How many total element shifts does insertion sort perform?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "ap-csa-u4-c2-day-9-while-removal",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "[a, c]",
+      "letter": "A"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-1-string-concatenation-order",
+      "key": "B",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-10-reassigning-object-parameter",
+      "key": "D",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-11-string-literals-and",
+      "key": "A",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-12-substring-pieces-concatenation",
+      "key": "A",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-13-nested-method-calls",
+      "key": "C",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-14-indexof-substring-computed-indices",
+      "key": "A",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-15-object-state-change",
+      "key": "D",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "science\n7",
+      "letter": "D"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-16-repeated-method-calls-mutate-object-state",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "4 9",
+      "letter": "A"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-17-math-random-with-constrained-values",
+      "key": "D",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-18-math-pow-returns-double",
+      "key": "B",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-19-math-pow-then-cast-to-int",
+      "key": "C",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-2-substringstartend-indexing",
+      "key": "D",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-20-string-touppercase",
+      "key": "B",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-21-aliasing-two-references-to-same-object",
+      "key": "D",
+      "stem": "Consider the following code segment.",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-22-distinct-objects-with-same-state",
+      "key": "C",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "7 AP 34",
+      "letter": "C"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-23-pass-by-value-for-primitives",
+      "key": "A",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-24-capturing-return-value-updates-variable",
+      "key": "B",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-25-string-immutability",
+      "key": "D",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-26-reassigning-string-method-result",
+      "key": "A",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-27-passing-object-to-method-mutates-state",
+      "key": "C",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "27 2.0 7",
+      "letter": "C"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-28-string-length-string-concatenation",
+      "key": "A",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-3-indexofstring-first-occurrence",
+      "key": "A",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-4-string-vs-equals-with-new-string",
+      "key": "B",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-5-method-composition-tracing",
+      "key": "C",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-6-math-random-range-mapping",
+      "key": "A",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-7-object-state-over-time-via-methods",
+      "key": "A",
+      "stem": "Consider the following code segment. What is printed?",
+      "state": "agrees",
+      "out": "COMPER 4",
+      "letter": "A"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-8-substring-with-length-based-indices",
+      "key": "C",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-1-cycle-2-day-9-substringlength-3-last-3-chars",
+      "key": "C",
+      "stem": "Consider the following code:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-1-boolean-algebra-equivalence",
+      "key": "A",
+      "stem": "Format: Boolean Algebra (Equivalence) Which expression is logically equivalent to `!(a < 5 || b == 0)`?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-10-iteration-accumulation",
+      "key": "C",
+      "stem": "Format: Iteration (accumulation) What is printed?",
+      "state": "no-match",
+      "stdout": "15\n",
+      "out": "15",
+      "keyed": "10"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-11-iteration-nested-loop-count",
+      "key": "B",
+      "stem": "Format: Iteration (nested loop count) What is printed?",
+      "state": "no-match",
+      "stdout": "12\n",
+      "out": "12",
+      "keyed": "6"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-12-debugging-loop-condition",
+      "key": "A",
+      "stem": "Format: Debugging (Loop condition) A programmer wants to print all integers from 1 to 5 inclusive. Which change fixes th",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-13-iteration-break",
+      "key": "B",
+      "stem": "Format: Iteration (break) What is printed?",
+      "state": "no-match",
+      "stdout": "0 1 2 3 4 ",
+      "out": "0 1 2 3 4",
+      "keyed": "6"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-14-iteration-selection-filtering",
+      "key": "D",
+      "stem": "Format: Iteration + Selection (Filtering) What is printed?",
+      "state": "no-match",
+      "stdout": "2 4 6 8 10 ",
+      "out": "2 4 6 8 10",
+      "keyed": "9"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-15-boolean-algebra-equivalence",
+      "key": "B",
+      "stem": "Format: Boolean Algebra (Equivalence) Which expression is logically equivalent to `!(p && q)`?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-16-selection-if-else-if-boundary",
+      "key": "D",
+      "stem": "Format: Selection (if / else-if boundary) What is printed?",
+      "state": "no-match",
+      "stdout": "Equal\n",
+      "out": "Equal",
+      "keyed": "B"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-17-boolean-precedence-andand-with",
+      "key": "A",
+      "stem": "Format: Boolean Precedence (&& with ||) What is printed?",
+      "state": "agrees",
+      "out": "true",
+      "letter": "A"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-18-iteration-for-loop-count",
+      "key": "B",
+      "stem": "Format: Iteration (for-loop count) What is printed?",
+      "state": "agrees",
+      "out": "5",
+      "letter": "B"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-19-iteration-while-loop-growth",
+      "key": "C",
+      "stem": "Format: Iteration (while-loop growth) What is printed?",
+      "state": "no-match",
+      "stdout": "1 3 9 27 81 ",
+      "out": "1 3 9 27 81",
+      "keyed": "5"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-2-selection-if-else-if",
+      "key": "D",
+      "stem": "Format: Selection (if / else-if) What is printed?",
+      "state": "agrees",
+      "out": "B",
+      "letter": "D"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-20-iteration-accumulation",
+      "key": "C",
+      "stem": "Format: Iteration (accumulation) What is printed?",
+      "state": "no-match",
+      "stdout": "15\n",
+      "out": "15",
+      "keyed": "10"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-21-iteration-break",
+      "key": "A",
+      "stem": "Format: Iteration (break) What is printed?",
+      "state": "no-match",
+      "stdout": "0 1 2 3 4 ",
+      "out": "0 1 2 3 4",
+      "keyed": "3"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-22-iteration-continue",
+      "key": "B",
+      "stem": "Format: Iteration (continue) What is printed?",
+      "state": "no-match",
+      "stdout": "0 1 3 4 ",
+      "out": "0 1 3 4",
+      "keyed": "12"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-23-iteration-while-loop-tracing",
+      "key": "B",
+      "stem": "Format: Iteration (while-loop tracing) What is printed?",
+      "state": "no-match",
+      "stdout": "1 2 4 8 ",
+      "out": "1 2 4 8",
+      "keyed": "3"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-24-iteration-nested-loop-count",
+      "key": "C",
+      "stem": "Format: Iteration (nested loop count) What is printed?",
+      "state": "no-match",
+      "stdout": "12\n",
+      "out": "12",
+      "keyed": "6"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-25-iteration-selection-nested-condition",
+      "key": "C",
+      "stem": "Format: Iteration + Selection (nested condition) What is printed?",
+      "state": "no-match",
+      "stdout": "6 ",
+      "out": "6",
+      "keyed": "3"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-26-iteration-break-in-nested-loops",
+      "key": "A",
+      "stem": "Format: Iteration (break in nested loops) What is printed?",
+      "state": "no-match",
+      "stdout": "1,0 2,0 2,1 ",
+      "out": "1,0 2,0 2,1",
+      "keyed": "3"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-27-iteration-selection-nested-filtering",
+      "key": "D",
+      "stem": "Format: Iteration + Selection (nested filtering) What is printed?",
+      "state": "no-match",
+      "stdout": "10 20 ",
+      "out": "10 20",
+      "keyed": "4"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-28-iteration-nested-loop-accumulation",
+      "key": "C",
+      "stem": "Format: Iteration (nested loop accumulation) What is printed?",
+      "state": "no-match",
+      "stdout": "36\n",
+      "out": "36",
+      "keyed": "6"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-3-short-circuit-logic",
+      "key": "B",
+      "stem": "Format: Short-Circuit Logic What is printed?",
+      "state": "not-runnable",
+      "why": "threw at run time",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "unit-2-cycle-2-day-4-selection-nested-if-else",
+      "key": "B",
+      "stem": "Format: Selection (Nested if / else) What is printed?",
+      "state": "no-match",
+      "stdout": "Both\n",
+      "out": "Both",
+      "keyed": "B"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-5-boolean-precedence-andand-before",
+      "key": "A",
+      "stem": "Format: Boolean Precedence (&& before ||) What is printed?",
+      "state": "agrees",
+      "out": "true",
+      "letter": "A"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-6-selection-range-check",
+      "key": "C",
+      "stem": "Format: Selection (Range Check) A programmer wants to print \"In range\" when `n` is between 10 and 20 inclusive. Which co",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-7-selection-two-separate-if-statements",
+      "key": "A",
+      "stem": "Format: Selection (Two separate if statements) What is printed?",
+      "state": "no-match",
+      "stdout": "A\nB\n",
+      "out": "A\nB",
+      "keyed": "XY"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-8-iteration-for-loop-count",
+      "key": "B",
+      "stem": "Format: Iteration (for-loop count) What is printed?",
+      "state": "mismatch",
+      "out": "5",
+      "should_be": "C",
+      "keys": "B",
+      "keyed": "4"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-9-iteration-while-loop-tracing",
+      "key": "A",
+      "stem": "Format: Iteration (while-loop tracing) What is printed?",
+      "state": "no-match",
+      "stdout": "1 2 4 8 ",
+      "out": "1 2 4 8",
+      "keyed": "4"
+    },
+    {
+      "handle": "unit-2-day-16-algorithm-analysis",
+      "key": "C",
+      "stem": "How many times does the inner loop body execute?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-2-day-17-string-algorithms",
+      "key": "B",
+      "stem": "What is returned by mystery(\"hello\")?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-1-constructor-overloading",
+      "key": "D",
+      "stem": "Format: Constructor Overloading What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-10-method-overriding-rules",
+      "key": "C",
+      "stem": "Format: Method Overriding Rules Which method signature correctly overrides the parent method?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-11-mutator-method",
+      "key": "A",
+      "stem": "Format: Mutator Method What is the value of x after this code?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-12-object-equality",
+      "key": "D",
+      "stem": "Format: Object Equality What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-13-super-keyword",
+      "key": "C",
+      "stem": "Format: super Keyword What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-14-constructor-parameter-validation",
+      "key": "B",
+      "stem": "Format: Constructor Parameter Validation What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-15-polymorphism",
+      "key": "D",
+      "stem": "Format: Polymorphism Which method call is valid?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-16-tostring-override",
+      "key": "A",
+      "stem": "Format: toString Override What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-17-constructor-default-values",
+      "key": "A",
+      "stem": "Format: Constructor Default Values What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-18-private-vs-public",
+      "key": "C",
+      "stem": "Format: Private vs Public What happens when you compile this code?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-19-method-overriding-vs-overloading",
+      "key": "C",
+      "stem": "Format: Method Overriding vs Overloading Which methods are in class Child?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-2-instance-vs-static",
+      "key": "B",
+      "stem": "Format: Instance vs Static What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-20-inheritance-access",
+      "key": "B",
+      "stem": "Format: Inheritance Access Which variables can Child access?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-21-null-reference",
+      "key": "D",
+      "stem": "Format: Null Reference What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-22-this-in-constructors",
+      "key": "C",
+      "stem": "Format: this in Constructors What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-23-static-method-calling",
+      "key": "D",
+      "stem": "Format: Static Method Calling Which statement is INVALID?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-24-constructor-no-return",
+      "key": "D",
+      "stem": "Format: Constructor No Return What happens when you compile this code?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-25-super-call",
+      "key": "C",
+      "stem": "Format: super() Call What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-26-object-class",
+      "key": "D",
+      "stem": "Format: Object Class Which method is inherited from Object class?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-27-encapsulation-violation",
+      "key": "A",
+      "stem": "Format: Encapsulation Violation Which design violates encapsulation?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-28-polymorphic-array",
+      "key": "C",
+      "stem": "Format: Polymorphic Array What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-3-accessor-method-side-effects",
+      "key": "D",
+      "stem": "Format: Accessor Method Side Effects Which statement is TRUE about this accessor method?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-4-method-overriding",
+      "key": "B",
+      "stem": "Format: Method Overriding What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-5-constructor-chaining",
+      "key": "D",
+      "stem": "Format: Constructor Chaining What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-6-this-keyword",
+      "key": "B",
+      "stem": "Format: this Keyword What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-7-scope-and-access",
+      "key": "D",
+      "stem": "Format: Scope and Access Which line will cause a compilation error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-8-static-method-restrictions",
+      "key": "A",
+      "stem": "Format: Static Method Restrictions Which statement would cause a compilation error inside a static method?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-3-cycle-2-day-9-inheritance-constructor-calls",
+      "key": "C",
+      "stem": "Format: Inheritance Constructor Calls What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit-3-day-16-this-keyword",
+      "key": "B",
+      "stem": "Which statement correctly uses the this keyword in a constructor?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-1-array-initialization",
+      "key": "A",
+      "stem": "Format: Array Initialization What is the output?",
+      "state": "agrees",
+      "out": "20",
+      "letter": "A"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-10-array-algorithm-find-maximum",
+      "key": "C",
+      "stem": "Format: Array Algorithm: Find Maximum What is the output?",
+      "state": "agrees",
+      "out": "9",
+      "letter": "C"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-11-arraylist-add-with-index",
+      "key": "A",
+      "stem": "Format: ArrayList Add with Index What is the output?",
+      "state": "agrees",
+      "out": "[10, 15, 20, 30]",
+      "letter": "A"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-12-array-out-of-bounds",
+      "key": "C",
+      "stem": "Format: Array Out of Bounds Which line causes ArrayIndexOutOfBoundsException?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-13-arraylist-remove-return-value",
+      "key": "A",
+      "stem": "Format: ArrayList Remove Return Value What is the output?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "unit-4-cycle-2-day-14-2d-array-diagonal-sum",
+      "key": "B",
+      "stem": "Format: 2D Array Diagonal Sum What is the output?",
+      "state": "agrees",
+      "out": "15",
+      "letter": "B"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-15-binary-search-precondition",
+      "key": "D",
+      "stem": "Format: Binary Search Precondition Which array is suitable for binary search?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-16-arraylist-set-index-error",
+      "key": "D",
+      "stem": "Format: ArrayList Set Index Error What happens when this code executes?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-17-array-reverse",
+      "key": "B",
+      "stem": "Format: Array Reverse What is the output?",
+      "state": "agrees",
+      "out": "[5, 4, 3, 2, 1]",
+      "letter": "B"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-18-arraylist-autoboxing",
+      "key": "B",
+      "stem": "Format: ArrayList AutoBoxing What is the output?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "unit-4-cycle-2-day-19-2d-array-search",
+      "key": "A",
+      "stem": "Format: 2D Array Search What is the output?",
+      "state": "agrees",
+      "out": "true",
+      "letter": "A"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-2-enhanced-for-loop-limitation",
+      "key": "C",
+      "stem": "Format: Enhanced For Loop Limitation Which operation is IMPOSSIBLE with an enhanced for loop?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-20-arraylist-remove-with-wrapper",
+      "key": "D",
+      "stem": "Format: ArrayList Remove with Wrapper What is the output?",
+      "state": "ambiguous",
+      "out": "[10, 30, 20]",
+      "letters": [
+        "A",
+        "D"
+      ]
+    },
+    {
+      "handle": "unit-4-cycle-2-day-21-array-copy-pitfall",
+      "key": "D",
+      "stem": "Format: Array Copy Pitfall What is the output?",
+      "state": "agrees",
+      "out": "99",
+      "letter": "D"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-22-arraylist-remove-all-even-numbers",
+      "key": "B",
+      "stem": "Format: ArrayList Remove All Even Numbers What is the correct way to remove all even numbers from this ArrayList?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-23-2d-array-row-sums",
+      "key": "C",
+      "stem": "Format: 2D Array Row Sums What is the output?",
+      "state": "agrees",
+      "out": "21",
+      "letter": "C"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-24-arraylist-null-element",
+      "key": "B",
+      "stem": "Format: ArrayList Null Element What is the output?",
+      "state": "agrees-flattened",
+      "out": "null\n3",
+      "letter": "B",
+      "option": "null 3"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-25-selection-sort-iteration",
+      "key": "B",
+      "stem": "Format: Selection Sort Iteration After ONE pass of selection sort, what is the array?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-26-arraylist-loop-adding",
+      "key": "D",
+      "stem": "Format: ArrayList Loop Adding What is the final size of the ArrayList?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-27-2d-array-edge-elements",
+      "key": "B",
+      "stem": "Format: 2D Array Edge Elements What is the output?",
+      "state": "agrees",
+      "out": "8",
+      "letter": "B"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-28-arraylist-equality",
+      "key": "C",
+      "stem": "Format: ArrayList Equality What is the output?",
+      "state": "agrees-flattened",
+      "out": "false\ntrue",
+      "letter": "C",
+      "option": "false true"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-3-arraylist-remove-during-iteration",
+      "key": "A",
+      "stem": "Format: ArrayList Remove During Iteration What is the output?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "unit-4-cycle-2-day-4-array-vs-arraylist",
+      "key": "D",
+      "stem": "Format: Array vs ArrayList Which statement is TRUE?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-5-2d-array-initialization",
+      "key": "D",
+      "stem": "Format: 2D Array Initialization What is the output?",
+      "state": "ambiguous",
+      "out": "10",
+      "letters": [
+        "A",
+        "D"
+      ]
+    },
+    {
+      "handle": "unit-4-cycle-2-day-6-arraylist-wrapper-types",
+      "key": "B",
+      "stem": "Format: ArrayList Wrapper Types What happens when you compile this code?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-7-linear-search",
+      "key": "B",
+      "stem": "Format: Linear Search What is the output?",
+      "state": "agrees",
+      "out": "3",
+      "letter": "B"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-8-arraylist-get-vs-set",
+      "key": "B",
+      "stem": "Format: ArrayList Get vs Set What is the output?",
+      "state": "agrees",
+      "out": "[cat, fish, bird]",
+      "letter": "B"
+    },
+    {
+      "handle": "unit-4-cycle-2-day-9-2d-array-column-major-traversal",
+      "key": "C",
+      "stem": "Format: 2D Array Column-Major Traversal What is the output?",
+      "state": "agrees",
+      "out": "1 4 2 5 3 6",
+      "letter": "C"
+    },
+    {
+      "handle": "unit-4-day-16-arraylist-algorithms",
+      "key": "B",
+      "stem": "What does the following method return for the list [3, 1, 4, 1, 5]?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-day-17-arraylist-remove-traversal",
+      "key": "B",
+      "stem": "A programmer wants to remove all even numbers from an ArrayList. Consider the following three code segments:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-day-18-arraylist-object-methods",
+      "key": "A",
+      "stem": "Consider the following class and code segment:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-day-19-arraylist-shifting",
+      "key": "B",
+      "stem": "A student wrote the following method to insert a value at every other position in an ArrayList. The method does NOT work",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-day-20-arraylist-vs-array",
+      "key": "C",
+      "stem": "Consider the following statements about arrays and ArrayLists in Java:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit-4-day-21-arraylist-comprehensive",
+      "key": "A",
+      "stem": "Consider the following code segment:",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit2-cycle2-day-1-boolean-algebra-equivalence",
+      "key": "A",
+      "stem": "Format: Boolean Algebra (Equivalence) Which expression is logically equivalent to `!(a < 5 || b == 0)`?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit2-cycle2-day-10-iteration-accumulation",
+      "key": "C",
+      "stem": "Format: Iteration (accumulation) What is printed?",
+      "state": "agrees",
+      "out": "10",
+      "letter": "C"
+    },
+    {
+      "handle": "unit2-cycle2-day-11-iteration-nested-loop-count",
+      "key": "B",
+      "stem": "Format: Iteration (nested loop count) What is printed?",
+      "state": "agrees",
+      "out": "6",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-12-debugging-loop-condition",
+      "key": "A",
+      "stem": "Format: Debugging (Loop condition) A programmer wants to print all integers from 1 to 5 inclusive. Which change fixes th",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit2-cycle2-day-13-iteration-break",
+      "key": "B",
+      "stem": "Format: Iteration (break) What is printed?",
+      "state": "agrees",
+      "out": "6",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-14-iteration-selection-filtering",
+      "key": "B",
+      "stem": "Format: Iteration + Selection (Filtering) What is printed?",
+      "state": "agrees",
+      "out": "9",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-15-boolean-algebra-equivalence",
+      "key": "B",
+      "stem": "Format: Boolean Algebra (Equivalence) Which expression is logically equivalent to `!(p && q)`?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit2-cycle2-day-16-selection-if-else-if-boundary",
+      "key": "B",
+      "stem": "Format: Selection (if / else-if boundary) What is printed?",
+      "state": "agrees",
+      "out": "B",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-17-boolean-precedence-andand-with",
+      "key": "A",
+      "stem": "Format: Boolean Precedence (&& with ||) What is printed?",
+      "state": "agrees",
+      "out": "true",
+      "letter": "A"
+    },
+    {
+      "handle": "unit2-cycle2-day-18-iteration-for-loop-count",
+      "key": "B",
+      "stem": "Format: Iteration (for-loop count) What is printed?",
+      "state": "agrees",
+      "out": "5",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-19-iteration-while-loop-growth",
+      "key": "C",
+      "stem": "Format: Iteration (while-loop growth) What is printed?",
+      "state": "agrees",
+      "out": "5",
+      "letter": "C"
+    },
+    {
+      "handle": "unit2-cycle2-day-2-selection-if-else-if",
+      "key": "B",
+      "stem": "Format: Selection (if / else-if) What is printed?",
+      "state": "agrees",
+      "out": "B",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-20-iteration-accumulation",
+      "key": "C",
+      "stem": "Format: Iteration (accumulation) What is printed?",
+      "state": "agrees",
+      "out": "10",
+      "letter": "C"
+    },
+    {
+      "handle": "unit2-cycle2-day-21-iteration-break",
+      "key": "A",
+      "stem": "Format: Iteration (break) What is printed?",
+      "state": "agrees",
+      "out": "3",
+      "letter": "A"
+    },
+    {
+      "handle": "unit2-cycle2-day-22-iteration-continue",
+      "key": "B",
+      "stem": "Format: Iteration (continue) What is printed?",
+      "state": "agrees",
+      "out": "12",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-23-iteration-while-loop-tracing",
+      "key": "B",
+      "stem": "Format: Iteration (while-loop tracing) What is printed?",
+      "state": "agrees",
+      "out": "3",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-24-iteration-nested-loop-count",
+      "key": "C",
+      "stem": "Format: Iteration (nested loop count) What is printed?",
+      "state": "agrees",
+      "out": "6",
+      "letter": "C"
+    },
+    {
+      "handle": "unit2-cycle2-day-25-iteration-selection-nested-condition",
+      "key": "C",
+      "stem": "Format: Iteration + Selection (nested condition) What is printed?",
+      "state": "agrees",
+      "out": "3",
+      "letter": "C"
+    },
+    {
+      "handle": "unit2-cycle2-day-26-iteration-break-in-nested-loops",
+      "key": "A",
+      "stem": "Format: Iteration (break in nested loops) What is printed?",
+      "state": "agrees",
+      "out": "3",
+      "letter": "A"
+    },
+    {
+      "handle": "unit2-cycle2-day-27-iteration-selection-nested-filtering",
+      "key": "B",
+      "stem": "Format: Iteration + Selection (nested filtering) What is printed?",
+      "state": "agrees",
+      "out": "4",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-28-iteration-nested-loop-accumulation",
+      "key": "C",
+      "stem": "Format: Iteration (nested loop accumulation) What is printed?",
+      "state": "agrees",
+      "out": "6",
+      "letter": "C"
+    },
+    {
+      "handle": "unit2-cycle2-day-3-short-circuit-logic",
+      "key": "B",
+      "stem": "Format: Short-Circuit Logic What is printed?",
+      "state": "agrees",
+      "out": "false",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-4-selection-nested-if-else",
+      "key": "B",
+      "stem": "Format: Selection (Nested if / else) What is printed?",
+      "state": "agrees",
+      "out": "B",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-5-boolean-precedence-andand-before",
+      "key": "A",
+      "stem": "Format: Boolean Precedence (&& before ||) What is printed?",
+      "state": "agrees",
+      "out": "true",
+      "letter": "A"
+    },
+    {
+      "handle": "unit2-cycle2-day-6-selection-range-check",
+      "key": "B",
+      "stem": "Format: Selection (Range Check) A programmer wants to print \"In range\" when `n` is between 10 and 20 inclusive. Which co",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit2-cycle2-day-7-selection-two-separate-if-statements",
+      "key": "A",
+      "stem": "Format: Selection (Two separate if statements) What is printed?",
+      "state": "agrees",
+      "out": "XY",
+      "letter": "A"
+    },
+    {
+      "handle": "unit2-cycle2-day-8-iteration-for-loop-count",
+      "key": "B",
+      "stem": "Format: Iteration (for-loop count) What is printed?",
+      "state": "agrees",
+      "out": "4",
+      "letter": "B"
+    },
+    {
+      "handle": "unit2-cycle2-day-9-iteration-while-loop-tracing",
+      "key": "B",
+      "stem": "Format: Iteration (while-loop tracing) What is printed?",
+      "state": "agrees",
+      "out": "4",
+      "letter": "B"
+    },
+    {
+      "handle": "unit3-cycle2-day-1-constructor-overloading",
+      "key": "B",
+      "stem": "Format: Constructor Overloading What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-10-method-overriding-rules",
+      "key": "C",
+      "stem": "Format: Method Overriding Rules Which method signature correctly overrides the parent method?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-11-mutator-method",
+      "key": "A",
+      "stem": "Format: Mutator Method What is the value of x after this code?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-12-object-equality",
+      "key": "D",
+      "stem": "Format: Object Equality What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-13-super-keyword",
+      "key": "C",
+      "stem": "Format: super Keyword What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-14-constructor-parameter-validation",
+      "key": "B",
+      "stem": "Format: Constructor Parameter Validation What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-15-polymorphism",
+      "key": "D",
+      "stem": "Format: Polymorphism Which method call is valid?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-16-tostring-override",
+      "key": "A",
+      "stem": "Format: toString Override What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-17-constructor-default-values",
+      "key": "A",
+      "stem": "Format: Constructor Default Values What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-18-private-vs-public",
+      "key": "C",
+      "stem": "Format: Private vs Public What happens when you compile this code?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-19-method-overriding-vs-overloading",
+      "key": "C",
+      "stem": "Format: Method Overriding vs Overloading Which methods are in class Child?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-2-instance-vs-static",
+      "key": "B",
+      "stem": "Format: Instance vs Static What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-20-inheritance-access",
+      "key": "B",
+      "stem": "Format: Inheritance Access Which variables can Child access?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-21-null-reference",
+      "key": "D",
+      "stem": "Format: Null Reference What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-22-this-in-constructors",
+      "key": "B",
+      "stem": "Format: this in Constructors What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-23-static-method-calling",
+      "key": "D",
+      "stem": "Format: Static Method Calling Which statement is INVALID?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-24-constructor-no-return",
+      "key": "D",
+      "stem": "Format: Constructor No Return What happens when you compile this code?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-25-super-call",
+      "key": "C",
+      "stem": "Format: super() Call What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-26-object-class",
+      "key": "B",
+      "stem": "Format: Object Class Which method is inherited from Object class?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-27-encapsulation-violation",
+      "key": "A",
+      "stem": "Format: Encapsulation Violation Which design violates encapsulation?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-28-polymorphic-array",
+      "key": "C",
+      "stem": "Format: Polymorphic Array What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-3-accessor-method-side-effects",
+      "key": "D",
+      "stem": "Format: Accessor Method Side Effects Which statement is TRUE about this accessor method?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-4-method-overriding",
+      "key": "B",
+      "stem": "Format: Method Overriding What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-5-constructor-chaining",
+      "key": "B",
+      "stem": "Format: Constructor Chaining What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-6-this-keyword",
+      "key": "B",
+      "stem": "Format: this Keyword What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit3-cycle2-day-7-scope-and-access",
+      "key": "D",
+      "stem": "Format: Scope and Access Which line will cause a compilation error?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-8-static-method-restrictions",
+      "key": "B",
+      "stem": "Format: Static Method Restrictions Which statement would cause a compilation error inside a static method?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit3-cycle2-day-9-inheritance-constructor-calls",
+      "key": "C",
+      "stem": "Format: Inheritance Constructor Calls What is the output?",
+      "state": "not-runnable",
+      "why": "a class with no driver, so the page decides what is called"
+    },
+    {
+      "handle": "unit4-cycle2-day-1-array-initialization",
+      "key": "A",
+      "stem": "Format: Array Initialization What is the output?",
+      "state": "agrees",
+      "out": "20",
+      "letter": "A"
+    },
+    {
+      "handle": "unit4-cycle2-day-10-array-algorithm-find-maximum",
+      "key": "C",
+      "stem": "Format: Array Algorithm: Find Maximum What is the output?",
+      "state": "agrees",
+      "out": "9",
+      "letter": "C"
+    },
+    {
+      "handle": "unit4-cycle2-day-11-arraylist-add-with-index",
+      "key": "A",
+      "stem": "Format: ArrayList Add with Index What is the output?",
+      "state": "agrees",
+      "out": "[10, 15, 20, 30]",
+      "letter": "A"
+    },
+    {
+      "handle": "unit4-cycle2-day-12-array-out-of-bounds",
+      "key": "C",
+      "stem": "Format: Array Out of Bounds Which line causes ArrayIndexOutOfBoundsException?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-13-arraylist-remove-return-value",
+      "key": "A",
+      "stem": "Format: ArrayList Remove Return Value What is the output?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "unit4-cycle2-day-14-2d-array-diagonal-sum",
+      "key": "B",
+      "stem": "Format: 2D Array Diagonal Sum What is the output?",
+      "state": "agrees",
+      "out": "15",
+      "letter": "B"
+    },
+    {
+      "handle": "unit4-cycle2-day-15-binary-search-precondition",
+      "key": "B",
+      "stem": "Format: Binary Search Precondition Which array is suitable for binary search?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-16-arraylist-set-index-error",
+      "key": "D",
+      "stem": "Format: ArrayList Set Index Error What happens when this code executes?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-17-array-reverse",
+      "key": "B",
+      "stem": "Format: Array Reverse What is the output?",
+      "state": "agrees",
+      "out": "[5, 4, 3, 2, 1]",
+      "letter": "B"
+    },
+    {
+      "handle": "unit4-cycle2-day-18-arraylist-autoboxing",
+      "key": "B",
+      "stem": "Format: ArrayList AutoBoxing What is the output?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "unit4-cycle2-day-19-2d-array-search",
+      "key": "A",
+      "stem": "Format: 2D Array Search What is the output?",
+      "state": "agrees",
+      "out": "true",
+      "letter": "A"
+    },
+    {
+      "handle": "unit4-cycle2-day-2-enhanced-for-loop-limitation",
+      "key": "C",
+      "stem": "Format: Enhanced For Loop Limitation Which operation is IMPOSSIBLE with an enhanced for loop?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-20-arraylist-remove-with-wrapper",
+      "key": "D",
+      "stem": "Format: ArrayList Remove with Wrapper What is the output?",
+      "state": "ambiguous",
+      "out": "[10, 30, 20]",
+      "letters": [
+        "A",
+        "D"
+      ]
+    },
+    {
+      "handle": "unit4-cycle2-day-21-array-copy-pitfall",
+      "key": "B",
+      "stem": "Format: Array Copy Pitfall What is the output?",
+      "state": "agrees",
+      "out": "99",
+      "letter": "B"
+    },
+    {
+      "handle": "unit4-cycle2-day-22-arraylist-remove-all-even-numbers",
+      "key": "B",
+      "stem": "Format: ArrayList Remove All Even Numbers What is the correct way to remove all even numbers from this ArrayList?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-23-2d-array-row-sums",
+      "key": "C",
+      "stem": "Format: 2D Array Row Sums What is the output?",
+      "state": "agrees",
+      "out": "21",
+      "letter": "C"
+    },
+    {
+      "handle": "unit4-cycle2-day-24-arraylist-null-element",
+      "key": "B",
+      "stem": "Format: ArrayList Null Element What is the output?",
+      "state": "agrees-flattened",
+      "out": "null\n3",
+      "letter": "B",
+      "option": "null 3"
+    },
+    {
+      "handle": "unit4-cycle2-day-25-selection-sort-iteration",
+      "key": "B",
+      "stem": "Format: Selection Sort Iteration After ONE pass of selection sort, what is the array?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-26-arraylist-loop-adding",
+      "key": "D",
+      "stem": "Format: ArrayList Loop Adding What is the final size of the ArrayList?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-27-2d-array-edge-elements",
+      "key": "B",
+      "stem": "Format: 2D Array Edge Elements What is the output?",
+      "state": "agrees",
+      "out": "8",
+      "letter": "B"
+    },
+    {
+      "handle": "unit4-cycle2-day-28-arraylist-equality",
+      "key": "C",
+      "stem": "Format: ArrayList Equality What is the output?",
+      "state": "agrees-flattened",
+      "out": "false\ntrue",
+      "letter": "C",
+      "option": "false true"
+    },
+    {
+      "handle": "unit4-cycle2-day-3-arraylist-remove-during-iteration",
+      "key": "A",
+      "stem": "Format: ArrayList Remove During Iteration What is the output?",
+      "state": "not-runnable",
+      "why": "does not compile",
+      "detail": "Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45207 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes="
+    },
+    {
+      "handle": "unit4-cycle2-day-4-array-vs-arraylist",
+      "key": "D",
+      "stem": "Format: Array vs ArrayList Which statement is TRUE?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-5-2d-array-initialization",
+      "key": "D",
+      "stem": "Format: 2D Array Initialization What is the output?",
+      "state": "ambiguous",
+      "out": "10",
+      "letters": [
+        "A",
+        "D"
+      ]
+    },
+    {
+      "handle": "unit4-cycle2-day-6-arraylist-wrapper-types",
+      "key": "B",
+      "stem": "Format: ArrayList Wrapper Types What happens when you compile this code?",
+      "state": "not-applicable",
+      "why": "the stem does not ask what the program prints"
+    },
+    {
+      "handle": "unit4-cycle2-day-7-linear-search",
+      "key": "B",
+      "stem": "Format: Linear Search What is the output?",
+      "state": "agrees",
+      "out": "3",
+      "letter": "B"
+    },
+    {
+      "handle": "unit4-cycle2-day-8-arraylist-get-vs-set",
+      "key": "B",
+      "stem": "Format: ArrayList Get vs Set What is the output?",
+      "state": "agrees",
+      "out": "[cat, fish, bird]",
+      "letter": "B"
+    },
+    {
+      "handle": "unit4-cycle2-day-9-2d-array-column-major-traversal",
+      "key": "B",
+      "stem": "Format: 2D Array Column-Major Traversal What is the output?",
+      "state": "agrees",
+      "out": "1 4 2 5 3 6",
+      "letter": "B"
+    }
+  ]
+}

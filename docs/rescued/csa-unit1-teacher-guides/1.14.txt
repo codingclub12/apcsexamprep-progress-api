@@ -1,0 +1,210 @@
+TEACHER GUIDE
+
+Topic 1.14: Calling Instance Methods
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.14.A | Develop code to call instance methods and determine the result of these calls. |
+
+Students will be able to
+
+I can call an instance method on an object reference with the dot operator and explain why the class name does not work there.
+
+I can decide whether an instance method call is a standalone statement or an expression whose value must be stored or used.
+
+I can trace an object's state across a series of instance method calls and write the exact output.
+
+I can explain why calling a method on a null reference compiles but throws a NullPointerException at run time.
+
+How the days run
+
+Day 1
+
+Class method versus instance method: what is left of the dot; void versus value-returning instance methods; Arguments and changing object state
+
+Bell ringer: Two calls, spot every difference (6 min)
+
+On the board:  
+int big = Math.max(3, 8);  
+int len = greeting.length();  
+Both lines call a method. In 3 minutes, list every difference you can see between the two calls. Do not look anything up.
+
+Debrief: Take the list out loud. The one that matters: what sits to the left of the dot. Math is a class name, greeting is a variable holding an object. Math.max needs no object because it works only from its arguments; greeting.length() needs an object because the answer depends on which String greeting is. That is the whole topic: class methods are called on the class, instance methods are called on an object reference.
+
+Objectives and guided-notes preview (3 min)
+
+Class method versus instance method: what is left of the dot (9 min)
+
+In 1.10 you called class methods: the class name went to the left of the dot, as in Math.abs(-4). No object was involved.
+
+An instance method is different. It belongs to a specific object, so an object reference goes to the left of the dot: c.getCount(), account.deposit(20.0), str.length().
+
+That is not a style choice. Math.max(3, 8) can answer from its arguments alone. getCount() cannot: the answer depends on which Counter you asked, so Java requires you to name one.
+
+Because an instance method runs on a specific object, it can read that object's attributes and change them. A class method has no object, so it has no object state to touch.
+
+Two syntax rules that show up as whole MCQ answer choices: the parentheses are required even with no arguments, and the class name is not a legal substitute for a reference. Counter.getCount() and c.getCount are both wrong.
+
+Worked example at the board (9 min)
+
+Call an instance method on two different objects of the same class and show the different results. Same code, different state.
+
+void versus value-returning instance methods (10 min)
+
+The void versus non-void rule you learned for class methods in 1.9 and 1.10 is exactly the same for instance methods. Nothing new to memorize, just a new left side.
+
+A void instance method does something and hands nothing back. Call it as a standalone statement: c.increment();
+
+A value-returning instance method hands a value back, and the CED expects that value to be stored in a variable or used inside a larger expression. int now = c.getCount(); or System.out.println(c.getCount());
+
+Calling a value-returning method and ignoring the result compiles, but the value evaporates. c.getCount(); on its own line is legal Java and almost always a bug.
+
+Going the other way is a hard compile error. int x = c.increment(); does not compile because increment is void and there is no value to assign. This one is worded as a run-time error in distractors constantly. It is compile time.
+
+The return type in the class definition is your only evidence. Read the word right before the method name: void means statement, int or double or boolean or String means expression.
+
+Arguments and changing object state (9 min)
+
+Arguments go inside the parentheses of the call and must match the parameters in number, order, and type. addPoints(int p) takes exactly one int, so c.addPoints(7) is valid and c.addPoints() and c.addPoints(2, 3) are not.
+
+The argument is what you pass; the parameter is the variable inside the method that receives it. p is a parameter, 7 is an argument.
+
+Here is what makes instance methods different from class methods in practice: the method can change the state of the object it was called on, and that change persists after the method finishes.
+
+So the order of calls matters. Tracing means keeping a running value for each attribute of each object and updating it call by call, exactly like the trace tables from 1.4.
+
+Getters and setters are the pattern you will see all year. A getter returns state and changes nothing; a setter or an updater changes state and usually returns void.
+
+Misconception check: Calling an instance method on the class name (6 min)
+
+Calling an instance method on the class name: Counter.getCount() and String.length("hello") look reasonable and are both wrong. An instance method needs a specific object, so a reference goes left of the dot: c.getCount(), "hello".length(). The exam offers the class-name version as a distractor in nearly every instance method question.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+Two references, one object (aliasing); Calling a method on null
+
+Bell ringer: retrieval on the previous day (5 min)
+
+Why does an instance method need an object but a static method does not?
+
+Objectives and guided-notes preview (3 min)
+
+Two references, one object (aliasing) (7 min)
+
+Counter b = a; does not build a second Counter. It copies the reference, so a and b are two names for one object. That is called aliasing.
+
+Because there is only one object, a change made through either name is visible through both. b.increment() is instantly visible to a.getCount().
+
+The exam draws this as one box with two arrows pointing at it. Draw it that way every single time and the questions become free points.
+
+Contrast it with primitives from 1.2 and 1.4: int y = x; really does copy the value, so changing y leaves x alone. References behave differently, and that difference is deliberately tested.
+
+Worked walkthrough (10 min)
+
+Chain a method call on a returned object and trace it left to right.
+
+Calling a method on null (9 min)
+
+A reference variable can hold null, meaning it points to no object at all. Declaring a reference without calling a constructor is the common way to end up there.
+
+The compiler is happy with c.getCount() even when c is null, because the compiler checks types, not values. The type of c is Counter and Counter has a getCount method, so the code is legal Java.
+
+At run time the JVM has to go find the object to run the method on, finds nothing, and throws a NullPointerException. The program terminates there unless it is handled.
+
+Bucket it correctly using 1.1 vocabulary: this is a run-time error, specifically an exception, not a syntax error and not a logic error. Distractors that say compile error are wrong.
+
+The fix is always to make the reference point at a real object before the call, which means running a constructor.
+
+Guided practice on the live lesson page (12 min)
+
+Work the live lesson page together (Unit 1 Link Sheet, row 1.14). Start in the Java Code Editor exercise, then the Tier 2 practice set in pairs, then one of the two games, then the Tier 3 Mastery Challenge (The Temperature Sensor) as a whole class.
+
+Run the 1.14 Java editor exercise as written and confirm the expected output before changing anything.
+
+Break it on purpose twice: remove the parentheses from one call (read the compiler message aloud), then assign a void call to an int variable and compare the two messages.
+
+Complete the eight Tier 2 practice questions with a partner, saying out loud for each call whether it is void or value-returning before choosing.
+
+Play either Output Predictor or Bug Hunt for instance methods; require a written prediction before each reveal.
+
+Tier 3 Mastery Challenge, The Temperature Sensor: trace Parts A and B as a class using a reading column on the board, then write Part C (the aliasing explanation) individually against the 4-point rubric.
+
+Independent practice (9 min)
+
+Offline trace-and-predict work using the Counter class from the board. No internet needed; the class definition is printed at the top of the handout.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. Given the Counter class, which line correctly calls the value-returning instance method and keeps its value?
+
+Answer: B
+
+2\. Counter c = null;  
+System.out.println(c.getCount());  
+What happens?
+
+Answer: C
+
+3\. Counter a = new Counter(6);  
+Counter b = a;  
+b.increment();  
+System.out.println(a.getCount());  
+What is the exact output?
+
+Answer: B
+
+Traps this topic sets
+
+Calling an instance method on the class name. Counter.getCount() and String.length("hello") look reasonable and are both wrong. An instance method needs a specific object, so a reference goes left of the dot: c.getCount(), "hello".length(). The exam offers the class-name version as a distractor in nearly every instance method question.
+
+Storing the result of a void method. int x = c.increment(); is a compile error because a void method returns nothing to assign. Distractors describe this as a run-time error or claim it stores 0; both are wrong. Compile errors happen before execution, so the program produces no output at all.
+
+Calling a method on a null reference. A call on null compiles cleanly because the compiler checks the declared type, not the value. At run time the JVM has no object to run the method on and throws a NullPointerException. Answer choices that call it a compile error are the trap.
+
+Assuming a second reference makes a second object. Counter b = a; copies the reference, not the object, so a and b are aliases for one object. A state change made through b is visible through a because there is only one object in memory. Primitives behave the opposite way: int y = x; really does copy the value.
+
+Differentiation
+
+Support
+
+Give a printed decision card: is the thing left of the dot a class name or a reference, and is the return type void or not. Struggling students answer every MCQ by walking the card instead of from memory.
+
+Color-code the printed Counter class: highlight return types in one color and parameters in another, so void versus non-void is visible before any reading happens.
+
+Do the aliasing work with two sticky notes and one desk object. Both notes name the same object; move the object and both notes still point at it.
+
+Provide half-filled trace tables where the first two rows are already done, so the student practices updating state rather than setting up the table.
+
+Stretch
+
+Give a Counter object and ask for the shortest sequence of calls that leaves count at exactly 100 starting from 0, then have them prove no shorter sequence exists.
+
+Ask them to write a single println that calls two instance methods on two different objects inside one concatenation expression, and to state its exact output.
+
+Hand them a program with three references and only two constructor calls, and ask how many objects exist and which variables are aliases, with a drawn diagram as the answer.
+
+Ask a design question: why does getCount return a value while addPoints returns void, and what would break if addPoints returned an int that nobody stored. Answer in terms of the value being discarded, not in terms of errors.
+
+Homework
+
+Vocabulary: write instance method, object reference, dot operator, state, argument, null, NullPointerException, and alias in your own words with one example each.
+
+Trace practice: three printed programs using the Counter class. For each, write compiles or does not compile, and if it compiles write the exact output or name the exception thrown.
+
+Write-and-predict: invent a Locker class with an attribute and three instance methods (one void, one value-returning, one taking an argument), then write four calls on one object and the exact output. You are writing the calls, not the class body; the class body is given as a stub on the handout.
+
+Optional online: replay the 1.14 Output Predictor game until you score 6 of 6 (Unit 1 Link Sheet, row 1.14).
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.14 teacher guide Page

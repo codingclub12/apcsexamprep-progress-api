@@ -1,0 +1,224 @@
+TEACHER GUIDE
+
+Topic 1.9: Method Signatures
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.9.A | Identify the correct method to call based on documentation and method signatures. |
+| 1.9.B | Describe how to call methods. |
+
+Students will be able to
+
+I can read a method header and write its signature as the method name plus the ordered list of parameter types, leaving out the return type and the modifiers.
+
+I can tell a parameter from an argument and decide whether a given call matches a given parameter list in number, order, and type.
+
+I can trace call-by-value and state the exact value of the caller's variable after a method tries to change its parameter.
+
+I can decide whether a method call belongs on a line by itself or inside an expression, based on whether the method is void or value-returning.
+
+How the days run
+
+Day 1
+
+Headers, signatures, and what is not in them; Parameters versus arguments, and matching a call; Call-by-value: the method gets a copy
+
+Bell ringer: Did the method change my variable? (6 min)
+
+On the board, with the instruction 'Write the number that prints. No talking.'  
+  
+public static void addTen(int n) {  
+ n += 10;  
+}  
+  
+int score = 50;  
+addTen(score);  
+System.out.println(score);
+
+Debrief: Vote on 50 versus 60 before saying anything. The answer is 50. addTen received a copy of the value 50 in its own variable n, added ten to that copy, and then the copy vanished when the method ended. The variable score was never touched. This is call-by-value, it is one of the most-tested traps in Unit 1, and today's whole job is understanding the machinery that makes it true.
+
+Objectives and guided-notes preview (3 min)
+
+Headers, signatures, and what is not in them (10 min)
+
+A method is a named block of code that only runs when something calls it. Writing a method does not run it. It sits there until called, possibly forever.
+
+The header is the whole first line. Reading left to right: access and type modifiers, then the return type, then the method name, then the parameter list in parentheses.
+
+The signature is a strict subset of that: the method name plus the ordered list of parameter types. Write it as average(int, int).
+
+The return type is NOT part of the signature. Neither are the modifiers, and neither are the parameter names. Only types, and only in order.
+
+That is why procedural abstraction works. Given the signature and the documentation, you can call average without ever reading the body, exactly as you called methods on the Java API in topic 1.7.
+
+Worked example at the board (9 min)
+
+Write three overloaded signatures and ask which call resolves to which. Return type is not part of the signature; that is the trap.
+
+Parameters versus arguments, and matching a call (9 min)
+
+A parameter is a variable declared in the method header. It only exists inside that method. The exam sometimes calls it a formal parameter.
+
+An argument is the actual value you write at the call site. The exam sometimes calls it an actual parameter. Same idea, different vocabulary, both fair game.
+
+Arguments must match the parameter list in three ways at once: number, order, and compatible type. Two arguments for two parameters, in the same order, with types Java accepts.
+
+Compatible does not mean identical. An int argument will widen to a double parameter automatically, so scale(2, 3) is legal for scale(double, int).
+
+It does not go the other way. A double argument for an int parameter is a narrowing conversion, and Java refuses to do that silently. That is a compile error, not a rounding.
+
+Call-by-value: the method gets a copy (9 min)
+
+When a method is called, each parameter is initialized with a COPY of the corresponding argument's value. The parameter is a brand new variable that happens to start with the same number in it.
+
+So assigning to a parameter inside the method changes only the method's own copy. The caller's variable is untouched, always, for int, double, and boolean.
+
+The copy disappears when the method finishes. If a void method's only action was to modify its parameter, that method accomplished exactly nothing.
+
+The only way a value-returning method can hand information back to the caller is the return value, and the only way the caller keeps it is by storing or using it.
+
+The exam loves this because the wrong answer is so reasonable. Draw two boxes every single time: one labeled score in main, one labeled n inside the method. Numbers written in one box never appear in the other.
+
+Misconception check: Call-by-value on primitives (6 min)
+
+Call-by-value on primitives: This is the most-tested trap in Unit 1. A method that assigns to its int, double, or boolean parameter changes only its own copy, so the caller's variable is unchanged after the call. Students look at n += 10 and report the caller's variable as 10 higher; it is not.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+void, value-returning, and where control goes; Overloading: same name, different signature
+
+Bell ringer: retrieval on the previous day (5 min)
+
+What makes two method signatures different, and what does not?
+
+Objectives and guided-notes preview (3 min)
+
+void, value-returning, and where control goes (7 min)
+
+A void method performs an action and hands back nothing. You call it as a statement on its own line, like System.out.println("hi");
+
+A value-returning method hands back a value of its declared type. You must do something with that value: store it in a variable or use it inside an expression.
+
+Putting a void method call inside an expression is a compile error. There is no value there to use, and int x = doStuff(); has nothing to assign.
+
+The reverse compiles but is almost always wrong: writing average(10, 6); on a line by itself computes the average and throws it away. Java allows it; the exam treats it as a logic error.
+
+Calling a method interrupts sequencing. Execution jumps into the body, the calling line pauses mid-statement, and when the method returns, control comes back to exactly that spot and the line finishes.
+
+Worked walkthrough (10 min)
+
+Trace a call with the wrong argument order and let it fail at compile time.
+
+Overloading: same name, different signature (9 min)
+
+Methods are overloaded when one class has two or more methods with the same name but different signatures. Different parameter types, different number of parameters, or a different order of types all count.
+
+This is legal precisely because the signature identifies the method, not the name alone. Java looks at the argument types at the call site and picks the matching version.
+
+Math.abs is the canonical example: there is an abs that takes an int and returns an int, and an abs that takes a double and returns a double. Same name, two signatures.
+
+Two methods that differ ONLY in return type are a compile error, because the return type is not part of the signature, so those two methods have the same signature.
+
+Java picks the exact match when one exists. Math.abs(-5.0) takes the double version because -5.0 is a double literal; it will not narrow to reach the int version.
+
+Overloading is in scope for this course. It is only about a class having several same-named methods with different parameter lists, nothing more.
+
+Guided practice on the live lesson page (12 min)
+
+Move to the live lesson page (Unit 1 Link Sheet, row 1.9). Run the Java editor exercises first so students see call-by-value fail in front of them on a real compiler, then the Tier 2 practice set in pairs, then the Tier 3 Mastery Challenge, The Temperature Converter.
+
+In the 1.9 Java editor: write a void method that doubles its int parameter, call it on a variable set to 7, print the variable, and confirm 7 prints. Then rewrite it as a value-returning method and assign the result so 14 prints.
+
+Tier 2 signature question: identify the signature of public double computeTax(double income, int dependents) and say out loud which distractor added the return type.
+
+Tier 2 trace question: predict the output of the triple(4) segment (A, B, 12 order) before running it, then run it.
+
+Tier 2 overload question: given process(int x), process(double x), and process(int x, int y), decide whether the class compiles and justify with signatures.
+
+Tier 2 argument-matching question: for signature scale(double factor, int count), decide which of scale(2.0, 3), scale(2, 3), and scale(3, 2.0) fail to compile, and why.
+
+Tier 3 The Temperature Converter, Parts A and B: which overload runs for toCelsius(98.6), and which runs for toCelsius(100.0, "F") after a two-parameter version is added.
+
+Independent practice (9 min)
+
+Offline signature and trace practice. Everything runs on paper with a pencil; no compiler required.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. What is the signature of this method?  
+public static double convert(int amount, double rate)
+
+Answer: B
+
+2\. What is printed?  
+public static void boost(int n) {  
+ n = n \* 2;  
+}  
+  
+int lives = 3;  
+boost(lives);  
+System.out.println(lives);
+
+Answer: A
+
+3\. A class defines public static int shift(int x) and public static double shift(double x). Which statement is true?
+
+Answer: C
+
+Traps this topic sets
+
+Call-by-value on primitives. This is the most-tested trap in Unit 1. A method that assigns to its int, double, or boolean parameter changes only its own copy, so the caller's variable is unchanged after the call. Students look at n += 10 and report the caller's variable as 10 higher; it is not.
+
+Return type in the signature. The signature is the method name plus the ordered parameter types, and nothing else. Distractors add the return type in front or tack it on with a colon, and both look plausible. Two methods with identical parameter lists and different return types are a compile error for exactly this reason.
+
+Narrowing at the call site. Passing an int where a double parameter is declared works, because widening is automatic. Passing a double where an int parameter is declared is a compile error, not a silent round or truncate. The same widening and narrowing rules from topic 1.5 apply to arguments.
+
+Discarding a return value, or using a void one. Writing average(10, 6); as its own statement compiles in Java and computes a value nobody kept, which the exam scores as a logic error. The opposite, int x = someVoidMethod();, does not compile at all, because there is no value to assign.
+
+Differentiation
+
+Support
+
+Give a preprinted two-box trace template (CALLER box on the left, METHOD box on the right, with a heavy line between them) for every call-by-value problem. Students may not answer until both boxes are filled in.
+
+Color-code the signature: hand out headers with the modifiers and return type already highlighted in gray and the name and parameter types in bold, so the signature is visually obvious before it is conceptually obvious.
+
+Sort before writing: instead of writing signatures from scratch, students match twelve headers to twelve pre-written signature cards. Move to free writing once the matching is fast.
+
+Stretch
+
+Given the signature average(int, int) returning double, write three additional overloads that would legally coexist in the same class, and one that would not, with a one-sentence justification for each.
+
+Explain in a brief paragraph why Java can allow abs(int) and abs(double) to return different types even though the return type is not part of the signature. Push for the precise answer: the call site picks the method by argument types first, and the return type then follows from whichever method was chosen.
+
+Argue on paper: a classmate says 'call-by-value makes methods useless, since they cannot change anything.' Rebut it in five sentences using the return value and at least one concrete example where a value-returning method updates the caller's variable via assignment.
+
+Prediction challenge: write a value-returning method whose call appears inside a println argument list, and a second version where the result is stored first. Predict both outputs exactly and explain why the printed text is identical while the control flow differs.
+
+Homework
+
+Vocabulary: all ten terms defined in your own words. For parameter and argument, include one code line each showing the term in place.
+
+Paper traces: six segments on the handout, each calling a method. For every one, write the exact output and mark whether each method is void or value-returning.
+
+Signature drill: rewrite twelve method headers as signatures. Then answer in a sentence why the return type is excluded and what would break if it were included.
+
+Error hunt: five call sites on the handout, each against a stated signature. For each, write compiles or does not compile, and if it does not, name the reason (wrong count, wrong order, or narrowing).
+
+Write-and-predict: design a value-returning method perimeter(double w, double h) and a void method report(double p). Write a main that calls both, then write the exact output your program would produce.
+
+Optional online: replay the 1.9 Java editor exercises and the Tier 2 set (Unit 1 Link Sheet, row 1.9).
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.9 teacher guide Page

@@ -96,6 +96,39 @@ function checkRow(r, kind) {
     if (end === start + 1 && start < 2026) bad.push(`writes a school year that has ended: ${m[0]}`);
   }
 
+  //  ── AND NEITHER MAY A STANDALONE EXAM YEAR THAT HAS PASSED ────────────────
+  //  The rule above only catches a SPAN, and the defect that cost the clicks was
+  //  not a span. On 2026-09-17 Search Console showed eight queries at positions
+  //  4 to 9 converting at 0 to 1.7%; the pages behind the zero-click ones were
+  //  titled "AP CSA Exam Format 2026" and "AP CSA Java Quick Reference 2026",
+  //  live in September 2026, advertising an administration four months past. A
+  //  span guard reads 2026-27 and passes, so it never looked at those titles.
+  //
+  //  The boundary is DERIVED rather than typed, so this fires by itself next
+  //  September instead of waiting to be rediscovered from a traffic report. AP
+  //  administers in May: once May is behind us the live administration is the
+  //  following year's.
+  const now = new Date();
+  const examYear = now.getUTCMonth() > 4 ? now.getUTCFullYear() + 1 : now.getUTCFullYear();
+  //  Two shapes are NOT a stale exam year and must survive this rule, because
+  //  the first draft of it flagged three correct records that are live today:
+  //    a school-year span, 2026-27, which is the rule above's business
+  //    an ARCHIVE RANGE, "every released FRQ from 2004 to 2025", which is the
+  //      catalogue of past papers and is the whole point of those pages
+  //  Blank both before scanning. The exemption is deliberately narrow: it takes
+  //  a year only when a SECOND year sits on the other side of a range word, so
+  //  a lone "2026" next to "Exam Format" is still caught. smoke asserts exactly
+  //  that, because an exemption nobody probed is just a hole.
+  const standalone = both
+    .replace(/\b20\d{2}\s*[-–]\s*(?:20\d{2}|\d{2})\b/g, ' ')
+    .replace(/\b20\d{2}\s*(?:-|–|to|through)\s*20\d{2}\b/gi, ' ');
+  for (const m of standalone.matchAll(/\b(20\d{2})\b/g)) {
+    const y = Number(m[1]);
+    if (y < examYear) {
+      bad.push(`names the exam year ${y}, which has passed; the live administration is May ${examYear}`);
+    }
+  }
+
   return bad.map((b) => `${kind} ${r.handle}: ${b}`);
 }
 

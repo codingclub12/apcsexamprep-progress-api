@@ -610,6 +610,23 @@
     if (scroll) $("gbCard").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  // A column footer is marks over marks wherever the column has marks, and the
+  // mean of the percentages only where nobody has priced the work yet. Those are
+  // different claims and they used to render identically, so the asterisk here
+  // is the same one a cell carries for the same reason: this number could not be
+  // added up, because the assignment has no points.
+  function avgCell(col, th) {
+    if (col.class_avg_pct == null) return '<td class="num gbcell none">·</td>';
+    var mark = col.class_avg_basis === "percent"
+      ? '<span class="gbprov" title="Averaged from percentages: this column has no points assigned yet, so there are no marks to add">*</span>'
+      : "";
+    var tip = col.class_graded
+      ? num(col.class_earned) + " of " + num(col.class_graded) + " marks across the class"
+      : "averaged from percentages, no points assigned yet";
+    return '<td class="num gbcell ' + gbClass(col.class_avg_pct, th) + '" title="' + esc(tip) + '">' +
+      col.class_avg_pct + "%" + mark + "</td>";
+  }
+
   function renderGradebook(g) {
     var studs = g.students || [];
     var th = g.class.mastery_threshold == null ? 80 : g.class.mastery_threshold;
@@ -618,7 +635,10 @@
     var sum = g.summary || {};
     var strip =
       '<div class="strip" style="margin:2px 0 12px">' +
-        '<div class="s"><b>' + (sum.class_avg_pct == null ? "-" : sum.class_avg_pct + "%") + "</b>class average</div>" +
+        '<div class="s"><b>' + (sum.class_avg_pct == null ? "-" : sum.class_avg_pct + "%") + "</b>" +
+          (sum.class_avg_basis === "points" && sum.graded
+            ? "class average, " + num(sum.earned) + "/" + num(sum.graded) + " marks"
+            : "class average") + "</div>" +
         '<div class="s"><b>' + fmt(sum.students_with_scores) + "/" + fmt(sum.students) + "</b>students with scores</div>" +
         '<div class="s"><b>' + fmt(sum.items_shown) + "</b>assignments</div>" +
         '<div class="s"><b>' + th + "%</b>mastery threshold</div>" +
@@ -755,10 +775,8 @@
     }).join("");
 
     var avg = '<tr class="avgrow"><td class="stick">Class average</td>' +
-      items.map(function (i) {
-        return '<td class="num gbcell ' + gbClass(i.class_avg_pct, th) + '">' +
-          (i.class_avg_pct == null ? "·" : i.class_avg_pct + "%") + "</td>";
-      }).join("") + '<td class="num"></td></tr>';
+      items.map(function (i) { return avgCell(i, th); }).join("") +
+      '<td class="num"></td></tr>';
 
     // Rendered ONLY when at least one cell is actually an X. A standing legend
     // for a symbol that is not on screen is noise, and noise trains people to
@@ -813,10 +831,8 @@
     }).join("");
 
     var avg = '<tr class="avgrow"><td class="stick">Class average</td><td class="num muted"></td>' +
-      lessons.map(function (l) {
-        return '<td class="num gbcell ' + gbClass(l.class_avg_pct, th) + '">' +
-          (l.class_avg_pct == null ? "·" : l.class_avg_pct + "%") + "</td>";
-      }).join("") + '<td class="num"></td></tr>';
+      lessons.map(function (l) { return avgCell(l, th); }).join("") +
+      '<td class="num"></td></tr>';
 
     return '<div class="tablewrap gbwrap"><table class="minitable gbtable"><thead><tr>' + head +
       "</tr></thead><tbody>" + rows + avg + "</tbody></table></div>";

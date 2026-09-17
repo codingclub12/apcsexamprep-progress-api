@@ -1,0 +1,196 @@
+TEACHER GUIDE
+
+Topic 1.12: Objects: Instances of Classes
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.12.A | Explain the relationship between a class and an object. |
+| 1.12.B | Develop code to declare variables to store reference types. |
+
+Students will be able to
+
+I can state in one sentence what a class defines and what an object is, and give a specific example of one class with several objects.
+
+I can declare a variable of a reference type and say exactly what is stored in that variable.
+
+I can draw and describe the difference between how a primitive variable and a reference variable store their contents.
+
+I can trace what each reference variable refers to after every line, including when a variable holds null and when two variables refer to the same object.
+
+How the days run
+
+Day 1
+
+Class is the blueprint, object is the instance; What a reference variable actually stores
+
+Bell ringer: Follow the address (6 min)
+
+On the board:  
+String a = "hello";  
+String b = a;  
+a = "world";  
+System.out.println(b);  
+Write the exact output. Then write one sentence explaining why. Four minutes.
+
+Debrief: It prints hello. Most rooms split between hello and world, and the argument that follows is the entire lesson. Line 2 did not copy the letters h, e, l, l, o into b. It copied the address that a was holding, so both names pointed at one object. Line 3 pointed a at a different object and never touched b. Land the sentence you will repeat all week: a reference variable stores where the object is, not what the object contains.
+
+Objectives and guided-notes preview (3 min)
+
+Class is the blueprint, object is the instance (14 min)
+
+A class is the formal definition. It specifies the attributes every object of that type will carry and the behaviors every object of that type will be able to perform. The class itself holds no data for any particular thing.
+
+An object is one specific instance created at run time, with its own attribute values. One class definition, as many objects as you need.
+
+Concrete example you already use: String is a class. "Hamlet" and "1984" are two distinct String objects. Both got the length() behavior from the same class, and each carries its own characters.
+
+Instance and object mean the same thing. The exam uses both words in the same question, so do not let the vocabulary switch throw you.
+
+This unit you use classes that other people wrote. You will write your own classes in Unit 3. Right now the job is reading a class description and creating and using objects from it.
+
+Worked example at the board (9 min)
+
+Draw the reference-versus-object picture on the board. Two variables, one object, and change it through one of them.
+
+What a reference variable actually stores (14 min)
+
+A primitive variable stores its value directly. int, double, and boolean are the primitive types you use in this course, and for those, the value sits inside the variable itself.
+
+A reference variable stores an address: it records where the object is, not what the object contains. String, and every class type, is a reference type.
+
+That difference is why assignment behaves differently. Copying an int copies the number. Copying a reference copies the address, which means both variables now lead to the same single object.
+
+A reference variable that refers to no object holds null. Write it explicitly when you mean it: String s = null;.
+
+Useful mental model for where things live: primitive variables and reference variables sit in a region called the stack, and objects live in a separate region called the heap. The reference variable on the stack holds the heap address of its object. You are never asked to draw memory on the exam, but you are constantly asked to reason as if you had.
+
+Misconception check: == on reference types compares addresses (6 min)
+
+\== on reference types compares addresses: == asks whether two reference variables hold the same address, not whether the objects look alike. Two separately created objects with identical contents sit at different addresses, so == is false. Use .equals() to compare String contents.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+null and NullPointerException; Aliasing, reassigning, and == on references
+
+Bell ringer: retrieval on the previous day (5 min)
+
+What does a reference variable actually hold?
+
+Objectives and guided-notes preview (3 min)
+
+null and NullPointerException (8 min)
+
+null is a real value a reference variable can hold. It means the variable currently refers to no object.
+
+null is not the empty string and it is not zero. String s = null; and String s = ""; are different: the second one refers to a real String object that happens to contain no characters.
+
+Calling an instance method on a null reference compiles perfectly well, because the compiler only checks that String has a length() method. The failure happens at run time, when the program tries to travel to an object that is not there.
+
+That failure is a NullPointerException, which is a run-time error, exactly the category from Topic 1.1. Connect it back: the compiler is blind to this one.
+
+Worked walkthrough (10 min)
+
+Show an uninitialised object reference and the null it holds, in the scope where that is legal.
+
+Aliasing, reassigning, and == on references (8 min)
+
+Assigning one reference variable to another copies the address, so both names now refer to the same single object. That is aliasing.
+
+Reassigning one of the two variables does not disturb the other. It just points that one name at a different object. Nothing about the original object changed.
+
+\== on reference types compares addresses, not contents. Two separately created objects holding identical data live at different addresses, so == is false even though they look the same.
+
+To compare String contents, use .equals(). You will use it constantly in Unit 2 conditionals, so build the habit now.
+
+Guided practice on the live lesson page (12 min)
+
+Move the class to the live lesson page (Unit 1 Link Sheet, row 1.12). Students run the Java editor exercise, then work the Tier 2 AP Practice set of six questions in pairs with their memory diagram from the notes open beside them. Close with one game and the Tier 3 Mastery Challenge, The Library System.
+
+Run the 1.12 Java editor exercise as written and confirm the expected output.
+
+Modify it: add a second reference variable that is assigned from the first, reassign the first, then print both, and check the result against your prediction before running.
+
+Work the six Tier 2 practice questions with a partner. For every question involving two variables, draw the boxes and the addresses before choosing an answer.
+
+Choose one game: Output Predictor for Objects and References (six questions) or Bug Hunt (seven snippets, one buggy line each).
+
+Finish with Tier 3, The Library System, Parts A, B, and C. Part C is a four-point written response on class versus object using the Book class, so draft it in complete sentences.
+
+Independent practice (9 min)
+
+Offline reference-tracing and diagramming. Everything is done on paper with boxes and fake addresses; no compiler required.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. Which of the following best describes the relationship between a class and an object?
+
+Answer: C
+
+2\. Which correctly explains what a reference variable holds?
+
+Answer: D
+
+3\. What is the complete output?  
+String s = null;  
+System.out.println("start");  
+System.out.println(s.length());
+
+Answer: A
+
+Traps this topic sets
+
+\== on reference types compares addresses. == asks whether two reference variables hold the same address, not whether the objects look alike. Two separately created objects with identical contents sit at different addresses, so == is false. Use .equals() to compare String contents.
+
+null is not empty and not zero. A reference variable that refers to no object holds null. It does not default to "" and it does not hold 0. String s = null; and String s = ""; are different situations, and only the second one has an object to call methods on.
+
+Reassigning is not the same as changing the object. Writing a = "world"; points the variable a at a different object. It does not edit the object a used to refer to, and it does not touch any other variable that still holds the old address. Trace which box changed, not which value looks new.
+
+Calling a method on null looks like a compile error. It is not. The compiler only checks that the method exists for that type, so the code builds and runs until it reaches the call. Then it throws a NullPointerException, which is a run-time error, so any output before that line really did print.
+
+Differentiation
+
+Support
+
+Give a preprinted diagram template with a stack column on the left and an objects column on the right. Struggling students fill in the same template for every problem, so the picture becomes automatic and the thinking is what varies.
+
+Use physical props: index cards are objects, sticky notes with locker numbers are the addresses, and students hold the sticky notes. Aliasing becomes two students holding the same locker number, and reassignment becomes one of them swapping notes while the other stands still.
+
+Restrict early practice to two variables and one reassignment, and require the student to say the sentence 'b still holds the old address' out loud before writing any answer.
+
+Pair the trace tables: one partner reads the line, the other updates the boxes, then swap after each snippet.
+
+Stretch
+
+Give two snippets, one where a variable is reassigned and one where nothing is reassigned, and have students explain in writing why only one of them changes what the second variable prints.
+
+Ask them to construct a snippet in which two String variables clearly contain the same characters but a comparison with == would be false, and then explain what .equals() would report instead.
+
+Have advanced students write four Bug Hunt style snippets of their own, each hiding exactly one of today's misconceptions, then trade and diagnose in writing.
+
+Challenge: explain in three sentences why the storage difference between primitives and references is the reason a NullPointerException can exist at all, and why no int variable can ever cause one.
+
+Homework
+
+Vocabulary: write the ten terms with definitions in your own words, and for class, object, reference variable, and null give one line of Java that illustrates the term.
+
+Diagram set: four snippets on the handout. For each, draw the variable boxes with their contents on the left and any objects on the right with fake addresses, and label every case of aliasing.
+
+Trace tables: three snippets on the handout, each with two or three reference variables and at least one reassignment. Fill in a table with what each variable holds after each line and give the exact output.
+
+Write and predict: on paper, write four lines that create two String variables referring to the same object, then reassign one of them, then print both. State the exact output and explain in one sentence why the second variable did not change.
+
+Optional online: replay the Output Predictor and Bug Hunt games on the lesson page (Unit 1 Link Sheet, row 1.12) until you can predict all six outputs on the first try.
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.12 teacher guide Page

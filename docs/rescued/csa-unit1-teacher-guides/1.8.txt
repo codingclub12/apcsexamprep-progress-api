@@ -1,0 +1,169 @@
+TEACHER GUIDE
+
+Topic 1.8: Documentation with Comments
+
+1 day | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.8.A | Describe the functionality and use of code through comments. |
+
+Students will be able to
+
+I can write all three Java comment types (//, /\* \*/, and /\*\* \*/) and explain that the compiler ignores every one of them.
+
+I can read a Javadoc block and state the method's precondition and postcondition in my own words.
+
+I can explain that a method is not required to check its preconditions, and say what happens when a caller violates one.
+
+How the days run
+
+Day 1
+
+Three comment types, zero execution; Javadoc: the comment that becomes documentation; Preconditions: the caller's job, not the method's; Postconditions: what the method promises back
+
+Bell ringer: Does the comment run? (5 min)
+
+On the board, with the instruction 'Write down the exact number that prints. Do not talk yet.'  
+  
+int score = 10;  
+// score = score + 5;  
+score = score \* 2;  
+System.out.println(score);
+
+Debrief: Take a hand count for 20, 25, and 30 before revealing anything. The answer is 20. The compiler strips the // line out before it reads a single instruction, so score is 10, then 10 \* 2 = 20. Students who said 30 executed the comment in their head. Land the sentence now and repeat it all period: a comment is text for humans, and the compiler never runs it.
+
+Objectives and guided-notes preview (3 min)
+
+Three comment types, zero execution (6 min)
+
+Java has exactly three comment forms and the CED names all three: // for a single line, /\* \*/ for a block that can span many lines, and /\*\* \*/ for Javadoc.
+
+// comments out everything from the slashes to the end of that line, and nothing on the next line. /\* \*/ comments out everything between the markers no matter how many lines that covers.
+
+All three are removed before compilation. You can put valid Java, invalid Java, song lyrics, or nothing at all inside a comment and the compiler will not care.
+
+That means a comment can never fix a bug and can never cause one. If your program misbehaves, the answer is in the code, not in the comments.
+
+Worked example at the board (7 min)
+
+Take an uncommented method and comment it as a class, then compare with a precondition/postcondition version.
+
+Javadoc: the comment that becomes documentation (6 min)
+
+A Javadoc comment opens with /\*\* (two asterisks) and closes with \*/. The extra asterisk is the whole difference, and it is the difference the exam expects you to recognize.
+
+The javadoc tool reads those blocks and generates the HTML documentation you have been reading since topic 1.7. Every method description in the Java API started life as a Javadoc comment above the method.
+
+Javadoc uses tags: @param names one parameter and describes it, and @return describes what comes back. Write one @param per parameter, in the same order as the parameter list.
+
+A Javadoc comment is still a comment. The compiler ignores it exactly as hard as it ignores //. Nothing inside it executes and nothing inside it is checked against the method.
+
+Preconditions: the caller's job, not the method's (9 min)
+
+A precondition is a condition that must be true immediately before a method runs in order for the method to behave as documented.
+
+The key rule, and this is the sentence the exam tests: there is no expectation that the method will check that the precondition is satisfied. It assumes the caller already did.
+
+So a precondition is a contract. The caller promises to satisfy it. If the caller breaks that promise, the method's behavior is undefined: it may crash, it may return garbage, it may appear to work. Either way the fault is at the call site.
+
+This matters on the FRQ. When a problem hands you a precondition, you do not write code to defend against it. You are being told what you are allowed to assume, which usually means less code, not more.
+
+Preconditions are written in the Javadoc as ordinary prose or a small boolean expression, for example 'Precondition: n \>= 0'. They are documentation, so the compiler ignores them like any comment.
+
+Postconditions: what the method promises back (6 min)
+
+A postcondition is a condition that is guaranteed to be true after the method finishes, assuming the preconditions were satisfied.
+
+Postconditions come in two flavors: a statement about the value returned ('the value returned is the larger of a and b') or a statement about the state of an object afterward ('balance has increased by amount').
+
+A postcondition describes the result, never the technique. 'Postcondition: the value returned is the largest element' tells you nothing about how the method searched, and the exam writes distractors that describe internal steps precisely to catch that.
+
+The two conditions are linked: if the precondition was violated, the postcondition is void. The method promises nothing at all to a caller who broke the contract.
+
+Guided practice on the live lesson page (8 min)
+
+Work the live lesson page as a class (Unit 1 Link Sheet, row 1.8). This lesson has no Java editor exercise, so the whole block is reading and reasoning: the Tier 2 practice questions first as a full-class vote, then the Tier 3 Mastery Challenge, The Grade Calculator, in pairs.
+
+Tier 2 question 1 (the commented-out score line) on a show-of-hands vote before anyone speaks, then one student explains the answer 20.
+
+Tier 2 questions on the index precondition, the largest-element postcondition, and the setTemperature(90) scenario. For each, name out loud which answer choice describes the method checking something, and eliminate it on that basis alone.
+
+Tier 3 Part A and Part B: fill in the precondition and the postcondition for letterGrade(int score) given that the method handles 90-100 as A, 80-89 as B, and so on, and does not handle values outside 0-100.
+
+Tier 3 Part C in writing: a classmate calls safeDivide(10, 0) on a method with precondition b \!= 0. Three to five sentences on what the precondition means, whether the method must handle the call safely, and what the caller should have done.
+
+Independent practice (6 min)
+
+Offline documentation drill. Students write documentation for methods whose headers are supplied on the handout; no compiler needed and no internet needed.
+
+Exit ticket (4 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. What is printed?  
+int x = 4;  
+/\* x = x + 10; \*/  
+x = x + 1;  
+System.out.println(x);
+
+Answer: B
+
+2\. A method is documented with 'Precondition: 0 \<= index \< size'. Which statement is true?
+
+Answer: C
+
+3\. Which comment types does the AP CSA CED list as valid Java comments?  
+I. // single-line  
+II. /\* block \*/  
+III. /\*\* Javadoc \*/
+
+Answer: D
+
+Traps this topic sets
+
+Comments do not execute. Comments are stripped out before compilation, so a line reading // x = x + 1; changes nothing about x. Students who mentally run commented-out code produce answers that are wrong by exactly the amount that line would have changed. The exam builds distractors from that specific arithmetic.
+
+A precondition is not a check. There is no expectation that a method verifies its preconditions. The distractors on this topic all describe the method validating, throwing, clamping, or returning a default value. Any answer choice that has the method policing its own inputs is wrong by definition.
+
+The postcondition dies with the precondition. A postcondition is guaranteed only when the preconditions were satisfied. If a caller passes an out-of-range value, the method owes the caller nothing at all, including the documented result. Students assume the postcondition still holds and pick the answer where the method quietly fixes the bad input.
+
+Javadoc is still just a comment. The /\*\* \*/ form is special to the javadoc tool, not to the compiler, which discards it like any other comment. A Javadoc block that claims @return int on a method whose header says double compiles fine and is simply wrong documentation. Nothing in a comment is ever verified against the code.
+
+Differentiation
+
+Support
+
+Give a printed two-column contract card, CALLER PROMISES / METHOD PROMISES, and have students physically write each precondition on the left and each postcondition on the right before answering any question about them.
+
+For the comment-tracing homework, hand out the same segments with every comment already crossed out in red, so the student only has to trace the surviving code. Fade this scaffold on the second set.
+
+Sentence frames for writing conditions: 'Before this method runs, \_\_\_\_\_\_ must be true.' and 'After this method finishes, \_\_\_\_\_\_ is true.' Students fill the blanks rather than composing from nothing.
+
+Stretch
+
+Write precise preconditions and postconditions for Math.sqrt(double x) and Math.pow(double base, double exponent) using only what topic 1.7 documentation reading gives you, then compare with a partner and argue about the edge cases (what is the precondition on sqrt, and is there one on pow?).
+
+Take a method with the precondition 'b \!= 0' and write out three different concrete things that could happen when the precondition is violated (an exception, a wrong value returned, output that looks fine but is not), and rank them by how hard each would be to notice.
+
+Design by Contract discussion prompt: preconditions and postconditions come from Bertrand Meyer's Design by Contract. Argue in a paragraph for or against the claim that a public library method should always check its own preconditions, and address what that costs in code size and speed.
+
+Homework
+
+Vocabulary: write all six terms with definitions in your own words, plus one original example of each comment type.
+
+Documentation rewrite: three method headers on the handout come with vague one-line comments. Replace each with a proper Javadoc block including @param, @return where needed, a precondition, and a postcondition.
+
+Trace and explain: four brief segments on the handout mix real statements with commented-out statements. Write the exact output of each and circle every line the compiler deletes.
+
+Contract analysis: for the method 'public static double root(double n)' with precondition n \>= 0, write four sentences on what the method may do if someone calls root(-9.0) and why that is not the method's fault.
+
+Optional online: replay the 1.8 Tier 2 practice set (Unit 1 Link Sheet, row 1.8) and record any question you missed with a one-line reason.
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.8 teacher guide Page

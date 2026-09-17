@@ -12,27 +12,32 @@
 //  The player's wording had been corrected earlier that same day off the same
 //  email, which made the refusal honest and left it wrong.
 //
-//  FOUR CALLERS, and every one of them has to keep its own answer. The risk in
-//  this fix is not that teachers stay locked out; it is that widening the door
-//  for teachers reopens the hole the anonymous rule was built to close on
-//  2026-09-07, which was a STUDENT signing out to walk past their teacher's lock.
+//  THE TRUTH TABLE SHRANK ON 2026-09-14, board 277. Tanner: "Labs should be open
+//  as long as the specific teacher doesn't lock it." So the only caller a lock
+//  now reaches is a signed-in student of the class that set it:
 //
 //    teacher, valid token         OPEN   even though a class has closed it
 //    student of a class that
-//      closed it                  LOCKED unchanged, audience 'class'
+//      closed it                  LOCKED the only refusal left, audience 'class'
 //    student of a class that
-//      opened it                  OPEN   unchanged
-//    no token at all              LOCKED unchanged, audience 'anonymous'
+//      opened it                  OPEN
+//    no token at all              OPEN   was LOCKED between 2026-09-07 and 277
 //
-//  The third row is the one that makes the suite non-vacuous. A mutation that
-//  simply returns open for everybody satisfies rows 1 and 3 and has to fail on
-//  rows 2 and 4, so those are asserted with their reason strings rather than
-//  only their booleans.
+//  Row 2 is the one that makes this suite non-vacuous. A mutation returning open
+//  for everybody satisfies rows 1, 3 and 4 and has to fail on row 2, which is
+//  asserted with its audience string rather than only its boolean.
 //
-//  A FORGED OR EXPIRED teacher token must NOT get the open answer, or the check
-//  is "did you send a header" rather than "are you a teacher". Asserted with a
-//  token signed by a different secret and with a student token relabelled by
-//  claim, because those are the two shapes an attacker actually has.
+//  WHAT MOVED, AND WHY IT IS NOT SIMPLY GONE. This suite used to prove that the
+//  ROLE opened the door rather than the presence of a header, with a token signed
+//  by a different secret, a student token relabelled by claim, a stale token and
+//  an expired one. Board 277 makes every one of those callers OPEN, exactly like
+//  a visitor with no token, so on this route those assertions can no longer fail
+//  and keeping them would be a guard that reads as security and checks nothing.
+//
+//  The role still decides something real: the ANSWER KEY. smoke:labkey asserts
+//  that no token, a garbage token, a student token, an unentitled teacher and a
+//  tampered teacher token are each refused it. One forged case is kept below
+//  against that route so this file cannot drift into believing role is free.
 //
 //  Run: npm run smoke:labteacherpreview
 // -----------------------------------------------------------------------------
@@ -75,6 +80,13 @@ const base = () => `http://127.0.0.1:${server.address().port}`;
 
 const getLab = (auth) => fetch(
   `${base()}/api/labs/${COURSE}/${encodeURIComponent(SPEC.item_id)}`,
+  { headers: auth ? { Authorization: 'Bearer ' + auth } : {} },
+).then(async (r) => ({ status: r.status, body: await r.json().catch(() => null) }));
+
+//  The ANSWER KEY route, which is where the caller's role still decides
+//  something after board 277 opened the gate to everyone without a class.
+const getKey = (auth) => fetch(
+  `${base()}/api/labs/${COURSE}/${encodeURIComponent(SPEC.item_id)}/key`,
   { headers: auth ? { Authorization: 'Bearer ' + auth } : {} },
 ).then(async (r) => ({ status: r.status, body: await r.json().catch(() => null) }));
 
@@ -135,46 +147,30 @@ const sOpen = signStudentToken({ id: 's_open', class_id: 'c_open' });
     { locked: asOpen.body && asOpen.body.locked });
 
   const asNobody = await getLab(null);
-  ok('a caller with NO token is still refused while a class has it closed',
-    asNobody.status === 200 && asNobody.body.locked === true,
-    asNobody.body);
-  ok('  and that refusal still names anonymous, so the player can word it right',
-    asNobody.body && asNobody.body.locked_for === 'anonymous',
-    asNobody.body && asNobody.body.locked_for);
+  ok('a caller with NO token gets it, because no teacher of theirs closed it',
+    asNobody.status === 200 && !asNobody.body.locked,
+    asNobody.body && asNobody.body.reason);
 
-  console.log('\n-- 2. it is the ROLE that opens the door, not the header --');
+  console.log('\n-- 2. the role still decides the ANSWER KEY --');
 
-  //  Signed with a different secret. This is the forgery an outsider can attempt.
+  //  Board 277 opened the gate to everyone without a class, so a forged teacher
+  //  token gets the lab exactly as a visitor with no token does. Asserting a
+  //  refusal here would be asserting nothing. The key route is where the role is
+  //  still load-bearing, so the forgery is pointed at that instead.
   const forged = jwt.sign({ id: 't1', role: 'teacher' }, 'not-the-real-secret', { expiresIn: '1h' });
   const asForged = await getLab(forged);
-  ok('a teacher token signed with the WRONG secret gets the anonymous answer',
-    asForged.body && asForged.body.locked === true && asForged.body.locked_for === 'anonymous',
-    asForged.body);
+  ok('a token signed with the WRONG secret gets the lab, same as any passer-by',
+    asForged.status === 200 && !asForged.body.locked, asForged.body && asForged.body.reason);
+  const forgedKey = await getKey(forged);
+  ok('and it is refused the ANSWER KEY, which is what the role protects',
+    forgedKey.status === 403, forgedKey.status);
 
   //  A real student token is not upgraded by claiming to be a teacher, because
-  //  the claim is inside the signature. This is the forgery a STUDENT can attempt,
-  //  and it is the one the 2026-09-07 rule exists to stop.
+  //  the claim is inside the signature. Against the key, that still matters.
   const relabelled = jwt.sign({ id: 's_shut', role: 'teacher' }, 'not-the-real-secret', { expiresIn: '1h' });
-  const asRelabelled = await getLab(relabelled);
-  ok('a student cannot relabel themselves a teacher to walk past their own lock',
-    asRelabelled.body && asRelabelled.body.locked === true,
-    asRelabelled.body);
-
-  //  A VALID STUDENT TOKEN WHOSE STUDENT ROW IS GONE. This is the only caller
-  //  that reaches the teacher branch holding a correctly signed non-teacher
-  //  token, and without it the role check is untestable: labStudent() handles
-  //  every ordinary student above, so dropping `role === 'teacher'` changes
-  //  nothing for them and the mutation survives green.
-  //
-  //  It is also a real caller. A student who is deactivated, or whose row is
-  //  removed, keeps a signed token for 180 days. They must land on the anonymous
-  //  answer, not on the teacher one.
-  run(`DELETE FROM students WHERE id = 's_shut'`);
-  const ghost = await getLab(sShut);
-  ok('a valid STUDENT token whose row no longer exists gets the anonymous answer',
-    ghost.body && ghost.body.locked === true && ghost.body.locked_for === 'anonymous',
-    ghost.body);
-  run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s_shut','c_closed','A','x')`);
+  const relabelledKey = await getKey(relabelled);
+  ok('a student relabelling themselves a teacher is refused the key',
+    relabelledKey.status === 403, relabelledKey.status);
 
   //  An expired teacher token is not a teacher. signTeacherToken has no expiry
   //  argument, so it is minted here against the same pinned secret.
@@ -183,10 +179,19 @@ const sOpen = signStudentToken({ id: 's_open', class_id: 'c_open' });
     process.env.JWT_SECRET,
     { expiresIn: '-1s' },
   );
-  const asExpired = await getLab(expired);
-  ok('an EXPIRED teacher token gets the anonymous answer',
-    asExpired.body && asExpired.body.locked === true,
-    asExpired.body);
+  const expiredKey = await getKey(expired);
+  ok('an EXPIRED teacher token is refused the key', expiredKey.status === 403, expiredKey.status);
+
+  //  A VALID STUDENT TOKEN WHOSE ROW IS GONE. A deactivated student keeps a
+  //  signed token for 180 days. On the gate they are now an ordinary passer-by,
+  //  which is the deliberate outcome of 277; on the key they are still nobody.
+  run(`DELETE FROM students WHERE id = 's_shut'`);
+  const ghost = await getLab(sShut);
+  ok('a student token whose row is gone gets the lab, like any passer-by',
+    ghost.status === 200 && !ghost.body.locked, ghost.body && ghost.body.reason);
+  const ghostKey = await getKey(sShut);
+  ok('and is still refused the key', ghostKey.status === 403, ghostKey.status);
+  run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s_shut','c_closed','A','x')`);
 
   console.log('\n-- 3. the suite is not vacuous --');
 
@@ -196,12 +201,14 @@ const sOpen = signStudentToken({ id: 's_open', class_id: 'c_open' });
     'SELECT COUNT(*) n FROM activity_gates WHERE open = 0 AND course = ? AND unit = ?'
   ).get(COURSE, UNIT).n;
   ok('a closing row genuinely exists for this location', closedRows === 1, closedRows);
-  ok('and the anonymous caller was refused BECAUSE of it, by reason string',
-    asNobody.body && /^anonymous-/.test(String(asNobody.body.reason || '')),
-    asNobody.body && asNobody.body.reason);
-  ok('while the teacher answer names preview, not self-study',
-    asTeacher.body && asTeacher.body.item_id && !asTeacher.body.locked,
-    asTeacher.body && asTeacher.body.reason);
+  //  Row 2 is now the whole of the lock, so the vacuity check is that it bites.
+  //  If it did not, every assertion in section 1 would pass for the wrong reason.
+  ok('and the student of that class was refused BECAUSE of it',
+    asShut.body && asShut.body.locked === true && asShut.body.locked_for === 'class',
+    asShut.body && asShut.body.locked_for);
+  ok('while everyone without a class in it got the lab',
+    !asTeacher.body.locked && !asNobody.body.locked && !asOpen.body.locked,
+    { teacher: asTeacher.body.locked, nobody: asNobody.body.locked, other: asOpen.body.locked });
 
   console.log(`\n${pass} passed, ${fail} failed`);
   server.close();

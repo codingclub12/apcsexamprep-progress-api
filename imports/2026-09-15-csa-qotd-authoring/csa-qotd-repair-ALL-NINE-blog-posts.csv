@@ -1,0 +1,1829 @@
+﻿"Blog: Handle","Handle","Command","Body HTML"
+"ap-csa-daily-practice","ap-csa-u1-c1-day-22-math-random-range","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #ecfdf5; color: #059669 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-21-math-abs-pow"" class=""qotd-nav-btn qotd-nav-prev"">← Day 21</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-23-math-sqrt-casting"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Day 23 →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 1</span>
+  <span class=""qotd-cycle-badge"">Foundation (Cycle 1)</span>
+  <span class=""qotd-day-badge"">Day 22 of 28</span>
+  <span class=""qotd-difficulty"">Foundation</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">Math.random() Range Formula</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section 1.13 — The Math Class</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">Static methods belong to the class itself rather than to any particular object. They are called using the class name: <code>Math.sqrt(25)</code>, not through an instance. Static methods cannot access instance variables or call non-static methods directly because they have no <code>this</code> reference. The AP exam primarily tests static methods through the <code>Math</code> class and the <code>main</code> method. A common mistake is trying to call an instance method from a static context without creating an object first.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">A programmer wants to generate a random integer between 5 and 12, inclusive. Consider the following expressions.</p>
+  <div class=""qotd-code-block"">I.   (int)(Math.random() * 8) + 5
+II.  (int)(Math.random() * 7) + 5
+III. (int)(Math.random() * 8 + 5)</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">Which of the expressions will correctly produce a random integer from 5 to 12, inclusive?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span>I only</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span>II only</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span>I and III only</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span>I, II, and III</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (C) I and III only</h3>
+  <p style=""line-height: 1.7;"">The formula for a random int in [low, high]: <code>(int)(Math.random() * (high - low + 1)) + low</code></p>
+  <p style=""line-height: 1.7;"">For [5, 12]: range = <code>12 - 5 + 1 = 8</code>. Formula: <code>(int)(Math.random() * 8) + 5</code>.</p>
+  <p style=""line-height: 1.7;""><strong>I: CORRECT.</strong> <code>Math.random() * 8</code> gives [0.0, 8.0). Cast to int gives 0-7. Add 5 gives 5-12.</p>
+  <p style=""line-height: 1.7;""><strong>II: INCORRECT.</strong> <code>Math.random() * 7</code> gives [0.0, 7.0). Cast to int gives 0-6. Add 5 gives 5-11. It never produces 12.</p>
+  <p style=""line-height: 1.7;""><strong>III: CORRECT.</strong> The <code>+ 5</code> sits inside the cast here, so the shift happens before the truncation rather than after. <code>Math.random() * 8 + 5</code> gives [5.0, 13.0), and truncating that gives 5 through 12. Adding a whole number before truncating lands on the same integer as adding it after, so III produces the same 5 through 12 that I does.</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(A)</strong> Everything about I is right, and this is the answer to pick if you never checked III. Most people rule III out on the shape of the parentheses rather than on the arithmetic.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(B)</strong> The multiplier must be 8, the count of values from 5 to 12, not 7. Using 7 produces only 5-11.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(D)</strong> This includes II, which stops at 11 and never produces 12.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">The multiplier in the <code>Math.random()</code> formula equals the number of possible outcomes: <code>high - low + 1</code>. For 5 to 12, that is <code>12 - 5 + 1 = 8</code>. Using <code>high - low</code> (without +1) excludes the highest value.</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">Memorize: <code>(int)(Math.random() * range) + min</code> where <code>range = max - min + 1</code>. On the exam, always verify by checking: what is the smallest possible value? What is the largest? Count the number of possible values.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section 1.13 — The Math Class •
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" style=""color: #5b21b6 !important;"">Unit 1 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 2 - SignedText</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 2 - Scoreboard</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 2 - Sign</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-21-math-abs-pow"" class=""qotd-nav-btn qotd-nav-prev"">← Day 21</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-23-math-sqrt-casting"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Day 23 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'C';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"
+"ap-csa-daily-practice","unit-4-day-19-arraylist-shifting","MERGE","<style>
+.apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}
+.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.apcs-meta{color:#718096;font-size:14px}
+.apcs-cycle-badge{display:inline-block;background:#fef3c7;color:#b45309;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}
+.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}
+.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}
+.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}
+.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}
+.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}
+.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}
+.apcs-keyword{color:#fc8181}
+.apcs-type{color:#fc8181}
+.apcs-function{color:#90cdf4}
+.apcs-number{color:#f6ad55}
+.apcs-string{color:#68d391}
+.apcs-comment{color:#a0aec0;font-style:italic}
+.apcs-answer-options{margin:24px 0}
+.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}
+.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}
+.apcs-option.selected{border-color:#5a67d8;background:#edf2f7}
+.apcs-option.correct{border-color:#48bb78;background:#f0fff4}
+.apcs-option.incorrect{border-color:#f56565;background:#fff5f5}
+.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}
+.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}
+.apcs-option-content{font-size:15px;line-height:1.5}
+.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;transition:background .2s}
+.apcs-submit-btn:hover{background:#4c51bf}
+.apcs-submit-btn:disabled{background:#a0aec0;cursor:not-allowed}
+.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}
+.apcs-feedback.show{display:block}
+.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}
+.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}
+.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}
+.apcs-feedback-header.apcs-correct{color:#48bb78}
+.apcs-feedback-header.apcs-incorrect{color:#f56565}
+.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+.apcs-section-content{margin-bottom:20px;line-height:1.7}
+.apcs-section-content p{margin-bottom:12px}
+.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}
+.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}
+.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}
+.apcs-trace-table tr:nth-child(even){background:#f7fafc}
+.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}
+.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}
+.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}
+.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}
+.apcs-navigation{background:#fff;border-radius:12px;padding:24px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.apcs-nav-link{color:#5a67d8;text-decoration:none;font-weight:500}
+.apcs-nav-link:hover{color:#4c51bf;text-decoration:underline}
+.apcs-nav-link.disabled{color:#a0aec0;pointer-events:none;cursor:default}
+.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}
+.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}
+.apcs-cta-box p{margin-bottom:16px;font-size:16px}
+.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}
+.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}
+.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}
+</style>
+<div class=""apcs-practice-wrapper"">
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4: Data Collections</div>
+<div class=""apcs-meta"">Day 19 Practice - January 19, 2026<span class=""apcs-cycle-badge"">Cycle 1 - Hard</span>
+</div>
+<div class=""apcs-focus-badge"">Focus: Index Shifting After add/remove</div>
+</div>
+
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Practice Question</h2>
+<div class=""apcs-question-text"">A student wrote the following method to insert a value at every other position in an ArrayList. The method does <strong>NOT</strong> work as intended.</div>
+<div class=""apcs-code-block"">
+<pre><code><span class=""apcs-keyword"">public static void</span> <span class=""apcs-function"">insertEveryOther</span>(<span class=""apcs-type"">ArrayList</span>&lt;<span class=""apcs-type"">String</span>&gt; list, <span class=""apcs-type"">String</span> val)
+{
+    <span class=""apcs-comment"">// Intended: insert val at indices 0, 2, 4, 6, ...</span>
+    <span class=""apcs-keyword"">for</span> (<span class=""apcs-type"">int</span> i = 0; i &lt; list.size(); i++)
+    {
+        list.add(i, val);
+    }
+}
+
+<span class=""apcs-comment"">// Test:</span>
+<span class=""apcs-type"">ArrayList</span>&lt;<span class=""apcs-type"">String</span>&gt; words = <span class=""apcs-keyword"">new</span> <span class=""apcs-type"">ArrayList</span>&lt;&gt;();
+words.add(<span class=""apcs-string"">""A""</span>); words.add(<span class=""apcs-string"">""B""</span>); words.add(<span class=""apcs-string"">""C""</span>);
+insertEveryOther(words, <span class=""apcs-string"">""X""</span>);
+<span class=""apcs-comment"">// Expected: [X, A, X, B, X, C]</span></code></pre>
+</div>
+<div class=""apcs-question-text""><strong>What is the actual result when insertEveryOther(words, ""X"") is called?</strong></div>
+
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">[X, A, X, B, X, C] as expected</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">[X, X, X, X, ... ] (infinite loop)</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">[X, A, B, C] (only one X inserted)</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">[A, X, B, X, C, X] (X inserted at odd indices)</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""E"">
+<span class=""apcs-option-letter"">E)</span>
+<span class=""apcs-option-content"">IndexOutOfBoundsException is thrown</span>
+</label>
+
+</div>
+<button type=""submit"" class=""apcs-submit-btn"" id=""submit-btn"">Submit Answer</button>
+</form>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard - <strong>Time:</strong> 3-4 minutes - <strong>AP Skill:</strong> 4.B - Identify errors in program code
+</div>
+</div>
+
+<div class=""apcs-feedback"" id=""feedback-section"">
+<div class=""apcs-feedback-header"" id=""feedback-header""></div>
+<div class=""apcs-section-content"">
+<strong>What This Tests:</strong> This question tests understanding of how add(index, element) shifts all subsequent elements right AND increases size(). When inserting during forward traversal, the condition i &lt; list.size() keeps changing.
+</div>
+
+<h3 class=""apcs-section-title"">Step-by-Step Trace</h3>
+<div class=""apcs-code-block"">
+<pre><code><span class=""apcs-comment"">// Initial: [A, B, C], size = 3</span>
+
+<span class=""apcs-comment"">// i=0: 0 &lt; 3? YES. add(""X"" at 0) -&gt; [X, A, B, C], size = 4</span>
+<span class=""apcs-comment"">// i=1: 1 &lt; 4? YES. add(""X"" at 1) -&gt; [X, X, A, B, C], size = 5</span>
+<span class=""apcs-comment"">// i=2: 2 &lt; 5? YES. add(""X"" at 2) -&gt; [X, X, X, A, B, C], size = 6</span>
+<span class=""apcs-comment"">// i=3: 3 &lt; 6? YES. ...</span>
+
+<span class=""apcs-comment"">// Each pass adds one element and advances i by one, so size</span>
+<span class=""apcs-comment"">// stays exactly 3 ahead of i forever and the condition is never</span>
+<span class=""apcs-comment"">// false. The loop runs until the program runs out of memory.</span>
+
+<span class=""apcs-comment"">// The update the author wanted is i += 2. Then i gains on size</span>
+<span class=""apcs-comment"">// by 1 each pass, the gap closes, and the loop stops after one</span>
+<span class=""apcs-comment"">// insertion per original element: [X, A, X, B, X, C].</span></code></pre>
+</div>
+
+<h3 class=""apcs-section-title"">Key Concept</h3>
+<div class=""apcs-section-content"">
+<p><strong>The Shifting Problem:</strong> When you call add(index, element), the ArrayList size increases by 1. If your loop condition is i &lt; list.size(), the target keeps moving.</p>
+<p><strong>This specific case:</strong> i and size both grow by 1 on every pass, so the gap between them never closes and the loop never ends. With <code>i += 2</code> the gap closes by 1 each pass, which is what makes the intended version stop.</p>
+<p><strong>Fix:</strong> Store the original size before the loop, or iterate backward, or calculate exact insertion points ahead of time.</p>
+</div>
+
+<h3 class=""apcs-section-title"">Common Mistakes</h3>
+<div class=""apcs-section-content"">
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Mistake: Answer A - reading the intent instead of the code</div>
+<p>That is what the method was meant to produce, and it is what <code>i += 2</code> would produce. The code in front of you says <code>i++</code>, and size grows exactly as fast as i does.</p>
+</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Mistake: Answer C or D - assuming the loop stops</div>
+<p>Both answers describe a finished list. There is no finished list here, because <code>i &lt; list.size()</code> is true on every pass no matter how far i gets.</p>
+</div>
+
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Tip</div>
+<p>When adding elements during a loop, the list size changes! Either save the original size in a variable before the loop, or use backward traversal. AP exam questions love this trap.</p>
+</div>
+</div>
+
+<nav class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit-4-day-18-arraylist-object-methods"" class=""apcs-nav-link"">← Day 18: Object Methods</a>
+<a href=""/pages/daily-practice"" class=""apcs-nav-link"">View All Days</a>
+<a href=""/blogs/ap-csa-daily-practice/unit-4-day-20-arraylist-vs-array"" class=""apcs-nav-link"" data-available-date=""2026-01-20T00:00:00"">Day 20: ArrayList vs Array →</a>
+</nav>
+
+<div class=""apcs-cta-box"">
+<h3>Want More Practice?</h3>
+<p>Master AP CSA with guided practice and expert help</p>
+<a href=""/products/computer-science-tutoring-lesson"" class=""apcs-cta-link"">Schedule 1-on-1 Tutoring</a>
+<a href=""/pages/ap-csa-frqs-by-topic"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+</div>
+
+<script>
+(function() {
+  var defined_answer = 'B';
+  var storage_key = 'unit-4-day-19';
+  var answered = false;
+  
+  var form = document.getElementById('apcs-quiz-form');
+  var submitBtn = document.getElementById('submit-btn');
+  var feedbackSection = document.getElementById('feedback-section');
+  var feedbackHeader = document.getElementById('feedback-header');
+  var options = document.querySelectorAll('.apcs-option');
+  
+  // Selection feedback
+  options.forEach(function(option) {
+    option.addEventListener('click', function() {
+      if (answered) return;
+      options.forEach(function(opt) { opt.classList.remove('selected'); });
+      this.classList.add('selected');
+      this.querySelector('input[type=""radio""]').checked = true;
+    });
+  });
+  
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (answered) return;
+    
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+      alert('Please select an answer before submitting.');
+      return;
+    }
+    
+    answered = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Answered';
+    
+    var userAnswer = selected.value;
+    var isCorrect = userAnswer === defined_answer;
+    
+    options.forEach(function(option) {
+      var input = option.querySelector('input[type=""radio""]');
+      option.classList.remove('selected');
+      if (input.value === defined_answer) {
+        option.classList.add('correct');
+      } else if (input.value === userAnswer && !isCorrect) {
+        option.classList.add('incorrect');
+      }
+      input.disabled = true;
+      option.style.cursor = 'default';
+    });
+    
+    feedbackSection.classList.add('show');
+    feedbackSection.style.display = 'block';
+    
+    if (isCorrect) {
+      feedbackSection.classList.add('apcs-correct');
+      feedbackHeader.classList.add('apcs-correct');
+      feedbackHeader.textContent = 'Correct! Well done.';
+    } else {
+      feedbackSection.classList.add('apcs-incorrect');
+      feedbackHeader.classList.add('apcs-incorrect');
+      feedbackHeader.textContent = 'Not quite. The correct answer is ' + defined_answer + '.';
+    }
+    
+    feedbackSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    try {
+      var progress = JSON.parse(localStorage.getItem('apcsaDailyPracticeProgress') || '{}');
+      progress[storage_key] = { completed: true, correct: isCorrect, timestamp: Date.now() };
+      localStorage.setItem('apcsaDailyPracticeProgress', JSON.stringify(progress));
+    } catch(err) {}
+  });
+  
+  // Date-based navigation link control
+  var nextLink = document.querySelector('.apcs-nav-link[data-available-date]');
+  if (nextLink) {
+    var availDate = new Date(nextLink.getAttribute('data-available-date'));
+    var now = new Date();
+    if (now < availDate) {
+      nextLink.classList.add('disabled');
+      nextLink.removeAttribute('href');
+      nextLink.title = 'Available ' + availDate.toLocaleDateString();
+    }
+  }
+})();
+</script>"
+"ap-csa-daily-practice","ap-csa-u1-c1-day-15-chained-string-methods","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #ecfdf5; color: #059669 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-14-substring-indexof"" class=""qotd-nav-btn qotd-nav-prev"">← Day 14</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-16-length-extracting-chars"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Day 16 →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 1</span>
+  <span class=""qotd-cycle-badge"">Foundation (Cycle 1)</span>
+  <span class=""qotd-day-badge"">Day 15 of 28</span>
+  <span class=""qotd-difficulty"">Foundation</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">Chained String Methods</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section 1.10 — Strings: Methods</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">Object creation in Java uses the <code>new</code> keyword followed by a constructor call. The constructor initializes the object's state by setting instance variable values. A class can have multiple constructors (overloading) as long as they have different parameter lists. If no constructor is defined, Java provides a default no-argument constructor that sets numeric fields to 0, booleans to <code>false</code>, and references to <code>null</code>. Once you define any constructor, the default is no longer provided — this is a common source of compile errors on the AP exam.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">Consider the following code segment.</p>
+  <div class=""qotd-code-block"">String phrase = ""JAVA PRACTICE"";
+String part = phrase.substring(phrase.indexOf(""A"") + 1, 8);
+System.out.println(part + part.length());</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">What is printed as a result of executing the code segment?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">VA PRA7</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">VA PRA6</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">AVA PRAC8</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">AVA PRA7</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (B) VA PRA6</h3>
+  <p style=""line-height: 1.7;"">Trace step by step:</p>
+  <p style=""line-height: 1.7;""><strong>indexOf(""A""):</strong> Finds the first <code>""A""</code> in <code>""JAVA PRACTICE""</code> at index 1.</p>
+  <p style=""line-height: 1.7;""><strong>indexOf(""A"") + 1:</strong> <code>1 + 1 = 2</code>.</p>
+  <p style=""line-height: 1.7;""><strong>substring(2, 8):</strong> Number the string first: J(0) A(1) V(2) A(3) space(4) P(5) R(6) A(7) C(8) T(9) I(10) C(11) E(12). The end index is exclusive, so you take indices 2 through 7: V, A, space, P, R, A. That is <code>""VA PRA""</code>.</p>
+  <p style=""line-height: 1.7;""><strong>part.length():</strong> <code>""VA PRA""</code> has 6 characters. The shortcut worth learning: the length of <code>substring(a, b)</code> is <code>b - a</code>, here <code>8 - 2 = 6</code>.</p>
+  <p style=""line-height: 1.7;""><strong>Concatenation:</strong> <code>""VA PRA"" + 6 = ""VA PRA6""</code>. The <code>int</code> is converted to text because the left side is a <code>String</code>.</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(A)</strong> The substring is right and the count is not. <code>8 - 2 = 6</code>, not 7. Counting <code>8 - 1</code> is the usual slip.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(C)</strong> Two errors at once: it starts at index 1, dropping the <code>+ 1</code>, and it treats the end index as inclusive. Indices 1 through 8 give <code>""AVA PRAC""</code>, which is 8 characters.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(D)</strong> Same start error, beginning at index 1 instead of 2. Indices 1 through 7 give <code>""AVA PRA""</code>, which is 7 characters.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">Two traps: (1) <code>indexOf(""A"")</code> returns the first occurrence at index 1, not the one at index 3 or 7. (2) The end index in <code>substring(start, end)</code> is exclusive. Also, spaces count as characters.</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">Write out the string with index numbers: J(0) A(1) V(2) A(3) space(4) P(5) R(6) A(7) C(8) T(9) I(10) C(11) E(12). This makes substring operations visual and accurate.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section 1.10 — Strings: Methods •
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" style=""color: #5b21b6 !important;"">Unit 1 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 2 - SignedText</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 2 - Scoreboard</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 2 - Sign</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-14-substring-indexof"" class=""qotd-nav-btn qotd-nav-prev"">← Day 14</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-16-length-extracting-chars"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Day 16 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'B';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"
+"ap-csa-daily-practice","ap-csa-u2-c2-day-4-iii-loop-equivalence","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #fef2f2; color: #dc2626 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-3-error-off-by-one"" class=""qotd-nav-btn qotd-nav-prev"">← Day 3</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-5-short-circuit-side-effects"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Day 5 →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 2</span>
+  <span class=""qotd-cycle-badge"">Advanced (Cycle 2)</span>
+  <span class=""qotd-day-badge"">Day 4 of 28</span>
+  <span class=""qotd-difficulty"">Advanced</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">I/II/III: Loop Equivalence</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section 2.9 — For Loops</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">A <code>for</code> loop and a <code>while</code> loop can express the same logic, and the AP exam tests your ability to recognize equivalent loop structures. The <code>for</code> loop <code>for (int i = 0; i &lt; n; i++) { body }</code> is equivalent to <code>int i = 0; while (i &lt; n) { body; i++; }</code>. However, equivalence breaks when the loop body contains <code>continue</code> statements (not on the AP exam) or when the update expression is complex. I/II/III questions present three loop variants and ask which produce identical output.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">Consider the following while loop.</p>
+  <div class=""qotd-code-block"">int i = 0;
+while (i &lt; 10)
+{
+    System.out.print(i + "" "");
+    i += 3;
+}</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">Which of the following for loops produces the same output?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">for (int i = 0; i &lt; 10; i += 3) { System.out.print(i + "" ""); }</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">for (int i = 0; i &lt;= 12; i += 3) { System.out.print(i + "" ""); }</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">for (int i = 3; i &lt; 10; i += 3) { System.out.print(i + "" ""); }</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">for (int i = 0; i &lt; 10; i++) { System.out.print(i + "" ""); }</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (A) for (int i = 0; i &lt; 10; i += 3) { System.out.print(i + "" ""); }</h3>
+  <p style=""line-height:1.7;"">The while loop: i starts at 0, prints while i &lt; 10, increments by 3. Output: 0 3 6 9. Option A has identical init (i=0), condition (i &lt; 10), and update (i += 3).</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(B)</strong> <code>i &lt;= 12</code> lets i reach 12, so this prints <code>0 3 6 9 12</code>. The while loop stops as soon as i reaches 10, so 12 is never printed.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(C)</strong> Starting at i=3 skips the first value (0). Output would be 3 6 9.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(D)</strong> Incrementing by 1 gives 0 1 2 3 4 5 6 7 8 9, not 0 3 6 9.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">Converting while to for: the initialization goes before the semicolon, the condition stays the same, and the update goes after the second semicolon. <code>while (cond) { body; update; }</code> becomes <code>for (init; cond; update) { body; }</code>.</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">While-to-for conversion is a standard AP exam question. Map the three parts directly: init, condition, update. The body stays the same.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section 2.9 — For Loops •
+    <a href=""/pages/unit-2-selection-and-iteration-ultimate-study-guide"" style=""color: #5b21b6 !important;"">Unit 2 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/unit-2-selection-and-iteration-ultimate-study-guide"">Unit 2 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 1 - DogWalker</a><span class=""qotd-mp-tag"">Methods &amp; Control</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 1 - Feeder</a><span class=""qotd-mp-tag"">Methods &amp; Control</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 1 - AppointmentBook</a><span class=""qotd-mp-tag"">Methods &amp; Control</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-3-error-off-by-one"" class=""qotd-nav-btn qotd-nav-prev"">← Day 3</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-5-short-circuit-side-effects"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Day 5 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'A';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"
+"ap-csa-daily-practice","ap-csa-u1-c2-day-7-error-method-calls","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #fef2f2; color: #dc2626 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-6-multi-step-reassignment"" class=""qotd-nav-btn qotd-nav-prev"">← Day 6</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-8-iii-string-behavior"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Day 8 →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 1</span>
+  <span class=""qotd-cycle-badge"">Advanced (Cycle 2)</span>
+  <span class=""qotd-day-badge"">Day 7 of 28</span>
+  <span class=""qotd-difficulty"">Advanced</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">Spotting the Error: Method Calls</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section 1.7 — Methods: Void</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">Error-spotting with method calls tests whether you understand the rules for invoking methods: the object must not be <code>null</code>, the method must exist in the object's class, arguments must match parameter types, and the return value must be handled appropriately. Common errors include calling a non-static method without an object, passing the wrong number of arguments, ignoring a required return value, or using a void method in an expression. On the AP exam, these errors may be embedded in otherwise correct-looking code.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">A class <code>Calculator</code> has these methods:</p>
+  <div class=""qotd-code-block"">public int add(int a, int b) { return a + b; }
+public void display(String msg) { System.out.println(msg); }
+public double half(int n) { return n / 2.0; }</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">Which of the following code segments will cause a compile-time error?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">Calculator c = new Calculator();
+int sum = c.add(3, 4);</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">Calculator c = new Calculator();
+c.display(""Sum: "" + c.add(3, 4));</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">Calculator c = new Calculator();
+int result = c.half(10);</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">Calculator c = new Calculator();
+double d = c.add(5, 5);</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (C) Calculator c = new Calculator();
+int result = c.half(10);</h3>
+  <p style=""line-height: 1.7;"">Check each for type compatibility:</p>
+  <p style=""line-height: 1.7;""><strong>(A):</strong> Valid. <code>add</code> returns <code>int</code>, stored in <code>int</code>.</p>
+  <p style=""line-height: 1.7;""><strong>(B):</strong> Valid. <code>""Sum: "" + c.add(3, 4)</code> is string concatenation, so the <code>int</code> becomes part of a <code>String</code> before <code>display</code> ever sees it.</p>
+  <p style=""line-height: 1.7;""><strong>(C):</strong> Error. <code>half</code> returns <code>double</code>. Storing a <code>double</code> in an <code>int</code> requires explicit casting. This is a narrowing conversion error.</p>
+  <p style=""line-height: 1.7;""><strong>(D):</strong> Valid. <code>add</code> returns <code>int</code> (10), which widens to <code>double</code> (10.0) automatically.</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(A)</strong> <code>add</code> returns <code>int</code> and the variable is <code>int</code>. Types match perfectly.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(B)</strong> Concatenating with <code>""Sum: ""</code> turns the whole expression into a <code>String</code>, which is what <code>display</code> takes. Pass <code>c.add(3, 4)</code> on its own and it would be an error.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(D)</strong> Storing an <code>int</code> return value in a <code>double</code> is widening, which Java does automatically. <code>10</code> becomes <code>10.0</code>.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">Return type mismatches are a top source of compile errors. A method that returns <code>double</code> cannot have its value stored in an <code>int</code> without casting. Always check: does the return type match the variable type?</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">For error-spotting with methods, check two things: (1) Do the argument types match the parameter types? (2) Does the return type match how the result is used? Both can cause compile errors.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section 1.7 — Methods: Void •
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" style=""color: #5b21b6 !important;"">Unit 1 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 2 - SignedText</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 2 - Scoreboard</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 2 - Sign</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-6-multi-step-reassignment"" class=""qotd-nav-btn qotd-nav-prev"">← Day 6</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-8-iii-string-behavior"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Day 8 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'C';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"
+"ap-csa-daily-practice","unit-4-cycle-2-day-25-selection-sort-iteration","MERGE","<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:""→"";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class=""apcs-practice-wrapper"">
+
+<!-- HEADER -->
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4, Data Collections • Cycle 2</div>
+<div class=""apcs-meta"">Day 25 Advanced Practice • Harder Difficulty</div>
+<div class=""apcs-focus-badge"">
+Focus: Selection Sort Iteration
+<span class=""apcs-difficulty-badge"" style=""background:#f56565"">Hard</span>
+<span class=""apcs-difficulty-badge"" style=""background:#805ad5;margin-left:4px"">Selection Sort Iteration</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Advanced Practice Question</h2>
+<div class=""apcs-question-text"">
+<strong>Format:</strong> Selection Sort Iteration<br><br>
+After ONE pass of selection sort, what is the array?
+</div>
+
+
+<div class=""apcs-code-block"">
+<pre><code>int[] arr = {5, 2, 8, 1, 9};</code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">[1, 2, 5, 8, 9]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">[1, 2, 8, 5, 9]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">[2, 5, 8, 1, 9]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">[1, 5, 2, 8, 9]</span>
+</label>
+</div>
+<button type=""submit"" class=""apcs-submit-btn"">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id=""apcs-feedback"" class=""apcs-feedback"">
+<div id=""apcs-feedback-header"" class=""apcs-feedback-header""></div>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> Selection Sort Iteration  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class=""apcs-section-title"">Why This Answer?</div>
+<div class=""apcs-section-content"">
+<p>Selection sort scans the whole unsorted part of the array for the smallest value and swaps it to the front. On the first pass the smallest value is 1, sitting at index 3, so 1 and 5 trade places. Nothing else moves, which leaves [1, 2, 8, 5, 9].</p>
+</div>
+
+<div class=""apcs-section-title"">Common Mistake</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Watch Out!</div>
+<p>Assuming one pass sorts more than one element into place. [1, 2, 5, 8, 9] is where selection sort finishes, not where it is after a single pass.</p>
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Strategy</div>
+<p>Selection sort settles exactly one position per pass. After k passes the first k entries are final and the rest of the array is untouched, so you can answer these without tracing the inner loop.</p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-24-arraylist-null-element"" class=""apcs-nav-link"" id=""prev-day-link"">← Previous</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""apcs-nav-link"">Hub</a>
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-26-arraylist-loop-adding"" class=""apcs-nav-link"" id=""next-day-link"">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class=""apcs-study-section"">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests selection sort iteration. Review Unit 4 concepts to build mastery of data collections.</p>
+<ul class=""apcs-concept-list"">
+<li>Understanding selection sort iteration</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href=""/pages/ap-csa-unit-4-ultimate-study-guide"" class=""apcs-cta-link"">View Unit 4 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class=""apcs-cta-box"">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href=""/pages/ap-csa-study-games"" class=""apcs-cta-link"">Study Games</a>
+<a href=""/pages/ap-csa-frq-archive"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'B';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is (' + correctAnswer + '). Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var overallDayNumber = 208;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>"
+"ap-csa-daily-practice","unit4-cycle2-day-25-selection-sort-iteration","MERGE","<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:""→"";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class=""apcs-practice-wrapper"">
+
+<!-- HEADER -->
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4, Data Collections • Cycle 2</div>
+<div class=""apcs-meta"">Day 25 Advanced Practice • Harder Difficulty</div>
+<div class=""apcs-focus-badge"">
+Focus: Selection Sort Iteration
+<span class=""apcs-difficulty-badge"" style=""background:#f56565"">Hard</span>
+<span class=""apcs-difficulty-badge"" style=""background:#805ad5;margin-left:4px"">Selection Sort Iteration</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Advanced Practice Question</h2>
+<div class=""apcs-question-text"">
+<strong>Format:</strong> Selection Sort Iteration<br><br>
+After ONE pass of selection sort, what is the array?
+</div>
+
+
+<div class=""apcs-code-block"">
+<pre><code>int[] arr = {5, 2, 8, 1, 9};</code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">[1, 2, 5, 8, 9]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">[1, 2, 8, 5, 9]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">[2, 5, 8, 1, 9]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">[1, 5, 2, 8, 9]</span>
+</label>
+</div>
+<button type=""submit"" class=""apcs-submit-btn"">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id=""apcs-feedback"" class=""apcs-feedback"">
+<div id=""apcs-feedback-header"" class=""apcs-feedback-header""></div>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> Selection Sort Iteration  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class=""apcs-section-title"">Why This Answer?</div>
+<div class=""apcs-section-content"">
+<p>Selection sort scans the whole unsorted part of the array for the smallest value and swaps it to the front. On the first pass the smallest value is 1, sitting at index 3, so 1 and 5 trade places. Nothing else moves, which leaves [1, 2, 8, 5, 9].</p>
+</div>
+
+<div class=""apcs-section-title"">Common Mistake</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Watch Out!</div>
+<p>Assuming one pass sorts more than one element into place. [1, 2, 5, 8, 9] is where selection sort finishes, not where it is after a single pass.</p>
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Strategy</div>
+<p>Selection sort settles exactly one position per pass. After k passes the first k entries are final and the rest of the array is untouched, so you can answer these without tracing the inner loop.</p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-24-arraylist-null-element"" class=""apcs-nav-link"" id=""prev-day-link"">← Previous</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""apcs-nav-link"">Hub</a>
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-26-arraylist-loop-adding"" class=""apcs-nav-link"" id=""next-day-link"">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class=""apcs-study-section"">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests selection sort iteration. Review Unit 4 concepts to build mastery of data collections.</p>
+<ul class=""apcs-concept-list"">
+<li>Understanding selection sort iteration</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href=""/pages/ap-csa-unit-4-ultimate-study-guide"" class=""apcs-cta-link"">View Unit 4 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class=""apcs-cta-box"">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href=""/pages/ap-csa-study-games"" class=""apcs-cta-link"">Study Games</a>
+<a href=""/pages/ap-csa-frq-archive"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'B';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is (' + correctAnswer + '). Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var overallDayNumber = 208;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>"
+"ap-csa-daily-practice","ap-csa-u1-c2-day-20-iii-expression-evaluation","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #fef2f2; color: #dc2626 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-19-error-math-methods"" class=""qotd-nav-btn qotd-nav-prev"">← Day 19</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-21-string-building-conditionals"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Day 21 →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 1</span>
+  <span class=""qotd-cycle-badge"">Advanced (Cycle 2)</span>
+  <span class=""qotd-day-badge"">Day 20 of 28</span>
+  <span class=""qotd-difficulty"">Advanced</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">I/II/III: Expression Evaluation</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section 1.3 — Expressions and Assignment</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">I/II/III format questions about expression evaluation test whether you can apply multiple rules simultaneously. Each statement may involve different combinations of casting, precedence, and type promotion. The strategy is to evaluate each roman numeral statement completely and independently, determining whether it is true or false before looking at the answer choices. If you are confident about two of the three statements, you can often determine the answer without fully evaluating the third.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">Consider the following expressions where <code>x = 14</code> and <code>y = 4</code>.</p>
+  <div class=""qotd-code-block"">I.   x / y + x % y == x
+     evaluates to false
+II.  (double) x / y == 3.5
+     evaluates to true
+III. x / y * y == x
+     evaluates to false</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">Which of the above statements are correct?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span>I and III only</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span>II and III only</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span>I and II only</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span>I, II, and III</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (D) I, II, and III</h3>
+  <p style=""line-height: 1.7;"">Evaluate each with <code>x = 14</code>, <code>y = 4</code>:</p>
+  <p style=""line-height: 1.7;""><strong>I:</strong> <code>14 / 4 + 14 % 4 = 3 + 2 = 5</code>, and <code>5 == 14</code> is <code>false</code>. Statement I says it is false, so statement I is correct. Watch the shape of it: the identity that rebuilds <code>x</code> is <code>(x / y) * y + x % y</code>, with the multiply. Drop the multiply and you are left with <code>3 + 2</code>.</p>
+  <p style=""line-height: 1.7;""><strong>II:</strong> <code>(double) 14 / 4 = 14.0 / 4 = 3.5</code>. <code>3.5 == 3.5</code> is <code>true</code>. Statement says this is true. CORRECT.</p>
+  <p style=""line-height: 1.7;""><strong>III:</strong> <code>14 / 4 * 4 = 3 * 4 = 12</code>. <code>12 == 14</code> is <code>false</code>. Statement says this is false. CORRECT.</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(A)</strong> Statement II is also correct. <code>(double) x / y</code> performs floating-point division giving 3.5.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(B)</strong> Statement I is also correct. <code>x / y + x % y = 3 + 2 = 5</code>, which does not equal 14.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(C)</strong> Statement III is also correct. Integer division truncates, so <code>(14/4)*4 = 3*4 = 12</code>, not 14.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">The identity <code>(a/b)*b + a%b == a</code> always holds, but <code>(a/b)*b</code> alone does NOT equal <code>a</code> unless <code>a</code> is divisible by <code>b</code>. The truncation from integer division loses the remainder, so multiplying back gives a smaller value.</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">Read I/II/III statements carefully. They tell you what they evaluate to and ask if that claim is correct. You must both compute the expression AND verify the stated result.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section 1.3 — Expressions and Assignment •
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" style=""color: #5b21b6 !important;"">Unit 1 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 2 - SignedText</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 2 - Scoreboard</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 2 - Sign</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-19-error-math-methods"" class=""qotd-nav-btn qotd-nav-prev"">← Day 19</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-21-string-building-conditionals"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Day 21 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'D';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"
+"ap-csa-daily-practice","ap-csa-u1-c2-day-28-comprehensive-final-review","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #fef2f2; color: #dc2626 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-27-comprehensive-expression-tracing"" class=""qotd-nav-btn qotd-nav-prev"">← Day 27</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u2-c1-day-1-boolean-expressions"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Next →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 1</span>
+  <span class=""qotd-cycle-badge"">Advanced (Cycle 2)</span>
+  <span class=""qotd-day-badge"">Day 28 of 28</span>
+  <span class=""qotd-difficulty"">Advanced</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">Comprehensive Unit 1 Final Review</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section Mixed — Review: All Unit 1</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">This final review covers every testable Unit 1 concept at advanced difficulty. On the AP exam, approximately 17-22% of questions come from Unit 1 topics. The most commonly tested areas are: integer division versus floating-point division, casting behavior and placement, <code>String</code> method return values (especially <code>substring()</code> boundaries), the difference between <code>==</code> and <code>equals()</code>, <code>Math.random()</code> range formulas, and autoboxing/unboxing with wrapper classes. Mastering these foundations makes the remaining units significantly easier.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">A method is intended to extract the initials from a full name. Consider the following implementation.</p>
+  <div class=""qotd-code-block"">public static String getInitials(String fullName)
+{
+    int space = fullName.indexOf("" "");
+    String first = fullName.substring(0, 1);
+    String last = fullName.substring(space, space + 1);
+    return first + last;
+}</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">The call <code>getInitials(""John Smith"")</code> returns an unexpected result. What is wrong?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span>The method returns ""JS"" as intended; there is no error.</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span>The variable last gets the space character instead of ""S"".</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span>The indexOf method returns -1 because the space is not found.</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span>The substring call on line 4 throws an IndexOutOfBoundsException.</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (B) The variable last gets the space character instead of ""S"".</h3>
+  <p style=""line-height: 1.7;"">Trace with <code>""John Smith""</code>:</p>
+  <p style=""line-height: 1.7;"">J(0) o(1) h(2) n(3) space(4) S(5) m(6) i(7) t(8) h(9)</p>
+  <p style=""line-height: 1.7;""><strong>space:</strong> <code>indexOf("" "")</code> = 4.</p>
+  <p style=""line-height: 1.7;""><strong>first:</strong> <code>substring(0, 1)</code> = <code>""J""</code>. Correct.</p>
+  <p style=""line-height: 1.7;""><strong>last:</strong> <code>substring(4, 5)</code> = <code>"" ""</code> (the space character). Not <code>""S""</code>!</p>
+  <p style=""line-height: 1.7;"">The fix: <code>fullName.substring(space + 1, space + 2)</code> to skip past the space and get <code>""S""</code>.</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(A)</strong> The method returns <code>""J ""</code> (J followed by a space), not <code>""JS""</code>. The off-by-one error gets the space instead of the first letter of the last name.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(C)</strong> The string <code>""John Smith""</code> clearly contains a space at index 4. <code>indexOf</code> successfully finds it.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(D)</strong> <code>substring(4, 5)</code> is within bounds (the string has 10 characters). No exception is thrown; the result is simply wrong.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">When splitting a string at a delimiter, remember that <code>indexOf</code> gives the position of the delimiter itself. To get the character after the delimiter, you must add 1: <code>substring(space + 1, space + 2)</code>.</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">Error analysis questions are common on the AP exam. You must trace the code with specific values and compare the actual result to the intended result. The error is often an off-by-one mistake, not a crash or compile error.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section Mixed — Review: All Unit 1 •
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" style=""color: #5b21b6 !important;"">Unit 1 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 2 - SignedText</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 2 - Scoreboard</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 2 - Sign</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-27-comprehensive-expression-tracing"" class=""qotd-nav-btn qotd-nav-prev"">← Day 27</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u2-c1-day-1-boolean-expressions"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Next →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'B';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"

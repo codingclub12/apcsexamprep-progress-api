@@ -1,0 +1,172 @@
+TEACHER GUIDE
+
+Topic 1.6: Compound Assignment Operators
+
+1 day | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.6.A | Develop code for assignment statements with compound assignment operators and determine the value that is stored in the variable as a result. |
+
+Students will be able to
+
+I can rewrite any compound assignment statement in its expanded form and get the same stored value.
+
+I can trace a sequence of compound assignments line by line and state the exact value stored after each one, including int division and remainder.
+
+I can explain what x++ and x-- do as standalone statements and say which forms of ++ and -- the AP exam excludes.
+
+How the days run
+
+Day 1
+
+The five compound operators and their expanded forms; Tracing a sequence, and letting the left side decide the division; Post-increment and post-decrement, standalone only
+
+Bell ringer: Does this add nothing? (5 min)
+
+On the board:  
+int n = 6;  
+n += n;  
+System.out.println(n);  
+Write down what this prints. Then write one sentence saying what n += n means in words, without using the += symbol.
+
+Debrief: Collect answers before revealing. The common wrong answers are 6 (reading it as 'add nothing to n') and 7 (confusing it with n++). It prints 12, because n += n expands to n = n + n, which is 6 + 6. Land the rule that carries the entire lesson: every compound operator expands to variable = variable OPERATOR value, and the right side is evaluated using the current value of the variable before anything is stored back.
+
+Objectives and guided-notes preview (3 min)
+
+The five compound operators and their expanded forms (9 min)
+
+A compound assignment operator combines an arithmetic operation with an assignment in one statement. There are five in scope: +=, -=, \*=, /=, and %=.
+
+Each one is exactly equivalent to its expanded form. x += y means x = x + y, x -= y means x = x - y, x \*= y means x = x \* y, x /= y means x = x / y, and x %= y means x = x % y.
+
+The order of operations inside the statement is always the same. Java takes the current value of the variable, applies the operator with the value on the right, and stores the result back into the same variable.
+
+Compound operators are shorthand only. They never change the arithmetic rules you already know, so int division stays int division and the remainder operator still returns a remainder.
+
+When you are stuck on a trace, write the expanded form in the margin. It costs five seconds and it removes almost every mistake students make on this topic.
+
+Worked example at the board (7 min)
+
+Expand x += 3 to x = x + 3 on the board every time until the class does it automatically. The compound form hides the assignment.
+
+Tracing a sequence, and letting the left side decide the division (9 min)
+
+Exam questions on this topic are almost always a short sequence of compound statements ending in a print. The only reliable method is a trace table: one row per statement, one column for the variable.
+
+Never evaluate two statements at once in your head. Write the value after every single line, even when the change is obvious.
+
+The type of the variable decides what kind of division /= performs. If the variable is an int, the division truncates, so 11 /= 2 leaves 5, and the .5 is gone.
+
+If the variable is a double, the division is double division even when the value on the right is an int. total /= 2 with total holding 9.0 gives 4.5, not 4.0.
+
+%= stores the remainder. 11 %= 4 leaves 3, because 11 divided by 4 is 2 with a remainder of 3.
+
+Post-increment and post-decrement, standalone only (9 min)
+
+x++ adds 1 to the variable and stores the result. It means exactly x = x + 1. x-- subtracts 1 and means exactly x = x - 1.
+
+On the AP exam these operators appear only as standalone statements on their own line. The prefix forms ++x and --x are explicitly excluded, and so is using either operator inside a larger expression.
+
+That exclusion is good news: you never have to reason about what the operator returns, only about what it stores. Add 1 or subtract 1 and move to the next line.
+
+x++ and x += 1 do the same thing here. Use whichever the question gives you, and do not read x++ as doubling or as any kind of shortcut for x += x.
+
+You will see these constantly once we reach loops later in the course, where the update step is a standalone x++. For now they are just a one-line way to count.
+
+Guided practice on the live lesson page (8 min)
+
+Work the live lesson page together (Unit 1 Link Sheet, row 1.6). Students use the Java Code Editor to verify traces they already wrote on paper, then complete the Tier 2 AP Practice set in pairs, then close with the Tier 3 Mastery Challenge on the shelf-count sequence.
+
+Before touching the editor, each student writes a paper trace of int n = 100; n /= 4; n %= 7; n += n; and predicts the final value. It is 8.
+
+Type the same sequence into the Java Code Editor with a println after each statement and confirm the printed values 25, 4, 8 against the paper trace.
+
+In the editor, run double total = 9.0; total /= 2; and confirm it prints 4.5, then change the declared type to int and observe what happens to the same statement.
+
+Complete the Tier 2 practice questions in pairs. Rule for this set: no answer is selected until both partners have written the value after every line.
+
+Play the game on the lesson page for five minutes as a whole-class competition, one trace per team.
+
+Work Parts A and B of the Tier 3 Mastery Challenge together. Part A traces the shelf sequence to 0, and Part B asks which single statement is equivalent to shelf += shelf; the answer is shelf \*= 2 because it doubles for any value, while a hardcoded number only works for one.
+
+Independent practice (6 min)
+
+Offline trace-table drill. Every item is paper and pencil, and every item has one exact answer.
+
+Exit ticket (4 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. What value is stored in k?  
+int k = 8;  
+k -= 3;  
+k \*= k;  
+k /= 5;
+
+Answer: C
+
+2\. What is printed?  
+int num = 5;  
+num += num;  
+num \*= num;  
+System.out.println(num);
+
+Answer: A
+
+3\. int total = 9; total /= 2; System.out.println(total);  
+Give the exact output and explain the value in one sentence.
+
+Answer: 4, because total is an int, so total = 9 / 2 is int division and the remainder is discarded.
+
+Traps this topic sets
+
+n += n is not n++. n += n expands to n = n + n, which doubles the variable, so n = 6 becomes 12. Students misread it as adding nothing or confuse it with n++, which adds exactly 1. Read every compound operator by expanding it before computing.
+
+The variable type decides the division, not the operator. /= does not force integer division. If the variable on the left is an int, the division truncates, so int n = 9; n /= 2; leaves 4. If the variable is a double, the division is double division even when the right side is an int, so double total = 9.0; total /= 2; leaves 4.5.
+
+Skipping intermediate values. Nearly every wrong answer on a compound-assignment question comes from evaluating two statements at once. Each distractor in these items is the value after the wrong number of steps, so stopping one line early is a designed trap. Write the value after every single statement.
+
+Forms that are out of scope. The AP exam uses ++ and -- only as standalone statements. The prefix forms ++x and --x are excluded, and so is using either operator inside a larger expression such as an array index. If an answer choice depends on what x++ returns rather than what it stores, it is not testing anything the exam covers.
+
+Differentiation
+
+Support
+
+Give a printed trace-table template with the statements pre-listed down the left column and one blank value cell per row, so the student only supplies numbers and cannot skip a line.
+
+Require the expanded form in the margin before any value is computed. Most errors on this topic disappear the moment the shorthand is rewritten as a full assignment.
+
+Start these students on sequences that use only += and -=, then add \*= and /=, and only introduce %= once the pattern is automatic.
+
+Provide a two-line reminder card: the compound operator uses the CURRENT value of the variable, and the result is stored back into that same variable.
+
+Stretch
+
+Ask for a single compound statement that has the same effect as three consecutive x++ statements, and a justification of why x += 3 always works while a hardcoded value does not.
+
+Give int n = 7 and ask for a two-statement compound sequence that lands exactly on 1, then a different two-statement sequence that also lands on 1, and an explanation of which operators make this easy.
+
+Ask students to construct a sequence where an int /= step loses information and a later step makes the loss invisible in the final answer, then explain why testing a single input would not reveal the bug.
+
+Give double d = 7.0; d /= 2; d /= 2; and ask for the exact output (1.75), then ask what the same three lines produce if d is declared int instead (1), with a written explanation of the difference.
+
+Homework
+
+Vocabulary: write the four terms with definitions in your own words, plus the expanded form of all five compound operators.
+
+Trace tables: six sequences on the handout, showing the variable value after every statement and the final printed output.
+
+Write and predict: create your own four-statement sequence starting from int p = 24 that uses at least one /= and one %=, then trace it and state the final value.
+
+Short answer: explain in two sentences why n += n is not the same as n++, using n = 6 as the example.
+
+Optional online: redo the Tier 3 Mastery Challenge and write Part C in full (Unit 1 Link Sheet, row 1.6).
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.6 teacher guide Page

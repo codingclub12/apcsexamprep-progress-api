@@ -1,0 +1,67 @@
+{
+  "change": "the teacher dashboard page rolls up marks: class average and column footers, not a mean of percentages",
+  "_context": [
+    "The other half of board 85, on the surface a teacher actually opens.",
+    "/pages/cyber-dashboard is a Shopify page body, so it deploys as a Matrixify import",
+    "rather than with the API, and it had the same defect in three places:",
+    "",
+    "  renderStats        class average, a mean of student percentages",
+    "  the grid footer    class average per column, a mean of cell percentages",
+    "  renderAssignment   the same, and 0 rather than a dash when nobody has started",
+    "",
+    "Its student rows were already points. Same split as the server side, same reason:",
+    "somebody fixed the row and nothing pointed at the numbers underneath it.",
+    "",
+    "The sheet also carries two earlier sessions' unimported work (the retry panel from",
+    "2026-09-09 and board 260's lock disclosure from 2026-09-07), because the repo mirror",
+    "was two changes ahead of the live page. Named in the runbook rather than discovered."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the page's own classAvg and colAvg, run in a vm, on a fixture where the rules disagree",
+      "_why": "The suite executes the shipped page's script rather than reimplementing it. 31 of 62 is 50 and a mean of 90 and 31 is 61; 19 of 22 is 86 and a mean of 90 and 50 is 70. An equally weighted fixture cannot tell the two rules apart, which is why the existing 72 assertions over this page stayed green while it was wrong.",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect": "87 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the rest of the dashboard still behaves",
+      "command": "npm run --silent smoke:dashassign && npm run --silent smoke:cellactions && npm run --silent smoke:dashassignmutation",
+      "expect": "0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet's own body, parsed back out of the CSV, computes the same numbers",
+      "_why": "Generation is not evidence that generation worked. The Body HTML column is parsed back with a reader that did not write it, diffed byte for byte against shopify/cyber-dashboard.html (112304 bytes, identical), and then RUN: the verifier's --file mode judges the sheet's own bytes rather than the repo file. A sheet that added the function and left the old call site would pass a text search and fail this.",
+      "command": "node scripts/verify-dashboard-rollup-live.js --file shopify/cyber-dashboard.html",
+      "expect": "OK - this body rolls up marks (6 checks)"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: classAvg goes back to a mean of student percentages",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "    if(p>0) return {pct:Math.round(e/p*100),earned:Math.round(e*100)/100,poss:Math.round(p*100)/100,basis:'points'};\n    if(graded.length)",
+      "replace": "    if(false) return null;\n    if(graded.length)",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]   the class average is 31 of 62, which is 50"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SHIPPED: colAvg goes back to a mean of cell percentages",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "    if(p>0) return {pct:Math.round(e/p*100),earned:Math.round(e*100)/100,poss:Math.round(p*100)/100,basis:'points'};\n    if(started.length)",
+      "replace": "    if(false) return null;\n    if(started.length)",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]   the two-denominator column is 19 of 22, which is 86"
+    },
+    {
+      "kind": "live",
+      "name": "the live page computes 50 and 86, not 61 and 70",
+      "_credential": "NO CREDENTIAL NEEDED, and it has been RUN. It fails right now, which is the point: the live body is 104858 bytes, updated_at 2026-09-07T07:00:28-05:00, and has neither function. Run it again after the import.",
+      "command": "node scripts/verify-dashboard-rollup-live.js",
+      "expect": "OK - the live dashboard rolls up marks (6 checks)",
+      "_why": "FALSE before the import and measured that way. It is not a string search: it pulls the script out of the live body, runs the page's own classAvg and colAvg in a vm, and asserts the numbers. The same harness reaches PASS on the sheet's own bytes, so a red live run means the page rather than the checker."
+    }
+  ]
+}

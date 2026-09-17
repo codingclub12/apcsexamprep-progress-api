@@ -1,0 +1,79 @@
+{
+  "change": "the cyber dashboard rolls up marks instead of a mean of percentages, and the two changes riding along on the same sheet are checked rather than passed along again",
+  "_context": [
+    "Board 318, and the sheet is board 85's other half. lib/admin-gradebook.js has",
+    "summed points since 2026-09-02, but the class average and the column footers",
+    "a teacher actually reads are computed in the Shopify page body, which is a",
+    "separate surface that nobody had updated. Until this sheet lands, the teacher",
+    "who reported the 483 percent column still sees an average that weighs a 5",
+    "mark exercise the same as a 25 mark project.",
+    "",
+    "The sheet carries THREE changes, not one, and only the first was verified by",
+    "the session that built it on 2026-09-11:",
+    "",
+    "  1 the rollup itself, marks over a mean of percentages",
+    "  2 the retry panel, three modes that save, replacing four dead SAVING SOON",
+    "    switches that moved the displayed grade and changed nothing a student",
+    "    could do",
+    "  3 board 260's unenforceable-lock disclosure, a warning sign beside the",
+    "    padlock rather than a colour filter alone",
+    "",
+    "2 and 3 were built and handed over by earlier sessions and had been sitting",
+    "unimported since 2026-09-07 and 09. This gate is what stops them shipping on",
+    "somebody else's evidence."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the page's own arithmetic, its retry panel, and now its lock disclosure",
+      "_why": "94 assertions against the mirror, loaded into a vm with a stub DOM so the page's own functions are called rather than its text searched. Section 11 covers change 2, including that picking a mode PATCHes the retry endpoint and then re-reads the class rather than trusting its own click. Section 12 is new and covers change 3, which nothing tested before: it rode along on this sheet twice with nobody asserting the glyph is appended.",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect": "ALL PASS  94 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the rollup judged by running the page's own classAvg and colAvg on a fixture where the two rules differ",
+      "_why": "Not a string search, and that distinction is the whole point: a body that added the new function and left the old call site in place would pass 'the function is in the body' while the page still printed the mean. This pulls the script out of the shipping bytes, runs it, and asserts the numbers. 31 of 62 is 50 and a mean of 90 and 31 is 61; 19 of 22 is 86 and a mean of 90 and 50 is 70. A page returning 61 and 70 has not been fixed whatever its text says.",
+      "command": "node scripts/verify-dashboard-rollup-live.js --file shopify/cyber-dashboard.html",
+      "expect": "OK - this body rolls up marks (6 checks)"
+    },
+    {
+      "kind": "mutation",
+      "name": "CHANGE 3 REVERTED: the warning sign stops being appended to an unenforceable lock",
+      "_why": "The state board 260 was opened against. A tinted padlock beside an untinted one is not a distinction on a phone, in greyscale, or to a colour blind teacher.",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "+(lying?'\\u26A0':'')",
+      "replace": "",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]   a lock that cannot be enforced carries the warning sign"
+    },
+    {
+      "kind": "mutation",
+      "name": "the aria-label goes back to naming the state without the reason",
+      "_why": "It read 'Quiz: Not assigned', which tells a screen reader the opposite of what the tooltip tells everybody else: that the lock is real.",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "aria-label='\"+this.esc(label+': '+t)+\"",
+      "replace": "aria-label='\"+this.esc(label+': '+what)+\"",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]   a screen reader hears WHY it cannot be enforced, not just that it is off"
+    },
+    {
+      "kind": "mutation",
+      "name": "the glyph is written as an HTML entity instead of a JS escape",
+      "_why": "Shopify decodes entities on import, so an entity in a string literal comes back as a raw character and stops being the thing that was reviewed. The same decoding is why the entity was taken out of the COMMENT explaining this rule on 2026-09-15: left there, the live body and this mirror would have differed by one character from the moment the sheet landed.",
+      "file": "shopify/cyber-dashboard.html",
+      "find": "(lying?'\\u26A0':'')",
+      "replace": "(lying?'&#9888;':'')",
+      "command": "npm run --silent smoke:tchdashpage",
+      "expect_failure": "[FAIL]   the glyph ships as a JS escape, and the entity appears nowhere in the body"
+    },
+    {
+      "kind": "live",
+      "name": "AFTER THE IMPORT: the live page returns 50 and 86, not 61 and 70",
+      "_credential": "NOT RUN YET AND FALSE BY CONSTRUCTION. The same command has reported 'this body has no classAvg/colAvg. The sheet is NOT imported' on every run since 2026-09-07, most recently at 18:10Z today. It reads the live page rather than the repo, so it cannot pass until a human imports the sheet.",
+      "command": "node scripts/verify-dashboard-rollup-live.js",
+      "expect": "OK - the live dashboard rolls up marks (6 checks)",
+      "_why": "WORDING NOTE: scripts/verify-dashboard-rollup-live.js prints 'this body' under --file and 'the live dashboard' without it, and this expect string was first copied from the --file run, so the gate refused a correct import on 2026-09-17 with a string mismatch that read like a failed page. The rederive check above uses --file and keeps the other wording on purpose."
+    }
+  ]
+}

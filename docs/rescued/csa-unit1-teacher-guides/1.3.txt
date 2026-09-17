@@ -1,0 +1,221 @@
+TEACHER GUIDE
+
+Topic 1.3: Expressions and Output
+
+2 days | Prepared for the May 2027 AP CSA exam (2025 Course and Exam Description, four-unit structure).
+
+Learning objectives
+
+| Code | Objective |
+| :-: | :-: |
+| 1.3.A | Develop code to generate output and determine the result that would be displayed. |
+| 1.3.B | Develop code to utilize string literals and determine the result of using string literals. |
+| 1.3.C | Develop code for arithmetic expressions and determine the result of these expressions. |
+
+Students will be able to
+
+I can predict the exact output layout of a code segment that mixes System.out.print and System.out.println.
+
+I can write string literals containing the escape sequences \\", \\\\, and \\n and state exactly what each one produces.
+
+I can apply the int/double result rule and compute the value of an integer division or remainder expression.
+
+I can evaluate a compound arithmetic expression using precedence and left-to-right order, and say when an ArithmeticException is thrown.
+
+How the days run
+
+Day 1
+
+print versus println: the cursor is the whole story; String literals and the three escape sequences; The int/double rule and integer division
+
+Bell ringer: Predict, then argue (6 min)
+
+On the board, no running allowed: 'Write down exactly what each line prints.  
+System.out.println(7 / 2);  
+System.out.println(7.0 / 2);  
+System.out.println(1 / 4);  
+Now find a neighbor who wrote something different and convince them.'
+
+Debrief: Take a show of hands on line 1 for 3.5 versus 3 before revealing anything. The answers are 3, 3.5, and 0. Land the rule once, hard: when both operands of / are int, Java throws away the decimal portion. It does not round. 1 / 4 is 0, not 0.25. Tell them straight out that this single rule shows up on nearly every released exam, and that today is the day to stop losing those points.
+
+Objectives and guided-notes preview (3 min)
+
+print versus println: the cursor is the whole story (8 min)
+
+Both methods live on the System.out object and both send text to the screen. The only difference is where the cursor sits afterward.
+
+System.out.println(x) prints x and then moves the cursor to a new line, so the next output starts one line down. System.out.print(x) prints x and leaves the cursor right where it stopped, so the next output continues on the same line.
+
+Trace output by tracking the cursor, not by counting statements. The trap on the exam is assuming every statement starts a fresh line.
+
+System.out.println() with no argument prints nothing and advances the cursor, which produces a blank line if the cursor was already at the start of a line, or ends the current line if it was not.
+
+Anything you can print, you can print with either method. Choosing between them is a layout decision.
+
+Worked example at the board (9 min)
+
+Put an integer-division expression on the board and take a vote before evaluating. The wrong answer is the interesting one.
+
+String literals and the three escape sequences (10 min)
+
+A literal is the code representation of a fixed value. 42 in source code is an int literal; "hello" is a string literal, a sequence of characters enclosed in double quotes.
+
+Some characters cannot appear directly inside a string because Java would misread them. An escape sequence is a backslash plus a character that signals a different meaning.
+
+The three on the exam: backslash-quote produces a literal double quote, backslash-backslash produces a single literal backslash, and backslash-n produces a newline.
+
+Inside a string, the backslash is the escape character. A lone backslash followed by an unrecognized letter, like backslash-r-e-p-o-r-t-s in a Windows path, is a compile error, not a printed backslash.
+
+Each escape sequence is one character in the output even though it takes two characters to write in source code.
+
+The plus operator joins a string to another value, which is how you print a label and a number together. Full string behavior comes later in Unit 1; for now just read it as 'stick these together'.
+
+The int/double rule and integer division (10 min)
+
+Java has five arithmetic operators: plus, minus, star for multiply, slash for divide, and percent for remainder.
+
+The result rule is about operand types, not about what you assign the result to. int with int gives int. int with double gives double. double with double gives double.
+
+Java does not upgrade the operands for you to be helpful. If both operands of / are int, you get integer division no matter how much you wanted a decimal.
+
+Integer division truncates toward zero. It does not round. 7 / 2 is 3, 13 / 4 is 3, 9 / 10 is 0.
+
+Memorize the shortcut: any int division where the numerator is smaller than the denominator produces 0. That single fact answers a surprising number of exam items.
+
+To get real division from two int variables, make one operand a double: use a double literal such as 3.0, or cast one operand, which is Topic 1.5.
+
+Misconception check: Integer division truncates, it does not round (6 min)
+
+Integer division truncates, it does not round: When both operands of / are int, Java discards the decimal portion entirely and truncates toward zero. 7 / 2 is 3, and 9 / 10 is 0, not 1. Any int division where the numerator is smaller than the denominator produces zero.
+
+Stop and think, then assign homework (8 min)
+
+Day 2
+
+The remainder operator %; Precedence, compound expressions, and divide by zero
+
+Bell ringer: retrieval on the previous day (5 min)
+
+Evaluate three mixed-type expressions cold. Watch for anyone who says 7/2 is 3.5.
+
+Objectives and guided-notes preview (3 min)
+
+The remainder operator % (8 min)
+
+a % b gives the remainder after dividing a by b. It is the amount left over when b no longer fits.
+
+Read it against the division: 17 % 5 is 2 because 17 is 3 times 5 plus 2. If you know the integer quotient, the remainder falls out.
+
+Two patterns cover most exam appearances: n % 2 tests evenness (0 means even), and n % 10 extracts the last digit of an integer.
+
+Percent has the same precedence as multiply and divide, so it is evaluated before plus and minus and left to right among its equals.
+
+AP exclusion: negative values for a, and values less than or equal to zero for b, are out of scope. You will not be asked about -7 % 3, so do not spend study time on negative remainder behavior.
+
+Worked walkthrough (10 min)
+
+Trace operator precedence left to right out loud. Students who guess rather than trace are the ones who lose points.
+
+Precedence, compound expressions, and divide by zero (8 min)
+
+Two rules cover the exam. First, multiply, divide, and remainder are evaluated before plus and minus. Second, operators at the same level evaluate left to right. Parentheses override both.
+
+Evaluate one operation at a time and rewrite the whole expression after each step. Students who try to hold four operations in their head are the ones who miss these.
+
+Precedence and integer division combine into the single most common exam trap: a division buried in a longer expression runs first, truncates, and poisons everything after it.
+
+Dividing an int by the int zero throws an ArithmeticException at run time. The same applies to % with a zero divisor. The code compiles fine because the compiler cannot know a variable's value in advance.
+
+AP exclusion: dividing a double by zero produces Infinity and is out of scope. Only the int case is tested.
+
+Guided practice on the live lesson page (12 min)
+
+Move to the live lesson page (Unit 1 Link Sheet, row 1.3). Students run the Java editor exercise, then work the eight Tier 2 AP practice items covering print and println layout, expression types, integer division with remainder, escape sequences in a Windows path, compound precedence, ArithmeticException segments, the average-precedence trap, and newline counting. Close with the Tier 3 School Store Vending Machine challenge.
+
+Run the 1.3 editor exercise, then modify it: change one operand from 2 to 2.0 and describe in one sentence what changed about the output and why.
+
+Tier 2 output trace: for the segment println("Status: "), print("OK"), println(), print("Done"), write the output before revealing. The answer is Status: on line 1, OK on line 2, Done on line 3.
+
+Tier 2 division set: work the 250 / 8 and 250 % 8 item (answers 31 and 2) and the 14 / 4 versus 14.0 / 4 versus 14 / 4 \* 2 typing item (only the first and third are int).
+
+Tier 3 School Store Vending Machine, Part A: trace changeCents = 100 - 65, quarters = changeCents / 25, remainder = changeCents % 25 and predict the output. The answers are 1 quarter and 10 leftover cents.
+
+Tier 3 Part C on paper: explain why "Change: $" + changeCents / 100 prints Change: $0 when changeCents is 35, and rewrite it using 100.0 so it prints Change: $0.35.
+
+Play one round of the Output Predictor game or the Expressions Bug Hunt as the closer.
+
+Independent practice (9 min)
+
+Offline prediction drills. No compiler needed, and no internet needed.
+
+Exit ticket (5 min)
+
+Answers are below. Do not hand this page to students.
+
+Exit ticket, with answers
+
+1\. What is printed?  
+int total = 250;  
+int slots = 8;  
+System.out.println(total / slots);  
+System.out.println(total % slots);
+
+Answer: B
+
+2\. What value is stored in result?  
+int result = 100 - 4 \* 3 + 24 / 8 % 2;
+
+Answer: A
+
+3\. Which segment causes an ArithmeticException at run time?  
+I. int m = 5; int n = 0; int r = m / n;  
+II. double x = 5.0; int n = 0; double r = x / n;  
+III. int m = 5; int n = 0; int r = m % n;
+
+Answer: C
+
+Traps this topic sets
+
+Integer division truncates, it does not round. When both operands of / are int, Java discards the decimal portion entirely and truncates toward zero. 7 / 2 is 3, and 9 / 10 is 0, not 1. Any int division where the numerator is smaller than the denominator produces zero.
+
+The destination type does not fix the division. double d = 1 + 3 / 2; stores 2.0, not 2.5. The division 3 / 2 happens first with two int operands and gives 1, then 1 + 1 is 2, and only then does the value widen to 2.0 on assignment. Fix it by making an operand a double, as in 3 / 2.0.
+
+Precedence hides a truncating division inside a longer expression. In s1 + s2 + s3 / 3, division runs before addition, so only s3 is divided and it truncates. The result is not the average of the three scores. Parenthesize the sum and divide by 3.0 to get real division.
+
+A newline escape works inside print too. Backslash-n breaks the line regardless of whether you called print or println, because the escape sequence controls the cursor and the method name does not. Students who assume print can never advance a line miss this item every year.
+
+Differentiation
+
+Support
+
+Give a laminated two-line precedence card (star slash percent first, then plus minus, all left to right) and require students to point at the card while narrating each step out loud.
+
+For integer division, hand out a 'does it fit' worksheet: 25 into 35 fits once with 10 left over, phrased in fitting language before any Java notation appears.
+
+Provide half-completed evaluation ladders where the first step is already done, so the student practices the rewrite habit rather than starting from a blank page.
+
+Stretch
+
+Give advanced students a target value and ask them to build an expression that reaches it using all five arithmetic operators exactly once, then have a partner evaluate it independently and compare.
+
+Ask them to explain why 10 / 4 \* 4 is 8 rather than 10, then generalize: for which int pairs does a / b \* b equal a? The answer is exactly when b divides a evenly, and defending that is the real work.
+
+Have them design a two-item quiz for the class where one item looks like integer division but is not, and the other looks safe but truncates. They must supply full solutions and one plausible wrong answer per item.
+
+Beyond-scope enrichment (not tested, no new concepts required): show System.out.printf("%.2f", value) as the standard way real Java rounds output to two decimal places, and note that the exam tests neither printf nor DecimalFormat.
+
+Homework
+
+Predict-and-check: eight expressions on the handout. Write the value and the result type for each, then write one sentence explaining any that surprised you.
+
+Output layout: given four segments mixing print and println with backslash-n, draw the exact screen output including any blank lines.
+
+Write-your-own trap: compose one expression whose correct value is different from what a careless student would say, then show the full step-by-step evaluation underneath.
+
+Vocabulary: the eight terms with definitions and one example each; for integer division and modulo, use numbers not used in class.
+
+Optional online: replay the Output Predictor game (Unit 1 Link Sheet, row 1.3) until you score at least five of six.
+
+AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.
+
+APCSExamPrep.com Topic 1.3 teacher guide Page

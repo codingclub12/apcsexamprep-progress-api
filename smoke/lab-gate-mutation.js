@@ -87,43 +87,35 @@ const MUTATIONS = [
     must: ['the two implementations agree on every case'],
   },
   {
-    //  THE BYPASS. Restore the old "no token means self-study" and a student
-    //  who signs out walks past every lock on the site.
-    name: 'THE BYPASS: anonymous goes back to being automatically self-study',
+    //  BOARD 277 IN REVERSE. Until 2026-09-14 this battery mutated the OTHER way,
+    //  restoring "no token means self-study" and requiring the suite to notice a
+    //  student walking past a lock by signing out. Tanner then decided that is
+    //  the wanted behaviour: "Labs should be open as long as the specific teacher
+    //  doesn't lock it."
+    //
+    //  So the mutation is inverted rather than deleted. Re-closing the anonymous
+    //  door has to turn the suite red, which is what stops a future session
+    //  restoring the old rule from the incident history without anyone noticing.
+    //  That history is real and is written out in routes/labs.js; the point of
+    //  this entry is that changing your mind about it must be a visible act.
+    name: 'BOARD 277 REVERTED: a caller with no class is refused again',
     file: 'route',
     suite: 'gate',
-    //  ANCHORED ON THE BRANCH OPENING ALONE, not on the line that used to follow
-    //  it. The first version named the next statement too and broke the day a
-    //  teacher carve-out was inserted between them: the patch found 0 hits, so
-    //  the mutation silently stopped running and the battery reported a FAIL for
-    //  the anchor rather than a hollow guard. A mutation anchor should name the
-    //  least it can get away with.
-    find: "  if (!stu) {\n",
-    repl: "  if (!stu) {\n    return { open: true, reason: 'self-study' };\n    // eslint-disable-next-line no-unreachable\n",
-    must: ['signing out no longer opens a closed lab'],
+    find: "    return { open: true, reason: 'self-study' };\n  }\n  const cls = labClassStmt.get(stu.class_id);",
+    repl: "    return { open: false, reason: 'anonymous-closed-for-activity', audience: 'anonymous' };\n  }\n  const cls = labClassStmt.get(stu.class_id);",
+    must: ['an anonymous visitor gets a lab another class has closed'],
   },
   {
     //  THE OTHER HALF, and the one a careless fix breaks. Refusing anonymous
-    //  outright closes the bypass AND takes the public practice layer offline,
-    //  which is the trade Tanner explicitly did not choose. A suite that only
-    //  asserts "anonymous is refused" goes green on this.
+    //  outright would take the public practice layer offline, which is the trade
+    //  Tanner explicitly did not choose in either direction. A suite that only
+    //  asserts "anonymous gets this one lab" goes green on this.
     name: 'anonymous is refused EVERY lab, taking the public practice layer offline',
-    file: 'gatelib',
+    file: 'route',
     suite: 'gate',
-    find: '  return { locked: false, reason: null, scope: null };',
-    repl: "  return { locked: true, reason: 'closed-for-activity', scope: 'activity' };",
+    find: "  const stu = labStudent(req);\n",
+    repl: "  const stu = labStudent(req);\n  if (!stu) return { open: false, reason: 'anonymous-closed-for-activity' };\n",
     must: ['a lab nobody closed is still open signed out'],
-  },
-  {
-    //  The per-class resolution is what stops one class's closing UNIT row from
-    //  withholding a lab that same class reopened at lesson scope. Scanning for
-    //  any open=0 row instead would refuse the public a lab nobody closed.
-    name: 'the anonymous rule trusts any closing row instead of resolving per class',
-    file: 'gatelib',
-    suite: 'gate',
-    find: '      const row = pickGateRow(classRows, lesson, act);',
-    repl: '      const row = classRows.find((r) => r.open === 0 || r.open === false) || null;',
-    must: ['and anonymous resolves those two rows too, rather than seeing one close'],
   },
   {
     //  A stale player cannot send a token, and a gate that never sees one stands
@@ -236,16 +228,18 @@ const MUTATIONS = [
     repl: 'const NATIVE_LABEL = {};',
     must: ['and they no longer render the same label'],
   },
-  {
-    //  The refusal that names the wrong person. Anonymous is refused whenever
-    //  ANY class has closed the lab, so a student of an OPEN class who is signed
-    //  out reads that their teacher closed it, and takes that to their teacher.
-    name: 'every refusal claims to be the caller\'s own class again',
-    file: 'route',
-    find: "      locked_for: gate.audience || 'class',",
-    repl: "      locked_for: 'class',",
-    must: ['a signed-out visitor is told it is the anonymous rule'],
-  },
+  //  REMOVED 2026-09-14, board 277. This battery used to mutate
+  //  `locked_for: gate.audience || 'class'` down to a hardcoded 'class' and
+  //  require the suite to catch a refusal blaming the wrong person. After 277 the
+  //  only refusal left IS the caller's own class, so locked_for is always 'class'
+  //  and that mutation cannot fail. Keeping it would be a guard that reads as
+  //  coverage and checks nothing, which is the exact failure this file exists to
+  //  find. The field stays on the wire: it costs nothing and it is what the
+  //  player would need again if the anonymous rule ever comes back.
+  //
+  //  The happier half is that the wording problem it guarded is now solved by the
+  //  policy rather than by the field. "Your teacher has not opened this yet" is
+  //  true of every refusal the route can now produce.
   {
     //  Same wrong sentence, one layer out: the player ignores who locked it.
     name: 'the player tells every locked visitor their teacher closed it',

@@ -274,6 +274,78 @@ const bareCsv = T.buildGradebookCSV().split('\r\n')[1].split(',');
 ok('  the spreadsheet leaves the grade blank rather than writing 0%',
   bareCsv[3] === '', bareCsv.slice(0, 7));
 
+console.log('\n12. The class average and the column footers are marks, not a mean');
+//  Board 85, the half of it a teacher actually looks at. The student ROW has
+//  been points for a while; the class average under it and the footer under
+//  every column were still means of percentages, so one student's 1 mark quiz
+//  weighed exactly as much as another student's 40 mark exam.
+//
+//  The fixture is built so the two rules give DIFFERENT answers. An equally
+//  weighted fixture cannot tell them apart, because there a mean of percentages
+//  and a points average are the same number, and that is exactly why every
+//  suite over this page stayed green while it was wrong.
+const WEIGHT = {
+  class: { class_name: 'Weighting', course: 'ap-cybersecurity' },
+  course_config: { units: { 'unit-1': {
+    label: 'Unit 1', lessons: ['1.1', '1.2', '1.3'], activities: ['quiz'],
+  } } },
+  //  1.3 is deliberately unpriced: most AP Cyber columns are.
+  denominators: { '1.1|quiz': 20, '1.2|quiz': 40 },
+  summary: [
+    { student: { id: 'a', name: 'A', ref: '', last_active: null }, units: {},
+      detail: { 'unit-1': {
+        '1.1': { quiz: { score: 90, points_earned: 18, points_possible: 20 } },
+        '1.3': { quiz: { score: 80 } },
+      } } },
+    { student: { id: 'b', name: 'B', ref: '', last_active: null }, units: {},
+      detail: { 'unit-1': {
+        // The page reported its own pair, out of 2, on the same column A sat
+        // out of 20. That is what the attempts path does, and it is the shape a
+        // mean of percentages cannot survive.
+        '1.1': { quiz: { score: 50, points_earned: 1, points_possible: 2 } },
+        '1.2': { quiz: { score: 30 } },
+        '1.3': { quiz: { score: 60 } },
+      } } },
+  ],
+};
+T.data = WEIGHT;
+T.model = T.buildModel(WEIGHT);
+const wa = T.totals(T.model.students[0]);
+const wb = T.totals(T.model.students[1]);
+ok('  student A is 18 of 20', wa.earned === 18 && wa.poss === 20, wa);
+ok('  student B is 13 of 42', wb.earned === 13 && wb.poss === 42, wb);
+
+const cavg = T.classAvg([wa, wb]);
+ok('  the class average is 31 of 62, which is 50', cavg.pct === 50, cavg);
+ok('  and NOT the 61 a mean of 90 and 31 gives', cavg.pct !== 61, cavg.pct);
+ok('  it carries the fraction behind it', cavg.earned === 31 && cavg.poss === 62, cavg);
+ok('  labelled points', cavg.basis === 'points', cavg.basis);
+
+const wcol = (l) => T.model.cols.find((c) => c.dl === l && c.da === 'quiz');
+const colCells = (l) => T.model.students.map((s) => T.cellData(s, wcol(l)));
+const c11 = T.colAvg(colCells('1.1'));
+ok('  the two-denominator column is 19 of 22, which is 86', c11.pct === 86, c11);
+ok('  and NOT the 70 that averaging 90 and 50 gives', c11.pct !== 70, c11.pct);
+const c13 = T.colAvg(colCells('1.3'));
+ok('  an unpriced column still reports the mean, 70', c13.pct === 70, c13);
+ok('  and says so, so the two cannot be read alike', c13.basis === 'percent', c13.basis);
+const c12 = T.colAvg(colCells('1.2'));
+ok('  a column only one student has sat is still that student, 30', c12.pct === 30, c12);
+
+//  Nothing started is a dash. 0 percent reads as a failing class average for
+//  work nobody has done, which is the same rule as the grade column above.
+const empty = T.colAvg([{ started: false, pct: null }, { started: false, pct: null }]);
+ok('  a column nobody has started has no average, not a zero',
+  empty.pct === null && empty.basis === 'none', empty);
+ok('  and a class with no graded student has none either',
+  T.classAvg([{ pct: null, earned: 0, poss: 0 }]).pct === null);
+
+//  The shipped file, not just the behaviour: a revert would put these back.
+ok('  no mean of student percentages survives in the shipped page',
+  !/graded_arr\.reduce\(\(a,b\)=>a\+b\.pct,0\)/.test(body));
+ok('  no mean of column percentages survives either',
+  !/vals\.reduce\(\(a,b\)=>a\+b\.pct,0\)\/vals\.length/.test(body));
+
 console.log('\n11. The retry panel controls the policy the server enforces');
 //  Reported 2026-09-09: "I also have students able to retry assignments as many
 //  times as they want." The engine was fine. The panel was four per-type
@@ -367,6 +439,46 @@ for (const [row, wantMode, wantQuiz] of [
   await T.setRetryMode('all');
   ok('    the mode is unchanged after a 403', T.state.retryMode === 'practice', T.state.retryMode);
   ok('    and so is the grid it draws', T.state.retryTypes.quiz === false, T.state.retryTypes);
+
+  //  ── 12. THE UNENFORCEABLE LOCK SAYS SO IN SHAPE, NOT ONLY IN COLOUR ──────
+  //  Board 260. Some activities keep their questions in the page body, so a
+  //  teacher closing one changes nothing a student cannot walk around. The page
+  //  used to mark those with a colour filter alone, and one tinted padlock
+  //  beside another is not a distinction on a phone, in greyscale, or to a
+  //  colour blind teacher.
+  //
+  //  This rode along on the board 318 sheet, built 2026-09-07 by another
+  //  session and handed over unverified twice. Asserted here rather than read,
+  //  because a glyph nobody tests is a glyph that quietly stops being appended.
+  console.log('\n12. An unenforceable lock is marked by shape, not by colour alone');
+  {
+    const WARN = '\u26A0';
+    const shut = T.lkHtml('act', 'unit-1', '1.1', 'quiz', 'off', false, 'Quiz', false);
+    const real = T.lkHtml('act', 'unit-1', '1.1', 'quiz', 'off', true, 'Quiz', false);
+    const open = T.lkHtml('act', 'unit-1', '1.1', 'quiz', 'on', false, 'Quiz', false);
+
+    ok('  a lock that cannot be enforced carries the warning sign', shut.includes(WARN), shut.slice(-120));
+    ok('  a lock that CAN be enforced does not', !real.includes(WARN), real.slice(-120));
+    ok('  and an open column does not, enforceable or not', !open.includes(WARN), open.slice(-120));
+    ok('  the unenforceable one is still marked in the class too, for the eye',
+      /class='lk[^']*\bnf\b/.test(shut), shut.slice(0, 90));
+
+    //  The aria-label used to read "Quiz: Not assigned", which tells a screen
+    //  reader the opposite of what the tooltip tells everybody else.
+    ok('  a screen reader hears WHY it cannot be enforced, not just that it is off',
+      /aria-label='[^']*Cannot be enforced/.test(shut), shut.slice(0, 200));
+    ok('  and the sighted tooltip says the same thing', /title='[^']*Cannot be enforced/.test(shut));
+
+    //  Shopify decodes entities on import, so an entity in a JS string literal
+    //  comes back as a raw character and stops being the reviewed thing.
+    //  Shopify decodes entities on import, so an entity anywhere in this body,
+    //  a comment included, comes back as a raw character and the mirror drifts
+    //  from the live page by that character. The entity is spelled from its code
+    //  point here so this assertion does not become the thing it forbids.
+    const ENTITY = '&#' + 0x26A0.toString(10) + ';';
+    ok('  the glyph ships as a JS escape, and the entity appears nowhere in the body',
+      !html.includes(ENTITY), html.indexOf(ENTITY));
+  }
 
   //  The tally spelling every other suite here uses, and the one
   //  scripts/gate-suite-floor.js parses. This file printed "(72 passed)" with no
