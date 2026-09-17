@@ -96,3 +96,140 @@ three ways listed in the runbook, every one harmless or a repair.
   sheet assert it and no first-party source in this repo confirms it. The
   rewrite moved the year and deliberately did not touch the count, so this is
   inherited, not introduced. Worth a check before the next pass.
+
+---
+
+## Addendum, after importing the canary: two predictions were wrong
+
+`body-ap-csa-score-calculator.csv` was imported the same day. The import itself
+worked exactly as designed: `[DONE]` on all 13 edits, 393 elements before and
+393 after, so nothing truncated. Two things this run note claimed above turned
+out to be wrong, and both were found by looking at the page rather than at the
+verifier.
+
+**1. Matrixify stores the body VERBATIM. The save repairs nothing.**
+
+Measured: the sheet cell was 45,400 characters and the stored body came back
+45,400, byte for byte identical. So all three of the "harmless or a repair"
+changes predicted from the parse5 simulation simply did not occur. `&amp;geq;`
+is still there and still renders as `5&geq;78`; `viewbox` is still lowercased;
+no `<tbody>` was inserted.
+
+The error was in the simulation, not in the reasoning about it: `decodeOnce()`
+followed by `parse5.parseFragment()` decodes TWICE, because the parser decodes
+during tokenization. It was a plausible model of a documented transform, run
+carefully, and it still predicted three things that did not happen.
+
+The cost is worth naming. The runbook told Tanner the `&geq;` repair was "the
+strongest single sign the round trip behaved". A correct import would therefore
+have read as a failed one. A check whose success signal is a side effect nobody
+has observed is worse than no check, and this is the second time in two days
+that a confident, plausible, entirely false report came out of a model of a
+system rather than the system.
+
+Both defects are now explicit edits, `docs/shopify-page-imports.md` carries the
+measurement in front of the transform it contradicts, and the runbook is
+rewritten.
+
+**2. Every one of these pages renders TWO h1 elements, and the body is the
+second one.**
+
+The theme prints the Shopify page `Title` field above the body:
+
+    h1[0]   AP CSA Score Calculator 2026 | Predict Your Exam Score   <- Title field
+    h1[1]   AP CSA Score Calculator 2027                             <- body, fixed
+
+So the body sheet fixed the h1 nobody sees first, and the visible heading still
+advertised the passed exam. That is the whole reason the H1 mattered: Google
+rewrites titles from it. A body sheet cannot reach the `Title` field, because
+`Title` is a forbidden column there precisely because a wrong value renames a
+live page, so it ships as its own small sheet with no body column beside it.
+
+Confirmed on all four pages, so this was never specific to the canary.
+
+**What changed as a result**
+
+- `&amp;geq;` and `viewbox` are explicit edits now, 49 replacements in total
+- `TITLES` in the spec and `titles-page-year.csv`, 4 rows, year only
+- the generator is IDEMPOTENT: an edit already live is skipped and reported
+  rather than refusing the page, which is what a partial import needs
+- that idempotency check was itself wrong on its first draft. It accepted
+  `replace count >= expected`, and the mutation run broke it in one move with a
+  one-character replacement: `'y'` occurs hundreds of times, so a find-string
+  that was simply MISSING read as already done. It now requires an exact count
+  and a replacement of at least 8 characters, with three mutation cases holding
+  it there
+- the verifier no longer calls PARTIAL a stop-the-line state, because a staged
+  import makes it a normal one
+- `smoke:bodyyear` 37 passed; mutation 10 guards live, 0 hollow
+
+**Still open, unchanged:** the duplicate h1 is its own defect and fixing it is a
+restructure rather than a year change. Five more hub pages need the same pass.
+Two handles carry a stale year in the URL. `42 MCQ` remains unverified.
+
+---
+
+## Second addendum: all five imported, and the third wrong prediction
+
+All five sheets went in on 2026-09-17. The verifier reads **4 done, 0 partly
+imported, 0 pending**, and regenerating now writes no sheet at all: every edit
+is live and all four titles are correct.
+
+What is live and checkable:
+
+    both h1 elements read 2027 on all four pages
+    5>=78, 4>=59, 3>=46, 2>=35   renders correctly on the CSA calculator
+    5>=83, 4>=72, 3>=58, 2>=45   renders correctly on the CSP calculator
+    the reference sheet drops the year from both headings
+
+### "Stores verbatim" was wrong, measured across four pages instead of one
+
+The first addendum wrote that rule from a single page. Two more imports showed
+two transforms that do fire:
+
+    ap-csa-score-calculator    45,368 -> 45,368   byte for byte identical
+    ap-csp-score-calculator    47,741 -> 47,741   byte for byte identical
+    ap-csa-reference-sheet     66,857 -> 66,777   -80, sixteen &nbsp; decoded
+    ap-csa-exam-format         48,658 -> 48,658   same length, viewBox lowercased
+
+Entities decode, and attribute names are lowercased. No reflow, no implied tags,
+no re-serialization. The nbsp decode is the outcome the sheet wanted: board #292
+says Matrixify strips a literal non-breaking space, so sending the entity and
+letting Shopify decode it back is the mitigation working exactly as designed.
+
+### The viewBox edit was wrong twice, and is removed
+
+It could not land: the sheet sent `viewBox` four times and the stored body came
+back with `viewbox` four times, because Shopify lowercases attribute names. That
+is also where the lowercasing came from originally.
+
+It did not need to land. HTML5 has an "adjust SVG attributes" step for foreign
+content. Verified in Chromium against the pre-installed build: a lowercased
+`viewbox` reads back as `viewBox`, the viewBox applies, and a 24-unit rect
+renders at 40px, identical to the camelCase version. An svg with no viewBox
+renders 24px, which is what a real failure looks like. The icons were never
+broken.
+
+So "four SVG icons are not scaling" was the third wrong prediction in this
+thread, after the entity repair and the two-h1 miss. All three have one shape:
+a confident claim about what a system does, reasoned rather than run. All three
+were caught by running the thing. The habit is the finding.
+
+### The idempotency floor was wrong, and the generator caught it
+
+The exact-count check shipped with `e.replace.length >= 8` beside it, added as a
+proxy for "distinctive" after the mutation run broke the first draft. It refused
+a finished page the next day: the geq repair replaces with one character, so the
+floor made an already-applied edit unbuildable. Exact count was doing all the
+work already, and the mutation cases prove it, because `'y'` and `'2027'` occur
+far more often than the edit would produce. The floor is gone and two smoke cases
+hold the one-character case open.
+
+`smoke:bodyyear` 39 passed 0 failed; mutation 10 guards live, 0 hollow.
+
+### Still open
+
+Unchanged from the first addendum, minus the viewBox entry, which was not a
+defect: the duplicate h1 is its own issue and needs a restructure rather than a
+year change; five more hub pages need the same pass; two handles carry a stale
+year in the URL; `42 MCQ` is still unverified on two pages.

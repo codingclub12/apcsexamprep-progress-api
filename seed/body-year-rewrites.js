@@ -52,6 +52,25 @@ const PAGES = [
       { count: 1, why: 'FAQ question',
         find: 'When is the 2026 AP Computer Science A exam?',
         replace: 'When is the 2027 AP Computer Science A exam?' },
+      //  ── THE viewBox EDIT IS GONE, AND IT WAS WRONG TWICE ────────────────
+      //  It shipped here on the theory that SVG attributes are case-sensitive,
+      //  so a lowercased `viewbox` meant four icons were not scaling. Both
+      //  halves of that were wrong, and both were settled by running something
+      //  rather than reasoning about it.
+      //
+      //  It CANNOT land. The edit was imported on 2026-09-17 and the page came
+      //  back with all four still lowercased: the sheet sent `viewBox` 4 times
+      //  and the stored body carries `viewbox` 4 times. Shopify lowercases
+      //  attribute names on save, which is also where the lowercasing came from
+      //  in the first place. Re-adding this edit just makes the page read
+      //  PARTIAL forever.
+      //
+      //  It DOES NOT NEED TO. Measured in Chromium against the pre-installed
+      //  build: HTML5 has an "adjust SVG attributes" step for foreign content,
+      //  so a parser maps `viewbox` back to `viewBox`. The attribute reads back
+      //  as `viewBox`, the viewBox applies, and a 24-unit rect renders at 40px,
+      //  identical to the camelCase version. An svg with no viewBox at all
+      //  renders 24px, which is what a real failure would have looked like.
       { count: 1, why: 'the digital-or-paper FAQ answer, found by the generator stale check rather than by reading',
         find: 'The 2026 AP CSA exam is <strong>fully digital</strong>',
         replace: 'The 2027 AP CSA exam is <strong>fully digital</strong>' },
@@ -130,6 +149,15 @@ const PAGES = [
       { count: 1, why: 'JSON-LD application name',
         find: '"name":"AP CSA Score Calculator 2026"',
         replace: '"name":"AP CSA Score Calculator 2027"' },
+      //  MEASURED AFTER THE 2026-09-17 IMPORT, not predicted before it. The
+      //  first version of this file assumed Shopify would repair this on save,
+      //  because docs/shopify-page-imports.md describes a decode-parse-
+      //  reserialize transform. A Matrixify Body HTML MERGE does no such thing:
+      //  the stored body came back byte for byte identical to the sheet cell,
+      //  45400 characters in and 45400 out. So the broken entity survived and
+      //  has to be replaced explicitly.
+      { count: 4, why: 'renders literally as 5&geq;78 on the live page; Shopify stores verbatim and will not fix it',
+        find: '&amp;geq;', replace: '\u2265' },
     ],
   },
   {
@@ -163,8 +191,44 @@ const PAGES = [
       { count: 1, why: 'exam day cell. May 14 is correct for 2027 as well, the year was not',
         find: 'Exam day (May 14, 2026)',
         replace: 'Exam day (May 14, 2027)' },
+      { count: 4, why: 'renders literally as 5&geq;83 on the live page; Shopify stores verbatim and will not fix it',
+        find: '&amp;geq;', replace: '\u2265' },
     ],
   },
 ];
 
-module.exports = { PAGES, EXAM };
+//  ── THE PAGE TITLE FIELD IS THE FIRST H1, AND THE BODY IS THE SECOND ────────
+//  Found on 2026-09-17 by looking at the canary page after importing it. Every
+//  one of these pages renders TWO h1 elements: the theme prints the Shopify
+//  page `Title` field at the top, and the body carries its own underneath.
+//
+//      rendered h1[0]   AP CSA Score Calculator 2026 | Predict Your Exam Score
+//      rendered h1[1]   AP CSA Score Calculator 2027
+//
+//  So a body sheet fixes the SECOND one and leaves the visible heading, and the
+//  one Google reads first, still advertising the exam that has passed. The body
+//  sheet cannot reach it: `Title` is a forbidden column there precisely because
+//  it can rename a page, so it ships as its own small sheet instead.
+//
+//  Changing Title does NOT change the URL. The handle is a separate field and
+//  is not in this sheet at all, so nothing here can move a page or break a link.
+const TITLES = [
+  { handle: 'ap-csa-score-calculator',
+    from: 'AP CSA Score Calculator 2026 | Predict Your Exam Score',
+    to: 'AP CSA Score Calculator 2027 | Predict Your Exam Score',
+    why: 'renders as the first h1 above the body, still reading 2026 after the body import' },
+  { handle: 'ap-csp-score-calculator',
+    from: 'AP CSP Score Calculator 2026 | Predict Your Exam Score',
+    to: 'AP CSP Score Calculator 2027 | Predict Your Exam Score',
+    why: 'renders as the first h1 above the body' },
+  { handle: 'ap-csa-exam-format',
+    from: 'AP Computer Science A Exam Format 2026 - Sections, Timing & Scoring Guide',
+    to: 'AP Computer Science A Exam Format 2027 - Sections, Timing & Scoring Guide',
+    why: 'renders as the first h1 above the body' },
+  { handle: 'ap-csa-reference-sheet',
+    from: 'AP CSA Reference Sheet 2026 - Complete Java Quick Reference Guide',
+    to: 'AP CSA Reference Sheet - Complete Java Quick Reference Guide',
+    why: 'renders as the first h1; drops the year rather than moving it, matching the body h1 and the SEO title' },
+];
+
+module.exports = { PAGES, EXAM, TITLES };
