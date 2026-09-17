@@ -1185,10 +1185,7 @@ STOPTHINK['1.14'] = {
 # that points at a file the teacher actually has in the same folder, rather than
 # by deleting the row: the guided-notes packet and the exit ticket are real
 # documents, and a heading that names one is doing a teacher a service.
-OBJECTIVES_NOTE = (
- 'The objectives above, and the guided-notes packet for this day, '
- 'Guided_Notes/Day{day}_Notes_STUDENT.docx in this lesson folder. The KEY '
- 'alongside it has the same pages filled in.')
-EXIT_NOTE = (
- '{n} items, with the answers and a short why for each in the Exit ticket '
- 'section at the end of this guide. Do not hand that page to students.')
+# Imported rather than defined here: Units 2-4 print the same two rows, and one
+# string in two builders is how the two halves of one bundle start disagreeing
+# about the same folder. See csa_kit/guide_sections.py.
+from csa_kit.guide_sections import OBJECTIVES_NOTE, EXIT_NOTE  # noqa: E402,F401
