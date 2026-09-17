@@ -221,3 +221,43 @@ itself. The repair was careful to re-derive every answer key by running Java
 rather than by reading the explanation. The verifier was not held to the same
 standard: its needles were written by reading the diff and never run against the
 case they describe. **A check is content too, and content gets verified.**
+
+---
+
+## 2026-09-17: board 332, the audit that did not need a leaked sentence
+
+The open item at the top of this note said a wrong key does not need an author to
+think out loud, and that a correctness pass running all 429 items was the only
+thing that would answer "is the question bank right". That pass is done.
+
+**28 of 429 articles are broken. 21 cannot be answered correctly by any student.**
+Full report and the machine-readable results:
+
+    docs/csa-qotd-item-audit-2026-09-17.md
+    docs/csa-qotd-rederive-2026-09-17.json
+    docs/csa-qotd-item-audit-2026-09-17.json
+
+The headline is a family, not a scatter: 19 `unit-2-cycle-2-day-*` articles post
+code that does not belong to their options. Each has an intact un-hyphenated twin
+carrying the same options and the same key with DIFFERENT code, so the code blocks
+were replaced under the original answers at some point. Board 343.
+
+The one that vindicates the method is `ap-csa-u1-c2-day-16-casting-precision-loss`:
+`(int)(19.99 * 100)` is 1998, so it prints `$19.98`, and the page keys `$19.99`.
+No twin, no leaked sentence, no internal contradiction. Only running it finds it.
+Board 344.
+
+### The number worth keeping
+
+The cheap in-page checks, run against the nine bodies known broken on 2026-09-15,
+catch **two**. That is now pinned in `smoke/csa-qotd-item-audit.js` so it cannot
+quietly be assumed to be more.
+
+### And the audit was wrong about itself first
+
+It opened by reporting 30 empty options and 24 duplicate pairs. Almost all of it
+was its own parser stripping a leading "A)" off every option, which on the
+selection items deletes the answer, because there the options ARE the letters.
+0 empty and 7 duplicates after anchoring the read per template, all 7 verified by
+hand. Same lesson as the verifier two days ago, arriving from the other side: the
+checker is content, and content gets verified before it is believed.

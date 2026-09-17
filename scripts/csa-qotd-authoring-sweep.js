@@ -43,8 +43,20 @@ function handles() {
   return out;
 }
 
+//  EVERY failure mode of a single article is caught here, including a THROW.
+//  The first version let one bad fetch take down the whole walk: on 2026-09-17
+//  a transfer failed with a null status code on article 199 of 429 and the
+//  exception unwound out of main(), losing eight minutes of fetching and the
+//  other 230 articles. A sweep over hundreds of pages that cannot survive one
+//  network blip is a sweep nobody can finish.
 function fetchBody(handle) {
+  try { return fetchBodyOnce(handle); }
+  catch (e) { return { error: (e && e.message) || String(e) }; }
+}
+
+function fetchBodyOnce(handle) {
   const r = sf.rawOnce('/blogs/' + BLOG + '/' + handle, {});
+  if (!r || !r.code) return { error: 'no status code came back, so the transfer failed' };
   if (r.code !== '200') return { error: 'fetch ' + r.code };
   if (!sf.looksReal(r.body)) return { error: 'not a rendered page, so nothing it does or does not contain means anything' };
   const e = extractArticle(r.body);

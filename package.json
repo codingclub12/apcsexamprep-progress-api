@@ -320,7 +320,10 @@
     "smoke:qotdrepair": "node smoke/csa-qotd-authoring-repair.js",
     "csa:qotdsweep": "node scripts/csa-qotd-authoring-sweep.js",
     "csa:qotdrepair": "node scripts/csa-qotd-authoring-repair.js",
-    "verify:qotdauthoring": "node scripts/verify-csa-qotd-authoring-live.js"
+    "verify:qotdauthoring": "node scripts/verify-csa-qotd-authoring-live.js",
+    "smoke:qotditems": "node smoke/csa-qotd-item-audit.js",
+    "csa:qotdaudit": "node scripts/csa-qotd-item-audit.js",
+    "csa:qotdrederive": "node scripts/csa-qotd-key-rederive.js"
   },
   "keywords": [],
   "author": "",
