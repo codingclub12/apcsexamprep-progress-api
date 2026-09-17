@@ -70,7 +70,7 @@ is a wrong denominator on a tool a student self-grades against, and
 config/csa-frq-2026.json          the content: questions, rubrics, solutions, FAQ
 lib/csa-past-frq-pages.js         renders four question pages and the year index
 scripts/verify-csa-2026-frq.js    compiles and RUNS every solution, plus mutants
-scripts/csa-past-frq-pages-csv.js the Matrixify sheet, and the nine rules that gate it
+scripts/csa-past-frq-pages-csv.js the Matrixify sheet, and the rules that gate it
 smoke/csa-past-frq-pages.js       npm run smoke:csa2026frq
 ```
 
@@ -116,7 +116,7 @@ on the 25 percent boundary, so `<=` produces correct output on every row the
 question shows you. It is caught here only because the harness runs the
 shampoo bottle, whose second call sits exactly on 10 of 40.
 
-`smoke/csa-past-frq-pages.js` does the same thing to the nineteen sheet rules,
+`smoke/csa-past-frq-pages.js` does the same thing to the twenty sheet rules,
 and asserts on the MESSAGE rather than on the count: a mutation that goes red
 for some other rule is telling you the rule you meant to test is hollow. Two
 controls sit beside them, and the second one earned its place too: the wrapper

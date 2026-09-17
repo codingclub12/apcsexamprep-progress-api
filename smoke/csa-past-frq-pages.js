@@ -193,6 +193,11 @@ fs.rmSync(tmp, { recursive: true, force: true });
 //  test, so the assertion is on the message, not on the count.
 section('7. mutation: every rule broken on purpose, and it must fire by name');
 
+//  Code points to a string, so a fixture never has to be typed as characters.
+function cp() {
+  return String.fromCodePoint.apply(String, Array.prototype.slice.call(arguments));
+}
+
 function mutate(fn) {
   const p = JSON.parse(JSON.stringify(questions[0]));
   p.question = spec.questions[0];
@@ -201,9 +206,22 @@ function mutate(fn) {
 }
 
 const MUTATIONS = [
-  ['non-ASCII byte', (p) => { p.body = p.body.replace('<h2 class="frq-pagetitle">', '<h2 class="frq-pagetitle">é'); }, /non-ASCII/],
-  ['em-dash', (p) => { p.body = p.body.replace('Worked Solution', 'Worked — Solution'); }, /em-dash/],
-  ['mojibake', (p) => { p.body = p.body.replace('Worked Solution', 'Worked â€¢ Solution'); }, /mojibake|non-ASCII/],
+  //  These three fixtures are BUILT from code points rather than typed.
+  //  Writing them as characters puts real mojibake and a real em-dash into this
+  //  file, and npm run smoke:encoding then reports the repository corrupt on the
+  //  strength of its own test data. That happened once here; the bullet below
+  //  went in as an escape and came out of the shell as bytes.
+  ['non-ASCII byte', (p) => { p.body = p.body.replace('<h2 class="frq-pagetitle">', '<h2 class="frq-pagetitle">' + cp(0xe9)); }, /non-ASCII/],
+  ['em-dash', (p) => { p.body = p.body.replace('Worked Solution', 'Worked ' + cp(0x2014) + ' Solution'); }, /em-dash/],
+  //  SINGLE pass: a UTF-8 bullet read as cp1252 and re-encoded. This is the
+  //  depth actually seen on live pages, and a mutation built only from the
+  //  double-pass form goes green against a detector blind to it, which is worse
+  //  than no mutation at all.
+  ['mojibake, single pass', (p) => { p.body = p.body.replace('Worked Solution', 'Worked ' + cp(0xe2, 0x20ac, 0xa2) + ' Solution'); }, /mojibake/],
+  //  DOUBLE pass: the same bullet run through the damage twice. Asserted
+  //  separately, because the two depths look nothing alike and a guard can
+  //  catch either one while missing the other.
+  ['mojibake, double pass', (p) => { p.body = p.body.replace('Worked Solution', 'Worked ' + cp(0xc3, 0xa2, 0xe2, 0x201a, 0xac, 0xc2, 0xa2) + ' Solution'); }, /mojibake/],
   ['mangled title', (p) => { p.title = 'Ap Csa 2026 Frq 1 Account'; }, /title is|lowercases an acronym/],
   ['a JSON-LD block that does not parse', (p) => { p.body = p.body.replace('{"@context":"https://schema.org","@type":"FAQPage"', '{"@context":,"@type":"FAQPage"'); }, /does not parse/],
   ['an HTML entity inside JSON-LD', (p) => { p.body = p.body.replace('"@type":"LearningResource"', '"@type":"Learning&amp;Resource"'); }, /HTML entity/],

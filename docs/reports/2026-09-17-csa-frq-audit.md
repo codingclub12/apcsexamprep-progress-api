@@ -103,8 +103,13 @@ patch, and it is flagged here rather than changed.
 `ap-csa-frq-archive` states **"88 FRQs Total"**, **"Every released exam"** and
 **"45% Of Your AP Score, 36 points, 90 min"**.
 
-- 86 question pages exist, not 88. 2020 had two FRQs rather than four, and the
-  hub counts 22 years times 4.
+- 86 question pages exist, not 88, and the hub's own question links agree with
+  the 86: it lists two for 2020 where every other year has four. 88 is 22 years
+  times 4. Why 2020 has two was NOT established here: the usual COVID-year
+  explanation is plausible and `ap20-frq-computer-science-a.pdf` answers 404, so
+  the count has no first-party source behind it in this session. What is
+  measured is that the hub advertises two pages it does not link and that do not
+  exist.
 - "Every released exam" stopped being true in May 2026.
 - 36 points is the retired section total. The strategy guide, updated
   2026-08-20, already says 25.
@@ -132,10 +137,25 @@ patch, and it is flagged here rather than changed.
 
 ### 8. Links
 
-Better than expected. Across all 117 pages only two page handles are linked that
-are not in the live fixture, and both answer 301 rather than 404, so they
-redirect. The year index pages link to bare `/ap-csa-2014-frq-1-scrambler`
-without the `/pages/` prefix, which also 301s. Nothing is hard-broken.
+Better than expected. Nothing is hard-broken: every internal link across the 117
+pages resolves, and the ones that look wrong are carried by redirects.
+
+    /pages/ap-csa-2025-frq-4-sumorssamegame  301 -> .../ap-csa-2025-frq-4-sumorsame
+    /pages/ap-csa-2020-frq-3                 301 -> .../ap-csa-frq-2020
+    /pages/ap-computer-science-tutor         301 -> .../ap-computer-science-a-tutor
+
+The first is the one to notice. The archive hub links the most recent year's
+question 4 at a **misspelled handle**, `sumorssamegame` for `sumorsame`, and it
+works only because a redirect exists. The year index pages also link bare
+`/ap-csa-2014-frq-1-scrambler` without the `/pages/` prefix, which likewise 301s.
+
+Redirect hops are cheap and they are not free: they cost a round trip on every
+click and they hide the typo that caused them, so the next generated sheet
+inherits it. Worth fixing when the hub is edited for the numbers above, not
+worth an import of its own.
+
+The archive hub links **22 year index pages**, one per year from 2004 to 2025.
+It will need a 23rd.
 
 ### 9. The Java
 
@@ -196,8 +216,8 @@ $ npm run csa:2026frq
   9 of 9 solution run(s) reproduce the question's own examples, 4 of 4 mutants caught
 
 $ npm run smoke:csa2026frq
-  69 passed, 0 failed
-  19 sheet rules broken on purpose, each caught BY NAME; 2 controls stay green
+  70 passed, 0 failed
+  20 sheet rules broken on purpose, each caught BY NAME; 2 controls stay green
 
 $ node scripts/csa-past-frq-pages-csv.js imports/2026-09-17/csa-2026-frq-pages.csv
   wrote 5 page(s), 236 KB of body
@@ -238,6 +258,9 @@ file nobody executes would have shipped that to a student as an answer key.
 - Whether the 2004 to 2013 question TEXT matches the real exams. The Java was
   checked; the prompts were not, and the three `Fish` pages are the reason to
   doubt at least those.
+- How many free-response questions the 2020 exam actually had. College Board's
+  2020 FRQ PDF is not at the URL every other year uses, so this went unverified
+  rather than guessed.
 - Whether the archive should get a generator retro-fitted. That is 86 indexed
   bodies regenerated at once and it needs its own plan.
 - Anything about the 53 lesson FRQ practice pages, which were out of scope.

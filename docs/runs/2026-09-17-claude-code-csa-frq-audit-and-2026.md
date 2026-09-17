@@ -67,7 +67,7 @@ $ npm run csa:2026frq
   9 of 9 solution run(s) reproduce the question's own examples, 4 of 4 mutants caught
 
 $ npm run smoke:csa2026frq
-  69 passed, 0 failed
+  70 passed, 0 failed
 
 $ node scripts/csa-past-frq-pages-csv.js imports/2026-09-17/csa-2026-frq-pages.csv
   wrote 5 page(s), 236 KB of body
@@ -99,7 +99,7 @@ table**, because none of its rows lands on the 25 percent boundary. It is caught
 only because the harness runs the shampoo bottle, whose second call sits exactly
 on 10 of 40.
 
-The same rewrite happened on the sheet rules. Nineteen mutations, each asserting
+The same rewrite happened on the sheet rules. Twenty mutations, each asserting
 on the MESSAGE rather than the count, because a mutation that goes red for a
 different rule is telling you the rule you meant to test is hollow. Two controls
 sit beside them and the second one earned its place: the wrapper rule demanded
@@ -130,3 +130,23 @@ checked and the prompts were not, and three pages across three different years
 are all titled `Fish`, two of them near-duplicates of each other. Whether the
 archive should get a generator retro-fitted over its 86 indexed bodies, which
 needs its own plan.
+
+## One more thing the guards caught, on this branch
+
+`npm run smoke:encoding` went red on **this suite's own test data**. The mojibake
+mutation was written as `â€¢` in a shell heredoc and arrived in the
+file as the bytes themselves, so the repository-wide scan correctly reported
+`smoke/csa-past-frq-pages.js` as corrupt. CLAUDE.md warns about exactly this and
+the warning was not enough; the fixture is built from code points now.
+
+Worth the interruption, because fixing it surfaced a second problem. The
+fixture that landed was the DOUBLE-pass form of a bullet, and the single-pass
+form is the one seen on live pages. A mutation built only from the double-pass
+form goes green against a detector blind to the real bug. There are two
+mutations now, one per depth, asserted separately.
+
+Five other offline suites fail in this container and all five fail identically on
+a clean `origin/main` worktree: `csaunit1guides`, `csaunit1guidesmutation`,
+`csakitstyle`, `deckvoice` and `exercisekeys`, every one of them
+`ModuleNotFoundError` for `python-pptx` or `python-docx`. Environment, not this
+branch. The other 248 pass.
