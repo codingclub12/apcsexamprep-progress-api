@@ -1,0 +1,193 @@
+<div id="qotd-wrapper" style="all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0fdf4; color: #16a34a !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;">
+  <a href="/blogs/ap-csa-daily-practice/ap-csa-u2-c1-day-18-string-building-traversal" class="qotd-nav-btn qotd-nav-prev">← Day 18</a>
+  <a href="/pages/ap-csa-qotd-hub" class="qotd-nav-btn qotd-nav-hub">All Days</a>
+  <a href="/blogs/ap-csa-daily-practice/ap-csa-u2-c1-day-20-nested-loop-counting" class="qotd-nav-btn qotd-nav-next" id="nextDayTop">Day 20 →</a>
+</div>
+<div style="margin-bottom: 20px;">
+  <span class="qotd-unit-badge">Unit 2</span>
+  <span class="qotd-cycle-badge">Foundation (Cycle 1)</span>
+  <span class="qotd-day-badge">Day 19 of 28</span>
+  <span class="qotd-difficulty">Foundation</span>
+</div>
+<h2 style="font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;">Nested Loop Output Pattern</h2>
+<p style="color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;">Section 2.12 — Nested Loops</p>
+<div class="qotd-key-concept">
+  <h3>Key Concept</h3>
+  <p style="line-height: 1.7;">Nested loops have an inner loop that completes all its iterations for each single iteration of the outer loop. If the outer loop runs <code>m</code> times and the inner loop runs <code>n</code> times, the inner body executes <code>m * n</code> times total. Output pattern questions ask you to determine what is printed, which requires tracking both loop variables simultaneously. Draw a table with outer variable values in rows and inner variable values in columns to visualize the pattern.</p>
+</div>
+<div class="qotd-question-box">
+  <p style="font-weight: 600; font-size: 17px; margin-bottom: 16px;">Consider the following code segment.</p>
+  <div class="qotd-code-block">for (int r = 1; r &lt;= 3; r++)
+{
+    for (int c = 1; c &lt;= r; c++)
+    {
+        System.out.print("* ");
+    }
+    System.out.println();
+}</div>
+  <p style="font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;">What is printed as a result of executing the code segment?</p>
+  <form id="qotdForm" onsubmit="return false;">
+    <label class="qotd-option" id="optA">
+      <input type="radio" name="answer" value="A"> (A)   <span style="font-family: Courier New, Courier, monospace; font-size: 14px;">* 
+* * 
+* * * </span>
+    </label>
+    <label class="qotd-option" id="optB">
+      <input type="radio" name="answer" value="B"> (B)   <span style="font-family: Courier New, Courier, monospace; font-size: 14px;">* * * 
+* * * 
+* * * </span>
+    </label>
+    <label class="qotd-option" id="optC">
+      <input type="radio" name="answer" value="C"> (C)   <span style="font-family: Courier New, Courier, monospace; font-size: 14px;">* * * 
+* * 
+* </span>
+    </label>
+    <label class="qotd-option" id="optD">
+      <input type="radio" name="answer" value="D"> (D)   <span style="font-family: Courier New, Courier, monospace; font-size: 14px;">* 
+* 
+* </span>
+    </label>
+
+    <button type="button" class="qotd-submit-btn" id="submitBtn" onclick="checkAnswer()">Check Answer</button>
+  </form>
+  <div id="resultMsg" style="margin-top: 16px; font-weight: 600; font-size: 16px; display: none;"></div>
+</div>
+<div class="qotd-explanation" id="explanation">
+  <h3>Answer: (A) * 
+* * 
+* * * </h3>
+  <p style="line-height:1.7;">r=1: inner loop runs 1 time (c=1), prints <code>"* "</code>. Newline. r=2: inner runs 2 times, prints <code>"* * "</code>. Newline. r=3: inner runs 3 times, prints <code>"* * * "</code>. Triangle pattern.</p>
+  <div class="qotd-why-not">
+    <h4>Why Not the Others?</h4>
+  <p style="line-height: 1.7; margin-bottom: 8px;"><strong>(B)</strong> The inner loop runs <code>c &lt;= r</code> times, not a fixed 3 times. Each row has a different number of stars.</p>
+  <p style="line-height: 1.7; margin-bottom: 8px;"><strong>(C)</strong> This would be an inverted triangle (r going from 3 down to 1), but the outer loop goes from 1 to 3.</p>
+  <p style="line-height: 1.7; margin-bottom: 8px;"><strong>(D)</strong> Each row would have only 1 star if the inner loop always ran once, but it runs r times.</p>
+
+  </div>
+  <div class="qotd-mistake-box">
+    <h4>Common Mistake</h4>
+    <p style="line-height: 1.6;">In nested loops, the inner loop's bounds often depend on the outer loop variable. Here <code>c &lt;= r</code> means row 1 has 1 star, row 2 has 2, row 3 has 3.</p>
+  </div>
+  <div class="qotd-tip-box">
+    <h4>AP Exam Tip</h4>
+    <p style="line-height: 1.6;">For nested loop output questions, trace the outer loop first. For each outer iteration, determine how many times the inner loop runs, then write the output.</p>
+  </div>
+  <div class="qotd-section-ref">
+    <strong>Review this topic:</strong> Section 2.12 — Nested Loops •
+    <a href="/pages/unit-2-selection-and-iteration-ultimate-study-guide" style="color: #5b21b6 !important;">Unit 2 Study Guide</a>
+  </div>
+</div>
+<div class="qotd-more-practice">
+  <h3>More Practice</h3>
+  <div class="qotd-mp-grid">
+    <div class="qotd-mp-card">
+      <h4>Study This Topic</h4>
+      <div class="qotd-mp-link"><a href="/pages/unit-2-selection-and-iteration-ultimate-study-guide">Unit 2 Study Guide →</a></div>
+      <a href="/pages/daily-practice" class="qotd-mp-btn">Daily Practice Hub</a>
+    </div>
+    <div class="qotd-mp-card">
+      <h4>Related FRQs</h4>
+      <div class="qotd-mp-link">
+<a href="/pages/ap-csa-frq-2025">2025 FRQ 1 - DogWalker</a><span class="qotd-mp-tag">Methods &amp; Control</span>
+</div>
+      <div class="qotd-mp-link">
+<a href="/pages/ap-csa-frq-2024">2024 FRQ 1 - Feeder</a><span class="qotd-mp-tag">Methods &amp; Control</span>
+</div>
+      <div class="qotd-mp-link">
+<a href="/pages/ap-csa-frq-2023">2023 FRQ 1 - AppointmentBook</a><span class="qotd-mp-tag">Methods &amp; Control</span>
+</div>
+
+      <div class="qotd-mp-link" style="padding-top: 10px;"><a href="/pages/ap-csa-frqs-by-topic">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+  <a href="/blogs/ap-csa-daily-practice/ap-csa-u2-c1-day-18-string-building-traversal" class="qotd-nav-btn qotd-nav-prev">← Day 18</a>
+  <a href="/pages/ap-csa-qotd-hub" class="qotd-nav-btn qotd-nav-hub">All Days</a>
+  <a href="/blogs/ap-csa-daily-practice/ap-csa-u2-c1-day-20-nested-loop-counting" class="qotd-nav-btn qotd-nav-next" id="nextDayBottom">Day 20 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name="answer"]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'A';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type="radio"]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type="radio"]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style="color: #16a34a !important;">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style="color: #dc2626 !important;">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>

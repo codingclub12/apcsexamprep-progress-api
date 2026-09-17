@@ -2,7 +2,11 @@
 
 Board 332. 2026-09-17. All 429 articles in `ap-csa-daily-practice`.
 
-**28 articles are broken. 21 of them cannot be answered correctly by any student.**
+**27 articles are broken. 21 of them cannot be answered correctly by any student.**
+
+> **Corrected 2026-09-17, later the same day.** This first read 28 and counted
+> `ap-csa-u2-c1-day-19-nested-loop-pattern` among them. That article is fine and
+> the audit was wrong about it. See "The correction" at the foot of this file.
 
 Every finding below was produced by compiling the question's own code and running
 it, never by reading the explanation beside it. That distinction is the whole
@@ -36,7 +40,7 @@ suite goes red and somebody has to say which way.
 
 | | |
 |---|---|
-| re-derived by running the code | 162 agree, 25 flagged |
+| re-derived by running the code | 159 agree, 4 agree with the lines flattened, 24 flagged |
 | not applicable | 179, the stem does not ask what the program prints |
 | not runnable | 63, mostly a class posted with no driver |
 
@@ -44,8 +48,8 @@ suite goes red and somebody has to say which way.
 unjudged. A conceptual item ("which statement about inheritance is true") and a
 `Player` class with no `main` cannot be settled by running anything, and this
 audit says so rather than counting them as passes. That is the residue, and it is
-the honest answer to "is the question bank right": 162 of 429 are now proved
-right, 28 are proved wrong, and 239 are untested by this method.
+the honest answer to "is the question bank right": 163 of 429 are now proved
+right, 27 are proved wrong, and 239 are untested by this method.
 
 ---
 
@@ -113,12 +117,11 @@ page keys the answer a student gets by ignoring precision loss, on the page that
 exists to teach precision loss. This one has no twin, no leaked sentence and no
 internal contradiction: only running it finds it.
 
-## 3. Five articles where two options are both right
+## 3. Four articles where two options are both right
 
 The program's output matches two options, so a student picking the unkeyed twin
 is marked wrong for the correct answer.
 
-    ap-csa-u2-c1-day-19-nested-loop-pattern              prints "* * * * * *"   A and C
     unit-4-cycle-2-day-20-arraylist-remove-with-wrapper  prints "[10, 30, 20]"  A and D
     unit-4-cycle-2-day-5-2d-array-initialization         prints "10"            A and D
     unit4-cycle2-day-20-arraylist-remove-with-wrapper    prints "[10, 30, 20]"  A and D
@@ -173,3 +176,69 @@ cannot classify.
 - The 63 not-runnable are mostly a class with no driver, which is a shape a
   future pass could handle by taking the call out of the stem prose. It would
   need to be as careful as this one about not guessing.
+
+
+---
+
+# The correction
+
+Filed the same day, while repairing these under board 344.
+
+**`ap-csa-u2-c1-day-19-nested-loop-pattern` is not broken.** This report listed it
+as an item with two identical options. Its four options are
+
+    A)  *        B)  * * *      C)  * * *      D)  *
+        * *          * * *          * *            *
+        * * *        * * *          *              *
+
+a growing triangle, a square, a SHRINKING triangle and a column. All four are
+different and the key is right.
+
+The audit's comparison collapsed every run of whitespace, so `A` and `C` both
+became `"* * * * * *"`: the same six stars in a different arrangement, on a
+question whose entire subject is the arrangement.
+
+## What changed, and what it cost
+
+Line structure is now significant when comparing an option against another option
+or against what the program printed. Fixing that overshot in the other direction
+first: the `<h3>Answer: (A) ...</h3>` heading is one line of markup and cannot
+carry an option's line breaks, so holding it to them reported **eight correct
+pages** as heading mismatches. Prose that restates an answer is now compared with
+lines flattened, and options are compared with lines kept. Two comparisons,
+because two different things are being compared.
+
+A third state came out of the same work. Four items print two lines where the
+correct option writes them on one:
+
+    unit-4-cycle-2-day-24-arraylist-null-element   prints "null\n3",  option "null 3"
+    unit-4-cycle-2-day-28-arraylist-equality       prints "false\ntrue", option "false true"
+
+The key is right and the rendering differs. Nothing mechanical can decide which
+the author meant, so those are `agrees-flattened`: counted as correct, named
+separately, and not filed under either "right" or "broken".
+
+## The numbers, before and after
+
+| | first published | corrected |
+|---|---|---|
+| distinct articles broken | 28 | **27** |
+| keys proved correct | 162 | **163** (159 strict, 4 flattened) |
+| two options both right | 5 | **4** |
+| the 19-article drifted family | 19 | 19, unchanged |
+| the casting mis-key | confirmed | confirmed |
+
+Nothing about the headline moved: the drifted family and the `$19.98` mis-key are
+exactly as reported. What moved is one false accusation, withdrawn.
+
+## Why this keeps happening in this direction
+
+Three times now a checker in this line of work has been wrong before the content
+was: the option parser that deleted answers that were single letters, the live
+verifier whose needle spanned a `</span>`, and this. All three read as sensible
+and all three were caught by running them against a case rather than reading
+them. The rule the 2026-09-15 run note arrived at holds: **a check is content,
+and content gets verified before it is believed.** The only reliable version of
+that is a fixture per finding class, which is why
+`smoke/csa-qotd-item-audit.js` now pins the triangle alongside the letter-options
+page.

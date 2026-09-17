@@ -89,8 +89,11 @@ function runJava(code, kind) {
 //  Output and option compared as a reader would see them: whitespace collapsed,
 //  surrounding quotes dropped. Nothing else, because "3.0" and "3" are different
 //  answers and a looser rule would call a wrong key right.
+//  A NEWLINE IS PART OF THE ANSWER. Collapsing them made a growing triangle and
+//  a shrinking one compare equal on day 19 of u2-c1, which is the whole question.
+//  Lines survive; spacing inside a line does not. See lib/csa-qotd-items.js.
 function normOut(s) {
-  return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().replace(/^["'`]|["'`]$/g, '').trim();
+  return I.collapseLines(String(s == null ? '' : s)).replace(/^["'`]|["'`]$/g, '').trim();
 }
 
 //  ONLY A QUESTION THAT ASKS WHAT THE PROGRAM PRINTS CAN BE SETTLED BY PRINTING.
@@ -115,16 +118,35 @@ function audit(item) {
   if (run.state !== 'ran') return run;
 
   const out = normOut(run.stdout);
-  const matches = item.options.filter((o) => normOut(o.text) === out);
   const keyed = item.options.find((o) => o.letter === item.key.value) || null;
 
-  if (matches.length === 0) return { state: 'no-match', stdout: run.stdout, out, keyed: keyed && keyed.text };
-  if (matches.length > 1) return { state: 'ambiguous', out, letters: matches.map((m) => m.letter) };
-  const answer = matches[0];
-  if (answer.letter !== item.key.value) {
-    return { state: 'mismatch', out, should_be: answer.letter, keys: item.key.value, keyed: keyed && keyed.text };
+  //  STRICT FIRST: lines preserved. Ambiguity is only ever judged here, because
+  //  flattening lines makes a growing triangle and a shrinking one identical.
+  const strict = item.options.filter((o) => normOut(o.text) === out);
+  if (strict.length > 1) return { state: 'ambiguous', out, letters: strict.map((m) => m.letter) };
+  if (strict.length === 1) {
+    const answer = strict[0];
+    if (answer.letter !== item.key.value) {
+      return { state: 'mismatch', out, should_be: answer.letter, keys: item.key.value, keyed: keyed && keyed.text };
+    }
+    return { state: 'agrees', out, letter: answer.letter };
   }
-  return { state: 'agrees', out, letter: answer.letter };
+
+  //  THEN FLATTENED, and the result is reported as a weaker thing than agreement.
+  //  unit-4-cycle-2-day-24 prints "null" and "3" on two lines and its correct
+  //  option writes them as "null 3". The key is right and the option renders the
+  //  arrangement differently; nothing here can decide which the author meant, so
+  //  it is named rather than filed under either "correct" or "broken".
+  const flat = (v) => String(v).replace(/\s+/g, ' ').trim();
+  const loose = item.options.filter((o) => flat(normOut(o.text)) === flat(out));
+  if (loose.length === 1) {
+    const answer = loose[0];
+    if (answer.letter !== item.key.value) {
+      return { state: 'mismatch', out, should_be: answer.letter, keys: item.key.value, keyed: keyed && keyed.text };
+    }
+    return { state: 'agrees-flattened', out, letter: answer.letter, option: answer.text };
+  }
+  return { state: 'no-match', stdout: run.stdout, out, keyed: keyed && keyed.text };
 }
 
 function main(argv) {
@@ -152,7 +174,7 @@ function main(argv) {
   });
 
   console.log('\nre-derived ' + files.length + ' items by compiling and running them\n');
-  ['mismatch', 'no-match', 'ambiguous', 'agrees', 'not-runnable', 'not-applicable'].forEach((k) => {
+  ['mismatch', 'no-match', 'ambiguous', 'agrees', 'agrees-flattened', 'not-runnable', 'not-applicable'].forEach((k) => {
     if (tally[k]) console.log('  ' + k.padEnd(14) + String(tally[k]).padStart(4));
   });
 
