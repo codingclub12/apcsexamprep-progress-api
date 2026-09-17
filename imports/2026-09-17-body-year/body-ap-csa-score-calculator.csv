@@ -1,0 +1,694 @@
+﻿"Handle","Command","Body HTML"
+"ap-csa-score-calculator","MERGE","<style>
+:root{--navy:#1E1B4B;--purple:#6B21A8;--mid:#7C3AED;--accent:#A78BFA;
+  --light:#F5F0FF;--lighter:#EDE9FE;--amber:#D97706;--amber-bg:#FFFBEB;
+  --green:#059669;--green-bg:#ECFDF5;--red:#DC2626;--red-bg:#FEF2F2;
+  --g50:#FAFAFA;--g100:#F4F4F5;--g200:#E4E4E7;--g400:#A1A1AA;
+  --g600:#52525B;--g700:#3F3F46;--g800:#27272A;--white:#fff;}
+.sc-wrap{all:initial!important;display:block!important;font-family:Georgia,serif!important;
+  color:var(--g800)!important;max-width:880px!important;margin:0 auto!important;
+  padding:0 16px 72px!important;box-sizing:border-box!important;line-height:1.7!important;}
+.sc-wrap *{box-sizing:border-box!important;}
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+.sc-hero{background:linear-gradient(135deg,#130825 0%,#2E1065 55%,#1E3A5F 100%)!important;
+  border-radius:24px!important;padding:48px 40px 40px!important;margin-bottom:28px!important;color:#fff!important;}
+.sc-hero .eyebrow{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:2px!important;color:#A78BFA!important;margin-bottom:10px!important;display:block!important;}
+.sc-hero h1{font-size:clamp(22px,4vw,34px)!important;font-weight:700!important;color:#fff!important;
+  margin:0 0 10px!important;line-height:1.2!important;}
+.sc-hero .sub{font-size:15px!important;color:rgba(255,255,255,.78)!important;margin:0 0 20px!important;line-height:1.6!important;}
+.sc-hero .badges{display:flex!important;flex-wrap:wrap!important;gap:8px!important;}
+.badge{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.18)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;padding:4px 12px!important;border-radius:20px!important;
+  font-size:12px!important;font-weight:600!important;}
+.how-box{background:#FFFBEB!important;border-left:4px solid #D97706!important;
+  border-radius:0 12px 12px 0!important;padding:16px 20px!important;margin-bottom:24px!important;}
+.how-label{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1.5px!important;color:#D97706!important;margin-bottom:6px!important;display:block!important;}
+.how-box p{margin:0!important;font-size:14px!important;color:var(--g700)!important;}
+.calc-card{background:#fff!important;border:1px solid var(--g200)!important;border-radius:16px!important;
+  padding:32px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,.08)!important;}
+.calc-card h2{font-size:18px!important;font-weight:700!important;color:var(--navy)!important;
+  margin:0 0 24px!important;padding-bottom:12px!important;border-bottom:2px solid var(--lighter)!important;}
+.sl-row{margin-bottom:28px!important;}
+.sl-header{display:flex!important;justify-content:space-between!important;align-items:baseline!important;margin-bottom:8px!important;}
+.sl-label{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;}
+.sl-sub{font-size:12px!important;color:var(--g400)!important;}
+.sl-value{font-size:26px!important;font-weight:700!important;color:var(--purple)!important;}
+input[type=range]{-webkit-appearance:none!important;appearance:none!important;width:100%!important;
+  height:8px!important;background:var(--g200)!important;border-radius:4px!important;outline:none!important;
+  cursor:pointer!important;margin:4px 0!important;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none!important;width:24px!important;height:24px!important;
+  border-radius:50%!important;background:var(--purple)!important;cursor:pointer!important;
+  border:3px solid #fff!important;box-shadow:0 2px 6px rgba(109,40,217,.4)!important;}
+.sl-ticks{display:flex!important;justify-content:space-between!important;font-size:11px!important;
+  color:var(--g400)!important;margin-top:4px!important;}
+.comp-section{background:var(--lighter)!important;border-radius:12px!important;
+  padding:20px 24px!important;margin-bottom:24px!important;}
+.comp-row{display:flex!important;justify-content:space-between!important;align-items:center!important;
+  margin-bottom:12px!important;flex-wrap:wrap!important;gap:8px!important;}
+.comp-label{font-size:12px!important;font-weight:700!important;color:var(--navy)!important;
+  text-transform:uppercase!important;letter-spacing:1px!important;}
+.comp-num-big{font-size:36px!important;font-weight:700!important;color:var(--purple)!important;}
+.comp-max{font-size:14px!important;color:var(--g400)!important;}
+.bar-track{background:var(--g200)!important;border-radius:4px!important;height:14px!important;overflow:hidden!important;margin-bottom:6px!important;}
+.bar-fill{height:100%!important;border-radius:4px!important;transition:width .3s ease,background .3s!important;}
+.bar-labels{display:flex!important;justify-content:space-between!important;font-size:11px!important;color:var(--g400)!important;}
+.score-result{border-radius:16px!important;padding:28px!important;margin-bottom:24px!important;
+  transition:all .3s!important;border:2px solid transparent!important;}
+.sr-top{display:flex!important;align-items:center!important;gap:20px!important;margin-bottom:14px!important;flex-wrap:wrap!important;}
+.sr-num{font-size:80px!important;font-weight:700!important;line-height:1!important;}
+.sr-meta h3{font-size:20px!important;font-weight:700!important;margin:0 0 4px!important;}
+.sr-meta p{margin:0!important;font-size:14px!important;color:var(--g600)!important;}
+.sr-tip{font-size:14px!important;color:var(--g700)!important;line-height:1.7!important;}
+.score-table{width:100%!important;border-collapse:collapse!important;font-size:14px!important;margin-bottom:24px!important;}
+.score-table th{background:var(--navy)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  padding:10px 14px!important;text-align:left!important;font-size:11px!important;
+  text-transform:uppercase!important;letter-spacing:.5px!important;}
+.score-table td{padding:10px 14px!important;border-bottom:1px solid var(--g200)!important;color:var(--g700)!important;}
+.score-table tr:nth-child(even) td{background:var(--g50)!important;}
+.score-table tr.active-row td{background:var(--lighter)!important;font-weight:700!important;}
+.s-badge{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:2px 10px!important;border-radius:12px!important;}
+.s5b{background:#DCFCE7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.s4b{background:#DBEAFE!important;color:#1E40AF!important;-webkit-text-fill-color:#1E40AF!important;}
+.s3b{background:#FEFCE8!important;color:#713F12!important;-webkit-text-fill-color:#713F12!important;}
+.s2b{background:#FEF3C7!important;color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+.s1b{background:#FEE2E2!important;color:#991B1B!important;-webkit-text-fill-color:#991B1B!important;}
+.dist-section{margin-bottom:24px!important;}
+.dist-section h3{font-size:16px!important;font-weight:700!important;color:var(--navy)!important;margin:0 0 14px!important;}
+.dist-row{display:flex!important;align-items:center!important;gap:12px!important;margin-bottom:8px!important;}
+.dist-score{width:20px!important;font-size:14px!important;font-weight:700!important;text-align:right!important;flex-shrink:0!important;}
+.dist-bar-wrap{flex:1!important;}
+.dist-bar{height:28px!important;border-radius:4px!important;transition:width .4s!important;
+  display:flex!important;align-items:center!important;padding:0 8px!important;}
+.dist-bar-label{font-size:12px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;white-space:nowrap!important;}
+.dist-pct{font-size:13px!important;font-weight:700!important;width:36px!important;text-align:right!important;flex-shrink:0!important;}
+.path-box{background:linear-gradient(135deg,var(--navy),#2E1065)!important;border-radius:16px!important;
+  padding:28px 32px!important;margin-bottom:24px!important;color:#fff!important;}
+.path-box h3{font-size:18px!important;font-weight:700!important;color:#fff!important;margin:0 0 16px!important;}
+.path-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;}
+.path-item{background:rgba(255,255,255,.08)!important;border-radius:12px!important;padding:16px!important;}
+.pi-label{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1px!important;color:#A78BFA!important;margin-bottom:4px!important;}
+.pi-val{font-size:20px!important;font-weight:700!important;color:#fff!important;}
+.pi-sub{font-size:12px!important;color:rgba(255,255,255,.6)!important;margin-top:2px!important;}
+.callout-info{background:#F0F9FF!important;border-left:4px solid #0EA5E9!important;
+  border-radius:0 8px 8px 0!important;padding:14px 18px!important;margin:16px 0!important;
+  font-size:14px!important;color:var(--g700)!important;}
+.callout-warn{background:#FFFBEB!important;border-left:4px solid #D97706!important;
+  border-radius:0 8px 8px 0!important;padding:14px 18px!important;margin:16px 0!important;
+  font-size:14px!important;color:var(--g700)!important;}
+.callout-warn strong,.callout-info strong{display:block!important;margin-bottom:4px!important;font-size:12px!important;
+  text-transform:uppercase!important;letter-spacing:.5px!important;}
+.callout-warn strong{color:#92400E!important;}
+.callout-info strong{color:#0369A1!important;}
+.tutor-cta{background:linear-gradient(135deg,#1E0D40,#2E1065,#1E3A5F)!important;border-radius:16px!important;
+  padding:28px 32px!important;margin:28px 0!important;display:flex!important;align-items:center!important;
+  gap:24px!important;flex-wrap:wrap!important;border:1px solid rgba(167,139,250,.2)!important;}
+.tutor-cta strong{display:block!important;color:#A78BFA!important;-webkit-text-fill-color:#A78BFA!important;font-size:16px!important;margin-bottom:6px!important;}
+.tutor-cta p{color:rgba(255,255,255,.72)!important;-webkit-text-fill-color:rgba(255,255,255,.72)!important;font-size:14px!important;margin:0!important;}
+.tutor-btn{display:inline-block!important;background:#fff!important;color:var(--purple)!important;
+  -webkit-text-fill-color:var(--purple)!important;padding:12px 24px!important;border-radius:8px!important;
+  font-weight:700!important;font-size:14px!important;text-decoration:none!important;white-space:nowrap!important;flex-shrink:0!important;}
+.tutor-btn:link,.tutor-btn:visited{color:var(--purple)!important;-webkit-text-fill-color:var(--purple)!important;text-decoration:none!important;}
+.related-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))!important;gap:12px!important;margin-top:12px!important;}
+.related-card{display:block!important;padding:14px 16px!important;border:1px solid var(--lighter)!important;
+  border-radius:8px!important;text-decoration:none!important;border-left:3px solid var(--purple)!important;}
+.related-card:hover{background:var(--lighter)!important;}
+.related-card:link,.related-card:visited{color:inherit!important;text-decoration:none!important;}
+.rc-label{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:.8px!important;color:var(--purple)!important;margin-bottom:4px!important;}
+.rc-title{font-size:13px!important;font-weight:700!important;color:var(--navy)!important;line-height:1.4!important;}
+.author-box{background:linear-gradient(135deg,#130825,#2E1065)!important;border-radius:16px!important;
+  padding:24px 28px!important;margin:24px 0!important;display:flex!important;gap:16px!important;
+  align-items:flex-start!important;flex-wrap:wrap!important;}
+.author-avatar{width:60px!important;height:60px!important;border-radius:50%!important;background:var(--purple)!important;
+  flex-shrink:0!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  font-size:20px!important;font-weight:700!important;color:#fff!important;border:2px solid #A78BFA!important;}
+.author-name{font-size:16px!important;font-weight:700!important;color:#fff!important;margin:0 0 2px!important;}
+.author-role{font-size:11px!important;color:#A78BFA!important;-webkit-text-fill-color:#A78BFA!important;font-weight:700!important;
+  text-transform:uppercase!important;letter-spacing:.7px!important;margin-bottom:8px!important;}
+.author-bio{font-size:13px!important;color:rgba(255,255,255,.75)!important;margin:0 0 10px!important;line-height:1.55!important;}
+.author-stats{display:flex!important;flex-wrap:wrap!important;gap:8px!important;}
+.astat{background:rgba(255,255,255,.1)!important;border-radius:20px!important;padding:3px 10px!important;
+  font-size:11px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:500!important;}
+.breadcrumb{font-size:13px!important;color:var(--g400)!important;margin-bottom:16px!important;
+  display:flex!important;flex-wrap:wrap!important;gap:4px!important;}
+.breadcrumb a{color:var(--purple)!important;-webkit-text-fill-color:var(--purple)!important;text-decoration:none!important;}
+.bc-sep{color:var(--g200)!important;}
+.faq-list{list-style:none!important;padding:0!important;margin:0!important;}
+.faq-item{border:1px solid var(--g200)!important;border-radius:12px!important;margin-bottom:12px!important;overflow:hidden!important;}
+.faq-q{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;padding:16px 20px!important;
+  cursor:pointer!important;display:flex!important;justify-content:space-between!important;align-items:center!important;gap:12px!important;}
+.faq-q:hover{background:var(--g50)!important;}
+.faq-chev{font-size:12px!important;color:var(--g400)!important;transition:transform .2s!important;flex-shrink:0!important;}
+.faq-a{display:none!important;padding:0 20px 16px!important;font-size:14px!important;color:var(--g600)!important;line-height:1.7!important;}
+.faq-a.open{display:block!important;}
+.faq-item.open .faq-chev{transform:rotate(180deg)!important;}
+h2.section-h{font-size:20px!important;font-weight:700!important;color:var(--navy)!important;margin:32px 0 14px!important;
+  padding-bottom:10px!important;border-bottom:2px solid var(--lighter)!important;}
+.section-p{font-size:15px!important;color:var(--g700)!important;line-height:1.7!important;margin:0 0 14px!important;}
+@media(max-width:600px){
+  .sc-hero{padding:28px 20px!important;}
+  .calc-card{padding:20px!important;}
+  .path-grid{grid-template-columns:1fr!important;}
+  .tutor-cta{flex-direction:column!important;}
+  .sr-num{font-size:56px!important;}
+}
+</style>
+
+<div class=""sc-wrap"" id=""csa-calc-wrapper"">
+
+<div class=""breadcrumb"">
+  <a href=""/"">Home</a><span class=""bc-sep""> › </span>
+  <a href=""/pages/ap-csa-exam-prep-hub"">AP Computer Science A</a><span class=""bc-sep""> › </span>
+  <span>Score Calculator</span>
+</div>
+
+<div class=""sc-hero"">
+  <span class=""eyebrow"">AP Computer Science A</span>
+  <h1>AP CSA Score Calculator 2027</h1>
+  <p class=""sub"">Enter your MCQ and FRQ scores for an instant AP score estimate — built on the 2022 released scoring worksheet and 2020–2025 score distributions.</p>
+  <div class=""badges"">
+    <span class=""badge"">42 MCQ • 55%</span>
+    <span class=""badge"">4 FRQ • 45%</span>
+    <span class=""badge"">Digital via Bluebook</span>
+    <span class=""badge"">2025 Data</span>
+    <span class=""badge"">Instant Results</span>
+  </div>
+</div>
+
+<div class=""how-box"">
+  <span class=""how-label"">How This Calculator Works</span>
+  <p>Your composite score = <strong>(MCQ correct ÷ 42) × 55</strong> + <strong>(FRQ points ÷ 36) × 45</strong>. The composite (0–100) is then mapped to an AP score (1–5) using thresholds derived from the College Board’s 2022 released scoring worksheet, cross-referenced with 2020–2025 score distributions. College Board does not publish exact cutoffs; these are the best available public estimates.</p>
+</div>
+
+<div class=""calc-card"">
+  <h2>Enter Your Scores</h2>
+  
+  <div class=""sl-row"">
+    <div class=""sl-header"">
+      <div>
+        <div class=""sl-label"">Section 1: Multiple Choice</div>
+        <div class=""sl-sub"">42 questions • 55% of exam • no penalty for guessing</div>
+      </div>
+      <div class=""sl-value"">
+<span id=""csa-mcq-val"">30</span> / 42</div>
+    </div>
+    <input type=""range"" id=""csa-mcq"" min=""0"" max=""42"" value=""30"" oninput=""csaCalc()"">
+    <div class=""sl-ticks"">
+<span>0</span><span>10</span><span>21</span><span>32</span><span>42</span>
+</div>
+  </div>
+  
+  <div class=""sl-row"">
+    <div class=""sl-header"">
+      <div>
+        <div class=""sl-label"">Section 2: Free Response</div>
+        <div class=""sl-sub"">4 questions × 9 pts each = 36 pts • 45% of exam</div>
+      </div>
+      <div class=""sl-value"">
+<span id=""csa-frq-val"">18</span> / 36</div>
+    </div>
+    <input type=""range"" id=""csa-frq"" min=""0"" max=""36"" value=""18"" oninput=""csaCalc()"">
+    <div class=""sl-ticks"">
+<span>0</span><span>9</span><span>18</span><span>27</span><span>36</span>
+</div>
+  </div>
+  
+  <div class=""comp-section"">
+    <div class=""comp-row"">
+      <div class=""comp-label"">Composite Score</div>
+      <div>
+<span class=""comp-num-big"" id=""csa-comp"">--</span><span class=""comp-max""> / 100</span>
+</div>
+    </div>
+    <div class=""bar-track""><div class=""bar-fill"" id=""csa-bar"" style=""width:0%;background:#6B21A8;""></div></div>
+    <div class=""bar-labels"">
+<span>0</span><span>35 (2)</span><span>46 (3)</span><span>59 (4)</span><span>78 (5)</span><span>100</span>
+</div>
+  </div>
+</div>
+
+<div class=""score-result"" id=""csa-result"" style=""background:#F5F3FF;border-color:#DDD6FE;"">
+  <div class=""sr-top"">
+    <div class=""sr-num"" id=""csa-grade-num"" style=""color:#6B21A8;"">--</div>
+    <div class=""sr-meta"">
+      <h3 id=""csa-grade-label"" style=""color:#1E1B4B;"">Enter your scores above</h3>
+      <p id=""csa-grade-desc"">Adjust the sliders to see your estimated AP score.</p>
+    </div>
+  </div>
+  <p class=""sr-tip"" id=""csa-grade-tip""></p>
+</div>
+
+<div class=""path-box"">
+  <h3>Realistic Path to a 5 in 2027</h3>
+  <div class=""path-grid"">
+    <div class=""path-item"">
+      <div class=""pi-label"">MCQ Target</div>
+      <div class=""pi-val"">35+ / 42 correct</div>
+      <div class=""pi-sub"">83% accuracy → ~45.8 composite pts</div>
+    </div>
+    <div class=""path-item"">
+      <div class=""pi-label"">FRQ Target</div>
+      <div class=""pi-val"">26+ / 36 points</div>
+      <div class=""pi-sub"">72% of points → ~32.5 composite pts</div>
+    </div>
+    <div class=""path-item"">
+      <div class=""pi-label"">Combined</div>
+      <div class=""pi-val"">~78 composite</div>
+      <div class=""pi-sub"">Estimated 5 threshold</div>
+    </div>
+    <div class=""path-item"">
+      <div class=""pi-label"">2025 Result</div>
+      <div class=""pi-val"">25.5% earned a 5</div>
+      <div class=""pi-sub"">93,906 students tested</div>
+    </div>
+  </div>
+</div>
+
+<h2 class=""section-h"">AP CSA College Credit</h2>
+<p class=""section-p"">Many colleges and universities award credit or advanced placement for AP Computer Science A scores of 3, 4, or 5. Credit policies vary significantly by school — some award introductory CS credit for a 3, while highly selective programs may require a 4 or 5. Always check your specific school’s AP credit policy before making enrollment decisions.</p>
+<table class=""score-table"">
+  <thead><tr>
+<th>AP Score</th>
+<th>Typical Credit Outcome</th>
+<th>Notes</th>
+</tr></thead>
+  <tbody>
+    <tr>
+<td><span class=""s-badge s5b"">5</span></td>
+<td>Credit for CS1 + often CS2 or advanced placement into CS2</td>
+<td>Accepted by virtually all schools that grant CS AP credit. Equivalent to intro CS sequence.</td>
+</tr>
+    <tr>
+<td><span class=""s-badge s4b"">4</span></td>
+<td>Credit for CS1 (intro programming course)</td>
+<td>Accepted by most schools. Equivalent to one semester of introductory programming.</td>
+</tr>
+    <tr>
+<td><span class=""s-badge s3b"">3</span></td>
+<td>Credit at many schools; some require 4+</td>
+<td>Check your school’s specific policy. Selective CS programs often require 4 or 5 for credit.</td>
+</tr>
+    <tr>
+<td><span class=""s-badge s2b"">2</span></td>
+<td>Generally no credit</td>
+<td>Consider retaking or demonstrating proficiency through coursework.</td>
+</tr>
+    <tr>
+<td><span class=""s-badge s1b"">1</span></td>
+<td>No credit</td>
+<td></td>
+</tr>
+  </tbody>
+</table>
+<div class=""callout-info"">
+  <strong>Search the Official AP Credit Database</strong>
+  College Board maintains a database of credit policies for over 1,000 colleges. Search by school to see exact score requirements and credit hours awarded: <a href=""https://apstudents.collegeboard.org/getting-credit-placement/search-policies"" target=""_blank"" rel=""noopener"" style=""color:#1D4ED8!important;font-weight:700!important;"">College Board AP Credit Policy Search →</a>
+</div>
+<h2 class=""section-h"">Estimated AP Score Cutoffs (2027)</h2>
+<p class=""section-p"">College Board does not publish exact composite-to-AP-score conversion thresholds. The estimates below are derived from the <strong>2022 released scoring worksheet</strong> and cross-referenced with five years of score distributions (2020–2025). Treat these as well-grounded approximations, not official cutoffs. Cutoffs can shift by 1–3 composite points year to year based on exam difficulty.</p>
+
+<table class=""score-table"" id=""csa-cuts-table"">
+  <thead><tr>
+<th>AP Score</th>
+<th>Qualifier</th>
+<th>Estimated Composite</th>
+<th>Typical MCQ / FRQ</th>
+</tr></thead>
+  <tbody>
+    <tr id=""cut5"">
+<td><span class=""s-badge s5b"">5</span></td>
+<td>Extremely Well Qualified</td>
+<td>78 – 100</td>
+<td>35+ MCQ / 26+ FRQ pts</td>
+</tr>
+    <tr id=""cut4"">
+<td><span class=""s-badge s4b"">4</span></td>
+<td>Well Qualified</td>
+<td>59 – 77</td>
+<td>27–34 MCQ / 19–25 FRQ pts</td>
+</tr>
+    <tr id=""cut3"">
+<td><span class=""s-badge s3b"">3</span></td>
+<td>Qualified</td>
+<td>46 – 58</td>
+<td>21–26 MCQ / 15–18 FRQ pts</td>
+</tr>
+    <tr id=""cut2"">
+<td><span class=""s-badge s2b"">2</span></td>
+<td>Possibly Qualified</td>
+<td>35 – 45</td>
+<td>16–20 MCQ / 11–14 FRQ pts</td>
+</tr>
+    <tr id=""cut1"">
+<td><span class=""s-badge s1b"">1</span></td>
+<td>No Recommendation</td>
+<td>0 – 34</td>
+<td>Below 16 MCQ</td>
+</tr>
+  </tbody>
+</table>
+
+<div class=""callout-warn"">
+  <strong>Important Note on Accuracy</strong>
+  These cutoffs are estimates. College Board sets the exact thresholds after the Reading using evidence-based standard setting. The cutoff for a 5 has ranged from approximately 75–82 composite across 2020–2025. Use this calculator to guide your preparation, not as a guarantee.
+</div>
+
+<h2 class=""section-h"">2025 National Score Distribution</h2>
+<p class=""section-p"">Source: College Board official score distribution report, May 2025 (93,906 students). Mean score: 3.18. Pass rate (3+): 67.0%.</p>
+
+<div style=""margin-bottom:24px!important;"">
+  <div class=""dist-row"">
+<div class=""dist-score"">5</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:25.5%;background:#16A34A;""><span class=""dist-bar-label"">25.5%</span></div></div>
+<div class=""dist-pct"">25.5%</div>
+</div>
+  <div class=""dist-row"">
+<div class=""dist-score"">4</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:21.8%;background:#2563EB;""><span class=""dist-bar-label"">21.8%</span></div></div>
+<div class=""dist-pct"">21.8%</div>
+</div>
+  <div class=""dist-row"">
+<div class=""dist-score"">3</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:19.8%;background:#CA8A04;""><span class=""dist-bar-label"">19.8%</span></div></div>
+<div class=""dist-pct"">19.8%</div>
+</div>
+  <div class=""dist-row"">
+<div class=""dist-score"">2</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:10.9%;background:#EA580C;""><span class=""dist-bar-label"">10.9%</span></div></div>
+<div class=""dist-pct"">10.9%</div>
+</div>
+  <div class=""dist-row"">
+<div class=""dist-score"">1</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:22.1%;background:#DC2626;""><span class=""dist-bar-label"">22.1%</span></div></div>
+<div class=""dist-pct"">22.1%</div>
+</div>
+</div>
+
+<div class=""callout-info"">
+  <strong>Why the bimodal distribution?</strong>
+  AP CSA has an unusually high proportion of both 1s and 5s. Students with prior Java or programming experience often find the exam manageable; students with no programming background can struggle significantly. If you’re self-studying, target Unit 2 (selection and iteration) first — it’s the highest-weight content and the most accessible entry point.
+</div>
+
+<h2 class=""section-h"">Is Your AP CSA Score Good?</h2>
+<div class=""callout-info"" style=""margin-bottom:16px!important;"">
+  <strong>Is a 5 Good on AP CSA?</strong>
+  Yes — a 5 is excellent. Only 25.5% of the 93,906 students who took AP CSA in 2025 scored a 5. Nationally, a 5 demonstrates mastery equivalent to an A in a college-level CS1 course. Nearly every university that grants AP CS credit awards the maximum benefit for a 5, often including placement into CS2 or above.
+</div>
+<div class=""callout-info"" style=""margin-bottom:16px!important;"">
+  <strong>Is a 4 Good on AP CSA?</strong>
+  Yes — a 4 is strong. In 2025, 21.8% of test-takers scored a 4. It is ""Well Qualified"" per College Board standards and earns introductory CS credit at most universities. A 4 demonstrates solid command of Java fundamentals, OOP concepts, and data structures. Most students with a 4 needed 27–34 MCQ correct and solid FRQ performance.
+</div>
+<div class=""callout-info"" style=""margin-bottom:16px!important;"">
+  <strong>Is a 3 Good on AP CSA?</strong>
+  A 3 is passing and ""Qualified"" per College Board. In 2025, 19.8% of students scored a 3. It earns credit at many schools, though selective CS programs often require a 4 or 5. A 3 means you demonstrated competency across core Java concepts. If your target school requires a 4+, use a 3 as motivation — the gap is bridgeable with focused preparation in the specific FRQ types you missed.
+</div>
+<h2 class=""section-h"">Common FRQ Scores Needed for a 5</h2>
+<p class=""section-p"">Students frequently ask what FRQ score they need to guarantee a 5. The answer depends on MCQ performance, but here are realistic combinations based on the estimated cutoff of 78 composite:</p>
+<table class=""score-table"">
+  <thead><tr>
+<th>MCQ Correct</th>
+<th>MCQ Composite Pts</th>
+<th>FRQ Pts Needed</th>
+<th>FRQ / 36</th>
+<th>Result</th>
+</tr></thead>
+  <tbody>
+    <tr>
+<td>42 / 42 (100%)</td>
+<td>55.0</td>
+<td>23+ / 36</td>
+<td>64%</td>
+<td><span class=""s-badge s5b"">5</span></td>
+</tr>
+    <tr>
+<td>38 / 42 (90%)</td>
+<td>49.8</td>
+<td>26+ / 36</td>
+<td>72%</td>
+<td><span class=""s-badge s5b"">5</span></td>
+</tr>
+    <tr>
+<td>35 / 42 (83%)</td>
+<td>45.8</td>
+<td>26+ / 36</td>
+<td>72%</td>
+<td><span class=""s-badge s5b"">5</span></td>
+</tr>
+    <tr>
+<td>32 / 42 (76%)</td>
+<td>41.9</td>
+<td>29+ / 36</td>
+<td>81%</td>
+<td><span class=""s-badge s5b"">5</span></td>
+</tr>
+    <tr>
+<td>28 / 42 (67%)</td>
+<td>36.7</td>
+<td>32+ / 36</td>
+<td>89%</td>
+<td><span class=""s-badge s5b"">5 (very hard)</span></td>
+</tr>
+  </tbody>
+</table>
+<div class=""callout-warn"">
+  <strong>Key Insight</strong>
+  The most common path to a 5 is 35+ MCQ correct (83%+) with 26+ FRQ points (72%+). Students who aim for 38+ MCQ give themselves a buffer that allows a slightly lower FRQ score. Practicing 2D array traversals and class writing under timed conditions is the highest-leverage FRQ preparation for 5-seekers.
+</div>
+<h2 class=""section-h"">AP CSA Exam Format (2026–2027)</h2>
+<table class=""score-table"">
+  <thead><tr>
+<th>Section</th>
+<th>Questions</th>
+<th>Time</th>
+<th>Weight</th>
+<th>Details</th>
+</tr></thead>
+  <tbody>
+    <tr>
+<td><strong>MCQ</strong></td>
+<td>42 questions</td>
+<td>90 min</td>
+<td>55%</td>
+<td>Digital via Bluebook. No penalty for guessing. Covers all 4 units.</td>
+</tr>
+    <tr>
+<td><strong>FRQ Q1</strong></td>
+<td>9 points</td>
+<td rowspan=""4"">90 min</td>
+<td rowspan=""4"">45%</td>
+<td>Methods &amp; Control Structures</td>
+</tr>
+    <tr>
+<td><strong>FRQ Q2</strong></td>
+<td>9 points</td>
+<td>Class Writing</td>
+</tr>
+    <tr>
+<td><strong>FRQ Q3</strong></td>
+<td>9 points</td>
+<td>Array / ArrayList (ArrayList only since 2025 CED)</td>
+</tr>
+    <tr>
+<td><strong>FRQ Q4</strong></td>
+<td>9 points</td>
+<td>2D Array</td>
+</tr>
+  </tbody>
+</table>
+
+<div class=""callout-info"">
+  <strong>2027 Exam Date</strong>
+  AP Computer Science A exam: <strong>Wednesday, May 12, 2027.</strong> Administered digitally through the Bluebook app. Java Quick Reference is provided. No penalty for wrong answers on MCQ.
+</div>
+
+<div class=""tutor-cta"">
+<div>
+<strong>Want to push from a 4 to a 5 on AP CSA?</strong>
+<p>1-on-1 sessions with Tanner Crow — AP CS teacher, 5.0 Wyzant rating, 2,067+ hours. One targeted session can move your score on the hardest FRQ types.</p>
+</div>
+<a href=""/pages/ap-computer-science-a-tutor"" class=""tutor-btn"">Book a Session →</a>
+</div>
+
+<h2 class=""section-h"">How Accurate Is This AP CSA Score Calculator?</h2>
+<p class=""section-p"">This is a common and fair question. Here is an honest answer:</p>
+<div class=""callout-info"">
+  <strong>What This Calculator Gets Right</strong>
+  The scoring formula — (MCQ/42 × 55) + (FRQ/36 × 45) — is confirmed by the College Board’s 2022 released AP CSA scoring worksheet and the CED. This math is accurate. The 2025 score distribution data is official, sourced directly from College Board’s published score report (N=93,906 students).
+</div>
+<div class=""callout-warn"">
+  <strong>What This Calculator Cannot Get Exactly Right</strong>
+  <ul style=""margin:8px 0!important;padding-left:20px!important;line-height:2!important;"">
+    <li>College Board does not publish exact composite-to-AP-score conversion thresholds. The cutoffs (5&amp;geq;78, 4&amp;geq;59, 3&amp;geq;46, 2&amp;geq;35) are derived from the 2022 released worksheet and cross-referenced with 5 years of score distribution data — they are estimates, not official values.</li>
+    <li>Cutoffs shift slightly each year (typically ±1–3 composite points) based on exam difficulty and standard-setting decisions made after the AP Reading.</li>
+    <li>This calculator cannot account for individual question weighting, reading difficulty adjustments, or raw-to-scaled score conversions if College Board applies them in a given year.</li>
+  </ul>
+  <strong style=""color:#92400E!important;"">Bottom line:</strong> Use this calculator to set practice goals and identify the MCQ/FRQ score combinations you need to target. Do not treat the exact composite number as a guaranteed AP score outcome.
+</div>
+<h2 class=""section-h"">Frequently Asked Questions</h2>
+<ul class=""faq-list"">
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">How accurate is this AP CSA score calculator?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">This calculator is built on the 2022 College Board released AP CSA scoring worksheet and cross-referenced with official score distributions from 2020–2025. The composite formula (MCQ weight 55%, FRQ weight 45%) is confirmed by the CED. The score cutoffs are estimates — College Board does not publish exact thresholds, and they shift slightly each year based on exam difficulty and reader calibration. Treat results as directionally accurate within ±1–3 composite points.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">What is a good AP CSA score?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">A 3 or higher is considered passing and ""qualified"" by College Board standards. In 2025, 67.0% of students scored 3 or higher. A 4 or 5 earns credit at most universities. A 5 (earned by 25.5% of test-takers in 2025) demonstrates mastery comparable to an A in a college CS1 course. Most selective colleges award credit starting at a 4; check your specific school’s AP credit policy.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">Is there a penalty for guessing on the AP CSA MCQ?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">No. Since 2011, College Board eliminated the wrong-answer penalty on AP MCQ. Every unanswered question earns 0; every correct answer earns full credit; wrong answers also earn 0. Always answer every question — eliminate obvious wrong choices and guess from the remaining options if unsure.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">What are the four AP CSA FRQ types?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">The four FRQ types appear on every AP CSA exam in the same order: Q1 = Methods and Control Structures (implementing methods with conditionals and loops); Q2 = Class Writing (designing a complete class from a specification); Q3 = Array/ArrayList (manipulating one-dimensional collections — ArrayList only per the 2025–2026 CED update); Q4 = 2D Array (working with two-dimensional data). Each question is worth 9 points.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">How is the AP CSA composite score calculated?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">Composite = (MCQ correct ÷ 42) × 55 + (FRQ points earned ÷ 36) × 45. This gives a composite score from 0 to 100. College Board then applies a conversion table (which varies slightly each year) to map the composite to an AP score of 1–5.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">When are AP CSA scores released in 2027?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">AP scores are typically released in mid-July. Based on recent years, 2027 AP scores are expected in the second week of July 2027. Students receive an email from College Board and can view scores through their AP Student account at collegeboard.org.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">What is the hardest FRQ type on AP CSA?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">Per 2025 AP CSA data shared by College Board, 2D arrays were the lowest-scoring FRQ area. Class Writing (Q2) is often underestimated — students must write all method headers, implement logic, and handle edge cases without partial structure. Q3 (ArrayList) is typically highest-scoring because students can apply familiar traversal patterns. FRQ Q1 (Methods &amp; Control Structures) rewards students who write clean loop logic and handle boundary conditions correctly.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">Does the AP CSA exam still use paper in 2027?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">No. The AP CSA exam moved to fully digital delivery (Bluebook app) starting in 2025. Both MCQ and FRQ are completed digitally. Students type their Java code directly in Bluebook. The Java Quick Reference Sheet is provided as a digital resource within the exam interface.</div>
+  </li>
+</ul>
+
+<h2 class=""section-h"">Continue Preparing</h2>
+<div class=""related-grid"">
+  <a href=""/pages/ap-csa-exam-prep-hub"" class=""related-card""><div class=""rc-label"">Course Hub</div>
+<div class=""rc-title"">AP CSA Complete Course Hub</div></a>
+  <a href=""/pages/ap-csa-unit-4-data-collections-study-guide"" class=""related-card""><div class=""rc-label"">Study Guide</div>
+<div class=""rc-title"">Unit 4: Data Collections (highest FRQ weight)</div></a>
+  <a href=""/pages/ap-csa-practice-exams"" class=""related-card""><div class=""rc-label"">Practice</div>
+<div class=""rc-title"">AP CSA Full Practice Exams</div></a>
+  <a href=""/pages/ap-csa-frq-archive"" class=""related-card""><div class=""rc-label"">FRQ Archive</div>
+<div class=""rc-title"">Official FRQs 2004–2025</div></a>
+  <a href=""/pages/ap-csp-score-calculator"" class=""related-card""><div class=""rc-label"">Calculator</div>
+<div class=""rc-title"">AP CSP Score Calculator</div></a>
+  <a href=""/pages/ap-cybersecurity-score-calculator"" class=""related-card""><div class=""rc-label"">Calculator</div>
+<div class=""rc-title"">AP Cybersecurity Score Calculator</div></a>
+</div>
+
+<div class=""author-box"">
+<div class=""author-avatar"">TC</div>
+<div>
+<p class=""author-name"">Tanner Crow</p>
+<p class=""author-role"">AP Computer Science Teacher</p>
+<p class=""author-bio"">11+ years teaching AP CS at Blue Valley North HS. Built every calculator on this site from official College Board data and released scoring worksheets. 5.0 Wyzant rating, 2,067+ tutoring hours, 499+ five-star reviews.</p>
+<div class=""author-stats"">
+<span class=""astat"">11+ Years AP CS</span>
+<span class=""astat"">2,067+ Tutoring Hours</span>
+<span class=""astat"">499+ Five-Star Reviews</span>
+<span class=""astat"">Last Updated September 2026</span>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+var CSA_CUTS=[
+  {min:78,score:5,label:""Extremely Well Qualified"",cls:""s5"",color:""#16A34A"",bg:""#ECFDF5"",border:""#86EFAC""},
+  {min:59,score:4,label:""Well Qualified"",cls:""s4"",color:""#1D4ED8"",bg:""#EFF6FF"",border:""#93C5FD""},
+  {min:46,score:3,label:""Qualified"",cls:""s3"",color:""#92400E"",bg:""#FEFCE8"",border:""#FDE047""},
+  {min:35,score:2,label:""Possibly Qualified"",cls:""s2"",color:""#C2410C"",bg:""#FFF7ED"",border:""#FDBA74""},
+  {min:0,score:1,label:""No Recommendation"",cls:""s1"",color:""#DC2626"",bg:""#FEF2F2"",border:""#FCA5A5""}
+];
+var CSA_TIPS={
+  5:""You are tracking for a 5 — top 25.5% nationally. To lock it in: verify your 2D array traversal patterns cold, review exception handling in class methods, and practice writing complete FRQ responses under timed conditions. Even one extra FRQ point per question is worth ~1.25 composite points. <a href='/pages/ap-csa-frq-archive' style='color:#1D4ED8;font-weight:700;'>Review official FRQs 2020–2025</a> for calibration."",
+  4:""Solidly in 4 territory. The gap to a 5 is typically 5–15 composite points — achievable with targeted work. Focus your FRQ prep on your lowest-performing type. Even 2–3 additional FRQ points across the four questions can push you over. <a href='/pages/ap-csa-unit-4-data-collections-study-guide' style='color:#1D4ED8;font-weight:700;'>Unit 4 (2D arrays + ArrayList)</a> is the highest-leverage FRQ area."",
+  3:""Passing, with room to grow. Your fastest gains are usually in MCQ accuracy — identify which unit has the most gaps and drill it systematically. For FRQ, write complete method stubs even when uncertain about the logic: header + return earn partial credit. A <a href='/pages/ap-computer-science-a-tutor' style='color:#1D4ED8;font-weight:700;'>targeted tutoring session</a> on your weakest unit can move you into a 4."",
+  2:""Close to passing. The fastest path to a 3: raise MCQ accuracy by 5–8 correct (about 6–10 composite points), and earn at least 2 partial-credit points per FRQ. Focus on loops, conditionals, and ArrayList — these appear on every exam. Study <a href='/pages/ap-csa-exam-prep-hub' style='color:#1D4ED8;font-weight:700;'>Units 1–2</a> first to build foundational accuracy."",
+  1:""Building your foundation. Start with Unit 1 (primitives, expressions, method calls) and Unit 2 (if/else, loops) — mastering these two units alone can move you to a 3. AP CSA rewards consistent logic even when code is incomplete. On FRQs, write syntactically correct method headers and attempt the simplest cases first for partial credit.""
+};
+function csaCalc(){
+  var mcq=parseInt(document.getElementById(""csa-mcq"").value);
+  var frq=parseInt(document.getElementById(""csa-frq"").value);
+  document.getElementById(""csa-mcq-val"").textContent=mcq;
+  document.getElementById(""csa-frq-val"").textContent=frq;
+  var mcqPts=(mcq/42)*55;
+  var frqPts=(frq/36)*45;
+  var comp=Math.round(mcqPts+frqPts);
+  document.getElementById(""csa-comp"").textContent=comp;
+  var bar=document.getElementById(""csa-bar"");
+  bar.style.width=Math.min(comp,100)+""%"";
+  var cut=null;
+  for(var i=0;i<CSA_CUTS.length;i++){if(comp>=CSA_CUTS[i].min){cut=CSA_CUTS[i];break;}}
+  if(!cut)cut=CSA_CUTS[CSA_CUTS.length-1];
+  var res=document.getElementById(""csa-result"");
+  res.style.background=cut.bg;
+  res.style.borderColor=cut.border;
+  bar.style.background=cut.color;
+  var gn=document.getElementById(""csa-grade-num"");
+  gn.textContent=cut.score;
+  gn.style.color=cut.color;
+  document.getElementById(""csa-grade-label"").textContent=cut.label;
+  document.getElementById(""csa-grade-label"").style.color=cut.color;
+  document.getElementById(""csa-grade-desc"").textContent=""Composite score: ""+comp+"" / 100"";
+  document.getElementById(""csa-grade-tip"").innerHTML=CSA_TIPS[cut.score];
+  [""cut5"",""cut4"",""cut3"",""cut2"",""cut1""].forEach(function(id){
+    document.getElementById(id).classList.remove(""active-row"");
+  });
+  document.getElementById(""cut""+cut.score).classList.add(""active-row"");
+}
+csaCalc();
+</script>
+
+<script type=""application/ld+json"">
+{
+  ""@context"":""https://schema.org"",
+  ""@graph"":[
+    {
+      ""@type"":""BreadcrumbList"",
+      ""itemListElement"":[
+        {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com/""},
+        {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science A"",""item"":""https://www.apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+        {""@type"":""ListItem"",""position"":3,""name"":""AP CSA Score Calculator"",""item"":""https://www.apcsexamprep.com/pages/ap-csa-score-calculator""}
+      ]
+    },
+    {
+      ""@type"":""FAQPage"",
+      ""mainEntity"":[
+        {""@type"":""Question"",""name"":""How accurate is the AP CSA score calculator?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""This calculator is based on the 2022 College Board released scoring worksheet and 2020-2025 score distributions. The composite formula (MCQ 55%, FRQ 45%) is confirmed by the CED. Score cutoffs are estimates; College Board does not publish exact thresholds, which shift by 1-3 composite points each year.""}},
+        {""@type"":""Question"",""name"":""What is a good AP Computer Science A score?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""A 3 or higher is passing. In 2025, 67.0% of students scored 3 or higher. A 4 or 5 earns credit at most universities. A 5 was earned by 25.5% of test-takers in 2025 (93,906 students). Mean score was 3.18.""}},
+        {""@type"":""Question"",""name"":""Is there a penalty for guessing on the AP CSA exam?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""No. There is no penalty for incorrect answers on the AP Computer Science A exam. Always answer every MCQ question, even if you must guess.""}},
+        {""@type"":""Question"",""name"":""How is the AP CSA composite score calculated?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Composite = (MCQ correct / 42) x 55 + (FRQ points / 36) x 45. This produces a score from 0 to 100, which is then mapped to an AP score of 1-5.""}},
+        {""@type"":""Question"",""name"":""When is the AP Computer Science A exam in 2027?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The 2027 AP Computer Science A exam is on Wednesday, May 12, 2027. It is administered digitally through the Bluebook app.""}},
+        {""@type"":""Question"",""name"":""What percentage of students pass the AP CSA exam?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""In 2025, 67.0% of the 93,906 students scored 3 or higher. Distribution: 5=25.5%, 4=21.8%, 3=19.8%, 2=10.9%, 1=22.1%. Mean score: 3.18.""}},
+        {""@type"":""Question"",""name"":""What are the four AP CSA FRQ question types?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Q1: Methods and Control Structures. Q2: Class Writing. Q3: Array/ArrayList (ArrayList only per 2025-2026 CED). Q4: 2D Array. Each is worth 9 points. Total FRQ = 36 points.""}},
+        {""@type"":""Question"",""name"":""Does the AP CSA exam still use paper?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""No. The AP CSA exam moved to fully digital delivery via the Bluebook app starting in 2025. Both MCQ and FRQ are completed digitally. The Java Quick Reference Sheet is provided digitally within the exam.""}},
+        {""@type"":""Question"",""name"":""What is the hardest FRQ type on AP CSA?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Per 2025 College Board data, 2D arrays were the lowest-scoring FRQ area. Class Writing (Q2) is often underestimated. ArrayList (Q3) is typically highest-scoring due to familiar traversal patterns.""}}
+      ]
+    },
+    {
+      ""@type"":""WebApplication"",
+      ""name"":""AP CSA Score Calculator 2027"",
+      ""url"":""https://www.apcsexamprep.com/pages/ap-csa-score-calculator"",
+      ""applicationCategory"":""EducationalApplication"",
+      ""operatingSystem"":""Any"",
+      ""description"":""Calculate your estimated AP Computer Science A score. Enter MCQ correct and FRQ points earned for an instant composite and AP score estimate (1-5) with study tips."",
+      ""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""jobTitle"":""AP Computer Science Teacher""},
+      ""featureList"":[""Instant score calculation"",""42 MCQ + 4 FRQ input"",""2025 score distribution display"",""Estimated score cutoffs"",""Personalized study tips per score level""],
+      ""offers"":{""@type"":""Offer"",""price"":""0"",""priceCurrency"":""USD"",""availability"":""https://schema.org/InStock""}
+    }
+  ]
+}
+</script>"
