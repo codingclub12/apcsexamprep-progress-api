@@ -111,7 +111,7 @@ A one-sided rule misses a repair that removes one reference and adds another.
 ## Shipping it
 
 ```
-npm run smoke:csafrqrepair        65 assertions, offline, with mutations
+npm run smoke:csafrqrepair        66 assertions, offline, with mutations
 npm run csa:frqrepairsheets       seven sheets, every cell parsed back and diffed
 npm run csa:frqrepairlive         red before the import, green after
 node scripts/deploy-gate.js deploy-gates/2026-09-17-csa-frq-archive-repair.json

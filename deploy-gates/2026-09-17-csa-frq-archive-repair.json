@@ -34,9 +34,9 @@
     {
       "kind": "suite",
       "name": "the transforms, the refusals, and every sheet rule broken one at a time",
-      "_why": "Sixty-five assertions, offline against fixtures so a bad network day cannot turn it red. Section 3 is the one that matters most: every transform is asked to run against a page it does not match, and every one must throw. A repair that quietly matches nothing is worse than one that fails, because the import reports success and the page is unchanged.",
+      "_why": "Sixty-six assertions, offline against fixtures so a bad network day cannot turn it red. Section 3 is the one that matters most: every transform is asked to run against a page it does not match, and every one must throw. A repair that quietly matches nothing is worse than one that fails, because the import reports success and the page is unchanged.",
       "command": "npm run --silent smoke:csafrqrepair",
-      "expect": "65 passed, 0 failed"
+      "expect": "66 passed, 0 failed"
     },
     {
       "kind": "rederive",
