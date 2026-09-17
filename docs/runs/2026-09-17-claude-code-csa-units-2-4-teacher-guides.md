@@ -101,8 +101,11 @@ code to a sentence College Board did not write. The fix made six guides worse an
 
 ## The three kinds
 
-    suite     12 rules over the 38 rendered documents, 0 failures, and 257 of 257
-              offline suites green
+    suite     12 rules over the 38 rendered documents, 0 failures, and 255 of 255
+              offline suites green on the branch as committed. 255 and not 257
+              because CI derives its list from package.json, which is not in
+              this commit; with the three npm scripts applied locally it is
+              257 of 257
     rederive  a python-docx reader, not the zip, reports 190 bare headings and
               114 I-can rows on the pre-repair build and 0 of each on the
               32 overlaid topics, matching the suite exactly. Rule 11 against
