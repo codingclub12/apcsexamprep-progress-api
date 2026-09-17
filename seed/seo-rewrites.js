@@ -261,6 +261,113 @@ const PAGES = [
     description: 'AP CSA Unit 4, the largest and most heavily tested unit on the exam, covers arrays, ArrayLists, 2D arrays, searching, sorting, and recursion.',
     why: 'description was scraped breadcrumb text, and the title carried an em dash',
   },
+  //  ── THE PAGES GOOGLE ALREADY RANKS, 2026-09-17 ─────────────────────────────
+  //  Search Console for 2026-09-16 shows eight queries taking heavy impressions
+  //  at positions 4 to 9 and converting at 0 to 1.7%, against 12 to 17% on the
+  //  action pages. Every ZERO-click page below had a broken snippet; the two
+  //  that earned clicks (ap-cybersecurity-curriculum, ap-csp-score-calculator)
+  //  had already been rewritten in the pass above. That is the whole pattern.
+  //
+  //  The exam dates are first-party, from docs/ced-snapshot/exam-dates.txt
+  //  captured 2026-09-01: CSA is Wednesday May 12 2027, CSP is Friday May 14
+  //  2027. Bluebook is deliberately NOT claimed anywhere below: the live copy
+  //  asserts it and no source in this repo confirms it for CSA or CSP.
+  {
+    handle: 'ap-csa-exam-format',
+    title: 'AP CSA Exam Format 2027: Sections, Timing and Scoring',
+    description: 'The AP CSA exam is Wednesday, May 12, 2027. What each section asks, how the two are weighted, what the Java Quick Reference gives you, and how to pace both.',
+    why: '237 impressions and 2 clicks at position 5.67; title said 2026 and the description trailed off mid-sentence',
+  },
+  {
+    handle: 'ap-csa-reference-sheet',
+    title: 'AP CSA Java Quick Reference: Every Method, All 4 Units',
+    description: 'The full Java Quick Reference you get in the AP CSA free response section, unit by unit: String, Math, Integer, Double, ArrayList, arrays, plus exam traps.',
+    why: '214 impressions and ZERO clicks at position 4.44; title said 2026 and the body still reads Exam: May 2026',
+  },
+  {
+    handle: 'ap-csp-reference-sheet',
+    title: 'AP CSP Reference Sheet: Pseudocode and Exam Formulas',
+    description: 'The AP CSP exam reference sheet explained line by line: pseudocode blocks, list and procedure syntax, and the robot grid, with worked examples of each.',
+    why: '142 impressions and ZERO clicks at position 6.88; the description was the untouched template default',
+  },
+  {
+    handle: 'ap-networking-curriculum',
+    title: 'AP Networking Curriculum: All 4 Units and Every Topic',
+    description: 'The full AP Networking pilot curriculum, all four units from Managing My Connections to Managing Our Global Connections, with every topic and a pacing plan.',
+    why: '201 impressions and ZERO clicks at position 8.62; title was 62 chars and the description 180, so both were cut',
+  },
+  {
+    handle: 'ap-csp-bi2-overflow-roundoff',
+    title: 'AP CSP Overflow and Roundoff Errors: Big Idea 2',
+    description: 'Why integers overflow and decimals round off, the difference the AP CSP exam tests, and how to spot each in a question. Worked examples and practice items.',
+    why: '141 impressions and ZERO clicks at position 4.87; the description trailed off mid-sentence',
+  },
+  {
+    handle: 'ap-computer-science-principles-full-practice-exam-70-mcq',
+    title: 'AP CSP Practice Exam 2027: Full 70 Question Test',
+    description: 'A free full-length AP CSP practice exam, 70 questions across all 5 Big Ideas, with timed mode, answer explanations and a score estimate for the May 2027 exam.',
+    why: 'title said 2026 and the description trailed off mid-sentence',
+  },
+  {
+    handle: 'ap-computer-science-principles-practice-exam-2025',
+    title: 'AP CSP Practice Exam: 30 Question Condensed Test',
+    description: 'A short AP CSP practice exam, 30 questions with answer explanations across all 5 Big Ideas. Built to find weak spots fast before the May 2027 exam.',
+    why: 'the description advertised a CSA practice exam on a CSP page, and the title carried a machine ellipsis',
+  },
+  {
+    handle: 'ap-csa-java-errors-hub',
+    title: 'AP CSA Java Errors: Every Compiler and Runtime Error',
+    description: 'Every Java error AP CSA students hit, each with broken and fixed code, the MCQ trap it sets, and where it sits in the course. Compiler and runtime covered.',
+    why: 'title said 2026 and carried the brand; description was 162 chars',
+  },
+  {
+    handle: 'ap-csa-unit-2-complete-study-guide',
+    title: 'AP CSA Unit 2 Study Guide: Selection and Iteration',
+    description: 'AP CSA Unit 2 in full: boolean expressions, if and nested if, compound conditions, while and for loops, string algorithms and run time. Examples and practice.',
+    why: 'the description read AP CSAUnit 2 with no space, and the title carried a machine ellipsis',
+  },
+  {
+    handle: 'ap-csa-unit-3-complete-study-guide',
+    title: 'AP CSA Unit 3 Study Guide: Class Creation',
+    description: 'AP CSA Unit 3 in full: writing classes, constructors, instance versus static, scope, the this keyword, toString and equals. Worked examples and practice sets.',
+    why: 'the description read AP CSAUnit 3 with no space, and the title carried a machine ellipsis',
+  },
+  {
+    handle: 'ap-csp-practice-exam-bootcamp',
+    title: 'AP CSP Practice Exam Bootcamp: Full Walkthrough',
+    description: 'A recorded AP CSP bootcamp working a full practice exam question by question, with scoring strategy and the mistakes that cost the most points in May 2027.',
+    why: 'title said 2026 and the description trailed off mid-sentence',
+  },
+  {
+    handle: 'ap-csp-unit-5-cybersecurity-complete-2025-study-guide',
+    title: 'AP CSP Unit 5 Study Guide: Cybersecurity and Impact',
+    description: 'AP CSP Unit 5 in full: cybersecurity risks, safe computing, and the legal and ethical impact of computing. Examples, practice questions and exam strategy.',
+    why: 'title carried an en dash, a machine ellipsis and the year 2025; description was the template default. The handle keeps 2025 because renaming a handle is never automatic',
+  },
+  {
+    handle: 'ap-networking-practice-exam',
+    title: 'AP Networking Practice Exam: Free Scenario Questions',
+    description: 'Free AP Networking practice questions with answer explanations, built on the four pilot skills: Connect, Secure, Troubleshoot and Collaborate. Scenario based.',
+    why: 'title was 62 chars and the description 186, so both were cut in the SERP',
+  },
+  {
+    handle: 'ap-networking-practice-exam-full',
+    title: 'AP Networking Practice Exam: 20 Interactive Questions',
+    description: 'Twenty scenario-based AP Networking questions with instant feedback, answer explanations and a live score, across all four skills of the pilot framework.',
+    why: 'title was 64 chars and the description 202, the longest on the site',
+  },
+  {
+    handle: 'ap-networking-study-guide',
+    title: 'AP Networking Study Guide: Unit by Unit Exam Review',
+    description: 'A free AP Networking study guide covering all four units and skills, from Managing My Connections to Managing Our Global Connections, from the pilot framework.',
+    why: 'title was 62 chars and the description 182, so both were cut in the SERP',
+  },
+  {
+    handle: 'ap-csa-ultimate-practice-exam',
+    title: 'AP CSA Full Practice Exam: MCQ and FRQ with Answers',
+    description: 'A full-length AP CSA practice exam, multiple choice plus every free response type, with Java solutions and scoring rubrics. Built for the May 12, 2027 exam.',
+    why: 'description trailed off mid-sentence and the body advertises the 2026 exam',
+  },
 ];
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
