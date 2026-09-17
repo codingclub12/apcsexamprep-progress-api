@@ -223,8 +223,8 @@ $ npm run csa:2026frq
   9 of 9 solution run(s) reproduce the question's own examples, 4 of 4 mutants caught
 
 $ npm run smoke:csa2026frq
-  70 passed, 0 failed
-  20 sheet rules broken on purpose, each caught BY NAME; 2 controls stay green
+  72 passed, 0 failed
+  22 sheet rules broken on purpose, each caught BY NAME; 2 controls stay green
 
 $ node scripts/csa-past-frq-pages-csv.js imports/2026-09-17/csa-2026-frq-pages.csv
   wrote 5 page(s), 236 KB of body

@@ -116,7 +116,7 @@ on the 25 percent boundary, so `<=` produces correct output on every row the
 question shows you. It is caught here only because the harness runs the
 shampoo bottle, whose second call sits exactly on 10 of 40.
 
-`smoke/csa-past-frq-pages.js` does the same thing to the twenty sheet rules,
+`smoke/csa-past-frq-pages.js` does the same thing to the twenty-two sheet rules,
 and asserts on the MESSAGE rather than on the count: a mutation that goes red
 for some other rule is telling you the rule you meant to test is hollow. Two
 controls sit beside them, and the second one earned its place too: the wrapper

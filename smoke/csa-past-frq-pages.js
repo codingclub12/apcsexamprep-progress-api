@@ -223,6 +223,10 @@ const MUTATIONS = [
   //  catch either one while missing the other.
   ['mojibake, double pass', (p) => { p.body = p.body.replace('Worked Solution', 'Worked ' + cp(0xc3, 0xa2, 0xe2, 0x201a, 0xac, 0xc2, 0xa2) + ' Solution'); }, /mojibake/],
   ['mangled title', (p) => { p.title = 'Ap Csa 2026 Frq 1 Account'; }, /title is|lowercases an acronym/],
+  //  Same masking, same fix. A mangled title trips the acronym rule AND the
+  //  parity rule, so it proves neither on its own. This title is correctly cased
+  //  and simply is not the canonical one, which only parity can catch.
+  ['a title that drifts from canonical without mangling its casing', (p) => { p.title = '2026 AP CSA FRQ 1: Account Solution and Rubric'; }, /title is .*canonical says/],
   ['a JSON-LD block that does not parse', (p) => { p.body = p.body.replace('{"@context":"https://schema.org","@type":"FAQPage"', '{"@context":,"@type":"FAQPage"'); }, /does not parse/],
   ['an HTML entity inside JSON-LD', (p) => { p.body = p.body.replace('"@type":"LearningResource"', '"@type":"Learning&amp;Resource"'); }, /HTML entity/],
   ['a missing JSON-LD block', (p) => { p.body = p.body.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, ' '); }, /JSON-LD block\(s\), expected 3/],
@@ -232,6 +236,11 @@ const MUTATIONS = [
   }, /leaks above the reveal panel/],
   ['no reveal panel at all', (p) => { p.body = p.body.replace('id="frq2026q1-sol"', 'id="frq2026q1-nothing"'); }, /no reveal panel/],
   ['a stale 9-point claim', (p) => { p.body = p.body.replace('The Official 7-Point Rubric for', 'The Official 9-Point Rubric for'); }, /prints 9 points|9-point rubric outside/],
+  //  The row above accepts EITHER rule, and there are two: the points-parity
+  //  loop and the blanket 9-point rule. The blanket one masks the parity one, so
+  //  that row alone leaves the parity rule unproven and the deploy gate said so.
+  //  8 is wrong and is not 9, so only the parity rule can see it.
+  ['a point total that is wrong without being 9', (p) => { p.body = p.body.replace('The Official 7-Point Rubric for', 'The Official 8-Point Rubric for'); }, /prints 8 points where the canonical data says 7/],
   ['a point table missing a question', (p) => { p.body = p.body.replace(/<tr><td>Question 3<\/td>[\s\S]*?<\/tr>/, ' '); }, /point table omits question 3/],
   //  replaceAll, not replace: the phrase also appears inside the FAQ JSON-LD,
   //  which the rule deliberately does not read, so mutating only the first

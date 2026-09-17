@@ -67,7 +67,7 @@ $ npm run csa:2026frq
   9 of 9 solution run(s) reproduce the question's own examples, 4 of 4 mutants caught
 
 $ npm run smoke:csa2026frq
-  70 passed, 0 failed
+  72 passed, 0 failed
 
 $ node scripts/csa-past-frq-pages-csv.js imports/2026-09-17/csa-2026-frq-pages.csv
   wrote 5 page(s), 236 KB of body
@@ -99,7 +99,7 @@ table**, because none of its rows lands on the 25 percent boundary. It is caught
 only because the harness runs the shampoo bottle, whose second call sits exactly
 on 10 of 40.
 
-The same rewrite happened on the sheet rules. Twenty mutations, each asserting
+The same rewrite happened on the sheet rules. Twenty-two mutations, each asserting
 on the MESSAGE rather than the count, because a mutation that goes red for a
 different rule is telling you the rule you meant to test is hollow. Two controls
 sit beside them and the second one earned its place: the wrapper rule demanded
@@ -155,3 +155,38 @@ a clean `origin/main` worktree: `csaunit1guides`, `csaunit1guidesmutation`,
 `csakitstyle`, `deckvoice` and `exercisekeys`, every one of them
 `ModuleNotFoundError` for `python-pptx` or `python-docx`. Environment, not this
 branch. The other 248 pass.
+
+## The deploy gate found two hollow guards, which is what it is for
+
+`deploy-gates/2026-09-17-csa-2026-frq.json` mutates the SHIPPED validator rather
+than the suite's own fixtures, and the difference mattered immediately. Two of
+its five mutations came back:
+
+    the suite still PASSED with the guard broken, so it does not test it
+
+Both for the same reason, and it is the exact shape the gate's own header warns
+about: where two rules overlap, the strong one masks the weak one and the suite
+reads green over a rule that cannot fire.
+
+- **Points parity.** The mutation set a 7-point question to 9. Two rules see
+  that: the parity loop and the blanket "no 9-point claim outside the callout"
+  rule. The blanket rule caught it, the suite's assertion accepted either
+  message, and the parity rule went unproven. The isolating mutation prints
+  **8**, which is wrong and is not 9, so only parity can see it.
+- **Title parity.** The mutation set `Ap Csa 2026 Frq 1 Account`, which trips
+  both the acronym rule and the parity rule. The isolating mutation uses a
+  correctly cased title that simply is not the canonical one.
+
+Twenty-two mutations now rather than twenty. The suite was green before this and
+green after, and two of its rules were decoration in between.
+
+There is deliberately **no live check in the manifest**, and the reasoning is in
+its `_context`. The merge deploys the API and changes nothing the API does: no
+route, no schema, and nothing at runtime reads `config/csa-frq-2026.json`. A
+live assertion here would be true yesterday, true during and true if the deploy
+never happened, which is the defect the gate's own first manifest carried. The
+live observation this change earns belongs to the import, where five handles go
+from 404 to 200 with a closed reveal panel, and it is a runbook step.
+
+    $ node scripts/deploy-gate.js deploy-gates/2026-09-17-csa-2026-frq.json
+      3 independent kinds agree: suite, rederive, mutation. clear to ship.
