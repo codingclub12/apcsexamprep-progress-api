@@ -89,13 +89,20 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Four suites are Python. smoke:csadeckdays is stdlib only and has always
-      # been fine. smoke:csaunit1guides and smoke:csaunit1guidesmutation build
-      # and read back the 15 Unit 1 teacher guides, so they need python-docx.
-      # smoke:csakitstyle needs BOTH: it imports csa_kit.deck to
-      # check the bell-ringer rule, which pulls in python-pptx, and it builds
-      # the 38 teacher guides and reads them back, which needs python-docx.
-      # The runner ships neither.
+      # Six suites are Python, and the count is worth keeping honest: derive it
+      # with
+      #   node -e 'const s=require("./package.json").scripts;
+      #            console.log(Object.keys(s).filter(k=>k.startsWith("smoke:")
+      #            && /python3/.test(s[k])))'
+      # rather than trusting this comment, which has already been wrong once.
+      # smoke:csadeckdays is stdlib only and has always been fine. Four of them
+      # build teacher guides and read the .docx back, so they need python-docx:
+      # smoke:csaunit1guides and smoke:csaunit1guidesmutation over the 15 Unit 1
+      # guides, smoke:csaunits234guides and smoke:csaunits234guidesmutation over
+      # the 38 in Units 2-4. smoke:csakitstyle needs BOTH: it imports
+      # csa_kit.deck to check the bell-ringer rule, which pulls in python-pptx,
+      # and it builds the 38 teacher guides and reads them back, which needs
+      # python-docx. The runner ships neither.
       #
       # Both were found by simulating a runner without them rather than by
       # reading the imports. The first attempt at this step installed only
