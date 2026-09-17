@@ -127,13 +127,13 @@ before anyone counted what it covers.
   1 drop was additive because no Unit 1 folder had a `Teacher_Guide.docx`. All 38
   of these do, and the Drive API creates rather than replaces, so a careless
   upload leaves two guides per lesson folder.
-- **The six need CED wording that is in neither repo.** Board item wanted: their
-  theme specs are on the retired Unit 4 map and want rewriting against the 2025
-  CED, which also repairs the exercises a teacher holds, not only the guide.
-- **The kit's 3.6 handle is dead** in `content_unit3b.py`, so the deck, the guided
-  notes and the quiz for that lesson carry it too. The guide is fixed here because
-  the guide is what this pass owns; the content module is a one-line change with a
-  wider blast radius and its own claim.
+- **The six need CED wording that is in neither repo**, board 356. Their theme
+  specs are on the retired Unit 4 map and want rewriting against the 2025 CED,
+  which also repairs the exercise pages a teacher holds, not only the guide.
+- **The kit's 3.6 handle is dead** in `content_unit3b.py`, board 357, so the deck,
+  the guided notes and the quiz for that lesson carry it too. The guide is fixed
+  here because the guide is what this pass owns; the content module is a one-line
+  change with a wider blast radius and its own claim.
 - **`package.json` is not in this commit.** The three npm scripts belong in it and
   the lock was held by another session on board 349 for the whole pass. Nine of my
   ten locks went through; that one did not, and forcing it is not worth a merge
