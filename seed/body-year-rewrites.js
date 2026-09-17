@@ -52,8 +52,25 @@ const PAGES = [
       { count: 1, why: 'FAQ question',
         find: 'When is the 2026 AP Computer Science A exam?',
         replace: 'When is the 2027 AP Computer Science A exam?' },
-      { count: 4, why: 'SVG attributes are case-sensitive, so viewbox is ignored and these four icons do not scale. Not repaired by the save either, measured',
-        find: 'viewbox="0 0 24 24"', replace: 'viewBox="0 0 24 24"' },
+      //  ── THE viewBox EDIT IS GONE, AND IT WAS WRONG TWICE ────────────────
+      //  It shipped here on the theory that SVG attributes are case-sensitive,
+      //  so a lowercased `viewbox` meant four icons were not scaling. Both
+      //  halves of that were wrong, and both were settled by running something
+      //  rather than reasoning about it.
+      //
+      //  It CANNOT land. The edit was imported on 2026-09-17 and the page came
+      //  back with all four still lowercased: the sheet sent `viewBox` 4 times
+      //  and the stored body carries `viewbox` 4 times. Shopify lowercases
+      //  attribute names on save, which is also where the lowercasing came from
+      //  in the first place. Re-adding this edit just makes the page read
+      //  PARTIAL forever.
+      //
+      //  It DOES NOT NEED TO. Measured in Chromium against the pre-installed
+      //  build: HTML5 has an "adjust SVG attributes" step for foreign content,
+      //  so a parser maps `viewbox` back to `viewBox`. The attribute reads back
+      //  as `viewBox`, the viewBox applies, and a 24-unit rect renders at 40px,
+      //  identical to the camelCase version. An svg with no viewBox at all
+      //  renders 24px, which is what a real failure would have looked like.
       { count: 1, why: 'the digital-or-paper FAQ answer, found by the generator stale check rather than by reading',
         find: 'The 2026 AP CSA exam is <strong>fully digital</strong>',
         replace: 'The 2027 AP CSA exam is <strong>fully digital</strong>' },

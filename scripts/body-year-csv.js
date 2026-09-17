@@ -130,8 +130,20 @@ function buildOne(spec, fromDir, examYear) {
     //  Requiring the replacement to appear exactly as often as the edit would
     //  have produced it, and to be long enough to be distinctive, closes that:
     //  any other count means something is off and the sheet refuses.
+    //  The EXACT count is the whole test, and the length floor that used to sit
+    //  beside it was both redundant and wrong. It was added as a proxy for
+    //  "distinctive" after the mutation run broke the first draft, and it then
+    //  refused a legitimately applied edit the very next day: the geq repair
+    //  replaces with a single character, U+2265, so an 8-character floor made
+    //  a finished page unbuildable.
+    //
+    //  Exact count already covers what the floor was reaching for. The mutation
+    //  cases prove it: a replacement of 'y' occurs hundreds of times and '2027'
+    //  dozens, so neither equals the one occurrence the edit would have made,
+    //  and both are still refused. A short replacement is only accepted when it
+    //  appears exactly as often as applying the edit would have produced it.
     const r = before.split(e.replace).length - 1;
-    if (n === 0 && r === e.count && e.replace.length >= 8) { already += e.count; continue; }
+    if (n === 0 && r === e.count) { already += e.count; continue; }
 
     problems.push(`${spec.handle}: expected ${e.count} of ${JSON.stringify(e.find.slice(0, 48))}, found ${n}`
       + (r ? ` (and ${r} of the replacement, which is neither absent nor a full match)` : '')

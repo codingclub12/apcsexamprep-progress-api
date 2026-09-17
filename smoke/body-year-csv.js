@@ -90,6 +90,20 @@ ok('a MISSING find with a short replacement is still refused', (() => {
   const r = G.buildOne(spec([{ count: 1, why: 'x', find: 'ALSO NOT THERE', replace: '2027' }]), tmp, 2027);
   return r.problems.length > 0;
 })());
+//  And the case that the length floor got wrong: the geq repair replaces with a
+//  single character, so a floor made a finished page unbuildable. Exact count is
+//  what does the work, and it does it at any length.
+ok('a ONE-CHARACTER replacement already live is accepted, not refused', (() => {
+  fs2.writeFileSync(path2.join(tmp, 'q.html'), 'cutoffs are 5\u226578 and 4\u226559 here');
+  const r = G.buildOne({ handle: 'q', why: 'one-character replacement fixture',
+    edits: [{ count: 2, why: 'x', find: '&amp;geq;', replace: '\u2265' }] }, tmp, 2027);
+  return r.problems.length === 0 && r.noop === true;
+})());
+ok('a one-character replacement at the WRONG count is still refused', (() => {
+  const r = G.buildOne({ handle: 'q', why: 'one-character replacement fixture',
+    edits: [{ count: 5, why: 'x', find: '&amp;geq;', replace: '\u2265' }] }, tmp, 2027);
+  return r.problems.length > 0;
+})());
 ok('a replacement present the WRONG number of times is refused, not assumed done', (() => {
   const r = G.buildOne(spec([{ count: 2, why: 'x', find: '<h1>Title 2026</h1>', replace: '<h1>Title 2027</h1>' }]), tmp, 2027);
   return r.problems.length > 0;

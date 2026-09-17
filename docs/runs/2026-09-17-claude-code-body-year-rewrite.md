@@ -166,3 +166,70 @@ Confirmed on all four pages, so this was never specific to the canary.
 **Still open, unchanged:** the duplicate h1 is its own defect and fixing it is a
 restructure rather than a year change. Five more hub pages need the same pass.
 Two handles carry a stale year in the URL. `42 MCQ` remains unverified.
+
+---
+
+## Second addendum: all five imported, and the third wrong prediction
+
+All five sheets went in on 2026-09-17. The verifier reads **4 done, 0 partly
+imported, 0 pending**, and regenerating now writes no sheet at all: every edit
+is live and all four titles are correct.
+
+What is live and checkable:
+
+    both h1 elements read 2027 on all four pages
+    5>=78, 4>=59, 3>=46, 2>=35   renders correctly on the CSA calculator
+    5>=83, 4>=72, 3>=58, 2>=45   renders correctly on the CSP calculator
+    the reference sheet drops the year from both headings
+
+### "Stores verbatim" was wrong, measured across four pages instead of one
+
+The first addendum wrote that rule from a single page. Two more imports showed
+two transforms that do fire:
+
+    ap-csa-score-calculator    45,368 -> 45,368   byte for byte identical
+    ap-csp-score-calculator    47,741 -> 47,741   byte for byte identical
+    ap-csa-reference-sheet     66,857 -> 66,777   -80, sixteen &nbsp; decoded
+    ap-csa-exam-format         48,658 -> 48,658   same length, viewBox lowercased
+
+Entities decode, and attribute names are lowercased. No reflow, no implied tags,
+no re-serialization. The nbsp decode is the outcome the sheet wanted: board #292
+says Matrixify strips a literal non-breaking space, so sending the entity and
+letting Shopify decode it back is the mitigation working exactly as designed.
+
+### The viewBox edit was wrong twice, and is removed
+
+It could not land: the sheet sent `viewBox` four times and the stored body came
+back with `viewbox` four times, because Shopify lowercases attribute names. That
+is also where the lowercasing came from originally.
+
+It did not need to land. HTML5 has an "adjust SVG attributes" step for foreign
+content. Verified in Chromium against the pre-installed build: a lowercased
+`viewbox` reads back as `viewBox`, the viewBox applies, and a 24-unit rect
+renders at 40px, identical to the camelCase version. An svg with no viewBox
+renders 24px, which is what a real failure looks like. The icons were never
+broken.
+
+So "four SVG icons are not scaling" was the third wrong prediction in this
+thread, after the entity repair and the two-h1 miss. All three have one shape:
+a confident claim about what a system does, reasoned rather than run. All three
+were caught by running the thing. The habit is the finding.
+
+### The idempotency floor was wrong, and the generator caught it
+
+The exact-count check shipped with `e.replace.length >= 8` beside it, added as a
+proxy for "distinctive" after the mutation run broke the first draft. It refused
+a finished page the next day: the geq repair replaces with one character, so the
+floor made an already-applied edit unbuildable. Exact count was doing all the
+work already, and the mutation cases prove it, because `'y'` and `'2027'` occur
+far more often than the edit would produce. The floor is gone and two smoke cases
+hold the one-character case open.
+
+`smoke:bodyyear` 39 passed 0 failed; mutation 10 guards live, 0 hollow.
+
+### Still open
+
+Unchanged from the first addendum, minus the viewBox entry, which was not a
+defect: the duplicate h1 is its own issue and needs a restructure rather than a
+year change; five more hub pages need the same pass; two handles carry a stale
+year in the URL; `42 MCQ` is still unverified on two pages.
