@@ -261,3 +261,60 @@ selection items deletes the answer, because there the options ARE the letters.
 0 empty and 7 duplicates after anchoring the read per template, all 7 verified by
 hand. Same lesson as the verifier two days ago, arriving from the other side: the
 checker is content, and content gets verified before it is believed.
+
+---
+
+## 2026-09-17, later: board 344, and a false accusation withdrawn
+
+Eight articles repaired: the casting mis-key, three questions published at two
+handles each with two options reading the same text, and one heading misquote.
+Sheets in `imports/2026-09-17-csa-qotd-344/`, not imported.
+
+The casting one is worth keeping. `19.99 * 100` is `1998.9999999999998`, so the
+page prints `$19.98` and keyed `$19.99`. Its explanation ALREADY KNEW and argued
+itself out of it: "floating-point imprecision COULD make 19.99 * 100 evaluate to
+1998.9999... but the AP exam typically assumes exact arithmetic". It is not
+"could", the stem asks what executing the code prints, and the page is called
+casting-precision-loss. The trace, the Why Not block and the Common Mistake are
+rewritten so the precision loss is the answer rather than a footnote.
+
+### The audit was wrong about one article, and it is corrected
+
+`ap-csa-u2-c1-day-19-nested-loop-pattern` was reported as having two identical
+options. It does not. Its four options are a growing triangle, a square, a
+shrinking triangle and a column; the audit collapsed whitespace, so two of them
+became "* * * * * *", the same six stars in a different arrangement, on a
+question whose whole subject is the arrangement.
+
+    distinct broken     28 -> 27
+    keys proved right  162 -> 163   (159 strict, 4 with lines flattened)
+    two options right    5 -> 4
+
+The drifted family and the casting mis-key are unchanged. One false accusation,
+withdrawn, and `docs/csa-qotd-item-audit-2026-09-17.md` carries the correction
+with its own section rather than quietly restating the numbers.
+
+Fixing it overshot the other way first: a `<h3>` heading is one line and cannot
+carry an option's line breaks, so holding it to them reported eight correct pages
+as mismatched. There are two comparisons now, because two different things are
+being compared, and a third state for the four items that print two lines where
+the right option writes them on one.
+
+### Three checkers, three times wrong before the content was
+
+The option parser that deleted answers which were single letters. The live
+verifier whose needle spanned a `</span>`. This. All three read as sensible, all
+three were caught by running them against a case rather than by reading them, and
+all three are now fixtures. That is the only version of "a check is content" that
+actually holds.
+
+### Also done here
+
+`lib/matrixify-body-edit.js`: the anchored-edit machinery pulled out of
+`scripts/csa-qotd-authoring-repair.js` because a second repair needed it.
+Migrated rather than copied, and proved by the ten sheets the original generator
+emits coming back byte-identical to the ones already on main.
+
+One bug that guard caught during the build: `applyEdits` splices its replacement
+LITERALLY, so a `$1` backreference lands on the page as two characters. Four
+options became three and the option-count check refused it.

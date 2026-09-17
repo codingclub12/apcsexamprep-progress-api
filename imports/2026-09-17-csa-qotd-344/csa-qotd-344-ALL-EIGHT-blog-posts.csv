@@ -1,0 +1,1776 @@
+﻿"Blog: Handle","Handle","Command","Body HTML"
+"ap-csa-daily-practice","ap-csa-u1-c2-day-16-casting-precision-loss","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #fef2f2; color: #dc2626 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-15-complex-string-manipulation"" class=""qotd-nav-btn qotd-nav-prev"">← Day 15</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-17-wrapper-null-safety"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Day 17 →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 1</span>
+  <span class=""qotd-cycle-badge"">Advanced (Cycle 2)</span>
+  <span class=""qotd-day-badge"">Day 16 of 28</span>
+  <span class=""qotd-difficulty"">Advanced</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">Casting Precision Loss</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section 1.5 — Casting and Ranges</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">Precision loss during casting is a subtle concept the AP exam tests in unexpected ways. Casting a <code>double</code> to an <code>int</code> always truncates toward zero: <code>(int) 2.9</code> becomes <code>2</code>, and <code>(int) -2.9</code> becomes <code>-2</code>. But precision loss also occurs when converting large <code>int</code> values to <code>float</code> (not on the AP exam) or when integer division discards remainders. The exam combines casting with arithmetic to create multi-step precision loss: <code>(int)(7.0 / 2) + (int)(7 / 2.0)</code> requires evaluating each cast separately.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">Consider the following code segment.</p>
+  <div class=""qotd-code-block"">double price = 19.99;
+int cents = (int)(price * 100);
+int dollars = cents / 100;
+int leftover = cents % 100;
+System.out.println(""$"" + dollars + ""."" + leftover);</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">What is printed as a result of executing the code segment?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">$19.99</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">$19.98</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">$19.0</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">$20.99</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (B) $19.98</h3>
+  <p style=""line-height: 1.7;"">Trace the money conversion:</p>
+  <p style=""line-height: 1.7;""><strong>price * 100:</strong> <code>19.99 * 100</code> is <code>1998.9999999999998</code>, not <code>1999.0</code>. A <code>double</code> cannot hold 19.99 exactly, so the product lands just under 1999.</p>
+  <p style=""line-height: 1.7;""><strong>cents:</strong> <code>(int)</code> truncates toward zero, so <code>(int) 1998.9999999999998</code> is <code>1998</code>. It does not round.</p>
+  <p style=""line-height: 1.7;""><strong>dollars:</strong> <code>1998 / 100 = 19</code>.</p>
+  <p style=""line-height: 1.7;""><strong>leftover:</strong> <code>1998 % 100 = 98</code>.</p>
+  <p style=""line-height: 1.7;""><strong>Output:</strong> <code>""$"" + 19 + ""."" + 98 = ""$19.98""</code>. The program loses a cent, which is exactly what this topic is named for.</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(A)</strong> This is the answer you get by treating <code>19.99 * 100</code> as exactly <code>1999.0</code>. It is the most common answer and it is wrong: run it and the product is <code>1998.9999999999998</code>.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(C)</strong> This would need <code>cents % 100</code> to be 0, meaning a whole number of dollars. <code>1998 % 100</code> is 98.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(D)</strong> This would need <code>cents / 100</code> to be 20, so cents would have to reach 2000. It is 1998.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">Trusting a <code>double</code> to hold a decimal exactly. The quotient and remainder pattern here is right, and it is fed a number a hair under 1999. This is why money is counted in whole cents rather than in dollars and a fraction.</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">The quotient-remainder pattern works for any base conversion: time (base 60), money (base 100), digit extraction (base 10). Recognize the pattern: <code>/ base</code> gives the higher unit, <code>% base</code> gives the lower unit.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section 1.5 — Casting and Ranges •
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" style=""color: #5b21b6 !important;"">Unit 1 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 2 - SignedText</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 2 - Scoreboard</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 2 - Sign</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-15-complex-string-manipulation"" class=""qotd-nav-btn qotd-nav-prev"">← Day 15</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-17-wrapper-null-safety"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Day 17 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'B';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"
+"ap-csa-daily-practice","ap-csa-u1-c1-day-13-string-concatenation-mixed","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #ecfdf5; color: #059669 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-12-return-values"" class=""qotd-nav-btn qotd-nav-prev"">← Day 12</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-14-substring-indexof"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Day 14 →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 1</span>
+  <span class=""qotd-cycle-badge"">Foundation (Cycle 1)</span>
+  <span class=""qotd-day-badge"">Day 13 of 28</span>
+  <span class=""qotd-difficulty"">Foundation</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">String Concatenation with Mixed Types</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section 1.9 — Strings: Concatenation</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">Java's <code>Integer</code> and <code>Double</code> wrapper classes allow primitive values to be treated as objects. Autoboxing automatically converts a primitive to its wrapper: <code>Integer x = 5;</code> wraps 5 in an <code>Integer</code> object. Unboxing converts back: <code>int y = x;</code> extracts the primitive value. The AP exam tests edge cases with <code>null</code> — unboxing a <code>null</code> reference throws a <code>NullPointerException</code>. Wrapper classes also provide useful static methods like <code>Integer.parseInt(""42"")</code> and <code>Integer.MAX_VALUE</code>.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">Consider the following code segment.</p>
+  <div class=""qotd-code-block"">int x = 3;
+int y = 4;
+System.out.println(x + y + "" val"");
+System.out.println(""val "" + x + y);</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">What is printed as a result of executing the code segment?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">7 val
+val 34</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">34 val
+val 34</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">7 val
+val 7</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">34 val
+val 7</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (A) 7 val
+val 34</h3>
+  <p style=""line-height: 1.7;"">String concatenation depends on evaluation order (left to right):</p>
+  <p style=""line-height: 1.7;""><strong>Line 3:</strong> <code>x + y + "" val""</code> evaluates left to right. First <code>3 + 4 = 7</code> (both int, so arithmetic). Then <code>7 + "" val"" = ""7 val""</code> (int + String, so concatenation).</p>
+  <p style=""line-height: 1.7;""><strong>Line 4:</strong> <code>""val "" + x + y</code> evaluates left to right. First <code>""val "" + 3 = ""val 3""</code> (String + int, so concatenation). Then <code>""val 3"" + 4 = ""val 34""</code> (String + int, concatenation again).</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(B)</strong> The first line performs <code>x + y</code> before hitting the String. Since both are <code>int</code>, it is arithmetic addition: <code>3 + 4 = 7</code>. It only becomes concatenation when the String is reached.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(C)</strong> The second line starts with a String, so all subsequent <code>+</code> operations are concatenation. <code>""val "" + 3</code> produces <code>""val 3""</code>, then <code>""val 3"" + 4</code> produces <code>""val 34""</code>, not <code>""val 7""</code>.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(D)</strong> This reverses both results. The first line adds integers first, the second line concatenates from the start.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">The <code>+</code> operator evaluates left to right. If the left operand is a String (or the result so far is a String), it performs concatenation. If both operands are numeric, it performs addition. The position of the String literal controls which operation happens.</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">This is one of the most common AP exam tricks. Read <code>+</code> expressions strictly left to right. Once a String appears in the chain, every subsequent <code>+</code> becomes concatenation. To force addition first, use parentheses: <code>""val "" + (x + y)</code>.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section 1.9 — Strings: Concatenation •
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" style=""color: #5b21b6 !important;"">Unit 1 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 2 - SignedText</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 2 - Scoreboard</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 2 - Sign</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-12-return-values"" class=""qotd-nav-btn qotd-nav-prev"">← Day 12</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-14-substring-indexof"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Day 14 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'A';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"
+"ap-csa-daily-practice","unit-4-cycle-2-day-20-arraylist-remove-with-wrapper","MERGE","<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:""→"";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class=""apcs-practice-wrapper"">
+
+<!-- HEADER -->
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4, Data Collections • Cycle 2</div>
+<div class=""apcs-meta"">Day 20 Advanced Practice • Harder Difficulty</div>
+<div class=""apcs-focus-badge"">
+Focus: ArrayList Remove with Wrapper
+<span class=""apcs-difficulty-badge"" style=""background:#f56565"">Hard</span>
+<span class=""apcs-difficulty-badge"" style=""background:#805ad5;margin-left:4px"">ArrayList Remove with Wrapper</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Advanced Practice Question</h2>
+<div class=""apcs-question-text"">
+<strong>Format:</strong> ArrayList Remove with Wrapper<br><br>
+What is the output?
+</div>
+
+
+<div class=""apcs-code-block"">
+<pre><code>ArrayList<integer> nums = <span class=""apcs-keyword"">new</span> ArrayList&lt;&gt;();
+nums.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">10</span>);
+nums.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">20</span>);
+nums.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">30</span>);
+nums.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">20</span>);
+
+nums.<span class=""apcs-function"">remove</span>(<span class=""apcs-number"">1</span>);
+
+System.out.<span class=""apcs-function"">print</span>ln(nums);</integer></code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">[10, 20, 30]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">[10, 20, 30, 20]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">[10, 30]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">[10, 30, 20]</span>
+</label>
+</div>
+<button type=""submit"" class=""apcs-submit-btn"">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id=""apcs-feedback"" class=""apcs-feedback"">
+<div id=""apcs-feedback-header"" class=""apcs-feedback-header""></div>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> ArrayList Remove with Wrapper  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class=""apcs-section-title"">Why This Answer?</div>
+<div class=""apcs-section-content"">
+<p>remove(1) removes the element at INDEX 1, which is 20. The list becomes [10, 30, 20]. The last 20 remains.</p>
+</div>
+
+<div class=""apcs-section-title"">Common Mistake</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Watch Out!</div>
+<p>Thinking remove(1) removes the value 1, or removes all occurrences of 20.</p>
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Strategy</div>
+<p>For ArrayList<integer>: remove(int index) removes by index. To remove by value, use remove(Integer.valueOf(value)).</integer></p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-19-2d-array-search"" class=""apcs-nav-link"" id=""prev-day-link"">← Previous</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""apcs-nav-link"">Hub</a>
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-21-array-copy-pitfall"" class=""apcs-nav-link"" id=""next-day-link"">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class=""apcs-study-section"">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests arraylist remove with wrapper. Review Unit 4 concepts to build mastery of data collections.</p>
+<ul class=""apcs-concept-list"">
+<li>Understanding arraylist remove with wrapper</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href=""/pages/ap-csa-unit-4-ultimate-study-guide"" class=""apcs-cta-link"">View Unit 4 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class=""apcs-cta-box"">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href=""/pages/ap-csa-study-games"" class=""apcs-cta-link"">Study Games</a>
+<a href=""/pages/ap-csa-frq-archive"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'D';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is ' + correctAnswer + '. Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var overallDayNumber = 203;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>"
+"ap-csa-daily-practice","unit4-cycle2-day-20-arraylist-remove-with-wrapper","MERGE","<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:""→"";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class=""apcs-practice-wrapper"">
+
+<!-- HEADER -->
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4, Data Collections • Cycle 2</div>
+<div class=""apcs-meta"">Day 20 Advanced Practice • Harder Difficulty</div>
+<div class=""apcs-focus-badge"">
+Focus: ArrayList Remove with Wrapper
+<span class=""apcs-difficulty-badge"" style=""background:#f56565"">Hard</span>
+<span class=""apcs-difficulty-badge"" style=""background:#805ad5;margin-left:4px"">ArrayList Remove with Wrapper</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Advanced Practice Question</h2>
+<div class=""apcs-question-text"">
+<strong>Format:</strong> ArrayList Remove with Wrapper<br><br>
+What is the output?
+</div>
+
+
+<div class=""apcs-code-block"">
+<pre><code>ArrayList<integer> nums = <span class=""apcs-keyword"">new</span> ArrayList&lt;&gt;();
+nums.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">10</span>);
+nums.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">20</span>);
+nums.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">30</span>);
+nums.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">20</span>);
+
+nums.<span class=""apcs-function"">remove</span>(<span class=""apcs-number"">1</span>);
+
+System.out.<span class=""apcs-function"">print</span>ln(nums);</integer></code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">[10, 20, 30]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">[10, 20, 30, 20]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">[10, 30]</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">[10, 30, 20]</span>
+</label>
+</div>
+<button type=""submit"" class=""apcs-submit-btn"">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id=""apcs-feedback"" class=""apcs-feedback"">
+<div id=""apcs-feedback-header"" class=""apcs-feedback-header""></div>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> ArrayList Remove with Wrapper  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class=""apcs-section-title"">Why This Answer?</div>
+<div class=""apcs-section-content"">
+<p>remove(1) removes the element at INDEX 1, which is 20. The list becomes [10, 30, 20]. The last 20 remains.</p>
+</div>
+
+<div class=""apcs-section-title"">Common Mistake</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Watch Out!</div>
+<p>Thinking remove(1) removes the value 1, or removes all occurrences of 20.</p>
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Strategy</div>
+<p>For ArrayList<integer>: remove(int index) removes by index. To remove by value, use remove(Integer.valueOf(value)).</integer></p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-19-2d-array-search"" class=""apcs-nav-link"" id=""prev-day-link"">← Previous</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""apcs-nav-link"">Hub</a>
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-21-array-copy-pitfall"" class=""apcs-nav-link"" id=""next-day-link"">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class=""apcs-study-section"">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests arraylist remove with wrapper. Review Unit 4 concepts to build mastery of data collections.</p>
+<ul class=""apcs-concept-list"">
+<li>Understanding arraylist remove with wrapper</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href=""/pages/ap-csa-unit-4-ultimate-study-guide"" class=""apcs-cta-link"">View Unit 4 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class=""apcs-cta-box"">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href=""/pages/ap-csa-study-games"" class=""apcs-cta-link"">Study Games</a>
+<a href=""/pages/ap-csa-frq-archive"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'D';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is ' + correctAnswer + '. Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var overallDayNumber = 203;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>"
+"ap-csa-daily-practice","unit-4-cycle-2-day-5-2d-array-initialization","MERGE","<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:""→"";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class=""apcs-practice-wrapper"">
+
+<!-- HEADER -->
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4, Data Collections • Cycle 2</div>
+<div class=""apcs-meta"">Day 5 Advanced Practice • Harder Difficulty</div>
+<div class=""apcs-focus-badge"">
+Focus: 2D Array Initialization
+<span class=""apcs-difficulty-badge"" style=""background:#f56565"">Hard</span>
+<span class=""apcs-difficulty-badge"" style=""background:#805ad5;margin-left:4px"">2D Array Initialization</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Advanced Practice Question</h2>
+<div class=""apcs-question-text"">
+<strong>Format:</strong> 2D Array Initialization<br><br>
+What is the output?
+</div>
+
+
+<div class=""apcs-code-block"">
+<pre><code><span class=""apcs-keyword"">int</span>[][] matrix = <span class=""apcs-keyword"">new</span> <span class=""apcs-keyword"">int</span>[<span class=""apcs-number"">3</span>][<span class=""apcs-number"">4</span>];
+matrix[<span class=""apcs-number"">0</span>][<span class=""apcs-number"">0</span>] = <span class=""apcs-number"">1</span>;
+matrix[<span class=""apcs-number"">2</span>][<span class=""apcs-number"">3</span>] = <span class=""apcs-number"">9</span>;
+
+<span class=""apcs-keyword"">int</span> val = <span class=""apcs-number"">0</span>;
+<span class=""apcs-keyword"">for</span> (<span class=""apcs-keyword"">int</span> r = <span class=""apcs-number"">0</span>; r &lt; matrix.<span class=""apcs-function"">length</span>; r++) {
+    <span class=""apcs-keyword"">for</span> (<span class=""apcs-keyword"">int</span> c = <span class=""apcs-number"">0</span>; c &lt; matrix[r].<span class=""apcs-function"">length</span>; c++) {
+        <span class=""apcs-keyword"">if</span> (matrix[r][c] == <span class=""apcs-number"">0</span>) {
+            val++;
+        }
+    }
+}
+
+System.out.<span class=""apcs-function"">print</span>ln(val);</code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">2</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">11</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">12</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">10</span>
+</label>
+</div>
+<button type=""submit"" class=""apcs-submit-btn"">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id=""apcs-feedback"" class=""apcs-feedback"">
+<div id=""apcs-feedback-header"" class=""apcs-feedback-header""></div>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> 2D Array Initialization  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class=""apcs-section-title"">Why This Answer?</div>
+<div class=""apcs-section-content"">
+<p>Array has 3 rows × 4 columns = 12 total elements. Two are set to non-zero (1 and 9), leaving 12 - 2 = 10 elements at default value 0.</p>
+</div>
+
+<div class=""apcs-section-title"">Common Mistake</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Watch Out!</div>
+<p>Forgetting that 2D arrays auto-initialize all elements to 0, or miscounting total elements.</p>
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Strategy</div>
+<p>2D array size = rows × columns. New arrays auto-initialize: int→0, double→0.0, boolean→false, objects→null.</p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-4-array-vs-arraylist"" class=""apcs-nav-link"" id=""prev-day-link"">← Previous</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""apcs-nav-link"">Hub</a>
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-6-arraylist-wrapper-types"" class=""apcs-nav-link"" id=""next-day-link"">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class=""apcs-study-section"">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests 2d array initialization. Review Unit 4 concepts to build mastery of data collections.</p>
+<ul class=""apcs-concept-list"">
+<li>Understanding 2d array initialization</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href=""/pages/ap-csa-unit-4-ultimate-study-guide"" class=""apcs-cta-link"">View Unit 4 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class=""apcs-cta-box"">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href=""/pages/ap-csa-study-games"" class=""apcs-cta-link"">Study Games</a>
+<a href=""/pages/ap-csa-frq-archive"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'D';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is ' + correctAnswer + '. Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var overallDayNumber = 188;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>"
+"ap-csa-daily-practice","unit4-cycle2-day-5-2d-array-initialization","MERGE","<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:""→"";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class=""apcs-practice-wrapper"">
+
+<!-- HEADER -->
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4, Data Collections • Cycle 2</div>
+<div class=""apcs-meta"">Day 5 Advanced Practice • Harder Difficulty</div>
+<div class=""apcs-focus-badge"">
+Focus: 2D Array Initialization
+<span class=""apcs-difficulty-badge"" style=""background:#f56565"">Hard</span>
+<span class=""apcs-difficulty-badge"" style=""background:#805ad5;margin-left:4px"">2D Array Initialization</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Advanced Practice Question</h2>
+<div class=""apcs-question-text"">
+<strong>Format:</strong> 2D Array Initialization<br><br>
+What is the output?
+</div>
+
+
+<div class=""apcs-code-block"">
+<pre><code><span class=""apcs-keyword"">int</span>[][] matrix = <span class=""apcs-keyword"">new</span> <span class=""apcs-keyword"">int</span>[<span class=""apcs-number"">3</span>][<span class=""apcs-number"">4</span>];
+matrix[<span class=""apcs-number"">0</span>][<span class=""apcs-number"">0</span>] = <span class=""apcs-number"">1</span>;
+matrix[<span class=""apcs-number"">2</span>][<span class=""apcs-number"">3</span>] = <span class=""apcs-number"">9</span>;
+
+<span class=""apcs-keyword"">int</span> count = <span class=""apcs-number"">0</span>;
+<span class=""apcs-keyword"">for</span> (<span class=""apcs-keyword"">int</span> r = <span class=""apcs-number"">0</span>; r &lt; matrix.<span class=""apcs-function"">length</span>; r++) {
+    <span class=""apcs-keyword"">for</span> (<span class=""apcs-keyword"">int</span> c = <span class=""apcs-number"">0</span>; c &lt; matrix[r].<span class=""apcs-function"">length</span>; c++) {
+        <span class=""apcs-keyword"">if</span> (matrix[r][c] == <span class=""apcs-number"">0</span>) {
+            count++;
+        }
+    }
+}
+
+System.out.<span class=""apcs-function"">print</span>ln(count);</code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">2</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">11</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">12</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">10</span>
+</label>
+</div>
+<button type=""submit"" class=""apcs-submit-btn"">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id=""apcs-feedback"" class=""apcs-feedback"">
+<div id=""apcs-feedback-header"" class=""apcs-feedback-header""></div>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> 2D Array Initialization  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class=""apcs-section-title"">Why This Answer?</div>
+<div class=""apcs-section-content"">
+<p>Array has 3 rows × 4 columns = 12 total elements. Two are set to non-zero (1 and 9), leaving 12 - 2 = 10 elements at default value 0.</p>
+</div>
+
+<div class=""apcs-section-title"">Common Mistake</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Watch Out!</div>
+<p>Forgetting that 2D arrays auto-initialize all elements to 0, or miscounting total elements.</p>
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Strategy</div>
+<p>2D array size = rows × columns. New arrays auto-initialize: int→0, double→0.0, boolean→false, objects→null.</p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-4-array-vs-arraylist"" class=""apcs-nav-link"" id=""prev-day-link"">← Previous</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""apcs-nav-link"">Hub</a>
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-6-arraylist-wrapper-types"" class=""apcs-nav-link"" id=""next-day-link"">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class=""apcs-study-section"">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests 2d array initialization. Review Unit 4 concepts to build mastery of data collections.</p>
+<ul class=""apcs-concept-list"">
+<li>Understanding 2d array initialization</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href=""/pages/ap-csa-unit-4-ultimate-study-guide"" class=""apcs-cta-link"">View Unit 4 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class=""apcs-cta-box"">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href=""/pages/ap-csa-study-games"" class=""apcs-cta-link"">Study Games</a>
+<a href=""/pages/ap-csa-frq-archive"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'D';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is ' + correctAnswer + '. Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var overallDayNumber = 188;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>"
+"ap-csa-daily-practice","unit-4-cycle-2-day-26-arraylist-loop-adding","MERGE","<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:""→"";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class=""apcs-practice-wrapper"">
+
+<!-- HEADER -->
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4, Data Collections • Cycle 2</div>
+<div class=""apcs-meta"">Day 26 Advanced Practice • Harder Difficulty</div>
+<div class=""apcs-focus-badge"">
+Focus: ArrayList Loop Adding
+<span class=""apcs-difficulty-badge"" style=""background:#f56565"">Hard</span>
+<span class=""apcs-difficulty-badge"" style=""background:#805ad5;margin-left:4px"">ArrayList Loop Adding</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Advanced Practice Question</h2>
+<div class=""apcs-question-text"">
+<strong>Format:</strong> ArrayList Loop Adding<br><br>
+What is the final size of the ArrayList?
+</div>
+
+
+<div class=""apcs-code-block"">
+<pre><code>ArrayList<integer> list = <span class=""apcs-keyword"">new</span> ArrayList&lt;&gt;();
+list.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">1</span>);
+list.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">2</span>);
+list.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">3</span>);
+
+<span class=""apcs-keyword"">for</span> (<span class=""apcs-keyword"">int</span> i = <span class=""apcs-number"">0</span>; i &lt; <span class=""apcs-number"">3</span>; i++) {
+    list.<span class=""apcs-function"">add</span>(list.<span class=""apcs-function"">get</span>(i) * <span class=""apcs-number"">2</span>);
+}
+
+System.out.<span class=""apcs-function"">print</span>ln(list.<span class=""apcs-function"">size</span>());</integer></code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">3</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">12</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">9</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">6</span>
+</label>
+</div>
+<button type=""submit"" class=""apcs-submit-btn"">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id=""apcs-feedback"" class=""apcs-feedback"">
+<div id=""apcs-feedback-header"" class=""apcs-feedback-header""></div>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> ArrayList Loop Adding  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class=""apcs-section-title"">Why This Answer?</div>
+<div class=""apcs-section-content"">
+<p>Initial size is 3. Loop runs exactly 3 times (i = 0, 1, 2) based on the condition i &lt; 3. Each iteration adds one element. Final size: 3 + 3 = 6.</p>
+</div>
+
+<div class=""apcs-section-title"">Common Mistake</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Watch Out!</div>
+<p>Thinking the loop will run based on list.size() which changes during the loop (it doesn't - loop condition is i &lt; 3).</p>
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Strategy</div>
+<p>Loop condition i &lt; 3 is evaluated once at the start of each iteration. It doesn't dynamically change with list.size().</p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-25-selection-sort-iteration"" class=""apcs-nav-link"" id=""prev-day-link"">← Previous</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""apcs-nav-link"">Hub</a>
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-27-2d-array-edge-elements"" class=""apcs-nav-link"" id=""next-day-link"">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class=""apcs-study-section"">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests arraylist loop adding. Review Unit 4 concepts to build mastery of data collections.</p>
+<ul class=""apcs-concept-list"">
+<li>Understanding arraylist loop adding</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href=""/pages/ap-csa-unit-4-ultimate-study-guide"" class=""apcs-cta-link"">View Unit 4 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class=""apcs-cta-box"">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href=""/pages/ap-csa-study-games"" class=""apcs-cta-link"">Study Games</a>
+<a href=""/pages/ap-csa-frq-archive"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'D';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is ' + correctAnswer + '. Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var overallDayNumber = 209;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>"
+"ap-csa-daily-practice","unit4-cycle2-day-26-arraylist-loop-adding","MERGE","<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:""→"";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid #4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class=""apcs-practice-wrapper"">
+
+<!-- HEADER -->
+<div class=""apcs-header"">
+<div class=""apcs-unit-section"">Unit 4, Data Collections • Cycle 2</div>
+<div class=""apcs-meta"">Day 26 Advanced Practice • Harder Difficulty</div>
+<div class=""apcs-focus-badge"">
+Focus: ArrayList Loop Adding
+<span class=""apcs-difficulty-badge"" style=""background:#f56565"">Hard</span>
+<span class=""apcs-difficulty-badge"" style=""background:#805ad5;margin-left:4px"">ArrayList Loop Adding</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class=""apcs-question-card"">
+<h2 class=""apcs-question-header"">Advanced Practice Question</h2>
+<div class=""apcs-question-text"">
+<strong>Format:</strong> ArrayList Loop Adding<br><br>
+What is the final size of the ArrayList?
+</div>
+
+
+<div class=""apcs-code-block"">
+<pre><code>ArrayList<integer> list = <span class=""apcs-keyword"">new</span> ArrayList&lt;&gt;();
+list.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">1</span>);
+list.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">2</span>);
+list.<span class=""apcs-function"">add</span>(<span class=""apcs-number"">3</span>);
+
+<span class=""apcs-keyword"">for</span> (<span class=""apcs-keyword"">int</span> i = <span class=""apcs-number"">0</span>; i &lt; <span class=""apcs-number"">3</span>; i++) {
+    list.<span class=""apcs-function"">add</span>(list.<span class=""apcs-function"">get</span>(i) * <span class=""apcs-number"">2</span>);
+}
+
+System.out.<span class=""apcs-function"">print</span>ln(list.<span class=""apcs-function"">size</span>());</integer></code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id=""apcs-quiz-form"">
+<div class=""apcs-answer-options"">
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""A"">
+<span class=""apcs-option-letter"">A)</span>
+<span class=""apcs-option-content"">3</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""B"">
+<span class=""apcs-option-letter"">B)</span>
+<span class=""apcs-option-content"">12</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""C"">
+<span class=""apcs-option-letter"">C)</span>
+<span class=""apcs-option-content"">9</span>
+</label>
+<label class=""apcs-option"">
+<input type=""radio"" name=""answer"" value=""D"">
+<span class=""apcs-option-letter"">D)</span>
+<span class=""apcs-option-content"">6</span>
+</label>
+</div>
+<button type=""submit"" class=""apcs-submit-btn"">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id=""apcs-feedback"" class=""apcs-feedback"">
+<div id=""apcs-feedback-header"" class=""apcs-feedback-header""></div>
+
+<div class=""apcs-info-bar"">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> ArrayList Loop Adding  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class=""apcs-section-title"">Why This Answer?</div>
+<div class=""apcs-section-content"">
+<p>Initial size is 3. Loop runs exactly 3 times (i = 0, 1, 2) based on the condition i &lt; 3. Each iteration adds one element. Final size: 3 + 3 = 6.</p>
+</div>
+
+<div class=""apcs-section-title"">Common Mistake</div>
+<div class=""apcs-mistake-block"">
+<div class=""apcs-mistake-title"">Watch Out!</div>
+<p>Thinking the loop will run based on list.size() which changes during the loop (it doesn't - loop condition is i &lt; 3).</p>
+</div>
+
+<div class=""apcs-tip-box"">
+<div class=""apcs-tip-title"">AP Exam Strategy</div>
+<p>Loop condition i &lt; 3 is evaluated once at the start of each iteration. It doesn't dynamically change with list.size().</p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class=""apcs-navigation"">
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-25-selection-sort-iteration"" class=""apcs-nav-link"" id=""prev-day-link"">← Previous</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""apcs-nav-link"">Hub</a>
+<a href=""/blogs/ap-csa-daily-practice/unit4-cycle2-day-27-2d-array-edge-elements"" class=""apcs-nav-link"" id=""next-day-link"">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class=""apcs-study-section"">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests arraylist loop adding. Review Unit 4 concepts to build mastery of data collections.</p>
+<ul class=""apcs-concept-list"">
+<li>Understanding arraylist loop adding</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href=""/pages/ap-csa-unit-4-ultimate-study-guide"" class=""apcs-cta-link"">View Unit 4 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class=""apcs-cta-box"">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href=""/pages/ap-csa-study-games"" class=""apcs-cta-link"">Study Games</a>
+<a href=""/pages/ap-csa-frq-archive"" class=""apcs-cta-link apcs-cta-secondary"">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name=""answer""]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'D';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is ' + correctAnswer + '. Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var overallDayNumber = 209;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>"
