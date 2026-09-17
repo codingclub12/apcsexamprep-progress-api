@@ -321,3 +321,71 @@ The second thing: this was found by a student with an email address, not
 by the suite, and the suite could not have found it. Both repos check
 source, and a cascade defect has no source to check. That is what the browser
 gate is for, and why it measures a resolved value rather than asserting a rule.
+
+## RESOLVED 2026-09-17: the real fix is what serves
+
+Tanner imported `quiz-mount-unpin-1-csa-1-1.csv`. Verified live within the minute:
+
+    the page now names apcs-quiz-mount.js, with no ?v=
+    that URL serves 9,616 bytes and carries qz-opt-text
+    the eight answer choices measure 10.31:1
+    the shim is GONE from the served page, 0 occurrences
+
+So the page is fixed by the corrected asset rather than by a fence in front of
+it, which is what this was always for. The fence removed itself with no edit,
+no deploy and nobody remembering: its Liquid gate was the pin, the pin went,
+and the block stopped rendering. That is the one design decision here worth
+reusing. A stopgap that needs a cleanup task is a stopgap that outlives its
+reason.
+
+The handoff is the part that could have gone wrong and did not. Between the
+sheet landing and the CDN serving the new bytes there was a window where the
+shim could have stopped rendering before the real paint arrived, which would
+have put the page back to 1.1:1 with nobody watching. It did not happen because
+the gate and the fix flip on the same byte: the same 13 characters that stop the
+shim rendering are the ones that repoint the script.
+
+### The staleness rule fired on its first real case
+
+`--check` refused sheet 1 the moment the page changed underneath it:
+
+    ap-csa-lesson-1-1-intro-algorithms: STALE. The live body is 99792 bytes, the
+    sheet was built from 99805. Regenerate before importing; this sheet would
+    MERGE an old body over it.
+
+That is not a nuisance, it is the whole point. The sheet still carried the
+pre-import body, so re-importing it would have MERGED the `?v=` back on and
+undone the fix, silently, on the one page a student had complained about. Added
+that morning, useful by the afternoon.
+
+The sheet is deleted. Its group is marked `imported` rather than removed, which
+retires the SHEET and keeps the HANDLE: `verify-quiz-mount-unpin-live.js` still
+watches 1.1, because the page being right today is not a reason to stop noticing
+if it stops being right.
+
+### One mutation of my own read as a pass and was testing nothing
+
+Worth writing down because it is the exact trap this repo keeps meeting. To check
+the staleness rule still worked after that change, the mutation aged a cyber
+page's snapshot with `.replace('<h2>', ...)`. It exited 0. That looks like a
+hollow rule.
+
+It was a hollow TEST. Cyber quiz bodies contain no `<h2>` at all, so the replace
+was a no-op, the snapshot was unchanged, and there was nothing stale to find. The
+rule was fine. Re-run as an append, which cannot miss, it exits 1 and names the
+drift.
+
+A mutation built on a string you have not confirmed is present is not a mutation.
+Prefer one that cannot silently do nothing.
+
+### What is left, and none of it is urgent
+
+Five sheets, 22 AP Cyber quiz pages, all still pinned. They render at 10.31:1
+today and will render identically after, so nothing is broken and nothing is
+waiting on them. They exist so the next Files replacement is not silently
+ignored on 22 pages, which is the trap that cost this whole run.
+
+`snippets/apcs-quiz-mount-contrast-shim.liquid` is now inert: its gate needs a
+pinned page WITH an `.apcsa-mastery` section and no live page is both. Deleting
+it is safe once all 23 are unpinned and pointless before then, since it renders
+nowhere and costs nothing. Not worth a deploy on its own.

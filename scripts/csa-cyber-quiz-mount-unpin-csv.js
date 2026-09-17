@@ -56,8 +56,20 @@ const SNAP = path.join(__dirname, '..', 'imports', '2026-09-15', 'quiz-mount-unp
 //  radius first. Handles are not guessed, they are the 23 the live sitemap
 //  sweep found carrying data-apcs-quiz on 2026-09-15.
 const GROUPS = [
+  //  IMPORTED 2026-09-17, and the sheet is deleted. Verified live the same
+  //  minute: the page names the bare URL, that URL serves 9,616 bytes carrying
+  //  qz-opt-text, and the answer choices measure 10.31:1 from the widget's own
+  //  inline paint. The theme shim stopped rendering on its own, because its
+  //  gate was the pin.
+  //  `imported` retires the SHEET, not the handle. The handle stays in GROUPS
+  //  so verify-quiz-mount-unpin-live.js keeps watching it: the page being fixed
+  //  today is not a reason to stop noticing if it comes unfixed.
+  //  Keeping the sheet would have been the danger rather than the tidiness.
+  //  It carries the pre-import body, so a re-import would MERGE 13 bytes of
+  //  `?v=` back on and undo this. --check said so in those words before it was
+  //  deleted, which is the first time that rule has fired on a real case.
   { file: 'quiz-mount-unpin-1-csa-1-1.csv', label: 'CSA 1.1 (the reported page)',
-    handles: ['ap-csa-lesson-1-1-intro-algorithms'] },
+    imported: '2026-09-17', handles: ['ap-csa-lesson-1-1-intro-algorithms'] },
   { file: 'quiz-mount-unpin-2-cyber-unit-1.csv', label: 'AP Cyber unit 1',
     handles: ['ap-cyber-unit-1-lesson-1-quiz', 'ap-cyber-unit-1-lesson-2-quiz',
       'ap-cyber-unit-1-lesson-3-quiz', 'ap-cyber-unit-1-lesson-4-quiz',
@@ -159,6 +171,13 @@ function main() {
   let pages = 0;
 
   for (const g of GROUPS) {
+    if (g.imported) {
+      console.log('skipped ' + g.file.padEnd(38) +
+        g.handles.length + ' page' + (g.handles.length === 1 ? ' ' : 's') +
+        '  imported ' + g.imported + ', sheet deleted');
+      pages += g.handles.length;
+      continue;
+    }
     const rows = [];
     for (const handle of g.handles) {
       //  --check REFETCHES. It used to read the snapshot back when one existed,
@@ -223,7 +242,19 @@ function main() {
     problems.forEach((p) => console.log('  ' + p));
     process.exit(1);
   }
-  console.log(pages + ' pages across ' + GROUPS.length + ' sheets, every one parsed back byte for byte.');
+  //  Count the sheets that EXIST, not the groups. An imported group has no file
+  //  any more, and a summary that says 6 when 5 are on disk is the kind of line
+  //  somebody later reads as evidence.
+  const live = GROUPS.filter((g) => !g.imported);
+  const done = GROUPS.filter((g) => g.imported);
+  console.log(live.reduce((n, g) => n + g.handles.length, 0) + ' pages across ' +
+    live.length + ' sheet' + (live.length === 1 ? '' : 's') +
+    ', every one parsed back byte for byte.');
+  if (done.length) {
+    console.log(done.reduce((n, g) => n + g.handles.length, 0) + ' more already imported (' +
+      done.map((g) => g.file.replace(/^quiz-mount-unpin-|\.csv$/g, '')).join(', ') +
+      '), still watched by verify-quiz-mount-unpin-live.js.');
+  }
 }
 
 //  main() only when run directly, so the mutation harness can drive build()
