@@ -532,6 +532,12 @@ def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_li
                 m = d.get('misconception') or {}
                 if m.get('truth'):
                     _bullet(doc, m['truth'])
+            elif low.startswith('objectives and guided'):
+                # Optional, so a unit supplying nothing renders exactly as it
+                # did before: Unit 1 supplies it, Units 2-4 do not, and their 38
+                # guides come out unchanged either way.
+                if d.get('objectives_note'):
+                    _bullet(doc, d['objectives_note'])
             elif low.startswith('guided practice'):
                 lp = d.get('lesson_page') or {}
                 if lp.get('intro'):
@@ -541,6 +547,9 @@ def build_teacher_guide(path, topic, title, handle, days, vocab, quiz, graded_li
             elif low.startswith('independent practice'):
                 if d.get('independent'):
                     _bullet(doc, d['independent'])
+            elif low.startswith('exit ticket'):
+                if d.get('exit_note'):
+                    _bullet(doc, d['exit_note'])
             elif low.startswith('stop and think'):
                 for q in (d.get('discussion') or []):
                     _bullet(doc, q)
