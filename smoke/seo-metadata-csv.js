@@ -102,6 +102,43 @@ ok('a historical range is not a school year and is allowed',
   !G.checkRow(row({ title: 'AP CSA FRQ Archive 2004-2025' }), 'Pages')
     .some((p) => /school year that has ended/.test(p)));
 
+console.log('\n  A STANDALONE exam year that has passed may never be written\n');
+//  The span rule above reads 2026-27 and passes, so it never looked at a title
+//  reading "AP CSA Exam Format 2026". On 2026-09-17 that was live, in September
+//  2026, on a page ranking 4.4 in Search Console with 214 impressions and ZERO
+//  clicks. The boundary is derived from the clock, so these cases are written
+//  against "the year before the live administration" rather than a literal.
+const EXAM_YEAR = new Date().getUTCMonth() > 4
+  ? new Date().getUTCFullYear() + 1 : new Date().getUTCFullYear();
+const PASSED = String(EXAM_YEAR - 1);
+const staleYear = (p) => /names the exam year/.test(p);
+
+ok(`a title naming the passed exam year ${PASSED} is refused`,
+  G.checkRow(row({ title: `AP CSA Exam Format ${PASSED}` }), 'Pages').some(staleYear));
+ok(`a description naming ${PASSED} is refused too, not just a title`,
+  G.checkRow(row({ description: `Complete AP CSA exam guide for the ${PASSED} exam with `
+    + 'full scoring breakdowns, unit weights, timing strategy and worked examples.' }), 'Pages')
+    .some(staleYear));
+ok(`the live administration year ${EXAM_YEAR} is fine`,
+  !G.checkRow(row({ title: `AP CSA Exam Format ${EXAM_YEAR}` }), 'Pages').some(staleYear));
+ok('a school-year span is the other rule\'s business and is not flagged here',
+  !G.checkRow(row({ title: 'AP Computer Science A 2026-27: Free Course' }), 'Pages').some(staleYear));
+
+//  The exemption below is the part worth probing. Three live records say
+//  "every released FRQ from 2004 to 2025", which is a catalogue of past papers
+//  and correct. An exemption nobody probes is just a hole, so the last case
+//  proves a stale year sitting BESIDE a legitimate range is still caught.
+ok('an archive range like 2004 to 2025 is allowed',
+  !G.checkRow(row({ description: 'Complete AP CSA free response solutions with 9-point '
+    + 'rubrics and mistake analysis, covering every released FRQ from 2004 to 2025.' }), 'Pages')
+    .some(staleYear));
+ok('a dashed archive range 2004-2025 is allowed',
+  !G.checkRow(row({ title: 'AP CSA FRQ Solutions 2004-2025' }), 'Pages').some(staleYear));
+ok('THE EXEMPTION IS NOT A HOLE: a stale year beside a range is still refused',
+  G.checkRow(row({ description: `Every released FRQ from 2004 to 2025 with rubrics, built `
+    + `for the ${PASSED} exam, plus unit study guides and full practice exams.` }), 'Pages')
+    .some(staleYear));
+
 console.log('\n  The shipped table itself\n');
 
 for (const [rows, kind] of [[PAGES, 'Pages'], [PRODUCTS, 'Products'], [COLLECTIONS, 'Collections']]) {
