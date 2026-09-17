@@ -32,11 +32,27 @@ const fs = require('fs');
 process.env.DB_PATH = path.join(__dirname, 'smoke-assistant-report.db');
 for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
 
-// No recipient configured: mailOwner must short-circuit rather than attempt a
-// send. The suite must not depend on, or reach, a mail provider.
+// No recipient configured: the mail path must short-circuit rather than attempt
+// a send. The suite must not depend on, or reach, a mail provider.
 delete process.env.ASSISTANT_ALERT_EMAIL;
 delete process.env.COMMAND_OWNER_EMAIL;
+delete process.env.REPORTS_TO;
 delete process.env.RESEND_API_KEY;
+
+// BOARD FILING IS NOW OPT-IN, and this suite is what still covers it.
+//
+// docs/handoffs/Site-Assistant-Report-First.md section 3.1 stops the report path
+// calling the TODO API and says to keep the code behind REPORTS_FILE_TODOS so it
+// can come back. The default is therefore OFF, and sections 10 to 12 below test
+// filing, dedupe and what a task carries. Turning the flag on here is the honest
+// way to keep testing a path that still exists: deleting those sections would
+// leave the flag with nothing behind it, and a flag nobody tests is a flag that
+// has already stopped working.
+//
+// The DEFAULT being off is asserted in smoke/assistant-report-routing.js, which
+// runs with the variable unset. Neither suite can pass the other's assertion,
+// which is the point of splitting them.
+process.env.REPORTS_FILE_TODOS = 'true';
 
 // The limiter is real and it WILL block a test suite that fires two dozen
 // reports from one address. Rather than disable it, shrink its window to a few
@@ -122,7 +138,17 @@ const SECRET_PROSE = 'my name is REDACTEDCHILD and my email is kid@example.com';
   // ── 2) A closed category set ──────────────────────────────────────────────
   let r = await post('/api/assistant/report', { category: 'not_a_category', pageUrl: PRICING });
   ok('unknown category is refused', r.status === 400, r.status);
-  ok('refusal lists the valid set', r.body && Array.isArray(r.body.categories) && r.body.categories.length === 13);
+  // Compared against the module rather than a literal count. The literal was 13
+  // and 'suggestion' made it 14 (handoff 4.3); a number written out here fails on
+  // every legitimate addition, which trains whoever hits it to edit the number
+  // rather than to ask whether the set is right.
+  ok('refusal lists the valid set',
+    r.body && Array.isArray(r.body.categories)
+    && r.body.categories.join(',') === reportLib.CATEGORIES.join(','), r.body && r.body.categories);
+  ok('the refusal set carries suggestion (handoff 4.3)',
+    r.body && r.body.categories.includes('suggestion'));
+  ok('the refusal set never carries a server-only category',
+    r.body && reportLib.INTERNAL_CATEGORIES.every((c) => !r.body.categories.includes(c)));
   ok('refused report stored nothing', escCount() === 0, escCount());
 
   r = await post('/api/assistant/report', { pageUrl: PRICING });
@@ -226,12 +252,40 @@ const SECRET_PROSE = 'my name is REDACTEDCHILD and my email is kid@example.com';
     tch.contact_email === 't@school.example' && tch.contact_name === 'Alex Teacher' && tch.school === 'Example HS', tch);
 
   // ── 8) Severity is by rule, and public forms cannot page a human ──────────
+  //
+  // THIS RULE CHANGED, deliberately, and the old assertion is kept below the new
+  // ones so the change is visible rather than silently rewritten.
+  //
+  // Phase 0 raised assessment_visibility to 'immediate' only for a TEACHER, on
+  // the reasoning that a public form must not be able to page anyone. Handoff
+  // 3.3 overrides that for this one category: "a report says students can see
+  // tests, quizzes, answer keys, or teacher materials" is urgent whoever says
+  // it. An anonymous caller reporting a live answer key is reporting a live
+  // answer key, and the cost of believing them wrongly is one email.
+  //
+  // What did NOT change is the thing the old rule was protecting: every OTHER
+  // category still cannot be raised from a public form, which section 8b pins.
   r = await post('/api/assistant/report', { category: 'assessment_visibility', pageUrl: LESSON }, TT);
   ok('teacher assessment_visibility is immediate', escById(r.body.id).severity === 'immediate');
   r = await post('/api/assistant/report', { category: 'assessment_visibility', pageUrl: LESSON }, ST);
-  ok('student assessment_visibility is NOT immediate', escById(r.body.id).severity === 'normal');
+  ok('student assessment_visibility is immediate too (handoff 3.3)',
+    escById(r.body.id).severity === 'immediate', escById(r.body.id).severity);
   r = await post('/api/assistant/report', { category: 'assessment_visibility', pageUrl: PRICING });
-  ok('anonymous assessment_visibility is NOT immediate', escById(r.body.id).severity === 'normal');
+  ok('anonymous assessment_visibility is immediate too (handoff 3.3)',
+    escById(r.body.id).severity === 'immediate', escById(r.body.id).severity);
+
+  // ── 8b) and nothing ELSE a public form can send raises a pager ────────────
+  // The category list is the control surface, so walk the whole postable set
+  // rather than spot-checking one. Only assessment_visibility may come back
+  // immediate from an anonymous caller who typed nothing.
+  const raised = [];
+  for (const cat of reportLib.CATEGORIES) {
+    const rr = await post('/api/assistant/report', { category: cat, pageUrl: PRICING });
+    if (!rr.body || !rr.body.id) continue;
+    if (escById(rr.body.id).severity === 'immediate') raised.push(cat);
+  }
+  ok('assessment_visibility is the ONLY category a public form can raise',
+    raised.length === 1 && raised[0] === 'assessment_visibility', raised);
 
   // ── 9) Truncation: the browser is an unbounded source of strings ──────────
   r = await post('/api/assistant/report', {

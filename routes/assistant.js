@@ -51,6 +51,8 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const { verifyStudentToken, pageFromHandle } = require('../utils');
 const { pageScope } = require('../lib/assistant/scope');
 const report = require('../lib/assistant/report');
+const junk = require('../lib/assistant/junk-filter');
+const turnstile = require('../lib/assistant/turnstile');
 const reads = require('../lib/assistant/reads');
 const kb = require('../lib/assistant/kb');
 const chat = require('../lib/assistant/chat');
@@ -167,7 +169,58 @@ function cleanConsole(raw) {
   return out;
 }
 
+// The category-specific extras the form may send, per handoff 4.2. Whitelisted
+// by NAME rather than copied wholesale, because everything here rides into the
+// stored detail blob and a client that can add keys can grow that blob without
+// limit on a box with a $169 incident on record.
+const FIELD_NAMES = ['purchaseChannel', 'orderRef', 'classCode', 'lesson', 'questionId'];
+
+function cleanFields(raw) {
+  if (!raw || typeof raw !== 'object') return {};
+  const out = {};
+  for (const name of FIELD_NAMES) {
+    const v = report.clip(raw[name], report.LIMITS.field);
+    if (v) out[name] = v;
+  }
+  return out;
+}
+
+// An address the reporter typed into "want to know when it is fixed?". Shape
+// checked, not verified: the point is to catch a typo, and a confirmation loop
+// on a bug report is a form nobody finishes.
+function cleanReporterEmail(raw) {
+  const s = report.clip(raw, report.LIMITS.reporterEmail);
+  if (!s) return null;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s) ? s : null;
+}
+
+// Does this caller hold the admin key? Junk filter layer 2 waives the
+// User-Agent rule for them, so CI can post from node and still be judged on
+// every other rule. Compared in constant time, and a wrong key is simply not a
+// bypass rather than an error: this is not an auth gate, it is a hint.
+function hasAdminKey(req) {
+  const configured = process.env.ADMIN_KEY || '';
+  const provided = req.get('x-admin-key') || '';
+  if (!configured || !provided || configured.length < 20) return false;
+  const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
+  try { return crypto.timingSafeEqual(digest(provided), digest(configured)); } catch (_) { return false; }
+}
+
 // POST /api/assistant/report
+//
+// THE ORDER OF OPERATIONS IS THE DESIGN, so it is written out here rather than
+// left to be read off the code:
+//
+//   1. Validate the category. A closed set, checked first, so nothing else runs
+//      for a caller probing with junk.
+//   2. Turnstile, for anonymous callers, when it is configured. Layer 1.
+//   3. STORE THE ROW. Before any model is asked anything, because the row is the
+//      only thing whose absence loses the report.
+//   4. Layer 2 rules, then layer 3 triage. Both can only change a label, a
+//      severity and whether mail goes. Neither can delete anything.
+//   5. Answer the caller, carrying the label so the widget can ask its one
+//      follow-up question when the model said 'vague'.
+//   6. Mail, after the response, so a slow provider never holds the handler.
 router.post('/api/assistant/report', reportLimit, async (req, res) => {
   try {
     const body = (req && req.body) || {};
@@ -191,15 +244,66 @@ router.post('/api/assistant/report', reportLimit, async (req, res) => {
     const pageUrl = report.clip(body.pageUrl, report.LIMITS.pageUrl);
     const scope = pageScope(pageUrl || '');
     const who = identify(req);
+    const keepsText = require('../lib/assistant/scope').retainsBodies(who.role, scope);
+
+    // A suggestion IS its text. On a page where this repo does not keep typed
+    // text there is nothing left to store or send, so the honest answer is to
+    // refuse and say why rather than to accept an empty row and let the person
+    // believe they were heard. The report form on the same page still works and
+    // keeps the category plus the machine context, which is the part a fix needs.
+    if (category === 'suggestion' && !keepsText) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Suggestions are not collected on lesson and quiz pages, because nothing typed there is stored. The problem report form works here.',
+        textStored: false,
+      });
+    }
+
+    // ── LAYER 1: Turnstile on anonymous submits (handoff 3.5) ────────────────
+    //
+    // Only for anonymous callers, and only when Turnstile is actually
+    // configured. The posture matches lib/assistant/turnstile.js and the reason
+    // is the same one written there: an unconfigured challenge must not become
+    // an outage. What differs is which way "degrade" points. Chat degrades to a
+    // cheaper answer; a report has no cheaper version, so an unconfigured
+    // Turnstile means the rate limiter is the only layer 1 and the report is
+    // accepted. REPORTS_TURNSTILE_REQUIRED=true makes it mandatory once the keys
+    // are set, which is a decision rather than a default.
+    if (who.role === 'anonymous' && turnstile.configured()) {
+      const v = await turnstile.verify(
+        typeof body.turnstileToken === 'string' ? body.turnstileToken.slice(0, 4096) : null,
+        req.ip || (req.socket && req.socket.remoteAddress) || null
+      );
+      if (!v.ok && report.envOn('REPORTS_TURNSTILE_REQUIRED', false)) {
+        return res.status(403).json({ ok: false, error: 'Could not verify this browser. Please reload the page and try again.' });
+      }
+    }
 
     const detail = {
       pageTitle: report.clip(body.pageTitle, report.LIMITS.pageTitle),
       // Server-captured, never client-supplied: a body field could say anything.
       userAgent: report.clip(req.headers['user-agent'], report.LIMITS.userAgent),
       consoleErrors: cleanConsole(body.consoleErrors),
+      fields: cleanFields(body.fields),
     };
 
     const summary = report.clip(body.description, report.LIMITS.summary);
+    const reporterEmail = cleanReporterEmail(body.reporterEmail);
+    const hash = ipHash(req);
+
+    // ── LAYER 2 ──────────────────────────────────────────────────────────────
+    // Runs before the insert so the verdict can be stored WITH the row, which
+    // means a dismissed report is dismissed from the moment it exists rather
+    // than briefly looking open.
+    const layer2 = junk.rules({
+      category,
+      summary: keepsText ? summary : null,
+      detail,
+      fields: detail.fields,
+      userAgent: detail.userAgent,
+      ipHash: hash,
+      adminBypass: hasAdminKey(req),
+    });
 
     const stored = report.store({
       category,
@@ -213,13 +317,54 @@ router.post('/api/assistant/report', reportLimit, async (req, res) => {
       school: who.school,
       summary,
       detail,
-      ipHash: ipHash(req),
+      ipHash: hash,
+      reporterEmail,
+      junkLabel: layer2.label === 'junk' ? 'junk' : null,
+      junkReason: layer2.reason,
+      // Handoff 3.5: junk is STORED with status=dismissed and not emailed. It is
+      // never dropped, and the morning mail counts these.
+      status: layer2.label === 'junk' ? 'dismissed' : 'open',
     });
 
+    // ── LAYER 3 ──────────────────────────────────────────────────────────────
+    // Only for traffic layer 2 let through, which is the whole point of putting
+    // the free rules first. No text means no call and no spend, which is every
+    // student report by construction.
+    let verdict = { label: layer2.label === 'junk' ? 'junk' : 'real', summary: null, severity: null, reason: layer2.reason };
+    if (layer2.label !== 'junk') {
+      verdict = await junk.triage({
+        category,
+        summary: keepsText ? summary : null,
+        pagePath: report.pagePath(pageUrl),
+        role: who.role,
+      });
+    }
+
+    // Severity is recomputed with the model's read in hand, because handoff 3.3's
+    // third trigger needs it. severityFor only lets it raise anything for a
+    // verified teacher.
+    const severity = report.severityFor(category, who.role, {
+      summary: keepsText ? summary : null,
+      aiSeverity: verdict.severity,
+    });
+
+    const dismissed = verdict.label === 'junk';
+    report.recordVerdict(stored.id, {
+      junkLabel: verdict.label,
+      junkReason: verdict.reason,
+      aiSummary: verdict.summary,
+      aiSeverity: verdict.severity,
+      severity,
+      status: dismissed ? 'dismissed' : 'open',
+    });
+
+    // Board filing is off by default now (handoff 3.1) and returns immediately
+    // when the flag is unset. Kept in the path so turning the flag on needs no
+    // code change.
     const filed = report.fileTodo({
       escalationId: stored.id,
       category,
-      severity: stored.severity,
+      severity,
       role: who.role,
       pageUrl,
       pageScope: scope,
@@ -228,27 +373,40 @@ router.post('/api/assistant/report', reportLimit, async (req, res) => {
       bodiesRetained: stored.bodiesRetained,
     });
 
-    // Answer the caller as soon as the report is durable. The mail is best
+    // Answer the caller as soon as the verdict is durable. The mail is best
     // effort and must not hold the response open on a 1 vCPU box.
     res.json({
       ok: true,
       id: stored.id,
-      severity: stored.severity,
+      severity,
       todoId: filed.todoId,
       // Honest to the person who just typed: say whether their words were kept.
       textStored: stored.bodiesRetained,
+      // Handoff 4.2: the widget shows ONE follow-up question on 'vague' and
+      // nothing on anything else. The label is the only thing that decides it.
+      label: verdict.label,
+      followUp: verdict.label === 'vague',
     });
 
-    // One email per distinct failure. When the board deduped this onto an
-    // existing task the owner has already been told about it, so thirty students
-    // hitting one broken page is one message rather than thirty. The row is
-    // stored either way, so nothing is lost by staying quiet.
-    if (filed.deduped) return;
+    // ── THE MAIL ─────────────────────────────────────────────────────────────
+    //
+    //  junk      stored, never sent. Handoff 3.5.
+    //  digest    non-urgent held for the 7am flush; urgent sends anyway. 3.1.
+    //  otherwise one threaded email now. 3.4.
+    if (dismissed) {
+      report.markEmail(stored.id, 'suppressed');
+      return;
+    }
+    if (report.emailMode() === 'digest' && severity !== 'immediate') {
+      report.markEmail(stored.id, 'held');
+      return;
+    }
 
-    report.mailOwner({
+    report.mailReport({
       escalationId: stored.id,
+      threadKey: stored.threadKey,
       category,
-      severity: stored.severity,
+      severity,
       role: who.role,
       pageUrl,
       pageScope: scope,
@@ -256,13 +414,51 @@ router.post('/api/assistant/report', reportLimit, async (req, res) => {
       detail,
       bodiesRetained: stored.bodiesRetained,
       todoId: filed.todoId,
+      junkLabel: verdict.label,
+      aiSummary: verdict.summary,
+      reporterEmail: stored.bodiesRetained ? reporterEmail : null,
       contactEmail: stored.bodiesRetained ? who.contactEmail : null,
       contactName: stored.bodiesRetained ? who.contactName : null,
       school: stored.bodiesRetained ? who.school : null,
-    }).catch((e) => console.error('[assistant/report] mail rejected:', e && e.message));
+    })
+      .then((out) => report.markEmail(stored.id, out.status))
+      .catch((e) => {
+        console.error('[assistant/report] mail rejected:', e && e.message);
+        report.markEmail(stored.id, 'failed');
+      });
   } catch (e) {
     console.error('assistant/report:', e);
     return res.status(500).json({ ok: false, error: 'Could not file the report.' });
+  }
+});
+
+// POST /api/assistant/reports/digest/flush
+//
+// Sends whatever digest mode is holding, as one email, and marks those rows
+// sent. Admin key only, and fail-closed in the same shape routes/admin.js uses:
+// no key configured means the endpoint is off rather than open.
+//
+// THIS IS THE 7AM SEND, and nothing in this process calls it. The handoff puts
+// the schedule at 7:00 America/Chicago, and a container that restarts on every
+// deploy cannot hold a timer that means anything: the send time would become a
+// function of the last push. The caller is the Daily site audit task, which
+// already runs on a schedule and already holds the admin key, and wiring it is
+// handoff section 6. Until that lands the default mode is 'each', so nothing is
+// waiting on this and nothing is stranded by it.
+router.post('/api/assistant/reports/digest/flush', async (req, res) => {
+  const configured = process.env.ADMIN_KEY || '';
+  if (configured.length < 20) {
+    return res.status(503).json({ error: 'Admin API disabled. Set a strong ADMIN_KEY (>= 20 chars) in the environment.' });
+  }
+  if (!hasAdminKey(req)) {
+    return res.status(403).json({ error: 'Invalid or missing admin key.' });
+  }
+  try {
+    const out = await report.flushDigest();
+    res.json(out);
+  } catch (e) {
+    console.error('assistant/digest-flush:', e);
+    res.status(500).json({ error: 'Could not flush the digest.' });
   }
 });
 
@@ -281,11 +477,21 @@ router.get('/api/assistant/report/context', (req, res) => {
   const pageUrl = report.clip(req.query.pageUrl, report.LIMITS.pageUrl);
   const scope = pageScope(pageUrl || '');
   const who = identify(req);
+  const keeps = require('../lib/assistant/scope').retainsBodies(who.role, scope);
   res.json({
     categories: report.CATEGORIES,
     scope,
     role: who.role,
-    textStored: require('../lib/assistant/scope').retainsBodies(who.role, scope),
+    textStored: keeps,
+    // The widget hides "Suggest something" where typed text is not kept, rather
+    // than offering a box whose contents the POST will refuse. Same fact, said
+    // before the person types instead of after.
+    suggestionsAllowed: keeps,
+    // Category-specific extras the form may send, so the widget renders the
+    // purchase-channel fields on access_not_showing and nothing on bug_report
+    // without holding its own copy of that mapping.
+    fields: junk.CATEGORY_FIELDS,
+    turnstileSiteKey: turnstile.siteKey(),
   });
 });
 

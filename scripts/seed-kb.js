@@ -73,6 +73,14 @@ const STUBS = {
     title: 'Reporting a problem with a page',
     must_cover: 'What the report button sends and what it does not. Say plainly that on lesson pages typed messages are not stored, and why.',
   },
+  // Added with the 'suggestion' category, handoff 4.3. A suggestion is not a
+  // support question, so this stub is the shortest of the set on purpose: what
+  // it has to answer is "where does this go and will anybody read it", which is
+  // the question somebody asks before bothering to type one.
+  suggestion: {
+    title: 'Suggesting a change',
+    must_cover: 'Where a suggestion goes, who reads it, and what happens next. Say that suggestions are not collected on lesson and quiz pages, because nothing typed there is kept, and point to the report form for anything that is actually broken.',
+  },
   other: {
     title: 'Something else',
     must_cover: 'Where to go when nothing above fits, and what to include so the first reply can be useful.',

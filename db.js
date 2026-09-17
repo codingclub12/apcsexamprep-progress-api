@@ -849,6 +849,59 @@ const migrations = [
   // been verified, rather than by a backfill that would have to guess which of
   // two students named Avery are the same person. See lib/student-accounts.js.
   `ALTER TABLE students  ADD COLUMN account_id        TEXT DEFAULT NULL`,
+
+  // ── SITE ASSISTANT: REPORT-FIRST ROUTING ──────────────────────────────────
+  //  docs/handoffs/Site-Assistant-Report-First.md sections 3 and 5. Every report
+  //  is now emailed and stored rather than filed on the board, so the row has to
+  //  carry what the mail path decided. All additive, all NULL on existing rows,
+  //  which is the correct starting state: a report filed before this shipped was
+  //  never threaded and never triaged, and pretending otherwise would put
+  //  invented verdicts in the history.
+
+  // The (page path, category) bucket a report threads into, and where it sits in
+  // that bucket. thread_seq is what makes the follow-up body able to say "Report
+  // 3 of 3 for this page today" without a second count query.
+  `ALTER TABLE chat_escalations ADD COLUMN thread_key        TEXT DEFAULT NULL`,
+  `ALTER TABLE chat_escalations ADD COLUMN thread_seq        INTEGER DEFAULT NULL`,
+  // The RFC 5322 Message-ID of the FIRST mail in that thread. Follow-ups quote it
+  // in In-Reply-To and References so a mail client files them together. Stored
+  // rather than recomputed because it is the one value that cannot be derived:
+  // it is minted once, at send time, for a message that already went.
+  `ALTER TABLE chat_escalations ADD COLUMN thread_message_id TEXT DEFAULT NULL`,
+
+  // What actually happened to the mail, as opposed to what was intended.
+  //   sent | held | suppressed | failed | no_recipient | not_attempted
+  //  'suppressed' is the junk verdict: stored, deliberately not mailed.
+  //  'held' is digest mode waiting for the 7am flush.
+  //  The reason this is a column rather than a log line is the failure this repo
+  //  has now paid for twice: mail that never goes is SILENT, and a report that is
+  //  recorded and never seen looks exactly like a report that was handled.
+  `ALTER TABLE chat_escalations ADD COLUMN email_status      TEXT DEFAULT NULL`,
+  `ALTER TABLE chat_escalations ADD COLUMN email_sent_at     TEXT DEFAULT NULL`,
+
+  // The three-layer junk filter's verdict: real | vague | junk, and which layer
+  // said so. Kept because the morning email reports a dismissed count and a
+  // number nobody can audit is a number nobody should trust.
+  `ALTER TABLE chat_escalations ADD COLUMN junk_label        TEXT DEFAULT NULL`,
+  `ALTER TABLE chat_escalations ADD COLUMN junk_reason       TEXT DEFAULT NULL`,
+
+  // The model's one-line summary and severity read, section 3.6. NULL whenever
+  // the model was not called, which includes every report whose text was not
+  // retained: there is nothing to summarise and nothing is invented to fill it.
+  `ALTER TABLE chat_escalations ADD COLUMN ai_summary        TEXT DEFAULT NULL`,
+  `ALTER TABLE chat_escalations ADD COLUMN ai_severity       TEXT DEFAULT NULL`,
+
+  // An address the REPORTER typed, from the optional "want to know when it is
+  // fixed?" field. Deliberately NOT contact_email, which is the caller's own
+  // verified address read from their token and is never client-supplied. This
+  // one is client-supplied, so it is written only where retainsBodies() already
+  // allows typed text: a minor cannot be made to carry an address by a crafted
+  // payload, and students have none by construction.
+  `ALTER TABLE chat_escalations ADD COLUMN reporter_email    TEXT DEFAULT NULL`,
+  // Set once when the section 5 thank-you goes out, so it can never go twice.
+  `ALTER TABLE chat_escalations ADD COLUMN thanked_at        TEXT DEFAULT NULL`,
+  // The morning routine's note on what it did, section 6.1's PATCH field.
+  `ALTER TABLE chat_escalations ADD COLUMN resolution_note   TEXT DEFAULT NULL`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }
@@ -856,6 +909,10 @@ for (const sql of migrations) {
 // Index after the ALTER, never inside the CREATE block above: the column does
 // not exist yet on a database that predates it.
 try { db.exec(`CREATE INDEX IF NOT EXISTS idx_students_account ON students(account_id)`); } catch(e) { /* pre-migration boot */ }
+// Threading looks up the first row in a (page, category) bucket on every accepted
+// report, and the digest flush scans held rows. Both are hot enough to index.
+try { db.exec(`CREATE INDEX IF NOT EXISTS idx_chat_esc_thread ON chat_escalations(thread_key, created_at)`); } catch(e) { /* pre-migration boot */ }
+try { db.exec(`CREATE INDEX IF NOT EXISTS idx_chat_esc_email ON chat_escalations(email_status, created_at)`); } catch(e) { /* pre-migration boot */ }
 
 // ── COMMAND CENTER (Phase 1) ──────────────────────────────────────────────────
 // Six additive tables (tasks, promises, deps, claims, task_events,
