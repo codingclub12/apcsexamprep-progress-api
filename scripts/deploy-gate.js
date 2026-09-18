@@ -66,6 +66,7 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 
 const KINDS = ['suite', 'rederive', 'live', 'mutation'];
+const PHASES = ['pre', 'post', 'both'];
 const REQUIRED_KIND = 'mutation';
 const REQUIRED_ONE_OF = ['live', 'rederive'];
 const MIN_KINDS = 3;
@@ -139,13 +140,45 @@ function runCheck(c) {
 
 function gate(manifest, opts) {
   opts = opts || {};
-  const checks = (manifest.checks || []).filter((c) => !(opts.pre && c.kind === 'live'));
+  //  WHEN A CHECK IS MEANINGFUL, which is not the same as whether it passes.
+  //  `live` has always been deferred on a --pre run because it cannot observe a
+  //  deploy that has not happened. The mirror case went unnoticed until the FRQ
+  //  archive gate hit it: a `rederive` whose command REGENERATES an artifact
+  //  from live state can never pass AFTER the deploy, because the transforms
+  //  are find-or-refuse and the thing they look for is now already there. That
+  //  gate was unclosable by construction while reading like a real refusal.
+  //
+  //  So a check may declare its phase. 'pre' runs only before, 'post' only
+  //  after, 'both' (the default) runs always. The `live` rule below stays
+  //  hardcoded rather than being rewritten as phase:'post', so that every
+  //  manifest already in this repo behaves exactly as it did.
+  //
+  //  This cannot be used to skip a check that fails. Marking the only
+  //  live-or-rederive check 'pre' leaves the post run with suite and mutation
+  //  alone, which trips both MIN_KINDS and REQUIRED_ONE_OF below. And a
+  //  deferred check is NAMED in the output, never silently dropped.
+  const deferred = [];
+  const checks = (manifest.checks || []).filter((c) => {
+    const phase = c.phase || 'both';
+    if (!PHASES.includes(phase)) return true;  // reported as a problem below
+    if (opts.pre && c.kind === 'live') { deferred.push(c); return false; }
+    if (opts.pre && phase === 'post') { deferred.push(c); return false; }
+    if (!opts.pre && phase === 'pre') { deferred.push(c); return false; }
+    return true;
+  });
   const problems = [];
   const results = [];
 
   for (const c of checks) {
     if (!KINDS.includes(c.kind)) {
       problems.push(`unknown kind ${JSON.stringify(c.kind)}, expected one of ${KINDS.join(', ')}`);
+      continue;
+    }
+    //  A misspelled phase must not quietly mean "runs always". That is the
+    //  exact shape of defect this gate keeps finding in other people's checks.
+    if (c.phase !== undefined && !PHASES.includes(c.phase)) {
+      problems.push(`unknown phase ${JSON.stringify(c.phase)} on ${c.kind}/${c.name}, `
+        + `expected one of ${PHASES.join(', ')}`);
       continue;
     }
     const r = runCheck(c);
@@ -186,7 +219,7 @@ function gate(manifest, opts) {
     problems.push(`no passing ${REQUIRED_ONE_OF.join(' or ')} check. suite plus mutation is still `
       + `only this repo talking to itself.`);
   }
-  return { ok: problems.length === 0, problems, results, kinds: [...kinds] };
+  return { ok: problems.length === 0, problems, results, kinds: [...kinds], deferred };
 }
 
 if (require.main === module) {
@@ -201,6 +234,15 @@ if (require.main === module) {
   const r = gate(manifest, { pre });
   for (const x of r.results) {
     console.log(`  [${x.ok ? 'PASS' : 'FAIL'}] ${x.kind.padEnd(9)} ${String(x.name).padEnd(34)} ${x.detail}`);
+  }
+  //  A deferred check is always NAMED. A gate that quietly drops a check reads
+  //  like a clean run over work nobody did, which is the failure this whole
+  //  script exists to prevent.
+  for (const d of r.deferred || []) {
+    const why = d.kind === 'live' && pre ? 'the deploy has not happened yet'
+      : d.phase === 'pre' ? 'it is only meaningful before the deploy, run it with --pre'
+      : 'it is only meaningful after the deploy';
+    console.log(`  [ -- ] ${String(d.kind).padEnd(9)} ${String(d.name).padEnd(34)} deferred: ${why}`);
   }
   console.log(`\n  kinds passing: ${r.kinds.join(', ') || 'none'}`);
   if (!r.ok) {
