@@ -80,6 +80,23 @@ applies-but-does-not-reproduce verdict reds the two anchor-intact cases and
 nothing else, and swallowing a broken anchor reds the one anchor-breaking case and
 nothing else.
 
+## One number in CLAUDE.md looks stale, on one measurement
+
+CLAUDE.md says the Railway deploy takes "about 55 seconds" against a CI suite of
+about 4.5 minutes, and builds the case for gating before the merge on that gap.
+Timed on this merge: merged 15:00:20 UTC, `/api/health` first reported 330d731 at
+15:04:50. Four minutes thirty, not fifty-five seconds. CI on the same head ran
+14:52:02 to 14:59:36, about seven and a half minutes.
+
+That is one measurement against theirs, which was taken across runs 80 to 82 and
+1024 to 1028 and called structural, so it is not enough to overwrite the figure
+and this run note is deliberately the only place it is written down. What it is
+enough for is to tell the next session to re-time it rather than trust the number.
+
+The CONCLUSION is untouched either way: the deploy still starts before the suite
+finishes, so a gate before the merge is still the only point that beats the race.
+The gap narrowed from roughly four minutes to three; it did not close or reverse.
+
 ## Still open
 
 - **The 19 pages are unchanged until Tanner imports.** The sheets are generated
