@@ -252,6 +252,70 @@ console.log('\n10. GUARD SUBSUMPTION: a mutation must trip the guard it TARGETS'
   ok('  the file is restored after all of it', fs.readFileSync(target, 'utf8') === intact);
 }
 
+console.log('\n11. A check may declare WHEN it is meaningful, and a typo must not mean "always"');
+{
+  //  The case this was built for: a rederive whose command regenerates an
+  //  artifact from live state. It is real evidence before the deploy and
+  //  impossible after it, because the transforms it runs are find-or-refuse.
+  const preOnly = { kind: 'rederive', name: 'regenerates from live', phase: 'pre', command: FALSE };
+
+  //  Post-deploy it is deferred, so a FAILING command cannot make the gate red.
+  const rPost = gate({ checks: full().checks.concat([preOnly]) });
+  ok('  post-deploy, a phase:pre check is deferred even though its command fails', rPost.ok, rPost.problems);
+  ok('  and the deferral is NAMED rather than silent',
+    (rPost.deferred || []).some((d) => d.name === 'regenerates from live'), rPost.deferred);
+
+  //  Pre-deploy it RUNS, and a failing one is refused. Without this, phase:pre
+  //  would be a way to delete a check instead of a way to schedule it.
+  const rPre = gate({ checks: full().checks.concat([preOnly]) }, { pre: true });
+  ok('  pre-deploy, the same check runs and its failure is refused', !rPre.ok, rPre.problems);
+
+  //  The mirror: live is still deferred on --pre, exactly as before.
+  const rLive = gate({ checks: full().checks }, { pre: true });
+  ok('  live is still deferred on a --pre run', (rLive.deferred || []).some((d) => d.kind === 'live'));
+
+  //  phase:post is the other direction.
+  const postOnly = { kind: 'rederive', name: 'after only', phase: 'post', command: FALSE };
+  const rp = gate({ checks: full().checks.concat([postOnly]) }, { pre: true });
+  ok('  a phase:post check is deferred on --pre', rp.ok, rp.problems);
+
+  //  A MISSPELLED phase must be an error. If it quietly meant "both", a typo
+  //  would silently re-enable a check at the moment it cannot pass, which is
+  //  the same class of defect as a live check asserting something already true.
+  //  A DISTINCT command. The first draft of this reused TRUE, which is also the
+  //  command in full(), so disabling the phase check left the DUPLICATE rule to
+  //  refuse the manifest and this assertion passed for the wrong reason. The
+  //  mutation run is what caught it.
+  const typo = { kind: 'suite', name: 'typo', phase: 'pre-deploy',
+    command: 'node -e "console.log(\'typo\')"' };
+  const rt = gate({ checks: full().checks.concat([typo]) });
+  ok('  an unknown phase is refused, not treated as the default', !rt.ok, rt.problems);
+  ok('  and the refusal names the bad phase',
+    /unknown phase/.test(rt.problems.join(' ')), rt.problems);
+
+  //  THE ABUSE PATH, pinned: phase cannot be used to ship with no outside check.
+  //  Marking the only live-or-rederive check pre-only must leave the post run
+  //  standing on suite plus mutation, which is this repo talking to itself.
+  const gutted = gate({ checks: [
+    { kind: 'suite', name: 'tests', command: TRUE },
+    { kind: 'live', name: 'production', phase: 'pre', command: TRUE },
+    Object.assign({}, killable),
+  ] });
+  ok('  marking the ONLY live check pre-only still refuses to ship', !gutted.ok, gutted.problems);
+  //  TWO guards defend this and neither can be isolated from the other. KINDS
+  //  has four members, two of which are live and rederive, so a manifest with
+  //  neither can reach at most two kinds and MIN_KINDS fires as well. Measured
+  //  by mutation on 2026-09-18: disabling REQUIRED_ONE_OF still leaves the gate
+  //  red on MIN_KINDS. That redundancy is fine, but an assertion claiming to
+  //  pin REQUIRED_ONE_OF alone would be decoration, so this one does not.
+  ok('  and says why, on either guard',
+    /live or rederive|kind\(s\) of check passed/.test(gutted.problems.join(' ')), gutted.problems);
+
+  //  A manifest with no phase anywhere behaves exactly as it did before.
+  const plain = gate(full());
+  ok('  a manifest with no phase field is unchanged', plain.ok && plain.kinds.length === 3, plain.problems);
+}
+
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

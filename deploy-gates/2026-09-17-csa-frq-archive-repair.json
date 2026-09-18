@@ -28,7 +28,14 @@
     "rule fires on text the repair never touched, which would have refused the",
     "whole sheet and shipped nothing. The stale-date rule is two-sided instead,",
     "because a plain 'no more than before' misses a repair that removes one",
-    "reference and adds another."
+    "reference and adds another.",
+    "",
+    "THE REDERIVE CHECK IS PHASE PRE, added 2026-09-18 after the post-import run.",
+    "It regenerates the sheets from live bodies, and the transforms are",
+    "find-or-refuse, so once the repair is live it MUST refuse. Before the phase",
+    "field existed this manifest could never be satisfied without --pre, while",
+    "reading like a genuine refusal to ship. The fix is in scripts/deploy-gate.js",
+    "and the post run now stands on suite, mutation and live."
   ],
   "checks": [
     {
@@ -41,9 +48,10 @@
     {
       "kind": "rederive",
       "name": "every sheet parsed back with a reader that shares no code with the writer",
-      "_why": "The generator writes seven CSVs and then reads all seven off disk with an RFC 4180 parser written separately, diffing every cell against what the transforms produced. Generation is not evidence that generation worked: the CSP sheet lost 90 bytes a page while every semantic check passed, and a parse-back diff is what caught it. This also reads all 86 bodies live at build time, so a sheet cannot be built from a stale cache.",
+      "_why": "The generator writes seven CSVs and then reads all seven off disk with an RFC 4180 parser written separately, diffing every cell against what the transforms produced. Generation is not evidence that generation worked: the CSP sheet lost 90 bytes a page while every semantic check passed, and a parse-back diff is what caught it. This also reads all 86 bodies live at build time, so a sheet cannot be built from a stale cache.  PHASE PRE, and this is not a convenience. The command IS the generator, and every transform in it is find-or-refuse: addScoringNote throws 'already carries the 2026 scoring note' the moment the note is on the page. So this check is true evidence before the import and impossible after it, and the gate refused to close on a deploy that was entirely correct. Run it with --pre, where it is real. After the import the live check is what re-derives, by reading 142 assertions off the storefront that were all false beforehand.",
       "command": "node scripts/csa-frq-archive-repair-csv.js imports/2026-09-17-frq-archive",
-      "expect": "every cell parsed back and diffed clean"
+      "expect": "every cell parsed back and diffed clean",
+      "phase": "pre"
     },
     {
       "kind": "mutation",

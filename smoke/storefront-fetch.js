@@ -41,6 +41,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const sf = require('../lib/storefront-fetch');
 
 let pass = 0, fail = 0;
@@ -188,6 +189,88 @@ for (const f of SWEEPS) {
     '6.2 ' + f + ' sends no User-Agent of its own');
   ok(/require\(['"][^'"]*storefront-fetch['"]\)/.test(code),
     '6.3 ' + f + ' fetches through lib/storefront-fetch.js');
+}
+
+
+// ── 7. THE LOAD-SHEDDING RETRY, against a real server ──────────────────────
+//  This existed for 429 since 2026-09-04 and was never tested. 503 was added
+//  2026-09-18 after verify-csa-frq-archive-live, which walks 142 requests in
+//  one pass, failed on 7 handles then 1 then a different 1, always 503, never
+//  the same handle twice, while every one of them served 200 on its own.
+//
+//  A REAL SERVER IN ITS OWN PROCESS, and both halves of that are forced. A stub
+//  of rawOnce cannot reach the retry, because raw() calls the local binding and
+//  not the export. And an in-process server cannot work either: every caller of
+//  this module is synchronous, so the Atomics.wait between attempts blocks the
+//  event loop and listen() never fires. The first cut of this test did exactly
+//  that and died on a null address.
+{
+  const cp2 = require('child_process');
+  const srcPath = path.join(os.tmpdir(), 'sf-retry-srv-' + process.pid + '.js');
+  fs.writeFileSync(srcPath, [
+    "const http = require('http');",
+    "const seen = Object.create(null);",
+    "http.createServer((req, res) => {",
+    "  const u = req.url.split('?')[0];",
+    "  if (u.startsWith('/__count/')) {",
+    "    res.writeHead(200, {'content-type':'text/plain'});",
+    "    return res.end(String(seen['/' + u.slice(9)] || 0));",
+    "  }",
+    "  seen[u] = (seen[u] || 0) + 1;",
+    "  const m = u.match(/^\\/shed-(\\d+)$/);",
+    "  if (m && seen[u] === 1) { res.writeHead(Number(m[1])); return res.end('shedding'); }",
+    "  if (u === '/hard-404') { res.writeHead(404); return res.end('gone'); }",
+    "  res.writeHead(200, {'content-type':'text/html'});",
+    "  res.end('<html><body>the real page</body></html>');",
+    "}).listen(Number(process.argv[2]), '127.0.0.1');",
+  ].join('\n'));
+
+  const port = 38000 + (process.pid % 2000);
+  const child = cp2.spawn(process.execPath, [srcPath, String(port)],
+    { stdio: 'ignore', detached: false });
+  const base = 'http://127.0.0.1:' + port;
+
+  //  Wait for it the only way a sync caller can: ask, sleep, ask again.
+  let up = false;
+  for (let i = 0; i < 50 && !up; i += 1) {
+    //  Poll with curl DIRECTLY rather than through raw(). raw() throws on a
+    //  refused connection, and its curl writes the refusal to stderr, so a
+    //  warmup loop through it prints an alarming "Failed to connect" line on a
+    //  run where nothing is wrong. A suite that cries wolf gets skimmed.
+    let code = '';
+    try {
+      code = cp2.execFileSync('curl', ['-s', '-o', os.devNull, '-w', '%{http_code}',
+        '--max-time', '2', base + '/warmup'],
+        { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    } catch (e) { code = ''; }
+    if (code === '200') up = true;
+    else Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
+  }
+  ok(up, '7.0 the local test server came up');
+
+  if (up) {
+    const count = (name) => {
+      const r = sf.raw(base + '/__count/' + name, { retryAttempts: 1, timeout: 2 });
+      return Number((r.body || '').trim());
+    };
+
+    const a = sf.raw(base + '/shed-503', { retryAttempts: 2 });
+    ok(a.code === '200', '7.1 a 503 is retried and the retry is believed, got ' + a.code);
+    ok(count('shed-503') === 2, '7.2 it took exactly two requests, took ' + count('shed-503'));
+
+    const b = sf.raw(base + '/shed-429', { retryAttempts: 2 });
+    ok(b.code === '200', '7.3 429 still retries, as it has since 2026-09-04, got ' + b.code);
+
+    //  THE NARROWNESS IS THE POINT. A 404 retried three times is still a 404,
+    //  and waiting on it only makes a red check slower. If this ever starts
+    //  retrying, every genuinely missing page costs the full wait first.
+    const c = sf.raw(base + '/hard-404', { retryAttempts: 4 });
+    ok(c.code === '404', '7.4 a 404 is returned as-is, got ' + c.code);
+    ok(count('hard-404') === 1, '7.5 and is NOT retried, took ' + count('hard-404') + ' request(s)');
+  }
+
+  try { child.kill(); } catch (e) {}
+  try { fs.unlinkSync(srcPath); } catch (e) {}
 }
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
