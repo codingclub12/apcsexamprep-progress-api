@@ -71,20 +71,25 @@ const GROUPS = [
   { file: 'quiz-mount-unpin-1-csa-1-1.csv', label: 'CSA 1.1 (the reported page)',
     imported: '2026-09-17', handles: ['ap-csa-lesson-1-1-intro-algorithms'] },
   { file: 'quiz-mount-unpin-2-cyber-unit-1.csv', label: 'AP Cyber unit 1',
+    imported: '2026-09-18',
     handles: ['ap-cyber-unit-1-lesson-1-quiz', 'ap-cyber-unit-1-lesson-2-quiz',
       'ap-cyber-unit-1-lesson-3-quiz', 'ap-cyber-unit-1-lesson-4-quiz',
       'ap-cyber-unit-1-lesson-5-quiz'] },
   { file: 'quiz-mount-unpin-3-cyber-unit-2.csv', label: 'AP Cyber unit 2',
+    imported: '2026-09-18',
     handles: ['ap-cyber-unit-2-lesson-1-quiz', 'ap-cyber-unit-2-lesson-2-quiz',
       'ap-cyber-unit-2-lesson-4-quiz'] },
   { file: 'quiz-mount-unpin-4-cyber-unit-3.csv', label: 'AP Cyber unit 3',
+    imported: '2026-09-18',
     handles: ['ap-cyber-unit-3-lesson-1-quiz', 'ap-cyber-unit-3-lesson-2-quiz',
       'ap-cyber-unit-3-lesson-3-quiz', 'ap-cyber-unit-3-lesson-4-quiz',
       'ap-cyber-unit-3-lesson-5-quiz'] },
   { file: 'quiz-mount-unpin-5-cyber-unit-4.csv', label: 'AP Cyber unit 4',
+    imported: '2026-09-18',
     handles: ['ap-cyber-unit-4-lesson-2-quiz', 'ap-cyber-unit-4-lesson-3-quiz',
       'ap-cyber-unit-4-lesson-4-quiz'] },
   { file: 'quiz-mount-unpin-6-cyber-unit-5.csv', label: 'AP Cyber unit 5',
+    imported: '2026-09-18',
     handles: ['ap-cyber-unit-5-lesson-1-quiz', 'ap-cyber-unit-5-lesson-2-quiz',
       'ap-cyber-unit-5-lesson-3-quiz', 'ap-cyber-unit-5-lesson-4-quiz',
       'ap-cyber-unit-5-lesson-5-quiz', 'ap-cyber-unit-5-lesson-6-quiz'] }
@@ -247,9 +252,16 @@ function main() {
   //  somebody later reads as evidence.
   const live = GROUPS.filter((g) => !g.imported);
   const done = GROUPS.filter((g) => g.imported);
-  console.log(live.reduce((n, g) => n + g.handles.length, 0) + ' pages across ' +
-    live.length + ' sheet' + (live.length === 1 ? '' : 's') +
-    ', every one parsed back byte for byte.');
+  //  When nothing is left, say THAT. "0 pages across 0 sheets, every one parsed
+  //  back byte for byte" is technically true and reads like a passing run, which
+  //  is exactly the sort of line somebody later quotes as evidence of work.
+  if (!live.length) {
+    console.log('Nothing left to import. Every sheet this generator produced has landed.');
+  } else {
+    console.log(live.reduce((n, g) => n + g.handles.length, 0) + ' pages across ' +
+      live.length + ' sheet' + (live.length === 1 ? '' : 's') +
+      ', every one parsed back byte for byte.');
+  }
   if (done.length) {
     console.log(done.reduce((n, g) => n + g.handles.length, 0) + ' more already imported (' +
       done.map((g) => g.file.replace(/^quiz-mount-unpin-|\.csv$/g, '')).join(', ') +

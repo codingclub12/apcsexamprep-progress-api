@@ -179,6 +179,35 @@
     if (document.getElementById('apcs-assistant-root')) return;
 
     var host = el('div', { id: 'apcs-assistant-root' });
+
+    /*  THE SHADOW ROOT PROTECTS WHAT IS INSIDE IT. NOTHING PROTECTED THE HOST.
+     *
+     *  Measured on a live page 2026-09-18, the day this shipped: the script
+     *  loaded, boot() ran clean, window.APCS_ERRORS was empty, the host was in
+     *  the DOM and the .btn inside the shadow root computed as display:block,
+     *  visibility:visible, opacity:1, z-index 2147483000. The pill still did
+     *  not paint, because the HOST computed display:none, so the whole subtree
+     *  collapsed to a 0x0 rect.
+     *
+     *  It was not our CSS. Walking every readable stylesheet for a rule
+     *  matching the host returned nothing, and the host carried no inline
+     *  style. Forcing display back put the pill in the corner instantly. So
+     *  the source was something the page cannot see: an extension cosmetic
+     *  filter, an adopted stylesheet, an ad stack. All three are outside this
+     *  repo and none of them is going to stop.
+     *
+     *  ':host { all: initial }' cannot defend this. It sets the host's INITIAL
+     *  values, and any author rule beats an initial value. The host's own box
+     *  therefore has to be stated the one way that outranks an author rule,
+     *  which is inline and !important.
+     *
+     *  Only the three properties that HIDE a box are pinned. Position, size and
+     *  stacking stay in the shadow CSS where they belong: this is armour, not a
+     *  second opinion about layout.  */
+    host.style.setProperty('display', 'block', 'important');
+    host.style.setProperty('visibility', 'visible', 'important');
+    host.style.setProperty('opacity', '1', 'important');
+
     document.body.appendChild(host);
     var root = host.attachShadow ? host.attachShadow({ mode: 'open' }) : null;
     if (!root) { host.remove(); return; }   /* no shadow DOM: no widget, no mess */

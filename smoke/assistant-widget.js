@@ -132,6 +132,75 @@ for (const [p, title, course, unit, lesson, type] of FIXTURES) {
   ok('and returns before mounting when it fires',
     /if \(onAssessmentPage\(\)\) return;/.test(widget), widget.slice(0, 0));
 
+  // ---------------------------------------------------------------------------
+  //  THE HOST'S OWN BOX, which is what shipped broken on 2026-09-18.
+  //
+  //  Everything INSIDE the shadow root was correct that day and the pill still
+  //  did not paint: the host computed display:none from a source no stylesheet
+  //  walk could find, so a healthy subtree collapsed to 0x0. ':host{all:initial}'
+  //  cannot defend that, because an author rule beats an initial value.
+  //
+  //  This runs boot() against a DOM shim rather than grepping for the three
+  //  setProperty lines, because the assertion that matters is not "the source
+  //  contains a string", it is "the host ends up unhideable". A regex would
+  //  still pass if somebody moved the lines after the appendChild, or dropped
+  //  the !important, or set them on the wrong element.
+  // ---------------------------------------------------------------------------
+  function shimEl(tag) {
+    const decls = {};
+    return {
+      tagName: String(tag).toUpperCase(), children: [], _attrs: {}, shadowRoot: null,
+      style: {
+        setProperty: (k, v, pri) => { decls[k] = { value: v, priority: pri || '' }; },
+        getPropertyValue: (k) => (decls[k] || {}).value,
+        getPropertyPriority: (k) => (decls[k] || {}).priority || '',
+        _decls: decls,
+      },
+      setAttribute(k, v) { this._attrs[k] = v; if (k === 'id') this.id = v; },
+      appendChild(c) {
+        //  Snapshot the armour AT APPEND TIME. Without this the order assertion
+        //  below is hollow: moving the setProperty calls after appendChild leaves
+        //  the final style identical, and a check of the end state cannot see it.
+        if (c && c.style) c._displayPinAtAppend = c.style.getPropertyPriority('display');
+        this.children.push(c); return c;
+      },
+      attachShadow() { this.shadowRoot = shimEl('#shadow'); return this.shadowRoot; },
+      remove() { this._removed = true; },
+      querySelector() { return null; },
+      set textContent(v) { this._text = v; }, get textContent() { return this._text; },
+    };
+  }
+  function bootInShim(pathname) {
+    const body = shimEl('body');
+    const doc = {
+      readyState: 'interactive', body,
+      createElement: shimEl,
+      getElementById: (id) => body.children.find((c) => c.id === id) || null,
+      addEventListener() {},
+    };
+    const win = { APCS_ERRORS: [], addEventListener() {}, removeEventListener() {} };
+    const fn = new Function('window', 'document', 'location', 'fetch', 'localStorage', widget);
+    fn(win, doc, { pathname }, () => {}, {});
+    return { body, host: body.children.find((c) => c.id === 'apcs-assistant-root') || null };
+  }
+
+  const shimmed = bootInShim('/pages/ap-csa-lesson-2-7-while-loops');
+  ok('boot() mounts a host on an ordinary page', !!shimmed.host);
+  if (shimmed.host) {
+    const st = shimmed.host.style;
+    for (const [prop, want] of [['display', 'block'], ['visibility', 'visible'], ['opacity', '1']]) {
+      ok('the host pins ' + prop + ' inline, so page CSS cannot hide it',
+        st.getPropertyValue(prop) === want, st.getPropertyValue(prop));
+      ok('and pins ' + prop + ' !important, which is what outranks an author rule',
+        st.getPropertyPriority(prop) === 'important', st.getPropertyPriority(prop));
+    }
+    ok('the host still gets a shadow root', !!shimmed.host.shadowRoot);
+    ok('and the armour is on BEFORE it enters the document, so it is never once hideable',
+      shimmed.host._displayPinAtAppend === 'important', shimmed.host._displayPinAtAppend);
+  }
+  ok('an assessment page still mounts nothing at all',
+    bootInShim('/pages/ap-csa-practice-test-2d-arrays').host === null);
+
   // Run the guard itself against real paths rather than trusting the regex by eye.
   const guard = new Function('path', `
     var location = { pathname: path };
