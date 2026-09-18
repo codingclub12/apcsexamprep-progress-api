@@ -117,3 +117,62 @@ absolute count did not.
 - Board 351 is the class this instance belongs to: seven board tasks since #73
   are all "a page shipped and nothing links it", six closed as instances. The
   nightly crawl rates orphans P2 and does not check for them at all.
+
+---
+
+## Addendum, 2026-09-18: imported, and what the import proved
+
+Tanner imported the sheet. Live hub `updated_at 2026-09-18T09:17:00-05:00`.
+
+`node scripts/verify-u4-array-mastery-live.js --post`: **8 of 8**. The hub links
+the target exactly once, the deck holds five card anchors where it held four,
+all four incumbent cards survive, and the target still serves its 7 editors.
+
+Three checks beyond the verifier, each re-derivable by someone who does not
+trust this note:
+
+- **Byte-exact.** The imported CSV was parsed back and its Body HTML column
+  compared to the live stored body. Identical, 64,592 UTF-16 units. So the live
+  page is exactly what was reviewed, with nothing added or lost in transit.
+- **A student sees it.** The RENDERED page answers 200, passes `looksReal`,
+  carries the card text, and shows five resource-card anchors.
+- **The original measurement, re-run.** Inbound content links to
+  `ap-csa-array-mastery-interactive-practice` went from **0 to 1** across the
+  same 15 parents, reading stored bodies so chrome is excluded. That is the
+  measurement that established the defect, which is the one worth repeating:
+  proving a fix with a friendlier check than the one that found it proves
+  nothing.
+
+Board 352 is `done` with `verified` still false, deliberately. This session did
+the work and rule 4 says the worker is never the one who says it is true.
+
+## The sheet is deleted, and that is the point
+
+A Matrixify sheet carries a WHOLE BODY SNAPSHOT rather than a patch. This one now
+holds the 2026-09-17 body. Import it next week and it MERGES that body over the
+page, silently reverting anything that landed in between. The fenced card is
+idempotent; the body around it is not. So the CSV and its carrying file are gone
+and the runbook is the record, following what #702 did the day before.
+
+`scripts/verify-u4-array-mastery-live.js` stays, for the reason that note gave:
+a page being right today is no reason to stop noticing if it stops being right.
+
+## What that turned up, which is bigger than this task
+
+`scripts/matrixify-preflight.js` was re-run against this sheet AFTER the import,
+with its carrying body a day out of date, and answered **clear to import.**
+
+The staleness rule that fired on its first real case on 2026-09-17, and that
+CLAUDE.md now cites as the thing standing between a stale sheet and a reverted
+page, lives inside ONE generator: `scripts/csa-cyber-quiz-mount-unpin-csv.js`,
+in its `--check` path. It is not in the shared preflight that every sheet passes
+through on its way to a live page.
+
+So the gate that catches this is the one a session has to remember to build into
+its own generator, and the gate everybody actually runs does not have it. Every
+other sheet under `imports/` is a re-import that nothing would refuse. Filed as
+its own board item rather than fixed here, because moving that rule into the
+shared preflight touches every generator that already has its own copy, and that
+is a change worth reviewing on its own.
+
+Same shape as board 351: an instance was fixed, the class was not.

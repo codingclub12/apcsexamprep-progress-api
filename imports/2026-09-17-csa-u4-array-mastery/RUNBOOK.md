@@ -1,5 +1,23 @@
 # One page, one card: give the array practice page a way in
 
+> **IMPORTED 2026-09-18. THE SHEET IS DELETED AND THIS IS THE RECORD.**
+>
+> Tanner imported it; the live hub updated at 2026-09-18T09:17:00-05:00 and the
+> post-import check passed 8 of 8. The CSV and its carrying file are gone from
+> this directory ON PURPOSE.
+>
+> A sheet carries a WHOLE BODY SNAPSHOT, not a patch. Re-importing this one
+> tomorrow would MERGE yesterday's body over the page and silently revert
+> whatever landed in between, which is the 2026-09-08 near-miss. The fenced card
+> is idempotent; the body around it is not. A spent sheet is a footgun, so it is
+> deleted rather than kept for reference.
+>
+> `scripts/verify-u4-array-mastery-live.js` stays. A page being right today is no
+> reason to stop noticing if it stops being right.
+>
+> To do this again, regenerate against the live body:
+> `node scripts/csa-unit-hub-resource-card.js <out>.csv`
+
 One file, one row, MERGE. Import it once. Run one command before, and the same
 command again after.
 
@@ -91,3 +109,31 @@ reachable.
   carrying file. It refused the first draft three times: no BOM, a file name
   Matrixify would have rejected whole, and an emoji it could not prove was
   pre-existing.
+
+
+## What the import actually proved
+
+Measured after the import, all of it re-derivable:
+
+| | |
+|---|---|
+| Post-import check | **8 of 8** |
+| Live stored body vs the Body HTML the sheet carried | **byte-exact**, 64,592 UTF-16 units |
+| Rendered page | 200, `looksReal` true, card text present, **5** resource-card anchors |
+| Inbound content links to the target | **0 before, 1 after** (chrome excluded, stored bodies read) |
+
+The last row is the one that matters: it is the same measurement that established
+the defect, re-run against the same parent set, so the fix is proven the way it
+was found rather than by a different and friendlier check.
+
+This session did the work, so it did not mark the board task verified. Board 352
+sits in `needs_verification` with `verified` still false.
+
+## One thing this exposed
+
+`scripts/matrixify-preflight.js` answered **clear to import** on this sheet AFTER
+it had already been imported and gone a day stale. The staleness rule that fired
+on its first real case on 2026-09-17 lives inside one generator,
+`scripts/csa-cyber-quiz-mount-unpin-csv.js`, not in the shared preflight every
+sheet passes through. So every other sheet under `imports/` is a re-import that
+nothing would refuse. Filed as its own board item.
