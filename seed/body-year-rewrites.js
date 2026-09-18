@@ -195,6 +195,139 @@ const PAGES = [
         find: '&amp;geq;', replace: '\u2265' },
     ],
   },
+  //  ── SECOND PASS, 2026-09-18: THE REMAINING FIVE HUB PAGES ─────────────
+  //  These carry the stale year as a school-year SPAN rather than a bare 2026,
+  //  which is why the first pass missed them: staleYears() stripped every span
+  //  before looking, so ap-csp-reference-sheet said "the 2025-2026 AP CSP exam"
+  //  four times and the check called the page clean. Spans are judged by their
+  //  end year now.
+  //
+  //  THREE KINDS OF SPAN LIVE ON THESE PAGES AND ONLY ONE IS STALE:
+  //    a CURRENCY claim   "aligned to the 2025-2026 4-unit curriculum"   fix
+  //    a HISTORICAL claim "Scanner is new to the 2025-2026 exam"         keep
+  //    AUTHORING SCAFFOLDING inside an HTML comment                      keep
+  //
+  //  The third is worth knowing about: both practice-exam pages carry a block
+  //  of "SEO: - Page Title: ... - Meta description: ..." notes in a comment,
+  //  left over from whoever built them. Checked against the rendered page, none
+  //  of it reaches a student. It is not touched here, which is why the spans
+  //  below use long find-strings rather than the bare span.
+  {
+    handle: 'ap-csa-exam-prep-hub',
+    why: 'the CSA hub, five currency spans plus a 2026 FAQ pair duplicated into JSON-LD',
+    edits: [
+      { count: 1, why: 'JSON-LD headline',
+        find: '"headline": "AP Computer Science A Exam Prep (2025-2026)"',
+        replace: '"headline": "AP Computer Science A Exam Prep (2026-2027)"' },
+      { count: 1, why: 'JSON-LD description, a currency claim',
+        find: 'exam prep aligned to the 2025-2026 4-unit curriculum',
+        replace: 'exam prep aligned to the 2026-2027 4-unit curriculum' },
+      { count: 1, why: 'body copy, a currency claim',
+        find: 'built specifically for the 2025–2026 curriculum',
+        replace: 'built specifically for the 2026–2027 curriculum' },
+      { count: 1, why: 'the alignment pill',
+        find: '2025–2026 Aligned', replace: '2026–2027 Aligned' },
+      { count: 1, why: 'strip line, a currency claim',
+        find: 'aligned to the 2025–2026 4-unit curriculum',
+        replace: 'aligned to the 2026–2027 4-unit curriculum' },
+      { count: 1, why: 'JSON-LD keyword list',
+        find: 'AP Computer Science A 2026"', replace: 'AP Computer Science A 2027"' },
+      { count: 2, why: 'FAQ question, visible copy and its JSON-LD twin',
+        find: 'What units are on the AP CSA exam in 2026?',
+        replace: 'What units are on the AP CSA exam in 2027?' },
+      { count: 1, why: 'FAQ answer',
+        find: 'The 2026 AP CSA exam covers 4', replace: 'The 2027 AP CSA exam covers 4' },
+      { count: 2, why: 'FAQ question, visible copy and its JSON-LD twin',
+        find: 'What is the AP CSA exam format in 2026?',
+        replace: 'What is the AP CSA exam format in 2027?' },
+      { count: 1, why: 'FAQ answer',
+        find: 'The 2026 AP Computer Science', replace: 'The 2027 AP Computer Science' },
+      { count: 1, why: 'freshness line under the lesson count',
+        find: 'Updated for the May 2026 exam.', replace: 'Updated for the May 2027 exam.' },
+      //  "New 2026" in the comparison table is NOT edited. It badges the 4-unit
+      //  rewrite, which happened in 2026, so moving it to 2027 would assert that
+      //  something changed this year. Same for the FRQ archive links, 2020 to
+      //  2025, and "appears every single year, consistently from 2004 to
+      //  present". Those are the archive, which is the point of the page.
+    ],
+  },
+  {
+    handle: 'ap-csa-practice-exams',
+    why: 'currency spans plus an exam date that was wrong for 2026 as well',
+    edits: [
+      { count: 1, why: 'FAQ answer, a currency claim',
+        find: 'built for the 2025-2026 AP CSA 4-unit curriculum',
+        replace: 'built for the 2026-2027 AP CSA 4-unit curriculum' },
+      { count: 1, why: 'hero eyebrow',
+        find: 'AP Computer Science A • 2025–2026',
+        replace: 'AP Computer Science A • 2026–2027' },
+      { count: 1, why: 'FAQ question',
+        find: 'aligned to the 2026 curriculum?', replace: 'aligned to the 2027 curriculum?' },
+      { count: 1, why: 'the exam date, which named May 15 where the CED gives May 12 2027',
+        find: 'AP CSA Exam — May 15, 2026',
+        replace: `AP CSA Exam — ${EXAM.csa}` },
+      //  "File and Scanner class topics, which are new to the 2025-2026
+      //  curriculum" stays. That is when they were added, and it is true.
+    ],
+  },
+  {
+    handle: 'ap-csa-topics',
+    why: 'the topics hub, whose Title field and both h1 elements read 2026',
+    edits: [
+      { count: 2, why: 'the h1 and the JSON-LD headline',
+        find: 'AP CSA Topics (2026)', replace: 'AP CSA Topics (2027)' },
+      { count: 1, why: 'the long-form h1',
+        find: 'Topics (2026) — Practice', replace: 'Topics (2027) — Practice' },
+      { count: 2, why: 'quick-nav and footer link labels',
+        find: '2026 Exam Info', replace: '2027 Exam Info' },
+      { count: 1, why: 'common mistakes link label',
+        find: 'Common Mistakes (2026)', replace: 'Common Mistakes (2027)' },
+      { count: 1, why: 'intro line, a currency claim. The span sits inside a <strong>, so the find-string carries the markup',
+        find: 'organized by the <strong>2025–2026 four-unit curriculum</strong>',
+        replace: 'organized by the <strong>2026–2027 four-unit curriculum</strong>' },
+      { count: 1, why: 'JSON-LD description, a currency claim',
+        find: 'topics organized by the 2025-2026 4-unit curriculum',
+        replace: 'topics organized by the 2026-2027 4-unit curriculum' },
+      //  NOT edited, all historical: "New & Updated Topics 2025-2026
+      //  Curriculum" and "File I/O with Scanner is a fully new addition to the
+      //  2025-2026 AP CSA exam" both describe when the 4-unit rewrite landed.
+      //  The "New in 2026" and "NEW 2026" badges mark those same topics. The
+      //  copyright year is a copyright year.
+    ],
+  },
+  {
+    handle: 'ap-csp-practice-exams',
+    why: 'one visible currency span; the other two spans are inside authoring scaffolding',
+    edits: [
+      { count: 1, why: 'hero eyebrow, the only span a student sees',
+        find: 'AP Computer Science Principles • 2025–2026',
+        replace: 'AP Computer Science Principles • 2026–2027' },
+    ],
+  },
+  {
+    handle: 'ap-csp-reference-sheet',
+    why: '142 impressions and ZERO clicks at position 6.88. Six spans, four of them student-visible.',
+    edits: [
+      { count: 1, why: 'JSON-LD headline',
+        find: '"headline": "AP CSP Language Reference Sheet (2025-2026)"',
+        replace: '"headline": "AP CSP Language Reference Sheet (2026-2027)"' },
+      { count: 1, why: 'JSON-LD description',
+        find: 'pseudocode reference sheet for the 2025-2026 exam',
+        replace: 'pseudocode reference sheet for the 2026-2027 exam' },
+      { count: 1, why: 'hero label',
+        find: 'AP Computer Science Principles — 2025–2026',
+        replace: 'AP Computer Science Principles — 2026–2027' },
+      { count: 1, why: 'intro line, a currency claim',
+        find: 'covers the complete 2025–2026 pseudocode syntax',
+        replace: 'covers the complete 2026–2027 pseudocode syntax' },
+      { count: 1, why: 'body copy about what College Board provides',
+        find: 'College Board for the 2025–2026 AP CSP exam',
+        replace: 'College Board for the 2026–2027 AP CSP exam' },
+      { count: 1, why: 'FAQ answer',
+        find: 'The 2025–2026 AP CSP exam reference sheet',
+        replace: 'The 2026–2027 AP CSP exam reference sheet' },
+    ],
+  },
 ];
 
 //  ── THE PAGE TITLE FIELD IS THE FIRST H1, AND THE BODY IS THE SECOND ────────
@@ -225,6 +358,10 @@ const TITLES = [
     from: 'AP Computer Science A Exam Format 2026 - Sections, Timing & Scoring Guide',
     to: 'AP Computer Science A Exam Format 2027 - Sections, Timing & Scoring Guide',
     why: 'renders as the first h1 above the body' },
+  { handle: 'ap-csa-topics',
+    from: 'AP CSA Topics (2026)',
+    to: 'AP CSA Topics (2027)',
+    why: 'second pass: renders as the first of FOUR h1 elements on that page' },
   { handle: 'ap-csa-reference-sheet',
     from: 'AP CSA Reference Sheet 2026 - Complete Java Quick Reference Guide',
     to: 'AP CSA Reference Sheet - Complete Java Quick Reference Guide',

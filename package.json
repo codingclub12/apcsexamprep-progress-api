@@ -346,7 +346,12 @@
     "smoke:u2c2": "node smoke/csa-qotd-u2c2-repair.js",
     "verify:u2c2": "node scripts/verify-csa-u2c2-live.js",
     "csa:u2c2repair": "node scripts/csa-qotd-u2c2-repair.js",
-    "csa:u2c2data": "node scripts/csa-u2c2-build-restore.js"
+    "csa:u2c2data": "node scripts/csa-u2c2-build-restore.js",
+    "smoke:csafrqrepair": "node smoke/csa-frq-archive-repair.js",
+    "csa:frqrepairsheets": "node scripts/csa-frq-archive-repair-csv.js imports/2026-09-17-frq-archive",
+    "csa:frqrepairlive": "node scripts/verify-csa-frq-archive-live.js",
+    "smoke:csafrqbootcamp": "node smoke/csa-frq-bootcamp.js",
+    "csa:frqbootcampsheets": "node scripts/csa-frq-bootcamp-csv.js imports/2026-09-17-frq-bootcamp"
   },
   "keywords": [],
   "author": "",

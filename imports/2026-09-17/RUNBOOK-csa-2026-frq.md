@@ -31,8 +31,39 @@ for h in ap-csa-2026-frq-1-account ap-csa-2026-frq-2-bottle \
 done
 ```
 
-Expected: **404 on all five.** A 200 means somebody built one by hand and this
-import would replace it.
+Expected: **404 on four of them, and a 301 on `ap-csa-frq-2026`.**
+
+A 200 on any of them means somebody built that page by hand and this import
+would replace its body.
+
+### The 301 on ap-csa-frq-2026, and what to do about it
+
+Checked 2026-09-17: `/pages/ap-csa-frq-2026` answers **301 to
+`/pages/ap-csa-frq-archive`**. That is a deliberate Shopify URL redirect,
+recorded at line 252 of `APCSExamPrep-theme/fixes/redirect-link-map.csv`. It was
+created because pages linked a 2026 index that did not exist yet, which was the
+right fix then and is in the way now.
+
+**I do not know for certain which wins once the page exists.** Shopify may treat
+the redirect as inert the moment a real page occupies the handle, or the
+redirect may keep shadowing it. So this is a check, not an assumption, and it is
+the first thing to run after the import:
+
+```
+curl -sS -o /dev/null -w "%{http_code} %{redirect_url}\n" \
+  "https://www.apcsexamprep.com/pages/ap-csa-frq-2026"
+```
+
+- **200** and the redirect is inert. Nothing to do, though deleting it in
+  Online Store > Navigation > URL Redirects is tidy.
+- **301** and the new index page exists but nobody can reach it. **Delete that
+  redirect** in Shopify Admin, then re-run the curl and expect 200.
+
+Either way the four question pages are unaffected: none of them has a redirect.
+
+This matters more than it looks, because the archive hub already links
+`/pages/ap-csa-frq-2026`. Until that URL serves the index, a reader clicking the
+2026 card on the hub lands back on the hub they came from.
 
 ## The import
 
