@@ -81,9 +81,31 @@ function dangerousEntities(body) {
 //  Refusal 4. A year is stale only when it stands alone: not inside a URL, not
 //  part of a school-year span, not part of an archive range like 2004 to 2025.
 function staleYears(body, examYear) {
+  //  ── A SCHOOL-YEAR SPAN IS CHECKED, NOT SKIPPED ─────────────────────────────
+  //  The first version stripped every span before looking, on the reasoning that
+  //  2026-27 is correct and should not be flagged. True, but it meant an ENDED
+  //  span was not flagged either. ap-csp-reference-sheet says "the 2025-2026 AP
+  //  CSP exam" four times and this function called that page clean, which is the
+  //  worst kind of check: one that reports nothing and looks like evidence.
+  //  Spans are now judged by their END year, the same way scripts/
+  //  seo-metadata-csv.js has always judged the ones it writes.
+  const spanHits = [];
+  const SPAN = /\b(20\d{2})\s*[-–]\s*(20\d{2}|\d{2})\b/g;
+  for (const m of body.matchAll(SPAN)) {
+    const start = Number(m[1]);
+    const end = m[2].length === 2 ? Number(String(start).slice(0, 2) + m[2]) : Number(m[2]);
+    //  Only a SCHOOL YEAR, two consecutive years. 2004-2025 is an archive range.
+    if (end === start + 1 && end < examYear) {
+      spanHits.push(body.slice(Math.max(0, m.index - 45), m.index + 25).replace(/\s+/g, ' '));
+    }
+  }
+
   const stripped = body
     .replace(/<!--[\s\S]*?-->/g, ' ')
-    .replace(/(?:href|src|id|class|action)\s*=\s*"[^"]*"/gi, ' ')
+    .replace(/(?:href|src|id|class|action|xmlns|xmlns:\w+|viewBox|viewbox|d)\s*=\s*"[^"]*"/gi, ' ')
+    //  Any absolute URL, wherever it sits. www.w3.org/2000/svg appears in every
+    //  inline SVG on these pages and read as 34 stale years on one of them.
+    .replace(/https?:\/\/[^\s"'<>)]+/gi, ' ')
     .replace(/\b20\d{2}\s*[-–]\s*(?:20\d{2}|\d{2})\b/g, ' ')
     .replace(/\b20\d{2}\s*(?:to|through)\s*20\d{2}\b/gi, ' ')
     //  Archive and historical labels keep their own year on purpose.
@@ -95,7 +117,7 @@ function staleYears(body, examYear) {
     //  sits immediately before it, so an exam year elsewhere in the same line
     //  is still caught.
     .replace(/(?:Last\s+)?Updated\s+(?:[A-Z][a-z]+\s+)?20\d{2}/g, ' ');
-  const hits = [];
+  const hits = [...spanHits];
   for (const m of stripped.matchAll(/\b(20\d{2})\b/g)) {
     if (Number(m[1]) < examYear) hits.push(stripped.slice(Math.max(0, m.index - 45), m.index + 25).replace(/\s+/g, ' '));
   }

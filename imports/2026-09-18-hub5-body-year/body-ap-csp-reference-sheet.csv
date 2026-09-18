@@ -1,0 +1,1073 @@
+﻿"Handle","Command","Body HTML"
+"ap-csp-reference-sheet","MERGE","<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@graph"": [
+    {
+      ""@type"": ""BreadcrumbList"",
+      ""itemListElement"": [
+        {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com/""},
+        {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science Principles"",""item"":""https://www.apcsexamprep.com/pages/ap-computer-science-principles-resources""},
+        {""@type"":""ListItem"",""position"":3,""name"":""AP CSP Language Reference Sheet"",""item"":""https://www.apcsexamprep.com/pages/ap-csp-reference-sheet""}
+      ]
+    },
+    {
+      ""@type"": ""Article"",
+      ""headline"": ""AP CSP Language Reference Sheet (2026-2027)"",
+      ""description"": ""Complete AP CSP pseudocode reference sheet for the 2026-2027 exam. Covers all syntax: variables, conditionals, loops, lists, procedures, string operations, robot procedures, and Boolean logic."",
+      ""author"": {""@type"":""Person"",""name"":""Tanner Crow""},
+      ""publisher"": {""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://www.apcsexamprep.com""},
+      ""url"": ""https://www.apcsexamprep.com/pages/ap-csp-reference-sheet"",
+      ""keywords"": ""AP CSP pseudocode reference, AP CSP language reference sheet, AP CSP exam reference, AP Computer Science Principles pseudocode, AP CSP cheat sheet""
+    },
+    {
+      ""@type"": ""FAQPage"",
+      ""mainEntity"": [
+        {
+          ""@type"": ""Question"",
+          ""name"": ""What pseudocode does AP CSP use?"",
+          ""acceptedAnswer"": {""@type"":""Answer"",""text"":""AP Computer Science Principles uses a simplified block-based pseudocode developed by the College Board. It uses left arrow for assignment, 1-indexed lists, DISPLAY for output, INPUT for user input, and RANDOM for random numbers. It is not based on any specific programming language but resembles Python in some ways.""}
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""Is a reference sheet provided on the AP CSP exam?"",
+          ""acceptedAnswer"": {""@type"":""Answer"",""text"":""Yes. The College Board provides a pseudocode reference sheet on AP CSP exam day. It covers the core syntax including assignment, conditionals, iteration, list operations, procedures, and robot procedures. Students should practice with this reference sheet before the exam so they are familiar with it.""}
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""What are the AP CSP list operations?"",
+          ""acceptedAnswer"": {""@type"":""Answer"",""text"":""AP CSP list operations include: INSERT(list, index, value) to add an element, APPEND(list, value) to add to the end, REMOVE(list, index) to delete an element, LENGTH(list) to count elements, and using list[i] to access elements. Note that AP CSP lists are 1-indexed, meaning the first element is at position 1 not 0.""}
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<div id=""apcsp-ref-v1"">
+<style>
+#apcsp-ref-v1,
+#apcsp-ref-v1 *,
+#apcsp-ref-v1 *::before,
+#apcsp-ref-v1 *::after { box-sizing: border-box !important; }
+#apcsp-ref-v1 {
+  all: initial !important;
+  display: block !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 15px !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  line-height: 1.6 !important;
+  margin: 0 -20px !important;
+}
+
+/* HERO */
+#apcsp-ref-v1 .ref-hero {
+  display: block !important;
+  background: #064e3b !important;
+  padding: 40px 32px 36px !important;
+}
+#apcsp-ref-v1 .ref-hero-inner {
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  gap: 32px !important;
+  align-items: center !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+}
+#apcsp-ref-v1 .ref-hero-label {
+  display: block !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  color: #6ee7b7 !important;
+  -webkit-text-fill-color: #6ee7b7 !important;
+  margin: 0 0 10px !important;
+}
+#apcsp-ref-v1 .ref-hero h1 {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  line-height: 1.2 !important;
+  margin: 0 0 10px !important;
+  letter-spacing: -0.4px !important;
+}
+#apcsp-ref-v1 .ref-hero-desc {
+  display: block !important;
+  font-size: 14px !important;
+  color: #a7f3d0 !important;
+  -webkit-text-fill-color: #a7f3d0 !important;
+  line-height: 1.6 !important;
+  max-width: 520px !important;
+  margin: 0 !important;
+}
+#apcsp-ref-v1 .ref-hero-stats {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+#apcsp-ref-v1 .ref-hero-stat {
+  display: block !important;
+  background: rgba(255,255,255,0.1) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 8px !important;
+  padding: 10px 16px !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+#apcsp-ref-v1 .ref-stat-val {
+  display: block !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#apcsp-ref-v1 .ref-stat-lbl {
+  display: block !important;
+  font-size: 10px !important;
+  color: #6ee7b7 !important;
+  -webkit-text-fill-color: #6ee7b7 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* EXAM DAY CALLOUT */
+#apcsp-ref-v1 .ref-exam-callout {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  background: #fffbeb !important;
+  border: 1.5px solid #fcd34d !important;
+  border-radius: 10px !important;
+  padding: 14px 18px !important;
+  margin: 0 0 32px !important;
+  flex-wrap: wrap !important;
+}
+#apcsp-ref-v1 .ref-callout-icon {
+  font-size: 20px !important;
+  flex-shrink: 0 !important;
+}
+#apcsp-ref-v1 .ref-callout-text {
+  font-size: 13px !important;
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  line-height: 1.5 !important;
+  flex: 1 !important;
+}
+#apcsp-ref-v1 .ref-callout-text strong {
+  font-weight: 700 !important;
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+}
+
+/* JUMP LINKS */
+#apcsp-ref-v1 .ref-jump-nav {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin: 0 0 32px !important;
+}
+#apcsp-ref-v1 a.ref-jump,
+#apcsp-ref-v1 a.ref-jump:link,
+#apcsp-ref-v1 a.ref-jump:visited {
+  display: inline-block !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 5px 12px !important;
+  border-radius: 20px !important;
+  text-decoration: none !important;
+  background: #f0fdf4 !important;
+  color: #065f46 !important;
+  -webkit-text-fill-color: #065f46 !important;
+  border: 1px solid #86efac !important;
+}
+#apcsp-ref-v1 a.ref-jump:hover {
+  background: #dcfce7 !important;
+}
+
+/* WRAP */
+#apcsp-ref-v1 .ref-wrap {
+  display: block !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 32px 24px !important;
+}
+
+/* SECTION */
+#apcsp-ref-v1 .ref-section {
+  display: block !important;
+  margin: 0 0 40px !important;
+}
+#apcsp-ref-v1 .ref-section-head {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 0 16px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+#apcsp-ref-v1 .ref-section-tag {
+  display: inline-block !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+  background: #f0fdf4 !important;
+  color: #065f46 !important;
+  -webkit-text-fill-color: #065f46 !important;
+}
+#apcsp-ref-v1 .ref-section-head h2 {
+  display: block !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  margin: 0 !important;
+}
+#apcsp-ref-v1 .ref-section-note {
+  display: block !important;
+  font-size: 12px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin: -8px 0 14px !important;
+  font-style: italic !important;
+}
+
+/* SYNTAX TABLE */
+#apcsp-ref-v1 .ref-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: 13px !important;
+  margin: 0 0 16px !important;
+}
+#apcsp-ref-v1 .ref-table th {
+  text-align: left !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  padding: 6px 12px !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+#apcsp-ref-v1 .ref-table td {
+  padding: 10px 12px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  vertical-align: top !important;
+  color: #334155 !important;
+  -webkit-text-fill-color: #334155 !important;
+  line-height: 1.5 !important;
+}
+#apcsp-ref-v1 .ref-table tr:last-child td { border-bottom: none !important; }
+#apcsp-ref-v1 .ref-table tr:hover td { background: #f8fafc !important; }
+#apcsp-ref-v1 .ref-table td:first-child { width: 38% !important; }
+#apcsp-ref-v1 .ref-table td:last-child {
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+  font-size: 12.5px !important;
+}
+
+/* CODE ELEMENT */
+#apcsp-ref-v1 code {
+  display: inline !important;
+  font-family: 'Courier New', Courier, monospace !important;
+  font-size: 12.5px !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 1px 5px !important;
+  border-radius: 3px !important;
+  border: 1px solid #e2e8f0 !important;
+  white-space: nowrap !important;
+}
+
+/* CODE BLOCK */
+#apcsp-ref-v1 .ref-code-block {
+  display: block !important;
+  font-family: 'Courier New', Courier, monospace !important;
+  font-size: 12.5px !important;
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 14px 16px !important;
+  border-radius: 8px !important;
+  margin: 0 0 14px !important;
+  white-space: pre !important;
+  overflow-x: auto !important;
+  line-height: 1.7 !important;
+}
+#apcsp-ref-v1 .ref-code-block .kw {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+}
+#apcsp-ref-v1 .ref-code-block .cm {
+  color: #6ee7b7 !important;
+  -webkit-text-fill-color: #6ee7b7 !important;
+}
+#apcsp-ref-v1 .ref-code-block .str {
+  color: #fcd34d !important;
+  -webkit-text-fill-color: #fcd34d !important;
+}
+#apcsp-ref-v1 .ref-code-block .num {
+  color: #f9a8d4 !important;
+  -webkit-text-fill-color: #f9a8d4 !important;
+}
+
+/* KEY DIFFERENCES BOX */
+#apcsp-ref-v1 .ref-diff-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin: 0 0 16px !important;
+}
+#apcsp-ref-v1 .ref-diff-card {
+  display: block !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 14px !important;
+}
+#apcsp-ref-v1 .ref-diff-label {
+  display: block !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+  margin: 0 0 6px !important;
+}
+#apcsp-ref-v1 .ref-diff-rule {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #065f46 !important;
+  -webkit-text-fill-color: #065f46 !important;
+  margin: 0 0 4px !important;
+}
+#apcsp-ref-v1 .ref-diff-example {
+  display: block !important;
+  font-family: 'Courier New', Courier, monospace !important;
+  font-size: 11.5px !important;
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+}
+
+/* ALERT / TIP */
+#apcsp-ref-v1 .ref-tip {
+  display: flex !important;
+  gap: 10px !important;
+  background: #eff6ff !important;
+  border-left: 3px solid #2563eb !important;
+  border-radius: 0 6px 6px 0 !important;
+  padding: 10px 14px !important;
+  margin: 0 0 16px !important;
+  font-size: 12.5px !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  line-height: 1.55 !important;
+}
+#apcsp-ref-v1 .ref-warn {
+  display: flex !important;
+  gap: 10px !important;
+  background: #fef9c3 !important;
+  border-left: 3px solid #ca8a04 !important;
+  border-radius: 0 6px 6px 0 !important;
+  padding: 10px 14px !important;
+  margin: 0 0 16px !important;
+  font-size: 12.5px !important;
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  line-height: 1.55 !important;
+}
+
+/* OPERATOR GRID */
+#apcsp-ref-v1 .ref-op-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  margin: 0 0 16px !important;
+}
+#apcsp-ref-v1 .ref-op {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+}
+#apcsp-ref-v1 .ref-op-sym {
+  display: inline-block !important;
+  font-family: 'Courier New', Courier, monospace !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #065f46 !important;
+  -webkit-text-fill-color: #065f46 !important;
+  min-width: 32px !important;
+  text-align: center !important;
+}
+#apcsp-ref-v1 .ref-op-desc {
+  font-size: 12px !important;
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+}
+
+/* BOTTOM NAV */
+#apcsp-ref-v1 .ref-bottom-nav {
+  display: flex !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  background: #f0fdf4 !important;
+  border: 1px solid #86efac !important;
+  border-radius: 10px !important;
+  padding: 16px 20px !important;
+  margin-top: 40px !important;
+}
+#apcsp-ref-v1 .ref-bottom-nav-label {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #065f46 !important;
+  -webkit-text-fill-color: #065f46 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  white-space: nowrap !important;
+}
+#apcsp-ref-v1 a.ref-nav-link,
+#apcsp-ref-v1 a.ref-nav-link:link,
+#apcsp-ref-v1 a.ref-nav-link:visited {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 7px 14px !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  background: #059669 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* FAQ */
+#apcsp-ref-v1 .ref-faq-item { display: block !important; border-bottom: 1px solid #e2e8f0 !important; }
+#apcsp-ref-v1 .ref-faq-q {
+  all: initial !important;
+  display: flex !important;
+  width: 100% !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 14px 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  cursor: pointer !important;
+  background: transparent !important;
+  border: none !important;
+  text-align: left !important;
+}
+#apcsp-ref-v1 .ref-faq-q::after { content: '+' !important; font-size: 20px !important; font-weight: 300 !important; color: #94a3b8 !important; -webkit-text-fill-color: #94a3b8 !important; flex-shrink: 0 !important; margin-left: 12px !important; }
+#apcsp-ref-v1 .ref-faq-item.open .ref-faq-q::after { content: '\2212' !important; }
+#apcsp-ref-v1 .ref-faq-a { display: block !important; font-size: 13px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important; line-height: 1.7 !important; max-height: 0 !important; overflow: hidden !important; transition: max-height 0.25s ease, padding 0.2s !important; padding: 0 !important; }
+#apcsp-ref-v1 .ref-faq-item.open .ref-faq-a { max-height: 300px !important; padding: 0 0 14px !important; }
+
+#apcsp-ref-v1 .ref-section-divider { display: block !important; height: 1px !important; background: #e2e8f0 !important; margin: 40px 0 !important; }
+#apcsp-ref-v1 .ref-bottom-pad { display: block !important; height: 60px !important; }
+</style>
+
+<!-- HERO -->
+<div class=""ref-hero"">
+  <div class=""ref-hero-inner"">
+    <div>
+      <span class=""ref-hero-label"">AP Computer Science Principles — 2026–2027</span>
+      <h1>AP CSP Language<br>Reference Sheet</h1>
+      <span class=""ref-hero-desc"">Complete pseudocode syntax for the AP CSP exam — variables, conditionals, loops, lists, procedures, string operations, and robot procedures. Provided on exam day; practice with it now.</span>
+    </div>
+    <div class=""ref-hero-stats"">
+      <div class=""ref-hero-stat"">
+        <span class=""ref-stat-val"">8 Sections</span>
+        <span class=""ref-stat-lbl"">Full syntax coverage</span>
+      </div>
+      <div class=""ref-hero-stat"">
+        <span class=""ref-stat-val"">Exam Day</span>
+        <span class=""ref-stat-lbl"">Sheet provided</span>
+      </div>
+      <div class=""ref-hero-stat"">
+        <span class=""ref-stat-val"">30–35%</span>
+        <span class=""ref-stat-lbl"">Big Idea 3 of exam</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class=""ref-wrap"">
+
+  <!-- EXAM DAY CALLOUT -->
+  <div class=""ref-exam-callout"">
+    <span class=""ref-callout-icon"">📋</span>
+    <span class=""ref-callout-text""><strong>This reference sheet is provided on exam day.</strong> You do not need to memorize the syntax — but you do need to recognize it instantly. Practice reading and tracing pseudocode in this format so the reference sheet feels familiar, not foreign, when you open it during the exam.</span>
+  </div>
+
+  <!-- SEO INTRO -->
+  <p style=""display:block!important;font-size:14.5px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin:0 0 20px!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;"">
+    The AP Computer Science Principles exam uses a College Board pseudocode language that appears on every programming question. This AP CSP language reference sheet covers the complete 2026–2027 pseudocode syntax — variables, conditionals, loops, list operations, procedures, string operations, and robot commands. This reference sheet is provided on AP CSP exam day, so you do not need to memorize it; you do need to recognize every construct instantly. Practice with it now so the AP CSP pseudocode cheat sheet feels second nature before test day.
+  </p>
+
+  <!-- JUMP NAV -->
+  <div class=""ref-jump-nav"">
+    <a class=""ref-jump"" href=""#variables"">Variables &amp; Assignment</a>
+    <a class=""ref-jump"" href=""#operators"">Operators</a>
+    <a class=""ref-jump"" href=""#conditionals"">Conditionals</a>
+    <a class=""ref-jump"" href=""#loops"">Loops</a>
+    <a class=""ref-jump"" href=""#lists"">List Operations</a>
+    <a class=""ref-jump"" href=""#procedures"">Procedures</a>
+    <a class=""ref-jump"" href=""#strings"">String Operations</a>
+    <a class=""ref-jump"" href=""#robot"">Robot Procedures</a>
+  </div>
+
+  <!-- KEY DIFFERENCES -->
+  <div class=""ref-section"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Start Here</span>
+      <h2>How AP CSP Pseudocode Differs from Real Languages</h2>
+    </div>
+    <div class=""ref-diff-grid"">
+      <div class=""ref-diff-card"">
+        <span class=""ref-diff-label"">Assignment</span>
+        <span class=""ref-diff-rule"">Uses ← not =</span>
+        <span class=""ref-diff-example"">x ← 5 (not x = 5)</span>
+      </div>
+      <div class=""ref-diff-card"">
+        <span class=""ref-diff-label"">List Indexing</span>
+        <span class=""ref-diff-rule"">Starts at 1, not 0</span>
+        <span class=""ref-diff-example"">myList[1] is the first item</span>
+      </div>
+      <div class=""ref-diff-card"">
+        <span class=""ref-diff-label"">Output</span>
+        <span class=""ref-diff-rule"">DISPLAY, not print()</span>
+        <span class=""ref-diff-example"">DISPLAY(""hello"")</span>
+      </div>
+      <div class=""ref-diff-card"">
+        <span class=""ref-diff-label"">Equality Check</span>
+        <span class=""ref-diff-rule"">= for comparison</span>
+        <span class=""ref-diff-example"">IF (x = 5) not ==</span>
+      </div>
+      <div class=""ref-diff-card"">
+        <span class=""ref-diff-label"">Blocks</span>
+        <span class=""ref-diff-rule"">{ } for code blocks</span>
+        <span class=""ref-diff-example"">No indentation rules</span>
+      </div>
+      <div class=""ref-diff-card"">
+        <span class=""ref-diff-label"">Input</span>
+        <span class=""ref-diff-rule"">INPUT() built-in</span>
+        <span class=""ref-diff-example"">x ← INPUT()</span>
+      </div>
+    </div>
+    <div class=""ref-warn"">⚠ The single biggest mistake students make: forgetting lists are 1-indexed. If a list has 5 elements, valid indices are 1 through 5. Accessing index 0 or index 6 is an error.</div>
+  </div>
+
+  <!-- VARIABLES & ASSIGNMENT -->
+  <div class=""ref-section"" id=""variables"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Section 1</span>
+      <h2>Variables &amp; Assignment</h2>
+    </div>
+    <table class=""ref-table"">
+      <thead><tr>
+<th>Syntax</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr></thead>
+      <tbody>
+        <tr>
+<td><code>a ← expression</code></td>
+<td>Assign value to variable</td>
+<td><code>score ← 0</code></td>
+</tr>
+        <tr>
+<td><code>a ← b</code></td>
+<td>Copy value of b into a</td>
+<td><code>temp ← x</code></td>
+</tr>
+        <tr>
+<td><code>DISPLAY(expression)</code></td>
+<td>Print to output</td>
+<td><code>DISPLAY(score)</code></td>
+</tr>
+        <tr>
+<td><code>INPUT()</code></td>
+<td>Read a value from user</td>
+<td><code>name ← INPUT()</code></td>
+</tr>
+        <tr>
+<td><code>RANDOM(a, b)</code></td>
+<td>Random integer between a and b (inclusive)</td>
+<td><code>roll ← RANDOM(1, 6)</code></td>
+</tr>
+      </tbody>
+    </table>
+    <div class=""ref-tip"">ⓘ Variables in AP CSP can store numbers, strings, Booleans, or lists. There are no type declarations — the type is inferred from the assigned value.</div>
+  </div>
+
+  <!-- OPERATORS -->
+  <div class=""ref-section"" id=""operators"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Section 2</span>
+      <h2>Operators</h2>
+    </div>
+    <p class=""ref-section-note"">Arithmetic operators follow standard order of operations. Comparison operators return TRUE or FALSE.</p>
+    <div class=""ref-op-grid"">
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">+</span><span class=""ref-op-desc"">Addition</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">-</span><span class=""ref-op-desc"">Subtraction</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">*</span><span class=""ref-op-desc"">Multiplication</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">/</span><span class=""ref-op-desc"">Division</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">MOD</span><span class=""ref-op-desc"">Remainder (modulo)</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">=</span><span class=""ref-op-desc"">Equal to</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">≠</span><span class=""ref-op-desc"">Not equal to</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">&lt;</span><span class=""ref-op-desc"">Less than</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">&gt;</span><span class=""ref-op-desc"">Greater than</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">&lt;=</span><span class=""ref-op-desc"">Less than or equal</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">&gt;=</span><span class=""ref-op-desc"">Greater than or equal</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">AND</span><span class=""ref-op-desc"">Logical AND</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">OR</span><span class=""ref-op-desc"">Logical OR</span>
+</div>
+      <div class=""ref-op"">
+<span class=""ref-op-sym"">NOT</span><span class=""ref-op-desc"">Logical NOT</span>
+</div>
+    </div>
+    <div class=""ref-tip"">ⓘ <strong>MOD tip:</strong> <code>x MOD 2 = 0</code> checks if x is even. <code>x MOD 2 = 1</code> checks if x is odd. This appears frequently on the exam.</div>
+  </div>
+
+  <!-- CONDITIONALS -->
+  <div class=""ref-section"" id=""conditionals"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Section 3</span>
+      <h2>Conditional Statements</h2>
+    </div>
+    <table class=""ref-table"">
+      <thead><tr>
+<th>Structure</th>
+<th>When to use</th>
+</tr></thead>
+      <tbody>
+        <tr>
+<td><code>IF (condition) { }</code></td>
+<td>Run block only if condition is TRUE</td>
+</tr>
+        <tr>
+<td><code>IF (condition) { } ELSE { }</code></td>
+<td>Run first block if TRUE, second if FALSE</td>
+</tr>
+        <tr>
+<td><code>IF ... ELSE IF ... ELSE</code></td>
+<td>Chain of conditions, only first TRUE runs</td>
+</tr>
+      </tbody>
+    </table>
+    <span class=""ref-code-block""><span class=""kw"">IF</span> (score &gt;= 90)
+{
+    <span class=""kw"">DISPLAY</span>(<span class=""str"">""A""</span>)
+}
+<span class=""kw"">ELSE IF</span> (score &gt;= 80)
+{
+    <span class=""kw"">DISPLAY</span>(<span class=""str"">""B""</span>)
+}
+<span class=""kw"">ELSE</span>
+{
+    <span class=""kw"">DISPLAY</span>(<span class=""str"">""Below B""</span>)
+}</span>
+    <div class=""ref-warn"">⚠ Conditions in AP CSP use = for equality comparison (not ==). <code>IF (x = 5)</code> is correct syntax — do not write <code>IF (x == 5)</code>.</div>
+  </div>
+
+  <!-- LOOPS -->
+  <div class=""ref-section"" id=""loops"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Section 4</span>
+      <h2>Loops (Iteration)</h2>
+    </div>
+    <table class=""ref-table"">
+      <thead><tr>
+<th>Structure</th>
+<th>When to use</th>
+</tr></thead>
+      <tbody>
+        <tr>
+<td><code>REPEAT n TIMES { }</code></td>
+<td>Run block exactly n times</td>
+</tr>
+        <tr>
+<td><code>REPEAT UNTIL (condition) { }</code></td>
+<td>Repeat until condition becomes TRUE</td>
+</tr>
+        <tr>
+<td><code>FOR EACH item IN list { }</code></td>
+<td>Iterate over every element in a list</td>
+</tr>
+      </tbody>
+    </table>
+    <span class=""ref-code-block""><span class=""cm"">// REPEAT n TIMES</span>
+<span class=""kw"">REPEAT</span> <span class=""num"">5</span> TIMES
+{
+    <span class=""kw"">DISPLAY</span>(<span class=""str"">""hello""</span>)
+}
+
+<span class=""cm"">// REPEAT UNTIL</span>
+count ← <span class=""num"">1</span>
+<span class=""kw"">REPEAT UNTIL</span> (count &gt; 10)
+{
+    <span class=""kw"">DISPLAY</span>(count)
+    count ← count + <span class=""num"">1</span>
+}
+
+<span class=""cm"">// FOR EACH</span>
+<span class=""kw"">FOR EACH</span> item <span class=""kw"">IN</span> myList
+{
+    <span class=""kw"">DISPLAY</span>(item)
+}</span>
+    <div class=""ref-tip"">ⓘ <strong>REPEAT UNTIL vs WHILE:</strong> AP CSP uses REPEAT UNTIL (not while). The loop continues until the condition is TRUE — so the condition is the stopping condition, not the continuing condition. This trips up many students from Python backgrounds.</div>
+  </div>
+
+  <!-- LIST OPERATIONS -->
+  <div class=""ref-section"" id=""lists"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Section 5</span>
+      <h2>List Operations</h2>
+    </div>
+    <div class=""ref-warn"">⚠ AP CSP lists are <strong>1-indexed</strong>. The first element is at index 1, not index 0. This is the opposite of Python, JavaScript, and Java.</div>
+    <table class=""ref-table"">
+      <thead><tr>
+<th>Operation</th>
+<th>What it does</th>
+<th>Example</th>
+</tr></thead>
+      <tbody>
+        <tr>
+<td><code>aList ← []</code></td>
+<td>Create empty list</td>
+<td><code>scores ← []</code></td>
+</tr>
+        <tr>
+<td><code>aList ← [v1, v2, v3]</code></td>
+<td>Create list with values</td>
+<td><code>nums ← [1, 2, 3]</code></td>
+</tr>
+        <tr>
+<td><code>aList[i]</code></td>
+<td>Access element at index i (starts at 1)</td>
+<td>
+<code>aList[1]</code> = first item</td>
+</tr>
+        <tr>
+<td><code>aList[i] ← value</code></td>
+<td>Assign value to position i</td>
+<td><code>aList[2] ← 99</code></td>
+</tr>
+        <tr>
+<td><code>INSERT(aList, i, value)</code></td>
+<td>Insert value at index i; shift right</td>
+<td><code>INSERT(aList, 1, 0)</code></td>
+</tr>
+        <tr>
+<td><code>APPEND(aList, value)</code></td>
+<td>Add value to end of list</td>
+<td><code>APPEND(scores, 95)</code></td>
+</tr>
+        <tr>
+<td><code>REMOVE(aList, i)</code></td>
+<td>Remove element at index i; shift left</td>
+<td><code>REMOVE(aList, 2)</code></td>
+</tr>
+        <tr>
+<td><code>LENGTH(aList)</code></td>
+<td>Returns number of elements</td>
+<td>
+<code>LENGTH(scores)</code> = 5</td>
+</tr>
+      </tbody>
+    </table>
+    <span class=""ref-code-block""><span class=""cm"">// Traverse a list and find the max</span>
+nums ← [<span class=""num"">3</span>, <span class=""num"">7</span>, <span class=""num"">2</span>, <span class=""num"">9</span>, <span class=""num"">1</span>]
+maxVal ← nums[<span class=""num"">1</span>]
+
+<span class=""kw"">FOR EACH</span> n <span class=""kw"">IN</span> nums
+{
+    <span class=""kw"">IF</span> (n &gt; maxVal)
+    {
+        maxVal ← n
+    }
+}
+<span class=""kw"">DISPLAY</span>(maxVal)  <span class=""cm"">// displays 9</span></span>
+  </div>
+
+  <!-- PROCEDURES -->
+  <div class=""ref-section"" id=""procedures"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Section 6</span>
+      <h2>Procedures (Functions)</h2>
+    </div>
+    <table class=""ref-table"">
+      <thead><tr>
+<th>Structure</th>
+<th>What it does</th>
+</tr></thead>
+      <tbody>
+        <tr>
+<td><code>PROCEDURE name(param1, param2) { }</code></td>
+<td>Define a procedure with parameters</td>
+</tr>
+        <tr>
+<td><code>PROCEDURE name(param) { RETURN(expr) }</code></td>
+<td>Define a procedure that returns a value</td>
+</tr>
+        <tr>
+<td><code>name(arg1, arg2)</code></td>
+<td>Call a procedure with arguments</td>
+</tr>
+      </tbody>
+    </table>
+    <span class=""ref-code-block""><span class=""cm"">// Procedure without return value</span>
+<span class=""kw"">PROCEDURE</span> greet(name)
+{
+    <span class=""kw"">DISPLAY</span>(<span class=""str"">""Hello, ""</span> + name)
+}
+greet(<span class=""str"">""Alex""</span>)  <span class=""cm"">// displays: Hello, Alex</span>
+
+<span class=""cm"">// Procedure with return value</span>
+<span class=""kw"">PROCEDURE</span> square(n)
+{
+    <span class=""kw"">RETURN</span>(n * n)
+}
+result ← square(<span class=""num"">5</span>)  <span class=""cm"">// result = 25</span></span>
+    <div class=""ref-tip"">ⓘ <strong>Abstraction:</strong> Procedures are the primary form of procedural abstraction in AP CSP. The exam frequently tests whether you can trace what a procedure returns given specific inputs.</div>
+  </div>
+
+  <!-- STRING OPERATIONS -->
+  <div class=""ref-section"" id=""strings"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Section 7</span>
+      <h2>String Operations</h2>
+    </div>
+    <table class=""ref-table"">
+      <thead><tr>
+<th>Operation</th>
+<th>What it does</th>
+<th>Example</th>
+</tr></thead>
+      <tbody>
+        <tr>
+<td><code>concat(str1, str2)</code></td>
+<td>Combine two strings</td>
+<td><code>concat(""Hello"", "" World"")</code></td>
+</tr>
+        <tr>
+<td><code>substring(str, start, end)</code></td>
+<td>Extract characters from start to end</td>
+<td>
+<code>substring(""hello"", 2, 4)</code> = ""ell""</td>
+</tr>
+        <tr>
+<td><code>len(str)</code></td>
+<td>Number of characters</td>
+<td>
+<code>len(""hello"")</code> = 5</td>
+</tr>
+        <tr>
+<td><code>str1 + str2</code></td>
+<td>Concatenation shorthand</td>
+<td>
+<code>""AP"" + "" CSP""</code> = ""AP CSP""</td>
+</tr>
+      </tbody>
+    </table>
+    <div class=""ref-tip"">ⓘ Strings in AP CSP are 1-indexed just like lists. <code>substring(""hello"", 1, 3)</code> returns ""hel"" (characters at positions 1, 2, and 3).</div>
+  </div>
+
+  <!-- ROBOT PROCEDURES -->
+  <div class=""ref-section"" id=""robot"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Section 8</span>
+      <h2>Robot Procedures</h2>
+    </div>
+    <p class=""ref-section-note"">Robot questions appear on the AP CSP exam. The robot lives on a grid and follows these commands.</p>
+    <table class=""ref-table"">
+      <thead><tr>
+<th>Command</th>
+<th>What it does</th>
+</tr></thead>
+      <tbody>
+        <tr>
+<td><code>MOVE_FORWARD()</code></td>
+<td>Move one square in the direction the robot is currently facing</td>
+</tr>
+        <tr>
+<td><code>ROTATE_LEFT()</code></td>
+<td>Turn the robot 90° counterclockwise (left), stays in place</td>
+</tr>
+        <tr>
+<td><code>ROTATE_RIGHT()</code></td>
+<td>Turn the robot 90° clockwise (right), stays in place</td>
+</tr>
+        <tr>
+<td><code>CAN_MOVE(direction)</code></td>
+<td>Returns TRUE if robot can move in direction: forward, backward, left, right</td>
+</tr>
+      </tbody>
+    </table>
+    <span class=""ref-code-block""><span class=""cm"">// Move robot to the right 3 squares</span>
+<span class=""kw"">ROTATE_RIGHT</span>()
+<span class=""kw"">REPEAT</span> <span class=""num"">3</span> TIMES
+{
+    <span class=""kw"">MOVE_FORWARD</span>()
+}
+
+<span class=""cm"">// Move until hitting a wall</span>
+<span class=""kw"">REPEAT UNTIL</span> (<span class=""kw"">NOT</span> CAN_MOVE(<span class=""str"">forward</span>))
+{
+    <span class=""kw"">MOVE_FORWARD</span>()
+}</span>
+    <div class=""ref-warn"">⚠ ROTATE_LEFT and ROTATE_RIGHT only change the direction the robot faces — they do not move it. You must call MOVE_FORWARD() to actually move. Common exam trap: assuming ROTATE moves the robot one square.</div>
+  </div>
+
+  <div class=""ref-section-divider""></div>
+
+  <!-- COMMON EXAM MISTAKES -->
+  <div class=""ref-section"" id=""mistakes"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">Exam Strategy</span>
+      <h2>Common AP CSP Pseudocode Mistakes</h2>
+    </div>
+    <p style=""display:block!important;font-size:13.5px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.6!important;margin:0 0 16px!important;"">These are the most frequent errors students make when reading or writing AP CSP pseudocode on the exam. Each one has cost real students points.</p>
+    <table class=""ref-table"">
+      <thead><tr>
+<th>Mistake</th>
+<th>Wrong</th>
+<th>Correct</th>
+</tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Using 0-based index</strong></td>
+          <td>
+<code>aList[0]</code> for first item</td>
+          <td>
+<code>aList[1]</code> is the first item</td>
+        </tr>
+        <tr>
+          <td><strong>REPEAT UNTIL logic reversed</strong></td>
+          <td>
+<code>REPEAT UNTIL (count &lt; 10)</code> to count to 10</td>
+          <td>
+<code>REPEAT UNTIL (count &gt; 10)</code> — stops when TRUE</td>
+        </tr>
+        <tr>
+          <td><strong>Using == for equality</strong></td>
+          <td><code>IF (x == 5)</code></td>
+          <td>
+<code>IF (x = 5)</code> — single = is comparison</td>
+        </tr>
+        <tr>
+          <td><strong>ROTATE moves the robot</strong></td>
+          <td>
+<code>ROTATE_RIGHT()</code> moves one square right</td>
+          <td>ROTATE only changes direction — must call <code>MOVE_FORWARD()</code>
+</td>
+        </tr>
+        <tr>
+          <td><strong>Misreading FOR EACH scope</strong></td>
+          <td>Assuming <code>item</code> persists after the loop ends</td>
+          <td>
+<code>item</code> is only valid inside the FOR EACH block</td>
+        </tr>
+        <tr>
+          <td><strong>INSERT vs APPEND confusion</strong></td>
+          <td>Using <code>INSERT</code> to add to the end</td>
+          <td>
+<code>APPEND(list, value)</code> adds to end; <code>INSERT</code> adds at index</td>
+        </tr>
+        <tr>
+          <td><strong>MOD with even/odd check</strong></td>
+          <td>
+<code>x MOD 2 = 1</code> to check if x is even</td>
+          <td>
+<code>x MOD 2 = 0</code> is even; <code>x MOD 2 = 1</code> is odd</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class=""ref-section-divider""></div>
+
+  <!-- FAQ -->
+  <div class=""ref-section"">
+    <div class=""ref-section-head"">
+      <span class=""ref-section-tag"">FAQ</span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class=""ref-faq-item"">
+      <button class=""ref-faq-q"" onclick=""(function(b){b.closest('.ref-faq-item').classList.toggle('open')})(this)"">What pseudocode does AP CSP use?</button>
+      <div class=""ref-faq-a"">AP Computer Science Principles uses a simplified block-based pseudocode developed by the College Board for the 2026–2027 AP CSP exam. It uses ← for assignment, 1-indexed lists, DISPLAY for output, INPUT for user input, and RANDOM for random numbers. The AP CSP pseudocode reference sheet is not based on any specific programming language, though it resembles Python in some ways.</div>
+    </div>
+    <div class=""ref-faq-item"">
+      <button class=""ref-faq-q"" onclick=""(function(b){b.closest('.ref-faq-item').classList.toggle('open')})(this)"">Is a reference sheet provided on the AP CSP exam?</button>
+      <div class=""ref-faq-a"">Yes. The College Board provides the AP CSP language reference sheet on exam day. The 2026–2027 AP CSP exam reference sheet covers pseudocode syntax including assignment, conditionals, loops, list operations, procedures, and robot procedures. You do not need to memorize the syntax, but you must be able to read and trace this pseudocode format fluently. Practice using the AP CSP reference sheet now so it feels familiar on test day.</div>
+    </div>
+    <div class=""ref-faq-item"">
+      <button class=""ref-faq-q"" onclick=""(function(b){b.closest('.ref-faq-item').classList.toggle('open')})(this)"">What are the AP CSP list operations?</button>
+      <div class=""ref-faq-a"">The four main list operations are: INSERT(list, index, value) to add an element at a position, APPEND(list, value) to add to the end, REMOVE(list, index) to delete an element, and LENGTH(list) to count elements. Remember: AP CSP lists are 1-indexed — the first element is at position 1, not 0.</div>
+    </div>
+    <div class=""ref-faq-item"">
+      <button class=""ref-faq-q"" onclick=""(function(b){b.closest('.ref-faq-item').classList.toggle('open')})(this)"">How do AP CSP robot questions work?</button>
+      <div class=""ref-faq-a"">Robot questions show a robot on a grid. You write or trace code using MOVE_FORWARD(), ROTATE_LEFT(), ROTATE_RIGHT(), and CAN_MOVE(direction). The robot faces a direction and MOVE_FORWARD() moves it one square that way. ROTATE commands only change facing direction — they do not move the robot.</div>
+    </div>
+    <div class=""ref-faq-item"">
+      <button class=""ref-faq-q"" onclick=""(function(b){b.closest('.ref-faq-item').classList.toggle('open')})(this)"">What is the difference between REPEAT UNTIL and a while loop?</button>
+      <div class=""ref-faq-a"">REPEAT UNTIL (condition) runs the block and checks the condition after each iteration. It continues looping while the condition is FALSE and stops when it becomes TRUE. This is the opposite of a while loop, which continues while the condition is TRUE. Students from Python sometimes write the logic backwards on the exam.</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class=""ref-bottom-nav"">
+    <span class=""ref-bottom-nav-label"">Keep Practicing</span>
+    <a class=""ref-nav-link"" href=""/pages/ap-csp-practice-exams"">Practice Exams →</a>
+    <a class=""ref-nav-link"" href=""/pages/ap-csp-big-idea-3-algorithms-programming-complete-study-guide"">Big Idea 3 Study Guide →</a>
+    <a class=""ref-nav-link"" href=""/pages/ap-computer-science-principles-resources"">CSP Course Hub →</a>
+  </div>
+
+  <div class=""ref-bottom-pad""></div>
+
+</div>
+</div>"
