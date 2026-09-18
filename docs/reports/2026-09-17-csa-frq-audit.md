@@ -148,12 +148,19 @@ Better than expected. Nothing is hard-broken: every internal link across the 117
 pages resolves, and the ones that look wrong are carried by redirects.
 
     /pages/ap-csa-2025-frq-4-sumorssamegame  301 -> .../ap-csa-2025-frq-4-sumorsame
+    /pages/ap-csa-frq-2024-question-1        301 -> .../ap-csa-2024-frq-1-feeder
+    /pages/ap-csa-frq-2024-question-2        301 -> .../ap-csa-2024-frq-2-scoreboard
+    /pages/ap-csa-frq-2024-question-3        301 -> .../ap-csa-2024-frq-3-wordchecker
+    /pages/ap-csa-frq-2024-question-4        301 -> .../ap-csa-2024-frq-4-gridpath
+    /pages/ap-csa-qotd-hub                   301 -> .../daily-practice
     /pages/ap-csa-2020-frq-3                 301 -> .../ap-csa-frq-2020
     /pages/ap-computer-science-tutor         301 -> .../ap-computer-science-a-tutor
 
 The first is the one to notice. The archive hub links the most recent year's
 question 4 at a **misspelled handle**, `sumorssamegame` for `sumorsame`, and it
-works only because a redirect exists. The year index pages also link bare
+works only because a redirect exists. All four of its 2024 links use a retired
+handle pattern and redirect too, so five of the eight most recent question links
+on the site's main FRQ page cost a hop. The year index pages also link bare
 `/ap-csa-2014-frq-1-scrambler` without the `/pages/` prefix, which likewise 301s.
 
 Redirect hops are cheap and they are not free: they cost a round trip on every
@@ -270,4 +277,13 @@ file nobody executes would have shipped that to a student as an answer key.
   rather than guessed.
 - Whether the archive should get a generator retro-fitted. That is 86 indexed
   bodies regenerated at once and it needs its own plan.
+
+## Correction, made while building the repair
+
+This report first counted `ap-csa-2016-frq-1-randomstringchooser` among the stub
+pages, on a keyword match for "no longer part of the curriculum". Reading the
+page proved the opposite: it carries a real solution and the phrase is its own
+correct caveat that only the subclass part uses inheritance. It is not a stub,
+it is one of the better pages in the archive, and it gets a title repair and
+nothing else. The stub count of eleven above is the checked number.
 - Anything about the 53 lesson FRQ practice pages, which were out of scope.

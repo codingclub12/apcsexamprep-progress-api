@@ -1,0 +1,116 @@
+{
+  "change": "the 86 hand-authored AP CSA past-paper FRQ pages and their archive hub: a 2026 scoring note on 74, 43 titles, 11 stub pages relabelled, 6 unit contradictions, 13 stale exam dates, one JSON-LD block that has never parsed, and the hub's five wrong headline statistics",
+  "_context": [
+    "THIS ONE HAS A LIVE CHECK AND IT IS THE POINT OF THE MANIFEST.",
+    "",
+    "The previous change in this area, the 2026 question set, honestly had none:",
+    "it deployed the API and changed nothing the API does. This one is the",
+    "opposite. Nothing here reaches a student until a human imports seven",
+    "Matrixify sheets, and the only way to know that happened is to read the live",
+    "pages afterwards.",
+    "",
+    "So scripts/verify-csa-frq-archive-live.js is written to be FALSE BEFORE and",
+    "true after, and it was measured that way: run against the hub before any",
+    "import it reports 12 of 13 red. The thirteenth was 'Section II is 45%',",
+    "which was already true, and it was replaced for exactly that reason.",
+    "",
+    "Run the gate with --pre before the first import and again without --pre",
+    "after the last one. The deploy is not finished until the second run passes.",
+    "",
+    "WHY THE MUTATIONS TARGET checkBody RATHER THAN THE TRANSFORMS.",
+    "The transforms already refuse loudly and that is asserted in section 3 of",
+    "the suite. What a mutation has to prove here is the LAST line of defence:",
+    "the rule that inspects a finished body before it is allowed into a sheet.",
+    "A transform can be correct and a sheet still carry a body that lost a div.",
+    "",
+    "TWO OF THESE RULES WERE ABSOLUTE AND HAD TO BECOME DELTAS, and the suite's",
+    "own controls are what caught it. An absolute 'no retired curriculum name'",
+    "rule fires on text the repair never touched, which would have refused the",
+    "whole sheet and shipped nothing. The stale-date rule is two-sided instead,",
+    "because a plain 'no more than before' misses a repair that removes one",
+    "reference and adds another."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the transforms, the refusals, and every sheet rule broken one at a time",
+      "_why": "Sixty-six assertions, offline against fixtures so a bad network day cannot turn it red. Section 3 is the one that matters most: every transform is asked to run against a page it does not match, and every one must throw. A repair that quietly matches nothing is worse than one that fails, because the import reports success and the page is unchanged.",
+      "command": "npm run --silent smoke:csafrqrepair",
+      "expect": "66 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "every sheet parsed back with a reader that shares no code with the writer",
+      "_why": "The generator writes seven CSVs and then reads all seven off disk with an RFC 4180 parser written separately, diffing every cell against what the transforms produced. Generation is not evidence that generation worked: the CSP sheet lost 90 bytes a page while every semantic check passed, and a parse-back diff is what caught it. This also reads all 86 bodies live at build time, so a sheet cannot be built from a stale cache.",
+      "command": "node scripts/csa-frq-archive-repair-csv.js imports/2026-09-17-frq-archive",
+      "expect": "every cell parsed back and diffed clean"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE RULE THAT STOPS A SHEET EATING A PAGE: a repaired body may be shorter than the original",
+      "_why": "Every sheet here is MERGE over a live body with no undo. This is the only rule standing between a transform bug and 86 pages losing content, and it is the one whose absence would be least visible in a diff of 720KB of markup.",
+      "file": "scripts/csa-frq-archive-repair-csv.js",
+      "find": "  if (after.length < before.length * 0.98) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:csafrqrepair",
+      "expect_failure": "caught: a repair that removes content"
+    },
+    {
+      "kind": "mutation",
+      "name": "the div balance no longer has to survive the repair",
+      "_why": "The scoring note is prepended to 74 bodies in four different page formats. An unbalanced div does not throw anywhere: it renders, and it swallows whatever follows it into the wrong container.",
+      "file": "scripts/csa-frq-archive-repair-csv.js",
+      "find": "  if (opens - closes !== bOpens - bCloses) bad.push('div balance changed: was ' + (bOpens - bCloses) + ', now ' + (opens - closes));",
+      "replace": "  if (false) bad.push('div balance changed');",
+      "command": "npm run --silent smoke:csafrqrepair",
+      "expect_failure": "caught: a repair that unbalances the divs"
+    },
+    {
+      "kind": "mutation",
+      "name": "a page may keep the stale exam date after being repaired for it",
+      "_why": "Thirteen pages name a date four months past. The rule is two-sided and this breaks the half that matters: a page that named it must come back naming it zero times.",
+      "file": "scripts/csa-frq-archive-repair-csv.js",
+      "find": "  if (staleBefore > 0 && staleAfter > 0) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:csafrqrepair",
+      "expect_failure": "caught: a repair that leaves the stale date in"
+    },
+    {
+      "kind": "mutation",
+      "name": "the retired 10-unit curriculum may be reintroduced",
+      "_why": "Two of the six unit corrections exist because a page links a guide labelled 'Unit 1: Primitive Types'. This repo forbids that name in front of a student, and a repair that put it back would be a regression the page set was being fixed for.",
+      "file": "scripts/csa-frq-archive-repair-csv.js",
+      "find": "  if (count(after, /Unit \\d:\\s*Primitive Types/g) > count(before, /Unit \\d:\\s*Primitive Types/g)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:csafrqrepair",
+      "expect_failure": "caught: a repair that reintroduces the retired curriculum"
+    },
+    {
+      "kind": "mutation",
+      "name": "mojibake stops being checked, tested with SINGLE pass corruption",
+      "_why": "These bodies already carry bullets, arrows and clock glyphs, which is exactly the material that corrupts. The fixture is a bullet damaged once rather than twice, because a detector blind to single pass passes a double-pass mutation and reports itself healthy.",
+      "file": "scripts/csa-frq-archive-repair-csv.js",
+      "find": "  if (mo && mo.length) bad.push('mojibake in the result: ' + mo.length + ' run(s)');",
+      "replace": "  if (false) bad.push('mojibake in the result');",
+      "command": "npm run --silent smoke:csafrqrepair",
+      "expect_failure": "caught: a repair that carries single-pass mojibake"
+    },
+    {
+      "kind": "mutation",
+      "name": "a stub page may go on promising a Complete Solution",
+      "_why": "Eleven pages promise a solution and deliver a comment saying the case study was withdrawn. The title is the entire fix, so a rule that does not enforce it leaves the defect in place while the sheet reports success.",
+      "file": "scripts/csa-frq-archive-repair-csv.js",
+      "find": "  if (spec.stubs[handle] && /Complete Solution/.test(title)) bad.push('a stub page still promises a Complete Solution');",
+      "replace": "  if (false) bad.push('a stub page still promises a Complete Solution');",
+      "command": "npm run --silent smoke:csafrqrepair",
+      "expect_failure": "caught: a stub page still promising a Complete Solution"
+    },
+    {
+      "kind": "live",
+      "name": "the archive tells a reader the rubric below them is retired",
+      "command": "node scripts/verify-csa-frq-archive-live.js",
+      "expect": "OK - the archive repair is live",
+      "_why": "FALSE BEFORE THE IMPORT and measured that way: against the live hub on 2026-09-17, before any sheet was imported, it reported 12 of 13 red. It reads the served bodies rather than the sheets, through lib/storefront-fetch.js so a bot-challenge page cannot pass a 'this string is present' assertion vacuously. It also asserts the things the repair must NOT have disturbed, so a sheet that landed the note and broke the page around it fails here rather than reading as a success."
+    }
+  ]
+}

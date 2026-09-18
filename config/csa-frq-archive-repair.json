@@ -1,0 +1,153 @@
+{
+  "_comment": [
+    "CANONICAL REPAIR SPEC for the 86 hand-authored AP CSA past-paper FRQ pages",
+    "and their archive hub. Read docs/csa-frq-archive-repair.md first.",
+    "",
+    "Every defect here was measured against live bodies on 2026-09-17 and is",
+    "recorded in docs/reports/2026-09-17-csa-frq-audit.md. Nothing in this file",
+    "is a guess about what a page contains: the generator reads the live body at",
+    "build time and REFUSES a page whose text it does not recognise, rather than",
+    "writing a repair over something it has not seen.",
+    "",
+    "THE EXAM NUMBERS ARE NOT REPEATED HERE. They come from",
+    "config/csa-frq-2026.json through lib/csa-frq-archive-repair.js, because two",
+    "copies of 7/7/5/6 is how one of them goes stale."
+  ],
+  "auditReport": "docs/reports/2026-09-17-csa-frq-audit.md",
+
+  "_titles": [
+    "Target shape is the archive's own best form, the one 2023 to 2025 already",
+    "use: '<year> AP CSA FRQ <n>: <ClassName> Solution + Rubric'.",
+    "",
+    "Two families are broken and they are broken differently. 2018 to 2022 ran a",
+    "slug-to-title pass that title-cased the whole handle, so AP became Ap and FRQ",
+    "became Frq. 2014 to 2017 kept the acronyms and still lost the class name's",
+    "internal capitals, so RandomStringChooser reads Randomstringchooser.",
+    "",
+    "Class names are College Board's and are spelled the way the question spells",
+    "them. They are not retyped from memory: each one is asserted to appear in its",
+    "own page body before the title is written."
+  ],
+  "titles": {
+    "ap-csa-2014-frq-1-scrambler": "2014 AP CSA FRQ 1: Scrambler Solution + Rubric",
+    "ap-csa-2014-frq-3-seatingchart": "2014 AP CSA FRQ 3: SeatingChart Solution + Rubric",
+    "ap-csa-2014-frq-4-trio": "2014 AP CSA FRQ 4: Trio Solution + Rubric",
+    "ap-csa-2015-frq-1-diversearray": "2015 AP CSA FRQ 1: DiverseArray Solution + Rubric",
+    "ap-csa-2015-frq-2-hiddenword": "2015 AP CSA FRQ 2: HiddenWord Solution + Rubric",
+    "ap-csa-2015-frq-3-sparsearray": "2015 AP CSA FRQ 3: SparseArray Solution + Rubric",
+    "ap-csa-2015-frq-4-numbergroup": "2015 AP CSA FRQ 4: NumberGroup Solution + Rubric",
+    "ap-csa-2016-frq-1-randomstringchooser": "2016 AP CSA FRQ 1: RandomStringChooser Solution + Rubric",
+    "ap-csa-2016-frq-2-systemlog": "2016 AP CSA FRQ 2: SystemLog Solution + Rubric",
+    "ap-csa-2016-frq-3-crossword": "2016 AP CSA FRQ 3: Crossword Solution + Rubric",
+    "ap-csa-2016-frq-4-stringformatter": "2016 AP CSA FRQ 4: StringFormatter Solution + Rubric",
+    "ap-csa-2017-frq-1-digits": "2017 AP CSA FRQ 1: Digits Solution + Rubric",
+    "ap-csa-2017-frq-2-multpractice": "2017 AP CSA FRQ 2: MultPractice Solution + Rubric",
+    "ap-csa-2017-frq-3-phrase": "2017 AP CSA FRQ 3: Phrase Solution + Rubric",
+    "ap-csa-2017-frq-4-position": "2017 AP CSA FRQ 4: Position Solution + Rubric",
+    "ap-csa-2018-frq-1-frogsimulation": "2018 AP CSA FRQ 1: FrogSimulation Solution + Rubric",
+    "ap-csa-2018-frq-2-wordpairlist": "2018 AP CSA FRQ 2: WordPairList Solution + Rubric",
+    "ap-csa-2018-frq-3-codewordchecker": "2018 AP CSA FRQ 3: CodeWordChecker Solution + Rubric",
+    "ap-csa-2018-frq-4-arraytester": "2018 AP CSA FRQ 4: ArrayTester Solution + Rubric",
+    "ap-csa-2019-frq-1-apcalendar": "2019 AP CSA FRQ 1: APCalendar Solution + Rubric",
+    "ap-csa-2019-frq-3-delimiters": "2019 AP CSA FRQ 3: Delimiters Solution + Rubric",
+    "ap-csa-2019-frq-4-lightboard": "2019 AP CSA FRQ 4: LightBoard Solution + Rubric",
+    "ap-csa-2020-frq-1-gizmo": "2020 AP CSA FRQ 1: Gizmo Solution + Rubric",
+    "ap-csa-2020-frq-2-checkdigit": "2020 AP CSA FRQ 2: CheckDigit Solution + Rubric",
+    "ap-csa-2021-frq-1-wordmatch": "2021 AP CSA FRQ 1: WordMatch Solution + Rubric",
+    "ap-csa-2021-frq-2-combinedtable": "2021 AP CSA FRQ 2: CombinedTable Solution + Rubric",
+    "ap-csa-2021-frq-3-clubmembers": "2021 AP CSA FRQ 3: ClubMembers Solution + Rubric",
+    "ap-csa-2021-frq-4-arrayresizer": "2021 AP CSA FRQ 4: ArrayResizer Solution + Rubric",
+    "ap-csa-2022-frq-1-game": "2022 AP CSA FRQ 1: Game Solution + Rubric",
+    "ap-csa-2022-frq-2-textbook": "2022 AP CSA FRQ 2: Textbook Solution + Rubric",
+    "ap-csa-2022-frq-3-reviewanalysis": "2022 AP CSA FRQ 3: ReviewAnalysis Solution + Rubric",
+    "ap-csa-2022-frq-4-data": "2022 AP CSA FRQ 4: Data Solution + Rubric"
+  },
+
+  "_stubs": [
+    "Eleven pages whose entire solution block is a comment saying the case study",
+    "was withdrawn. There is nothing to solve and that is College Board's doing,",
+    "not a defect. The defect is the TITLE: four of them promise a Complete",
+    "Solution and the other seven promise a Solution, and neither is true.",
+    "",
+    "They are not unpublished. That is on the NEVER_AUTO list, it throws away the",
+    "traffic, and a student who lands here is served by being told plainly that",
+    "the question is off the exam. So the title says so, and the page keeps its",
+    "explanation of which modern concepts the question touched.",
+    "",
+    "The parenthetical uses a SHORT case-study label. The full name runs the",
+    "title past the 70 characters Shopify shows, and a title truncated mid-word",
+    "in the SERP is the defect this repair exists to fix.",
+    "",
+    "ap-csa-2016-frq-1-randomstringchooser was checked and is NOT in this list.",
+    "It carries a real solution and already caveats, correctly, that only its",
+    "subclass part uses inheritance. It gets a title repair and nothing else."
+  ],
+  "stubs": {
+    "ap-csa-2004-frq-3": { "name": "Fish", "caseStudy": "Marine Biology Case Study", "short": "Marine Biology" },
+    "ap-csa-2005-frq-3": { "name": "MemberInfo", "caseStudy": "Marine Biology Case Study", "short": "Marine Biology" },
+    "ap-csa-2006-frq-3": { "name": "Fish", "caseStudy": "Marine Biology Case Study", "short": "Marine Biology" },
+    "ap-csa-2007-frq-2": { "name": "Fish", "caseStudy": "Marine Biology Case Study", "short": "Marine Biology" },
+    "ap-csa-2008-frq-3": { "name": "OpossumCritter", "caseStudy": "GridWorld Case Study", "short": "GridWorld" },
+    "ap-csa-2009-frq-2": { "name": "StockpileCritter", "caseStudy": "GridWorld Case Study", "short": "GridWorld" },
+    "ap-csa-2010-frq-4": { "name": "GridChecker", "caseStudy": "GridWorld Case Study", "short": "GridWorld" },
+    "ap-csa-2011-frq-2": { "name": "AttractiveCritter", "caseStudy": "GridWorld Case Study", "short": "GridWorld" },
+    "ap-csa-2012-frq-4": { "name": "RetroBug", "caseStudy": "GridWorld Case Study", "short": "GridWorld" },
+    "ap-csa-2013-frq-4": { "name": "GridWorldUtilities", "caseStudy": "GridWorld Case Study", "short": "GridWorld" },
+    "ap-csa-2014-frq-2-gameoflife": { "name": "GameOfLife", "caseStudy": "GridWorld framework", "short": "GridWorld" }
+  },
+
+  "_unitFix": [
+    "Six pages state a Curriculum Alignment and link a Study This Topic guide for",
+    "a DIFFERENT unit, four lines apart on the same screen.",
+    "",
+    "The page's own Skills Tested line decides, and in all six it says the same",
+    "thing. 2004 FRQ 4 and 2005 FRQ 4 are 'Array traversal', which is Unit 4, so",
+    "their ALIGNMENT is the wrong half. The four case-study pages are already",
+    "aligned to Unit 4 and link elsewhere, so their LINK is the wrong half.",
+    "",
+    "Two of them link /pages/ap-csa-unit-1-study-guide labelled 'Unit 1: Primitive",
+    "Types'. That is the retired 10-unit curriculum, which this repo forbids in",
+    "front of students, and the handle answers 301 rather than 200. Both problems",
+    "go away with the unit correction."
+  ],
+  "unitFix": {
+    "ap-csa-2004-frq-3": { "unit": 4 },
+    "ap-csa-2004-frq-4": { "unit": 4 },
+    "ap-csa-2005-frq-3": { "unit": 4 },
+    "ap-csa-2005-frq-4": { "unit": 4 },
+    "ap-csa-2006-frq-3": { "unit": 4 },
+    "ap-csa-2007-frq-2": { "unit": 4 }
+  },
+  "units": {
+    "1": { "name": "Using Objects and Methods", "handle": "ap-csa-unit-1-complete-study-guide" },
+    "2": { "name": "Selection and Iteration", "handle": "ap-csa-unit-2-complete-study-guide" },
+    "3": { "name": "Class Creation", "handle": "ap-csa-unit-3-complete-study-guide" },
+    "4": { "name": "Data Collections", "handle": "ap-csa-unit-4-data-collections-study-guide" }
+  },
+
+  "_dates": [
+    "Thirteen pages name May 15, 2026 as a future exam date, four months after it",
+    "passed. The next administration is Wednesday, May 12, 2027, Session 2, read",
+    "from College Board's AP Computer Science A exam page on 2026-09-17.",
+    "",
+    "The archive hub also carries a static '46 days left' beside a script that",
+    "counts to the same dead date."
+  ],
+  "dates": {
+    "staleExam": "May 15, 2026",
+    "nextExam": "May 12, 2027",
+    "nextExamLong": "Wednesday, May 12, 2027"
+  },
+
+  "_hub": [
+    "The archive hub is the entry point to all 86 pages and three of its five",
+    "headline statistics are wrong. Each replacement below is an exact string the",
+    "generator must FIND in the live body; a miss is a refusal rather than a",
+    "silent no-op, because a repair that quietly does nothing is worse than one",
+    "that fails loudly."
+  ],
+  "hub": {
+    "handle": "ap-csa-frq-archive",
+    "title": "AP CSA FRQ Archive: Every Past Free Response Question, 2004 to 2026"
+  }
+}
