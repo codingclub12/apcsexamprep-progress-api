@@ -55,6 +55,25 @@ ok('a past FRQ label is not, because the archive is the point',
 ok('a historical score distribution is not',
   stale('the 2025 National Score Distribution') === 0);
 ok('the live administration year is not stale', stale('The 2027 AP CSA exam') === 0);
+//  ── AN ENDED SPAN IS STALE, AND THE FIRST VERSION MISSED IT ─────────────────
+//  staleYears() used to strip every span before looking, so an ENDED one was not
+//  flagged either. ap-csp-reference-sheet said "the 2025-2026 AP CSP exam" four
+//  times and this check called that page clean, which is the worst kind: one
+//  that reports nothing and reads like evidence. Spans are judged by end year.
+ok('an ENDED school-year span is stale', stale('the 2025-2026 AP CSP exam') > 0);
+ok('an ENDED span with an en-dash is stale too', stale('the 2025\u20132026 AP CSP exam') > 0);
+ok('an ENDED short span is stale', stale('AP CSA 2025-26 course') > 0);
+ok('the CURRENT span is not stale', stale('the 2026-2027 AP CSP exam') === 0);
+ok('an archive RANGE is not a school year, so not stale', stale('every FRQ from 2004-2025') === 0);
+//  ── A URL IS NOT A YEAR ────────────────────────────────────────────────────
+//  Every inline SVG carries xmlns="http://www.w3.org/2000/svg", which read as
+//  34 stale years on ap-csa-topics and buried the six real ones.
+ok('an svg namespace is not a stale year',
+  stale('<svg xmlns="http://www.w3.org/2000/svg"></svg>') === 0);
+ok('a data-URI svg is not either',
+  stale("background:url('data:image/svg+xml,%3Csvg xmlns=http://www.w3.org/2000/svg')") === 0);
+ok('THE URL STRIP IS NOT A HOLE: a real year beside a URL is still caught',
+  stale('<svg xmlns="http://www.w3.org/2000/svg"></svg> The 2026 AP CSA exam is digital.') > 0);
 //  A "last updated" stamp names a past date on purpose. The exemption is narrow
 //  and the third case is what proves it is not a hole.
 ok('a last-updated stamp is a timestamp, not a stale exam claim',
@@ -131,8 +150,18 @@ ok('every edit names why, and carries an expected count',
   PAGES.every((p) => p.edits.every((e) => typeof e.why === 'string' && e.why.length > 3
     && Number.isInteger(e.count) && e.count > 0)));
 ok('no edit is a no-op', PAGES.every((p) => p.edits.every((e) => e.find !== e.replace)));
-ok('no edit writes an em-dash or en-dash into a body it is authoring',
-  PAGES.every((p) => p.edits.every((e) => !/[—]/.test(e.replace))));
+//  The house rule is that we do not AUTHOR an em-dash. Preserving one already in
+//  a live body, while changing only the year beside it, is not authoring: on the
+//  practice-exams page "AP CSA Exam \u2014 May 15, 2026" becomes "\u2014 May 12, 2027",
+//  and stripping the dash would be an unrelated edit that widens the change.
+//  So an edit may not INCREASE the count, which still refuses one that adds a dash.
+const emCount = (str) => (str.match(/\u2014/g) || []).length;
+ok('no edit ADDS an em-dash to a body',
+  PAGES.every((p) => p.edits.every((e) => emCount(e.replace) <= emCount(e.find))));
+ok('THE ALLOWANCE IS NOT A HOLE: an edit introducing an em-dash is still caught',
+  !(emCount('a \u2014 b') <= emCount('a b')));
+ok('an edit preserving an existing em-dash is allowed',
+  emCount('Exam \u2014 May 12') <= emCount('Exam \u2014 May 15'));
 ok('no handle appears twice', new Set(PAGES.map((p) => p.handle)).size === PAGES.length);
 //  The dates are the whole point of the rewrite and are first-party in
 //  docs/ced-snapshot/exam-dates.txt, captured 2026-09-01.

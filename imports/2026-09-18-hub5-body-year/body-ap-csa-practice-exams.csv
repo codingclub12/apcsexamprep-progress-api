@@ -1,0 +1,1353 @@
+﻿"Handle","Command","Body HTML"
+"ap-csa-practice-exams","MERGE","<!-- ============================================================
+  AP CSA PRACTICE EXAMS - LANDING PAGE
+  Handle: /pages/ap-csa-practice-exams  (CREATE THIS IN SHOPIFY)
+  Shopify Page Content (paste into HTML editor)
+
+  SEO:
+  - Page Title: AP CSA Practice Exams | AP Computer Science A 2025-2026
+  - Meta description: Free AP Computer Science A practice exams for 2025-2026. Two full 42-MCQ exams, unit practice tests for all 4 units, topic-specific drills, and an array mastery exam. Aligned to the new 4-unit curriculum.
+
+  SHOPIFY NOTES:
+  - Unique wrapper: #csa-exams
+  - Page title hidden via CSS (hero H1 takes over)
+  - No raw emojis - HTML entities only
+  - All buttons forced white with !important + :link/:visited
+  - All 8 linked pages verified 200 before deploy
+  ============================================================ -->
+
+<style>
+/* -- HIDE SHOPIFY TITLE ------------------------------------- */
+.page-title,.page__title,.template-page h1:first-of-type,.article__title{
+  display:none!important;
+}
+
+/* -- WRAPPER ----------------------------------------------- */
+#csa-exams{
+  all:initial!important;
+  display:block!important;
+  font-family:'Georgia',serif!important;
+  color:#1e293b!important;
+  background:#f8f7f4!important;
+  line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;
+}
+#csa-exams *{box-sizing:border-box!important;}
+#csa-exams{
+  --blue:#1d4ed8;
+  --blue-mid:#2563eb;
+  --blue-bg:#eff6ff;
+  --blue-border:#bfdbfe;
+  --dark:#0c1f3f;
+  --gray:#64748b;
+  --gray-light:#f1f5f9;
+  --gray-border:#e2e8f0;
+  --green:#059669;
+  --green-bg:#f0fdf4;
+  --amber:#d97706;
+  --amber-bg:#fffbeb;
+  --red:#dc2626;
+  --red-bg:#fef2f2;
+  --white:#ffffff;
+}
+
+/* -- HERO -------------------------------------------------- */
+#csa-exams .hero{
+  background:linear-gradient(135deg,#0c1f3f 0%,#0d2d63 55%,#1a3a7a 100%)!important;
+  border-radius:16px!important;
+  padding:48px 48px 44px!important;
+  margin-bottom:44px!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+#csa-exams .hero::before{
+  content:''!important;
+  position:absolute!important;
+  top:-70px!important;right:-50px!important;
+  width:300px!important;height:300px!important;
+  border-radius:50%!important;
+  background:rgba(96,165,250,0.07)!important;
+  pointer-events:none!important;
+}
+#csa-exams .hero-eyebrow{
+  font-size:11px!important;
+  font-weight:700!important;
+  letter-spacing:2.5px!important;
+  text-transform:uppercase!important;
+  color:#93c5fd!important;
+  -webkit-text-fill-color:#93c5fd!important;
+  margin-bottom:12px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  position:relative!important;
+  z-index:1!important;
+}
+#csa-exams .hero-eyebrow::before{
+  content:''!important;
+  display:block!important;
+  width:22px!important;height:1px!important;
+  background:#3b82f6!important;
+}
+#csa-exams .hero-h1{
+  font-size:clamp(26px,4vw,42px)!important;
+  font-weight:700!important;
+  color:#f8fafc!important;
+  -webkit-text-fill-color:#f8fafc!important;
+  line-height:1.15!important;
+  margin:0 0 12px!important;
+  position:relative!important;
+  z-index:1!important;
+}
+#csa-exams .hero-sub{
+  font-size:15.5px!important;
+  color:#93c5fd!important;
+  -webkit-text-fill-color:#93c5fd!important;
+  line-height:1.65!important;
+  max-width:580px!important;
+  margin:0 0 28px!important;
+  position:relative!important;
+  z-index:1!important;
+}
+#csa-exams .hero-pills{
+  display:flex!important;
+  gap:10px!important;
+  flex-wrap:wrap!important;
+  position:relative!important;
+  z-index:1!important;
+}
+#csa-exams .hero-pill{
+  background:rgba(255,255,255,0.1)!important;
+  border:1px solid rgba(255,255,255,0.2)!important;
+  color:#e2e8f0!important;
+  -webkit-text-fill-color:#e2e8f0!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  padding:5px 13px!important;
+  border-radius:20px!important;
+  display:inline-block!important;
+}
+
+/* -- SECTION LABEL ----------------------------------------- */
+#csa-exams .sec-label{
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:2.2px!important;
+  text-transform:uppercase!important;
+  color:#94a3b8!important;
+  -webkit-text-fill-color:#94a3b8!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin-bottom:16px!important;
+}
+#csa-exams .sec-label::after{
+  content:''!important;flex:1!important;
+  height:1px!important;background:#e2e8f0!important;
+}
+
+/* -- FEATURED EXAM CARDS (full exams) ---------------------- */
+#csa-exams .full-exams{
+  display:grid!important;
+  grid-template-columns:1fr 1fr 1fr!important;
+  gap:16px!important;
+  margin-bottom:44px!important;
+}
+#csa-exams .exam-card-full{
+  background:#ffffff!important;
+  border:1px solid #e2e8f0!important;
+  border-radius:14px!important;
+  padding:24px!important;
+  text-decoration:none!important;
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  display:flex!important;
+  flex-direction:column!important;
+  position:relative!important;
+  overflow:hidden!important;
+  transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s!important;
+  cursor:pointer!important;
+}
+#csa-exams .exam-card-full:link,
+#csa-exams .exam-card-full:visited{
+  color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;
+}
+#csa-exams .exam-card-full:hover{
+  transform:translateY(-3px)!important;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1)!important;
+  border-color:#bfdbfe!important;
+}
+#csa-exams .exam-card-full::before{
+  content:''!important;
+  position:absolute!important;
+  top:0!important;left:0!important;right:0!important;
+  height:4px!important;
+  background:linear-gradient(90deg,#1d4ed8,#60a5fa)!important;
+}
+#csa-exams .ecf-header{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+  margin-bottom:14px!important;
+  gap:10px!important;
+}
+#csa-exams .ecf-icon{
+  width:44px!important;height:44px!important;
+  border-radius:10px!important;
+  background:#eff6ff!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:20px!important;
+  flex-shrink:0!important;
+}
+#csa-exams .ecf-badge{
+  font-size:10px!important;
+  font-weight:700!important;
+  padding:3px 9px!important;
+  border-radius:10px!important;
+  background:#dbeafe!important;
+  color:#1d4ed8!important;
+  -webkit-text-fill-color:#1d4ed8!important;
+  white-space:nowrap!important;
+  align-self:flex-start!important;
+}
+#csa-exams .ecf-badge-hot{background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#csa-exams .ecf-badge-new{
+  background:#d1fae5!important;
+  color:#065f46!important;
+  -webkit-text-fill-color:#065f46!important;
+}
+#csa-exams .ecf-title{
+  font-size:17px!important;
+  font-weight:700!important;
+  color:#0f172a!important;
+  -webkit-text-fill-color:#0f172a!important;
+  margin-bottom:6px!important;
+  line-height:1.25!important;
+  display:block!important;
+}
+#csa-exams .ecf-desc{
+  font-size:13px!important;
+  color:#475569!important;
+  -webkit-text-fill-color:#475569!important;
+  line-height:1.6!important;
+  margin-bottom:16px!important;
+  display:block!important;
+  flex:1!important;
+}
+#csa-exams .ecf-meta{
+  display:flex!important;
+  gap:16px!important;
+  margin-bottom:18px!important;
+  flex-wrap:wrap!important;
+}
+#csa-exams .ecf-meta-item{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:1px!important;
+}
+#csa-exams .ecf-meta-val{
+  font-size:15px!important;
+  font-weight:700!important;
+  color:#0f172a!important;
+  -webkit-text-fill-color:#0f172a!important;
+}
+#csa-exams .ecf-meta-lbl{
+  font-size:10.5px!important;
+  color:#94a3b8!important;
+  -webkit-text-fill-color:#94a3b8!important;
+}
+#csa-exams .ecf-btn{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  background:#2563eb!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  padding:9px 18px!important;
+  border-radius:7px!important;
+  text-decoration:none!important;
+  cursor:pointer!important;
+  transition:background 0.15s!important;
+  font-family:'Georgia',serif!important;
+  margin-top:auto!important;
+  align-self:flex-start!important;
+}
+#csa-exams .ecf-btn:link,
+#csa-exams .ecf-btn:visited{
+  color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+}
+#csa-exams .ecf-btn:hover{
+  background:#1d4ed8!important;
+  color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+}
+
+/* -- UNIT EXAM ROWS ---------------------------------------- */
+#csa-exams .unit-exams{margin-bottom:44px!important;}
+#csa-exams .unit-exam-row{
+  background:#ffffff!important;
+  border:1px solid #e2e8f0!important;
+  border-radius:11px!important;
+  padding:16px 20px!important;
+  margin-bottom:10px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:16px!important;
+  text-decoration:none!important;
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  transition:border-color 0.14s,background 0.14s,transform 0.14s!important;
+  cursor:pointer!important;
+}
+#csa-exams .unit-exam-row:link,
+#csa-exams .unit-exam-row:visited{
+  color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;
+}
+#csa-exams .unit-exam-row:hover{
+  border-color:#bfdbfe!important;
+  background:#f8fbff!important;
+  transform:translateX(3px)!important;
+}
+#csa-exams .uer-num{
+  font-size:11px!important;
+  font-weight:700!important;
+  background:#eff6ff!important;
+  color:#1d4ed8!important;
+  -webkit-text-fill-color:#1d4ed8!important;
+  padding:6px 11px!important;
+  border-radius:6px!important;
+  white-space:nowrap!important;
+  flex-shrink:0!important;
+}
+#csa-exams .uer-body{flex:1!important;}
+#csa-exams .uer-title{
+  font-size:14.5px!important;
+  font-weight:700!important;
+  color:#0f172a!important;
+  -webkit-text-fill-color:#0f172a!important;
+  display:block!important;
+}
+#csa-exams .uer-topics{
+  font-size:11.5px!important;
+  color:#64748b!important;
+  -webkit-text-fill-color:#64748b!important;
+  margin-top:2px!important;
+  display:block!important;
+}
+#csa-exams .uer-right{
+  display:flex!important;
+  align-items:center!important;
+  gap:14px!important;
+  flex-shrink:0!important;
+}
+#csa-exams .uer-pct{
+  font-size:12.5px!important;
+  font-weight:700!important;
+  color:#2563eb!important;
+  -webkit-text-fill-color:#2563eb!important;
+  white-space:nowrap!important;
+  background:#eff6ff!important;
+  padding:4px 9px!important;
+  border-radius:6px!important;
+}
+#csa-exams .uer-arrow{
+  color:#94a3b8!important;
+  -webkit-text-fill-color:#94a3b8!important;
+  font-size:15px!important;
+}
+
+/* -- SPECIALTY CARDS --------------------------------------- */
+#csa-exams .specialty-grid{
+  display:grid!important;
+  grid-template-columns:1fr 1fr 1fr!important;
+  gap:14px!important;
+  margin-bottom:44px!important;
+}
+#csa-exams .spec-card{
+  background:#ffffff!important;
+  border:1px solid #e2e8f0!important;
+  border-radius:12px!important;
+  padding:20px!important;
+  text-decoration:none!important;
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  display:block!important;
+  transition:transform 0.14s,box-shadow 0.14s,border-color 0.14s!important;
+  cursor:pointer!important;
+}
+#csa-exams .spec-card:link,
+#csa-exams .spec-card:visited{
+  color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;
+}
+#csa-exams .spec-card:hover{
+  transform:translateY(-2px)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,0.09)!important;
+  border-color:#bfdbfe!important;
+}
+#csa-exams .sc-icon{
+  width:38px!important;height:38px!important;
+  border-radius:9px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  font-size:18px!important;
+  margin-bottom:12px!important;
+}
+#csa-exams .sc-title{
+  font-size:14.5px!important;
+  font-weight:700!important;
+  color:#0f172a!important;
+  -webkit-text-fill-color:#0f172a!important;
+  margin-bottom:5px!important;
+  display:block!important;
+}
+#csa-exams .sc-desc{
+  font-size:12px!important;
+  color:#64748b!important;
+  -webkit-text-fill-color:#64748b!important;
+  line-height:1.55!important;
+  display:block!important;
+}
+#csa-exams .sc-badge{
+  display:inline-block!important;
+  margin-top:10px!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  padding:3px 9px!important;
+  border-radius:10px!important;
+}
+#csa-exams .badge-blue{background:#dbeafe!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#csa-exams .badge-amber{background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#csa-exams .badge-green{background:#d1fae5!important;color:#065f46!important;-webkit-text-fill-color:#065f46!important;}
+
+/* -- STUDY TIP BANNER -------------------------------------- */
+#csa-exams .tip-banner{
+  background:#fffbeb!important;
+  border:1px solid #fde68a!important;
+  border-radius:12px!important;
+  padding:20px 24px!important;
+  margin-bottom:44px!important;
+  display:flex!important;
+  gap:14px!important;
+  align-items:flex-start!important;
+}
+#csa-exams .tip-icon{
+  font-size:20px!important;
+  flex-shrink:0!important;
+  margin-top:2px!important;
+}
+#csa-exams .tip-head{
+  font-size:13.5px!important;
+  font-weight:700!important;
+  color:#78350f!important;
+  -webkit-text-fill-color:#78350f!important;
+  margin-bottom:4px!important;
+  display:block!important;
+}
+#csa-exams .tip-body{
+  font-size:12.5px!important;
+  color:#92400e!important;
+  -webkit-text-fill-color:#92400e!important;
+  line-height:1.6!important;
+  display:block!important;
+}
+
+/* -- CTA BANNER -------------------------------------------- */
+#csa-exams .cta-banner{
+  background:linear-gradient(135deg,#0c1f3f,#1e3a6e)!important;
+  border-radius:14px!important;
+  padding:32px 36px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:24px!important;
+  flex-wrap:wrap!important;
+}
+#csa-exams .cta-head{
+  font-size:18px!important;font-weight:700!important;
+  color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;
+  margin:0 0 5px!important;display:block!important;
+}
+#csa-exams .cta-sub{
+  font-size:13px!important;
+  color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;
+  line-height:1.55!important;display:block!important;
+}
+#csa-exams .cta-btns{display:flex!important;gap:10px!important;flex-shrink:0!important;}
+#csa-exams .cta-btn{
+  padding:10px 20px!important;
+  border-radius:8px!important;
+  font-size:13.5px!important;
+  font-weight:700!important;
+  text-decoration:none!important;
+  cursor:pointer!important;
+  white-space:nowrap!important;
+  display:inline-block!important;
+  transition:all 0.15s!important;
+  font-family:'Georgia',serif!important;
+}
+#csa-exams .cta-primary{
+  background:#2563eb!important;
+  color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+  border:none!important;
+}
+#csa-exams .cta-primary:link,
+#csa-exams .cta-primary:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csa-exams .cta-primary:hover{background:#1d4ed8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csa-exams .cta-outline{
+  background:none!important;
+  border:1px solid rgba(255,255,255,0.25)!important;
+  color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;
+}
+#csa-exams .cta-outline:link,
+#csa-exams .cta-outline:visited{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-exams .cta-outline:hover{background:rgba(255,255,255,0.1)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+
+/* -- RESPONSIVE -------------------------------------------- */
+@media(max-width:768px){
+  #csa-exams .hero{padding:32px 24px!important;}
+  #csa-exams .full-exams,
+  #csa-exams .specialty-grid{grid-template-columns:1fr!important;}
+  #csa-exams .cta-banner{flex-direction:column!important;align-items:flex-start!important;}
+  #csa-exams .uer-pct{display:none!important;}
+}
+</style>
+
+<!-- JSON-LD: BreadcrumbList + FAQPage -->
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@graph"": [
+    {
+      ""@type"": ""BreadcrumbList"",
+      ""itemListElement"": [
+        {
+          ""@type"": ""ListItem"",
+          ""position"": 1,
+          ""name"": ""Home"",
+          ""item"": ""https://www.apcsexamprep.com""
+        },
+        {
+          ""@type"": ""ListItem"",
+          ""position"": 2,
+          ""name"": ""AP CSA Exam Prep Hub"",
+          ""item"": ""https://www.apcsexamprep.com/pages/ap-csa-exam-prep-hub""
+        },
+        {
+          ""@type"": ""ListItem"",
+          ""position"": 3,
+          ""name"": ""AP CSA Practice Exams"",
+          ""item"": ""https://www.apcsexamprep.com/pages/ap-csa-practice-exams""
+        }
+      ]
+    },
+    {
+      ""@type"": ""FAQPage"",
+      ""mainEntity"": [
+        {
+          ""@type"": ""Question"",
+          ""name"": ""How many questions are on the AP CSA practice exams?"",
+          ""acceptedAnswer"": {
+            ""@type"": ""Answer"",
+            ""text"": ""The two full AP CSA practice exams each contain 42 multiple-choice questions, matching the format of the real AP Computer Science A exam. Each question has 4 answer choices (A-D) and the exam is designed to be completed in 90 minutes, just like the actual Bluebook digital exam.""
+          }
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""Which AP CSA units should I practice most?"",
+          ""acceptedAnswer"": {
+            ""@type"": ""Answer"",
+            ""text"": ""Unit 4 (Data Collections) carries the most weight at 30-40% of the exam, followed by Unit 2 (Selection and Iteration) at 25-35%. Together these two units represent 55-75% of the MCQ section. Start with the Unit 4 and Unit 2 practice exams before taking a full 42-question exam.""
+          }
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""Are these AP CSA practice exams aligned to the 2027 curriculum?"",
+          ""acceptedAnswer"": {
+            ""@type"": ""Answer"",
+            ""text"": ""Yes. All practice exams on this page are built for the 2026-2027 AP CSA 4-unit curriculum. They do not include inheritance, polymorphism, extends, or super keywords, which were removed from the course. They do include File and Scanner class topics, which are new to the 2025-2026 curriculum.""
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- ======================================================= -->
+<div id=""csa-exams"">
+
+  <!-- HERO -->
+  <div class=""hero"">
+    <div class=""hero-eyebrow"">AP Computer Science A • 2026–2027</div>
+    <h1 class=""hero-h1"">AP CSA Practice Exams</h1>
+<!--APCS-TOOLKIT-START--><style>#apcs-toolkit-csa,#apcs-toolkit-csa *{all:initial!important;box-sizing:border-box!important;font-family:Georgia,serif!important;}#apcs-toolkit-csa{display:block!important;margin:16px 0!important;padding:14px 16px!important;background:#F5F3FF!important;border:1px solid #DDD6FE!important;border-radius:12px!important;}#apcs-toolkit-csa .tk-label{display:block!important;font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 10px 0!important;}#apcs-toolkit-csa .tk-row{display:flex!important;flex-wrap:wrap!important;gap:10px!important;}#apcs-toolkit-csa a.tk-btn,#apcs-toolkit-csa a.tk-btn:link,#apcs-toolkit-csa a.tk-btn:visited{display:inline-block!important;background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;font-size:14px!important;font-weight:700!important;padding:10px 16px!important;border-radius:8px!important;line-height:1.2!important;}#apcs-toolkit-csa a.tk-btn:hover{background:#1d4ed8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}</style>
+<div id=""apcs-toolkit-csa"">
+<span class=""tk-label"">Your AP CSA toolkit</span><div class=""tk-row"">
+<a href=""/pages/ap-csa-course"" class=""tk-btn"">Full Course</a><a href=""/pages/ap-csa-score-calculator"" class=""tk-btn"">Score Calculator</a><a href=""/pages/ap-csa-study-guides"" class=""tk-btn"">All Study Guides</a>
+</div>
+</div>
+<!--APCS-TOOLKIT-END-->
+    <p class=""hero-sub"">
+      Three full 42-MCQ exams, four unit practice tests, topic drills, and an array mastery exam — all built for the new 4-unit curriculum and Bluebook digital format.
+    </p>
+    <div class=""hero-pills"">
+      <span class=""hero-pill"">42 MCQ Format</span>
+      <span class=""hero-pill"">4-Unit Curriculum</span>
+      <span class=""hero-pill"">Instant Feedback</span>
+      <span class=""hero-pill"">Free</span>
+    </div>
+  </div>
+
+
+  <!-- REFERENCE BAR -->
+  <div style=""display:flex!important;align-items:center!important;gap:12px!important;flex-wrap:wrap!important;background:#eff6ff!important;border:1px solid #bfdbfe!important;border-radius:8px!important;padding:12px 18px!important;margin:0 0 24px!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;"">
+    <span style=""font-size:12px!important;font-weight:700!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;text-transform:uppercase!important;letter-spacing:1px!important;white-space:nowrap!important;"">Exam Reference</span>
+    <a href=""/pages/ap-csa-reference-sheet"" style=""display:inline-flex!important;align-items:center!important;gap:5px!important;font-size:13px!important;font-weight:700!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:#2D6BC4!important;padding:6px 14px!important;border-radius:6px!important;text-decoration:none!important;opacity:1!important;"">📋 Java Quick Reference Sheet →</a>
+    <span style=""font-size:12px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;"">Provided on exam day — practice using it now so it’s familiar.</span>
+  </div>
+  <!-- STUDY ORDER TIP -->
+  <div class=""tip-banner"">
+    <span class=""tip-icon"">💡</span>
+    <div>
+      <span class=""tip-head"">Study smarter: practice in order of exam weight.</span>
+      <span class=""tip-body"">Unit 4 is 30–40% of the exam. Unit 2 is 25–35%. Start with those unit exams before jumping to a full 42-question exam — you'll identify gaps faster and get more out of the full practice test.</span>
+    </div>
+  </div>
+
+  <!-- FULL PRACTICE EXAMS -->
+  <div class=""sec-label"">Full Practice Exams — 42 MCQ Each</div>
+  <div class=""full-exams"">
+
+    <a class=""exam-card-full"" href=""/pages/ap-csa-2025-practice-mcq"">
+      <div class=""ecf-header"">
+        <div class=""ecf-icon"">📝</div>
+        <span class=""ecf-badge"">Full Exam</span>
+      </div>
+      <span class=""ecf-title"">Full MCQ Practice Exam #1</span>
+      <span class=""ecf-desc"">42 questions covering all 4 units in proportion to actual exam weights. Mirrors the Bluebook digital format with A–D answer choices and full explanations.</span>
+      <div class=""ecf-meta"">
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">42</span>
+          <span class=""ecf-meta-lbl"">Questions</span>
+        </div>
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">90 min</span>
+          <span class=""ecf-meta-lbl"">Suggested time</span>
+        </div>
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">All 4</span>
+          <span class=""ecf-meta-lbl"">Units covered</span>
+        </div>
+      </div>
+      <span class=""ecf-btn"">Start Exam →</span>
+    </a>
+
+    <a class=""exam-card-full"" href=""/pages/ap-csa-practice-exam-2"">
+      <div class=""ecf-header"">
+        <div class=""ecf-icon"">📝</div>
+        <span class=""ecf-badge ecf-badge-new"">NEW</span>
+      </div>
+      <span class=""ecf-title"">Full MCQ Practice Exam #2</span>
+      <span class=""ecf-desc"">A second full 42-question exam with a fresh question set. Use this after completing Exam #1 to confirm you've closed the gaps and are ready for test day.</span>
+      <div class=""ecf-meta"">
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">42</span>
+          <span class=""ecf-meta-lbl"">Questions</span>
+        </div>
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">90 min</span>
+          <span class=""ecf-meta-lbl"">Suggested time</span>
+        </div>
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">All 4</span>
+          <span class=""ecf-meta-lbl"">Units covered</span>
+        </div>
+      </div>
+      <span class=""ecf-btn"">Start Exam →</span>
+    </a>
+
+    <!-- ULTIMATE PRACTICE EXAM -->
+    <a class=""exam-card-full"" href=""/pages/ap-csa-ultimate-practice-exam"">
+      <div class=""ecf-header"">
+        <div class=""ecf-icon"">🏅</div>
+        <span class=""ecf-badge ecf-badge-hot"">🔥 NEWEST</span>
+      </div>
+      <span class=""ecf-title"">Ultimate Practice Exam</span>
+      <span class=""ecf-desc"">42 exam-weight questions with Study Mode (instant feedback) and Test Mode (score at end). Progress bar, detailed explanations, and AP score estimate.</span>
+      <div class=""ecf-meta"">
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">42</span>
+          <span class=""ecf-meta-lbl"">Questions</span>
+        </div>
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">90 min</span>
+          <span class=""ecf-meta-lbl"">Timed</span>
+        </div>
+        <div class=""ecf-meta-item"">
+          <span class=""ecf-meta-val"">2 Modes</span>
+          <span class=""ecf-meta-lbl"">Study + Test</span>
+        </div>
+      </div>
+      <span class=""ecf-btn"">Start Exam →</span>
+    </a>
+
+  </div>
+
+  <!-- UNIT PRACTICE EXAMS -->
+  <div class=""sec-label"">Unit Practice Exams — Target Your Weak Spots</div>
+  <div class=""unit-exams"">
+
+    <a class=""unit-exam-row"" href=""/pages/ap-csa-unit-4-practice-exam"">
+      <span class=""uer-num"">Unit 4</span>
+      <span class=""uer-body"">
+        <span class=""uer-title"">Data Collections Practice Exam</span>
+        <span class=""uer-topics"">Arrays • ArrayLists • 2D arrays • Algorithms • File &amp; Scanner</span>
+      </span>
+      <span class=""uer-right"">
+        <span class=""uer-pct"">30–40% of exam</span>
+        <span class=""uer-arrow"">→</span>
+      </span>
+    </a>
+
+    <a class=""unit-exam-row"" href=""/pages/ap-csa-unit-2-exam-selection-iteration"">
+      <span class=""uer-num"">Unit 2</span>
+      <span class=""uer-body"">
+        <span class=""uer-title"">Selection &amp; Iteration Practice Exam</span>
+        <span class=""uer-topics"">if/else • while • for loops • Boolean logic • Nested loops</span>
+      </span>
+      <span class=""uer-right"">
+        <span class=""uer-pct"">25–35% of exam</span>
+        <span class=""uer-arrow"">→</span>
+      </span>
+    </a>
+
+    <a class=""unit-exam-row"" href=""/pages/ap-csa-unit-1-exam-objects-methods-expressions"">
+      <span class=""uer-num"">Unit 1</span>
+      <span class=""uer-body"">
+        <span class=""uer-title"">Using Objects &amp; Methods Practice Exam</span>
+        <span class=""uer-topics"">String • Math • Scanner • Constructors • Method calls • Expressions</span>
+      </span>
+      <span class=""uer-right"">
+        <span class=""uer-pct"">15–25% of exam</span>
+        <span class=""uer-arrow"">→</span>
+      </span>
+    </a>
+
+    <a class=""unit-exam-row"" href=""/pages/ap-csa-unit-3-practice-exam"">
+      <span class=""uer-num"">Unit 3</span>
+      <span class=""uer-body"">
+        <span class=""uer-title"">Class Creation Practice Exam</span>
+        <span class=""uer-topics"">Writing classes • Constructors • Instance variables • Encapsulation</span>
+      </span>
+      <span class=""uer-right"">
+        <span class=""uer-pct"">10–18% of exam</span>
+        <span class=""uer-arrow"">→</span>
+      </span>
+    </a>
+
+  </div>
+
+  <!-- SPECIALTY EXAMS -->
+  <div class=""sec-label"">Specialty &amp; Topic Drills</div>
+  <div class=""specialty-grid"">
+
+    <a class=""spec-card"" href=""/pages/ap-csa-practice-tests-by-topic"">
+      <div class=""sc-icon"" style=""background:#dbeafe!important"">🔎</div>
+      <span class=""sc-title"">Tests by Topic</span>
+      <span class=""sc-desc"">Short targeted drills on specific topics: String methods, loops, arrays, ArrayList operations, 2D arrays, and more. Great for fixing a single gap without retaking a full unit exam.</span>
+      <span class=""sc-badge badge-blue"">10+ Topics</span>
+    </a>
+
+    
+    <a class=""spec-card"" href=""/pages/ap-csa-test-builder"">
+      <div class=""sc-icon"" style=""background:#d1fae5!important"">⚙</div>
+      <span class=""sc-title"">AP CSA Test Builder</span>
+      <span class=""sc-desc"">Build custom practice exams. Select questions by unit, topic, and difficulty — generate a printable PDF with answer key. 586 questions available.</span>
+      <span class=""sc-badge badge-green"">Custom PDF • 586 Qs</span>
+    </a>
+
+    <a class=""spec-card"" href=""/pages/ap-csa-array-practice-exam"">
+      <div class=""sc-icon"" style=""background:#fef3c7!important"">📊</div>
+      <span class=""sc-title"">Array Mastery Exam</span>
+      <span class=""sc-desc"">Arrays are the highest-frequency topic on the AP CSA exam. This dedicated exam drills every array pattern: traversals, 2D arrays, algorithms, and common errors — exactly as they appear on the real test.</span>
+      <span class=""sc-badge badge-amber"">High-Yield</span>
+    </a>
+
+  </div>
+
+  <!-- CTA BANNER -->
+  <div class=""cta-banner"">
+    <div>
+      <span class=""cta-head"">Scoring below where you want to be?</span>
+      <span class=""cta-sub"">54.5% of Tanner's AP CSA students score 5s — vs. 25.5% nationally. 1-on-1 tutoring identifies your specific gaps faster than practice alone.</span>
+    </div>
+    <div class=""cta-btns"">
+      <a class=""cta-btn cta-outline"" href=""/pages/ap-csa-exam-prep-hub"">Back to Hub</a>
+      <a class=""cta-btn cta-primary"" href=""/pages/tutoring-packages"">Book Tutoring →</a>
+    </div>
+  </div>
+
+
+  <!-- REFERENCE BAR -->
+  
+<!-- AP Tools CTA -->
+<div style=""display:block !important;font-family:system-ui,-apple-system,sans-serif !important;margin:32px auto !important;padding:24px !important;background:linear-gradient(135deg,#006298 0%,#324dc7 100%) !important;border-radius:12px !important;text-align:center !important;box-sizing:border-box !important;max-width:800px !important;width:100% !important;overflow:visible !important;visibility:visible !important;opacity:1 !important;height:auto !important;position:relative !important;"">
+<div style=""display:block !important;font-size:20px !important;font-weight:700 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 8px !important;line-height:1.3 !important;visibility:visible !important;opacity:1 !important;"">AP CSA Exam Tools</div>
+<div style=""display:block !important;font-size:14px !important;color:rgba(255,255,255,0.9) !important;-webkit-text-fill-color:rgba(255,255,255,0.9) !important;margin:0 0 16px !important;line-height:1.5 !important;visibility:visible !important;opacity:1 !important;"">Predict your AP score and find out which colleges accept it for credit.</div>
+<div style=""display:flex !important;justify-content:center !important;gap:12px !important;flex-wrap:wrap !important;"">
+<a href=""/pages/ap-csa-score-calculator"" style=""display:inline-block !important;padding:10px 24px !important;background:#fff !important;color:#006298 !important;-webkit-text-fill-color:#006298 !important;font-size:14px !important;font-weight:600 !important;font-family:system-ui,-apple-system,sans-serif !important;border-radius:6px !important;text-decoration:none !important;cursor:pointer !important;border:none !important;line-height:1.4 !important;opacity:1 !important;visibility:visible !important;"">Score Calculator →</a>
+<a href=""/pages/ap-college-credit-policy-search"" style=""display:inline-block !important;padding:10px 24px !important;background:rgba(255,255,255,0.15) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;font-size:14px !important;font-weight:600 !important;font-family:system-ui,-apple-system,sans-serif !important;border-radius:6px !important;text-decoration:none !important;cursor:pointer !important;border:2px solid rgba(255,255,255,0.5) !important;line-height:1.4 !important;opacity:1 !important;visibility:visible !important;"">College Credit Lookup →</a>
+</div>
+</div>
+<!-- /AP Tools CTA -->
+</div><!-- end #csa-exams -->
+
+<!-- ===== PREP PATH SECTION ===== -->
+<!--
+  AP CSA PREP PATH SECTION
+  ========================
+  Purpose : Date-aware funnel section — routes students to the right
+            product/resource based on how close the exam is.
+  Wrapper : #apcs-prep-path  (all CSS scoped here)
+  Deploy  : Shopify Custom Liquid OR paste into Body HTML via Matrixify
+            (only include Body HTML column when updating this section)
+
+  CSP VERSION: change EXAM_DATE to '2026-05-14T08:00:00'
+               and update product/page URLs in CONFIG block below.
+
+  PRODUCT URL PLACEHOLDERS — update before going live:
+    kit4wk  : /products/ap-csa-4-week-cram-kit-day-by-day-study-plan
+    kit2wk  : live Apr 25 — update handle when published
+    kit7d   : live May 5  — update handle when published
+-->
+
+<style>
+/* ── RESET ─────────────────────────────────────────────────────────────── */
+#apcs-prep-path{
+  all:initial!important;
+  display:block!important;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;
+  color:#111827!important;
+  -webkit-font-smoothing:antialiased!important;
+  line-height:1.5!important;
+}
+#apcs-prep-path *{box-sizing:border-box!important;margin:0!important;padding:0!important;}
+
+/* ── HEADER ─────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-header{
+  background:#0f172a!important;
+  padding:36px 24px 32px!important;
+  text-align:center!important;
+}
+#apcs-prep-path .pp-eyebrow{
+  font-size:11px!important;
+  font-weight:600!important;
+  letter-spacing:2px!important;
+  text-transform:uppercase!important;
+  color:#94a3b8!important;
+  display:block!important;
+  margin-bottom:10px!important;
+}
+#apcs-prep-path .pp-heading{
+  font-size:26px!important;
+  font-weight:700!important;
+  color:#f8fafc!important;
+  -webkit-text-fill-color:#f8fafc!important;
+  line-height:1.25!important;
+  margin-bottom:8px!important;
+}
+#apcs-prep-path .pp-subheading{
+  font-size:15px!important;
+  color:#94a3b8!important;
+  margin-bottom:20px!important;
+}
+#apcs-prep-path .pp-countdown-bar{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  background:#1e293b!important;
+  border:1px solid #334155!important;
+  border-radius:40px!important;
+  padding:8px 20px!important;
+  font-size:13px!important;
+  color:#cbd5e1!important;
+}
+#apcs-prep-path .pp-countdown-num{
+  font-size:22px!important;
+  font-weight:700!important;
+  color:#f97316!important;
+  -webkit-text-fill-color:#f97316!important;
+  line-height:1!important;
+}
+#apcs-prep-path .pp-countdown-num.urgent{
+  color:#ef4444!important;
+  -webkit-text-fill-color:#ef4444!important;
+}
+#apcs-prep-path .pp-countdown-num.very-urgent{
+  color:#dc2626!important;
+  -webkit-text-fill-color:#dc2626!important;
+  animation:pp-pulse 1.4s ease-in-out infinite!important;
+}
+@keyframes pp-pulse{0%,100%{opacity:1}50%{opacity:.65}}
+
+/* ── GRID ───────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,1fr)!important;
+  gap:0!important;
+  background:#f1f5f9!important;
+  padding:28px 24px!important;
+}
+@media(max-width:900px){
+  #apcs-prep-path .pp-grid{
+    grid-template-columns:repeat(2,1fr)!important;
+    gap:12px!important;
+    padding:20px 16px!important;
+  }
+}
+@media(max-width:600px){
+  #apcs-prep-path .pp-grid{
+    grid-template-columns:1fr!important;
+    gap:16px!important;
+    padding:20px 16px!important;
+  }
+}
+
+/* ── CARD ───────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-card{
+  background:#ffffff!important;
+  border:1px solid #e2e8f0!important;
+  border-radius:0!important;
+  padding:24px 22px 22px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:0!important;
+  position:relative!important;
+  transition:box-shadow .2s!important;
+  border-left:4px solid #e2e8f0!important;
+  margin:0 -0.5px!important;
+}
+#apcs-prep-path .pp-card:first-child{border-radius:10px 0 0 10px!important;}
+#apcs-prep-path .pp-card:last-child{border-radius:0 10px 10px 0!important;}
+@media(max-width:900px){
+  #apcs-prep-path .pp-card{border-radius:10px!important;margin:0!important;}
+  #apcs-prep-path .pp-card:first-child{border-radius:10px!important;}
+  #apcs-prep-path .pp-card:last-child{border-radius:10px!important;}
+}
+@media(max-width:600px){
+  #apcs-prep-path .pp-card{border-radius:10px!important;margin:0!important;}
+}
+#apcs-prep-path .pp-card.c-blue{border-left-color:#2563eb!important;}
+#apcs-prep-path .pp-card.c-green{border-left-color:#16a34a!important;}
+#apcs-prep-path .pp-card.c-amber{border-left-color:#d97706!important;}
+#apcs-prep-path .pp-card.c-red{border-left-color:#dc2626!important;}
+
+/* Recommended state */
+#apcs-prep-path .pp-card.pp-recommended{
+  background:#fafbff!important;
+  border-color:#3b82f6!important;
+  border-top-width:2px!important;
+  box-shadow:0 4px 20px rgba(59,130,246,.12)!important;
+  z-index:2!important;
+  margin-top:-4px!important;
+  margin-bottom:-4px!important;
+}
+#apcs-prep-path .pp-card.pp-recommended.c-amber{
+  border-color:#d97706!important;
+  box-shadow:0 4px 20px rgba(217,119,6,.12)!important;
+  background:#fffbf0!important;
+}
+#apcs-prep-path .pp-card.pp-recommended.c-red{
+  border-color:#dc2626!important;
+  box-shadow:0 4px 20px rgba(220,38,38,.13)!important;
+  background:#fff8f8!important;
+}
+#apcs-prep-path .pp-card.pp-dimmed{opacity:.55!important;}
+#apcs-prep-path .pp-card.pp-hidden{display:none!important;}
+
+/* ── BADGE ──────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-badge{
+  display:none!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  letter-spacing:1px!important;
+  text-transform:uppercase!important;
+  padding:3px 8px!important;
+  border-radius:4px!important;
+  margin-bottom:10px!important;
+  width:fit-content!important;
+}
+#apcs-prep-path .pp-recommended .pp-badge{display:inline-block!important;}
+#apcs-prep-path .c-blue .pp-badge{background:#dbeafe!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;}
+#apcs-prep-path .c-green .pp-badge{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+#apcs-prep-path .c-amber .pp-badge{background:#fef3c7!important;color:#b45309!important;-webkit-text-fill-color:#b45309!important;}
+#apcs-prep-path .c-red .pp-badge{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+
+/* ── PHASE LABEL ────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-phase{
+  font-size:10px!important;
+  font-weight:600!important;
+  letter-spacing:1.5px!important;
+  text-transform:uppercase!important;
+  color:#94a3b8!important;
+  margin-bottom:6px!important;
+  display:block!important;
+}
+#apcs-prep-path .c-blue .pp-phase{color:#93c5fd!important;}
+#apcs-prep-path .c-green .pp-phase{color:#86efac!important;}
+#apcs-prep-path .c-amber .pp-phase{color:#fcd34d!important;}
+#apcs-prep-path .c-red .pp-phase{color:#fca5a5!important;}
+
+/* ── CARD CONTENT ───────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-title{
+  font-size:18px!important;
+  font-weight:700!important;
+  color:#0f172a!important;
+  -webkit-text-fill-color:#0f172a!important;
+  line-height:1.2!important;
+  margin-bottom:6px!important;
+}
+#apcs-prep-path .pp-for{
+  font-size:12px!important;
+  color:#64748b!important;
+  font-style:italic!important;
+  margin-bottom:12px!important;
+  padding-bottom:12px!important;
+  border-bottom:1px solid #f1f5f9!important;
+}
+#apcs-prep-path .pp-body{
+  font-size:13.5px!important;
+  color:#374151!important;
+  line-height:1.65!important;
+  margin-bottom:18px!important;
+  flex:1!important;
+}
+
+/* ── BUTTONS ────────────────────────────────────────────────────────────── */
+#apcs-prep-path .pp-cta{
+  display:block!important;
+  text-align:center!important;
+  padding:12px 16px!important;
+  border-radius:7px!important;
+  font-size:14px!important;
+  font-weight:600!important;
+  text-decoration:none!important;
+  margin-bottom:10px!important;
+  cursor:pointer!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+}
+#apcs-prep-path a.pp-cta:link,
+#apcs-prep-path a.pp-cta:visited{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  text-decoration:none!important;
+}
+#apcs-prep-path a.pp-cta:hover{opacity:.9!important;text-decoration:none!important;}
+#apcs-prep-path .c-blue .pp-cta{background:#2563eb!important;}
+#apcs-prep-path .c-green .pp-cta{background:#16a34a!important;}
+#apcs-prep-path .c-amber .pp-cta{background:#d97706!important;}
+#apcs-prep-path .c-red .pp-cta{background:#dc2626!important;}
+
+#apcs-prep-path .pp-secondary{
+  display:block!important;
+  text-align:center!important;
+  font-size:12.5px!important;
+  color:#6b7280!important;
+  -webkit-text-fill-color:#6b7280!important;
+  text-decoration:none!important;
+  padding:4px!important;
+}
+#apcs-prep-path a.pp-secondary:link,
+#apcs-prep-path a.pp-secondary:visited{
+  color:#6b7280!important;
+  -webkit-text-fill-color:#6b7280!important;
+  text-decoration:none!important;
+}
+#apcs-prep-path a.pp-secondary:hover{
+  color:#374151!important;
+  -webkit-text-fill-color:#374151!important;
+  text-decoration:underline!important;
+}
+
+/* ── MINI COUNTDOWN (inside Final Days card) ─────────────────────────────── */
+#apcs-prep-path .pp-mini-countdown{
+  background:#fef2f2!important;
+  border:1px solid #fecaca!important;
+  border-radius:6px!important;
+  padding:10px 12px!important;
+  text-align:center!important;
+  margin-bottom:14px!important;
+}
+#apcs-prep-path .pp-mini-countdown-num{
+  font-size:28px!important;
+  font-weight:800!important;
+  color:#dc2626!important;
+  -webkit-text-fill-color:#dc2626!important;
+  line-height:1!important;
+  display:block!important;
+}
+#apcs-prep-path .pp-mini-countdown-label{
+  font-size:11px!important;
+  color:#991b1b!important;
+  letter-spacing:.5px!important;
+  text-transform:uppercase!important;
+}
+
+/* ── POST-EXAM MESSAGE ──────────────────────────────────────────────────── */
+#apcs-prep-path .pp-post-exam{
+  display:none!important;
+  background:#f0fdf4!important;
+  border:1px solid #bbf7d0!important;
+  border-radius:10px!important;
+  padding:32px 24px!important;
+  text-align:center!important;
+  margin:28px 24px!important;
+}
+#apcs-prep-path .pp-post-exam-title{
+  font-size:22px!important;
+  font-weight:700!important;
+  color:#14532d!important;
+  -webkit-text-fill-color:#14532d!important;
+  margin-bottom:8px!important;
+}
+#apcs-prep-path .pp-post-exam-body{
+  font-size:14px!important;
+  color:#166534!important;
+  margin-bottom:16px!important;
+}
+</style>
+
+<div id=""apcs-prep-path"">
+
+  <!-- HEADER -->
+  <div class=""pp-header"">
+    <span class=""pp-eyebrow"">AP CSA Exam — Wednesday, May 12, 2027</span>
+    <div class=""pp-heading"">Where are you right now?</div>
+    <div class=""pp-subheading"">Choose the prep path that matches your situation — not just a product.</div>
+    <div class=""pp-countdown-bar"">
+      <span id=""pp-days-label"" style=""font-size:13px;color:#cbd5e1;"">Days until exam:</span>
+      <span class=""pp-countdown-num"" id=""pp-days-num"">—</span>
+      <span style=""font-size:13px;color:#64748b;"">days</span>
+    </div>
+  </div>
+
+  <!-- CARDS GRID -->
+  <div class=""pp-grid"" id=""pp-grid"">
+
+    <!-- CARD 1: Just Getting Started -->
+    <div class=""pp-card c-blue"" id=""pp-card-start"">
+      <span class=""pp-badge"" id=""pp-badge-start"">Best for you now</span>
+      <span class=""pp-phase"">Phase 1 — Study</span>
+      <div class=""pp-title"">Just Getting Started</div>
+      <div class=""pp-for"">You have time to build a real foundation</div>
+      <div class=""pp-body"">
+        Work through the unit study guides in order. Understanding
+        the material deeply now means less panic later — and
+        higher scores on both the MCQ and FRQ.
+      </div>
+      <a class=""pp-cta"" href=""/pages/ap-csa-exam-prep-hub"" id=""pp-cta-start"">Start with Study Guides →</a>
+      <a class=""pp-secondary"" href=""/pages/ap-csa-qotd-hub"">
+        Free: try a daily practice question
+      </a>
+      <a class=""pp-secondary"" href=""/products/ap-csa-4-week-cram-kit"" style=""margin-top:2px!important;color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;"">
+        Or get a day-by-day plan from the start →
+      </a>
+    </div>
+
+    <!-- CARD 2: Need Reps -->
+    <div class=""pp-card c-green"" id=""pp-card-reps"">
+      <span class=""pp-badge"" id=""pp-badge-reps"">Best for you now</span>
+      <span class=""pp-phase"">Phase 2 — Practice</span>
+      <div class=""pp-title"">I Know It — I Need Reps</div>
+      <div class=""pp-for"">You understand the concepts but haven't tested yourself yet</div>
+      <div class=""pp-body"">
+        The fastest way to find gaps is a full exam under timed
+        conditions. Your weak spots will surface immediately —
+        and you'll know exactly where to focus your remaining time.
+      </div>
+      <a class=""pp-cta"" href=""/pages/ap-csa-practice-exams"" id=""pp-cta-reps"">Take a Full Practice Exam →</a>
+      <a class=""pp-secondary"" href=""/pages/ap-csa-frq-archive"">
+        Free: browse the FRQ archive (2019–2025) →
+      </a>
+      <a class=""pp-secondary"" href=""/products/ap-csa-2025-frq-year-pack"" style=""margin-top:2px!important;color:#16a34a!important;-webkit-text-fill-color:#16a34a!important;"">
+        Or get the 2025 FRQ Year Pack with full solutions →
+      </a>
+    </div>
+
+    <!-- CARD 3: Running Out of Time -->
+    <div class=""pp-card c-amber"" id=""pp-card-runnin"">
+      <span class=""pp-badge"" id=""pp-badge-runnin"">Best for you now</span>
+      <span class=""pp-phase"">Phase 3 — Focused Review</span>
+      <div class=""pp-title"">Running Out of Time</div>
+      <div class=""pp-for"">1–3 weeks out and you need a focused plan</div>
+      <div class=""pp-body"">
+        Stop browsing random topics. A day-by-day cram plan tells
+        you exactly what to cover each day so nothing important
+        gets skipped and nothing gets over-studied.
+      </div>
+      <a class=""pp-cta"" href=""/products/ap-csa-4-week-cram-kit"" id=""pp-cta-runnin"">Get the Cram Kit →</a>
+      <a class=""pp-secondary"" href=""/pages/ap-csa-reference-sheet"" id=""pp-sec-runnin"">Free: grab the Quick Reference Sheet</a>
+      <a class=""pp-secondary"" href=""/pages/ap-computer-science-a-tutor"" style=""margin-top:2px!important;color:#d97706!important;-webkit-text-fill-color:#d97706!important;"">
+        Or add expert tutoring alongside the plan →
+      </a>
+    </div>
+
+    <!-- CARD 4: Final Days -->
+    <div class=""pp-card c-red"" id=""pp-card-final"">
+      <span class=""pp-badge"" id=""pp-badge-final"">Best for you now</span>
+      <span class=""pp-phase"">Phase 4 — Exam Mode</span>
+      <div class=""pp-title"">Exam Is Days Away</div>
+      <div class=""pp-for"">You need the fastest path to points right now</div>
+
+      <!-- Mini countdown inside this card -->
+      <div class=""pp-mini-countdown"" id=""pp-mini-countdown"">
+        <span class=""pp-mini-countdown-num"" id=""pp-mini-days"">—</span>
+        <span class=""pp-mini-countdown-label"">days until AP CSA exam</span>
+      </div>
+
+      <div class=""pp-body"">
+        One focused tutoring session with someone who knows exactly
+        what the exam tests is worth more than 10 more hours
+        studying solo. Lock in a slot before they fill up.
+      </div>
+      <a class=""pp-cta"" href=""/pages/ap-computer-science-a-tutor"" id=""pp-cta-final"">Book a Tutor Session →</a>
+      <a class=""pp-secondary"" href=""/products/ap-csa-4-week-cram-kit"" id=""pp-sec-final"">Or get the Cram Kit for a self-study plan</a>
+    </div>
+
+  </div>
+<!-- /pp-grid -->
+
+  <!-- POST-EXAM MESSAGE (hidden until after May 15) -->
+  <div class=""pp-post-exam"" id=""pp-post-exam"">
+    <div class=""pp-post-exam-title"">Exam's done — good luck on scores.</div>
+    <div class=""pp-post-exam-body"">
+      AP CSA scores release in July. In the meantime, check out what
+      your score means for college credit and what to expect next.
+    </div>
+    <a class=""pp-cta c-green"" href=""/pages/ap-csa-exam-prep-hub"" style=""display:inline-block!important;padding:12px 28px!important;background:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:7px!important;font-weight:600!important;font-size:14px!important;text-decoration:none!important;"">
+      Browse All AP CSA Resources →
+    </a>
+  </div>
+
+</div><!-- /apcs-prep-path -->
+
+<script>
+(function(){
+  /* ── CONFIG ── update URLs when products go live ─────────────────────── */
+  var CFG = {
+    examDate      : new Date('2026-05-15T08:00:00'),
+
+    /* Cram kit go-live dates */
+    kit2wkDate    : new Date('2026-04-25T00:00:00'),
+    kit7dDate     : new Date('2026-05-05T00:00:00'),
+
+    /* Product URLs */
+    kit4wk        : '/products/ap-csa-4-week-cram-kit',
+    kit2wk        : '/products/ap-csa-2-week-cram-kit',
+    kit7d         : '/products/ap-csa-7-day-emergency-kit',
+    tutor         : '/pages/ap-computer-science-a-tutor',
+  };
+
+  /* ── HELPERS ─────────────────────────────────────────────────────────── */
+  function daysTo(d){ return Math.ceil((d - new Date()) / 86400000); }
+  function el(id){ return document.getElementById(id); }
+  function setAttr(id, attr, val){ var e=el(id); if(e) e[attr]=val; }
+  function addClass(id, cls){ var e=el(id); if(e) e.classList.add(cls); }
+  function removeClass(id, cls){ var e=el(id); if(e) e.classList.remove(cls); }
+
+  /* ── MAIN ────────────────────────────────────────────────────────────── */
+  var today    = new Date();
+  var days     = daysTo(CFG.examDate);
+  var postExam = days <= 0;
+
+  /* -- Countdown displays -- */
+  var daysDisplay = postExam ? 0 : days;
+  var daysEl = el('pp-days-num');
+  if(daysEl){
+    daysEl.textContent = daysDisplay;
+    if(days <= 7)  daysEl.classList.add('very-urgent');
+    else if(days <= 21) daysEl.classList.add('urgent');
+  }
+  setAttr('pp-mini-days', 'textContent', daysDisplay);
+
+  /* -- Dynamic cram kit CTA URLs -- */
+  var ctaRunning  = el('pp-cta-runnin');
+  var secRunning  = el('pp-sec-runnin');
+  var ctaFinal    = el('pp-cta-final');
+  var secFinal    = el('pp-sec-final');
+
+  /* Running Out of Time card: use 2-wk kit if available, else 4-wk */
+  if(ctaRunning){
+    if(today >= CFG.kit2wkDate){
+      ctaRunning.href        = CFG.kit2wk;
+      ctaRunning.textContent = 'Get the 2-Week Cram Kit \u2192';
+    } else {
+      ctaRunning.href        = CFG.kit4wk;
+      ctaRunning.textContent = 'Get the 4-Week Cram Kit \u2192';
+    }
+  }
+
+  /* Final Days card: use 7-day kit as secondary if available */
+  if(secFinal){
+    if(today >= CFG.kit7dDate){
+      secFinal.href        = CFG.kit7d;
+      secFinal.textContent = 'Or get the 7-Day Emergency Kit';
+    } else if(today >= CFG.kit2wkDate){
+      secFinal.href        = CFG.kit2wk;
+      secFinal.textContent = 'Or get the 2-Week Cram Kit for a structured plan';
+    }
+    /* else defaults stay: links to 4-wk kit */
+  }
+
+  /* ── PHASE LOGIC — which cards are recommended / dimmed / hidden ─────── */
+  /*
+    > 45 days  : all 4 equal weight, ""Just Getting Started"" recommended
+    21-45 days : ""Need Reps"" + ""Running Out of Time"" recommended; start dimmed
+    7-21 days  : ""Running Out of Time"" + ""Final Days"" recommended; start hidden
+    1-7 days   : only ""Final Days"" + ""Running Out of Time"" visible; start hidden
+    <= 0 days  : post-exam message
+  */
+
+  if(postExam){
+    /* Hide grid, show post-exam message */
+    var grid = el('pp-grid');
+    if(grid) grid.style.display = 'none';
+    var pe = el('pp-post-exam');
+    if(pe) pe.style.display = 'block';
+
+  } else if(days > 45){
+    addClass('pp-card-start', 'pp-recommended');
+    el('pp-badge-start') && (el('pp-badge-start').textContent = 'Best for you now');
+
+  } else if(days > 21){
+    addClass('pp-card-start',  'pp-dimmed');
+    addClass('pp-card-reps',   'pp-recommended');
+    addClass('pp-card-runnin', 'pp-recommended');
+    el('pp-badge-reps')   && (el('pp-badge-reps').textContent   = 'Best for you now');
+    el('pp-badge-runnin') && (el('pp-badge-runnin').textContent = 'Best for you now');
+
+  } else if(days > 7){
+    addClass('pp-card-start',  'pp-hidden');
+    addClass('pp-card-reps',   'pp-dimmed');
+    addClass('pp-card-runnin', 'pp-recommended');
+    addClass('pp-card-final',  'pp-recommended');
+    el('pp-badge-runnin') && (el('pp-badge-runnin').textContent = 'Best for you now');
+    el('pp-badge-final')  && (el('pp-badge-final').textContent  = 'Best for you now');
+
+  } else {
+    /* Final 7 days: hide cards 1 + 2, full urgency */
+    addClass('pp-card-start', 'pp-hidden');
+    addClass('pp-card-reps',  'pp-hidden');
+    addClass('pp-card-runnin','pp-recommended');
+    addClass('pp-card-final', 'pp-recommended');
+    el('pp-badge-runnin') && (el('pp-badge-runnin').textContent = 'You are here');
+    el('pp-badge-final')  && (el('pp-badge-final').textContent  = 'You are here');
+    var daysLabel = el('pp-days-label');
+    if(daysLabel) daysLabel.textContent = 'Exam in:';
+  }
+
+})();
+</script>"

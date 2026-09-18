@@ -1,0 +1,551 @@
+﻿"Handle","Command","Body HTML"
+"ap-csp-practice-exams","MERGE","<!-- ============================================================
+  AP CSP PRACTICE EXAMS - LANDING PAGE
+  Handle: /pages/ap-csp-practice-exams
+
+  SEO:
+  - Page Title: AP CSP Practice Exams | AP Computer Science Principles 2025-2026
+  - Meta description: Free AP Computer Science Principles practice exams for 2025-2026. Three full 70-MCQ exams, Big Idea drills for all 5 units, and topic-specific tests. Aligned to the current AP CSP curriculum.
+  ============================================================ -->
+
+<style>
+.page-title,.page__title,.template-page h1:first-of-type,.article__title{
+  display:none!important;
+}
+#csp-exams{
+  all:initial!important;
+  display:block!important;
+  font-family:'Georgia',serif!important;
+  color:#1e293b!important;
+  background:#f8f7f4!important;
+  line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;
+}
+#csp-exams *{box-sizing:border-box!important;}
+#csp-exams{
+  --green:#059669;
+  --green-mid:#047857;
+  --green-dark:#065f46;
+  --green-bg:#f0fdf4;
+  --green-border:#bbf7d0;
+  --dark:#052e16;
+  --gray:#64748b;
+  --gray-light:#f1f5f9;
+  --gray-border:#e2e8f0;
+  --blue:#2563eb;
+  --amber:#d97706;
+  --amber-bg:#fffbeb;
+  --white:#ffffff;
+}
+#csp-exams .hero{
+  background:linear-gradient(135deg,#052e16 0%,#064e3b 55%,#065f46 100%)!important;
+  border-radius:16px!important;
+  padding:48px 48px 44px!important;
+  margin-bottom:44px!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+#csp-exams .hero::before{
+  content:''!important;
+  position:absolute!important;
+  top:-70px!important;right:-50px!important;
+  width:300px!important;height:300px!important;
+  border-radius:50%!important;
+  background:rgba(52,211,153,0.07)!important;
+  pointer-events:none!important;
+}
+#csp-exams .hero-eyebrow{
+  font-size:11px!important;font-weight:700!important;letter-spacing:2.5px!important;
+  text-transform:uppercase!important;color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;
+  margin-bottom:12px!important;display:flex!important;align-items:center!important;gap:8px!important;
+  position:relative!important;z-index:1!important;
+}
+#csp-exams .hero-eyebrow::before{
+  content:''!important;display:block!important;width:22px!important;height:1px!important;background:#10b981!important;
+}
+#csp-exams .hero-h1{
+  font-size:clamp(26px,4vw,42px)!important;font-weight:700!important;
+  color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;
+  line-height:1.15!important;margin:0 0 12px!important;position:relative!important;z-index:1!important;
+}
+#csp-exams .hero-sub{
+  font-size:15.5px!important;color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;
+  line-height:1.65!important;max-width:580px!important;margin:0 0 28px!important;
+  position:relative!important;z-index:1!important;
+}
+#csp-exams .hero-pills{
+  display:flex!important;gap:10px!important;flex-wrap:wrap!important;position:relative!important;z-index:1!important;
+}
+#csp-exams .hero-pill{
+  background:rgba(255,255,255,0.1)!important;border:1px solid rgba(255,255,255,0.2)!important;
+  color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;
+  font-size:12px!important;font-weight:700!important;padding:5px 13px!important;
+  border-radius:20px!important;display:inline-block!important;
+}
+#csp-exams .sec-label{
+  font-size:10px!important;font-weight:700!important;letter-spacing:2.2px!important;
+  text-transform:uppercase!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;
+  display:flex!important;align-items:center!important;gap:10px!important;margin-bottom:16px!important;
+}
+#csp-exams .sec-label::after{
+  content:''!important;flex:1!important;height:1px!important;background:#e2e8f0!important;
+}
+#csp-exams .full-exams{
+  display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:16px!important;margin-bottom:44px!important;
+}
+#csp-exams .exam-card-full{
+  background:#ffffff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;
+  padding:24px!important;text-decoration:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important;
+  display:flex!important;flex-direction:column!important;position:relative!important;overflow:hidden!important;
+  transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s!important;cursor:pointer!important;
+}
+#csp-exams .exam-card-full:link,
+#csp-exams .exam-card-full:visited{color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;}
+#csp-exams .exam-card-full:hover{
+  transform:translateY(-3px)!important;box-shadow:0 10px 30px rgba(0,0,0,0.1)!important;border-color:#bbf7d0!important;
+}
+#csp-exams .exam-card-full::before{
+  content:''!important;position:absolute!important;top:0!important;left:0!important;right:0!important;
+  height:4px!important;background:linear-gradient(90deg,#059669,#34d399)!important;
+}
+#csp-exams .ecf-header{
+  display:flex!important;align-items:flex-start!important;justify-content:space-between!important;
+  margin-bottom:14px!important;gap:10px!important;
+}
+#csp-exams .ecf-icon{
+  width:44px!important;height:44px!important;border-radius:10px!important;background:#f0fdf4!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  font-size:20px!important;flex-shrink:0!important;
+}
+#csp-exams .ecf-badge{
+  font-size:10px!important;font-weight:700!important;padding:3px 9px!important;border-radius:10px!important;
+  background:#d1fae5!important;color:#065f46!important;-webkit-text-fill-color:#065f46!important;
+  white-space:nowrap!important;align-self:flex-start!important;
+}
+#csp-exams .ecf-badge-new{background:#dbeafe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;}
+#csp-exams .ecf-badge-hot{background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+#csp-exams .ecf-title{
+  font-size:17px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;
+  margin-bottom:6px!important;line-height:1.25!important;display:block!important;
+}
+#csp-exams .ecf-desc{
+  font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;
+  line-height:1.6!important;margin-bottom:16px!important;display:block!important;flex:1!important;
+}
+#csp-exams .ecf-meta{display:flex!important;gap:16px!important;margin-bottom:18px!important;flex-wrap:wrap!important;}
+#csp-exams .ecf-meta-item{display:flex!important;flex-direction:column!important;gap:1px!important;}
+#csp-exams .ecf-meta-val{font-size:15px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;}
+#csp-exams .ecf-meta-lbl{font-size:10.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+#csp-exams .ecf-btn{
+  display:inline-flex!important;align-items:center!important;gap:6px!important;
+  background:#059669!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+  font-size:13px!important;font-weight:700!important;padding:9px 18px!important;border-radius:7px!important;
+  text-decoration:none!important;cursor:pointer!important;transition:background 0.15s!important;
+  font-family:'Georgia',serif!important;margin-top:auto!important;align-self:flex-start!important;
+}
+#csp-exams .ecf-btn:link,#csp-exams .ecf-btn:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csp-exams .ecf-btn:hover{background:#047857!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csp-exams .bi-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important;margin-bottom:44px!important;}
+#csp-exams .bi-card{
+  background:#ffffff!important;border:1px solid #e2e8f0!important;border-radius:11px!important;
+  padding:16px 20px!important;display:flex!important;align-items:center!important;gap:14px!important;
+  text-decoration:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important;
+  transition:border-color 0.14s,background 0.14s,transform 0.14s!important;cursor:pointer!important;
+}
+#csp-exams .bi-card:link,#csp-exams .bi-card:visited{color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;}
+#csp-exams .bi-card:hover{border-color:#bbf7d0!important;background:#f8fffe!important;transform:translateX(3px)!important;}
+#csp-exams .bi-num{
+  font-size:11px!important;font-weight:700!important;background:#f0fdf4!important;
+  color:#059669!important;-webkit-text-fill-color:#059669!important;padding:6px 10px!important;
+  border-radius:7px!important;white-space:nowrap!important;flex-shrink:0!important;
+  min-width:50px!important;text-align:center!important;
+}
+#csp-exams .bi-body{flex:1!important;}
+#csp-exams .bi-title{font-size:13.5px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;display:block!important;}
+#csp-exams .bi-topics{font-size:11px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-top:2px!important;display:block!important;}
+#csp-exams .bi-arrow{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-size:14px!important;flex-shrink:0!important;}
+#csp-exams .bi-weight{font-size:10px!important;font-weight:700!important;color:#059669!important;-webkit-text-fill-color:#059669!important;background:#d1fae5!important;padding:2px 7px!important;border-radius:8px!important;flex-shrink:0!important;white-space:nowrap!important;}
+#csp-exams .specialty-wrap{margin-bottom:20px!important;}
+#csp-exams .spec-card{
+  background:#ffffff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;
+  padding:20px 24px!important;text-decoration:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important;
+  display:flex!important;align-items:center!important;gap:18px!important;
+  transition:transform 0.14s,box-shadow 0.14s,border-color 0.14s!important;cursor:pointer!important;
+}
+#csp-exams .spec-card:link,#csp-exams .spec-card:visited{color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;}
+#csp-exams .spec-card:hover{transform:translateY(-2px)!important;box-shadow:0 8px 22px rgba(0,0,0,0.09)!important;border-color:#bbf7d0!important;}
+#csp-exams .sc-icon{
+  width:46px!important;height:46px!important;border-radius:10px!important;background:#f0fdf4!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  font-size:20px!important;flex-shrink:0!important;
+}
+#csp-exams .sc-body{flex:1!important;}
+#csp-exams .sc-title{font-size:15px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;margin-bottom:4px!important;display:block!important;}
+#csp-exams .sc-desc{font-size:12.5px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.55!important;display:block!important;}
+#csp-exams .sc-badge{display:inline-block!important;margin-top:8px!important;font-size:10px!important;font-weight:700!important;padding:3px 9px!important;border-radius:10px!important;background:#d1fae5!important;color:#065f46!important;-webkit-text-fill-color:#065f46!important;}
+#csp-exams .tip-banner{
+  background:#fffbeb!important;border:1px solid #fde68a!important;border-radius:12px!important;
+  padding:20px 24px!important;margin-bottom:44px!important;display:flex!important;gap:14px!important;align-items:flex-start!important;
+}
+#csp-exams .tip-icon{font-size:20px!important;flex-shrink:0!important;margin-top:2px!important;}
+#csp-exams .tip-head{font-size:13.5px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:4px!important;display:block!important;}
+#csp-exams .tip-body{font-size:12.5px!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;line-height:1.6!important;display:block!important;}
+#csp-exams .cta-banner{
+  background:linear-gradient(135deg,#052e16,#064e3b)!important;border-radius:14px!important;
+  padding:32px 36px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;gap:24px!important;flex-wrap:wrap!important;margin-top:44px!important;
+}
+#csp-exams .cta-head{font-size:18px!important;font-weight:700!important;color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;margin:0 0 5px!important;display:block!important;}
+#csp-exams .cta-sub{font-size:13px!important;color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;line-height:1.55!important;display:block!important;}
+#csp-exams .cta-btns{display:flex!important;gap:10px!important;flex-shrink:0!important;}
+#csp-exams .cta-btn{
+  padding:10px 20px!important;border-radius:8px!important;font-size:13.5px!important;font-weight:700!important;
+  text-decoration:none!important;cursor:pointer!important;white-space:nowrap!important;
+  display:inline-block!important;transition:all 0.15s!important;font-family:'Georgia',serif!important;
+}
+#csp-exams .cta-primary{background:#059669!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border:none!important;}
+#csp-exams .cta-primary:link,#csp-exams .cta-primary:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csp-exams .cta-primary:hover{background:#047857!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csp-exams .cta-outline{background:none!important;border:1px solid rgba(255,255,255,0.25)!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csp-exams .cta-outline:link,#csp-exams .cta-outline:visited{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csp-exams .cta-outline:hover{background:rgba(255,255,255,0.1)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+@media(max-width:768px){
+  #csp-exams .hero{padding:32px 24px!important;}
+  #csp-exams .full-exams{grid-template-columns:1fr!important;}
+  #csp-exams .bi-grid{grid-template-columns:1fr!important;}
+  #csp-exams .cta-banner{flex-direction:column!important;align-items:flex-start!important;}
+  #csp-exams .spec-card{flex-direction:column!important;align-items:flex-start!important;}
+}
+</style>
+
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@graph"": [
+    {
+      ""@type"": ""BreadcrumbList"",
+      ""itemListElement"": [
+        {""@type"": ""ListItem"",""position"": 1,""name"": ""Home"",""item"": ""https://www.apcsexamprep.com""},
+        {""@type"": ""ListItem"",""position"": 2,""name"": ""AP CSP Resources"",""item"": ""https://www.apcsexamprep.com/pages/ap-computer-science-principles-resources""},
+        {""@type"": ""ListItem"",""position"": 3,""name"": ""AP CSP Practice Exams"",""item"": ""https://www.apcsexamprep.com/pages/ap-csp-practice-exams""}
+      ]
+    },
+    {
+      ""@type"": ""FAQPage"",
+      ""mainEntity"": [
+        {
+          ""@type"": ""Question"",
+          ""name"": ""How many questions are on the AP CSP practice exams?"",
+          ""acceptedAnswer"": {
+            ""@type"": ""Answer"",
+            ""text"": ""Each of the three full AP CSP practice exams contains 70 multiple-choice questions with 4 answer choices (A-D), matching the format of the real AP Computer Science Principles exam. The suggested time is 120 minutes per exam, just like the actual digital exam.""
+          }
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""Which Big Ideas are most important for the AP CSP exam?"",
+          ""acceptedAnswer"": {
+            ""@type"": ""Answer"",
+            ""text"": ""Big Idea 3 (Algorithms and Programming) carries the most weight at 30-35% of the AP CSP exam, followed by Big Idea 5 (Impact of Computing) at 21-26% and Big Idea 2 (Data) at 17-22%. Together these three Big Ideas account for the majority of MCQ questions. Practicing by Big Idea helps you identify exactly where your gaps are before taking a full 70-question exam.""
+          }
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""What is the passing score for the AP CSP exam?"",
+          ""acceptedAnswer"": {
+            ""@type"": ""Answer"",
+            ""text"": ""A score of 3 or higher is considered passing for AP credit at most colleges. A score of 4 or 5 is needed for credit at more selective institutions. On these practice exams, aim for 70% or higher to indicate readiness for a 4 or 5 on the real exam.""
+          }
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""How many practice exams does APCSExamPrep have for AP CSP?"",
+          ""acceptedAnswer"": {
+            ""@type"": ""Answer"",
+            ""text"": ""APCSExamPrep offers three full-length 70-MCQ practice exams for AP CSP, plus a Top 100 Questions set, Big Idea-specific drills, topic tests, and two written response practice exams. All are free with instant scoring and detailed explanations.""
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<div id=""csp-exams"">
+
+  <!-- HERO -->
+  <div class=""hero"">
+    <div class=""hero-eyebrow"">AP Computer Science Principles • 2026–2027</div>
+    <h1 class=""hero-h1"">AP CSP Practice Exams</h1>
+<!--APCS-TOOLKIT-START--><style>#apcs-toolkit-csp,#apcs-toolkit-csp *{all:initial!important;box-sizing:border-box!important;font-family:Georgia,serif!important;}#apcs-toolkit-csp{display:block!important;margin:16px 0!important;padding:14px 16px!important;background:#F5F3FF!important;border:1px solid #DDD6FE!important;border-radius:12px!important;}#apcs-toolkit-csp .tk-label{display:block!important;font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 10px 0!important;}#apcs-toolkit-csp .tk-row{display:flex!important;flex-wrap:wrap!important;gap:10px!important;}#apcs-toolkit-csp a.tk-btn,#apcs-toolkit-csp a.tk-btn:link,#apcs-toolkit-csp a.tk-btn:visited{display:inline-block!important;background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;font-size:14px!important;font-weight:700!important;padding:10px 16px!important;border-radius:8px!important;line-height:1.2!important;}#apcs-toolkit-csp a.tk-btn:hover{background:#1d4ed8!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}</style>
+<div id=""apcs-toolkit-csp"">
+<span class=""tk-label"">Your AP CSP toolkit</span><div class=""tk-row"">
+<a href=""/pages/ap-csp-course"" class=""tk-btn"">Full Course</a><a href=""/pages/ap-csp-score-calculator"" class=""tk-btn"">Score Calculator</a><a href=""/pages/ap-csp-study-guides"" class=""tk-btn"">All Study Guides</a>
+</div>
+</div>
+<!--APCS-TOOLKIT-END-->
+    <p class=""hero-sub"">
+      Three full 70-MCQ exams, 100 hardest questions, Big Idea drills, and topic-specific tests — everything you need to build confidence before exam day.
+    </p>
+    <div class=""hero-pills"">
+      <span class=""hero-pill"">3 Full Exams</span>
+      <span class=""hero-pill"">210+ MCQs</span>
+      <span class=""hero-pill"">5 Big Ideas</span>
+      <span class=""hero-pill"">Instant Feedback</span>
+      <span class=""hero-pill"">Free</span>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS BAR -->
+  <div style=""display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;background:#f0fdf4!important;border:1px solid #86efac!important;border-radius:8px!important;padding:12px 18px!important;margin:0 0 20px!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;"">
+    <span style=""font-size:12px!important;font-weight:700!important;color:#065f46!important;-webkit-text-fill-color:#065f46!important;text-transform:uppercase!important;letter-spacing:1px!important;white-space:nowrap!important;"">Also Practice</span>
+    <a href=""/pages/ap-csp-reference-sheet"" style=""display:inline-flex!important;align-items:center!important;gap:5px!important;font-size:13px!important;font-weight:700!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:#059669!important;padding:6px 14px!important;border-radius:6px!important;text-decoration:none!important;opacity:1!important;"">📋 CSP Language Reference Sheet</a>
+    <a href=""/pages/ap-csp-practice-exam-1-written-response"" style=""display:inline-flex!important;align-items:center!important;gap:5px!important;font-size:13px!important;font-weight:700!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:#059669!important;padding:6px 14px!important;border-radius:6px!important;text-decoration:none!important;opacity:1!important;"">✎ Written Response Exam 1 →</a>
+    <a href=""/pages/ap-csp-practice-exam-2-written-response"" style=""display:inline-flex!important;align-items:center!important;gap:5px!important;font-size:13px!important;font-weight:700!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:#059669!important;padding:6px 14px!important;border-radius:6px!important;text-decoration:none!important;opacity:1!important;"">✎ Written Response Exam 2 →</a>
+  </div>
+
+  <!-- STUDY TIP -->
+  <div class=""tip-banner"">
+    <span class=""tip-icon"">💡</span>
+    <div>
+      <span class=""tip-head"">Study smarter: drill by Big Idea before going full-length.</span>
+      <span class=""tip-body"">Big Idea 3 (Algorithms &amp; Programming) is the most heavily tested area on the AP CSP exam at 30–35% of your score. Use the Big Idea drills below to pinpoint weak spots first — then take a full 70-question exam to simulate real test conditions.</span>
+    </div>
+  </div>
+
+  <!-- ========== FULL PRACTICE EXAMS ========== -->
+  <div class=""sec-label"">Full Practice Exams — 70 MCQ Each</div>
+  <div class=""full-exams"">
+
+    <!-- EXAM 1 -->
+    <a class=""exam-card-full"" href=""/pages/ap-computer-science-principles-full-practice-exam-70-mcq"">
+      <div class=""ecf-header"">
+        <div class=""ecf-icon"">📝</div>
+        <span class=""ecf-badge"">Full Exam</span>
+      </div>
+      <span class=""ecf-title"">Practice Exam #1</span>
+      <span class=""ecf-desc"">70 questions spanning all 5 Big Ideas. Mirrors the digital format with A–D choices and full answer explanations.</span>
+      <div class=""ecf-meta"">
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">70</span><span class=""ecf-meta-lbl"">Questions</span>
+</div>
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">120 min</span><span class=""ecf-meta-lbl"">Suggested</span>
+</div>
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">All 5</span><span class=""ecf-meta-lbl"">Big Ideas</span>
+</div>
+      </div>
+      <span class=""ecf-btn"">Start Exam →</span>
+    </a>
+
+    <!-- EXAM 2 -->
+    <a class=""exam-card-full"" href=""/pages/ap-csp-practice-exam-2"">
+      <div class=""ecf-header"">
+        <div class=""ecf-icon"">📝</div>
+        <span class=""ecf-badge"">Full Exam</span>
+      </div>
+      <span class=""ecf-title"">Practice Exam #2</span>
+      <span class=""ecf-desc"">A second full exam with a fresh question set. Use this after Exam #1 to confirm your gaps are closed.</span>
+      <div class=""ecf-meta"">
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">70</span><span class=""ecf-meta-lbl"">Questions</span>
+</div>
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">120 min</span><span class=""ecf-meta-lbl"">Suggested</span>
+</div>
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">All 5</span><span class=""ecf-meta-lbl"">Big Ideas</span>
+</div>
+      </div>
+      <span class=""ecf-btn"">Start Exam →</span>
+    </a>
+
+    <!-- EXAM 3 — BOOTCAMP -->
+    <a class=""exam-card-full"" href=""/pages/ap-csp-practice-exam-bootcamp"">
+      <div class=""ecf-header"">
+        <div class=""ecf-icon"">🏅</div>
+        <span class=""ecf-badge ecf-badge-hot"">🔥 NEWEST</span>
+      </div>
+      <span class=""ecf-title"">MCQ Bootcamp Exam #3</span>
+      <span class=""ecf-desc"">Our hardest 70 questions hand-picked from 100+. Built-in 2-hour timer, BI filter tabs, and balanced 25% answer key.</span>
+      <div class=""ecf-meta"">
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">70</span><span class=""ecf-meta-lbl"">Questions</span>
+</div>
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">120 min</span><span class=""ecf-meta-lbl"">Timed</span>
+</div>
+        <div class=""ecf-meta-item"">
+<span class=""ecf-meta-val"">Hard</span><span class=""ecf-meta-lbl"">Difficulty</span>
+</div>
+      </div>
+      <span class=""ecf-btn"">Start Exam →</span>
+    </a>
+
+  </div>
+
+  <!-- ========== BIG IDEA DRILLS ========== -->
+  <div class=""sec-label"">Big Idea Drills — Target Your Weak Spots</div>
+  <div class=""bi-grid"">
+
+    <a class=""bi-card"" href=""/pages/ap-csp-big-idea-1-creative-development"">
+      <span class=""bi-num"">BI 1</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Creative Development</span>
+        <span class=""bi-topics"">Collaboration • Program design • Debugging • Documentation</span>
+      </span>
+      <span class=""bi-weight"">10–13%</span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+
+    <a class=""bi-card"" href=""/pages/ap-csp-big-idea-2-data"">
+      <span class=""bi-num"">BI 2</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Data</span>
+        <span class=""bi-topics"">Binary • Data compression • Metadata • Privacy</span>
+      </span>
+      <span class=""bi-weight"">17–22%</span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+
+    <a class=""bi-card"" href=""/pages/ap-csp-big-idea-3-algorithms-programming-complete-study-guide"">
+      <span class=""bi-num"">BI 3</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Algorithms &amp; Programming</span>
+        <span class=""bi-topics"">Variables • Conditionals • Loops • Lists • Procedures</span>
+      </span>
+      <span class=""bi-weight"">30–35%</span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+
+    <a class=""bi-card"" href=""/pages/ap-csp-big-idea-4-computer-systems-networks"">
+      <span class=""bi-num"">BI 4</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Computing Systems &amp; Networks</span>
+        <span class=""bi-topics"">Internet • TCP/IP • DNS • Fault tolerance • Parallel computing</span>
+      </span>
+      <span class=""bi-weight"">11–15%</span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+
+    <a class=""bi-card"" href=""/pages/ap-csp-big-idea-5-impact-of-computing"" style=""grid-column:1 / -1!important;"">
+      <span class=""bi-num"">BI 5</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Impact of Computing</span>
+        <span class=""bi-topics"">Beneficial &amp; harmful effects • Digital divide • Bias • Crowdsourcing • Legal &amp; ethical concerns</span>
+      </span>
+      <span class=""bi-weight"">21–26%</span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+
+  </div>
+
+  <!-- ========== WRITTEN RESPONSE ========== -->
+  <div class=""sec-label"">Written Response Practice</div>
+  <div class=""bi-grid"" style=""margin-bottom:44px!important;"">
+
+    <a class=""bi-card"" href=""/pages/ap-csp-practice-exam-1-written-response"">
+      <span class=""bi-num"">WR 1</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Written Response Practice #1</span>
+        <span class=""bi-topics"">Program purpose • Function • Algorithm • Data abstraction</span>
+      </span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+
+    <a class=""bi-card"" href=""/pages/ap-csp-practice-exam-2-written-response"">
+      <span class=""bi-num"">WR 2</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Written Response Practice #2</span>
+        <span class=""bi-topics"">Program purpose • Function • Algorithm • Data abstraction</span>
+      </span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+
+  </div>
+
+  <!-- ========== ADDITIONAL PRACTICE ========== -->
+  <div class=""sec-label"">More Practice Resources</div>
+  <div class=""specialty-wrap"">
+    <a class=""spec-card"" href=""/pages/ap-csp-test-builder"" style=""border-left:3px solid #059669!important;"">
+      <div class=""sc-icon"">⚙</div>
+      <div class=""sc-body"">
+        <span class=""sc-title"">AP CSP Test Builder</span>
+        <span class=""sc-desc"">Build your own custom practice exam. Select questions by Big Idea, topic, and difficulty — then generate a printable PDF exam with a separate answer key. Perfect for teachers creating assessments or students drilling weak areas.</span>
+        <span class=""sc-badge"">Custom PDF Exams • By Big Idea</span>
+      </div>
+      <span class=""bi-arrow"" style=""flex-shrink:0!important;"">→</span>
+    </a>
+  </div>
+
+
+  <div class=""specialty-wrap"">
+    <a class=""spec-card"" href=""/pages/ap-csp-top-100-questions"">
+      <div class=""sc-icon"">🏆</div>
+      <div class=""sc-body"">
+        <span class=""sc-title"">Top 100 AP CSP Questions</span>
+        <span class=""sc-desc"">The most important, most common, and hardest question types from all 5 Big Ideas. Filter by BI, track your score, and review explanations. Hard difficulty only.</span>
+        <span class=""sc-badge"">100 Questions • Hard</span>
+      </div>
+      <span class=""bi-arrow"" style=""flex-shrink:0!important;"">→</span>
+    </a>
+  </div>
+
+  <div class=""specialty-wrap"">
+    <a class=""spec-card"" href=""/pages/ap-csp-practice-tests-by-topic"">
+      <div class=""sc-icon"">🔎</div>
+      <div class=""sc-body"">
+        <span class=""sc-title"">Tests by Topic</span>
+        <span class=""sc-desc"">Short targeted drills on individual AP CSP concepts: binary, algorithms, the internet, data analysis, and more. Use these to fix one specific gap.</span>
+        <span class=""sc-badge"">10+ Topics • 250 Questions</span>
+      </div>
+      <span class=""bi-arrow"" style=""flex-shrink:0!important;"">→</span>
+    </a>
+  </div>
+
+  <div class=""specialty-wrap"">
+    <a class=""spec-card"" href=""/blogs/news/ap-csp-pseudocode-complete-guide-2026"">
+      <div class=""sc-icon"">💻</div>
+      <div class=""sc-body"">
+        <span class=""sc-title"">AP CSP Pseudocode Complete Guide</span>
+        <span class=""sc-desc"">Every pseudocode construct with examples, common mistakes, and practice problems. Essential reading before any exam — BI3 questions require pseudocode fluency.</span>
+        <span class=""sc-badge"">Guide + Practice</span>
+      </div>
+      <span class=""bi-arrow"" style=""flex-shrink:0!important;"">→</span>
+    </a>
+  </div>
+
+  <div class=""bi-grid"" style=""margin-bottom:44px!important;"">
+    <a class=""bi-card"" href=""/pages/ap-csp-robot-tracing-practice"">
+      <span class=""bi-num"">🤖</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Robot Tracing Practice</span>
+        <span class=""bi-topics"">Grid movement • MOVE/TURN • Conditionals • Loops</span>
+      </span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+
+    <a class=""bi-card"" href=""/pages/ap-csp-lists-operations"">
+      <span class=""bi-num"">[ ]</span>
+      <span class=""bi-body"">
+        <span class=""bi-title"">Lists &amp; List Operations</span>
+        <span class=""bi-topics"">APPEND • INSERT • REMOVE • 1-indexed • FOR EACH</span>
+      </span>
+      <span class=""bi-arrow"">→</span>
+    </a>
+  </div>
+
+  <!-- CTA BANNER -->
+  <div class=""cta-banner"">
+    <div>
+      <span class=""cta-head"">Scoring below where you want to be?</span>
+      <span class=""cta-sub"">34.8% of Tanner’s AP CSP students score 5s — vs. 9.6% nationally. 1-on-1 tutoring gets you there faster.</span>
+    </div>
+    <div class=""cta-btns"">
+      <a class=""cta-btn cta-outline"" href=""/pages/ap-computer-science-principles-resources"">Back to CSP Hub</a>
+      <a class=""cta-btn cta-primary"" href=""/pages/tutoring-packages"">Book Tutoring →</a>
+    </div>
+  </div>
+
+</div>"
