@@ -410,3 +410,49 @@ too. So the assertion to make is not "production reports MY sha", it is
 That is true of my own commit and of every commit that lands on top of it, which
 is the actual question. Pinning the exact sha only works while nobody else is
 working, and that is not this repo.
+
+## CLOSED 2026-09-18: 23 of 23, and the fence is gone
+
+Tanner imported the five cyber sheets. `verify-quiz-mount-unpin-live.js` reads
+**23 of 23**: every page names the bare URL and loads the 9,616 byte build
+carrying `qz-opt-text`. No page on the site is pinned to the pre-fix snapshot
+any more, so replacing the Files object now reaches students with no page edit.
+That is the trap closed rather than stepped around, which was the whole point of
+the sheets.
+
+All six sheets are deleted and their groups marked `imported`. The handles stay
+in `GROUPS`, so the live verifier still watches all 23: being right today is not
+a reason to stop noticing.
+
+`snippets/apcs-quiz-mount-contrast-shim.liquid` is removed, theme PR #125. It
+had rendered nowhere since the 17th, exactly as designed, so taking it out
+changed nothing a student sees.
+
+### The cleanup nearly cost the gate
+
+Deleting the snippet broke `verify-quiz-mount-contrast.js`, which reads the shim
+CSS out of that file rather than holding a copy. It threw ENOENT the moment the
+file went. Caught locally rather than in CI, and worth recording because the
+lazy repair is to delete the assertion that broke.
+
+What it needed instead was removing the `shimmed` HOST, which existed only to
+prove the fence worked and has no subject once the fence is gone. Then the check
+that mattered: the slimmed gate still exits 1 with 5 failing assertions against
+the pre-fix build, and 7 passed / 0 failed against the real one. A cleanup that
+quietly leaves a gate unable to fail is worse than no cleanup.
+
+### What the whole run cost, and what it bought
+
+One student's email on 2026-09-15. Nine days of a lesson page nobody could read.
+Three theme deploys, three API deploys, one fence that deleted itself, six
+Matrixify sheets, and four guards that are better than they were:
+
+    lib/... nothing, the fix is inline paint the cascade cannot outrank
+    verify-quiz-mount-contrast.js   a browser gate, mutation tested per property
+    verify-quiz-contrast-live.js    the live page, not a fixture of it
+    --check on the generator        refetches, and refused a stale sheet for real
+    smoke/encoding, volumepaths     unchanged, still green throughout
+
+The defect itself was two correct files disagreeing about one CSS declaration.
+Everything above exists because no check in either repo could see that, and the
+one who could was a student with an email address.
