@@ -251,9 +251,16 @@ const PAGES = [
       { count: 1, why: 'the alignment pill',
         find: 'hub-flash-pill">2025–2026 Aligned</li>',
         replace: 'hub-flash-pill">Curriculum Aligned</li>' },
+      //  ANCHORED because two edits on this page would otherwise produce the
+      //  same string. The JSON-LD description above also ends up reading
+      //  "aligned to the 4-unit curriculum", so after both are applied that
+      //  phrase occurs twice and the exact-count idempotency test cannot tell
+      //  which edit made which. The generator refused the whole page for it,
+      //  correctly: when two edits can produce the same text, a count is not
+      //  evidence about either. Carrying the strip's own markup separates them.
       { count: 1, why: 'strip line, a currency claim',
-        find: 'aligned to the 2025–2026 4-unit curriculum',
-        replace: 'aligned to the 4-unit curriculum' },
+        find: 'free — aligned to the 2025–2026 4-unit curriculum</span>',
+        replace: 'free — aligned to the 4-unit curriculum</span>' },
       { count: 1, why: 'JSON-LD keyword list',
         find: 'AP Computer Science A 2026"', replace: 'AP Computer Science A 2027"' },
       { count: 2, why: 'FAQ question, visible copy and its JSON-LD twin',
@@ -320,6 +327,46 @@ const PAGES = [
       //  2025-2026 AP CSA exam" both describe when the 4-unit rewrite landed.
       //  The "New in 2026" and "NEW 2026" badges mark those same topics. The
       //  copyright year is a copyright year.
+      //  ── THE FOUR h1 ELEMENTS ON ap-csa-topics, 2026-09-18, board #366 ─────────
+      //  Found by looking at the page after the year edits landed, not by a check.
+      //  The rendered page carries FOUR, three of them in the stored body:
+  //
+      //    h1[0]  AP CSA Topics                                  theme, from Title
+      //    h1[1]  AP CSA Topics | Practice by Unit ... .com      body, see below
+      //    h1[2]  AP Computer Science A Topics — Practice ...     body, the real one
+      //    h1[3]  Get in Touch                                   body, a section
+  //
+      //  h1[1] is a PASTED COPY OF THE THEME'S OWN page-title markup, class list and
+      //  all, carrying the SEO title complete with the brand suffix. Somebody copied
+      //  rendered chrome into the page body. It is the first element in the body.
+  //
+      //  ── THE PAGE LOOKS FINE, WHICH IS WHY NOTHING CAUGHT IT ────────────────────
+      //  The body ships `.page-title, .section-header, h1.title { display: none }`,
+      //  commented "Hide Shopify's default page title if it shows". That rule hides
+      //  the theme's h1 AND the pasted copy, since both carry `page-title`. So two
+      //  of the four are invisible and the page reads correctly to a human. This is
+      //  a DOM defect only, which is exactly the kind a live check on visible text
+      //  cannot see.
+  //
+      //  ── WHAT THIS DOES, AND WHAT IT DELIBERATELY DOES NOT ──────────────────────
+      //  Removes the pasted h1 and keeps its wrapper div, which costs nothing
+      //  visually because the h1 was already hidden. Demotes "Get in Touch" to h2,
+      //  where the body already has twelve, and moves its CSS rule with it so the
+      //  32px styling survives.
+  //
+      //  It does NOT touch h1[2], the real heading. Demoting that would leave the
+      //  only remaining h1 a hidden one, which is worse than two. And it cannot
+      //  reach h1[0], which the theme renders. Two h1 elements, one hidden chrome
+      //  and one real heading, is where a body sheet can get to; collapsing that to
+      //  one is a theme change.
+
+      { count: 1, why: 'the pasted theme chrome h1, brand suffix and all. Its wrapper stays',
+        find: '<h1 class="main-page-title page-title h0 scroll-trigger animate--fade-in">\n    AP CSA Topics | Practice by Unit and Skill | APCSExamPrep.com\n  </h1>\n  <div class="grid-container column-container column">',
+        replace: '<div class="grid-container column-container column">' },
+      { count: 1, why: 'a contact section heading is not a page title; the body already has twelve h2',
+        find: '<h1>Get in Touch</h1>', replace: '<h2>Get in Touch</h2>' },
+      { count: 1, why: 'move the rule with the element so the 32px styling survives',
+        find: '.acw-hero h1 {', replace: '.acw-hero h2 {' },
     ],
   },
   {
