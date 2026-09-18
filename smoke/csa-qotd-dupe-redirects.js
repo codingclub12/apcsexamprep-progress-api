@@ -194,9 +194,67 @@ refuses('every pair demoted, so the sheet would be empty', (d) => { d.pairs.forE
   if (V.samePath('/a/b', '/a/c')) bad('samePath calls two different paths the same');
 }
 
+// ── 7. the step 1 unpublish sheet ────────────────────────────────────────────
+//  The redirects were imported on 2026-09-18 and did nothing, because all 72
+//  URLs still resolved. That is the predicted failure and the fix is step 1,
+//  which this sheet makes one import instead of 72 admin visits.
+//
+//  THE REFUSAL THAT MATTERS is unpublishing a keep handle. That would take down
+//  the article each redirect points AT, turning 72 tidy redirects into 72 dead
+//  ends, and it would look like a successful import either way.
+{
+  const un = G.unpublishRows(doc);
+  eq(un.length, 72, 'seventy-two unpublish rows');
+  const keep = new Set(doc.pairs.map((p) => p.keep));
+  un.forEach((r) => {
+    if (keep.has(r.Handle)) bad(r.Handle + ': a keep handle is in the unpublish sheet');
+    if (r.Published !== 'FALSE') bad(r.Handle + ': Published is not FALSE');
+    if (r.Command !== 'MERGE') bad(r.Handle + ': not MERGE');
+    if (r['Blog: Handle'] !== 'ap-csa-daily-practice') bad(r.Handle + ': wrong blog');
+    if (!/^unit-[0-9]-cycle-[0-9]-day-/.test(r.Handle)) bad(r.Handle + ': not a bulk-import handle');
+    if (/^unit-1-cycle/.test(r.Handle)) bad(r.Handle + ': unit 1 must never be unpublished');
+  });
+
+  //  Every Path in the redirect sheet must be unpublished, and nothing else.
+  const paths = new Set(G.rowsFor(doc).map((r) => r.Path.replace('/blogs/ap-csa-daily-practice/', '')));
+  const handles = new Set(un.map((r) => r.Handle));
+  eq(handles.size, paths.size, 'the two sheets cover the same number of handles');
+  [...paths].forEach((h) => { if (!handles.has(h)) bad(h + ' is redirected but never unpublished, so the redirect cannot fire'); });
+  [...handles].forEach((h) => { if (!paths.has(h)) bad(h + ' is unpublished but has no redirect, so it would 404'); });
+
+  const text = G.toCsvWith(G.UNPUB_COLS, un);
+  const lines = text.replace(/^\ufeff/, '').split('\r\n').filter((l) => l.length);
+  eq(lines.length, 73, 'a header and seventy-two rows');
+  eq(lines[0], '"Blog: Handle","Handle","Command","Published"', 'the four Matrixify columns');
+  if (/[^\x00-\x7F\ufeff]/.test(text)) bad('the unpublish sheet is not pure ASCII');
+
+  const onDisk = path.join(__dirname, '..', 'imports', '2026-09-18-csa-qotd-333', G.UNPUB_SHEET);
+  if (!fs.existsSync(onDisk)) bad('no unpublish sheet committed');
+  else if (fs.readFileSync(onDisk, 'utf8') !== text) bad('the committed unpublish sheet is not what the generator produces');
+
+  const refusesUn = (label, mutate) => {
+    const d = clone(); mutate(d);
+    try { G.unpublishRows(d); } catch (e) { return; }
+    bad('unpublish guard did not refuse: ' + label);
+  };
+  //  Isolated, and it took two goes. Pointing `retire` at a keep handle trips the
+  //  SHAPE check (every keep handle is compact). Putting the same handle on both
+  //  sides trips the DUPLICATE check. Either way the suite goes red for a rule
+  //  other than the one being tested, which reads as covered while the keep
+  //  check is dead. The only mutation that reaches it: put an otherwise valid
+  //  hyphenated handle into the keep SET, changing nothing else.
+  refusesUn('a handle that is somewhere on the keep side', (d) => {
+    d.pairs[1].keep = d.pairs[0].retire;
+  });
+  refusesUn('a unit 1 handle', (d) => { d.pairs[0].retire = 'unit-1-cycle-2-day-3-x'; });
+  refusesUn('a compact handle on the retire side', (d) => { d.pairs[0].retire = 'unit2-cycle2-day-3-x'; });
+  refusesUn('the same handle twice', (d) => { d.pairs[1].retire = d.pairs[0].retire; });
+}
+
 console.log(failed === 0
   ? '\ncsa-qotd-dupe-redirects: 84 pairs, 72 redirects and 12 held back for a human, direction asserted '
     + 'per row, the sheet parsed back and diffed against its source, 7 guard mutations and 6 classifier '
-    + 'cases, and 13 assertions that the live stage check can tell the four stages apart. All pass.'
+    + 'cases, 13 assertions that the live stage check can tell the four stages apart, and the step 1 '
+    + 'unpublish sheet covering exactly the redirected handles with 4 more mutations. All pass.'
   : '\ncsa-qotd-dupe-redirects: ' + failed + ' failure(s).');
 process.exit(failed ? 1 : 0);

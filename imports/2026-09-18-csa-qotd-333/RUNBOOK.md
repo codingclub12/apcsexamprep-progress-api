@@ -30,34 +30,43 @@ the February set, which says which half has been looked after.
 If you want it the other way, say so and the sheet regenerates; the direction is
 asserted per row, so it cannot be flipped by accident.
 
-## Step 0, run this first
+## STATE AS OF 2026-09-18 19:40 UTC: the redirects are in, the unpublish is not
+
+Checked against the Shopify Admin API and the live storefront:
+
+| | |
+|---|---|
+| the 72 redirect rows | **all present in Admin**, the newest 72 of 819. The CSV import worked. |
+| the 72 February articles | **still published.** Admin reports `isPublished: true`, every URL answers 200 with its full body, and the blog listing still returns all 429 articles. |
+| what that means | the 72 redirects are **inert**. A redirect only fires for a URL that does not resolve. |
+
+This is exactly the failure this runbook predicted, and it is recoverable with no
+harm done. **Do not re-import the redirect sheet.** Those rows are already in
+place and will start firing the moment the articles stop resolving.
+
+## What is left: one import
+
+`csa-qotd-333-step1-unpublish-blog-posts.csv` sets `Published` to `FALSE` on
+exactly the 72 February handles. It exists because doing this by hand is 72 trips
+through the Shopify admin.
+
+1. Import `csa-qotd-333-step1-unpublish-blog-posts.csv`, Matrixify, MERGE, one import.
+2. Run the check:
 
 ```
 node scripts/verify-csa-qotd-dupes-live.js
 ```
 
-Right now it reads **72 live, 0 unpublished, 0 redirected**. That is expected and
-it means the sheet is not importable yet. Read the next section before doing
-anything.
+It should read **0 live, 0 unpublished, 72 redirected**. The redirects take over
+the moment the articles stop resolving, so there is no third step.
 
-## The order is not optional, and getting it wrong looks like success
+If it reads **72 unpublished** instead, the articles are down but the redirects
+are not firing yet; wait a minute and re-run before doing anything else. If it
+reads any `wrong`, it names which handle and why.
 
-Shopify honours a redirect only FROM a URL that does not resolve. Their words:
-"You can redirect only from broken URLs. If the URL still loads a valid webpage,
-then the URL redirect won't work."
-
-Every `Path` in this sheet answers **200 today**. So:
-
-1. **You unpublish the 72 February articles.** Unpublishing a handle is
-   `NEVER_AUTO`; it is not an agent's to do and nothing here does it.
-2. Re-run the check. It must read **72 unpublished**.
-3. Import `csa-qotd-333-duplicate-handle-redirects.csv`, Matrixify, MERGE, one import.
-4. Re-run the check. It must read **72 redirected**.
-
-Import at step 3 before doing step 1 and you get 72 redirects that never fire.
-Matrixify logs all 72 rows, Admin shows all 72 present, and all 72 URLs keep
-serving the old article. Nothing anywhere reports a problem. That is why step 2
-exists.
+The sheet cannot take down the wrong side. It refuses any handle that appears
+anywhere on the keep side, any compact daily-series handle, and any unit 1
+handle, and the suite proves each refusal independently.
 
 ## What is deliberately NOT in this sheet
 

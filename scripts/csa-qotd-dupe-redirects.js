@@ -97,7 +97,48 @@ function rowsFor(doc) {
   return rows;
 }
 
-module.exports = { load, rowsFor, toCsv, url, COLS, SHEET, DATA };
+//  ── THE UNPUBLISH SHEET, WHICH IS STEP 1 AND NOT AN AGENT'S TO RUN ─────────
+//  Unpublishing is what makes the redirects fire, and doing it by hand is 72
+//  visits to the Shopify admin. This writes a Blog Posts sheet setting
+//  Published FALSE on exactly the 72 retire handles, so step 1 is one import on
+//  the same mechanism as step 3 rather than 72 clicks.
+//
+//  Generating it is not doing it. The import is still a human's, deliberately:
+//  it takes 72 articles off a live storefront.
+const UNPUB_COLS = ['Blog: Handle', 'Handle', 'Command', 'Published'];
+const UNPUB_SHEET = 'csa-qotd-333-step1-unpublish-blog-posts.csv';
+
+function unpublishRows(doc) {
+  const take = doc.pairs.filter((p) => p.verdict === 'redirect');
+  const keep = new Set(doc.pairs.map((p) => p.keep));
+  const seen = new Set();
+  const rows = take.map((p) => {
+    //  THE REFUSAL THAT MATTERS, and it is FIRST on purpose. Unpublishing a
+    //  keep handle takes down the article the redirect points AT, turning 72
+    //  tidy redirects into 72 dead ends. It sat below the shape check until a
+    //  mutation run caught it: every keep handle is compact, so the shape check
+    //  threw first and this one never ran. The suite went red for the wrong
+    //  rule and read as covered. Order it after the shape check again and the
+    //  guard goes hollow again, so it stays here.
+    if (keep.has(p.retire)) throw new Error(p.retire + ' is a keep handle somewhere, so it must never be unpublished');
+    if (!/^unit-[0-9]-cycle-[0-9]-day-/.test(p.retire)) throw new Error(p.retire + ' is not a bulk-import handle');
+    if (/^unit-1-cycle/.test(p.retire)) throw new Error(p.retire + ' is unit 1, which has no twin and must stay');
+    if (seen.has(p.retire)) throw new Error(p.retire + ' appears twice');
+    seen.add(p.retire);
+    return { 'Blog: Handle': BLOG, Handle: p.retire, Command: 'MERGE', Published: 'FALSE' };
+  });
+  if (!rows.length) throw new Error('no unpublish rows, which cannot be right for 72 pairs');
+  return rows;
+}
+
+function toCsvWith(cols, rows) {
+  const lines = [cols.map(csvCell).join(',')];
+  rows.forEach((r) => lines.push(cols.map((c) => csvCell(r[c])).join(',')));
+  return '\ufeff' + lines.join('\r\n') + '\r\n';
+}
+
+module.exports = { load, rowsFor, toCsv, url, COLS, SHEET, DATA,
+  unpublishRows, toCsvWith, UNPUB_COLS, UNPUB_SHEET };
 
 if (require.main === module) {
   const out = process.argv[2];
@@ -106,8 +147,11 @@ if (require.main === module) {
 
   const doc = load();
   const rows = rowsFor(doc);
-  const text = toCsv(rows);
-  fs.writeFileSync(path.join(out, SHEET), text);
+  fs.writeFileSync(path.join(out, SHEET), toCsv(rows));
+
+  const un = unpublishRows(doc);
+  fs.writeFileSync(path.join(out, UNPUB_SHEET), toCsvWith(UNPUB_COLS, un));
+  console.log('  ' + un.length + ' unpublish rows written to ' + UNPUB_SHEET + '  (step 1)');
 
   const review = doc.pairs.filter((p) => p.verdict === 'review');
   console.log('  ' + rows.length + ' redirects written to ' + SHEET);
