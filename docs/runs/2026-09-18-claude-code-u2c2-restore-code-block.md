@@ -99,10 +99,16 @@ The gap narrowed from roughly four minutes to three; it did not close or reverse
 
 ## Still open
 
-- **The 19 pages are unchanged until Tanner imports.** The sheets are generated
-  and validated, not imported. Run `node scripts/verify-csa-u2c2-live.js` again
-  immediately before importing: if it reads anything other than 19 pending, the
-  sheet is stale and must be regenerated off current live bodies first.
+- ~~The 19 pages are unchanged until Tanner imports.~~ **IMPORTED 2026-09-18 and
+  verified live.** `node scripts/verify-csa-u2c2-live.js` reads 19 imported, 0
+  pending, 0 drifted, byte-identical to the sheet with no board 292 NBSP
+  stripping. Separately and without using that verdict, all 19 live bodies were
+  refetched, compiled and run on a real JVM: 19 of 19 reach `agrees` with the run
+  letter equal to the article key, where all 19 failed before. Day 10 prints 10
+  against options 6, 9, 10, 11 keyed C; it printed 15 before, so no answer could
+  be right. An independent verifier that was not the worker confirmed all three
+  methods with zero discrepancies. Board 343 is in `needs_verification`: an agent
+  cannot set `verified=1`.
 - Board 333. After the restore every `unit-2-cycle-2` pair is the same question at
   two handles with the answers shuffled. That predates this repair and is a handle
   decision rather than a content one.
