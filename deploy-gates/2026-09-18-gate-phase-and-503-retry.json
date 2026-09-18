@@ -1,0 +1,124 @@
+{
+  "change": "deploy-gate learns a phase field, so a check can say WHEN it is meaningful, and lib/storefront-fetch.js retries 503 as well as 429",
+  "_context": [
+    "WRITTEN AFTER THE MERGE, and that is the honest order rather than the right",
+    "one. PR #735 shipped on a green CI run plus six mutations run by hand, and",
+    "those mutations lived in a shell script in a container scratchpad, which dies",
+    "with the session. This manifest is how they become something anyone can",
+    "re-run. The deploy itself is 0c8de04, already live.",
+    "",
+    "WHY THE CHANGE EXISTED. The FRQ archive gate could not be closed. Its",
+    "rederive check runs the generator, every transform in the generator is",
+    "find-or-refuse, so once the 2026 scoring note is on the page the check MUST",
+    "refuse. It was real evidence before the import and impossible after it, and",
+    "the manifest read like a genuine refusal to ship the whole time.",
+    "",
+    "The gate already had the mirror of this hardcoded: live is deferred on a",
+    "--pre run because it cannot observe a deploy that has not happened. Nobody",
+    "had needed the other direction.",
+    "",
+    "THE MUTATIONS BELOW MUTATE THE GATE ITSELF, which works and is worth stating",
+    "because it reads alarming. The gate writes the mutation to disk, runs the",
+    "suite as a SEPARATE node process, which therefore loads the mutated file, and",
+    "restores it. The gate's own already-loaded module in memory is untouched.",
+    "",
+    "WHY 503 AND NOT 502 OR 504. verify-csa-frq-archive-live walks 142 storefront",
+    "requests in one pass. Run three times it lost 7 handles, then 1, then a",
+    "different 1, always 503 and never the same handle twice, while every one of",
+    "them answered 200 with the expected body when fetched alone. 502 and 504 are",
+    "plausibly transient too, and nothing here has observed one. That list earns",
+    "entries by measurement rather than by argument.",
+    "",
+    "TWO OF THE ASSERTIONS THESE PIN WERE HOLLOW WHEN FIRST WRITTEN, and the",
+    "mutation run is what caught it. The unknown-phase test reused a command",
+    "already present in the manifest, so disabling the phase validation left the",
+    "DUPLICATE-command rule to refuse it and the assertion passed for the wrong",
+    "reason. And an assertion claiming to pin REQUIRED_ONE_OF alone cannot exist:",
+    "KINDS has four members, two of which are live and rederive, so a manifest",
+    "with neither reaches at most two kinds and MIN_KINDS fires as well. That one",
+    "now says so rather than pretending to an isolation that is not available."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the gate's own refusals, including every phase path",
+      "_why": "Section 11 is the new one. It pins that a phase:pre check is deferred after the deploy, RUNS before it, that the deferral is named rather than silent, that a misspelled phase is an error rather than a quiet default, and that marking the only outside check pre-only still refuses to ship.",
+      "command": "npm run --silent smoke:deploygate",
+      "expect": "42 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the one door, including the retry against a real server",
+      "_why": "Section 7 is the new one, and it had to run the server in its own PROCESS: every caller of storefront-fetch is synchronous, so the Atomics.wait between retry attempts blocks the event loop and an in-process listen() never fires. The first cut died on a null address.",
+      "command": "npm run --silent smoke:storefront",
+      "expect": "141 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "a phase:pre check is no longer deferred after the deploy",
+      "_why": "The whole point of the change. Without this the FRQ archive gate goes back to being unclosable.",
+      "file": "scripts/deploy-gate.js",
+      "find": "    if (!opts.pre && phase === 'pre') { deferred.push(c); return false; }",
+      "replace": "    if (false) { deferred.push(c); return false; }",
+      "command": "npm run --silent smoke:deploygate",
+      "expect_failure": "a phase:pre check is deferred"
+    },
+    {
+      "kind": "mutation",
+      "name": "phase:pre is deferred everywhere, so the check never runs at all",
+      "_why": "THE ABUSE THIS FIELD COULD HAVE BECOME. If a phase:pre check is skipped on --pre as well, phase is a way to delete a check rather than to schedule one.",
+      "file": "scripts/deploy-gate.js",
+      "find": "    if (!opts.pre && phase === 'pre') { deferred.push(c); return false; }",
+      "replace": "    if (phase === 'pre') { deferred.push(c); return false; }",
+      "command": "npm run --silent smoke:deploygate",
+      "expect_failure": "the same check runs and its failure is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "a misspelled phase quietly means the default",
+      "_why": "phase: 'pre-deploy' must be an error. If a typo fell back to 'both', it would silently re-enable a check at the exact moment it cannot pass, which is the same shape of defect as a live check asserting something already true.",
+      "file": "scripts/deploy-gate.js",
+      "find": "    if (c.phase !== undefined && !PHASES.includes(c.phase)) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:deploygate",
+      "expect_failure": "an unknown phase is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "a deferred check is dropped without being named",
+      "_why": "A gate that quietly drops a check reads like a clean run over work nobody did, which is the failure this whole script exists to prevent.",
+      "file": "scripts/deploy-gate.js",
+      "find": "  return { ok: problems.length === 0, problems, results, kinds: [...kinds], deferred };",
+      "replace": "  return { ok: problems.length === 0, problems, results, kinds: [...kinds], deferred: [] };",
+      "command": "npm run --silent smoke:deploygate",
+      "expect_failure": "the deferral is NAMED"
+    },
+    {
+      "kind": "mutation",
+      "name": "503 drops back out of the retry set",
+      "_why": "The measured failure. Without it, any verifier walking more than a few dozen storefront requests reports a correct site as broken, at random, and a verifier that is red at random gets ignored.",
+      "file": "lib/storefront-fetch.js",
+      "find": "const RETRY_CODES = new Set(['429', '503']);",
+      "replace": "const RETRY_CODES = new Set(['429']);",
+      "command": "npm run --silent smoke:storefront",
+      "expect_failure": "a 503 is retried"
+    },
+    {
+      "kind": "mutation",
+      "name": "the retry stops being narrow and retries everything",
+      "_why": "The narrowness is half the design. A 404 retried three times is still a 404, and waiting on it only makes a red check slower. This is the guard that stops a well-meant widening from costing every missing page the full backoff.",
+      "file": "lib/storefront-fetch.js",
+      "find": "  for (let i = 1; i < attempts && RETRY_CODES.has(r.code); i += 1) {",
+      "replace": "  for (let i = 1; i < attempts && r.code !== '200'; i += 1) {",
+      "command": "npm run --silent smoke:storefront",
+      "expect_failure": "and is NOT retried"
+    },
+    {
+      "kind": "live",
+      "name": "production is serving the commit that carries this change",
+      "_why": "FALSE BEFORE THE DEPLOY by construction: /api/health reported 4e27c9b, which is PR #734, until 0c8de04 landed. This is the sha the gate's own header recommends pinning, rather than a status:ok that was true yesterday and would be true if the deploy never happened.",
+      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health",
+      "expect": "\"commit\":\"0c8de04\""
+    }
+  ]
+}
