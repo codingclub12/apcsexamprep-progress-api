@@ -18,6 +18,7 @@
     "smoke:labs": "node smoke/labs.js",
     "verify:lablock": "node scripts/verify-lab-lock-live.js",
     "rederive:lablock": "python3 scripts/rederive-lab-lock.py",
+    "rederive:retrypolicy": "node scripts/rederive-retry-policy.js",
     "cyber:labdenomsheet": "node scripts/cyber-lab-denominator-csv.js matrixify",
     "rederive:cyberlabdenom": "node scripts/cyber-lab-denominator-rederive.js",
     "verify:cyberlabdenom": "node scripts/verify-cyber-lab-denominator-live.js",
