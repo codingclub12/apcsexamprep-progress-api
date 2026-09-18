@@ -18,7 +18,7 @@ Expect **4 done** (yesterday's pages) and **5 pending**.
 
 | # | Sheet | Edits | Expected after |
 |---|---|---|---|
-| 1 | `titles-page-year.csv` | 1 row | the first h1 on the topics page reads 2027 |
+| 1 | `titles-page-year.csv` | 1 row | the first h1 on the topics page reads `AP CSA Topics` |
 | 2 | `body-ap-csp-practice-exams.csv` | 1 | `[DONE]` |
 | 3 | `body-ap-csa-practice-exams.csv` | 4 | `[DONE]`, exam date reads May 12 2027 |
 | 4 | `body-ap-csp-reference-sheet.csv` | 6 | `[DONE]`, no 2025-2026 anywhere visible |
@@ -57,13 +57,28 @@ say something untrue:
   page: none of it reaches a student. Untouched here, and worth cleaning up
   separately.
 
-## One judgement call worth your eye
+## Currency lines lose their year rather than gaining a new one
 
-Lines like "aligned to the 2025-2026 4-unit curriculum" became "2026-2027". The
-four-unit structure has not changed and is not being renamed; what changed is the
-school year the page claims to be current for. That matches the SEO titles
-already live, which read "2026-27".
+Tanner's call. A line like "aligned to the 2025-2026 4-unit curriculum" now reads
+"aligned to the 4-unit curriculum", which is true for as long as the four-unit
+curriculum is what we teach. The first draft moved it to 2026-2027, correct today
+and due for this same pass next September.
 
-If you would rather those lines named no year at all, say so and I will redo
-them. It is the more durable option and I did not take it only because the
-shipped titles set a precedent.
+The rule this follows:
+
+- a year STAMPING CURRENCY on content goes: aligned to, built for, organized by,
+  a hero eyebrow, a page-title badge
+- a year stating a FACT about an administration stays and reads 2027: when the
+  exam is, what is on it, the date, "Updated for the May 2027 exam"
+
+Two lines were reworded rather than just trimmed, because the trim read badly.
+"Complete AP CSP pseudocode reference sheet for the AP CSP exam" said the course
+twice, so it is "for exam day". "Covers all 4 units, built specifically for the
+four-unit curriculum" repeated itself, so it is "the current curriculum".
+
+One mechanical consequence, which the generator caught rather than a human:
+dropping a year makes a replacement SHORT, and "AP Computer Science A" occurs all
+over its page. The surgical check refused every one of those sheets, correctly,
+because reversing the edit rewrote every other occurrence too. Those find-strings
+now carry their own markup, so the edit can only land in the one element it
+means.
