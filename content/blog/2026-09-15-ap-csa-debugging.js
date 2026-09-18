@@ -86,7 +86,7 @@ const body = H.article([
   H.h3('ArrayIndexOutOfBoundsException'),
   H.code('int[] scores = {10, 20, 30};\nSystem.out.println(scores[3]);'),
   H.code('Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 3\n    at Main.main(Main.java:2)'),
-  H.p('The message states both numbers a fix needs: the index that was used, 3, and the length of the array, also 3. For an array of length 3, valid indices run from 0 up to 2, one less than the length, so index 3 does not exist. This exact mismatch, using length itself as the last index instead of length minus one, is the most common cause and usually traces back to a loop condition written as i <= array.length instead of i < array.length.'),
+  H.p('The message states both numbers a fix needs: the index that was used, 3, and the length of the array, also 3. For an array of length 3, valid indices run from 0 up to 2, one less than the length, so index 3 does not exist. This exact mismatch, using length itself as the last index instead of length minus one, is the most common cause and usually traces back to a loop condition written as i &lt;= array.length instead of i &lt; array.length.'),
 
   H.h3('StringIndexOutOfBoundsException'),
   H.code('String word = "cat";\nSystem.out.println(word.charAt(3));'),
@@ -128,13 +128,13 @@ const body = H.article([
     stem: 'The method below is called with an array containing three elements, and running it produces the exception shown beneath it. What change fixes the cause of the exception?',
     codeText: 'public static int sumAll(int[] values)\n{\n    int total = 0;\n    for (int i = 0; i <= values.length; i++)\n    {\n        total = total + values[i];\n    }\n    return total;\n}\n\nException in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 3\n    at Main.sumAll(Main.java:6)',
     options: [
-      'Change the loop condition from i <= values.length to i < values.length.',
+      'Change the loop condition from i &lt;= values.length to i &lt; values.length.',
       'Change the initial value of i from 0 to 1.',
       'Change values[i] to values[i - 1] inside the loop body.',
       'Add a fourth element to the array so index 3 exists.',
     ],
     correct: 0,
-    why: 'The array has length 3, so its only valid indices are 0, 1, and 2. The condition i <= values.length lets i reach 3, one past the last valid index, and values[3] does not exist for a length-3 array, which is exactly what the message reports. Changing the condition to i < values.length stops the loop at i equal to 2, the last valid index, and fixes the actual off-by-one bound. Starting i at 1 still lets the loop run through index 3 and additionally skips index 0. Shifting to values[i - 1] happens to dodge the crash for this one array but breaks the sum by skipping the last element and is not a fix to the loop bound itself. Padding the array to four elements treats the symptom rather than the loop condition that produced it, and the same bug would reappear on the next array of any other size.',
+    why: 'The array has length 3, so its only valid indices are 0, 1, and 2. The condition i &lt;= values.length lets i reach 3, one past the last valid index, and values[3] does not exist for a length-3 array, which is exactly what the message reports. Changing the condition to i &lt; values.length stops the loop at i equal to 2, the last valid index, and fixes the actual off-by-one bound. Starting i at 1 still lets the loop run through index 3 and additionally skips index 0. Shifting to values[i - 1] happens to dodge the crash for this one array but breaks the sum by skipping the last element and is not a fix to the loop bound itself. Padding the array to four elements treats the symptom rather than the loop condition that produced it, and the same bug would reappear on the next array of any other size.',
   }),
 
   H.h2(SECTIONS[6]),
