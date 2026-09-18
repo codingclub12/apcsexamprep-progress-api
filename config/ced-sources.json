@@ -136,6 +136,15 @@
       "why": "Course-level framing and links to the current CED."
     },
     {
+      "id": "csa-exam",
+      "label": "AP Computer Science A Exam",
+      "course": "ap-csa",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-a/exam",
+      "why": "The section counts, timing and weighting the site prints as fact. Four live pages said 42 MCQ and 55/45 with nothing in this repo able to confirm it; checked 2026-09-18 and correct, but nothing was watching it."
+    },
+    {
       "id": "csp-course",
       "label": "AP Computer Science Principles course page",
       "course": "ap-csp",
@@ -143,6 +152,15 @@
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-principles",
       "why": "Five big ideas and the Create performance task framing."
+    },
+    {
+      "id": "csp-exam",
+      "label": "AP Computer Science Principles Exam",
+      "course": "ap-csp",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-principles/exam",
+      "why": "Same gap as csa-exam. The 70 MCQ figure and the Create performance task weighting are printed across the CSP pages and the Create deadline moves year to year."
     },
     {
       "id": "csp-ced-pdf",

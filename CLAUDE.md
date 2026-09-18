@@ -437,6 +437,49 @@ way (objective codes for the numbers, the UNIT AT A GLANCE tables for the titles
 and diffs to zero. The extracts remain the source; the JSON is what a generator
 reads so that nobody retypes a title.
 
+### The AP CSA and AP CSP exam formats, so no session has to look them up
+
+Added 2026-09-18 after a session was asked to check whether the "42 MCQ" printed
+on four live pages was true. It is. What was missing was any way to know that:
+`config/ced-sources.json` watched a `cyber-exam` page and no equivalent for the
+other two courses, so the number had been correct and uncheckable at the same
+time. Both exam pages are watched now and captured to `docs/ced-snapshot/`.
+
+**AP Computer Science A**, from `docs/ced-snapshot/csa-exam.txt`, captured
+2026-09-18:
+
+| Section | Type | Count | Timing | Weight |
+|---|---|---|---|---|
+| I | Multiple-choice | 42 | 1 hour 30 minutes | 55% |
+| II | Free-response | 4 | 1 hour 30 minutes | 45% |
+
+Three hours in total. The multiple-choice section is mostly individual questions,
+occasionally with one or two sets of two. Computational Thinking Practices 1
+through 5 are all assessed there; every free-response question assesses Practice
+2, Develop Code.
+
+**AP Computer Science Principles**, from `docs/ced-snapshot/csp-exam.txt`, same
+capture:
+
+| Section | Type | Count | Timing | Weight |
+|---|---|---|---|---|
+| I | Multiple-choice | 70 | 120 minutes | 70% |
+| II | Create performance task and written response | 2 written responses | 60 minutes plus 9 in-class hours | 30% |
+
+The 70 break down as 57 single-select, 5 single-select with a reading passage
+about a computing innovation, and 8 multiple-select where the student picks two.
+Those add to 70; a session reading only the first and last lines gets 65 and
+concludes the page is wrong.
+
+Exam dates for 2027 are in `docs/ced-snapshot/exam-dates.txt`: **CSA is Wednesday
+May 12, CSP is Friday May 14**. CSP moved from the day before CSA to two days
+after, so any page saying "the day before" is stale even if its numbers are
+right. The Create performance task deadline is April 30, 2027.
+
+Do not retype these from memory, and do not take them from a page body. The
+snapshot is the source and `npm run ced:watch` says when College Board changes
+it.
+
 ### Where the CED actually lives in this repo
 
 The PDFs are NOT committed. `config/ced-sources.json` watches

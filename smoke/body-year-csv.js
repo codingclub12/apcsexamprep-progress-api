@@ -6,7 +6,7 @@
 //  Run: npm run smoke:bodyyear
 // ─────────────────────────────────────────────────────────────────────────────
 const G = require('../scripts/body-year-csv');
-const { PAGES, EXAM, TITLES } = require('../seed/body-year-rewrites');
+const { PAGES, EXAM, EXAM_ISO, TITLES } = require('../seed/body-year-rewrites');
 
 let pass = 0, fail = 0;
 function ok(label, cond) {
@@ -82,6 +82,58 @@ ok('a bare Updated stamp is exempt too', stale('Updated June 2026') === 0);
 ok('THE EXEMPTION IS NOT A HOLE: an exam year beside a stamp is still caught',
   stale('Last Updated September 2026. The 2026 AP CSA exam is digital.') > 0);
 
+//  ── AN ISO DATE IS NOT A SCHOOL-YEAR SPAN, AND USED TO BE EATEN AS ONE ──────
+//  The CSA hub carried data-exam-iso="2026-05-15T12:00:00" through this whole
+//  pass and staleYears() called the page clean. "2026-05" matched the SPAN
+//  regex, expanded to 2005 so it was not a school year, and was then STRIPPED
+//  as one, which is what hid the 2026 from the standalone scan. The page's own
+//  script renders a past target as "Exam complete, great work!", so the hub
+//  said that to every visitor from May onward.
+//
+//  The clock is pinned here rather than read, so these cases keep meaning the
+//  same thing in 2028.
+const ISO_NOW = new Date('2026-09-18T12:00:00Z');
+const isoStale = (s) => G.staleYears(s, 2027, ISO_NOW).length;
+ok('THE HUB SHAPE: a countdown target in the past is stale',
+  isoStale('<span id="hub-countdown" data-exam-iso="2026-05-15T12:00:00">Exam coming up</span>') === 1);
+ok('a bare ISO date in the past is stale', isoStale('exam on 2026-05-15') === 1);
+ok('a countdown target in the future is not', isoStale('data-exam-iso="2027-05-12T12:00:00"') === 0);
+ok('today is not stale, so a date is never flagged during its own day',
+  isoStale('data-exam-iso="2026-09-18T12:00:00"') === 0);
+//  The exemption, and the case that proves it is not a hole.
+ok('schema.org datePublished may name a past date, because that is its job',
+  isoStale('"datePublished": "2026-03-01", "author": "AP Exam Prep"') === 0);
+ok('dateModified too', isoStale('"dateModified": "2026-03-16"') === 0);
+ok('THE EXEMPTION IS NOT A HOLE: a countdown beside a datePublished is caught',
+  isoStale('"datePublished": "2026-03-01" <span data-exam-iso="2026-05-15T12:00:00">') === 1);
+ok('an Event startDate is NOT exempt, because a passed event is the defect',
+  isoStale('"startDate": "2026-05-15"') === 1);
+//  A BARE url, not one in an href, and the path segment after the date is /recap
+//  rather than -recap. Two drafts of this case were hollow and the mutation run
+//  caught both: href="https://..." is removed by the attribute stripper before
+//  the URL rule is reached, and ".../2026-05-15-recap" is not an ISO match at
+//  all, because the lookahead refuses a date running into another dash. Neither
+//  version tested the line it named.
+ok('a date inside a bare URL is still the address, not a claim',
+  isoStale('see https://example.com/blog/2026-05-15/recap for the recap') === 0);
+ok('and in an href, where the attribute stripper catches it instead',
+  isoStale('<a href="/blog/2026-05-15/recap">recap</a>') === 0);
+ok('a longer dashed run is not a date: 2026-05-15-recap names a post, not a day',
+  isoStale('the post 2026-05-15-recap') === 0);
+//  Two shapes the first draft got wrong, kept as cases because each was a bug.
+ok('an ISO instant needs no word boundary after the day',
+  isoStale('data-exam-iso="2026-05-15T12:00:00"') === 1);
+//  Over-determined on purpose, and the mutation run is how we know: dropping
+//  the explicit `.replace(ISO, ' ')` in the generator changes nothing today,
+//  because the span stripper still eats "2026-05" as though it were a span.
+//  That is the same accident that hid the hub countdown, running in our favour
+//  this time. The assertion is about the PROPERTY, which is real; the comment
+//  in the generator says plainly that the line is belt and braces.
+ok('an ISO date is counted once, not once as a date and again as a bare year',
+  isoStale('exam on 2026-05-15') === 1);
+//  The span rules still mean what they meant.
+ok('AN ISO DATE DOES NOT DISABLE THE SPAN RULE: an ended span beside one is caught',
+  isoStale('data-exam-iso="2027-05-12T12:00:00" and the 2025-2026 AP CSP exam') === 1);
 console.log('\n  Idempotency, and the hole it nearly opened\n');
 //  A spec that cannot be re-run after a PARTIAL import gets hand-edited under
 //  pressure, so an edit that is already live is skipped rather than refused.
@@ -168,6 +220,51 @@ ok('no handle appears twice', new Set(PAGES.map((p) => p.handle)).size === PAGES
 ok('the CSA date is the one the CED capture gives', EXAM.csa === 'Wednesday, May 12, 2027');
 ok('the CSP date is the one the CED capture gives', EXAM.csp === 'Friday, May 14, 2027');
 ok('no replacement reintroduces a year that has passed',
+  PAGES.every((p) => p.edits.every((e) => G.staleYears(e.replace, 2027).length === 0)));
+//  ── THE COUNTDOWN TARGET, RE-DERIVED FROM THE CAPTURE RATHER THAN RETYPED ───
+//  A literal string assertion only proves somebody typed the same thing twice.
+//  These read the snapshot files and rebuild EXAM_ISO from them, which is the
+//  check that would have caught the hub: its target named a date no source in
+//  this repo has ever given.
+const fsC = require('fs'), pathC = require('path');
+const SNAP = (n) => fsC.readFileSync(pathC.join(__dirname, '..', 'docs', 'ced-snapshot', n), 'utf8');
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+//  College Board's own exam page for each course states the day and the session.
+function sessionLine(file) {
+  const m = SNAP(file).match(/^\w{3}, (\w+) (\d{1,2}), (\d{4}) \| Session (\d)$/m);
+  if (!m) return null;
+  return { month: m[1], day: Number(m[2]), year: Number(m[3]), session: Number(m[4]) };
+}
+//  And the schedule page states what the two sessions mean in clock time.
+const dates = SNAP('exam-dates.txt');
+ok('the capture still says which session is morning and which is afternoon',
+  /Session 1 and Session 2 represent the timeslots that are typically the morning and afternoon/.test(dates));
+ok('and still gives the two local start times',
+  /exams still begin at 8 a\.m\. local time and 12 p\.m\. local time/.test(dates));
+
+function rederiveIso(file) {
+  const s = sessionLine(file);
+  if (!s) return null;
+  const mm = String(MONTHS.indexOf(s.month) + 1).padStart(2, '0');
+  const hh = s.session === 1 ? '08' : '12';
+  return `${s.year}-${mm}-${String(s.day).padStart(2, '0')}T${hh}:00:00`;
+}
+ok('the CSA countdown target is rebuilt from csa-exam.txt, not retyped',
+  rederiveIso('csa-exam.txt') === EXAM_ISO.csa);
+ok('the CSP one from csp-exam.txt', rederiveIso('csp-exam.txt') === EXAM_ISO.csp);
+//  The prose date and the machine date are the same day. The hub drifted from
+//  its own page's copy for four months because nothing asserted this.
+const sameDay = (prose, iso) => {
+  const m = prose.match(/(\w+) (\d{1,2}), (\d{4})$/);
+  const mm = String(MONTHS.indexOf(m[1]) + 1).padStart(2, '0');
+  return `${m[3]}-${mm}-${String(Number(m[2])).padStart(2, '0')}` === iso.slice(0, 10);
+};
+ok('EXAM and EXAM_ISO name the same CSA day', sameDay(EXAM.csa, EXAM_ISO.csa));
+ok('and the same CSP day', sameDay(EXAM.csp, EXAM_ISO.csp));
+ok('neither countdown target is in the past',
+  Object.values(EXAM_ISO).every((v) => new Date(v + 'Z') > new Date()));
+ok('no replacement anywhere ships a date that has already passed',
   PAGES.every((p) => p.edits.every((e) => G.staleYears(e.replace, 2027).length === 0)));
 
 console.log(`\n  ${fail === 0 ? 'OK' : 'FAILED'} - ${pass} passed, ${fail} failed\n`);

@@ -80,7 +80,7 @@ function dangerousEntities(body) {
 
 //  Refusal 4. A year is stale only when it stands alone: not inside a URL, not
 //  part of a school-year span, not part of an archive range like 2004 to 2025.
-function staleYears(body, examYear) {
+function staleYears(body, examYear, now = new Date()) {
   //  ── A SCHOOL-YEAR SPAN IS CHECKED, NOT SKIPPED ─────────────────────────────
   //  The first version stripped every span before looking, on the reasoning that
   //  2026-27 is correct and should not be flagged. True, but it meant an ENDED
@@ -100,12 +100,71 @@ function staleYears(body, examYear) {
     }
   }
 
-  const stripped = body
+  //  ── AN ISO DATE IS INVISIBLE TO EVERY RULE BELOW IT ────────────────────────
+  //  Found 2026-09-18 on the CSA hub, the page Google hands the most traffic.
+  //  Its Quick Access header carries
+  //
+  //      <span id="hub-countdown" data-exam-iso="2026-05-15T12:00:00">
+  //
+  //  and the page's own inline script turns a target in the past into the words
+  //  "Exam complete, great work!". Rendered in Chromium on 2026-09-18 that
+  //  header read "Quick Access, Exam complete, great work!" to a student eight
+  //  months out from the exam.
+  //
+  //  This function called the page CLEAN, and not by omission. The SPAN regex
+  //  above reads "2026-05" as a school-year span: start 2026, end "05", which
+  //  the two-digit branch expands to 2005. 2005 is not 2027, so no span hit.
+  //  Then the stripper below removed "2026-05" AS a span, so the standalone
+  //  scan never saw the 2026 either. The date was eaten by the rule written to
+  //  protect correct spans, and every ISO date on every page was invisible the
+  //  same way.
+  //
+  //  So ISO dates are judged FIRST, against the clock rather than against
+  //  examYear, because a countdown target that has passed is stale whatever
+  //  year it names. Then they are removed explicitly rather than swallowed.
+  //
+  //  The one exemption is schema.org's own vocabulary for when a thing was
+  //  authored. "datePublished": "2026-03-01" sits in the JSON-LD on
+  //  ap-csa-reference-sheet and is SUPPOSED to name a past date, the same way
+  //  the Last Updated stamp below is. That list is schema.org's rather than one
+  //  invented here, which is the difference between an exemption and a pattern
+  //  list. Event startDate and endDate are deliberately NOT on it: an event
+  //  whose start has passed is exactly the defect this rule is for.
+  const base = body
     .replace(/<!--[\s\S]*?-->/g, ' ')
     .replace(/(?:href|src|id|class|action|xmlns|xmlns:\w+|viewBox|viewbox|d)\s*=\s*"[^"]*"/gi, ' ')
     //  Any absolute URL, wherever it sits. www.w3.org/2000/svg appears in every
     //  inline SVG on these pages and read as 34 stale years on one of them.
-    .replace(/https?:\/\/[^\s"'<>)]+/gi, ' ')
+    .replace(/https?:\/\/[^\s"'<>)]+/gi, ' ');
+
+  //  No trailing \b. An ISO instant runs straight into "T12:00:00" and there is
+  //  no word boundary between "5" and "T", so requiring one would have missed
+  //  the exact shape this rule exists for.
+  const ISO = /\b(20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?![-\d])/g;
+  const AUTHORED = /"(?:datePublished|dateModified|dateCreated|uploadDate)"\s*:\s*"[^"]*"/g;
+  //  KNOWN AND DELIBERATELY NOT EXEMPTED: ap-csa-topics carries a Klaviyo API
+  //  version pin, 'revision': '2024-10-15', and this rule calls it a past date.
+  //  It is. Exempting it would mean naming another key, and a pattern list is
+  //  how a check goes quiet without saying so. These hits are a REVIEW NOTE that
+  //  refuses nothing, so a false positive costs a reader one line and a silent
+  //  miss costs a live page four months. Do not add the exemption.
+  const isoHits = [];
+  for (const m of base.replace(AUTHORED, ' ').matchAll(ISO)) {
+    //  End of that day, so a date is never called stale during its own day.
+    if (new Date(`${m[1]}-${m[2]}-${m[3]}T23:59:59Z`) < now) {
+      isoHits.push(base.slice(Math.max(0, m.index - 60), m.index + 25).replace(/\s+/g, ' '));
+    }
+  }
+
+  const stripped = base
+    //  Judged above. Belt and braces, and known to be so: mutating this line
+    //  away leaves the suite green, because the span stripper below still eats
+    //  "2026-05" as though it were a span. That is the very accident that hid
+    //  the hub countdown, working in our favour this once. It is kept because
+    //  narrowing that stripper to real school years is a reasonable refactor,
+    //  and this is the line that would keep ISO dates out of the bare-year scan
+    //  afterwards. Said out loud so nobody reads it as a tested guarantee.
+    .replace(ISO, ' ')
     .replace(/\b20\d{2}\s*[-–]\s*(?:20\d{2}|\d{2})\b/g, ' ')
     .replace(/\b20\d{2}\s*(?:to|through)\s*20\d{2}\b/gi, ' ')
     //  Archive and historical labels keep their own year on purpose.
@@ -117,7 +176,7 @@ function staleYears(body, examYear) {
     //  sits immediately before it, so an exam year elsewhere in the same line
     //  is still caught.
     .replace(/(?:Last\s+)?Updated\s+(?:[A-Z][a-z]+\s+)?20\d{2}/g, ' ');
-  const hits = [...spanHits];
+  const hits = [...isoHits, ...spanHits];
   for (const m of stripped.matchAll(/\b(20\d{2})\b/g)) {
     if (Number(m[1]) < examYear) hits.push(stripped.slice(Math.max(0, m.index - 45), m.index + 25).replace(/\s+/g, ' '));
   }
@@ -277,7 +336,15 @@ function main() {
     console.log(`      ${String(b.edits).padStart(2)} replacements   ${b.before.length} -> ${b.after.length} chars`
       + (b.already ? `   (${b.already} already live, skipped)` : '')
       + (b.nbsp ? `   ${b.nbsp} nbsp sent as an entity` : ''));
-    if (b.stale.length) console.log(`      NOTE ${b.stale.length} past year(s) remain, review: ${b.stale[0].slice(0, 60)}`);
+    //  ISO hits are unshifted to the front by staleYears(), so a countdown
+    //  target can never be buried under a list of archive years. Three are shown
+    //  rather than one: on the hub the countdown happened to sort first, and
+    //  "happened to" is not a property to rely on.
+    if (b.stale.length) {
+      console.log(`      NOTE ${b.stale.length} past year(s) remain, review (dates first):`);
+      for (const h of b.stale.slice(0, 3)) console.log(`           ${h.trim().slice(0, 78)}`);
+      if (b.stale.length > 3) console.log(`           ...and ${b.stale.length - 3} more`);
+    }
     console.log(`      ${file}`);
   }
   for (const h of noops) console.log(`  ${h}\n      every edit is already live. No sheet written; there is nothing to import.`);
