@@ -144,11 +144,11 @@
   var CSS = [
     ':host{all:initial}',
     '*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}',
-    '.btn{position:fixed;right:18px;bottom:18px;z-index:2147483000;background:#1d4ed8;color:#fff;border:0;',
+    '.btn{position:fixed;left:18px;bottom:18px;z-index:2147483000;background:#1d4ed8;color:#fff;border:0;',
     'border-radius:999px;padding:11px 17px;font-size:14px;font-weight:600;cursor:pointer;',
     'box-shadow:0 2px 10px rgba(0,0,0,.28)}',
     '.btn:hover{background:#1e40af}',
-    '.panel{position:fixed;right:18px;bottom:70px;z-index:2147483000;width:340px;max-width:calc(100vw - 36px);',
+    '.panel{position:fixed;left:18px;bottom:70px;z-index:2147483000;width:340px;max-width:calc(100vw - 36px);',
     'max-height:min(78vh,620px);overflow:auto;background:#fff;color:#111827;border:1px solid #d1d5db;',
     'border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.22);padding:16px}',
     '.hd{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}',
@@ -173,6 +173,60 @@
     '.hit:hover{background:#eff6ff}',
     '.hit small{display:block;color:#6b7280;font-size:11px;margin-top:2px}'
   ].join('');
+
+  //  STAYING OUT OF THE WAY OF THE AD STACK
+  //
+  //  Measured on a live lesson page 2026-09-18, viewport 1365x911:
+  //
+  //      AdThrive_Footer_1_desktop   [0, 811, 1350, 100]   z 1000001
+  //      celtraCloseButton           [1318, 820, 42, 42]   z 2147483647
+  //      raptive-sales               [0, 0, 1350, 911]     z 2147483645
+  //
+  //  The footer banner is FULL WIDTH and 100px tall, so the old bottom:18px sat
+  //  under it on both sides. The ad's own close button sat exactly where the
+  //  pill was. Hence the move to the left, and hence a lift.
+  //
+  //  The lift is PROBED, not hardcoded, and that is the part worth keeping. A
+  //  fixed 120px is right for this banner on this viewport and wrong on a phone,
+  //  where the same banner eats a far bigger share of a short screen, and wrong
+  //  again the next time the ad layout changes. So instead of measuring
+  //  rectangles and doing geometry, ask the browser the question we actually
+  //  care about: if somebody clicked here, would the click reach us? Step up
+  //  until the answer is yes.
+  //
+  //  Probing also sidesteps a trap that geometry walks straight into.
+  //  raptive-sales is a FULL VIEWPORT fixed div with pointer-events auto and a
+  //  z-index above ours, so a rectangle check calls every point on the page
+  //  obstructed and the pill climbs to the ceiling. It does not intercept in
+  //  practice, because z-index only orders siblings within a stacking context
+  //  and that number is not comparable to ours. elementFromPoint knows this and
+  //  arithmetic does not.
+  //
+  //  Never fight for z-index here. We sit BELOW the ad close button on purpose:
+  //  covering the control somebody needs to dismiss an ad would be a worse bug
+  //  than the one this fixes.
+  var BASE_BOTTOM = 18, STEP = 22, MAX_STEPS = 12;
+
+  function placeWidget(host, btn, panel) {
+    if (!btn) return;
+    var ceiling = Math.max(120, Math.round(window.innerHeight * 0.55));
+    var bottom = BASE_BOTTOM;
+    for (var i = 0; i < MAX_STEPS; i += 1) {
+      var candidate = BASE_BOTTOM + i * STEP;
+      if (candidate > ceiling) break;
+      btn.style.setProperty('bottom', candidate + 'px', 'important');
+      var r = btn.getBoundingClientRect();
+      if (!r.width || !r.height) return;   /* hidden: nothing to place */
+      var hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      bottom = candidate;
+      if (hit === host || (hit && host.contains(hit))) break;
+    }
+    btn.style.setProperty('bottom', bottom + 'px', 'important');
+    if (panel) {
+      var h = btn.getBoundingClientRect().height || 38;
+      panel.style.setProperty('bottom', (bottom + h + 12) + 'px', 'important');
+    }
+  }
 
   function boot() {
     if (onAssessmentPage()) return;
@@ -240,6 +294,7 @@
       close();
       panel = el('div', { class: 'panel', role: 'dialog', 'aria-label': 'Help and reporting' });
       root.appendChild(panel);
+      placeWidget(host, btn, panel);
       render();
     }
 
@@ -457,6 +512,19 @@
       if (panel) return close();
       loadContext(function () { open(menu); });
     };
+
+    //  Place it now, and again as the ad stack fills in. The footer banner and
+    //  the sticky player arrive well after load, so a single pass at boot would
+    //  measure an empty corner and park the pill straight back underneath them.
+    //  Three delayed passes rather than a standing observer or a timer: the ads
+    //  settle within a few seconds, and a widget that re-measures forever on a
+    //  1 vCPU box is the kind of thing that turns into a bill.
+    function replace() { try { placeWidget(host, btn, panel); } catch (e) { /* never break the page */ } }
+    replace();
+    setTimeout(replace, 1200);
+    setTimeout(replace, 4000);
+    setTimeout(replace, 9000);
+    addEventListener('resize', replace);
   }
 
   try {

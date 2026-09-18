@@ -157,6 +157,23 @@ for (const [p, title, course, unit, lesson, type] of FIXTURES) {
         _decls: decls,
       },
       setAttribute(k, v) { this._attrs[k] = v; if (k === 'id') this.id = v; },
+      //  A rect computed from the element's OWN inline style, so placeWidget's
+      //  loop actually moves something and the test can watch where it lands.
+      //  Without this getBoundingClientRect is undefined, placeWidget throws,
+      //  the try/catch around it swallows the error, and every placement
+      //  assertion silently tests nothing.
+      getBoundingClientRect() {
+        const px = (k, d) => {
+          const v = decls[k] && decls[k].value;
+          const n = v ? Number(String(v).replace('px', '')) : NaN;
+          return Number.isFinite(n) ? n : d;
+        };
+        const w = 117, h = 41;
+        const bottom = px('bottom', 18);
+        const left = px('left', 18);
+        const top = SHIM_VIEWPORT.h - bottom - h;
+        return { left, top, width: w, height: h, right: left + w, bottom: top + h };
+      },
       appendChild(c) {
         //  Snapshot the armour AT APPEND TIME. Without this the order assertion
         //  below is hollow: moving the setProperty calls after appendChild leaves
@@ -166,23 +183,126 @@ for (const [p, title, course, unit, lesson, type] of FIXTURES) {
       },
       attachShadow() { this.shadowRoot = shimEl('#shadow'); return this.shadowRoot; },
       remove() { this._removed = true; },
+      //  placeWidget falls back to host.contains(hit). Without this the first
+      //  probe threw, the try/catch swallowed it, and the pill silently stayed
+      //  put: the exact shape of failure the live bug had.
+      contains(n) {
+        if (n === this) return true;
+        return this.children.some((c) => c && typeof c.contains === 'function' && c.contains(n));
+      },
       querySelector() { return null; },
       set textContent(v) { this._text = v; }, get textContent() { return this._text; },
     };
   }
-  function bootInShim(pathname) {
+  const SHIM_VIEWPORT = { w: 1365, h: 911 };
+
+  //  obstruction: how many pixels of the bottom of the viewport an ad covers.
+  //  elementFromPoint reports a foreign element there, exactly as the live
+  //  AdThrive footer banner does, so placeWidget has to climb out of it.
+  function bootInShim(pathname, obstruction) {
+    const body = shimEl('body');
+    const cover = Number(obstruction) || 0;
+    const doc = {
+      readyState: 'interactive', body,
+      createElement: shimEl,
+      getElementById: (id) => body.children.find((c) => c.id === id) || null,
+      addEventListener() {},
+      elementFromPoint(x, y) {
+        if (y > SHIM_VIEWPORT.h - cover) return { tagName: 'DIV', _ad: true };
+        return doc.__host || null;
+      },
+    };
+    const win = { APCS_ERRORS: [], addEventListener() {}, removeEventListener() {} };
+    win.innerHeight = SHIM_VIEWPORT.h;
+    win.innerWidth = SHIM_VIEWPORT.w;
+    //  boot() appends the host, then places it. The shim has to be able to
+    //  answer elementFromPoint with that host, so it is published as the
+    //  appendChild happens rather than after the script has finished.
+    const realAppend = body.appendChild.bind(body);
+    body.appendChild = (c) => { if (c && c.id === 'apcs-assistant-root') doc.__host = c; return realAppend(c); };
+    const fn = new Function('window', 'document', 'location', 'fetch', 'localStorage', 'setTimeout', 'addEventListener', widget);
+    fn(win, doc, { pathname }, () => {}, {}, () => 0, () => {});
+    const host = body.children.find((c) => c.id === 'apcs-assistant-root') || null;
+    const btn = host && host.shadowRoot
+      && host.shadowRoot.children.find((c) => c._attrs && c._attrs.class === 'btn');
+    return { body, host, btn };
+  }
+
+  // ---------------------------------------------------------------------------
+  //  PLACEMENT, and the ad stack that forced it.
+  //
+  //  Measured live 2026-09-18: AdThrive's footer banner is FULL WIDTH and 100px
+  //  tall, and the ad's own close button sits in the bottom-right corner at the
+  //  maximum z-index. The pill was in the middle of both.
+  //
+  //  The lift is probed rather than hardcoded, so the test drives a fake
+  //  elementFromPoint that pretends the bottom 100px is covered and requires the
+  //  pill to climb out of it. A test asserting "bottom is 120px" would pass on a
+  //  hardcoded constant, which is the thing this design exists to avoid.
+  // ---------------------------------------------------------------------------
+  function placeWith(obstructionHeight, viewportH) {
     const body = shimEl('body');
     const doc = {
       readyState: 'interactive', body,
       createElement: shimEl,
       getElementById: (id) => body.children.find((c) => c.id === id) || null,
       addEventListener() {},
+      elementFromPoint(x, y) {
+        // Anything inside the bottom strip is covered by the banner.
+        if (y > viewportH - obstructionHeight) return { tag: 'AD' };
+        return doc.__host;
+      },
     };
-    const win = { APCS_ERRORS: [], addEventListener() {}, removeEventListener() {} };
-    const fn = new Function('window', 'document', 'location', 'fetch', 'localStorage', widget);
-    fn(win, doc, { pathname }, () => {}, {});
-    return { body, host: body.children.find((c) => c.id === 'apcs-assistant-root') || null };
+    const win = { APCS_ERRORS: [], addEventListener() {}, removeEventListener() {},
+                  innerHeight: viewportH, innerWidth: 1365 };
+    const timers = [];
+    const fn = new Function('window', 'document', 'location', 'fetch', 'localStorage',
+      'setTimeout', 'addEventListener', 'innerHeight', widget);
+    fn(win, doc, { pathname: '/pages/ap-csa-lesson-2-7-while-loops' }, () => {}, {},
+       (f) => { timers.push(f); }, () => {}, viewportH);
+    const host = body.children.find((c) => c.id === 'apcs-assistant-root');
+    doc.__host = host;
+    const btn = host && host.shadowRoot && host.shadowRoot.children.find((c) => c._attrs && c._attrs.class === 'btn');
+    return { host, btn, bottom: btn && Number(String(btn.style.getPropertyValue('bottom') || '').replace('px', '')) };
   }
+
+  ok('the pill anchors LEFT, away from the ad close button and sticky player',
+    /\.btn\{position:fixed;left:18px;/.test(widget));
+  ok('and so does the panel, so the two do not split across the screen',
+    /\.panel\{position:fixed;left:18px;/.test(widget));
+  ok('neither is anchored right any more',
+    !/\.(btn|panel)\{position:fixed;right:/.test(widget));
+  //  THE BEHAVIOURAL PAIR. A hardcoded lift passes the obstructed case and
+  //  fails the clear one, which is exactly what a source grep could not tell:
+  //  the first cut of this assertion searched the file for "elementFromPoint"
+  //  and matched the COMMENT explaining why we probe, so replacing the probe
+  //  with "bottom = 120" left it green.
+  const clear = bootInShim('/pages/ap-csa-lesson-2-7-while-loops', 0);
+  ok('with nothing in the way the pill sits at the base offset',
+    clear.btn && clear.btn.style.getPropertyValue('bottom') === '18px',
+    clear.btn && clear.btn.style.getPropertyValue('bottom'));
+
+  const blocked = bootInShim('/pages/ap-csa-lesson-2-7-while-loops', 100);
+  const br = blocked.btn && blocked.btn.getBoundingClientRect();
+  ok('a 100px ad banner pushes it up out of the way',
+    !!br && (br.top + br.height / 2) <= SHIM_VIEWPORT.h - 100,
+    br && { bottom: blocked.btn.style.getPropertyValue('bottom'), centreY: br.top + br.height / 2 });
+  ok('and it lifts only as far as it needs to, rather than to the ceiling',
+    !!br && Number(String(blocked.btn.style.getPropertyValue('bottom')).replace('px', '')) < 200,
+    blocked.btn && blocked.btn.style.getPropertyValue('bottom'));
+  ok('it never climbs above the middle of the screen',
+    /Math\.max\(120, Math\.round\(window\.innerHeight \* 0\.55\)\)/.test(widget));
+  ok('it re-places after load, because ad slots fill late',
+    (widget.match(/setTimeout\(replace/g) || []).length >= 3);
+  ok('and on resize, because a phone banner is a different height',
+    /addEventListener\('resize', replace\)/.test(widget));
+  //  Checks the DECLARATIONS, not the file. The first cut of this grepped the
+  //  whole source for 2147483647 and went red on the comment that records the ad
+  //  close button's own z-index, which is documentation rather than a rule.
+  const zs = (widget.match(/z-index:\s*(\d+)/g) || []).map((m) => Number(m.replace(/\D/g, '')));
+  ok('the widget declares a z-index at all', zs.length > 0, zs);
+  ok('and never outranks the ad close button, which somebody needs to click',
+    Math.max.apply(null, zs) <= 2147483000, zs);
 
   const shimmed = bootInShim('/pages/ap-csa-lesson-2-7-while-loops');
   ok('boot() mounts a host on an ordinary page', !!shimmed.host);
