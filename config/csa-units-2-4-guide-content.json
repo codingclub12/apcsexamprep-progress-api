@@ -1,0 +1,953 @@
+{
+ "_provenance": {
+  "source": "APCSExamPrep-theme teacher-bundle/specs/unit-{2,3,4}/<topic>.json",
+  "generator": "scripts/export-csa-units-2-4-guide-content.js",
+  "fields": "handle, title, objectives (CED code and wording), iCan, the online block as lesson_page, independent.text",
+  "join": "the lesson page handle, never the topic number. See the header of the generator for the six Unit 4 specs this excludes and the live 301s that prove them retired.",
+  "excluded": {
+   "4.6": {
+    "spec": "ap-csa-lesson-4-6-arrays-as-parameters-and-return-values",
+    "redirects_to": "ap-csa-lesson-4-6-using-text-files",
+    "live_handle": "ap-csa-lesson-4-6-using-text-files"
+   },
+   "4.7": {
+    "spec": "ap-csa-lesson-4-7-arraylist-introduction",
+    "redirects_to": "ap-csa-lesson-4-7-wrapper-classes",
+    "live_handle": "ap-csa-lesson-4-7-wrapper-classes"
+   },
+   "4.13": {
+    "spec": "ap-csa-lesson-4-13-searching-and-sorting",
+    "redirects_to": "ap-csa-lesson-4-14-searching-algorithms",
+    "live_handle": "ap-csa-lesson-4-13-implementing-2d-array-algorithms"
+   },
+   "4.14": {
+    "spec": "ap-csa-lesson-4-14-reading-data-from-files",
+    "redirects_to": "ap-csa-lesson-4-14-searching-algorithms",
+    "live_handle": "ap-csa-lesson-4-14-searching-algorithms"
+   },
+   "4.15": {
+    "spec": "ap-csa-lesson-4-15-using-data-sets-with-arrays-and-arraylists",
+    "redirects_to": "ap-csa-lesson-4-15-sorting-algorithms",
+    "live_handle": "ap-csa-lesson-4-15-sorting-algorithms"
+   },
+   "4.17": {
+    "spec": "ap-csa-lesson-4-17-informal-code-analysis",
+    "redirects_to": "ap-csa-lesson-4-17-recursive-searching-and-sorting",
+    "live_handle": "ap-csa-lesson-4-17-recursive-searching-and-sorting"
+   }
+  },
+  "live_handle_override": {
+   "3.6": "ap-csa-lesson-3-6-methods-passing-returning-object-references"
+  },
+  "changed_on_import": "the phrase \"out loud\" removed where the theme voice pass left it",
+  "captured": "2026-09-17"
+ },
+ "2.1": {
+  "handle": "ap-csa-lesson-2-1-algorithms-selection-repetition",
+  "title": "Algorithms with Selection and Repetition",
+  "objectives": [
+   {
+    "code": "2.1.A",
+    "text": "Describe the behavior of a given segment that uses sequencing, selection, and iteration."
+   }
+  ],
+  "iCan": [
+   "I can name the three building blocks of an algorithm and point to each one in a segment of code.",
+   "I can read a flowchart and say which building block each shape represents.",
+   "I can explain why the order of steps changes the result, using an example where swapping two steps changes the output."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.1 lesson page has the building-block identification exercise, the six checks for understanding, and the flowchart game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.1 code exercise: given a short segment, label each line as sequencing, selection, or iteration, and check the expected output.",
+    "Complete the six checks for understanding. For each flowchart item, trace the arrows with a finger before choosing.",
+    "Play the flowchart game for the six rounds it scores. Any round that gets the diamond wrong should be retraced by following the arrows.",
+    "Work the FRQ item: describe in prose what a given segment does, without using the words if or while."
+   ]
+  },
+  "independent": "Offline labeling and flowchart drill. Everything below runs on paper."
+ },
+ "2.10": {
+  "handle": "ap-csa-lesson-2-10-implementing-string-algorithms",
+  "title": "Implementing String Algorithms",
+  "objectives": [
+   {
+    "code": "2.10.A",
+    "text": "Implement standard algorithms that traverse and build Strings, using the String methods in the AP Java subset."
+   }
+  ],
+  "iCan": [
+   "I can write a loop that visits every character of a String using length and substring.",
+   "I can count the characters or substrings that meet a criterion, and stop the loop at the right index.",
+   "I can build a new String from parts, including reversing one, without going out of bounds."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.10 lesson page has the code exercise, the six checks for understanding, and the String traversal game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.10 code exercise: count how many times a given letter appears in a word, and confirm the answer for two different words.",
+    "Break it on purpose: change the loop condition to i <= s.length(), run it, and read the exception name and the index it reports.",
+    "Complete the six checks for understanding. For each substring item, write the length of the result as the second argument minus the first.",
+    "Play the String traversal game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline String drill. Everything below runs on paper."
+ },
+ "2.11": {
+  "handle": "ap-csa-lesson-2-11-nested-iteration",
+  "title": "Nested Iteration",
+  "objectives": [
+   {
+    "code": "2.11.A",
+    "text": "Determine the result or side effect of nested iteration statements, including the total number of executions."
+   }
+  ],
+  "iCan": [
+   "I can trace a nested loop and say how many times the inner body runs in total.",
+   "I can explain why the inner loop completes fully on every single pass of the outer loop.",
+   "I can compute the total executions when the inner bound depends on the outer control variable."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.11 lesson page has the code exercise, the six checks for understanding, and the nested loop game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.11 code exercise: print a rectangle of characters with a nested loop, then change one bound and confirm the count changes as predicted.",
+    "Break it on purpose: move the inner loop's initialization above the outer loop, run it, and say how many times the inner body runs in total.",
+    "Complete the six checks for understanding. For each item, write the outer count times the inner count, or the table, before choosing.",
+    "Play the nested loop game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline nesting drill. Everything below runs on paper."
+ },
+ "2.12": {
+  "handle": "ap-csa-lesson-2-12-informal-run-time-analysis",
+  "title": "Informal Run-Time Analysis",
+  "objectives": [
+   {
+    "code": "2.12.A",
+    "text": "Compute statement execution counts for code segments containing iteration, and compare the efficiency of algorithms informally."
+   }
+  ],
+  "iCan": [
+   "I can count exactly how many times a given statement executes in a segment with one or more loops.",
+   "I can say how the execution count grows when the input size doubles, for a single loop and for a nested pair.",
+   "I can compare two algorithms that produce the same result and say which does less work, with a count rather than an opinion."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.12 lesson page has the code exercise, the six checks for understanding, and the counting game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.12 code exercise: add a counter that increments on every pass of a nested loop, print it, and check it against the count you predicted.",
+    "Break it on purpose: move the inner loop so the two loops become sequential rather than nested, run it again, and compare the two counters.",
+    "Complete the six checks for understanding. For each item, write the count beside every line before choosing an answer.",
+    "Play the counting game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline counting drill. Everything below runs on paper."
+ },
+ "2.2": {
+  "handle": "ap-csa-lesson-2-2-boolean-expressions",
+  "title": "Boolean Expressions",
+  "objectives": [
+   {
+    "code": "2.2.A",
+    "text": "Evaluate Boolean expressions that use relational operators."
+   }
+  ],
+  "iCan": [
+   "I can evaluate any of the six relational operators on two numbers and give the boolean result.",
+   "I can explain why == compares references rather than contents when both operands are objects.",
+   "I can store a relational result in a boolean variable and use that variable directly as a condition."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.2 lesson page has the code exercise, the six checks for understanding, and the operator game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.2 code exercise: print the result of all six relational operators on a pair of values you choose, and predict each result before running.",
+    "Break it on purpose: change one == to a single =, run it, and read the compiler message.",
+    "Complete the six checks for understanding. For any item using <= or >=, say the operator before answering.",
+    "Play the operator game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline evaluation drill and bug hunt. Everything below runs on paper."
+ },
+ "2.3": {
+  "handle": "ap-csa-lesson-2-3-if-statements",
+  "title": "if Statements",
+  "objectives": [
+   {
+    "code": "2.3.A",
+    "text": "Determine the result of conditional statements, including one-way and two-way selection."
+   }
+  ],
+  "iCan": [
+   "I can trace an if statement and say whether the body runs, for any value of the condition.",
+   "I can explain the difference between two separate if statements and one if-else, and show an input where they behave differently.",
+   "I can find the four classic if-statement bugs in code: missing braces, a stray semicolon, = instead of ==, and a dangling else."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.3 lesson page has the code exercise, the six checks for understanding, and the trace game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.3 code exercise: write an if statement that prints 'Pass' only when a score of 60 or more is stored in the variable, and confirm the expected output for both a passing and a failing value.",
+    "Break it on purpose: put a semicolon straight after the condition, run it again, and read what changed about the output.",
+    "Complete the six checks for understanding. For every item that hinges on braces, underline the statement the if actually controls before choosing an answer.",
+    "Play the trace game for the six rounds it scores. Students who finish early trace a partner's wrong answer back to the line that caused it."
+   ]
+  },
+  "independent": "Offline bug hunt and trace drill. Everything below runs on paper."
+ },
+ "2.4": {
+  "handle": "ap-csa-lesson-2-4-nested-if-statements",
+  "title": "Nested if Statements",
+  "objectives": [
+   {
+    "code": "2.4.A",
+    "text": "Determine the result of nested conditional statements and multiway selection."
+   }
+  ],
+  "iCan": [
+   "I can trace a nested if and name which conditions were evaluated and which were skipped entirely.",
+   "I can write an if-else-if chain that assigns exactly one category to every possible input.",
+   "I can explain why reordering the branches of an if-else-if chain can change the result even when every condition is correct."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.4 lesson page has the code exercise, the six checks for understanding, and the nested-if trace game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.4 code exercise: build the two-gate ride check as a nested if and confirm the output for all four combinations of pass and fail.",
+    "Break it on purpose: remove the braces from the outer if and add a statement after the inner block, then run it and explain which if now owns that statement.",
+    "Complete the six checks for understanding. For each item, write down how many conditions were evaluated before choosing an answer.",
+    "Play the nested-if trace game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline chain analysis. Everything below runs on paper."
+ },
+ "2.5": {
+  "handle": "ap-csa-lesson-2-5-compound-boolean-expressions",
+  "title": "Compound Boolean Expressions",
+  "objectives": [
+   {
+    "code": "2.5.A",
+    "text": "Evaluate compound Boolean expressions that use logical operators, including short-circuit evaluation."
+   }
+  ],
+  "iCan": [
+   "I can evaluate an expression using &&, ||, and ! and give the boolean result for any combination of operands.",
+   "I can say which operand of a compound expression is not evaluated, and why, in a short-circuit case.",
+   "I can apply the precedence order ! then && then || to an expression with no parentheses."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.5 lesson page has the code exercise, the six checks for understanding, and the truth-table game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.5 code exercise: write a range check with && and confirm it accepts values inside the range and rejects values on both sides of it.",
+    "Break it on purpose: swap the two operands of a && whose left side is a guard, feed it the value the guard was protecting against, and read what happens.",
+    "Complete the six checks for understanding. For each item, write the number of operands actually evaluated before choosing an answer.",
+    "Play the truth-table game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline evaluation and precedence drill. Everything below runs on paper."
+ },
+ "2.6": {
+  "handle": "ap-csa-lesson-2-6-comparing-boolean-expressions",
+  "title": "Comparing Boolean Expressions",
+  "objectives": [
+   {
+    "code": "2.6.A",
+    "text": "Determine whether two Boolean expressions are equivalent, including by applying De Morgan's law."
+   },
+   {
+    "code": "2.6.B",
+    "text": "Compare object references using == and equals."
+   }
+  ],
+  "iCan": [
+   "I can build a truth table for two expressions and use it to decide whether they are equivalent.",
+   "I can apply De Morgan's law to rewrite a negated compound condition without the outer ! operator.",
+   "I can say what == compares on object references and when equals gives a different answer."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.6 lesson page has the code exercise, the six checks for understanding, and the equivalence game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.6 code exercise: print an expression and its De Morgan rewrite for all four combinations of two booleans and confirm the outputs match line for line.",
+    "Break it on purpose: drop the operator flip so the rewrite reads !a && !b, run it again, and name the combination where the outputs diverge.",
+    "Complete the six checks for understanding. For any equivalence item, sketch the four-row table in the margin before answering.",
+    "Play the equivalence game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline equivalence and reference drill. Everything below runs on paper."
+ },
+ "2.7": {
+  "handle": "ap-csa-lesson-2-7-while-loops",
+  "title": "while Loops",
+  "objectives": [
+   {
+    "code": "2.7.A",
+    "text": "Determine the result or side effect of iteration statements, including loops that execute zero times and loops that do not terminate."
+   },
+   {
+    "code": "2.7.B",
+    "text": "Represent iterative processes using a while loop."
+   }
+  ],
+  "iCan": [
+   "I can trace a while loop and state how many times the body executes, including when the answer is zero.",
+   "I can name the three parts every loop needs and point to each one in a segment.",
+   "I can find the reason a loop never terminates and fix it by changing exactly one line."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.7 lesson page has the code exercise, the six checks for understanding, and the loop trace game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.7 code exercise: write a while loop that sums the whole numbers from 1 to a given limit, and confirm the total for two different limits.",
+    "Break it on purpose: set the starting value past the limit, run it, and confirm the body executes zero times and the total stays at its initial value.",
+    "Complete the six checks for understanding. For each item, write the number of passes in the margin before choosing an answer.",
+    "Play the loop trace game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline trace and bug hunt. Everything below runs on paper."
+ },
+ "2.8": {
+  "handle": "ap-csa-lesson-2-8-for-loops",
+  "title": "for Loops",
+  "objectives": [
+   {
+    "code": "2.8.A",
+    "text": "Represent iterative processes using a for loop, including converting between equivalent for and while loops."
+   }
+  ],
+  "iCan": [
+   "I can name the three parts of a for loop header and say exactly when each one executes.",
+   "I can convert any for loop into an equivalent while loop and back again.",
+   "I can state how many times a for loop body runs from its header alone, without tracing every pass."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.8 lesson page has the code exercise, the six checks for understanding, and the loop conversion game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.8 code exercise: write a for loop that prints the first n whole numbers, and confirm the count for two different values of n.",
+    "Break it on purpose: change the condition from < to <=, run it again, and name the extra value that appears.",
+    "Complete the six checks for understanding. For each item, write the pass count from the header before tracing anything.",
+    "Play the loop conversion game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline conversion and counting drill. Everything below runs on paper."
+ },
+ "2.9": {
+  "handle": "ap-csa-lesson-2-9-implementing-selection-iteration-algorithms",
+  "title": "Implementing Selection and Iteration Algorithms",
+  "objectives": [
+   {
+    "code": "2.9.A",
+    "text": "Implement standard algorithms that use selection and iteration, including divisibility, digit extraction, counting, and finding minimum and maximum values."
+   }
+  ],
+  "iCan": [
+   "I can use the modulus operator to test divisibility and to pull individual digits out of a number.",
+   "I can write the accumulator pattern for a sum, a count, and an average, and say what each variable starts at.",
+   "I can write a minimum or maximum loop that is correct even when every value is negative."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 2.9 lesson page has the code exercise, the six checks for understanding, and the algorithm game. Everything on that page is auto-graded and lands in your gradebook as students submit.",
+   "activities": [
+    "Run the 2.9 code exercise: write the digit-sum loop and confirm it for a three-digit and a one-digit input.",
+    "Break it on purpose: swap the two lines so the division happens before the remainder, run it, and say which digit gets lost.",
+    "Complete the six checks for understanding. For each divisibility item, write the modulus expression in the margin before choosing.",
+    "Play the algorithm game for the six rounds it scores."
+   ]
+  },
+  "independent": "Offline algorithm drill. Everything below runs on paper."
+ },
+ "3.1": {
+  "handle": "ap-csa-lesson-3-1-abstraction-and-program-design",
+  "title": "Abstraction and Program Design",
+  "objectives": [
+   {
+    "code": "3.1.A",
+    "text": "Use data abstraction to represent what an object knows, choosing between an attribute each object owns and one the whole class shares."
+   },
+   {
+    "code": "3.1.B",
+    "text": "Use procedural abstraction to represent what an object does, naming a process and decomposing it into methods each responsible for one job."
+   }
+  ],
+  "iCan": [
+   "I can read a specification and decide which nouns become attributes and which verbs become behaviors.",
+   "I can decide whether an attribute belongs to each object or to the whole class, and justify the choice.",
+   "I can replace a repeated condition with a named helper method and explain what the name buys the reader."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.1 lesson page has the six checks for understanding, the design decision rounds, and the editor problems.",
+   "activities": [
+    "Work the six checks for understanding. Each one is a design decision, not a syntax question.",
+    "Editor problems 1 and 2 are trace problems: read the class and the client code and predict the printed values before running anything.",
+    "Editor problem 3 asks for one counter for the whole class. Decide which of the two variables gets static before typing.",
+    "Editor problem 5 is the every-ticket-says-1 bug. Find it by asking how many copies of the counter exist.",
+    "Editor problem 7 gives a finished class missing its three attributes. Place each one at the right level and say why."
+   ]
+  },
+  "independent": "Design review on paper. Nothing below needs a computer."
+ },
+ "3.2": {
+  "handle": "ap-csa-lesson-3-2-impact-of-program-design",
+  "title": "Impact of Program Design",
+  "objectives": [
+   {
+    "code": "3.2.A",
+    "text": "State the preconditions a method assumes and the postconditions it guarantees, and explain that a precondition is documented rather than enforced."
+   },
+   {
+    "code": "3.2.B",
+    "text": "Describe how a design decision inside a class affects the people the program is used on, including who is excluded by the values a class can hold."
+   }
+  ],
+  "iCan": [
+   "I can write the precondition and postcondition for a method and say which one the caller is responsible for.",
+   "I can explain why a documented precondition does not stop a caller from breaking it, and what the method does when they do.",
+   "I can name a design decision in a small class that would exclude or misrepresent a real person, and propose a change."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.2 lesson page has the checks and practice questions.",
+   "activities": [
+    "Work the checks for understanding. Each asks you to sort a sentence into precondition or postcondition.",
+    "Two items give a method with a broken precondition and ask what the object's state is afterwards. Trace it; do not guess that an error occurs.",
+    "One item asks you to rewrite a documented precondition as a defensive check and state the new postcondition.",
+    "Finish the mastery set. Predict your answer before reading the options."
+   ]
+  },
+  "independent": "On paper. Nothing below needs a computer."
+ },
+ "3.3": {
+  "handle": "ap-csa-lesson-3-3-anatomy-of-a-class",
+  "title": "Anatomy of a Class",
+  "objectives": [
+   {
+    "code": "3.3.A",
+    "text": "Identify the parts of a class declaration in order, and state the effect of declaring each part public or private."
+   },
+   {
+    "code": "3.3.B",
+    "text": "Explain that private draws its wall around the class rather than around each object, and that every object of the class carries its own copy of each instance variable."
+   }
+  ],
+  "iCan": [
+   "I can name the four parts of a class in the order they are written and point to each one in a listing.",
+   "I can say what public and private each mean, and predict which lines of client code will fail to compile.",
+   "I can explain why one object of a class may reach another object's private variable."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.3 lesson page has the checks, the editor problems, and the encapsulation rounds.",
+   "activities": [
+    "Work the six checks for understanding. Several ask which client lines compile, so read the access modifier before the variable name.",
+    "The first editor problem is a trace over a class with a private helper. Predict the printed value before running it.",
+    "One editor problem asks you to write a method comparing two objects of the same class. Reach the other object's field directly rather than adding an accessor.",
+    "One editor problem gives a class whose setter accepts anything. Replace it with a mutator that enforces one rule and reports whether it acted.",
+    "Finish the multiple choice set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline reading and repair. Everything below runs on paper."
+ },
+ "3.4": {
+  "handle": "ap-csa-lesson-3-4-constructors",
+  "title": "Constructors",
+  "objectives": [
+   {
+    "code": "3.4.A",
+    "text": "Write a constructor that puts every attribute into a valid starting state, and identify a constructor by its name and its absent return type."
+   },
+   {
+    "code": "3.4.B",
+    "text": "Overload constructors so one class offers several ways to be created, and state the default value Java gives an attribute a constructor does not set."
+   }
+  ],
+  "iCan": [
+   "I can write a constructor that leaves no attribute meaningless, and say why that is the constructor's job rather than a caller's.",
+   "I can write two constructors for one class and say which one a given new expression calls.",
+   "I can state the default value of an int, a double, a boolean, and an object reference that a constructor never assigns."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.4 lesson page has the checks and editor problems.",
+   "activities": [
+    "Work the six checks for understanding. Several give a class and ask which new expressions compile.",
+    "The first editor problems are traces over classes with two or three constructors. Decide which constructor runs before predicting any value.",
+    "One editor problem gives a class whose constructor leaves one attribute unset. Say what that attribute's value is, then set it deliberately.",
+    "One editor problem has a class that will not compile because two constructors share a signature. Fix it without deleting either behavior.",
+    "Finish the multiple choice set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "3.5": {
+  "handle": "ap-csa-lesson-3-5-methods-how-to-write-them",
+  "title": "Methods: How to Write Them",
+  "objectives": [
+   {
+    "code": "3.5.A",
+    "text": "Write void and return methods with correct headers, and ensure every path through a non-void method returns a value."
+   },
+   {
+    "code": "3.5.B",
+    "text": "Explain pass by value for primitive parameters, and distinguish a local variable from an instance variable of the same name."
+   }
+  ],
+  "iCan": [
+   "I can write a method header and say from it alone what the method gives back and what it needs.",
+   "I can find the path through a non-void method that returns nothing and name the compile error it causes.",
+   "I can explain why changing a primitive parameter inside a method leaves the caller's variable untouched."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.5 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. Several show a method and ask whether it compiles; find the unreturned path before choosing.",
+    "The Output Predictor items give a method and a call. Predict the printed value before revealing anything.",
+    "The Bug Hunt items each contain one method with a missing return or a void used as a value. Name which, then give the fix.",
+    "One item asks you to turn a void setter into a boolean mutator. State the postcondition for both outcomes.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "3.6": {
+  "handle": "ap-csa-lesson-3-6-methods-passing-returning-object-references",
+  "title": "Methods: Passing and Returning Object References",
+  "objectives": [
+   {
+    "code": "3.6.A",
+    "text": "Explain that passing an object copies the reference, so a method can change the object the caller is holding, and predict the result of aliasing."
+   },
+   {
+    "code": "3.6.B",
+    "text": "Return an object reference from a method, and use same-class private access to reach another object's attributes directly."
+   }
+  ],
+  "iCan": [
+   "I can say what is copied when an object is passed to a method, and what that lets the method do to the caller's object.",
+   "I can predict the output when two variables refer to one object and a change is made through either name.",
+   "I can write a method that takes another object of the same class and reads its private attributes without an accessor."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.6 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. Count the new expressions in each item before tracing anything.",
+    "The aliasing items give two variables and one or two new expressions. Decide how many objects exist, then predict both printed values.",
+    "One item has a method that reassigns its parameter. Predict the caller's value before choosing an answer.",
+    "One item asks whether a line reaching other.field compiles. Check which class the line is written in.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline tracing and design. Everything below runs on paper."
+ },
+ "3.7": {
+  "handle": "ap-csa-lesson-3-7-class-variables-and-methods",
+  "title": "Class Variables and Methods",
+  "objectives": [
+   {
+    "code": "3.7.A",
+    "text": "Declare and use a class variable, and explain that one copy exists for the class while an instance variable has one copy per object."
+   },
+   {
+    "code": "3.7.B",
+    "text": "Write and call a static method, and state which members a static method may and may not reach."
+   }
+  ],
+  "iCan": [
+   "I can decide whether a value belongs to each object or to the whole class, and declare it accordingly.",
+   "I can call a static method on the class rather than on an object, and say why that is the correct form.",
+   "I can explain why a static method cannot read an instance variable, and name the compile error it produces."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.7 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. Each asks whether a value belongs to the object or the class before any syntax is involved.",
+    "The counter items give a class and three new expressions. Decide whether the counter is static before predicting the printed values.",
+    "One item removes static from a working counter and asks for the new output. Trace it rather than guessing at an error.",
+    "One item asks which of four members a static method may reach. Check each one for static.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "3.8": {
+  "handle": "ap-csa-lesson-3-8-scope-and-access",
+  "title": "Scope and Access",
+  "objectives": [
+   {
+    "code": "3.8.A",
+    "text": "Determine the scope of a variable from where it is declared, and identify where a name is and is not visible."
+   },
+   {
+    "code": "3.8.B",
+    "text": "Explain shadowing, and predict the behavior of code where a local variable shares a name with an instance variable."
+   }
+  ],
+  "iCan": [
+   "I can name the scope of any variable from its declaration alone, and say where it stops being visible.",
+   "I can find the line where a variable goes out of scope and name the compile error a later use produces.",
+   "I can spot a local variable shadowing an attribute and explain why the code compiles and does nothing."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.8 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. Each gives a declaration and asks for the last line where the name is visible.",
+    "Several items ask whether a line compiles. Find the closing brace that ended the variable's scope before answering.",
+    "One item has an accumulator declared inside a loop. Name both problems that causes, not just the compile error.",
+    "One item shadows an attribute with a local. Predict what the accessor reports afterwards.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "3.9": {
+  "handle": "ap-csa-lesson-3-9-this-keyword",
+  "title": "The this Keyword",
+  "objectives": [
+   {
+    "code": "3.9.A",
+    "text": "Use this to refer to the object a method or constructor was called on, and to reach an attribute that a parameter of the same name is shadowing."
+   },
+   {
+    "code": "3.9.B",
+    "text": "Pass the current object to another method with this, and distinguish this from a class name and from a newly created object."
+   }
+  ],
+  "iCan": [
+   "I can use this to assign a parameter to the attribute it shadows, and explain why the assignment fails without it.",
+   "I can pass the current object to another method using this and say what the receiving method can then do.",
+   "I can say what this is not: it is not the class, it is not static, and it is not a new object."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 3.9 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. Each gives a constructor and asks what the attributes hold afterwards.",
+    "Several items ask whether this is needed on a given line. Decide whether anything shadows the name first.",
+    "One item puts a this(...) call second in a constructor body. Decide whether it compiles.",
+    "One item uses this inside a static method. Name the reason it fails.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.1": {
+  "handle": "ap-csa-lesson-4-1-ethical-social-issues-data-collection",
+  "title": "Ethical and Social Issues Around Data Collection",
+  "objectives": [
+   {
+    "code": "4.1.A",
+    "text": "Explain the privacy risks created by storing personal data, and identify what counts as personally identifiable information."
+   },
+   {
+    "code": "4.1.B",
+    "text": "Explain how bias and poor data quality in a data set affect the conclusions a program draws from it."
+   }
+  ],
+  "iCan": [
+   "I can decide whether a field is personally identifiable information and say what the risk is of storing it.",
+   "I can name the kind of bias in a described data set and say which conclusion it would distort.",
+   "I can change a class so it answers the same question while storing less about a person."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.1 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. Each gives a field or a combination and asks whether it is PII.",
+    "Several items describe a collection method and ask which bias it produces. Name who is missing before choosing.",
+    "One item gives a data set with missing values and asks what a correct average would report. Decide what to do with the blank rows.",
+    "One item asks you to reduce a class to the fields its question needs. Say which question each removed field was serving.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "On paper. Nothing below needs a computer."
+ },
+ "4.10": {
+  "handle": "ap-csa-lesson-4-10-algorithms-with-arraylists",
+  "title": "Algorithms with ArrayLists",
+  "objectives": [
+   {
+    "code": "4.10.A",
+    "text": "Implement the standard algorithms over an ArrayList: minimum and maximum, sum and average, linear search, and frequency count."
+   },
+   {
+    "code": "4.10.B",
+    "text": "Build a filtered ArrayList in one pass, and apply the algorithms to a list of objects."
+   }
+  ],
+  "iCan": [
+   "I can write any of the standard algorithms over a list by changing only how the value is fetched.",
+   "I can build a filtered list in one pass and say why the array version needed two.",
+   "I can write the FRQ 3 shape: search a list of objects and return the object."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.10 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. Each gives an array algorithm and asks for the list version.",
+    "One item filters into an array and one into a list. Say how many passes each needs and why.",
+    "One item searches a list of objects. Return the object, not the attribute.",
+    "One item has no path returning for the not-found case. Say what the compiler reports.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.11": {
+  "handle": "ap-csa-lesson-4-11-2d-array-creation-and-access",
+  "title": "2D Array Creation and Access",
+  "objectives": [
+   {
+    "code": "4.11.A",
+    "text": "Declare and create a two-dimensional array with new or with an initializer list, and state its default element values."
+   },
+   {
+    "code": "4.11.B",
+    "text": "Read and update an element with two indices, and get the number of rows and the number of columns."
+   }
+  ],
+  "iCan": [
+   "I can create a 2D array both ways and say which index is the row and which is the column.",
+   "I can get the number of rows and the number of columns from the array itself.",
+   "I can say which of two out-of-bounds indices a given expression violates."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.11 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. For each grid, write the row count and the column count from the array itself.",
+    "Several items give an indexed expression and ask whether it throws. Check the row index and the column index separately.",
+    "One item reverses the two indices on a square grid. Say what it returns and why nothing throws.",
+    "One item passes a row to a one-dimensional method. Say why no conversion is needed.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.12": {
+  "handle": "ap-csa-lesson-4-12-traversing-2d-arrays",
+  "title": "Traversing 2D Arrays",
+  "objectives": [
+   {
+    "code": "4.12.A",
+    "text": "Traverse a two-dimensional array in row-major and column-major order with nested loops, and with nested enhanced for loops."
+   },
+   {
+    "code": "4.12.B",
+    "text": "Apply the standard algorithms to a grid, including whole-grid results and per-row results."
+   }
+  ],
+  "iCan": [
+   "I can write the row-major nested loop from memory and say which loop is the outer one.",
+   "I can convert it to column-major by swapping which variable each loop drives.",
+   "I can decide whether an accumulator belongs outside both loops or inside the outer one."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.12 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. For each nested loop, count the body executions before anything else.",
+    "Several items ask row-major or column-major. Look at which header is outside, not at the subscripts.",
+    "One item moves the accumulator inside the outer loop. Say what question it now answers.",
+    "One item writes to the grid in a nested enhanced for. Say which of the two writes lands.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.16": {
+  "handle": "ap-csa-lesson-4-16-recursion",
+  "title": "Recursion",
+  "objectives": [
+   {
+    "code": "4.16.A",
+    "text": "Identify the base case and the recursive case in a recursive method, and explain why both are required."
+   },
+   {
+    "code": "4.16.B",
+    "text": "Trace a recursive call to completion, including the order in which the calls return."
+   }
+  ],
+  "iCan": [
+   "I can point at the base case and the recursive case in any recursive method.",
+   "I can trace a recursive call by writing the chain down and then evaluating back up.",
+   "I can say why a recursive method with no base case fails, and name the error."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.16 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. For each method, point at the base case and the recursive case first.",
+    "Two items have a base case that cannot be reached. Say which inputs fail and why.",
+    "Several items ask for the printed output. Decide whether the print is before or after the recursive call.",
+    "One item asks how many calls are on the stack at the deepest point.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.2": {
+  "handle": "ap-csa-lesson-4-2-introduction-to-using-data-sets",
+  "title": "Introduction to Using Data Sets",
+  "objectives": [
+   {
+    "code": "4.2.A",
+    "text": "Describe a data set as records and attributes, and identify what one row and one column represent."
+   },
+   {
+    "code": "4.2.B",
+    "text": "Explain why separate variables cannot hold a data set of unknown size, and what a program needs instead."
+   }
+  ],
+  "iCan": [
+   "I can point at a table of data and say what one row is and what one column is.",
+   "I can explain why twenty separate variables cannot solve a problem that thirty rows would break.",
+   "I can name the three things a program must be able to do to a data set that separate variables cannot support."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.2 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. Several give a table and ask what one row and one column represent.",
+    "Two items ask which of two averages is meaningful, down a column or across a row. Say what the row's values are before choosing.",
+    "One item asks how many lines change when a record is added, for two different versions of the same program.",
+    "One item gives an array of objects and asks which column a loop reads. Point at the method call in the loop body.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "On paper. Nothing below needs a computer."
+ },
+ "4.3": {
+  "handle": "ap-csa-lesson-4-3-array-creation-and-access",
+  "title": "Array Creation and Access",
+  "objectives": [
+   {
+    "code": "4.3.A",
+    "text": "Declare and create an array using new with a size or using an initializer list, and state the default value of its elements."
+   },
+   {
+    "code": "4.3.B",
+    "text": "Read and update an element by index, use length, and identify the indices that throw ArrayIndexOutOfBoundsException."
+   }
+  ],
+  "iCan": [
+   "I can create an array two different ways and say when each one is the right choice.",
+   "I can name the first and last valid index of an array of any size, and say what length reports.",
+   "I can predict whether a given index throws, and name the exception it throws."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.3 lesson page has the checks and editor problems.",
+   "activities": [
+    "Work the checks for understanding. Several give an array and an index and ask whether it throws.",
+    "The creation items ask which of two forms to use. Decide whether the values are known yet before choosing.",
+    "One item asks for the value at an index that was never assigned. Give the type's default rather than saying undefined.",
+    "One item creates an array of objects and calls a method on an element. Say which exception it throws and why it is not out of bounds.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.4": {
+  "handle": "ap-csa-lesson-4-4-traversing-arrays",
+  "title": "Traversing Arrays",
+  "objectives": [
+   {
+    "code": "4.4.A",
+    "text": "Traverse an array with a standard for loop, including in reverse and over part of the array, and update elements during the traversal."
+   },
+   {
+    "code": "4.4.B",
+    "text": "Traverse an array with an enhanced for loop, and state what the enhanced form cannot do."
+   }
+  ],
+  "iCan": [
+   "I can write the standard traversal from memory and say what each of the three parts of the header does.",
+   "I can choose between a standard for loop and an enhanced for loop by asking whether I need the index or need to write.",
+   "I can find an off-by-one error by counting the passes rather than reading the code."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.4 lesson page has the checks and editor problems.",
+   "activities": [
+    "Work the checks for understanding. For each loop, count the passes before deciding anything else.",
+    "Several items ask whether a loop throws, skips an element, or is correct. Check the start and the bound separately.",
+    "One item asks you to write a partial traversal. Decide which of the three header parts to change.",
+    "One item tries to modify elements with an enhanced for loop. Say what actually happens to the array.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.5": {
+  "handle": "ap-csa-lesson-4-5-algorithms-with-arrays",
+  "title": "Algorithms with Arrays",
+  "objectives": [
+   {
+    "code": "4.5.A",
+    "text": "Implement the standard array algorithms: minimum and maximum, sum and average, linear search, and frequency count."
+   },
+   {
+    "code": "4.5.B",
+    "text": "Apply the same algorithms to an array of objects by reading one attribute out of each element."
+   }
+  ],
+  "iCan": [
+   "I can write a maximum loop and say why it is initialized from element 0 rather than from 0.",
+   "I can write both forms of linear search, the one returning a boolean and the one returning an index.",
+   "I can adapt any of the standard algorithms to an array of objects by changing only the body."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.5 lesson page has the checks and editor problems.",
+   "activities": [
+    "Work the checks for understanding. Each names an algorithm and asks for its starting value.",
+    "Two items initialize an extreme to 0. Find an input that exposes the bug rather than saying it is wrong.",
+    "One item asks for the first occurrence and one for the last. Decide whether the loop returns or assigns.",
+    "One item computes an average with integer division. Give the printed value, then the fix.",
+    "One item applies an algorithm to an array of objects. Change only the body.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.8": {
+  "handle": "ap-csa-lesson-4-8-arraylist-methods",
+  "title": "ArrayList Methods",
+  "objectives": [
+   {
+    "code": "4.8.A",
+    "text": "Use the AP reference sheet ArrayList methods: add in both forms, remove, get, set, and size."
+   },
+   {
+    "code": "4.8.B",
+    "text": "Predict how add at an index and remove shift the elements after them, and what each returns."
+   }
+  ],
+  "iCan": [
+   "I can name every ArrayList method on the reference sheet and say what each one returns.",
+   "I can predict the list's contents after a sequence of adds and removes, including the shifting.",
+   "I can say which methods change the size and which only change a value."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.8 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. For each call, write the list's contents and its size afterwards.",
+    "Two items use set where add was meant, or the reverse. Say what the size reveals.",
+    "One item asks what each method returns. Use the reference sheet rather than guessing.",
+    "One item adds at an index equal to size. Decide whether it throws before choosing.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ },
+ "4.9": {
+  "handle": "ap-csa-lesson-4-9-traversing-arraylists",
+  "title": "Traversing ArrayLists",
+  "objectives": [
+   {
+    "code": "4.9.A",
+    "text": "Traverse an ArrayList with a standard for loop and with an enhanced for loop, and choose between them."
+   },
+   {
+    "code": "4.9.B",
+    "text": "Remove elements during a traversal correctly, and explain why the obvious forward loop skips elements."
+   }
+  ],
+  "iCan": [
+   "I can write both traversals for a list and say what size() does in each.",
+   "I can explain why removing inside a forward loop skips the element after every removal.",
+   "I can write the two correct removal traversals and say what each one costs."
+  ],
+  "lesson_page": {
+   "intro": "The Topic 4.9 lesson page has the checks and practice items.",
+   "activities": [
+    "Work the checks for understanding. For each removal loop, decide correct, skips, or throws.",
+    "Two items give data with adjacent matches and data without. Say why the same loop passes one and fails the other.",
+    "One item asks you to convert a skipping loop into a correct one, two different ways.",
+    "One item calls set inside an enhanced for. Decide whether it throws before choosing.",
+    "Finish the mastery set, predicting each answer before reading the options."
+   ]
+  },
+  "independent": "Offline. Everything below runs on paper."
+ }
+}

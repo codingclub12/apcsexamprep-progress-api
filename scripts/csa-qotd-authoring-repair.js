@@ -316,139 +316,34 @@ function checkOrder() {
   }
 }
 
-// ── applying an edit, and proving it touched nothing else ────────────────────
-//  Every anchor is matched against the LIVE body, never against a
-//  partly-edited one, and the spans are spliced in one pass. Two reasons, both
-//  learned the hard way in this file: an anchor validated against a body an
-//  earlier edit already changed is not validated against anything real, and a
-//  reverse pass that searches for its own replacement text finds the WRONG copy
-//  when one replacement happens to contain another. Day 15 has exactly that
-//  pair: the rewritten trace paragraph contains the same index listing the
-//  tip-box edit produces.
-function applyEdits(handle, live, edits) {
-  const spans = edits.map((e) => {
-    const re = new RegExp(e.find.source, e.find.flags.indexOf('g') === -1 ? e.find.flags + 'g' : e.find.flags);
-    const hits = [];
-    let m;
-    while ((m = re.exec(live))) {
-      hits.push({ start: m.index, end: m.index + m[0].length, was: m[0] });
-      if (m.index === re.lastIndex) re.lastIndex += 1;
-    }
-    if (hits.length === 0) throw new Error(handle + ' edit ' + e.id + ': anchor matched 0 times, so the live body is not what this repair was written against');
-    if (hits.length > 1) throw new Error(handle + ' edit ' + e.id + ': anchor matched ' + hits.length + ' times, so it is not specific enough to be safe');
-    return { id: e.id, start: hits[0].start, end: hits[0].end, was: hits[0].was, now: e.to };
-  }).sort((a, b) => a.start - b.start);
+// ── the edit machinery now lives in lib/matrixify-body-edit.js ─────────────
+//  Extracted 2026-09-17 when a second repair (board 344) needed the same
+//  guarantees. MIGRATED rather than copied: this file's own smoke suite still
+//  covers it, and the ten sheets it emits are byte-identical to the ones this
+//  generator produced before the extraction, which is what proves it.
+const E = require('../lib/matrixify-body-edit.js');
+const applyEdits = E.applyEdits;
+const reverse = E.reverse;
+const checkAuthored = E.checkAuthored;
+const parseCsv = E.parseCsv;
 
-  for (let i = 1; i < spans.length; i++) {
-    if (spans[i].start < spans[i - 1].end) {
-      throw new Error(handle + ': edits ' + spans[i - 1].id + ' and ' + spans[i].id + ' overlap in the live body');
-    }
-  }
-
-  let out = ''; let at = 0;
-  spans.forEach((sp) => { out += live.slice(at, sp.start) + sp.now; at = sp.end; });
-  out += live.slice(at);
-  return { out, captured: spans };
-}
-
-//  Rebuild the live body from the repaired one using the recorded spans. Any
-//  byte the run touched outside a declared span shows up here as a mismatch.
-function reverse(repaired, captured) {
-  let back = ''; let at = 0;
-  let shift = 0;
-  for (const sp of captured) {
-    const startInOut = sp.start + shift;
-    back += repaired.slice(at, startInOut) + sp.was;
-    at = startInOut + sp.now.length;
-    shift += sp.now.length - sp.was.length;
-  }
-  back += repaired.slice(at);
-  return back;
-}
-
-// ── authored text has to obey the repo's own rules ───────────────────────────
-//  The dash class is written as escapes rather than as characters, the same way
-//  lib/mojibake.js writes its examples as codepoints: a guard that hunts a
-//  character must not be the reason that character is in this repository.
-function checkAuthored(handle, edits) {
-  edits.forEach((e) => {
-    if (/[\u2014\u2013]/.test(e.to)) throw new Error(handle + ' edit ' + e.id + ': authored text contains an em-dash or en-dash');
-    const nonAscii = e.to.match(/[^\x09\x0a\x0d\x20-\x7e]/g);
-    if (nonAscii) throw new Error(handle + ' edit ' + e.id + ': authored text is not ASCII (' + [...new Set(nonAscii)].map((c) => 'U+' + c.codePointAt(0).toString(16).toUpperCase()).join(' ') + ')');
-  });
-}
-
-// ── CSV, the way Matrixify wants it ──────────────────────────────────────────
-const BOM = '﻿';
 const COLS = ['Blog: Handle', 'Handle', 'Command', 'Body HTML'];
-const q = (s) => '"' + String(s).replace(/"/g, '""') + '"';
 
 function sheet(rows) {
-  const lines = [COLS.map(q).join(',')];
-  rows.forEach((r) => lines.push([BLOG, r.handle, 'MERGE', r.body].map(q).join(',')));
-  return BOM + lines.join('\r\n') + '\r\n';
+  return E.sheet(COLS, rows.map((r) => ({
+    'Blog: Handle': BLOG, Handle: r.handle, Command: 'MERGE', 'Body HTML': r.body,
+  })));
 }
 
-//  A reader that did not write the file. Deliberately from scratch rather than
-//  the writer's own escaping run backwards.
-function parseCsv(text) {
-  const s = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
-  const rows = []; let row = []; let cell = ''; let inQ = false;
-  for (let i = 0; i < s.length; i++) {
-    const c = s[i];
-    if (inQ) {
-      if (c === '"') { if (s[i + 1] === '"') { cell += '"'; i++; } else inQ = false; }
-      else cell += c;
-    } else if (c === '"') inQ = true;
-    else if (c === ',') { row.push(cell); cell = ''; }
-    else if (c === '\r' && s[i + 1] === '\n') { row.push(cell); cell = ''; rows.push(row); row = []; i++; }
-    else if (c === '\n') { row.push(cell); cell = ''; rows.push(row); row = []; }
-    else cell += c;
-  }
-  if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
-  return rows;
-}
-
-// ── one file or nine, and the proof they are the same nine ───────────────────
-//  Tanner asked for a single sheet. The repo's rule is to split by unit, and the
-//  reason is blast radius: one MERGE over nine rows rewrites nine live bodies on
-//  one click with nothing to check between them. That is his call, so both
-//  shapes ship and the nine stay on disk as the fallback.
-//
-//  What is not his call is whether the combination is LOSSLESS, and the cyber
-//  quiz split is the precedent: prove it by parsing both back, never by
-//  assuming that a writer that emitted nine rows emitted the right nine. A
-//  combined sheet that drops a row is worse than nine files, because nothing
-//  announces it, and a combined sheet that repeats one writes that body twice.
-//
-//  `singles` maps handle to the Body HTML as read back out of that article's own
-//  sheet. Returns the row count so a caller can print something true.
 function checkCombined(csvText, singles, label) {
-  const name = label || 'combined sheet';
-  const rows = parseCsv(csvText);
-  if (!rows.length) throw new Error(name + ': parsed back as no rows at all');
-  if (rows[0].join(',') !== COLS.join(',')) throw new Error(name + ': header changed in the round trip');
-  if (rows.length - 1 !== singles.size) {
-    throw new Error(name + ': carries ' + (rows.length - 1) + ' rows but there are ' + singles.size + ' articles');
-  }
-
-  const seen = new Set();
-  rows.slice(1).forEach((row, i) => {
-    const [blog, handle, command, body] = row;
-    if (blog !== BLOG) throw new Error(name + ' row ' + (i + 1) + ': blog handle is ' + JSON.stringify(blog));
-    if (command !== 'MERGE') throw new Error(name + ' row ' + (i + 1) + ': command is ' + JSON.stringify(command));
-    if (seen.has(handle)) throw new Error(name + ': ' + handle + ' appears twice, so one import would write that body twice');
-    seen.add(handle);
-    if (!singles.has(handle)) throw new Error(name + ': ' + handle + ' is not one of the articles this repair covers');
-    if (singles.get(handle) !== body) {
-      throw new Error(name + ': ' + handle + ' differs from its own sheet ('
-        + singles.get(handle).length + ' vs ' + body.length + ' characters)');
-    }
+  return E.checkCombined(csvText, singles, COLS, {
+    label,
+    each: (row, i) => {
+      const n = label || 'combined sheet';
+      if (row[0] !== BLOG) throw new Error(n + ' row ' + (i + 1) + ': blog handle is ' + JSON.stringify(row[0]));
+      if (row[2] !== 'MERGE') throw new Error(n + ' row ' + (i + 1) + ': command is ' + JSON.stringify(row[2]));
+    },
   });
-
-  const missing = [...singles.keys()].filter((h) => !seen.has(h));
-  if (missing.length) throw new Error(name + ': dropped ' + missing.join(', '));
-  return seen.size;
 }
 
 // ── one article, and every guard it has to clear ─────────────────────────────

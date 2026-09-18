@@ -1,0 +1,1288 @@
+﻿"Handle","Command","Body HTML"
+"ap-csa-exam-format","MERGE","<!--
+======================================================================================
+AP CSA EXAM FORMAT PAGE - UPDATED 2026
+For: APCSExamPrep.com
+Handle: ap-csa-exam-format
+Title: AP Computer Science A Exam Format 2026 - Sections, Timing & Scoring Guide
+FIXES APPLIED:
+  1. Exam date corrected: May 15, 2026 afternoon (12pm local)
+  2. Fully digital via Bluebook - made prominent
+  3. Java Quick Reference expanded (parseInt, parseDouble, Scanner, ArrayList expansion)
+  4. All raw emojis replaced with HTML entities or SVG/text
+  5. MCQ strategy aligned with internal standards (removed ""All of the Above"" hint)
+  6. Study guide handles corrected to canonical versions
+  7. Tutoring link updated to canonical handle (no PageRank redirect)
+  8. All •, —, ×, etc. as HTML entities
+======================================================================================
+-->
+<style>
+/* Wrapper to prevent Shopify theme interference */
+#exam-format-wrapper {
+    all: initial !important;
+    display: block !important;
+}
+
+#exam-format-wrapper *,
+#exam-format-wrapper *::before,
+#exam-format-wrapper *::after {
+    box-sizing: border-box !important;
+}
+
+#exam-format-wrapper .exam-format-page {
+    max-width: 900px !important;
+    margin: 0 auto !important;
+    padding: 20px !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    line-height: 1.7 !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Hide Shopify default page title */
+.page-title, .article__title, .page__title, .template-page h1:first-of-type {
+    display: none !important;
+}
+
+/* Header */
+#exam-format-wrapper .ef-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    padding: 40px 30px !important;
+    border-radius: 12px !important;
+    margin-bottom: 30px !important;
+}
+
+#exam-format-wrapper .ef-header * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+#exam-format-wrapper .ef-header h1 {
+    font-size: 2.2em !important;
+    margin: 0 0 12px 0 !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+}
+
+#exam-format-wrapper .ef-header-subtitle {
+    font-size: 1.1em !important;
+    opacity: 0.95 !important;
+    margin: 0 !important;
+}
+
+#exam-format-wrapper .ef-header-meta {
+    display: flex !important;
+    gap: 16px !important;
+    margin-top: 20px !important;
+    flex-wrap: wrap !important;
+}
+
+#exam-format-wrapper .ef-badge {
+    background: rgba(255, 255, 255, 0.2) !important;
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+/* Digital Exam Alert */
+#exam-format-wrapper .ef-digital-alert {
+    background: #fef3c7 !important;
+    border: 2px solid #f59e0b !important;
+    border-radius: 10px !important;
+    padding: 20px 24px !important;
+    margin: 0 0 30px 0 !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+}
+
+#exam-format-wrapper .ef-digital-alert-icon {
+    width: 40px !important;
+    height: 40px !important;
+    background: #f59e0b !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+}
+
+#exam-format-wrapper .ef-digital-alert-content h3 {
+    color: #78350f !important;
+    -webkit-text-fill-color: #78350f !important;
+    margin: 0 0 6px 0 !important;
+    font-size: 1.1em !important;
+}
+
+#exam-format-wrapper .ef-digital-alert-content p {
+    color: #78350f !important;
+    -webkit-text-fill-color: #78350f !important;
+    margin: 0 !important;
+    font-size: 15px !important;
+}
+
+/* Quick Nav */
+#exam-format-wrapper .ef-quick-nav {
+    background: #eff6ff !important;
+    border: 2px solid #3b82f6 !important;
+    border-radius: 10px !important;
+    padding: 24px !important;
+    margin-bottom: 30px !important;
+}
+
+#exam-format-wrapper .ef-quick-nav h3 {
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+    margin: 0 0 16px 0 !important;
+    font-size: 1.1em !important;
+}
+
+#exam-format-wrapper .ef-quick-nav-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 12px !important;
+}
+
+#exam-format-wrapper .ef-quick-nav-link,
+#exam-format-wrapper .ef-quick-nav-link:link,
+#exam-format-wrapper .ef-quick-nav-link:visited {
+    background: #ffffff !important;
+    padding: 12px 16px !important;
+    border-radius: 6px !important;
+    text-decoration: none !important;
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+    border: 1px solid #bfdbfe !important;
+}
+
+#exam-format-wrapper .ef-quick-nav-link:hover,
+#exam-format-wrapper .ef-quick-nav-link:active {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+    transform: translateX(4px) !important;
+}
+
+/* Key Info Box */
+#exam-format-wrapper .ef-key-info {
+    background: #dcfce7 !important;
+    border-left: 4px solid #22c55e !important;
+    padding: 24px !important;
+    margin: 30px 0 !important;
+    border-radius: 0 8px 8px 0 !important;
+}
+
+#exam-format-wrapper .ef-key-info h3 {
+    color: #166534 !important;
+    -webkit-text-fill-color: #166534 !important;
+    margin: 0 0 12px 0 !important;
+}
+
+#exam-format-wrapper .ef-key-info strong {
+    color: #166534 !important;
+    -webkit-text-fill-color: #166534 !important;
+}
+
+/* Overview Table */
+#exam-format-wrapper .ef-overview-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 24px 0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+#exam-format-wrapper .ef-overview-table th,
+#exam-format-wrapper .ef-overview-table td {
+    padding: 16px !important;
+    text-align: left !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+#exam-format-wrapper .ef-overview-table th {
+    background: #1e3a8a !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+#exam-format-wrapper .ef-overview-table tr:last-child td {
+    border-bottom: none !important;
+}
+
+#exam-format-wrapper .ef-overview-table tr:hover {
+    background: #f9fafb !important;
+}
+
+/* Section Headers */
+#exam-format-wrapper .ef-section {
+    margin: 40px 0 !important;
+}
+
+#exam-format-wrapper .ef-section-header {
+    font-size: 1.8em !important;
+    color: #1e3a8a !important;
+    -webkit-text-fill-color: #1e3a8a !important;
+    margin: 0 0 20px 0 !important;
+    padding-bottom: 12px !important;
+    border-bottom: 3px solid #3b82f6 !important;
+    font-weight: 700 !important;
+}
+
+#exam-format-wrapper .ef-section h3 {
+    font-size: 1.3em !important;
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+    margin: 28px 0 12px 0 !important;
+}
+
+/* FRQ Cards */
+#exam-format-wrapper .ef-frq-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    gap: 16px !important;
+    margin: 20px 0 !important;
+}
+
+#exam-format-wrapper .ef-frq-card {
+    background: #ffffff !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    transition: all 0.2s !important;
+}
+
+#exam-format-wrapper .ef-frq-card:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+#exam-format-wrapper .ef-frq-card-number {
+    background: #3b82f6 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 700 !important;
+    font-size: 1.1em !important;
+    margin-bottom: 12px !important;
+}
+
+#exam-format-wrapper .ef-frq-card-title {
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    color: #1e3a8a !important;
+    -webkit-text-fill-color: #1e3a8a !important;
+    margin-bottom: 8px !important;
+}
+
+#exam-format-wrapper .ef-frq-card-desc {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    -webkit-text-fill-color: #6b7280 !important;
+    margin-bottom: 12px !important;
+}
+
+#exam-format-wrapper .ef-frq-card-points {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+    -webkit-text-fill-color: #166534 !important;
+    padding: 4px 10px !important;
+    border-radius: 12px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+}
+
+/* Score Table */
+#exam-format-wrapper .ef-score-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 20px 0 !important;
+}
+
+#exam-format-wrapper .ef-score-table th,
+#exam-format-wrapper .ef-score-table td {
+    padding: 12px 16px !important;
+    text-align: left !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+#exam-format-wrapper .ef-score-table th {
+    background: #f3f4f6 !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    -webkit-text-fill-color: #374151 !important;
+}
+
+#exam-format-wrapper .ef-score-table tr:nth-child(even) {
+    background: #f9fafb !important;
+}
+
+/* Tips Box */
+#exam-format-wrapper .ef-tips {
+    background: #fef3c7 !important;
+    border: 2px solid #fbbf24 !important;
+    border-radius: 10px !important;
+    padding: 24px !important;
+    margin: 30px 0 !important;
+}
+
+#exam-format-wrapper .ef-tips h3 {
+    color: #92400e !important;
+    -webkit-text-fill-color: #92400e !important;
+    margin: 0 0 16px 0 !important;
+}
+
+#exam-format-wrapper .ef-tips ul {
+    margin: 0 !important;
+    padding-left: 24px !important;
+}
+
+#exam-format-wrapper .ef-tips li {
+    margin: 10px 0 !important;
+    color: #78350f !important;
+    -webkit-text-fill-color: #78350f !important;
+}
+
+#exam-format-wrapper .ef-tips strong {
+    color: #92400e !important;
+    -webkit-text-fill-color: #92400e !important;
+}
+
+/* Reference Box for Java Quick Reference */
+#exam-format-wrapper .ef-ref-box {
+    background: #f8fafc !important;
+    border: 2px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    padding: 24px !important;
+    margin: 20px 0 !important;
+}
+
+#exam-format-wrapper .ef-ref-box h4 {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    margin: 0 0 12px 0 !important;
+    font-size: 1.05em !important;
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
+#exam-format-wrapper .ef-ref-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 16px !important;
+    margin-top: 16px !important;
+}
+
+#exam-format-wrapper .ef-ref-item {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 6px !important;
+    padding: 14px !important;
+}
+
+#exam-format-wrapper .ef-ref-item-title {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    padding-bottom: 6px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+#exam-format-wrapper .ef-ref-item ul {
+    margin: 0 !important;
+    padding-left: 18px !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+}
+
+#exam-format-wrapper .ef-ref-item li {
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    margin: 4px 0 !important;
+}
+
+#exam-format-wrapper .ef-ref-new {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    -webkit-text-fill-color: #92400e !important;
+    padding: 2px 8px !important;
+    border-radius: 10px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    font-family: -apple-system, sans-serif !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin-left: 6px !important;
+    vertical-align: middle !important;
+}
+
+/* What's Provided Section */
+#exam-format-wrapper .ef-provided-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 16px !important;
+    margin: 20px 0 !important;
+}
+
+#exam-format-wrapper .ef-provided-card {
+    background: #f0fdf4 !important;
+    border: 1px solid #86efac !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    text-align: center !important;
+}
+
+#exam-format-wrapper .ef-provided-title {
+    font-weight: 600 !important;
+    color: #166534 !important;
+    -webkit-text-fill-color: #166534 !important;
+    margin-bottom: 4px !important;
+    font-size: 1em !important;
+}
+
+#exam-format-wrapper .ef-provided-desc {
+    font-size: 13px !important;
+    color: #4b5563 !important;
+    -webkit-text-fill-color: #4b5563 !important;
+}
+
+#exam-format-wrapper .ef-provided-svg {
+    width: 40px !important;
+    height: 40px !important;
+    margin: 0 auto 8px !important;
+    display: block !important;
+    color: #16a34a !important;
+}
+
+/* Resources Section */
+#exam-format-wrapper .ef-resources {
+    background: #faf5ff !important;
+    border: 2px solid #d8b4fe !important;
+    border-radius: 10px !important;
+    padding: 28px !important;
+    margin: 30px 0 !important;
+}
+
+#exam-format-wrapper .ef-resources h3 {
+    color: #6b21a8 !important;
+    -webkit-text-fill-color: #6b21a8 !important;
+    margin: 0 0 20px 0 !important;
+}
+
+#exam-format-wrapper .ef-resources-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    gap: 16px !important;
+}
+
+#exam-format-wrapper .ef-resource-card,
+#exam-format-wrapper .ef-resource-card:link,
+#exam-format-wrapper .ef-resource-card:visited {
+    background: #ffffff !important;
+    border: 1px solid #e9d5ff !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    text-decoration: none !important;
+    display: block !important;
+    transition: all 0.2s !important;
+    color: #6b21a8 !important;
+    -webkit-text-fill-color: #6b21a8 !important;
+}
+
+#exam-format-wrapper .ef-resource-card:hover,
+#exam-format-wrapper .ef-resource-card:active {
+    border-color: #a855f7 !important;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+#exam-format-wrapper .ef-resource-title {
+    font-weight: 600 !important;
+    color: #6b21a8 !important;
+    -webkit-text-fill-color: #6b21a8 !important;
+    margin-bottom: 6px !important;
+    font-size: 1em !important;
+}
+
+#exam-format-wrapper .ef-resource-desc {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    -webkit-text-fill-color: #6b7280 !important;
+}
+
+/* CTA Box */
+#exam-format-wrapper .ef-cta {
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    padding: 32px !important;
+    border-radius: 12px !important;
+    text-align: center !important;
+    margin: 40px 0 !important;
+}
+
+#exam-format-wrapper .ef-cta * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+#exam-format-wrapper .ef-cta h3 {
+    font-size: 1.6em !important;
+    margin: 0 0 12px 0 !important;
+}
+
+#exam-format-wrapper .ef-cta p {
+    font-size: 1.05em !important;
+    margin: 0 0 24px 0 !important;
+    opacity: 0.95 !important;
+}
+
+#exam-format-wrapper .ef-cta-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+}
+
+#exam-format-wrapper .ef-cta-btn,
+#exam-format-wrapper .ef-cta-btn:link,
+#exam-format-wrapper .ef-cta-btn:visited {
+    background: #ffffff !important;
+    color: #7c3aed !important;
+    -webkit-text-fill-color: #7c3aed !important;
+    padding: 14px 28px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+    transition: all 0.2s !important;
+}
+
+#exam-format-wrapper .ef-cta-btn:hover,
+#exam-format-wrapper .ef-cta-btn:active {
+    background: #f5f3ff !important;
+    color: #7c3aed !important;
+    -webkit-text-fill-color: #7c3aed !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* FAQ Section */
+#exam-format-wrapper .ef-faq {
+    margin: 40px 0 !important;
+}
+
+#exam-format-wrapper .ef-faq-item {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    margin-bottom: 16px !important;
+}
+
+#exam-format-wrapper .ef-faq-question {
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    color: #1e3a8a !important;
+    -webkit-text-fill-color: #1e3a8a !important;
+    margin: 0 0 12px 0 !important;
+}
+
+#exam-format-wrapper .ef-faq-answer {
+    color: #4b5563 !important;
+    -webkit-text-fill-color: #4b5563 !important;
+    line-height: 1.7 !important;
+}
+
+/* X / check marks using HTML entities */
+#exam-format-wrapper .ef-x {
+    color: #dc2626 !important;
+    -webkit-text-fill-color: #dc2626 !important;
+    font-weight: 700 !important;
+    margin-right: 6px !important;
+}
+
+#exam-format-wrapper .ef-check {
+    color: #16a34a !important;
+    -webkit-text-fill-color: #16a34a !important;
+    font-weight: 700 !important;
+    margin-right: 6px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #exam-format-wrapper .ef-header h1 {
+        font-size: 1.6em !important;
+    }
+
+    #exam-format-wrapper .ef-quick-nav-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #exam-format-wrapper .ef-frq-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #exam-format-wrapper .ef-overview-table {
+        font-size: 14px !important;
+    }
+
+    #exam-format-wrapper .ef-overview-table th,
+    #exam-format-wrapper .ef-overview-table td {
+        padding: 10px !important;
+    }
+
+    #exam-format-wrapper .ef-digital-alert {
+        flex-direction: column !important;
+    }
+}
+</style>
+
+<div id=""exam-format-wrapper"">
+<div class=""exam-format-page"">
+
+<!-- HEADER -->
+<header class=""ef-header"">
+<h1>AP Computer Science A Exam Format (2027)</h1>
+<p class=""ef-header-subtitle"">Complete guide to sections, timing, scoring, and what to expect on exam day</p>
+<div class=""ef-header-meta"">
+<span class=""ef-badge"">3 Hours Total</span>
+<span class=""ef-badge"">2 Sections</span>
+<span class=""ef-badge"">55% Multiple Choice</span>
+<span class=""ef-badge"">45% Free Response</span>
+<span class=""ef-badge"">100% Digital (Bluebook)</span>
+</div>
+</header>
+
+<!-- DIGITAL EXAM ALERT -->
+<div class=""ef-digital-alert"">
+<div class=""ef-digital-alert-icon"">⚠</div>
+<div class=""ef-digital-alert-content"">
+<h3>The 2027 AP CSA Exam is Fully Digital</h3>
+<p>All sections of the AP Computer Science A exam are now delivered through the College Board's <strong>Bluebook</strong> testing application on a laptop or Chromebook. There is no paper option. You will type all FRQ responses into Bluebook's code editor and answer MCQ questions by clicking. Make sure to install Bluebook and complete the digital practice before exam day.</p>
+</div>
+</div>
+
+<!-- QUICK NAVIGATION -->
+<nav class=""ef-quick-nav"">
+<h3>Quick Jump:</h3>
+<div class=""ef-quick-nav-grid"">
+<a href=""#overview"" class=""ef-quick-nav-link"">Format Overview</a>
+<a href=""#section-1"" class=""ef-quick-nav-link"">Multiple Choice</a>
+<a href=""#section-2"" class=""ef-quick-nav-link"">Free Response</a>
+<a href=""#scoring"" class=""ef-quick-nav-link"">Scoring Guide</a>
+<a href=""#timing"" class=""ef-quick-nav-link"">Time Management</a>
+<a href=""#provided"" class=""ef-quick-nav-link"">Java Quick Reference</a>
+</div>
+</nav>
+
+<!-- KEY INFO -->
+<div class=""ef-key-info"">
+<h3>What Does AP CSA Stand For?</h3>
+<p><strong>AP CSA stands for Advanced Placement Computer Science A</strong> — a college-level course and exam in Java programming offered by the College Board. The ""A"" distinguishes it from AP Computer Science Principles (AP CSP), which is a broader introductory course.</p>
+<p><strong>Key Differences:</strong> AP CSA focuses on object-oriented programming in Java, while AP CSP covers computational thinking concepts across multiple languages.</p>
+</div>
+
+<!-- OVERVIEW TABLE -->
+<section id=""overview"" class=""ef-section"">
+<h2 class=""ef-section-header"">Exam Format Overview</h2>
+<table class=""ef-overview-table"">
+<thead>
+<tr>
+<th>Section</th>
+<th>Questions</th>
+<th>Time</th>
+<th>Weight</th>
+<th>Calculator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Section I: Multiple Choice</strong></td>
+<td>42 questions</td>
+<td>90 minutes</td>
+<td>55% of score</td>
+<td>Not permitted</td>
+</tr>
+<tr>
+<td><strong>Section II: Free Response</strong></td>
+<td>4 questions</td>
+<td>90 minutes</td>
+<td>45% of score</td>
+<td>Not permitted</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>46 questions</strong></td>
+<td><strong>3 hours</strong></td>
+<td><strong>100%</strong></td>
+<td><strong>N/A</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Important:</strong> Both sections are completed on the same day in the <strong>Bluebook digital testing app</strong>, with a short break between sections. You cannot use a calculator for any part of the AP CSA exam.</p>
+</section>
+
+<!-- SECTION I: MULTIPLE CHOICE -->
+<section id=""section-1"" class=""ef-section"">
+<h2 class=""ef-section-header"">Section I: Multiple Choice Details</h2>
+<h3>Format &amp; Content</h3>
+<ul>
+<li>
+<strong>42 questions</strong> with answer choices A through D (no E option in the 2025–2026 curriculum)</li>
+<li>
+<strong>90 minutes</strong> — approximately 2 minutes and 8 seconds per question</li>
+<li>
+<strong>All 4 units covered</strong>, weighted proportionally:
+<ul>
+<li>Unit 1 (Using Objects and Methods): 15–25% of MCQs</li>
+<li>Unit 2 (Selection and Iteration): 25–35% of MCQs</li>
+<li>Unit 3 (Class Creation): 10–18% of MCQs</li>
+<li>Unit 4 (Data Collections): 30–40% of MCQs</li>
+</ul>
+</li>
+</ul>
+
+<h3>Question Types You Will See</h3>
+<ul>
+<li>
+<strong>Code Tracing:</strong> Predict output of given code segments</li>
+<li>
+<strong>Spot-the-Error:</strong> Identify which line contains a bug or the flaw in an algorithm</li>
+<li>
+<strong>Multi-Correct (I / II / III):</strong> Determine which combination of statements is true</li>
+<li>
+<strong>Algorithm Comparison:</strong> Evaluate different approaches to solve a problem</li>
+<li>
+<strong>Conceptual Understanding:</strong> Java syntax, data structures, OOP principles, and recursion <em>tracing</em> (writing recursion is no longer tested)</li>
+</ul>
+
+<div class=""ef-tips"">
+<h3>Multiple Choice Strategy Tips</h3>
+<ul>
+<li>
+<strong>Predict the answer first:</strong> Cover the choices, work out the answer from the stem, then match it. This prevents plausible distractors from swaying you.</li>
+<li>
+<strong>Slash the trash:</strong> Eliminate obviously wrong options to improve your odds on questions you are unsure of.</li>
+<li>
+<strong>Watch specific keywords:</strong> Circle words like <strong>not</strong>, <strong>except</strong>, <strong>always</strong>, <strong>never</strong>, and <strong>must</strong>. These flip the meaning of the entire question.</li>
+<li>
+<strong>Trace code systematically:</strong> Use the provided scratch paper to track variable values row by row.</li>
+<li>
+<strong>For I / II / III questions:</strong> Evaluate each Roman numeral independently before looking at the answer combinations.</li>
+<li>
+<strong>Time management:</strong> Do not spend more than 3 minutes on any one question. Flag and return later.</li>
+<li>
+<strong>Use the Bluebook tools:</strong> Mark questions for review, use the annotation tool, and use the built-in timer to stay on pace.</li>
+</ul>
+</div>
+</section>
+
+<!-- SECTION II: FREE RESPONSE -->
+<section id=""section-2"" class=""ef-section"">
+<h2 class=""ef-section-header"">Section II: Free Response Questions (FRQs)</h2>
+<p>The Free Response section contains <strong>4 questions</strong>, typed directly into the Bluebook code editor. Each FRQ type appears on every exam in the same order.</p>
+
+<div class=""ef-frq-grid"">
+<div class=""ef-frq-card"">
+<div class=""ef-frq-card-number"">1</div>
+<div class=""ef-frq-card-title"">Methods &amp; Control Structures</div>
+<div class=""ef-frq-card-desc"">Write methods using conditionals, loops, and expressions. Usually has 2 parts (a) and (b).</div>
+<span class=""ef-frq-card-points"">7 points</span>
+</div>
+<div class=""ef-frq-card"">
+<div class=""ef-frq-card-number"">2</div>
+<div class=""ef-frq-card-title"">Class Writing</div>
+<div class=""ef-frq-card-desc"">Write a complete class with instance variables, constructor, and methods. Tests OOP understanding.</div>
+<span class=""ef-frq-card-points"">7 points</span>
+</div>
+<div class=""ef-frq-card"">
+<div class=""ef-frq-card-number"">3</div>
+<div class=""ef-frq-card-title"">ArrayList</div>
+<div class=""ef-frq-card-desc"">Manipulate ArrayLists: search, filter, insert, or remove elements. The 2025–2026 FRQ 3 focuses <strong>only</strong> on ArrayList (not raw arrays).</div>
+<span class=""ef-frq-card-points"">5 points</span>
+</div>
+<div class=""ef-frq-card"">
+<div class=""ef-frq-card-number"">4</div>
+<div class=""ef-frq-card-title"">2D Array</div>
+<div class=""ef-frq-card-desc"">Work with 2D arrays using nested loops. Often involves row/column traversal or pattern matching.</div>
+<span class=""ef-frq-card-points"">6 points</span>
+</div>
+</div>
+
+<h3>FRQ Scoring Breakdown</h3>
+<p>Each FRQ has a <strong>different maximum point value</strong>, totaling <strong>25 points</strong> across Section II.</p>
+<table class=""ef-score-table"">
+<thead>
+<tr>
+<th>FRQ</th>
+<th>Type</th>
+<th>Max Points</th>
+<th>Typical Structure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FRQ 1</strong></td>
+<td>Methods &amp; Control Structures</td>
+<td>7 points</td>
+<td>Part (a) ~3 pts • Part (b) ~4 pts</td>
+</tr>
+<tr>
+<td><strong>FRQ 2</strong></td>
+<td>Class Writing</td>
+<td>7 points</td>
+<td>Constructor + 1–2 methods across parts</td>
+</tr>
+<tr>
+<td><strong>FRQ 3</strong></td>
+<td>ArrayList</td>
+<td>5 points</td>
+<td>Single method, usually 1 part</td>
+</tr>
+<tr>
+<td><strong>FRQ 4</strong></td>
+<td>2D Array</td>
+<td>6 points</td>
+<td>Part (a) ~2–3 pts • Part (b) ~3–4 pts</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>Section II</strong></td>
+<td><strong>25 points</strong></td>
+<td><strong>45% of composite score</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Strategy takeaway:</strong> FRQ 1 and FRQ 2 are each worth more than FRQ 3. If you are short on time, make sure the higher-point FRQs are the ones you attempt fully — do not let the clock run out on FRQ 1 because you over-invested in FRQ 4.</p>
+
+<div class=""ef-tips"">
+<h3>FRQ Strategy Tips</h3>
+<ul>
+<li>
+<strong>Read all four FRQs first:</strong> Start with whichever type you are strongest at. Bluebook lets you navigate between questions.</li>
+<li>
+<strong>Show your work:</strong> Partial credit is awarded. Write something for every part, even if you cannot finish.</li>
+<li>
+<strong>Use the Java Quick Reference:</strong> It is available on screen inside Bluebook at all times during Section II.</li>
+<li>
+<strong>Allocate time by point value:</strong> FRQ 1 and FRQ 2 are worth 7 points each, FRQ 3 is worth 5, FRQ 4 is worth 6. Spend roughly ~25 min on 7-pointers, ~20 min on the 2D Array, and ~18 min on the ArrayList question.</li>
+<li>
+<strong>Write clean code:</strong> Proper indentation and meaningful variable names help graders follow your logic.</li>
+<li>
+<strong>Syntax matters:</strong> Minor errors are usually forgiven, but major syntax errors (missing return type, missing braces) cost points.</li>
+<li>
+<strong>Test edge cases mentally:</strong> Consider empty ArrayLists, single-element inputs, and boundary indices.</li>
+</ul>
+</div>
+</section>
+
+<!-- SCORING -->
+<section id=""scoring"" class=""ef-section"">
+<h2 class=""ef-section-header"">Scoring System</h2>
+<h3>How Raw Scores Convert to AP Scores</h3>
+<p>Your performance on both sections is combined into a <strong>composite score</strong>, which is then converted to a score of 1–5. The conversion cutoffs shift slightly each year based on exam difficulty, but the typical ranges look like this:</p>
+<table class=""ef-score-table"">
+<thead>
+<tr>
+<th>AP Score</th>
+<th>Typical Percentage</th>
+<th>Meaning</th>
+<th>College Credit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>5 (Extremely qualified)</strong></td>
+<td>~70–100%</td>
+<td>Extremely well qualified</td>
+<td>Usually granted</td>
+</tr>
+<tr>
+<td><strong>4 (Well qualified)</strong></td>
+<td>~55–69%</td>
+<td>Well qualified</td>
+<td>Often granted</td>
+</tr>
+<tr>
+<td><strong>3 (Qualified)</strong></td>
+<td>~40–54%</td>
+<td>Qualified</td>
+<td>Sometimes granted</td>
+</tr>
+<tr>
+<td><strong>2 (Possibly qualified)</strong></td>
+<td>~30–39%</td>
+<td>Possibly qualified</td>
+<td>Rarely granted</td>
+</tr>
+<tr>
+<td><strong>1 (No recommendation)</strong></td>
+<td>Below ~30%</td>
+<td>No recommendation</td>
+<td>Not granted</td>
+</tr>
+</tbody>
+</table>
+
+<h3>2025 National Score Distribution</h3>
+<ul>
+<li>
+<strong>Score 5:</strong> 25.5% of test takers</li>
+<li>
+<strong>Score 4:</strong> 21.8% of test takers</li>
+<li>
+<strong>Score 3:</strong> 20.7% of test takers</li>
+<li>
+<strong>Score 2:</strong> 13.1% of test takers</li>
+<li>
+<strong>Score 1:</strong> 18.9% of test takers</li>
+</ul>
+
+<p><strong>What score do you need?</strong> A score of 3 or higher is considered ""passing"" and may qualify for college credit. Check with your target colleges for their specific AP CSA credit policies.</p>
+</section>
+
+<!-- TIME MANAGEMENT -->
+<section id=""timing"" class=""ef-section"">
+<h2 class=""ef-section-header"">Time Management Strategy</h2>
+<h3>Section I: Multiple Choice (90 minutes)</h3>
+<ul>
+<li>
+<strong>First pass (60 minutes):</strong> Answer every question you can solve in under 2 minutes. Flag the rest in Bluebook.</li>
+<li>
+<strong>Second pass (25 minutes):</strong> Return to flagged questions. Spend up to 3–4 minutes each.</li>
+<li>
+<strong>Final check (5 minutes):</strong> Verify every question has an answer selected. There is no guessing penalty — never leave a question blank.</li>
+</ul>
+
+<h3>Section II: Free Response (90 minutes)</h3>
+<p>Because each FRQ is worth a different number of points, allocate your time roughly in proportion to the points. A good baseline:</p>
+<ul>
+<li>
+<strong>FRQ 1 — Methods &amp; Control (~25 min, 7 pts):</strong> Typically the most straightforward; worth investing the time to get clean code</li>
+<li>
+<strong>FRQ 2 — Class Writing (~25 min, 7 pts):</strong> Plan instance variables and constructor before writing methods</li>
+<li>
+<strong>FRQ 3 — ArrayList (~18 min, 5 pts):</strong> Lower point value, so cap your time here</li>
+<li>
+<strong>FRQ 4 — 2D Array (~20 min, 6 pts):</strong> Often the hardest; don't let it eat time from FRQ 1 or 2</li>
+<li>
+<strong>Buffer (~2 min):</strong> Review for missing semicolons, missing return statements, and method-name spelling</li>
+</ul>
+
+<div class=""ef-key-info"">
+<h3>Pro Tip: Flexible FRQ Ordering</h3>
+<p><strong>You do not have to answer FRQs in order.</strong> Bluebook lets you navigate freely between the four questions. Skim all four first and start with the one you are most confident about — just make sure to type each answer in the correct numbered section.</p>
+</div>
+</section>
+
+<!-- JAVA QUICK REFERENCE (Full detail) -->
+<section id=""provided"" class=""ef-section"">
+<h2 class=""ef-section-header"">Java Quick Reference (2025–2026)</h2>
+<p>The <strong>Java Quick Reference</strong> is displayed on screen inside Bluebook during the exam. The 2025–2026 reference has been <strong>expanded</strong> to include Scanner methods, <code>Integer.parseInt</code> / <code>Double.parseDouble</code>, and additional ArrayList operations to reflect the updated curriculum. Here is exactly what it contains:</p>
+
+<div class=""ef-ref-box"">
+<h4>class java.lang.Object</h4>
+<ul>
+<li><code>boolean equals(Object other)</code></li>
+<li><code>String toString()</code></li>
+</ul>
+</div>
+
+<div class=""ef-ref-box"">
+<h4>class java.lang.Integer</h4>
+<ul>
+<li><code>Integer(int value)</code></li>
+<li><code>int intValue()</code></li>
+<li>
+<code>Integer.MIN_VALUE</code> — minimum value represented by an int or Integer</li>
+<li>
+<code>Integer.MAX_VALUE</code> — maximum value represented by an int or Integer</li>
+<li>
+<code>static int parseInt(String s)</code><span class=""ef-ref-new"">New in 2025–2026</span> — returns the int value of the String</li>
+</ul>
+</div>
+
+<div class=""ef-ref-box"">
+<h4>class java.lang.Double</h4>
+<ul>
+<li><code>Double(double value)</code></li>
+<li><code>double doubleValue()</code></li>
+<li>
+<code>static double parseDouble(String s)</code><span class=""ef-ref-new"">New in 2025–2026</span> — returns the double value of the String</li>
+</ul>
+</div>
+
+<div class=""ef-ref-box"">
+<h4>class java.lang.String</h4>
+<ul>
+<li><code>int length()</code></li>
+<li>
+<code>String substring(int from, int to)</code> — returns substring beginning at <code>from</code> and ending at <code>to - 1</code>
+</li>
+<li>
+<code>String substring(int from)</code> — returns <code>substring(from, length())</code>
+</li>
+<li>
+<code>int indexOf(String str)</code> — returns the index of the first occurrence of <code>str</code>, or <code>-1</code> if not found</li>
+<li>
+<code>int compareTo(String other)</code> — negative / zero / positive based on lexicographic order</li>
+</ul>
+<p style=""margin: 12px 0 0 0 !important; font-size: 13px !important; color: #64748b !important; -webkit-text-fill-color: #64748b !important;""><strong>Note:</strong> <code>charAt()</code> is <strong>not</strong> included in the 2025–2026 Java Quick Reference. Use <code>substring(i, i+1)</code> to access a single character.</p>
+</div>
+
+<div class=""ef-ref-box"">
+<h4>class java.lang.Math</h4>
+<ul>
+<li><code>static int abs(int x)</code></li>
+<li><code>static double abs(double x)</code></li>
+<li><code>static double pow(double base, double exponent)</code></li>
+<li><code>static double sqrt(double x)</code></li>
+<li>
+<code>static double random()</code> — returns a double in the range [0.0, 1.0)</li>
+</ul>
+</div>
+
+<div class=""ef-ref-box"">
+<h4>class java.util.Scanner <span class=""ef-ref-new"">New in 2025–2026</span>
+</h4>
+<p style=""margin: 0 0 10px 0 !important; font-size: 13px !important; color: #64748b !important; -webkit-text-fill-color: #64748b !important;"">Scanner is now tested directly (see Topic 4.14 — Reading Data from Files).</p>
+<ul>
+<li>
+<code>Scanner(File source)</code> — constructs a Scanner to read from a file</li>
+<li>
+<code>boolean hasNext()</code> — true if another token is available</li>
+<li>
+<code>boolean hasNextInt()</code> — true if the next token is a valid int</li>
+<li>
+<code>boolean hasNextDouble()</code> — true if the next token is a valid double</li>
+<li>
+<code>String next()</code> — returns the next token as a String</li>
+<li>
+<code>int nextInt()</code> — returns the next token as an int</li>
+<li>
+<code>double nextDouble()</code> — returns the next token as a double</li>
+<li>
+<code>String nextLine()</code> — returns the remainder of the current line</li>
+</ul>
+</div>
+
+<div class=""ef-ref-box"">
+<h4>interface java.util.List<e></e>
+</h4>
+<ul>
+<li><code>int size()</code></li>
+<li>
+<code>boolean add(E obj)</code> — appends obj to end of list, returns true</li>
+<li>
+<code>void add(int index, E obj)</code> — inserts obj at position index</li>
+<li><code>E get(int index)</code></li>
+<li>
+<code>E set(int index, E obj)</code> — replaces element at position index</li>
+<li>
+<code>E remove(int index)</code> — removes element at position index, returns it</li>
+</ul>
+</div>
+
+<div class=""ef-ref-box"">
+<h4>class java.util.ArrayList<e></e>
+</h4>
+<p style=""margin: 0 0 10px 0 !important; font-size: 13px !important; color: #64748b !important; -webkit-text-fill-color: #64748b !important;"">ArrayList implements List<e>, so all List methods above are available. The expanded reference also includes:</e></p>
+<ul>
+<li>
+<code>ArrayList()</code> — constructs an empty ArrayList</li>
+<li>
+<code>boolean contains(Object obj)</code><span class=""ef-ref-new"">Expanded</span> — returns true if the ArrayList contains obj (uses equals)</li>
+<li>
+<code>int indexOf(Object obj)</code><span class=""ef-ref-new"">Expanded</span> — returns the index of the first occurrence of obj, or <code>-1</code> if not found</li>
+</ul>
+</div>
+
+<div class=""ef-key-info"">
+<h3>Practice With It</h3>
+<p>Download a copy of the official 2025–2026 Java Quick Reference from College Board and keep it open whenever you practice FRQs. Knowing exactly which methods are provided (and which you must remember on your own) is one of the highest-leverage things you can do before exam day.</p>
+</div>
+</section>
+
+<!-- WHAT'S PROVIDED -->
+<section class=""ef-section"">
+<h2 class=""ef-section-header"">What's Provided and What You Can Bring</h2>
+<div class=""ef-provided-grid"">
+<div class=""ef-provided-card"">
+<svg class=""ef-provided-svg"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""><rect x=""3"" y=""3"" width=""18"" height=""18"" rx=""2"" ry=""2""></rect><line x1=""3"" y1=""9"" x2=""21"" y2=""9""></line><line x1=""9"" y1=""21"" x2=""9"" y2=""9""></line></svg>
+<div class=""ef-provided-title"">Bluebook App</div>
+<div class=""ef-provided-desc"">Digital testing platform on your laptop or Chromebook</div>
+</div>
+<div class=""ef-provided-card"">
+<svg class=""ef-provided-svg"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""><path d=""M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z""></path><polyline points=""14 2 14 8 20 8""></polyline></svg>
+<div class=""ef-provided-title"">Java Quick Reference</div>
+<div class=""ef-provided-desc"">On-screen inside Bluebook during both sections</div>
+</div>
+<div class=""ef-provided-card"">
+<svg class=""ef-provided-svg"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""><path d=""M12 20h9""></path><path d=""M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z""></path></svg>
+<div class=""ef-provided-title"">Scratch Paper</div>
+<div class=""ef-provided-desc"">Provided by your proctor for tracing code by hand</div>
+</div>
+<div class=""ef-provided-card"">
+<svg class=""ef-provided-svg"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""12"" cy=""12"" r=""10""></circle><polyline points=""12 6 12 12 16 14""></polyline></svg>
+<div class=""ef-provided-title"">Built-in Timer</div>
+<div class=""ef-provided-desc"">Bluebook displays the clock throughout each section</div>
+</div>
+</div>
+
+<h3>What You CANNOT Bring</h3>
+<ul>
+<li>
+<span class=""ef-x"">✗</span> Calculator (not permitted for any section)</li>
+<li>
+<span class=""ef-x"">✗</span> Personal laptop unless approved — the device must be set up for Bluebook</li>
+<li>
+<span class=""ef-x"">✗</span> Notes, books, or reference materials outside the on-screen Quick Reference</li>
+<li>
+<span class=""ef-x"">✗</span> Phone or smartwatch (must be powered off and stored)</li>
+<li>
+<span class=""ef-x"">✗</span> Food or drink in the testing room (may be allowed during the break)</li>
+</ul>
+
+<h3>About Bluebook</h3>
+<p>Bluebook is the College Board's digital testing application. For AP CSA, it provides:</p>
+<ul>
+<li>
+<span class=""ef-check"">✓</span> A built-in code editor for typing FRQ responses (syntax highlighting, no autocomplete)</li>
+<li>
+<span class=""ef-check"">✓</span> The Java Quick Reference panel accessible on every question</li>
+<li>
+<span class=""ef-check"">✓</span> A question-review tool so you can flag and return to MCQs</li>
+<li>
+<span class=""ef-check"">✓</span> Automatic answer saving and submission — no paper scanning required</li>
+</ul>
+<p><strong>Important:</strong> You should install Bluebook and complete the digital practice exam <strong>before</strong> exam day so the testing environment is familiar.</p>
+</section>
+
+<!-- FAQ -->
+<section class=""ef-faq"">
+<h2 class=""ef-section-header"">Frequently Asked Questions</h2>
+
+<div class=""ef-faq-item"">
+<h3 class=""ef-faq-question"">When is the 2027 AP Computer Science A exam?</h3>
+<div class=""ef-faq-answer"">The 2027 AP Computer Science A exam is on <strong>Wednesday, May 12, 2027</strong>. The AP Computer Science Principles exam is two days later, on Friday, May 14, 2027. Always confirm the date and start time against the <a href=""https://apstudents.collegeboard.org/exam-calendar"" rel=""nofollow noopener"" target=""_blank"">official College Board AP exam calendar</a>.</div>
+</div>
+
+<div class=""ef-faq-item"">
+<h3 class=""ef-faq-question"">Is the AP CSA exam digital or on paper?</h3>
+<div class=""ef-faq-answer"">The 2027 AP CSA exam is <strong>fully digital</strong> and delivered through the College Board's Bluebook app. There is no paper option. Both the MCQ and FRQ sections are completed in Bluebook on a laptop or Chromebook, with FRQs typed into a built-in code editor.</div>
+</div>
+
+<div class=""ef-faq-item"">
+<h3 class=""ef-faq-question"">Is AP Computer Science A hard?</h3>
+<div class=""ef-faq-answer"">AP CSA is considered moderately difficult. Success depends on your programming experience and how well you master object-oriented concepts. About <strong>47% of test takers score a 4 or 5</strong> nationally. With consistent practice — especially on FRQs — most students can reach that range.</div>
+</div>
+
+<div class=""ef-faq-item"">
+<h3 class=""ef-faq-question"">Do I need to memorize all Java syntax?</h3>
+<div class=""ef-faq-answer"">No. The <strong>Java Quick Reference</strong> is on screen in Bluebook during the exam and includes String, Math, Integer, Double, Scanner, List, and ArrayList method signatures. However, you still need to know core syntax from memory: loops, conditionals, array declaration, method headers, and class structure.</div>
+</div>
+
+<div class=""ef-faq-item"">
+<h3 class=""ef-faq-question"">Can I use a calculator on the AP CSA exam?</h3>
+<div class=""ef-faq-answer"">No. Calculators are <strong>not permitted</strong> for any section of the AP CSA exam. All arithmetic must be done by hand on scratch paper or mentally.</div>
+</div>
+
+<div class=""ef-faq-item"">
+<h3 class=""ef-faq-question"">What programming language is used on the AP CSA exam?</h3>
+<div class=""ef-faq-answer"">The AP CSA exam uses <strong>Java exclusively</strong>. Python, C++, JavaScript, and other languages are not accepted. All questions require Java syntax and object-oriented programming in Java.</div>
+</div>
+
+<div class=""ef-faq-item"">
+<h3 class=""ef-faq-question"">What topics were removed from the new 2025–2026 curriculum?</h3>
+<div class=""ef-faq-answer"">The updated AP CSA course <strong>no longer tests</strong> inheritance, polymorphism, <code>extends</code>, <code>super</code>, interfaces, or <em>writing</em> recursive methods. Recursion is still tested, but only as <strong>tracing</strong> (predicting the output of given recursive code). New topics include reading data from files with Scanner, data sets, and the expanded ArrayList methods.</div>
+</div>
+
+<div class=""ef-faq-item"">
+<h3 class=""ef-faq-question"">How should I prepare for the FRQ section?</h3>
+<div class=""ef-faq-answer"">Practice with <strong>past FRQs from College Board</strong>, but type your solutions inside Bluebook's practice environment — not a full IDE — so you get used to coding without autocomplete. Focus on one FRQ type per session and review the official scoring rubrics so you know exactly what graders look for.</div>
+</div>
+</section>
+
+<!-- RELATED RESOURCES -->
+<section class=""ef-resources"">
+<h3>Essential Study Resources</h3>
+<div class=""ef-resources-grid"">
+<a href=""/pages/ap-csa-frq-archive"" class=""ef-resource-card"">
+<div class=""ef-resource-title"">FRQ Archive (2004–2025)</div>
+<div class=""ef-resource-desc"">Past free response questions with complete solutions and rubrics</div>
+</a>
+<a href=""/pages/ap-csa-exam-prep-hub"" class=""ef-resource-card"">
+<div class=""ef-resource-title"">Complete Study Guide Hub</div>
+<div class=""ef-resource-desc"">Study guides for all 4 units with practice questions and key concepts</div>
+</a>
+<a href=""/pages/ap-csa-unit-1-complete-study-guide"" class=""ef-resource-card"">
+<div class=""ef-resource-title"">Unit 1: Using Objects &amp; Methods</div>
+<div class=""ef-resource-desc"">Objects, primitives, String class, and Math class</div>
+</a>
+<a href=""/pages/unit-2-selection-and-iteration-ultimate-study-guide"" class=""ef-resource-card"">
+<div class=""ef-resource-title"">Unit 2: Selection &amp; Iteration</div>
+<div class=""ef-resource-desc"">Conditionals, loops, and algorithm development</div>
+</a>
+<a href=""/pages/ap-csa-unit-3-class-creation-study-guide"" class=""ef-resource-card"">
+<div class=""ef-resource-title"">Unit 3: Class Creation</div>
+<div class=""ef-resource-desc"">Writing classes, constructors, and methods</div>
+</a>
+<a href=""/pages/ap-csa-unit-4-data-collections-study-guide"" class=""ef-resource-card"">
+<div class=""ef-resource-title"">Unit 4: Data Collections</div>
+<div class=""ef-resource-desc"">Arrays, ArrayList, 2D arrays, Scanner, and search algorithms</div>
+</a>
+</div>
+</section>
+
+<!-- CTA -->
+<section class=""ef-cta"">
+<h3>Ready to Ace the AP CSA Exam?</h3>
+<p>Get personalized help from an experienced AP CSA teacher with proven results</p>
+<div class=""ef-cta-buttons"">
+<a href=""/pages/ap-computer-science-a-tutor"" class=""ef-cta-btn"">1-on-1 Tutoring (1,800+ Hours)</a>
+<a href=""/pages/ap-csa-qotd-hub"" class=""ef-cta-btn"">Free Daily Practice</a>
+</div>
+<p style=""font-size: 14px !important; margin-top: 16px !important; opacity: 0.9 !important;"">54.5% of my students score 5s vs. 25.5% nationally • 5.0 rating from 451+ reviews</p>
+</section>
+
+</div>
+
+<!-- AP Tools CTA -->
+<div style=""display: block !important; font-family: system-ui,-apple-system,sans-serif !important; margin: 32px auto !important; padding: 24px !important; background: linear-gradient(135deg,#006298 0%,#324dc7 100%) !important; border-radius: 12px !important; text-align: center !important; box-sizing: border-box !important; max-width: 800px !important; width: 100% !important;"">
+<div style=""display: block !important; font-size: 20px !important; font-weight: 700 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; margin: 0 0 8px !important; line-height: 1.3 !important;"">AP CSA Exam Tools</div>
+<div style=""display: block !important; font-size: 14px !important; color: rgba(255,255,255,0.9) !important; -webkit-text-fill-color: rgba(255,255,255,0.9) !important; margin: 0 0 16px !important; line-height: 1.5 !important;"">Predict your AP score and find out which colleges accept it for credit.</div>
+<div style=""display: flex !important; justify-content: center !important; gap: 12px !important; flex-wrap: wrap !important;"">
+<a href=""/pages/ap-csa-score-calculator"" style=""display: inline-block !important; padding: 10px 24px !important; background: #ffffff !important; color: #006298 !important; -webkit-text-fill-color: #006298 !important; font-size: 14px !important; font-weight: 600 !important; font-family: system-ui,-apple-system,sans-serif !important; border-radius: 6px !important; text-decoration: none !important; line-height: 1.4 !important;"">Score Calculator →</a>
+<a href=""/pages/ap-college-credit-policy-search"" style=""display: inline-block !important; padding: 10px 24px !important; background: rgba(255,255,255,0.15) !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 14px !important; font-weight: 600 !important; font-family: system-ui,-apple-system,sans-serif !important; border-radius: 6px !important; text-decoration: none !important; border: 2px solid rgba(255,255,255,0.5) !important; line-height: 1.4 !important;"">College Credit Lookup →</a>
+</div>
+</div>
+<!-- /AP Tools CTA -->
+
+</div>"

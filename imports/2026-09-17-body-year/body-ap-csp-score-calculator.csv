@@ -1,0 +1,707 @@
+﻿"Handle","Command","Body HTML"
+"ap-csp-score-calculator","MERGE","<style>
+:root{--navy:#1E1B4B;--purple:#6B21A8;--mid:#7C3AED;--accent:#A78BFA;
+  --light:#F5F0FF;--lighter:#EDE9FE;--amber:#D97706;--amber-bg:#FFFBEB;
+  --green:#059669;--green-bg:#ECFDF5;--red:#DC2626;--red-bg:#FEF2F2;
+  --g50:#FAFAFA;--g100:#F4F4F5;--g200:#E4E4E7;--g400:#A1A1AA;
+  --g600:#52525B;--g700:#3F3F46;--g800:#27272A;--white:#fff;}
+.sc-wrap{all:initial!important;display:block!important;font-family:Georgia,serif!important;
+  color:var(--g800)!important;max-width:880px!important;margin:0 auto!important;
+  padding:0 16px 72px!important;box-sizing:border-box!important;line-height:1.7!important;}
+.sc-wrap *{box-sizing:border-box!important;}
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+.sc-hero{background:linear-gradient(135deg,#0C1A3D 0%,#1E3A8A 55%,#164E63 100%)!important;
+  border-radius:24px!important;padding:48px 40px 40px!important;margin-bottom:28px!important;color:#fff!important;}
+.sc-hero .eyebrow{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:2px!important;color:#93C5FD!important;margin-bottom:10px!important;display:block!important;}
+.sc-hero h1{font-size:clamp(22px,4vw,34px)!important;font-weight:700!important;color:#fff!important;
+  margin:0 0 10px!important;line-height:1.2!important;}
+.sc-hero .sub{font-size:15px!important;color:rgba(255,255,255,.78)!important;margin:0 0 20px!important;line-height:1.6!important;}
+.sc-hero .badges{display:flex!important;flex-wrap:wrap!important;gap:8px!important;}
+.badge{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.18)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;padding:4px 12px!important;border-radius:20px!important;
+  font-size:12px!important;font-weight:600!important;}
+.how-box{background:#EFF6FF!important;border-left:4px solid #2563EB!important;
+  border-radius:0 12px 12px 0!important;padding:16px 20px!important;margin-bottom:24px!important;}
+.how-label{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1.5px!important;color:#1D4ED8!important;margin-bottom:6px!important;display:block!important;}
+.how-box p{margin:0!important;font-size:14px!important;color:var(--g700)!important;}
+.calc-card{background:#fff!important;border:1px solid var(--g200)!important;border-radius:16px!important;
+  padding:32px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,.08)!important;}
+.calc-card h2{font-size:18px!important;font-weight:700!important;color:var(--navy)!important;
+  margin:0 0 24px!important;padding-bottom:12px!important;border-bottom:2px solid #DBEAFE!important;}
+.sl-row{margin-bottom:28px!important;}
+.sl-header{display:flex!important;justify-content:space-between!important;align-items:baseline!important;margin-bottom:8px!important;}
+.sl-label{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;}
+.sl-sub{font-size:12px!important;color:var(--g400)!important;}
+.sl-value{font-size:26px!important;font-weight:700!important;color:#1D4ED8!important;}
+input[type=range]{-webkit-appearance:none!important;appearance:none!important;width:100%!important;
+  height:8px!important;background:var(--g200)!important;border-radius:4px!important;outline:none!important;
+  cursor:pointer!important;margin:4px 0!important;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none!important;width:24px!important;height:24px!important;
+  border-radius:50%!important;background:#1D4ED8!important;cursor:pointer!important;
+  border:3px solid #fff!important;box-shadow:0 2px 6px rgba(29,78,216,.4)!important;}
+.sl-ticks{display:flex!important;justify-content:space-between!important;font-size:11px!important;
+  color:var(--g400)!important;margin-top:4px!important;}
+.cpt-section{background:#EFF6FF!important;border-radius:12px!important;padding:20px 24px!important;margin-bottom:16px!important;}
+.cpt-section h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;margin:0 0 14px!important;}
+.cpt-row-item{display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding:10px 14px!important;border:1px solid #BFDBFE!important;border-radius:8px!important;
+  margin-bottom:8px!important;background:#fff!important;}
+.cpt-row-label{font-size:13px!important;font-weight:700!important;color:var(--navy)!important;flex:1!important;}
+.cpt-row-sub{font-size:11px!important;color:var(--g400)!important;display:block!important;}
+.cpt-toggle{display:flex!important;gap:6px!important;}
+.cpt-btn{padding:5px 14px!important;border-radius:6px!important;border:1.5px solid var(--g200)!important;
+  font-size:13px!important;font-weight:700!important;cursor:pointer!important;background:#fff!important;
+  color:var(--g700)!important;-webkit-text-fill-color:var(--g700)!important;transition:all .15s!important;}
+.cpt-btn.active-y{background:#DCFCE7!important;border-color:#16A34A!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.cpt-btn.active-n{background:#FEE2E2!important;border-color:#DC2626!important;color:#991B1B!important;-webkit-text-fill-color:#991B1B!important;}
+.comp-section{background:#DBEAFE!important;border-radius:12px!important;
+  padding:20px 24px!important;margin-bottom:24px!important;}
+.comp-row{display:flex!important;justify-content:space-between!important;align-items:center!important;
+  margin-bottom:12px!important;flex-wrap:wrap!important;gap:8px!important;}
+.comp-label{font-size:12px!important;font-weight:700!important;color:var(--navy)!important;
+  text-transform:uppercase!important;letter-spacing:1px!important;}
+.comp-num-big{font-size:36px!important;font-weight:700!important;color:#1D4ED8!important;}
+.comp-max{font-size:14px!important;color:var(--g400)!important;}
+.bar-track{background:rgba(255,255,255,.5)!important;border-radius:4px!important;height:14px!important;overflow:hidden!important;margin-bottom:6px!important;}
+.bar-fill{height:100%!important;border-radius:4px!important;transition:width .3s ease,background .3s!important;}
+.bar-labels{display:flex!important;justify-content:space-between!important;font-size:11px!important;color:var(--g600)!important;}
+.score-result{border-radius:16px!important;padding:28px!important;margin-bottom:24px!important;
+  transition:all .3s!important;border:2px solid transparent!important;}
+.sr-top{display:flex!important;align-items:center!important;gap:20px!important;margin-bottom:14px!important;flex-wrap:wrap!important;}
+.sr-num{font-size:80px!important;font-weight:700!important;line-height:1!important;}
+.sr-meta h3{font-size:20px!important;font-weight:700!important;margin:0 0 4px!important;}
+.sr-meta p{margin:0!important;font-size:14px!important;color:var(--g600)!important;}
+.sr-tip{font-size:14px!important;color:var(--g700)!important;line-height:1.7!important;}
+.score-table{width:100%!important;border-collapse:collapse!important;font-size:14px!important;margin-bottom:24px!important;}
+.score-table th{background:var(--navy)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  padding:10px 14px!important;text-align:left!important;font-size:11px!important;
+  text-transform:uppercase!important;letter-spacing:.5px!important;}
+.score-table td{padding:10px 14px!important;border-bottom:1px solid var(--g200)!important;color:var(--g700)!important;}
+.score-table tr:nth-child(even) td{background:var(--g50)!important;}
+.score-table tr.active-row td{background:#DBEAFE!important;font-weight:700!important;}
+.s-badge{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:2px 10px!important;border-radius:12px!important;}
+.s5b{background:#DCFCE7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.s4b{background:#DBEAFE!important;color:#1E40AF!important;-webkit-text-fill-color:#1E40AF!important;}
+.s3b{background:#FEFCE8!important;color:#713F12!important;-webkit-text-fill-color:#713F12!important;}
+.s2b{background:#FEF3C7!important;color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+.s1b{background:#FEE2E2!important;color:#991B1B!important;-webkit-text-fill-color:#991B1B!important;}
+.dist-row{display:flex!important;align-items:center!important;gap:12px!important;margin-bottom:8px!important;}
+.dist-score{width:20px!important;font-size:14px!important;font-weight:700!important;text-align:right!important;flex-shrink:0!important;}
+.dist-bar-wrap{flex:1!important;}
+.dist-bar{height:28px!important;border-radius:4px!important;transition:width .4s!important;
+  display:flex!important;align-items:center!important;padding:0 8px!important;}
+.dist-bar-label{font-size:12px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;white-space:nowrap!important;}
+.dist-pct{font-size:13px!important;font-weight:700!important;width:36px!important;text-align:right!important;flex-shrink:0!important;}
+.path-box{background:linear-gradient(135deg,#0C1A3D,#1E3A8A)!important;border-radius:16px!important;
+  padding:28px 32px!important;margin-bottom:24px!important;color:#fff!important;}
+.path-box h3{font-size:18px!important;font-weight:700!important;color:#fff!important;margin:0 0 16px!important;}
+.path-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;}
+.path-item{background:rgba(255,255,255,.08)!important;border-radius:12px!important;padding:16px!important;}
+.pi-label{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:1px!important;color:#93C5FD!important;margin-bottom:4px!important;}
+.pi-val{font-size:20px!important;font-weight:700!important;color:#fff!important;}
+.pi-sub{font-size:12px!important;color:rgba(255,255,255,.6)!important;margin-top:2px!important;}
+.callout-warn{background:#FFFBEB!important;border-left:4px solid #D97706!important;
+  border-radius:0 8px 8px 0!important;padding:14px 18px!important;margin:16px 0!important;
+  font-size:14px!important;color:var(--g700)!important;}
+.callout-info{background:#EFF6FF!important;border-left:4px solid #2563EB!important;
+  border-radius:0 8px 8px 0!important;padding:14px 18px!important;margin:16px 0!important;
+  font-size:14px!important;color:var(--g700)!important;}
+.callout-warn strong{color:#92400E!important;display:block!important;margin-bottom:4px!important;font-size:12px!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
+.callout-info strong{color:#1D4ED8!important;display:block!important;margin-bottom:4px!important;font-size:12px!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
+.tutor-cta{background:linear-gradient(135deg,#0C1A3D,#1E3A8A,#164E63)!important;border-radius:16px!important;
+  padding:28px 32px!important;margin:28px 0!important;display:flex!important;align-items:center!important;
+  gap:24px!important;flex-wrap:wrap!important;border:1px solid rgba(147,197,253,.2)!important;}
+.tutor-cta strong{display:block!important;color:#93C5FD!important;-webkit-text-fill-color:#93C5FD!important;font-size:16px!important;margin-bottom:6px!important;}
+.tutor-cta p{color:rgba(255,255,255,.72)!important;-webkit-text-fill-color:rgba(255,255,255,.72)!important;font-size:14px!important;margin:0!important;}
+.tutor-btn{display:inline-block!important;background:#fff!important;color:#1D4ED8!important;
+  -webkit-text-fill-color:#1D4ED8!important;padding:12px 24px!important;border-radius:8px!important;
+  font-weight:700!important;font-size:14px!important;text-decoration:none!important;white-space:nowrap!important;flex-shrink:0!important;}
+.tutor-btn:link,.tutor-btn:visited{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important;text-decoration:none!important;}
+.related-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))!important;gap:12px!important;margin-top:12px!important;}
+.related-card{display:block!important;padding:14px 16px!important;border:1px solid #DBEAFE!important;
+  border-radius:8px!important;text-decoration:none!important;border-left:3px solid #1D4ED8!important;}
+.related-card:hover{background:#EFF6FF!important;}
+.related-card:link,.related-card:visited{color:inherit!important;text-decoration:none!important;}
+.rc-label{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:.8px!important;color:#1D4ED8!important;margin-bottom:4px!important;}
+.rc-title{font-size:13px!important;font-weight:700!important;color:var(--navy)!important;line-height:1.4!important;}
+.author-box{background:linear-gradient(135deg,#0C1A3D,#1E3A8A)!important;border-radius:16px!important;
+  padding:24px 28px!important;margin:24px 0!important;display:flex!important;gap:16px!important;
+  align-items:flex-start!important;flex-wrap:wrap!important;}
+.author-avatar{width:60px!important;height:60px!important;border-radius:50%!important;background:#1D4ED8!important;
+  flex-shrink:0!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  font-size:20px!important;font-weight:700!important;color:#fff!important;border:2px solid #93C5FD!important;}
+.author-name{font-size:16px!important;font-weight:700!important;color:#fff!important;margin:0 0 2px!important;}
+.author-role{font-size:11px!important;color:#93C5FD!important;-webkit-text-fill-color:#93C5FD!important;font-weight:700!important;
+  text-transform:uppercase!important;letter-spacing:.7px!important;margin-bottom:8px!important;}
+.author-bio{font-size:13px!important;color:rgba(255,255,255,.75)!important;margin:0 0 10px!important;line-height:1.55!important;}
+.author-stats{display:flex!important;flex-wrap:wrap!important;gap:8px!important;}
+.astat{background:rgba(255,255,255,.1)!important;border-radius:20px!important;padding:3px 10px!important;
+  font-size:11px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:500!important;}
+.breadcrumb{font-size:13px!important;color:var(--g400)!important;margin-bottom:16px!important;
+  display:flex!important;flex-wrap:wrap!important;gap:4px!important;}
+.breadcrumb a{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important;text-decoration:none!important;}
+.bc-sep{color:var(--g200)!important;}
+.faq-list{list-style:none!important;padding:0!important;margin:0!important;}
+.faq-item{border:1px solid var(--g200)!important;border-radius:12px!important;margin-bottom:12px!important;overflow:hidden!important;}
+.faq-q{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;padding:16px 20px!important;
+  cursor:pointer!important;display:flex!important;justify-content:space-between!important;align-items:center!important;gap:12px!important;}
+.faq-q:hover{background:var(--g50)!important;}
+.faq-chev{font-size:12px!important;color:var(--g400)!important;transition:transform .2s!important;flex-shrink:0!important;}
+.faq-a{display:none!important;padding:0 20px 16px!important;font-size:14px!important;color:var(--g600)!important;line-height:1.7!important;}
+.faq-a.open{display:block!important;}
+.faq-item.open .faq-chev{transform:rotate(180deg)!important;}
+h2.section-h{font-size:20px!important;font-weight:700!important;color:var(--navy)!important;margin:32px 0 14px!important;
+  padding-bottom:10px!important;border-bottom:2px solid #DBEAFE!important;}
+.section-p{font-size:15px!important;color:var(--g700)!important;line-height:1.7!important;margin:0 0 14px!important;}
+.cpt-score-display{display:flex!important;gap:16px!important;align-items:center!important;
+  padding:14px!important;background:#fff!important;border-radius:8px!important;margin-top:12px!important;}
+.cpt-earned{font-size:24px!important;font-weight:700!important;color:#1D4ED8!important;}
+.cpt-earned-label{font-size:12px!important;color:var(--g400)!important;}
+@media(max-width:600px){
+  .sc-hero{padding:28px 20px!important;}
+  .calc-card{padding:20px!important;}
+  .path-grid{grid-template-columns:1fr!important;}
+  .tutor-cta{flex-direction:column!important;}
+  .sr-num{font-size:56px!important;}
+}
+</style>
+
+<div class=""sc-wrap"" id=""csp-calc-wrapper"">
+
+<div class=""breadcrumb"">
+  <a href=""/"">Home</a><span class=""bc-sep""> › </span>
+  <a href=""/pages/ap-computer-science-principles-resources"">AP Computer Science Principles</a><span class=""bc-sep""> › </span>
+  <span>Score Calculator</span>
+</div>
+
+<div class=""sc-hero"">
+  <span class=""eyebrow"">AP Computer Science Principles</span>
+  <h1>AP CSP Score Calculator 2027</h1>
+  <p class=""sub"">Enter your MCQ score and CPT rows earned for an instant AP score estimate — built on the official CSP scoring formula and 2025 national score data.</p>
+  <div class=""badges"">
+    <span class=""badge"">70 MCQ • 70%</span>
+    <span class=""badge"">CPT 6 Rows • 30%</span>
+    <span class=""badge"">Composite 0–100</span>
+    <span class=""badge"">2025 Data</span>
+    <span class=""badge"">CPT Deadline ~Apr 30</span>
+  </div>
+</div>
+
+<div class=""how-box"">
+  <span class=""how-label"">How AP CSP Scoring Works</span>
+  <p>AP CSP has two scored components: the <strong>MCQ</strong> (70 questions, worth exactly 70 composite points) and the <strong>Create Performance Task (CPT)</strong> scored on 6 rows at 5 points each (worth 30 composite points). Your composite = MCQ raw + (rows earned ÷ 6 × 30). Composite 0–100 maps to AP score 1–5. <strong>The CPT is submitted ~April 30 and scored before the exam.</strong></p>
+</div>
+
+<div class=""calc-card"">
+  <h2>Section 1 — Multiple Choice</h2>
+  
+  <div class=""sl-row"">
+    <div class=""sl-header"">
+      <div>
+        <div class=""sl-label"">MCQ Correct</div>
+        <div class=""sl-sub"">70 questions • 70% of score • no penalty for guessing</div>
+      </div>
+      <div class=""sl-value"">
+<span id=""csp-mcq-val"">45</span> / 70</div>
+    </div>
+    <input type=""range"" id=""csp-mcq"" min=""0"" max=""70"" value=""45"" oninput=""cspCalc()"">
+    <div class=""sl-ticks"">
+<span>0</span><span>17</span><span>35</span><span>52</span><span>70</span>
+</div>
+  </div>
+</div>
+
+<div class=""calc-card"">
+  <h2>Section 2 — Create Performance Task (CPT)</h2>
+  <div class=""callout-warn"" style=""margin-top:0!important;margin-bottom:16px!important;"">
+    <strong>CPT Submission Deadline</strong>
+    The CPT is submitted through AP Digital Portfolio approximately <strong>April 30, 2027</strong>. It is scored by College Board readers before the MCQ exam. Each of the 6 rubric rows is worth 5 composite points. You either earn the row (5 pts) or you do not (0 pts) — no partial credit within a row.
+  </div>
+
+  <div class=""cpt-section"">
+    <h3>Select which CPT rows you earned:</h3>
+    <div class=""cpt-row-item"">
+      <div class=""cpt-row-label"">Row 1 <span class=""cpt-row-sub"">Program Purpose and Function</span>
+</div>
+      <div class=""cpt-toggle"">
+        <button class=""cpt-btn active-y"" id=""r1y"" onclick=""cptSet(1,1)"">Earned</button>
+        <button class=""cpt-btn"" id=""r1n"" onclick=""cptSet(1,0)"">Not Earned</button>
+      </div>
+    </div>
+    <div class=""cpt-row-item"">
+      <div class=""cpt-row-label"">Row 2 <span class=""cpt-row-sub"">Data Abstraction</span>
+</div>
+      <div class=""cpt-toggle"">
+        <button class=""cpt-btn active-y"" id=""r2y"" onclick=""cptSet(2,1)"">Earned</button>
+        <button class=""cpt-btn"" id=""r2n"" onclick=""cptSet(2,0)"">Not Earned</button>
+      </div>
+    </div>
+    <div class=""cpt-row-item"">
+      <div class=""cpt-row-label"">Row 3 <span class=""cpt-row-sub"">Managing Complexity</span>
+</div>
+      <div class=""cpt-toggle"">
+        <button class=""cpt-btn active-y"" id=""r3y"" onclick=""cptSet(3,1)"">Earned</button>
+        <button class=""cpt-btn"" id=""r3n"" onclick=""cptSet(3,0)"">Not Earned</button>
+      </div>
+    </div>
+    <div class=""cpt-row-item"">
+      <div class=""cpt-row-label"">Row 4 <span class=""cpt-row-sub"">Procedural Abstraction</span>
+</div>
+      <div class=""cpt-toggle"">
+        <button class=""cpt-btn active-y"" id=""r4y"" onclick=""cptSet(4,1)"">Earned</button>
+        <button class=""cpt-btn"" id=""r4n"" onclick=""cptSet(4,0)"">Not Earned</button>
+      </div>
+    </div>
+    <div class=""cpt-row-item"">
+      <div class=""cpt-row-label"">Row 5 <span class=""cpt-row-sub"">Algorithm Implementation</span>
+</div>
+      <div class=""cpt-toggle"">
+        <button class=""cpt-btn active-y"" id=""r5y"" onclick=""cptSet(5,1)"">Earned</button>
+        <button class=""cpt-btn"" id=""r5n"" onclick=""cptSet(5,0)"">Not Earned</button>
+      </div>
+    </div>
+    <div class=""cpt-row-item"">
+      <div class=""cpt-row-label"">Row 6 <span class=""cpt-row-sub"">Testing</span>
+</div>
+      <div class=""cpt-toggle"">
+        <button class=""cpt-btn active-y"" id=""r6y"" onclick=""cptSet(6,1)"">Earned</button>
+        <button class=""cpt-btn"" id=""r6n"" onclick=""cptSet(6,0)"">Not Earned</button>
+      </div>
+    </div>
+    <div class=""cpt-score-display"">
+      <div>
+<div class=""cpt-earned"" id=""csp-cpt-pts"">30</div>
+<div class=""cpt-earned-label"">CPT points (out of 30)</div>
+</div>
+      <div style=""color:var(--g400);font-size:13px!important;"">= <span id=""csp-cpt-rows"">6</span>/6 rows × 5 pts each</div>
+    </div>
+  </div>
+
+  <div class=""comp-section"">
+    <div class=""comp-row"">
+      <div class=""comp-label"">Composite Score</div>
+      <div>
+<span class=""comp-num-big"" id=""csp-comp"">75</span><span class=""comp-max""> / 100</span>
+</div>
+    </div>
+    <div class=""bar-track""><div class=""bar-fill"" id=""csp-bar"" style=""width:75%;background:#1D4ED8;""></div></div>
+    <div class=""bar-labels"">
+<span>0</span><span>45 (2)</span><span>58 (3)</span><span>72 (4)</span><span>83 (5)</span><span>100</span>
+</div>
+  </div>
+</div>
+
+<div class=""score-result"" id=""csp-result"" style=""background:#EFF6FF;border-color:#93C5FD;"">
+  <div class=""sr-top"">
+    <div class=""sr-num"" id=""csp-grade-num"" style=""color:#1D4ED8;"">--</div>
+    <div class=""sr-meta"">
+      <h3 id=""csp-grade-label"" style=""color:#1E1B4B;"">Adjust sliders above</h3>
+      <p id=""csp-grade-desc"">Enter your MCQ and CPT rows to see your estimated AP score.</p>
+    </div>
+  </div>
+  <p class=""sr-tip"" id=""csp-grade-tip""></p>
+</div>
+
+<div class=""path-box"">
+  <h3>Realistic Path to a 5 in 2027</h3>
+  <div class=""path-grid"">
+    <div class=""path-item"">
+      <div class=""pi-label"">MCQ Target</div>
+      <div class=""pi-val"">53+ / 70 correct</div>
+      <div class=""pi-sub"">76% accuracy → 53 composite pts</div>
+    </div>
+    <div class=""path-item"">
+      <div class=""pi-label"">CPT Target</div>
+      <div class=""pi-val"">All 6 rows</div>
+      <div class=""pi-sub"">30 composite pts (max)</div>
+    </div>
+    <div class=""path-item"">
+      <div class=""pi-label"">Combined Target</div>
+      <div class=""pi-val"">83+ composite</div>
+      <div class=""pi-sub"">Estimated 5 threshold</div>
+    </div>
+    <div class=""path-item"">
+      <div class=""pi-label"">2025 Result</div>
+      <div class=""pi-val"">11% earned a 5</div>
+      <div class=""pi-sub"">63% passed (3 or higher)</div>
+    </div>
+  </div>
+</div>
+
+<h2 class=""section-h"">AP CSP College Credit</h2>
+<p class=""section-p"">AP Computer Science Principles is accepted for college credit at hundreds of institutions. Credit policies vary — some schools grant CS elective credit, others grant intro programming credit, and some highly selective CS programs require a 4 or 5. Because AP CSP does not require Java or programming fluency, credit awards can differ from AP CSA even at the same school.</p>
+<table class=""score-table"">
+  <thead><tr>
+<th>AP Score</th>
+<th>Typical Credit Outcome</th>
+<th>Notes</th>
+</tr></thead>
+  <tbody>
+    <tr>
+<td><span class=""s-badge s5b"">5</span></td>
+<td>CS elective or intro CS credit; sometimes placement out of computing literacy requirement</td>
+<td>Only 11% of students scored a 5 in 2025. Strong signal of computational thinking mastery.</td>
+</tr>
+    <tr>
+<td><span class=""s-badge s4b"">4</span></td>
+<td>CS elective or intro computing credit at most schools</td>
+<td>Accepted by the majority of colleges with AP CS credit policies.</td>
+</tr>
+    <tr>
+<td><span class=""s-badge s3b"">3</span></td>
+<td>Credit at many schools; some require 4+</td>
+<td>Check your specific school. CSP credit is often less than CSA credit due to different scope.</td>
+</tr>
+    <tr>
+<td><span class=""s-badge s2b"">2</span></td>
+<td>Generally no credit</td>
+<td></td>
+</tr>
+    <tr>
+<td><span class=""s-badge s1b"">1</span></td>
+<td>No credit</td>
+<td></td>
+</tr>
+  </tbody>
+</table>
+<div class=""callout-info"">
+  <strong>Search the Official AP Credit Database</strong>
+  College Board maintains credit policies for over 1,000 colleges. Search by school to see exact score requirements and credit hours awarded: <a href=""https://apstudents.collegeboard.org/getting-credit-placement/search-policies"" target=""_blank"" rel=""noopener"" style=""color:#1D4ED8!important;font-weight:700!important;"">College Board AP Credit Policy Search →</a>
+</div>
+<h2 class=""section-h"">Estimated Score Cutoffs (2027)</h2>
+<p class=""section-p"">College Board does not publish exact AP CSP score conversion thresholds. The estimates below are based on analysis of 2023–2025 score distributions. These are best available public estimates; actual cutoffs can shift 2–4 composite points from year to year.</p>
+
+<table class=""score-table"" id=""csp-cuts-table"">
+  <thead><tr>
+<th>AP Score</th>
+<th>Qualifier</th>
+<th>Estimated Composite</th>
+<th>Typical MCQ / CPT</th>
+</tr></thead>
+  <tbody>
+    <tr id=""csp-cut5"">
+<td><span class=""s-badge s5b"">5</span></td>
+<td>Extremely Well Qualified</td>
+<td>83 – 100</td>
+<td>53+ MCQ / all 6 CPT rows</td>
+</tr>
+    <tr id=""csp-cut4"">
+<td><span class=""s-badge s4b"">4</span></td>
+<td>Well Qualified</td>
+<td>72 – 82</td>
+<td>47–52 MCQ / 5–6 CPT rows</td>
+</tr>
+    <tr id=""csp-cut3"">
+<td><span class=""s-badge s3b"">3</span></td>
+<td>Qualified</td>
+<td>58 – 71</td>
+<td>35–46 MCQ / 4–5 CPT rows</td>
+</tr>
+    <tr id=""csp-cut2"">
+<td><span class=""s-badge s2b"">2</span></td>
+<td>Possibly Qualified</td>
+<td>45 – 57</td>
+<td>25–34 MCQ / 3–4 CPT rows</td>
+</tr>
+    <tr id=""csp-cut1"">
+<td><span class=""s-badge s1b"">1</span></td>
+<td>No Recommendation</td>
+<td>0 – 44</td>
+<td>Below 25 MCQ or missing CPT rows</td>
+</tr>
+  </tbody>
+</table>
+
+<div class=""callout-warn"">
+  <strong>CPT Row Missed = 5 Composite Points Lost</strong>
+  Each unearned CPT row costs exactly 5 composite points. That is the same as getting ~5 additional MCQ questions wrong. Before the exam, verify that every row of your written responses explicitly addresses the row criteria — especially Row 3 (Managing Complexity) and Row 5 (Algorithm Implementation), which are the most commonly missed.
+</div>
+
+<h2 class=""section-h"">2025 National Score Distribution</h2>
+<p class=""section-p"">Source: Trevor Packer / College Board, June 2025. 63% of students scored 3 or higher.</p>
+
+<div style=""margin-bottom:24px!important;"">
+  <div class=""dist-row"">
+<div class=""dist-score"">5</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:11%;background:#16A34A;""><span class=""dist-bar-label"">11%</span></div></div>
+<div class=""dist-pct"">11%</div>
+</div>
+  <div class=""dist-row"">
+<div class=""dist-score"">4</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:20%;background:#2563EB;""><span class=""dist-bar-label"">20%</span></div></div>
+<div class=""dist-pct"">20%</div>
+</div>
+  <div class=""dist-row"">
+<div class=""dist-score"">3</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:32%;background:#CA8A04;""><span class=""dist-bar-label"">32%</span></div></div>
+<div class=""dist-pct"">32%</div>
+</div>
+  <div class=""dist-row"">
+<div class=""dist-score"">2</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:22%;background:#EA580C;""><span class=""dist-bar-label"">22%</span></div></div>
+<div class=""dist-pct"">22%</div>
+</div>
+  <div class=""dist-row"">
+<div class=""dist-score"">1</div>
+<div class=""dist-bar-wrap""><div class=""dist-bar"" style=""width:15%;background:#DC2626;""><span class=""dist-bar-label"">15%</span></div></div>
+<div class=""dist-pct"">15%</div>
+</div>
+</div>
+
+<div class=""callout-info"">
+  <strong>Why CSP Has Fewer 5s Than CSA</strong>
+  AP CSP is designed for a broader population — students with no prior programming experience can and do take it. The 11% rate of 5s reflects both the difficulty of earning all 6 CPT rows AND strong MCQ performance. Students who earn all 6 CPT rows and score 53+ MCQ have a realistic path to a 5. Missing even one CPT row makes a 5 significantly harder to achieve from MCQ alone.
+</div>
+
+<h2 class=""section-h"">Is Your AP CSP Score Good?</h2>
+<div class=""callout-info"" style=""margin-bottom:16px!important;background:#EFF6FF!important;border-left-color:#2563EB!important;"">
+  <strong style=""color:#1D4ED8!important;"">Is a 5 Good on AP CSP?</strong>
+  Yes — a 5 on AP CSP is exceptional. Only 11% of test-takers scored a 5 in 2025, the lowest 5-rate in the AP CS suite. Earning all 6 CPT rows (30 pts) and 53+ MCQ correct (53 pts) is required. A 5 demonstrates that you can write well-structured code addressing all CPT criteria AND answer nuanced algorithmic and impact questions under exam conditions.
+</div>
+<div class=""callout-info"" style=""margin-bottom:16px!important;background:#EFF6FF!important;border-left-color:#2563EB!important;"">
+  <strong style=""color:#1D4ED8!important;"">Is a 4 Good on AP CSP?</strong>
+  Yes — a 4 is strong. In 2025, 20% of students scored a 4. It is ""Well Qualified"" and earns computing credit at most universities. A 4 typically requires 5–6 CPT rows and 47–52 correct MCQ. Many students earning a 4 missed Row 3 (Managing Complexity) or Row 5 (Algorithm Implementation) and can earn a 5 by specifically addressing those criteria in their written responses.
+</div>
+<div class=""callout-info"" style=""margin-bottom:16px!important;background:#EFF6FF!important;border-left-color:#2563EB!important;"">
+  <strong style=""color:#1D4ED8!important;"">Is a 3 Good on AP CSP?</strong>
+  A 3 is passing (""Qualified"") and was earned by 32% of students in 2025 — the most common score. It earns credit at many colleges. A 3 typically reflects earning 4–5 CPT rows and scoring 35–46 on MCQ. If you earned a 3 and want to improve, the CPT rows are the highest-leverage area: each unearned row costs exactly 5 composite points.
+</div>
+<h2 class=""section-h"">AP CSP Exam Format (2026–2027)</h2>
+<table class=""score-table"">
+  <thead><tr>
+<th>Component</th>
+<th>Details</th>
+<th>Weight</th>
+<th>Timing</th>
+</tr></thead>
+  <tbody>
+    <tr>
+<td><strong>MCQ</strong></td>
+<td>70 questions, no penalty for guessing, covers all 5 Big Ideas</td>
+<td>70%</td>
+<td>Exam day (May 14, 2027)</td>
+</tr>
+    <tr>
+<td><strong>CPT Row 1</strong></td>
+<td>Program Purpose and Function</td>
+<td rowspan=""6"">30%<br>(5 pts/row)</td>
+<td rowspan=""6"">Submitted ~April 30, 2027 via AP Digital Portfolio</td>
+</tr>
+    <tr>
+<td><strong>CPT Row 2</strong></td>
+<td>Data Abstraction</td>
+</tr>
+    <tr>
+<td><strong>CPT Row 3</strong></td>
+<td>Managing Complexity</td>
+</tr>
+    <tr>
+<td><strong>CPT Row 4</strong></td>
+<td>Procedural Abstraction</td>
+</tr>
+    <tr>
+<td><strong>CPT Row 5</strong></td>
+<td>Algorithm Implementation</td>
+</tr>
+    <tr>
+<td><strong>CPT Row 6</strong></td>
+<td>Testing</td>
+</tr>
+  </tbody>
+</table>
+
+<div class=""callout-info"">
+  <strong>2027 Exam Date</strong>
+  AP Computer Science Principles exam: <strong>Friday, May 14, 2027.</strong> CPT submission deadline: approximately <strong>April 30, 2027</strong> via AP Digital Portfolio. The CPT is scored before the MCQ exam date.
+</div>
+
+<div class=""tutor-cta"">
+<div>
+<strong>Struggling with CPT rows or Big Idea 3?</strong>
+<p>1-on-1 tutoring with Tanner Crow — AP CS teacher, 5.0 Wyzant rating, 2,067+ tutoring hours. One targeted session on your weakest Big Idea or CPT row can move your score.</p>
+</div>
+<a href=""/pages/ap-computer-science-a-tutor"" class=""tutor-btn"">Book a Session →</a>
+</div>
+
+<h2 class=""section-h"">How Accurate Is This AP CSP Score Calculator?</h2>
+<div class=""callout-info"" style=""background:#EFF6FF!important;border-left-color:#2563EB!important;"">
+  <strong style=""color:#1D4ED8!important;"">What This Calculator Gets Right</strong>
+  The AP CSP scoring formula (composite = MCQ raw + CPT rows × 5) is confirmed by the official CED and College Board’s published scoring information. The 2025 score distribution (5=11%, 4=20%, 3=32%, 2=22%, 1=15%) is sourced directly from Trevor Packer’s official College Board release in June 2025. The CPT row interface reflects the actual 6-row binary scoring structure (0 or 5 per row, no partial credit within a row).
+</div>
+<div class=""callout-warn"" style=""margin-top:12px!important;"">
+  <strong>What This Calculator Cannot Guarantee</strong>
+  College Board does not publish exact composite-to-AP-score cutoffs. The thresholds (5≥83, 4≥72, 3≥58, 2≥45) are estimates based on 2023–2025 distribution analysis. Actual cutoffs shift 2–4 composite points each year. Use this calculator to set preparation targets and understand the relative impact of each CPT row vs. MCQ improvement — not as a guaranteed score prediction.
+</div>
+<h2 class=""section-h"">Frequently Asked Questions</h2>
+<ul class=""faq-list"">
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">How is the AP CSP score calculated?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">Composite = MCQ raw score (0–70) + (CPT rows earned ÷ 6 × 30). Each MCQ correct answer = 1 composite point (directly). Each CPT row = 5 composite points. Maximum composite = 70 (MCQ) + 30 (CPT) = 100. The composite then maps to an AP score of 1–5 via College Board’s conversion table.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">What are the 6 CPT rubric rows?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">Row 1: Program Purpose and Function — your video and written response explain what your program does. Row 2: Data Abstraction — you use a list/collection in a meaningful way. Row 3: Managing Complexity — your list/abstraction manages complexity that would otherwise require many variables. Row 4: Procedural Abstraction — you define and call a procedure with a parameter. Row 5: Algorithm Implementation — your procedure includes sequencing, selection, and iteration. Row 6: Testing — you test with two different argument values and explain results. Each row is scored 0 or 5; no partial credit within a row.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">What composite score do I need for a 5 on AP CSP?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">Based on 2023–2025 score distribution analysis, a composite of approximately <strong>83 or higher</strong> is needed for a 5. This is an estimate — College Board does not publish exact cutoffs, and the threshold can shift 2–4 points each year. Only 11% of students scored a 5 in 2025, making it the hardest top score in the AP CS suite.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">What is the CPT deadline for 2026?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">The Create Performance Task (CPT) must be submitted through AP Digital Portfolio by approximately <strong>April 30, 2027</strong>. This date is set by College Board and may shift slightly — confirm with your teacher and check AP Classroom for the exact date. Late submissions are not accepted.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">Which CPT rows are most commonly missed?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">Row 3 (Managing Complexity) and Row 5 (Algorithm Implementation) are the most commonly missed. Row 3 requires explicitly arguing that your list manages complexity that would otherwise require many variables — many students just describe what the list does without making this argument. Row 5 requires sequencing, selection (if/else), and iteration (loop) all within the same called procedure — if any element is missing, the row is 0.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">What are the 5 Big Ideas tested on the AP CSP MCQ?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">Big Idea 1: Creative Development (10–13% of MCQ) — collaboration, program design, iteration. Big Idea 2: Data (17–22%) — binary, encoding, compression, data analysis. Big Idea 3: Algorithms and Programming (30–35%) — the largest and most tested section; variables, loops, functions, lists, algorithms. Big Idea 4: Computer Systems and Networks (11–15%) — hardware, internet protocols, cybersecurity basics. Big Idea 5: Impact of Computing (21–26%) — beneficial/harmful effects, legal/ethical issues, digital divide. Per 2025 data, students scored highest on Big Idea 5 questions.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">Can I retake the CPT if I am not satisfied with my score?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">No. The CPT is submitted once before the deadline and scored by College Board readers. There is no opportunity to revise or resubmit after the deadline. Your submitted project is your final CPT score. This is why understanding the rubric in advance — especially which rows require specific written language — is critical for earning full marks.</div>
+  </li>
+  <li class=""faq-item"">
+    <div class=""faq-q"" onclick=""var i=this.closest('.faq-item');i.classList.toggle('open');i.querySelector('.faq-a').classList.toggle('open')"">Is AP CSP easier than AP CSA?<span class=""faq-chev"">▼</span>
+</div>
+    <div class=""faq-a"">AP CSP has a higher overall pass rate (63% in 2025) than AP CSA (67% in 2025) when comparing like-for-like, but a much lower 5 rate (11% vs 25.5%). AP CSP is more accessible because it does not require Java programming knowledge, but scoring a 5 is harder because the CPT adds a substantial non-exam component and Big Idea 3 (Algorithms) requires algorithmic thinking that non-programmers find challenging. Neither exam is objectively easier — they test different skill sets.</div>
+  </li>
+</ul>
+
+<h2 class=""section-h"">Continue Preparing</h2>
+<div class=""related-grid"">
+  <a href=""/pages/ap-computer-science-principles-resources"" class=""related-card""><div class=""rc-label"">Course Hub</div>
+<div class=""rc-title"">AP CSP Complete Course Hub</div></a>
+  <a href=""/pages/ap-csp-big-idea-3-algorithms-programming-complete-study-guide"" class=""related-card""><div class=""rc-label"">Study Guide</div>
+<div class=""rc-title"">Big Idea 3: Algorithms (30–35% of MCQ)</div></a>
+  <a href=""/pages/ap-csp-create-task-ultimate-guide"" class=""related-card""><div class=""rc-label"">CPT Guide</div>
+<div class=""rc-title"">Score 6/6 on the Create Task</div></a>
+  <a href=""/pages/ap-csp-practice-exams"" class=""related-card""><div class=""rc-label"">Practice</div>
+<div class=""rc-title"">AP CSP Full Practice Exams</div></a>
+  <a href=""/pages/ap-csa-score-calculator"" class=""related-card""><div class=""rc-label"">Calculator</div>
+<div class=""rc-title"">AP CSA Score Calculator</div></a>
+  <a href=""/pages/ap-cybersecurity-score-calculator"" class=""related-card""><div class=""rc-label"">Calculator</div>
+<div class=""rc-title"">AP Cybersecurity Score Calculator</div></a>
+</div>
+
+<div class=""author-box"">
+<div class=""author-avatar"">TC</div>
+<div>
+<p class=""author-name"">Tanner Crow</p>
+<p class=""author-role"">AP Computer Science Teacher</p>
+<p class=""author-bio"">11+ years teaching AP CS at Blue Valley North HS, Overland Park KS. 5.0 Wyzant rating, 2,067+ tutoring hours, 499+ five-star reviews. Score distributions sourced from Trevor Packer / College Board 2025.</p>
+<div class=""author-stats"">
+<span class=""astat"">11+ Years AP CS</span>
+<span class=""astat"">2,067+ Tutoring Hours</span>
+<span class=""astat"">499+ Five-Star Reviews</span>
+<span class=""astat"">Last Updated June 2026</span>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+var CSP_CUTS=[
+  {min:83,score:5,label:""Extremely Well Qualified"",color:""#16A34A"",bg:""#ECFDF5"",border:""#86EFAC""},
+  {min:72,score:4,label:""Well Qualified"",color:""#1D4ED8"",bg:""#EFF6FF"",border:""#93C5FD""},
+  {min:58,score:3,label:""Qualified"",color:""#92400E"",bg:""#FEFCE8"",border:""#FDE047""},
+  {min:45,score:2,label:""Possibly Qualified"",color:""#C2410C"",bg:""#FFF7ED"",border:""#FDBA74""},
+  {min:0,score:1,label:""No Recommendation"",color:""#DC2626"",bg:""#FEF2F2"",border:""#FCA5A5""}
+];
+var CSP_TIPS={
+  5:""You are on track for a 5 — top 11% nationally. Lock it in: verify all 6 CPT rows are explicitly addressed in your written responses. On MCQ, focus on Big Idea 3 (Algorithms, 30–35% of questions) — even one or two additional correct answers provide buffer if the cutoff shifts slightly."",
+  4:""Strong 4 territory. The gap to a 5 is typically 5–15 composite points. Check whether all 6 CPT rows are earned — each missing row costs exactly 5 composite points. On MCQ, <a href='/pages/ap-csp-big-idea-3-algorithms-programming-complete-study-guide' style='color:#1D4ED8;font-weight:700;'>Big Idea 3</a> and Big Idea 5 generate the most missed questions. A targeted session can close that gap."",
+  3:""Passing — and there is room to improve. Your fastest gains: review the CPT rubric and confirm Row 3 (Managing Complexity) and Row 5 (Algorithm Implementation) are explicitly addressed. On MCQ, Big Idea 3 is worth the most time investment. <a href='/pages/ap-csp-create-task-ultimate-guide' style='color:#1D4ED8;font-weight:700;'>The CPT guide</a> can move you into a 4."",
+  2:""Close to passing. Fast path to a 3: earn any unearned CPT rows (each is worth 5 composite points), then focus MCQ on Big Ideas 3 and 5. Even 3–4 additional MCQ correct answers combined with one more CPT row can push you over the threshold."",
+  1:""Building the foundation. Start with <a href='/pages/ap-csp-big-idea-3-algorithms-programming-complete-study-guide' style='color:#1D4ED8;font-weight:700;'>Big Idea 3</a> — it is the most important and most tested section (30–35% of MCQ). On CPT, focus on ensuring Rows 1, 4, and 6 are explicitly addressed — these are the most straightforward to earn with careful written responses.""
+};
+var cptRows=[1,1,1,1,1,1];
+function cptSet(row,val){
+  cptRows[row-1]=val;
+  var yb=document.getElementById(""r""+row+""y"");
+  var nb=document.getElementById(""r""+row+""n"");
+  if(val===1){yb.classList.add(""active-y"");yb.classList.remove(""active-n"");nb.classList.remove(""active-y"");nb.classList.remove(""active-n"");}
+  else{nb.classList.add(""active-n"");nb.classList.remove(""active-y"");yb.classList.remove(""active-y"");yb.classList.remove(""active-n"");}
+  cspCalc();
+}
+function cspCalc(){
+  var mcq=parseInt(document.getElementById(""csp-mcq"").value);
+  document.getElementById(""csp-mcq-val"").textContent=mcq;
+  var rowsEarned=cptRows.reduce(function(a,b){return a+b;},0);
+  var cptPts=rowsEarned*5;
+  var comp=mcq+cptPts;
+  document.getElementById(""csp-cpt-rows"").textContent=rowsEarned;
+  document.getElementById(""csp-cpt-pts"").textContent=cptPts;
+  document.getElementById(""csp-comp"").textContent=comp;
+  var bar=document.getElementById(""csp-bar"");
+  bar.style.width=Math.min(comp,100)+""%"";
+  var cut=null;
+  for(var i=0;i<CSP_CUTS.length;i++){if(comp>=CSP_CUTS[i].min){cut=CSP_CUTS[i];break;}}
+  if(!cut)cut=CSP_CUTS[CSP_CUTS.length-1];
+  var res=document.getElementById(""csp-result"");
+  res.style.background=cut.bg;
+  res.style.borderColor=cut.border;
+  bar.style.background=cut.color;
+  var gn=document.getElementById(""csp-grade-num"");
+  gn.textContent=cut.score;
+  gn.style.color=cut.color;
+  document.getElementById(""csp-grade-label"").textContent=cut.label;
+  document.getElementById(""csp-grade-label"").style.color=cut.color;
+  document.getElementById(""csp-grade-desc"").textContent=""Composite: ""+comp+"" / 100 (MCQ: ""+mcq+"" + CPT: ""+cptPts+"")"";
+  document.getElementById(""csp-grade-tip"").innerHTML=CSP_TIPS[cut.score];
+  [""csp-cut5"",""csp-cut4"",""csp-cut3"",""csp-cut2"",""csp-cut1""].forEach(function(id){
+    document.getElementById(id).classList.remove(""active-row"");
+  });
+  document.getElementById(""csp-cut""+cut.score).classList.add(""active-row"");
+}
+cspCalc();
+</script>
+
+<script type=""application/ld+json"">
+{
+  ""@context"":""https://schema.org"",
+  ""@graph"":[
+    {
+      ""@type"":""BreadcrumbList"",
+      ""itemListElement"":[
+        {""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com/""},
+        {""@type"":""ListItem"",""position"":2,""name"":""AP Computer Science Principles"",""item"":""https://www.apcsexamprep.com/pages/ap-computer-science-principles-resources""},
+        {""@type"":""ListItem"",""position"":3,""name"":""AP CSP Score Calculator"",""item"":""https://www.apcsexamprep.com/pages/ap-csp-score-calculator""}
+      ]
+    },
+    {
+      ""@type"":""FAQPage"",
+      ""mainEntity"":[
+        {""@type"":""Question"",""name"":""How is the AP CSP score calculated?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""AP CSP composite = MCQ raw (0-70) + CPT rows earned / 6 x 30. Each MCQ correct = 1 point. Each CPT row = 5 points. Maximum composite = 100. This maps to AP score 1-5.""}},
+        {""@type"":""Question"",""name"":""What composite score do I need for a 5 on AP CSP?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Based on 2023-2025 analysis, approximately 83 or higher is needed for a 5. Only 11% of students scored a 5 in 2025. Cutoffs can shift 2-4 points each year.""}},
+        {""@type"":""Question"",""name"":""What are the 6 CPT rubric rows for AP CSP?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Row 1: Program Purpose and Function. Row 2: Data Abstraction. Row 3: Managing Complexity. Row 4: Procedural Abstraction. Row 5: Algorithm Implementation. Row 6: Testing. Each row is worth 5 composite points with no partial credit within a row.""}},
+        {""@type"":""Question"",""name"":""What is the CPT deadline for AP CSP 2026?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The Create Performance Task must be submitted via AP Digital Portfolio by approximately April 30, 2026. Confirm with your teacher for the exact date. Late submissions are not accepted.""}},
+        {""@type"":""Question"",""name"":""What percentage of students pass the AP CSP exam?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""In 2025, 63% of students scored 3 or higher on AP Computer Science Principles. Distribution: 5=11%, 4=20%, 3=32%, 2=22%, 1=15%. Source: Trevor Packer / College Board June 2025.""}},
+        {""@type"":""Question"",""name"":""Which CPT rows are most commonly missed?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Row 3 (Managing Complexity) and Row 5 (Algorithm Implementation) are most commonly missed. Row 3 requires arguing that the list manages complexity vs many variables. Row 5 requires sequencing, selection, and iteration all within the same called procedure.""}}
+      ]
+    },
+    {
+      ""@type"":""WebApplication"",
+      ""name"":""AP CSP Score Calculator 2026"",
+      ""url"":""https://www.apcsexamprep.com/pages/ap-csp-score-calculator"",
+      ""applicationCategory"":""EducationalApplication"",
+      ""description"":""Calculate your estimated AP Computer Science Principles score. Enter MCQ correct answers and CPT rows earned for an instant composite and AP score estimate (1-5)."",
+      ""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""jobTitle"":""AP Computer Science Teacher""},
+      ""offers"":{""@type"":""Offer"",""price"":""0"",""priceCurrency"":""USD""}
+    }
+  ]
+}
+</script>"

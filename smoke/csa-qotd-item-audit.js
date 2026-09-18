@@ -64,6 +64,30 @@ const eq = (got, want, what) => { if (got !== want) bad(what + ': got ' + JSON.s
   eq(A.auditItem(it).length, 0, 'the letter-options page reports no contradiction');
 }
 
+// ── 2b. THE SECOND REGRESSION: line structure is not whitespace noise ────────
+//  ap-csa-u2-c1-day-19-nested-loop-pattern prints a growing triangle. Its four
+//  options are a growing triangle, a square, a SHRINKING triangle and a column.
+//  The audit's first comparison collapsed every run of whitespace, so two of
+//  them became "* * * * * *" and a correct page was published as a finding.
+{
+  const it = load(AUDIT_FIX, 'ap-csa-u2-c1-day-19-nested-loop-pattern');
+  const texts = it.options.map((o) => o.text);
+  if (!texts[0].includes('\n')) bad('the triangle options lost their line breaks in the parse');
+  if (texts[0] === texts[2]) bad('a growing triangle and a shrinking one compare equal, which is the 2026-09-17 bug');
+  eq(new Set(texts).size, 4, 'the triangle item has four distinct options');
+  eq(A.auditItem(it).length, 0, 'the triangle page reports no contradiction');
+
+  //  and the overshoot in the other direction, which the fix caused before it was
+  //  split in two: ap-csa-u1-c1-day-17 prints "false" and "true" on two lines and
+  //  its heading says "false true" on one. A heading is one line of markup and
+  //  cannot carry an option's line breaks, so holding it to them reported eight
+  //  correct pages as mismatched.
+  const flat = load(AUDIT_FIX, 'ap-csa-u1-c1-day-17-equals-vs-doubleequals');
+  if (A.auditItem(flat).map((x) => x.id).includes('heading-text-vs-option')) {
+    bad('a one-line heading restating a multi-line option is being reported as a mismatch');
+  }
+}
+
 // ── 3. each contradiction check fires on its own case and only its own ───────
 //  Synthetic items, one per check, built from the shape the real pages use.
 function synth(over) {
@@ -141,6 +165,12 @@ if (spawnSync('javac', ['-version'], { encoding: 'utf8' }).error) {
   //  two options both matching is reported as ambiguous, never as a mismatch
   const dup = R.audit(load(AUDIT_FIX, 'unit-4-cycle-2-day-20-arraylist-remove-with-wrapper'));
   eq(dup.state, 'ambiguous', 'an item with two identical options re-derives as ambiguous');
+
+  //  an option that writes two printed lines on one is agreement, not a defect
+  eq(R.audit(load(AUDIT_FIX, 'unit-4-cycle-2-day-24-arraylist-null-element')).state, 'agrees-flattened',
+    'an option rendering two printed lines on one line is a weaker agreement, not a finding');
+  eq(R.audit(load(AUDIT_FIX, 'ap-csa-u2-c1-day-19-nested-loop-pattern')).state, 'agrees',
+    'the triangle item re-derives as agreeing');
 
   //  and the two shapes that must NOT be judged
   eq(R.audit(load(AUDIT_FIX, 'ap-csa-u3-c1-day-10-this-keyword')).state, 'not-runnable',

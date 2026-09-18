@@ -4,6 +4,81 @@ Read this before editing anything in `shopify/*.html` that is listed in
 `scripts/page-body-csv.js`. It is short because it is mostly one trap and one
 verification, and both of them cost a live student page on 2026-08-22.
 
+## MEASURED 2026-09-17: what a Matrixify body import actually does
+
+**This section was rewritten the same day it was written.** Its first version
+said "stores VERBATIM" on the strength of one page. Two more imports showed that
+is wrong in two specific ways, which is exactly why one sample is not a model.
+
+Measured across four pages, sheet cell against stored body:
+
+    ap-csa-score-calculator    45,368 -> 45,368   byte for byte identical
+    ap-csp-score-calculator    47,741 -> 47,741   byte for byte identical
+    ap-csa-reference-sheet     66,857 -> 66,777   -80, see ENTITIES below
+    ap-csa-exam-format         48,658 -> 48,658   same length, NOT identical
+
+So the rule is not "verbatim". It is: **no reflow, no re-serialization, no
+implied tags, but two transforms that do fire.**
+
+**ENTITIES DECODE.** `&nbsp;` sent 16 times came back as 16 literal U+00A0, which
+is the whole -80: six characters each becoming one. This is the behaviour the
+old section below describes and it is real. It is also, here, exactly what was
+wanted: board #292 says Matrixify strips a literal non-breaking space out of a
+body, so the sheet sends the entity and Shopify decodes it back to the character.
+
+Note what did NOT decode: `&amp;geq;` survived the first import untouched and
+kept rendering as `5&geq;78`. `&amp;` decodes to `&` and stops. It does not then
+decode again into `≥`. A simulation that decodes once and then parses with a
+real HTML parser decodes TWICE, because the parser decodes during tokenization,
+and that is how this repo predicted a repair that never happened.
+
+**ATTRIBUTE NAMES ARE LOWERCASED.** The sheet sent `viewBox="0 0 24 24"` four
+times; the stored body carries `viewbox` four times. An edit that only changes
+attribute case can never land, and a page carrying one reads PARTIAL forever.
+
+That one turned out not to matter, and the reason is worth keeping: HTML5 has an
+"adjust SVG attributes" step for foreign content, so a browser maps `viewbox`
+back to `viewBox` when it parses the page. Verified in Chromium: the attribute
+reads back as `viewBox`, the viewBox applies, and a 24-unit rect renders at 40px,
+identical to the camelCase version, where an svg with no viewBox renders 24px.
+So the lowercasing is cosmetic in the stored body and invisible in the browser.
+
+**The habit worth taking from all of this**, three wrong predictions in one day:
+model the platform only when you cannot run it, and when you do run it, run it on
+more than one page before writing the rule down.
+
+## The original section, on the transform this repo learned from an incident
+
+Everything below is about a real incident and stays. This section is in front of
+it because a session acting on the transform described below, on the Matrixify
+path, will predict repairs that do not happen.
+
+`imports/2026-09-17-body-year/body-ap-csa-score-calculator.csv` was imported that
+day and the result measured rather than assumed:
+
+    sheet cell   45,400 characters
+    stored body  45,400 characters, byte for byte identical
+
+No decode, no re-parse, no re-serialize. Specifically, all three of these
+survived the round trip exactly as sent, when the transform below predicts all
+three would change:
+
+    &amp;geq;            stayed, still rendering literally as 5&geq;78
+    viewbox="0 0 24 24"  stayed lowercased, so the SVG still does not scale
+    <table><tr>          stayed, no implied <tbody> inserted
+
+A sheet built expecting those repairs ships a page that is still broken and a
+runbook that tells somebody to look for a change that never comes. That happened
+here: the canary's stated success signal was the `&geq;` repair, so a correct
+import would have read as a failed one.
+
+**What this does NOT overturn.** The 2026-09-06 incident below is real and its
+diff is real. The likely reading is that the transform belongs to a different
+write path rather than to Matrixify, but that has not been measured, so treat
+the rule below as live for any path you have not measured yourself. The safe
+posture is unchanged either way: build entities from parts, and never assume a
+platform will repair something for you. Fix it explicitly and check it live.
+
 ## The trap: Shopify decodes entities in the body it stores
 
 A page body is not stored verbatim. Shopify decodes HTML entities on save, and

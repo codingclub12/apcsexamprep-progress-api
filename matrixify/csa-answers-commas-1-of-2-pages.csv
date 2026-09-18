@@ -1,0 +1,2374 @@
+﻿"Handle","Command","Body HTML"
+"2d-array-neighbors-ap-csa","MERGE","<style>
+#spoke-2dneighbors{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-2dneighbors *{box-sizing:border-box}
+#spoke-2dneighbors h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-2dneighbors h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-2dneighbors h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-2dneighbors p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-2dneighbors ul,#spoke-2dneighbors ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-2dneighbors li{margin-bottom:6px}
+#spoke-2dneighbors a:link,#spoke-2dneighbors a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-2dneighbors a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-2dneighbors strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-2dneighbors .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-2dneighbors .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-2dneighbors .sp-toc ol{margin:0;padding-left:20px}
+#spoke-2dneighbors .sp-toc a:link,#spoke-2dneighbors .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-2dneighbors pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-2dneighbors code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-2dneighbors pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-2dneighbors .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-2dneighbors .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-2dneighbors .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-2dneighbors .sp-run-btn:link,#spoke-2dneighbors .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-2dneighbors .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-2dneighbors .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-2dneighbors .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-2dneighbors .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-2dneighbors .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-2dneighbors .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-2dneighbors .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-2dneighbors .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-2dneighbors .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-2dneighbors .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-2dneighbors .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-2dneighbors .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-2dneighbors .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-2dneighbors .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-2dneighbors .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-2dneighbors .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-2dneighbors .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-2dneighbors .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-2dneighbors .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-2dneighbors .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-2dneighbors .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-2dneighbors .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-2dneighbors .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-2dneighbors .sp-faq-q:hover{background:#eff6ff}
+#spoke-2dneighbors .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-2dneighbors .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-2dneighbors .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-2dneighbors .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-2dneighbors .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-2dneighbors .sp-tutor-btn:link,#spoke-2dneighbors .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-2dneighbors .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-2dneighbors .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-2dneighbors .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-2dneighbors .sp-rel-btn:link,#spoke-2dneighbors .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-2dneighbors .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-2dneighbors .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-2dneighbors .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-2dneighbors"">
+<h1>2D Array Neighbors and Diagonals in AP CSA: Complete Guide (2025-2026)</h1>
+<p>Working with <strong>2D array neighbors</strong> is one of the most challenging Unit 4 topics and a consistent FRQ target. Tasks include counting orthogonal neighbors, checking diagonals, processing borders, and building neighbor-based computations. The critical skill: writing correct bounds checks that prevent <code>ArrayIndexOutOfBoundsException</code> on edge and corner cells.</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#nb-idx"">2D Array Indexing Recap</a></li>
+<li><a href=""#nb-dirs"">Neighbor Directions and Bounds</a></li>
+<li><a href=""#nb-examples"">Code Examples</a></li>
+<li><a href=""#nb-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#nb-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#nb-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""nb-idx"">2D Array Indexing Recap</h2>
+<ul>
+<li>
+<code>grid[r][c]</code> — row r, column c</li>
+<li>Valid rows: 0 to <code>grid.length - 1</code>
+</li>
+<li>Valid columns: 0 to <code>grid[0].length - 1</code>
+</li>
+<li>Row 0 is top; larger row = further down</li>
+</ul>
+
+<h2 id=""nb-dirs"">Neighbor Directions and Bounds</h2>
+<ul>
+<li>
+<strong>Up:</strong> <code>grid[r-1][c]</code> — requires <code>r &gt; 0</code>
+</li>
+<li>
+<strong>Down:</strong> <code>grid[r+1][c]</code> — requires <code>r &lt; grid.length - 1</code>
+</li>
+<li>
+<strong>Left:</strong> <code>grid[r][c-1]</code> — requires <code>c &gt; 0</code>
+</li>
+<li>
+<strong>Right:</strong> <code>grid[r][c+1]</code> — requires <code>c &lt; grid[r].length - 1</code>
+</li>
+</ul>
+<div class=""sp-concept-box""><p>Offset-array technique for all 8 neighbors:<br>
+<code>int[] DR = {-1,-1,-1,0,0,1,1,1};</code><br>
+<code>int[] DC = {-1,0,1,-1,1,-1,0,1};</code><br>
+Loop through both arrays with a single bounds check per iteration.</p></div>
+
+<h2 id=""nb-examples"">Code Examples</h2>
+<h3>Example 1: Count Orthogonal Neighbors Equal to a Value</h3>
+<div class=""sp-predict"">How many cells adjacent to grid[1][1] equal 1?</div>
+<pre>public class GridCount {
+    public static int countAdjacent(int[][] grid, int r, int c, int val) {
+        int count = 0;
+        if (r &gt; 0               &amp;&amp; grid[r-1][c] == val) {
+            count++; // up
+        }
+        if (r &lt; grid.length-1   &amp;&amp; grid[r+1][c] == val) {
+            count++; // down
+        }
+        if (c &gt; 0               &amp;&amp; grid[r][c-1] == val) {
+            count++; // left
+        }
+        if (c &lt; grid[r].length-1 &amp;&amp; grid[r][c+1] == val) {
+            count++; // right
+        }
+        return count;
+    }
+    public static void main(String[] args) {
+        int[][] grid = {{0,1,0},{1,0,1},{0,1,0}};
+        System.out.println(countAdjacent(grid, 1, 1, 1)); // interior
+        System.out.println(countAdjacent(grid, 0, 0, 1)); // corner
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""nb-btn1"" onclick=""window.runPiston('nb-btn1','nb1','nb-out1')"">Run Code</button>
+<div class=""sp-output"" id=""nb-out1""></div>
+
+<h3>Example 2: All 8 Neighbors via Offset Arrays</h3>
+<div class=""sp-predict"">How many of the 8 surrounding cells contain positive values for g[1][1]?</div>
+<pre>public class GridAll8 {
+    static int[] DR = {-1,-1,-1,0,0,1,1,1};
+    static int[] DC = {-1,0,1,-1,1,-1,0,1};
+
+    public static int countPositive(int[][] g, int r, int c) {
+        int cnt = 0;
+        for (int d = 0; d &lt; DR.length; d++) {
+            int nr = r + DR[d], nc = c + DC[d];
+            if (nr &gt;= 0 &amp;&amp; nr &lt; g.length &amp;&amp; nc &gt;= 0 &amp;&amp; nc &lt; g[0].length)
+                if (g[nr][nc] &gt; 0) {
+                    cnt++;
+                }
+        }
+        return cnt;
+    }
+    public static void main(String[] args) {
+        int[][] g = {{2,0,3},{1,4,0},{0,5,1}};
+        System.out.println(countPositive(g, 1, 1));
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""nb-btn2"" onclick=""window.runPiston('nb-btn2','nb2','nb-out2')"">Run Code</button>
+<div class=""sp-output"" id=""nb-out2""></div>
+
+<h3>Example 3: Counting Border Cells</h3>
+<div class=""sp-predict"">How many border cells does a 3x3 grid have? A 4x5 grid?</div>
+<pre>public class BorderCells {
+    public static int countBorder(int[][] grid) {
+        int count = 0;
+        for (int r = 0; r &lt; grid.length; r++)
+            for (int c = 0; c &lt; grid[r].length; c++)
+                if (r==0 || c==0 || r==grid.length-1 || c==grid[r].length-1)
+                    count++;
+        return count;
+    }
+    public static void main(String[] args) {
+        System.out.println(""3x3: "" + countBorder(new int[3][3]));
+        System.out.println(""4x5: "" + countBorder(new int[4][5]));
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""nb-btn3"" onclick=""window.runPiston('nb-btn3','nb3','nb-out3')"">Run Code</button>
+<div class=""sp-output"" id=""nb-out3""></div>
+
+<h2 id=""nb-pitfalls"">Common Pitfalls</h2>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Wrong Bound for Down/Right</div>
+<p>Down requires <code>r &lt; grid.length - 1</code>, NOT <code>r &lt; grid.length</code>. The latter allows r+1 = grid.length (AIOOB).</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Checking Bounds After Accessing</div>
+<p>Always bounds-check BEFORE accessing. Java short-circuits &amp;&amp;: if the left side is false, the right is never evaluated, preventing AIOOB.</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. Swapping Row and Column Offsets</div>
+<p>Left/right changes the COLUMN index; up/down changes the ROW index. Do not swap them.</p>
+</div>
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. Forgetting Corner/Edge Cases</div>
+<p>Corners: 2 orthogonal neighbors. Edges: 3. Interior: 4. Your bounds checks must handle all three automatically.</p>
+</div>
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> In FRQ neighbor problems, list the four (or eight) directions as comments first, then code each with its bound. This structured approach earns partial credit even if one direction has a minor error.</div>
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> The MCQ asks how many neighbors a SPECIFIC cell has (often a corner or edge). Count using the given coordinates, not the interior maximum of 4 or 8.</div>
+
+<h2 id=""nb-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. For element <code>grid[r][c]</code>, <span class=""sp-q-keyword"">WHICH</span> expression accesses its <em>left</em> neighbor?</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> grid[r][c+1]</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> grid[r-1][c]</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> grid[r][c-1]</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> grid[r+1][c]</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. A bounds check for all four orthogonal neighbors of <code>grid[r][c]</code>. <span class=""sp-q-keyword"">WHICH</span> condition is missing?<br><pre>if (r &gt; 0 &amp;&amp; c &gt; 0 &amp;&amp; r &lt; grid.length - 1) {
+        { ... }
+}</pre>
+</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> c &lt; grid[r].length</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> c &lt; grid[r].length - 1</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> c &gt;= 0</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> r &gt;= 0</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. How many diagonal neighbors does an interior element of a 5x5 grid have? <span class=""sp-q-keyword"">PREDICT.</span>
+</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> 2</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> 3</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> 4</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> 8</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. How many orthogonal neighbors does corner element <code>grid[0][0]</code> have in a 3x3 grid?</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> 1</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> 2</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> 3</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> 4</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. Bug hunt. <span class=""sp-q-keyword"">WHICH</span> lines have an off-by-one error?<br><pre>if (r &gt; 0 &amp;&amp; grid[r-1][c]==1) {
+    count++;      // up
+}
+if (r &lt; grid.length &amp;&amp; grid[r+1][c]==1) {
+    count++;  // L2: down
+}
+if (c &gt; 0 &amp;&amp; grid[r][c-1]==1) {
+    count++;      // left
+}
+if (c &lt; grid[0].length &amp;&amp; grid[r][c+1]==1) {
+    count++; // L4: right
+}</pre>
+</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> Lines 2 and 4 use &lt; instead of &lt;=, skipping valid cells</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> Lines 2 and 4 should use &lt; grid.length - 1 and &lt; grid[r].length - 1</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> Line 2 should reference grid[0].length instead of grid.length</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> count is never returned</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. What does this return for a 3x3 grid of all 1s? <span class=""sp-q-keyword"">PREDICT.</span><br><pre>public static int diagSum(int[][] g) {{
+    int total = 0;
+    for (int r = 0; r &lt; g.length - 1; r++)
+        for (int c = 0; c &lt; g[r].length - 1; c++)
+            total += g[r+1][c+1];
+    return total;
+}}</pre>
+</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> 4</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> 6</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> 9</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> 8</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. <span class=""sp-q-keyword"">WHICH</span> offset array pair covers all 8 surrounding neighbors (4 orthogonal + 4 diagonal)?</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> dr={{-1,-1,0,1,1}}; dc={{0,1,1,0,-1}} (5 pairs)</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> dr={{-1,-1,-1,0,0,1,1,1}}; dc={{-1,0,1,-1,1,-1,0,1}} (8 pairs)</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> dr={{-1,0,1,0}}; dc={{0,-1,0,1}} (4 orthogonal only)</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> dr={{-1,1,-1,1}}; dc={{-1,1,1,-1}} (4 diagonal only)</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. <span class=""sp-q-keyword"">WHICH</span> loop correctly identifies ALL border cells of <code>int[][] grid</code>?</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> for r/c all cells: if (r==0||c==0||r==grid.length-1||c==grid[r].length-1)</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> for r from 1 to grid.length-2, for c from 1 to grid[r].length-2</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> for r/c all cells: if (r==0||c==0) only</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> for r from 0 to grid.length, for c from 0 to grid[r].length (inclusive)</button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+<h2 id=""nb-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What is the difference between grid.length and grid[0].length?</button><div class=""sp-faq-a""><p>grid.length is the number of rows. grid[0].length is the number of columns. For a rectangular grid they are consistent across all rows.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">How do I avoid four separate if statements?</button><div class=""sp-faq-a""><p>Use offset arrays: int[] dr = {-1,1,0,0}; int[] dc = {0,0,-1,1}; Then loop through both with one bounds check. This is cleaner and less error-prone.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Does order matter with &amp;&amp; bounds checks?</button><div class=""sp-faq-a""><p>Yes. Always put the bounds check BEFORE the array access. Java short-circuits: if r &gt; 0 is false, grid[r-1][c] is never evaluated, preventing AIOOB. Never reverse the order.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">How many border cells does an nxm grid have?</button><div class=""sp-faq-a""><p>2n + 2m - 4. For a 5x5: 2*5 + 2*5 - 4 = 16. Subtract 4 to avoid double-counting corners.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can a FRQ ask me to modify neighbor cells?</button><div class=""sp-faq-a""><p>Yes. The typical pattern: read from the original grid, write to a NEW result grid of the same size. Never read from and write to the same grid in one pass, or you'll corrupt values mid-computation.</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>2D array neighbor problems are among the hardest FRQ types. Get targeted practice with an AP CSA instructor whose students achieve a 54% five-rate.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/array-algorithms-ap-csa"">Array Algorithms</a>
+<a class=""sp-rel-btn"" href=""/pages/linear-search-ap-csa"">Linear Search</a>
+<a class=""sp-rel-btn"" href=""/pages/sorting-algorithms-ap-csa"">Sorting Algorithms</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['nb1']=`public class GridCount {
+    public static int countAdjacent(int[][] grid, int r, int c, int val) {
+        int count = 0;
+        if (r>0 && grid[r-1][c]==val) count++;
+        if (r<grid.length-1 && grid[r+1][c]==val) count++;
+        if (c>0 && grid[r][c-1]==val) count++;
+        if (c<grid[r].length-1 && grid[r][c+1]==val) count++;
+        return count;
+    }
+    public static void main(String[] args) {
+        int[][] grid={{0,1,0},{1,0,1},{0,1,0}};
+        System.out.println(countAdjacent(grid,1,1,1));
+        System.out.println(countAdjacent(grid,0,0,1));
+    }
+}`;
+window.CODES['nb2']=`public class GridAll8 {
+    static int[] DR={-1,-1,-1,0,0,1,1,1};
+    static int[] DC={-1,0,1,-1,1,-1,0,1};
+    public static int countPositive(int[][] g,int r,int c) {
+        int cnt=0;
+        for (int d=0;d<DR.length;d++) {
+            int nr=r+DR[d],nc=c+DC[d];
+            if (nr>=0&&nr<g.length&&nc>=0&&nc<g[0].length&&g[nr][nc]>0) cnt++;
+        }
+        return cnt;
+    }
+    public static void main(String[] args) {
+        int[][] g={{2,0,3},{1,4,0},{0,5,1}};
+        System.out.println(countPositive(g,1,1));
+    }
+}`;
+window.CODES['nb3']=`public class BorderCells {
+    public static int countBorder(int[][] grid) {
+        int count=0;
+        for (int r=0;r<grid.length;r++)
+            for (int c=0;c<grid[r].length;c++)
+                if (r==0||c==0||r==grid.length-1||c==grid[r].length-1) count++;
+        return count;
+    }
+    public static void main(String[] args) {
+        System.out.println(""3x3: ""+countBorder(new int[3][3]));
+        System.out.println(""4x5: ""+countBorder(new int[4][5]));
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-2dneighbors');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""C"", explanation: 'Left = same row, column minus 1: grid[r][c-1]. Option B moves UP (row-1). Option A moves right. Option D moves down.' },
+  q2: { correct: ""B"", explanation: 'c > 0 (not left edge) and r > 0, r < grid.length-1 are present, but c < grid[r].length-1 (not right edge) is missing. Without it, grid[r][c+1] can throw AIOOB. Options C and D are already covered.' },
+  q3: { correct: ""C"", explanation: 'Diagonal neighbors: upper-left [r-1][c-1], upper-right [r-1][c+1], lower-left [r+1][c-1], lower-right [r+1][c+1]. Exactly 4 diagonals. (All 8 surrounding cells = 4 orthogonal + 4 diagonal.)' },
+  q4: { correct: ""B"", explanation: 'Up: row -1 (invalid). Left: col -1 (invalid). Right: grid[0][1] (valid). Down: grid[1][0] (valid). Exactly 2 valid orthogonal neighbors for a corner cell.' },
+  q5: { correct: ""B"", explanation: 'grid[r+1][c] requires r+1 to be valid, meaning r < grid.length-1. Using r < grid.length allows r = grid.length-1 and r+1 = grid.length (AIOOB). Same for columns. Both guards need the minus-1.' },
+  q6: { correct: ""A"", explanation: 'r runs 0..1, c runs 0..1. Accesses: g[1][1], g[1][2], g[2][1], g[2][2]. All 1s. Sum = 4.' },
+  q7: { correct: ""B"", explanation: 'Option C is 4 orthogonal. Option D is 4 diagonal. Option A has only 5 pairs. Option B has all 8 (dr, dc) pairs covering every surrounding direction.' },
+  q8: { correct: ""A"", explanation: 'Option A checks all four edge conditions correctly. Option B iterates the interior only (skips borders). Option C misses the last row and last column. Option D uses <= causing AIOOB.' }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+<script type=""application/ld+json"">
+{""@context"":""https://schema.org"",""@graph"":[
+{""@type"":""Article"",""headline"":""2D Array Neighbors and Diagonals in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""}},
+{""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""2D Array Neighbors"",""item"":""https://apcsexamprep.com/pages/2d-array-neighbors-ap-csa""}]}
+]}
+</script>
+</div>"
+"array-algorithms-ap-csa","MERGE","<style>
+#spoke-arrayalgos{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-arrayalgos *{box-sizing:border-box}
+#spoke-arrayalgos h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-arrayalgos h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-arrayalgos h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-arrayalgos p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-arrayalgos ul,#spoke-arrayalgos ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-arrayalgos li{margin-bottom:6px}
+#spoke-arrayalgos a:link,#spoke-arrayalgos a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-arrayalgos a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-arrayalgos strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-arrayalgos .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-arrayalgos .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-arrayalgos .sp-toc ol{margin:0;padding-left:20px}
+#spoke-arrayalgos .sp-toc a:link,#spoke-arrayalgos .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-arrayalgos pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-arrayalgos code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-arrayalgos pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-arrayalgos .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-arrayalgos .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-arrayalgos .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-arrayalgos .sp-run-btn:link,#spoke-arrayalgos .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-arrayalgos .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-arrayalgos .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-arrayalgos .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-arrayalgos .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-arrayalgos .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-arrayalgos .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-arrayalgos .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-arrayalgos .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-arrayalgos .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-arrayalgos .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-arrayalgos .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-arrayalgos .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-arrayalgos .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-arrayalgos .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-arrayalgos .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-arrayalgos .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-arrayalgos .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-arrayalgos .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-arrayalgos .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-arrayalgos .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-arrayalgos .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-arrayalgos .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-arrayalgos .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-arrayalgos .sp-faq-q:hover{background:#eff6ff}
+#spoke-arrayalgos .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-arrayalgos .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-arrayalgos .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-arrayalgos .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-arrayalgos .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-arrayalgos .sp-tutor-btn:link,#spoke-arrayalgos .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-arrayalgos .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-arrayalgos .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-arrayalgos .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-arrayalgos .sp-rel-btn:link,#spoke-arrayalgos .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-arrayalgos .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-arrayalgos .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-arrayalgos .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-arrayalgos"">
+
+<h1>Array Algorithms in AP CSA: Complete Guide (2025-2026)</h1>
+
+<p><strong>Array algorithms</strong>—traversing, counting, summing, finding max/min, and searching arrays—are the highest-weighted topic on the AP CSA exam. Unit 4 (Data Collections) is 30–40% of the exam score, and array algorithms form the core of both MCQ trace questions and FRQ method writing. Mastering these patterns now pays dividends across the entire exam.</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#aa-patterns"">Core Algorithm Patterns</a></li>
+<li><a href=""#aa-loops"">Loop Choices</a></li>
+<li><a href=""#aa-examples"">Code Examples</a></li>
+<li><a href=""#aa-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#aa-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#aa-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""aa-patterns"">Core Algorithm Patterns</h2>
+<ul>
+<li>
+<strong>Sum/Average:</strong> accumulate += element; divide by length at end</li>
+<li>
+<strong>Count:</strong> conditional accumulate inside the loop</li>
+<li>
+<strong>Max/Min:</strong> initialize to first element; update if better element found</li>
+<li>
+<strong>Find index:</strong> return index immediately upon match; return -1 after loop</li>
+<li>
+<strong>All/Any (flag):</strong> boolean flag, break on condition change</li>
+</ul>
+
+<div class=""sp-concept-box""><p>Unit 4 is 30–40% of the AP CSA exam. Every exam includes at least one FRQ part requiring you to write an array traversal with an accumulator or conditional update. The pattern never changes—only the condition does.</p></div>
+
+<h2 id=""aa-loops"">Loop Choices</h2>
+<ul>
+<li>
+<strong>Enhanced for loop</strong> (<code>for (int v : arr)</code>): use when you only need values, not indices</li>
+<li>
+<strong>Standard for loop</strong> (<code>for (int i = 0; i &lt; arr.length; i++)</code>): use when you need the index, or need to modify elements</li>
+<li>Never use <code>i &lt;= arr.length</code>—valid indices are 0 through <code>arr.length - 1</code>
+</li>
+</ul>
+
+<h2 id=""aa-examples"">Code Examples</h2>
+
+<h3>Example 1: Count, Sum, and Average</h3>
+<div class=""sp-predict"">What three values does this print for {72, 85, 90, 60, 78}?</div>
+<pre>public class Stats {
+    public static void main(String[] args) {
+        int[] grades = {72, 85, 90, 60, 78};
+        int sum = 0;
+        int countHigh = 0;
+
+        for (int g : grades) {
+            sum += g;
+            if (g &gt;= 80) {
+                countHigh++;
+            }
+        }
+
+        double avg = (double) sum / grades.length;
+        System.out.println(""Sum: "" + sum);
+        System.out.println(""Average: "" + avg);
+        System.out.println(""Above 80: "" + countHigh);
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""aa-btn1"" onclick=""window.runPiston('aa-btn1','aa1','aa-out1')"">Run Code</button>
+<div class=""sp-output"" id=""aa-out1""></div>
+
+<h3>Example 2: Find Maximum and Its Index</h3>
+<div class=""sp-predict"">What index does the maximum live at in {14, 9, 27, 3, 19}?</div>
+<pre>public class MaxFinder {
+    public static void main(String[] args) {
+        int[] data = {14, 9, 27, 3, 19};
+        int maxVal = data[0];
+        int maxIdx = 0;
+
+        for (int i = 1; i &lt; data.length; i++) {
+            if (data[i] &gt; maxVal) {
+                maxVal = data[i];
+                maxIdx = i;
+            }
+        }
+
+        System.out.println(""Max value: "" + maxVal);
+        System.out.println(""At index:  "" + maxIdx);
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""aa-btn2"" onclick=""window.runPiston('aa-btn2','aa2','aa-out2')"">Run Code</button>
+<div class=""sp-output"" id=""aa-out2""></div>
+
+<h3>Example 3: First-Index Search with -1 Sentinel</h3>
+<div class=""sp-predict"">What does this print for target=7 in {3, 1, 7, 4, 7}?</div>
+<pre>public class Searcher {
+    public static int firstIndex(int[] arr, int target) {
+        for (int i = 0; i &lt; arr.length; i++) {
+            if (arr[i] == target) {
+                return i; // found: exit immediately
+            }
+        }
+        return -1; // not found
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {3, 1, 7, 4, 7};
+        System.out.println(firstIndex(nums, 7));
+        System.out.println(firstIndex(nums, 99));
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""aa-btn3"" onclick=""window.runPiston('aa-btn3','aa3','aa-out3')"">Run Code</button>
+<div class=""sp-output"" id=""aa-out3""></div>
+
+<h2 id=""aa-pitfalls"">Common Pitfalls</h2>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Initializing Max/Min to 0</div>
+<p>If all array values are negative, a max initialized to 0 will incorrectly report 0. Always initialize to <code>arr[0]</code> and start the loop at index 1, or use <code>Integer.MIN_VALUE</code> / <code>Integer.MAX_VALUE</code>.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Off-by-One with arr.length</div>
+<p>Valid indices: 0 to <code>arr.length - 1</code>. The condition must be <code>i &lt; arr.length</code>, never <code>i &lt;= arr.length</code>. The latter causes <code>ArrayIndexOutOfBoundsException</code>.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. Returning the Value Instead of the Index</div>
+<p>When a method should return an index, writing <code>return arr[i]</code> instead of <code>return i</code> is a classic error. Re-read the method specification carefully.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. Integer vs Double Division</div>
+<p><code>sum / arr.length</code> performs integer division when both are ints. Cast one operand to double before dividing: <code>(double) sum / arr.length</code>.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">5. Enhanced For Loop When You Need the Index</div>
+<p>The enhanced for loop cannot give you the current index. If you need to compare adjacent elements or return an index, use a standard indexed for loop.</p>
+</div>
+
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> The FRQ almost always contains an array-traversal part. Before writing code, identify: (1) what you accumulate, (2) what the condition is, (3) what you return. Write a comment for each. Graders follow a rubric that maps to these exact decisions.</div>
+
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> The MCQ frequently presents a loop that starts at index 1 or stops at <code>arr.length - 2</code>. Always count manually which elements are included—these “partial traversals” are designed specifically to trick students who assume the entire array is processed.</div>
+
+<h2 id=""aa-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. Spot the bug. <span class=""sp-q-keyword"">WHICH</span> change correctly fixes the maximum-finding loop?<br><pre>int[] vals = {{3, 9, 1, 7, 5}};<br>int best = 0;<br>for (int k = 0; k &lt; vals.length; k++) {{<br>    if (vals[k] &gt; best) best = vals[k];<br>}}<br>System.out.println(best);</pre>
+</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> Change <code>best = 0</code> to <code>best = vals[0]</code> and start the loop at k=1, or use Integer.MIN_VALUE</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> Change <code>&gt;</code> to <code>&gt;=</code> so the last occurrence of the maximum is found</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> Change <code>k &lt; vals.length</code> to <code>k &lt;= vals.length</code> to include the last element</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> No bug exists; initializing best to 0 is always correct for positive arrays</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. Consider these three array traversal patterns. <span class=""sp-q-keyword"">WHICH</span> correctly count the number of even elements?<br><br>I. <code>for (int v : arr) if (v % 2 == 0) count++;</code><br>II. <code>for (int i = 0; i &lt; arr.length; i++) if (arr[i] % 2 == 0) count++;</code><br>III. <code>for (int i = 1; i &lt;= arr.length; i++) if (arr[i] % 2 == 0) count++;</code>
+</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> I and II only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> II and III</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> I, II, and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. What does this method return when called with <code>{{8, 3, 8, 5}}</code>? <span class=""sp-q-keyword"">PREDICT.</span><br><pre>public static int mystery(int[] data) { {
+    <br>    int result = 0;<br>    for (int val : data) result += val;<br>    return result / data.length;<br>}
+}</pre>
+</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> 6</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> 6.0</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> 8</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> 5</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. A student tries to shift all elements one position left, wrapping the first element to the end. <span class=""sp-q-keyword"">WHICH</span> loop is correct for <code>int[] arr</code>?<br><pre>// Option A: for (int i=0; i<arr.length-1 i arr>// Option B: for (int i=arr.length-1; i&gt;0; i--) arr[i]=arr[i-1];<br>// Option C: for (int i=0; i<arr.length i arr>// Option D: for (int i=1; i<arr.length i arr></arr.length></arr.length></arr.length-1></pre>
+</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> Option A (does not preserve the first element but shifts remaining elements correctly)</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> Option B (shifts elements right, not left)</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> Option C (causes ArrayIndexOutOfBoundsException on last iteration)</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> Option D (identical logic to A, correctly shifts left excluding wrap)</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. A method must return the index of the first negative value in an array, or -1 if none exist. <span class=""sp-q-keyword"">WHICH</span> implementation is correct?</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> <code>for (int i=0; i<a.length i if return></a.length></code></button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> <code>for (int i=0; i<a.length i if return></a.length></code></button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> <code>for (int val : a) if (val&lt;0) return val; return -1;</code></button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> <code>int idx=-1; for (int i=0; i<a.length i if idx=""i;"" return></a.length></code></button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. After the code runs, what is <code>total</code>? <span class=""sp-q-keyword"">PREDICT</span> before choosing.<br><pre>int[] scores = {{90, 85, 92, 78, 95}};<br>int total = 0;<br>for (int i = 1; i &lt; scores.length - 1; i++) {{<br>    total += scores[i];<br>}}</pre>
+</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> 440</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> 255</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> 350</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> 267</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. An array <code>int[] data</code> has length 6. <span class=""sp-q-keyword"">WHICH</span> expression correctly accesses the middle-right element (index 3)?</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> <code>data[data.length / 2]</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> <code>data[data.length / 2 + 1]</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> <code>data[(data.length - 1) / 2]</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> <code>data[data.length - 1]</code></button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. A student writes a method to find the minimum. <span class=""sp-q-keyword"">WHICH</span> line introduces a logic error?<br><pre>1: public static int findMin(int[] nums) {{<br>2:   int low = nums[0];<br>3:   for (int i = 0; i &lt; nums.length; i++) {{<br>4:     if (nums[i] &lt; low) {{<br>5:       low = i;   // ← suspicious<br>6:     }}<br>7:   }}<br>8:   return low;<br>9: }}</pre>
+</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> Line 2 — initializing to nums[0] may miss the minimum</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> Line 3 — the loop should start at i=1 since nums[0] is already checked</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> Line 5 — low is assigned the index i instead of the value nums[i]</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> Line 8 — the method should return nums[low], not low</button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+<h2 id=""aa-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What is the difference between int[] and ArrayList<integer>?</integer></button>
+<div class=""sp-faq-a""><p>An int[] has a fixed size set at creation; elements are primitives. ArrayList<integer> is dynamically sized; elements are Integer objects. The 2025-2026 exam tests both. Use an array when size is known; use ArrayList when you need add/remove.</integer></p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">How do I find both the max value and its index in one pass?</button>
+<div class=""sp-faq-a""><p>Initialize both maxVal = arr[0] and maxIdx = 0, then loop from i=1. Inside the loop, when arr[i] &gt; maxVal, update BOTH: maxVal = arr[i] and maxIdx = i. Return whichever you need.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can I modify array elements inside an enhanced for loop?</button>
+<div class=""sp-faq-a""><p>No. Enhanced for loops give you copies of primitive values. Changes to the loop variable do not affect the array. Use a standard indexed loop (arr[i] = ...) to modify elements.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Why does my sum come out wrong when the array has no elements?</button>
+<div class=""sp-faq-a""><p>Accessing arr[0] on an empty array throws ArrayIndexOutOfBoundsException. Always check arr.length &gt; 0 before initializing to arr[0]. The AP exam typically guarantees non-empty arrays but knowing this protects you on edge-case MCQs.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What is the FRQ pattern for array algorithms?</button>
+<div class=""sp-faq-a""><p>Most FRQ array methods follow: (1) declare result variable, (2) traverse with for loop, (3) conditional update inside loop, (4) return result. Practice writing this skeleton from memory until it is automatic.</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>Array algorithms are the backbone of the AP CSA FRQ. Work with an AP CSA expert whose students outscore the national five-rate by 2x.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/linear-search-ap-csa"">Linear Search</a>
+<a class=""sp-rel-btn"" href=""/pages/sorting-algorithms-ap-csa"">Sorting Algorithms</a>
+<a class=""sp-rel-btn"" href=""/pages/2d-array-neighbors-ap-csa"">2D Array Neighbors</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['aa1'] = `public class Stats {
+    public static void main(String[] args) {
+        int[] grades = {72, 85, 90, 60, 78};
+        int sum = 0, countHigh = 0;
+        for (int g : grades) { sum += g; if (g >= 80) countHigh++; }
+        double avg = (double) sum / grades.length;
+        System.out.println(""Sum: "" + sum);
+        System.out.println(""Average: "" + avg);
+        System.out.println(""Above 80: "" + countHigh);
+    }
+}`;
+window.CODES['aa2'] = `public class MaxFinder {
+    public static void main(String[] args) {
+        int[] data = {14, 9, 27, 3, 19};
+        int maxVal = data[0], maxIdx = 0;
+        for (int i = 1; i < data.length; i++) {
+            if (data[i] > maxVal) { maxVal = data[i]; maxIdx = i; }
+        }
+        System.out.println(""Max value: "" + maxVal);
+        System.out.println(""At index:  "" + maxIdx);
+    }
+}`;
+window.CODES['aa3'] = `public class Searcher {
+    public static int firstIndex(int[] arr, int target) {
+        for (int i = 0; i < arr.length; i++) if (arr[i] == target) return i;
+        return -1;
+    }
+    public static void main(String[] args) {
+        int[] nums = {3, 1, 7, 4, 7};
+        System.out.println(firstIndex(nums, 7));
+        System.out.println(firstIndex(nums, 99));
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-arrayalgos');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""A"", explanation: 'If all values are negative, best=0 would incorrectly report 0 as the maximum. The robust fix is best=vals[0] (initialize to first element) and loop from k=1, or initialize to Integer.MIN_VALUE. Option D works accidentally only when all values are positive.' },
+  q2: { correct: ""B"", explanation: 'Pattern I (enhanced for loop) correctly visits all elements. Pattern II (standard indexed loop with i < arr.length) is correct. Pattern III starts at i=1 (skipping index 0) and goes to i=arr.length, which causes an ArrayIndexOutOfBoundsException on the last iteration. I and II are correct.' },
+  q3: { correct: ""A"", explanation: 'Sum = 8+3+8+5 = 24. data.length = 4. Integer division 24/4 = 6 (not 6.0 because both operands are int). The return type is int, so no decimal.' },
+  q4: { correct: ""D"", explanation: 'Options A and D produce the same shift-left result (arr[i-1]=arr[i] is equivalent to arr[i]=arr[i+1]). Option B shifts right. Option C accesses arr[arr.length], causing AIOOB. Both A and D work for the shift, but the question asks which IS correct; D is explicitly correct.' },
+  q5: { correct: ""A"", explanation: ""Option A correctly returns the index immediately upon finding the first negative. Option B returns -1 inside the loop (wrong: that's the sentinel). Option C returns the value, not the index. Option D finds the LAST negative index, not the first (it overwrites idx every time it finds one)."" },
+  q6: { correct: ""B"", explanation: 'The loop runs from i=1 to i=3 (i < 4). It sums scores[1]+scores[2]+scores[3] = 85+92+78 = 255. The first element (90) and last element (95) are excluded.' },
+  q7: { correct: ""A"", explanation: 'data.length = 6. data.length/2 = 3 (integer division). data[3] is the element at index 3. Option B gives index 4. Option C gives (6-1)/2 = 2. Option D gives index 5 (last element).' },
+  q8: { correct: ""C"", explanation: ""Line 5 sets low = i (the current index), not low = nums[i] (the current value). This means the method tracks loop indices, not actual array values. The fix is low = nums[i]. Line 2 is actually correct initialization; line 3 works fine (just checks nums[0] twice); line 8 would be right only if D's interpretation were true (but the real fix is line 5)."" }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+
+<script type=""application/ld+json"">
+{
+  ""@context"":""https://schema.org"",
+  ""@graph"":[
+    {""@type"":""Article"",""headline"":""Array Algorithms in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://apcsexamprep.com""},""url"":""https://apcsexamprep.com/pages/array-algorithms-ap-csa""},
+    {""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""Array Algorithms"",""item"":""https://apcsexamprep.com/pages/array-algorithms-ap-csa""}]}
+  ]
+}
+</script>
+
+</div>"
+"constructors-in-ap-csa","MERGE","<style>
+#spoke-constructors{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-constructors *{box-sizing:border-box}
+#spoke-constructors h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-constructors h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-constructors h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-constructors p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-constructors ul,#spoke-constructors ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-constructors li{margin-bottom:6px}
+#spoke-constructors a:link,#spoke-constructors a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-constructors a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-constructors strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-constructors .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-constructors .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-constructors .sp-toc ol{margin:0;padding-left:20px}
+#spoke-constructors .sp-toc a:link,#spoke-constructors .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-constructors pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-constructors code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-constructors pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-constructors .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-constructors .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-constructors .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-constructors .sp-run-btn:link,#spoke-constructors .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-constructors .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-constructors .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-constructors .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-constructors .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-constructors .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-constructors .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-constructors .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-constructors .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-constructors .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-constructors .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-constructors .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-constructors .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-constructors .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-constructors .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-constructors .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-constructors .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-constructors .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-constructors .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-constructors .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-constructors .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-constructors .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-constructors .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-constructors .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-constructors .sp-faq-q:hover{background:#eff6ff}
+#spoke-constructors .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-constructors .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-constructors .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-constructors .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-constructors .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-constructors .sp-tutor-btn:link,#spoke-constructors .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-constructors .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-constructors .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-constructors .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-constructors .sp-rel-btn:link,#spoke-constructors .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-constructors .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-constructors .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-constructors .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-constructors"">
+
+<h1>Constructors in AP CSA: Complete Guide (2025-2026)</h1>
+
+<p><strong>Constructors</strong> are special methods that run automatically when an object is created, and they are among the most-tested concepts in AP CSA Unit 3. Every class you design will have a constructor, and the exam frequently tests parameter shadowing, constructor overloading, and what happens when no constructor is written.</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#ctor-what"">What Is a Constructor?</a></li>
+<li><a href=""#ctor-syntax"">Syntax and Rules</a></li>
+<li><a href=""#ctor-examples"">Code Examples</a></li>
+<li><a href=""#ctor-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#ctor-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#ctor-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""ctor-what"">What Is a Constructor?</h2>
+<p>A <strong>constructor</strong> initializes a newly created object. It is invoked automatically by the <code>new</code> keyword. Unlike regular methods, a constructor has <em>no return type</em> and its name must exactly match the class name (case-sensitive).</p>
+
+<div class=""sp-concept-box""><p>On the 2025-2026 AP CSA exam, constructors appear in Unit 3 (Class Creation, 10–18% of score). Expect FRQ parts that ask you to write a constructor, plus MCQs that test parameter shadowing and overloading.</p></div>
+
+<h2 id=""ctor-syntax"">Syntax and Rules</h2>
+<ul>
+<li>Same name as the class</li>
+<li>
+<strong>No return type</strong> declared (not even <code>void</code>)</li>
+<li>Can accept parameters (parameterized constructor)</li>
+<li>If no constructor is written, Java provides a default no-arg constructor</li>
+<li>Defining any constructor removes the implicit default constructor</li>
+<li>Use <code>this.fieldName = param</code> to avoid parameter shadowing</li>
+</ul>
+
+<h2 id=""ctor-examples"">Code Examples</h2>
+
+<h3>Example 1: Basic Constructor with Parameter Shadowing Fix</h3>
+<div class=""sp-predict"">What field values does this object have after construction?</div>
+<pre>public class Planet {
+    private String name;
+    private double mass;
+
+    public Planet(String name, double mass) {
+        this.name = name;   // this.name = the FIELD; name = the PARAMETER
+        this.mass = mass;
+    }
+
+    public static void main(String[] args) {
+        Planet p = new Planet(""Mars"", 6.39);
+        System.out.println(p.name + "" "" + p.mass);
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""ctor-btn1"" onclick=""window.runPiston('ctor-btn1','ctor1','ctor-out1')"">Run Code</button>
+<div class=""sp-output"" id=""ctor-out1""></div>
+
+<h3>Example 2: Constructor Overloading</h3>
+<div class=""sp-predict"">Which constructor is called and what does rank print?</div>
+<pre>public class Player {
+    private String alias;
+    private int level;
+
+    public Player(String alias) {
+        this(alias, 1);          // delegates to the 2-param constructor
+    }
+
+    public Player(String alias, int level) {
+        this.alias = alias;
+        this.level = level;
+    }
+
+    public static void main(String[] args) {
+        Player p = new Player(""Zephyr"");
+        System.out.println(p.alias + "" level "" + p.level);
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""ctor-btn2"" onclick=""window.runPiston('ctor-btn2','ctor2','ctor-out2')"">Run Code</button>
+<div class=""sp-output"" id=""ctor-out2""></div>
+
+<h3>Example 3: Conditional Validation in Constructor</h3>
+<div class=""sp-predict"">What is printed when a negative value is passed?</div>
+<pre>public class Timer {
+    private int seconds;
+
+    public Timer(int seconds) {
+        this.seconds = (seconds &gt; 0) ? seconds : 0;
+    }
+
+    public static void main(String[] args) {
+        Timer t1 = new Timer(30);
+        Timer t2 = new Timer(-5);
+        System.out.println(t1.seconds);
+        System.out.println(t2.seconds);
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""ctor-btn3"" onclick=""window.runPiston('ctor-btn3','ctor3','ctor-out3')"">Run Code</button>
+<div class=""sp-output"" id=""ctor-out3""></div>
+
+<h2 id=""ctor-pitfalls"">Common Pitfalls</h2>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Adding a Return Type</div>
+<p><code>public void ClassName()</code> looks like a constructor but is actually a method. The real constructor is never defined, so Java silently provides a default one—or if arguments are required, a compile error occurs on instantiation.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Parameter Shadowing</div>
+<p>When the parameter name matches the field name, writing <code>name = name</code> reassigns the parameter to itself. Always use <code>this.name = name</code>.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. Losing the Default Constructor</div>
+<p>Once you write <em>any</em> constructor, Java no longer provides the no-arg default. Calling <code>new MyClass()</code> with no args then causes a compile error.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. Calling this() from Non-First Position</div>
+<p><code>this()</code> (constructor chaining) must be the <em>very first</em> statement in the constructor body. Any code before it causes a compile error.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">5. Thinking Constructors Set All Fields Automatically</div>
+<p>Only fields explicitly set in the constructor are initialized to non-default values. Unset primitives default to 0/false; unset object references default to null.</p>
+</div>
+
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> FRQ constructors are often worth 1–2 points. Graders check that your header is correct (no return type, exact class name), parameters match the specification, and fields are assigned using <code>this.</code> when needed.</div>
+
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> The most common MCQ trap is a constructor that adds <code>int</code> or <code>void</code> as a return type. That method compiles but is never invoked as a constructor—the object gets Java's default initialization instead.</div>
+
+<h2 id=""ctor-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. Which line contains a compile-time error? <span class=""sp-q-keyword"">IDENTIFY</span> the bug.<br><pre>1: public class Vehicle {
+2:   private int mileage;
+3:   public int Vehicle(int m) {
+4:     mileage = m;
+5:   }
+6: }</pre>
+</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> Line 2 — instance variables must be initialized at declaration</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> Line 3 — constructors must not declare a return type</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> Line 4 — the parameter must use <code>this.mileage</code> instead</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> Line 6 — classes must include a no-argument constructor</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. Consider the following statements about constructors. <span class=""sp-q-keyword"">WHICH</span> are true?<br><br>I. A constructor is automatically called when an object is created with <code>new</code>.<br>II. A class that defines a parameterized constructor retains its default no-arg constructor.<br>III. Constructors can call other methods of the same class.</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> I and III only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> II and III only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> I, II, and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. What is printed when the following code executes? <span class=""sp-q-keyword"">PREDICT</span> before reading the options.<br><pre>public class Box {
+  private int depth;
+    public Box() {
+      depth = 5; setDepth(10);
+  }
+    public void setDepth(int d) {
+      depth = d * 2;
+  }
+    public int getDepth() {
+      return depth;
+  }
+}
+// In main:
+Box b = new Box();
+System.out.println(b.getDepth());</pre>
+</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> 5</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> 10</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> 20</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> 0</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. A student writes the constructor below. <span class=""sp-q-keyword"">WHICH</span> problem does this code have?<br><pre>public class Sensor {
+  private double reading;
+  public Sensor(double reading) {
+    reading = reading;
+  }
+}</pre>
+</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> The constructor name does not match the class name</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> The parameter shadows the field, so the field is never updated</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> Instance variables of type double must be initialized to 0.0 explicitly</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> The constructor must include a return statement</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. Consider these two class definitions. <span class=""sp-q-keyword"">WHICH</span> of the following object creations compiles without error?<br><pre>class Alpha { public Alpha(int n) { } }
+class Beta  { public Beta()    { } }</pre>
+<br>I. <code>Alpha a = new Alpha();</code><br>II. <code>Beta b = new Beta(7);</code><br>III. <code>Beta b2 = new Beta();</code>
+</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> III only</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> I and III</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> II and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. What is the output of the code below? <span class=""sp-q-keyword"">PREDICT</span> before reviewing choices.<br><pre>public class Counter {
+  private int tally;
+    public Counter() {
+      this(1);
+  }
+    public Counter(int start) {
+      tally = start;
+  }
+    public int getTally() {
+      return tally;
+  }
+}
+// In main:
+Counter c = new Counter();
+System.out.println(c.getTally());</pre>
+</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> 0</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> 1</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> 2</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> Compile error: constructors cannot call other constructors</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. <span class=""sp-q-keyword"">WHICH</span> of the following is true about a class that has <span class=""sp-q-keyword"">NO</span> explicitly defined constructor?</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> The class cannot be instantiated</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> Java provides a default no-arg constructor that initializes all fields to their type defaults</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> Java provides a default constructor that calls each field's own constructor</button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> The programmer must define at least one constructor or a compile error occurs</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. A class <code>Profile</code> has two fields: <code>private String handle</code> and <code>private int rank</code>. The constructor is:<br><pre>public Profile(String h, int r) {
+  handle = h;
+  rank = (r &gt; 0) ? r : 1;
+}</pre>What are <code>handle</code> and <code>rank</code> after <code>new Profile(null, -3)</code>?</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> handle = null, rank = -3</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> handle = null, rank = 1</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> handle = """", rank = 1</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> A NullPointerException is thrown</button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+
+<h2 id=""ctor-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can a constructor call a non-static method of the same class?</button>
+<div class=""sp-faq-a""><p>Yes. A constructor can call instance methods because the object exists by the time those lines run (it was created by new, and the constructor is initializing it). However, be careful: if the method relies on fields not yet set, you may get unexpected results.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What happens if I forget to use this. when the parameter shadows a field?</button>
+<div class=""sp-faq-a""><p>The field is never updated. The assignment reads as 'set the local parameter equal to itself,' which has no effect. The field keeps its default value (0, false, or null). This is one of the top constructor bugs on the AP exam.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can constructors be private?</button>
+<div class=""sp-faq-a""><p>Yes. Private constructors appear in design patterns (like Singleton) but are not part of the 2025-2026 AP CSA curriculum. You will not be asked to write one on the exam, but you might see a private constructor in a reading and should know it prevents external instantiation.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Does Java call the parent class constructor automatically?</button>
+<div class=""sp-faq-a""><p>Inheritance and super() calls are NOT part of the 2025-2026 AP CSA curriculum. You will not be tested on extends or super. Focus only on single-class constructor design.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">If a class has two constructors and I call new MyClass(), which one runs?</button>
+<div class=""sp-faq-a""><p>Java matches arguments to parameters. new MyClass() with no args calls the no-arg constructor if one exists. If only a parameterized constructor exists, new MyClass() is a compile error.</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>Struggling with constructors, FRQ writing, or any Unit 3 topic? Get personalized help from an AP CSA teacher with 11+ years of experience and a 54% five-rate among students.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/getters-setters-ap-csa"">Getters &amp; Setters</a>
+<a class=""sp-rel-btn"" href=""/pages/tostring-equals-ap-csa"">toString &amp; equals</a>
+<a class=""sp-rel-btn"" href=""/pages/encapsulation-access-modifiers-ap-csa"">Encapsulation</a>
+<a class=""sp-rel-btn"" href=""/pages/static-vs-instance-variables-ap-csa"">Static vs Instance Variables</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['ctor1'] = `public class Planet {
+    private String name;
+    private double mass;
+    public Planet(String name, double mass) {
+        this.name = name;
+        this.mass = mass;
+    }
+    public static void main(String[] args) {
+        Planet p = new Planet(""Mars"", 6.39);
+        System.out.println(p.name + "" "" + p.mass);
+    }
+}`;
+window.CODES['ctor2'] = `public class Player {
+    private String alias;
+    private int level;
+    public Player(String alias) { this(alias, 1); }
+    public Player(String alias, int level) {
+        this.alias = alias;
+        this.level = level;
+    }
+    public static void main(String[] args) {
+        Player p = new Player(""Zephyr"");
+        System.out.println(p.alias + "" level "" + p.level);
+    }
+}`;
+window.CODES['ctor3'] = `public class Timer {
+    private int seconds;
+    public Timer(int seconds) {
+        this.seconds = (seconds > 0) ? seconds : 0;
+    }
+    public static void main(String[] args) {
+        Timer t1 = new Timer(30);
+        Timer t2 = new Timer(-5);
+        System.out.println(t1.seconds);
+        System.out.println(t2.seconds);
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-constructors');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""B"", explanation: 'A constructor declaration that includes a return type (even void) is treated by the compiler as a regular method, not a constructor. The class would then have no constructor, causing errors when the object is instantiated.' },
+  q2: { correct: ""B"", explanation: 'Statement I is true: new triggers the constructor. Statement II is FALSE: once you write any constructor, Java removes the implicit default constructor. Statement III is true: constructors may call instance methods (though the object is partially initialized at that point).' },
+  q3: { correct: ""C"", explanation: 'The constructor first sets depth=5, then calls setDepth(10), which assigns depth = 10*2 = 20. getDepth() returns 20.' },
+  q4: { correct: ""B"", explanation: ""When the parameter name matches the field name, the assignment 'reading = reading' just reassigns the local parameter to itself. The field stays at its default value (0.0). The fix is 'this.reading = reading'."" },
+  q5: { correct: ""B"", explanation: 'Alpha only has a one-arg constructor, so new Alpha() is a compile error. Beta only has a no-arg constructor, so new Beta(7) is a compile error. Only new Beta() matches the defined signature.' },
+  q6: { correct: ""B"", explanation: 'The no-arg constructor delegates to Counter(1) via this(1), which sets tally=1. Constructor chaining with this() is legal in Java as long as it is the very first statement in the constructor.' },
+  q7: { correct: ""B"", explanation: 'If no constructor is written, Java supplies a default no-arg constructor. It does NOT call field-specific constructors; it simply initializes primitives to 0/false and objects to null.' },
+  q8: { correct: ""B"", explanation: 'null is a valid String reference; handle stores null without error. The ternary replaces any non-positive rank with 1, so rank = 1. No exception is thrown because null is never dereferenced.' }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+
+<script type=""application/ld+json"">
+{
+  ""@context"":""https://schema.org"",
+  ""@graph"":[
+    {""@type"":""Article"",""headline"":""Constructors in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://apcsexamprep.com""},""url"":""https://apcsexamprep.com/pages/constructors-in-ap-csa""},
+    {""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""Constructors"",""item"":""https://apcsexamprep.com/pages/constructors-in-ap-csa""}]},
+    {""@type"":""FAQPage"",""mainEntity"":[{""@type"":""Question"",""name"":""Can a constructor call a non-static method?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Yes, constructors can call instance methods of the same class.""}},{""@type"":""Question"",""name"":""What happens with parameter shadowing?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""The field is never updated. Use this.fieldName = param to fix it.""}}]}
+  ]
+}
+</script>
+
+</div>"
+"encapsulation-access-modifiers-ap-csa","MERGE","<style>
+#spoke-encapsulation{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-encapsulation *{box-sizing:border-box}
+#spoke-encapsulation h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-encapsulation h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-encapsulation h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-encapsulation p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-encapsulation ul,#spoke-encapsulation ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-encapsulation li{margin-bottom:6px}
+#spoke-encapsulation a:link,#spoke-encapsulation a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-encapsulation a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-encapsulation strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-encapsulation .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-encapsulation .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-encapsulation .sp-toc ol{margin:0;padding-left:20px}
+#spoke-encapsulation .sp-toc a:link,#spoke-encapsulation .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-encapsulation pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-encapsulation code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-encapsulation pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-encapsulation .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-encapsulation .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-encapsulation .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-encapsulation .sp-run-btn:link,#spoke-encapsulation .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-encapsulation .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-encapsulation .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-encapsulation .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-encapsulation .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-encapsulation .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-encapsulation .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-encapsulation .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-encapsulation .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-encapsulation .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-encapsulation .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-encapsulation .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-encapsulation .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-encapsulation .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-encapsulation .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-encapsulation .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-encapsulation .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-encapsulation .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-encapsulation .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-encapsulation .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-encapsulation .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-encapsulation .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-encapsulation .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-encapsulation .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-encapsulation .sp-faq-q:hover{background:#eff6ff}
+#spoke-encapsulation .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-encapsulation .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-encapsulation .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-encapsulation .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-encapsulation .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-encapsulation .sp-tutor-btn:link,#spoke-encapsulation .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-encapsulation .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-encapsulation .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-encapsulation .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-encapsulation .sp-rel-btn:link,#spoke-encapsulation .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-encapsulation .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-encapsulation .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-encapsulation .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-encapsulation"">
+
+<h1>Encapsulation and Access Modifiers in AP CSA: Complete Guide (2025-2026)</h1>
+
+<p><strong>Encapsulation</strong> is the Unit 3 principle of hiding implementation details and controlling access to data through well-defined public interfaces. It is the reason AP CSA insists that instance variables be <code>private</code> and that all outside interaction happens through constructors, getters, and setters. This guide covers access modifiers, why encapsulation matters, and the tricky exam scenarios students frequently miss.</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#enc-what"">What Is Encapsulation?</a></li>
+<li><a href=""#enc-mods"">Access Modifiers</a></li>
+<li><a href=""#enc-examples"">Code Examples</a></li>
+<li><a href=""#enc-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#enc-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#enc-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""enc-what"">What Is Encapsulation?</h2>
+<p>Encapsulation bundles data and behavior inside a class and restricts direct access to that data. The class becomes a “black box”: other code can call its public methods but cannot see or change the internal state directly. This allows the class to enforce rules (e.g., balance can never be negative) and change its internal structure without breaking external code.</p>
+
+<div class=""sp-concept-box""><p>Unit 3 (Class Creation) is 10–18% of the AP CSA exam. Encapsulation questions appear in MCQ (access modifier identification, compile error detection) and FRQ (writing fully encapsulated classes with private fields, public methods).</p></div>
+
+<h2 id=""enc-mods"">Access Modifiers</h2>
+<ul>
+<li>
+<code>public</code> — accessible from any class</li>
+<li>
+<code>private</code> — accessible only within the declaring class</li>
+<li>AP CSA rule: all instance variables = <code>private</code>; constructors and most methods = <code>public</code>
+</li>
+</ul>
+
+<h2 id=""enc-examples"">Code Examples</h2>
+
+<h3>Example 1: Proper Encapsulation</h3>
+<div class=""sp-predict"">Which lines inside main() compile, and which fail?</div>
+<pre>public class Account {
+    private double balance;
+    private String owner;
+
+    public Account(String owner, double start) {
+        this.owner = owner;
+        balance = (start &gt;= 0) ? start : 0;
+    }
+
+        public double getBalance() {
+        return balance;
+    }
+        public String getOwner() {
+        return owner;
+    }
+
+    public void deposit(double amt) {
+        if (amt &gt; 0) {
+            balance += amt;
+        }
+    }
+
+    public static void main(String[] args) {
+        Account acc = new Account(""Alex"", 100);
+        System.out.println(acc.getBalance()); // compiles
+        // acc.balance = -999; // COMPILE ERROR: private
+        acc.deposit(50);
+        System.out.println(acc.getBalance());
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""enc-btn1"" onclick=""window.runPiston('enc-btn1','enc1','enc-out1')"">Run Code</button>
+<div class=""sp-output"" id=""enc-out1""></div>
+
+<h3>Example 2: Reference Leaking (Broken Encapsulation)</h3>
+<div class=""sp-predict"">Does clearing the returned list affect the object?</div>
+<pre>import java.util.ArrayList;
+public class Roster {
+    private ArrayList<string> members = new ArrayList&lt;&gt;();
+
+        public void add(String name) {
+        members.add(name);
+    }
+
+    // BAD: returns actual reference
+        public ArrayList<string> getMembers() {
+        return members;
+    }
+
+        public int size() {
+        return members.size();
+    }
+
+    public static void main(String[] args) {
+        Roster r = new Roster();
+        r.add(""Alice""); r.add(""Bob"");
+        ArrayList<string> copy = r.getMembers(); // same ref!
+        copy.clear(); // clears the internal list
+        System.out.println(r.size()); // should be 2 -- is it?
+    }
+}</string></string></string></pre>
+<button class=""sp-run-btn"" id=""enc-btn2"" onclick=""window.runPiston('enc-btn2','enc2','enc-out2')"">Run Code</button>
+<div class=""sp-output"" id=""enc-out2""></div>
+
+<h3>Example 3: Enforcing Invariants via Setters</h3>
+<div class=""sp-predict"">What score is stored after the invalid attempts?</div>
+<pre>public class Gradebook {
+    private int score;
+
+        public int getScore() {
+        return score;
+    }
+    public void setScore(int s) {
+        if (s &gt;= 0 &amp;&amp; s &lt;= 100) {
+            score = s;
+        }
+        // invalid values are simply ignored
+    }
+
+    public static void main(String[] args) {
+        Gradebook gb = new Gradebook();
+        gb.setScore(85);
+        gb.setScore(150);  // rejected
+        gb.setScore(-10);  // rejected
+        System.out.println(gb.getScore());
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""enc-btn3"" onclick=""window.runPiston('enc-btn3','enc3','enc-out3')"">Run Code</button>
+<div class=""sp-output"" id=""enc-out3""></div>
+
+<h2 id=""enc-pitfalls"">Common Pitfalls</h2>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Public Instance Variables</div>
+<p>Making a field <code>public</code> removes all protection. Any code anywhere can set it to any value. This is the most common encapsulation violation and the exam tests for it directly.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Returning a Mutable Object Reference</div>
+<p>A getter that returns an ArrayList or other mutable object gives the caller the power to modify the private field indirectly. Return a copy or an unmodifiable view instead.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. Confusing private with secure</div>
+<p>Private fields are accessible within the same class, including from static main methods and other instance method bodies. They are only hidden from code in <em>other</em> classes.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. Forgetting public on Constructors and Getters</div>
+<p>A constructor or getter with no access modifier is “package-private”—accessible only within the same package. On the AP exam, constructors and public methods must be explicitly marked <code>public</code>.</p>
+</div>
+
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> FRQ graders will deduct points if your instance variables are not private. Even if the rest of the class is perfect, an unencapsulated field costs a point. Always write <code>private</code> before every instance variable.</div>
+
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> The MCQ will show you code that accesses a private field from another class and ask whether it compiles. The answer is NO—always a compile error, never a runtime error. Access modifier violations are caught at compile time.</div>
+
+<h2 id=""enc-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. Consider this class. <span class=""sp-q-keyword"">WHICH</span> statement outside the class causes a compile error?<br><pre>public class Vault {{<br>    private int code;<br>    public int attempts;<br>    public Vault(int c) {{ code = c; }}<br>    public boolean verify(int guess) { {
+    return guess == code; }}<br>}
+}</pre>I. <code>Vault v = new Vault(1234);</code><br>II. <code>System.out.println(v.code);</code><br>III. <code>v.attempts = 0;</code>
+</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> II only</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> I and III</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> II and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. <span class=""sp-q-keyword"">WHICH</span> of the following best describes why instance variables should be declared <code>private</code> in AP CSA?</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> Private variables run faster than public ones at runtime</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> Private fields prevent any code from reading or changing their values</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> Private fields force all access to go through public methods, allowing the class to validate and control changes</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> Private is required by the Java compiler for all fields declared inside a class</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. A class has <code>private double balance</code>. A student adds this method:<br><pre>public double[] getInfo() {{<br>    return new double[]{ {
+    balance }};<br>}
+}</pre>Which statement about encapsulation is true?</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> This maintains encapsulation because balance itself is not returned directly</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> This breaks encapsulation because the caller receives an array containing the private value and can infer it</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> This causes a compile error because private fields cannot be used inside public methods</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> Encapsulation is not relevant for primitive fields like double</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. A student wants to prevent the field <code>maxSpeed</code> from ever being changed after construction. <span class=""sp-q-keyword"">WHICH</span> design achieves this <span class=""sp-q-keyword"">WITHOUT</span> using keywords not in the 2026 AP CSA curriculum?</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> Declare it public so the value is transparent</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> Declare it private and provide only a getter, no setter</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> Declare it private and provide both getter and setter but document it as read-only</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> Declare it with final keyword to prevent reassignment</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. Examine the four access levels below. <span class=""sp-q-keyword"">WHICH</span> modifier is <span class=""sp-q-keyword"">ALWAYS</span> used for well-encapsulated instance variables in AP CSA class design?</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> public — so any code can read the field directly</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> protected — so only subclasses can access it</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> private — so only methods inside the same class can access it</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> No modifier (package-private) — so code in the same folder can access it</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. Which scenario demonstrates a violation of encapsulation?<br><br>I. A method returns a copy of a private list as a new ArrayList.<br>II. A public field that allows any code to set a user's account balance directly.<br>III. A setter that validates input before updating a private field.</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> II only</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> I and III</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> I, II, and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. A class <code>Session</code> has <code>private int count = 0</code>. It has an increment method and a getter. Without seeing the method bodies, which of these external code lines is guaranteed to compile? <span class=""sp-q-keyword"">IDENTIFY</span> the valid line.</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> <code>session.count++;</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> <code>session.count = session.getCount();</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> <code>int n = session.getCount();</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> <code>session.count = 0;</code></button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. A poorly encapsulated class exposes a private <code>ArrayList</code> via a getter that returns the actual list reference. A student writes: <span class=""sp-q-keyword"">WHAT</span> is the consequence?<br><pre>ArrayList<string> items = obj.getItems();<br>items.clear();</string></pre>
+</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> Nothing; getters return copies so the original list is unaffected</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> The original private list inside obj is also cleared because they share the same reference</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> A compile error occurs because private lists cannot be returned from methods</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> An UnsupportedOperationException is thrown at runtime</button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+<h2 id=""enc-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can a class access private fields of another instance of the same class?</button>
+<div class=""sp-faq-a""><p>Yes. Private means hidden from other CLASSES, not other instances. Inside a class method, you can access private fields of any instance of the same class, including one passed as a parameter. This is why equals(Object other) can access other's private fields after casting.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Is it okay to have a public field for a constant?</button>
+<div class=""sp-faq-a""><p>Constants declared with 'final' are sometimes made public (e.g., public static final double PI). The AP exam may show these but won't ask you to write them. All regular instance variables should be private.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What happens if I access a private field from outside the class?</button>
+<div class=""sp-faq-a""><p>You get a compile-time error, not a runtime error. The Java compiler catches access modifier violations before the code ever runs.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Do setters always have to reject invalid input?</button>
+<div class=""sp-faq-a""><p>No, but they should if data integrity matters. Some setters simply assign without validation. When a FRQ specifies constraints (e.g., 'score must be 0-100'), you must include the validation to earn full credit.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Why is encapsulation important for the AP FRQ?</button>
+<div class=""sp-faq-a""><p>FRQ graders check for private instance variables and public constructors/methods as explicit point criteria. A class with public fields will not earn the encapsulation point even if all logic is otherwise correct.</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>Need help designing fully encapsulated classes for the AP FRQ? Work with an experienced AP CSA instructor who gets students to score 5s at twice the national rate.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/constructors-in-ap-csa"">Constructors</a>
+<a class=""sp-rel-btn"" href=""/pages/getters-setters-ap-csa"">Getters &amp; Setters</a>
+<a class=""sp-rel-btn"" href=""/pages/static-vs-instance-variables-ap-csa"">Static vs Instance</a>
+<a class=""sp-rel-btn"" href=""/pages/tostring-equals-ap-csa"">toString &amp; equals</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['enc1'] = `public class Account {
+    private double balance;
+    private String owner;
+    public Account(String owner, double start) {
+        this.owner = owner;
+        balance = (start >= 0) ? start : 0;
+    }
+    public double getBalance() { return balance; }
+    public String getOwner() { return owner; }
+    public void deposit(double amt) { if (amt > 0) balance += amt; }
+    public static void main(String[] args) {
+        Account acc = new Account(""Alex"", 100);
+        System.out.println(acc.getBalance());
+        acc.deposit(50);
+        System.out.println(acc.getBalance());
+    }
+}`;
+window.CODES['enc2'] = `import java.util.ArrayList;
+public class Roster {
+    private ArrayList<String> members = new ArrayList<>();
+    public void add(String name) { members.add(name); }
+    public ArrayList<String> getMembers() { return members; }
+    public int size() { return members.size(); }
+    public static void main(String[] args) {
+        Roster r = new Roster();
+        r.add(""Alice""); r.add(""Bob"");
+        ArrayList<String> copy = r.getMembers();
+        copy.clear();
+        System.out.println(r.size());
+    }
+}`;
+window.CODES['enc3'] = `public class Gradebook {
+    private int score;
+    public int getScore() { return score; }
+    public void setScore(int s) { if (s >= 0 && s <= 100) score = s; }
+    public static void main(String[] args) {
+        Gradebook gb = new Gradebook();
+        gb.setScore(85);
+        gb.setScore(150);
+        gb.setScore(-10);
+        System.out.println(gb.getScore());
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-encapsulation');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""B"", explanation: 'Statement I compiles fine (calling a public constructor). Statement II fails because code is private; direct field access from outside the class is a compile error. Statement III compiles because attempts is public. Only II fails.' },
+  q2: { correct: ""C"", explanation: 'Option A is false (no performance difference). Option B is false (getters and setters provide controlled access). Option D is false (public fields are allowed). Option C correctly states the purpose: forcing access through methods so the class can apply validation and maintain invariants.' },
+  q3: { correct: ""B"", explanation: 'Even though the field is wrapped in an array, the private value is fully exposed to the caller. The caller can read balance via getInfo()[0]. Encapsulation is broken. Option A is incorrect: wrapping the value does not hide it.' },
+  q4: { correct: ""B"", explanation: ""Making the field private and providing only a getter means no external code can change its value. No setter = no mutation from outside. Option D (final) works but 'final' is not a required AP CSA 2026 keyword. Option B is the pure encapsulation solution."" },
+  q5: { correct: ""C"", explanation: ""The AP CSA standard for encapsulation is to declare all instance variables private. Protected and package-private allow external access (from subclasses or the same package). Public allows access from anywhere. Only private restricts access to the declaring class's own methods."" },
+  q6: { correct: ""B"", explanation: 'Scenario I returns a copy; the original private list is protected. Scenario II is a direct violation: public fields bypass all validation. Scenario III is good encapsulation with validation. Only II violates encapsulation.' },
+  q7: { correct: ""C"", explanation: 'Lines A, B, and D all attempt to directly access the private field count, which causes compile errors. Only line C calls the public getter method, which compiles correctly.' },
+  q8: { correct: ""B"", explanation: ""If the getter returns the actual list reference (not a copy), then items and the internal list point to the same object. Calling items.clear() empties the actual private list. This is a classic encapsulation violation called 'reference leaking.'"" }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+
+<script type=""application/ld+json"">
+{
+  ""@context"":""https://schema.org"",
+  ""@graph"":[
+    {""@type"":""Article"",""headline"":""Encapsulation and Access Modifiers in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://apcsexamprep.com""},""url"":""https://apcsexamprep.com/pages/encapsulation-access-modifiers-ap-csa""},
+    {""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""Encapsulation"",""item"":""https://apcsexamprep.com/pages/encapsulation-access-modifiers-ap-csa""}]}
+  ]
+}
+</script>
+
+</div>"
+"getters-setters-ap-csa","MERGE","<style>
+#spoke-getterssetters{all:initial;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#1f2937 !important;max-width:900px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#spoke-getterssetters *{box-sizing:border-box}
+#spoke-getterssetters h1{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:2em;font-weight:800;border-bottom:3px solid #3b82f6;padding-bottom:14px;margin:0 0 24px}
+#spoke-getterssetters h2{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;font-size:1.4em;font-weight:700;margin:36px 0 16px;padding-left:12px;border-left:4px solid #60a5fa}
+#spoke-getterssetters h3{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;font-size:1.15em;font-weight:700;margin:24px 0 10px}
+#spoke-getterssetters p{margin:0 0 16px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-getterssetters ul,#spoke-getterssetters ol{margin:0 0 16px;padding-left:24px;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-getterssetters li{margin-bottom:6px}
+#spoke-getterssetters a:link,#spoke-getterssetters a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important;text-decoration:underline}
+#spoke-getterssetters a:hover{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important}
+#spoke-getterssetters strong{color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-getterssetters .sp-toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 28px;margin-bottom:32px}
+#spoke-getterssetters .sp-toc h3{margin-top:0;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#spoke-getterssetters .sp-toc ol{margin:0;padding-left:20px}
+#spoke-getterssetters .sp-toc a:link,#spoke-getterssetters .sp-toc a:visited{color:#2563eb !important;-webkit-text-fill-color:#2563eb !important}
+#spoke-getterssetters pre{background:#1e293b !important;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important;padding:20px;border-radius:8px;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px;white-space:pre;line-height:1.55;margin:12px 0}
+#spoke-getterssetters code{font-family:Consolas,Monaco,'Courier New',monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.92em;color:#c026d3 !important;-webkit-text-fill-color:#c026d3 !important}
+#spoke-getterssetters pre code{background:transparent;padding:0;color:#cdd6f4 !important;-webkit-text-fill-color:#cdd6f4 !important}
+#spoke-getterssetters .sp-predict{background:#fffbeb;border:2px dashed #f59e0b;border-radius:8px;padding:14px 18px;margin:14px 0;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:600}
+#spoke-getterssetters .sp-predict::before{content:""\270E  Predict First: "";font-weight:800}
+#spoke-getterssetters .sp-run-btn{display:inline-block;background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;border:none;padding:9px 20px;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;margin:8px 4px 4px 0;opacity:1 !important;visibility:visible !important}
+#spoke-getterssetters .sp-run-btn:link,#spoke-getterssetters .sp-run-btn:visited{color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-getterssetters .sp-run-btn:hover{background:#1d4ed8 !important;opacity:1 !important;visibility:visible !important;color:#fff !important;-webkit-text-fill-color:#fff !important}
+#spoke-getterssetters .sp-output{display:none;background:#0f172a;color:#94fa9c !important;-webkit-text-fill-color:#94fa9c !important;padding:14px;border-radius:6px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre;margin-top:6px;opacity:1 !important;visibility:visible !important}
+#spoke-getterssetters .sp-exam-tip{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0}
+#spoke-getterssetters .sp-exam-tip strong{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-getterssetters .sp-watch{background:#fffbeb;border:2px solid #f59e0b;padding:16px 20px;margin:24px 0;border-radius:8px}
+#spoke-getterssetters .sp-watch strong{color:#92400e !important;-webkit-text-fill-color:#92400e !important}
+#spoke-getterssetters .sp-pitfall{background:#fef2f2;border-left:3px solid #ef4444;padding:14px 18px;margin:12px 0;border-radius:0 6px 6px 0}
+#spoke-getterssetters .sp-pitfall-title{font-weight:700;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;margin-bottom:6px}
+#spoke-getterssetters .sp-cfu-wrap{background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0}
+#spoke-getterssetters .sp-score-bar{background:#1e40af;color:#fff !important;-webkit-text-fill-color:#fff !important;padding:12px 20px;border-radius:8px;font-weight:700;margin-bottom:20px;text-align:center}
+#spoke-getterssetters .sp-q{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:16px}
+#spoke-getterssetters .sp-q-stem{font-weight:700;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin-bottom:12px}
+#spoke-getterssetters .sp-q-keyword{background:#fef3c7;color:#92400e !important;-webkit-text-fill-color:#92400e !important;font-weight:800;padding:1px 4px;border-radius:3px}
+#spoke-getterssetters .sp-opt{display:block;padding:10px 14px;border:2px solid #e2e8f0;border-radius:6px;margin-bottom:8px;cursor:pointer;font-size:.95em;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important;text-align:left;background:#fff;width:100%;transition:border-color .15s}
+#spoke-getterssetters .sp-opt:hover{border-color:#3b82f6 !important;background:#eff6ff}
+#spoke-getterssetters .sp-opt.correct{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-getterssetters .sp-opt.wrong{border-color:#dc2626 !important;background:#fef2f2;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-getterssetters .sp-opt.revealed{border-color:#16a34a !important;background:#f0fdf4;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-getterssetters .sp-feedback{display:none;margin-top:10px;padding:12px 16px;border-radius:6px;font-size:.93em}
+#spoke-getterssetters .sp-feedback.correct{background:#f0fdf4;border-left:3px solid #16a34a;color:#14532d !important;-webkit-text-fill-color:#14532d !important}
+#spoke-getterssetters .sp-feedback.wrong{background:#fef2f2;border-left:3px solid #dc2626;color:#7f1d1d !important;-webkit-text-fill-color:#7f1d1d !important}
+#spoke-getterssetters .sp-faq-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+#spoke-getterssetters .sp-faq-q{background:#f8fafc;padding:14px 18px;font-weight:700;cursor:pointer;color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;border:none;width:100%;text-align:left;font-size:1em}
+#spoke-getterssetters .sp-faq-q:hover{background:#eff6ff}
+#spoke-getterssetters .sp-faq-a{display:none;padding:14px 18px;border-top:1px solid #e2e8f0;color:#1f2937 !important;-webkit-text-fill-color:#1f2937 !important}
+#spoke-getterssetters .sp-tutor-box{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff !important;-webkit-text-fill-color:#fff !important;border-radius:12px;padding:28px;margin:32px 0;text-align:center}
+#spoke-getterssetters .sp-tutor-box h3{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 10px}
+#spoke-getterssetters .sp-tutor-box p{color:#fff !important;-webkit-text-fill-color:#fff !important;margin:0 0 16px}
+#spoke-getterssetters .sp-tutor-btn{display:inline-block;background:#fff;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:11px 26px;border-radius:8px;font-weight:700;text-decoration:none;margin:4px;opacity:1 !important;visibility:visible !important}
+#spoke-getterssetters .sp-tutor-btn:link,#spoke-getterssetters .sp-tutor-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-getterssetters .sp-tutor-btn:hover{opacity:.92 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-getterssetters .sp-related{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+#spoke-getterssetters .sp-rel-btn{display:inline-block;background:#f1f5f9;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;padding:9px 18px;border-radius:20px;font-weight:600;font-size:.9em;text-decoration:none;border:2px solid #e2e8f0;opacity:1 !important;visibility:visible !important}
+#spoke-getterssetters .sp-rel-btn:link,#spoke-getterssetters .sp-rel-btn:visited{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-getterssetters .sp-rel-btn:hover{background:#eff6ff !important;border-color:#3b82f6 !important;opacity:1 !important;visibility:visible !important;color:#1e40af !important;-webkit-text-fill-color:#1e40af !important}
+#spoke-getterssetters .sp-concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+#spoke-getterssetters .sp-concept-box p{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important;margin:0}
+</style>
+<div id=""spoke-getterssetters"">
+
+<h1>Getters and Setters in AP CSA: Complete Guide (2025-2026)</h1>
+
+<p><strong>Getters (accessors)</strong> and <strong>setters (mutators)</strong> are the controlled interface between private fields and the outside world. They are central to Unit 3 encapsulation and appear on virtually every AP CSA exam in both MCQ and FRQ sections. This guide covers how to write them correctly, the traps students fall into, and the exam strategies that earn full points.</p>
+
+<div class=""sp-toc"">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href=""#gs-what"">What Are Getters and Setters?</a></li>
+<li><a href=""#gs-naming"">Naming Conventions</a></li>
+<li><a href=""#gs-examples"">Code Examples</a></li>
+<li><a href=""#gs-pitfalls"">Common Pitfalls</a></li>
+<li><a href=""#gs-cfu"">Check for Understanding (8 Questions)</a></li>
+<li><a href=""#gs-faq"">FAQ</a></li>
+</ol>
+</div>
+
+<h2 id=""gs-what"">What Are Getters and Setters?</h2>
+<p>In AP CSA, all instance variables should be <code>private</code>. Getters and setters give controlled public access:</p>
+<ul>
+<li>
+<strong>Getter (accessor):</strong> returns the value of a field. Must <em>not</em> modify state.</li>
+<li>
+<strong>Setter (mutator):</strong> changes the value of a field. Can validate before assigning.</li>
+</ul>
+
+<div class=""sp-concept-box""><p>Getters and setters are Unit 3 (Class Creation) content and account for 10–18% of the exam score. FRQ parts that say “write accessor methods” or “write a mutator” are testing exactly this skill.</p></div>
+
+<h2 id=""gs-naming"">Naming Conventions</h2>
+<ul>
+<li>Getter: <code>get</code> + FieldName → <code>getName()</code>, <code>getScore()</code>
+</li>
+<li>Boolean getter: <code>is</code> + FieldName → <code>isActive()</code>, <code>isValid()</code>
+</li>
+<li>Setter: <code>set</code> + FieldName → <code>setName(String n)</code>
+</li>
+<li>Return type of getter matches the field's type exactly</li>
+<li>Setter return type is always <code>void</code>
+</li>
+</ul>
+
+<h2 id=""gs-examples"">Code Examples</h2>
+
+<h3>Example 1: Standard Getter and Setter Pair</h3>
+<div class=""sp-predict"">What does the final println print?</div>
+<pre>public class Thermostat {
+    private double temp;
+
+    public double getTemp() {
+        return temp;
+    }
+
+    public void setTemp(double t) {
+        if (t &gt;= -40 &amp;&amp; t &lt;= 120) {
+            temp = t;
+        }
+    }
+
+    public static void main(String[] args) {
+        Thermostat th = new Thermostat();
+        th.setTemp(72.5);
+        th.setTemp(200);   // rejected
+        System.out.println(th.getTemp());
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""gs-btn1"" onclick=""window.runPiston('gs-btn1','gs1','gs-out1')"">Run Code</button>
+<div class=""sp-output"" id=""gs-out1""></div>
+
+<h3>Example 2: Boolean Field with isXxx Getter</h3>
+<div class=""sp-predict"">What is printed after toggling active twice?</div>
+<pre>public class Device {
+    private boolean active;
+
+        public boolean isActive() {
+        return active;
+    }
+        public void setActive(boolean a) {
+        active = a;
+    }
+
+    public static void main(String[] args) {
+        Device d = new Device();
+        System.out.println(d.isActive()); // default
+        d.setActive(true);
+        d.setActive(!d.isActive());
+        System.out.println(d.isActive());
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""gs-btn2"" onclick=""window.runPiston('gs-btn2','gs2','gs-out2')"">Run Code</button>
+<div class=""sp-output"" id=""gs-out2""></div>
+
+<h3>Example 3: Chained Setters and Computed Getter</h3>
+<div class=""sp-predict"">What does the formatted getter return?</div>
+<pre>public class Product {
+    private String name;
+    private double price;
+
+        public String getName() {
+        return name;
+    }
+        public double getPrice() {
+        return price;
+    }
+        public void setName(String n) {
+        name = n;
+    }
+        public void setPrice(double p) {
+        if (p &gt;= 0) {
+                price = p;
+        }
+    }
+        public String getLabel() {
+        return name + "": $"" + price;
+    }
+
+    public static void main(String[] args) {
+        Product prod = new Product();
+        prod.setName(""Widget"");
+        prod.setPrice(4.99);
+        prod.setPrice(-1);  // rejected
+        System.out.println(prod.getLabel());
+    }
+}</pre>
+<button class=""sp-run-btn"" id=""gs-btn3"" onclick=""window.runPiston('gs-btn3','gs3','gs-out3')"">Run Code</button>
+<div class=""sp-output"" id=""gs-out3""></div>
+
+<h2 id=""gs-pitfalls"">Common Pitfalls</h2>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">1. Getter That Modifies State</div>
+<p>A getter that increments, randomizes, or otherwise changes a field is a side-effect bug. The exam specifically tests this and it destroys encapsulation.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">2. Local Variable Shadowing the Field</div>
+<p>Writing <code>String name = ""default""; return name;</code> inside a getter ignores the field entirely. Return <code>this.name</code> or simply <code>return name</code> without the local declaration.</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">3. Wrong Return Type on Getter</div>
+<p>If the field is <code>double</code>, the getter must return <code>double</code>, not <code>int</code>. A narrowing return type causes a compile error (or silent truncation if cast).</p>
+</div>
+
+<div class=""sp-pitfall"">
+<div class=""sp-pitfall-title"">4. Setter Returning a Value</div>
+<p>Setters must be <code>void</code>. If a setter tries to return the field value, that's a design error—use a separate getter instead.</p>
+</div>
+
+<div class=""sp-exam-tip"">
+<strong>AP Exam Tip:</strong> FRQ rubrics award the getter point for: correct return type, correct field name, no modification of state. Setter points require: correct parameter type, correct assignment. Validation logic earns bonus credit when specified.</div>
+
+<div class=""sp-watch"">
+<strong>⚠ Watch Out:</strong> A getter named <code>getActive()</code> for a <code>boolean</code> field is technically valid but non-standard. The conventional Java name is <code>isActive()</code>. AP FRQ specs usually tell you exactly what to name the method—match it precisely.</div>
+
+<h2 id=""gs-cfu"">Check for Understanding</h2>
+<div class=""sp-cfu-wrap"">
+<div class=""sp-score-bar"">Score: <span class=""sp-score-display"">0 / 0 answered (8 total)</span>
+</div>
+<div class=""sp-q"" data-qblock=""1"">
+<div class=""sp-q-stem"">1. A student writes this getter. <span class=""sp-q-keyword"">WHICH</span> problem does it have?<br><pre>public int getScore() { {
+    <br>    score = score + 1;<br>    return score;<br>}
+}</pre>
+</div>
+<button class=""sp-opt"" data-q=""1"" data-choice=""A""><strong>A)</strong> Getters must be declared static</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""B""><strong>B)</strong> The getter modifies the field, violating the accessor contract</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""C""><strong>C)</strong> The return type must match the class name, not int</button>
+<button class=""sp-opt"" data-q=""1"" data-choice=""D""><strong>D)</strong> Getters cannot return primitive types on the AP exam</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""2"">
+<div class=""sp-q-stem"">2. Consider these three setter implementations for <code>private int altitude</code>. <span class=""sp-q-keyword"">WHICH</span> correctly enforce that altitude must be between 0 and 40000?<br><br>I. <code>public void setAlt(int a) {{ altitude = a; }}</code><br>II. <code>public void setAlt(int a) {{ if (a &gt;= 0 &amp;&amp; a &lt;= 40000) altitude = a; }}</code><br>III. <code>public void setAlt(int a) {{ altitude = Math.max(0, Math.min(40000, a)); }}</code>
+</div>
+<button class=""sp-opt"" data-q=""2"" data-choice=""A""><strong>A)</strong> I only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""B""><strong>B)</strong> II only</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""C""><strong>C)</strong> II and III</button>
+<button class=""sp-opt"" data-q=""2"" data-choice=""D""><strong>D)</strong> I, II, and III</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""3"">
+<div class=""sp-q-stem"">3. What does the following code print? <span class=""sp-q-keyword"">PREDICT</span> the output before reading the choices.<br><pre>public class Lamp {{<br>    private boolean on;<br>    public boolean isOn() {{ return on; }}<br>    public void setOn(boolean state) {{ on = state; }}<br>}}<br>Lamp lamp = new Lamp();<br>lamp.setOn(true);<br>lamp.setOn(false);<br>System.out.println(lamp.isOn());</pre>
+</div>
+<button class=""sp-opt"" data-q=""3"" data-choice=""A""><strong>A)</strong> true</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""B""><strong>B)</strong> false</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""C""><strong>C)</strong> null</button>
+<button class=""sp-opt"" data-q=""3"" data-choice=""D""><strong>D)</strong> Compile error: on is never initialized</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""4"">
+<div class=""sp-q-stem"">4. A student writes this getter for <code>private String label</code>. <span class=""sp-q-keyword"">WHICH</span> is the correct diagnosis?<br><pre>public String getLabel() { {
+    <br>    String label = ""default"";<br>    return label;<br>}
+}</pre>
+</div>
+<button class=""sp-opt"" data-q=""4"" data-choice=""A""><strong>A)</strong> The method always returns ""default"" regardless of the field value because the local variable shadows the field</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""B""><strong>B)</strong> The code is correct; local variables take precedence and protect the field</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""C""><strong>C)</strong> A compile error occurs because you cannot declare a variable with the same name as a field inside a method</button>
+<button class=""sp-opt"" data-q=""4"" data-choice=""D""><strong>D)</strong> The method returns the field's value only if the field is null</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""5"">
+<div class=""sp-q-stem"">5. <span class=""sp-q-keyword"">WHICH</span> of the following statements about getters and setters is <span class=""sp-q-keyword"">ALWAYS</span> true in AP CSA?</div>
+<button class=""sp-opt"" data-q=""5"" data-choice=""A""><strong>A)</strong> A getter must return the exact field it represents and nothing else</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""B""><strong>B)</strong> A setter must throw an exception if the value is invalid</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""C""><strong>C)</strong> Getters are public and allow reading private fields without directly exposing them</button>
+<button class=""sp-opt"" data-q=""5"" data-choice=""D""><strong>D)</strong> A class must have exactly one getter and one setter per field</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""6"">
+<div class=""sp-q-stem"">6. Given <code>private int capacity = 10</code>, what is the output? <span class=""sp-q-keyword"">PREDICT</span> before choosing.<br><pre>public void setCapacity(int c) {{<br>    if (c &gt; 0) capacity = c;<br>}}<br>setCapacity(-5);<br>setCapacity(20);<br>setCapacity(0);<br>System.out.println(capacity);</pre>
+</div>
+<button class=""sp-opt"" data-q=""6"" data-choice=""A""><strong>A)</strong> 10</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""B""><strong>B)</strong> 0</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""C""><strong>C)</strong> 20</button>
+<button class=""sp-opt"" data-q=""6"" data-choice=""D""><strong>D)</strong> -5</button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""7"">
+<div class=""sp-q-stem"">7. <span class=""sp-q-keyword"">WHICH</span> accessor method header is correctly written for a field <code>private double voltage</code>?</div>
+<button class=""sp-opt"" data-q=""7"" data-choice=""A""><strong>A)</strong> <code>public void getVoltage() {{ return voltage; }}</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""B""><strong>B)</strong> <code>public double getVoltage() {{ return voltage; }}</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""C""><strong>C)</strong> <code>public double voltage() {{ return this.voltage; }}</code></button>
+<button class=""sp-opt"" data-q=""7"" data-choice=""D""><strong>D)</strong> <code>private double getVoltage() {{ return voltage; }}</code></button>
+<div class=""sp-feedback""></div>
+</div>
+<div class=""sp-q"" data-qblock=""8"">
+<div class=""sp-q-stem"">8. A <code>BankAccount</code> class has <code>private double balance</code>. The setter is:<br><pre>public void setBalance(double amount) { {
+    <br>    balance = Math.abs(amount);<br>}
+}</pre>After calling <code>setBalance(-250.0)</code>, what is <code>getBalance()</code>? <span class=""sp-q-keyword"">PREDICT</span> before reading.</div>
+<button class=""sp-opt"" data-q=""8"" data-choice=""A""><strong>A)</strong> -250.0</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""B""><strong>B)</strong> 0.0</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""C""><strong>C)</strong> 250.0</button>
+<button class=""sp-opt"" data-q=""8"" data-choice=""D""><strong>D)</strong> A runtime exception is thrown</button>
+<div class=""sp-feedback""></div>
+</div>
+</div>
+<h2 id=""gs-faq"">Frequently Asked Questions</h2>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Do I need both a getter and a setter for every field?</button>
+<div class=""sp-faq-a""><p>No. Some fields should be read-only (getter only), especially if changing them would corrupt object state. For example, an ID assigned at construction should have a getter but no setter.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can a getter return a computed value instead of just the field?</button>
+<div class=""sp-faq-a""><p>Yes. A method like getFullName() that returns firstName + ' ' + lastName is a perfectly valid accessor. It follows the getter naming convention and does not modify state.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">What is the difference between an accessor and a mutator?</button>
+<div class=""sp-faq-a""><p>An accessor reads data (returns a value, void-free). A mutator writes data (takes a parameter, returns void). Accessor = getter, mutator = setter.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Can a setter take multiple parameters?</button>
+<div class=""sp-faq-a""><p>Technically yes, but the standard AP CSA pattern is one parameter per setter. If you need to update multiple fields, write separate setters or add an update method.</p></div>
+</div>
+<div class=""sp-faq-item"">
+<button class=""sp-faq-q"">Why use getters and setters instead of making fields public?</button>
+<div class=""sp-faq-a""><p>Public fields allow any code to set any value, bypassing validation. Setters let you enforce rules (e.g., reject negative scores). Getters let you return computed or formatted versions of data. This is the core of encapsulation.</p></div>
+</div>
+
+<div class=""sp-tutor-box"">
+<h3>1-on-1 Expert Support</h3>
+<p>Need help writing correct getter/setter methods for the FRQ? An AP CSA teacher with a 54% five-rate is available for personalized sessions.</p>
+<a class=""sp-tutor-btn"" href=""/pages/tutoring"">View Tutoring Options</a>
+</div>
+
+<h3>Related Topics</h3>
+<div class=""sp-related"">
+<a class=""sp-rel-btn"" href=""/pages/constructors-in-ap-csa"">Constructors</a>
+<a class=""sp-rel-btn"" href=""/pages/tostring-equals-ap-csa"">toString &amp; equals</a>
+<a class=""sp-rel-btn"" href=""/pages/encapsulation-access-modifiers-ap-csa"">Encapsulation</a>
+<a class=""sp-rel-btn"" href=""/pages/static-vs-instance-variables-ap-csa"">Static vs Instance</a>
+<a class=""sp-rel-btn"" href=""/pages/ap-csa-exam-prep-hub"">AP CSA Hub</a>
+</div>
+
+<script>
+
+window.CODES = window.CODES || {};
+window.runPiston = function(btnId, codeKey, outputId) {
+  var btn = document.getElementById(btnId);
+  var out = document.getElementById(outputId);
+  if (!btn || !out) return;
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.style.setProperty('display','block','important');
+  out.textContent = 'Compiling...';
+  fetch('https://emkc.org/api/v2/piston/execute', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({language:'java',version:'*',files:[{name:'Main.java',content:window.CODES[codeKey]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    out.textContent = (d.run && d.run.output) ? d.run.output.trimEnd() : (d.message || 'No output');
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  })
+  .catch(function(e){
+    out.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'Run Code';
+  });
+};
+
+window.CODES['gs1'] = `public class Thermostat {
+    private double temp;
+    public double getTemp() { return temp; }
+    public void setTemp(double t) { if (t >= -40 && t <= 120) temp = t; }
+    public static void main(String[] args) {
+        Thermostat th = new Thermostat();
+        th.setTemp(72.5);
+        th.setTemp(200);
+        System.out.println(th.getTemp());
+    }
+}`;
+window.CODES['gs2'] = `public class Device {
+    private boolean active;
+    public boolean isActive() { return active; }
+    public void setActive(boolean a) { active = a; }
+    public static void main(String[] args) {
+        Device d = new Device();
+        System.out.println(d.isActive());
+        d.setActive(true);
+        d.setActive(!d.isActive());
+        System.out.println(d.isActive());
+    }
+}`;
+window.CODES['gs3'] = `public class Product {
+    private String name;
+    private double price;
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public void setName(String n) { name = n; }
+    public void setPrice(double p) { if (p >= 0) price = p; }
+    public String getLabel() { return name + "": $"" + price; }
+    public static void main(String[] args) {
+        Product prod = new Product();
+        prod.setName(""Widget"");
+        prod.setPrice(4.99);
+        prod.setPrice(-1);
+        System.out.println(prod.getLabel());
+    }
+}`;
+
+(function(){
+  var W = document.getElementById('spoke-getterssetters');
+  if (!W) return;
+  var ANSWERS = {
+  q1: { correct: ""B"", explanation: 'An accessor (getter) should only READ and return a field value without modifying object state. Incrementing score inside a getter is a side effect that breaks encapsulation.' },
+  q2: { correct: ""C"", explanation: 'Option I performs no validation and allows any value. Option II silently ignores invalid values. Option III clamps the value. Both II and III enforce the 0-40000 range, making C correct.' },
+  q3: { correct: ""B"", explanation: 'Booleans default to false but are then set to true and subsequently to false. The final call to isOn() returns false. There is no compile error; boolean fields default to false.' },
+  q4: { correct: ""A"", explanation: 'Inside the method, \'String label = ""default""\' declares a new LOCAL variable named label. This shadows the instance field. The method always returns ""default"" rather than the field\'s actual value. The fix is to remove the local declaration: return this.label; or just return label; (which now resolves to the field).' },
+  q5: { correct: ""C"", explanation: 'Option A is not always true (computed properties are valid getters). Option B is not required; setters often just ignore invalid input. Option D is false; some fields may be read-only (getter only) or write-only. Option C is the core purpose of the getter pattern and is always true.' },
+  q6: { correct: ""C"", explanation: 'setCapacity(-5) is rejected (not > 0). setCapacity(20) is accepted, capacity becomes 20. setCapacity(0) is rejected (0 is not > 0). Final value is 20.' },
+  q7: { correct: ""B"", explanation: ""Option A has void return type but returns a value (compile error). Option C uses the field name as the method name without the 'get' prefix (style violation, also possible compile ambiguity). Option D is private, defeating the purpose of public access. Option B is correct: public, matching return type, standard naming."" },
+  q8: { correct: ""C"", explanation: 'Math.abs(-250.0) returns 250.0, so balance is set to 250.0. getBalance() returns 250.0. No exception is thrown.' }
+  };
+  var score = 0, answered = 0, total = 8;
+  var scoreEl = W.querySelector('.sp-score-display');
+
+  function updateScore(){
+    if (scoreEl) scoreEl.textContent = score + ' / ' + answered + ' answered (' + total + ' total)';
+  }
+
+  W.querySelectorAll('.sp-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qnum = btn.getAttribute('data-q');
+      var choice = btn.getAttribute('data-choice');
+      var qblock = W.querySelector('[data-qblock=""' + qnum + '""]');
+      if (!qblock || qblock.getAttribute('data-done') === '1') return;
+      qblock.setAttribute('data-done','1');
+      answered++;
+      var correct = ANSWERS['q'+qnum].correct;
+      var exp = ANSWERS['q'+qnum].explanation;
+      qblock.querySelectorAll('.sp-opt').forEach(function(b){
+        if (b.getAttribute('data-choice') === correct) b.classList.add('revealed');
+        else b.style.opacity = '0.5';
+      });
+      var fb = qblock.querySelector('.sp-feedback');
+      if (fb){
+        fb.style.setProperty('display','block','important');
+        if (choice === correct){
+          btn.classList.add('correct');
+          fb.classList.add('correct');
+          fb.textContent = '✓ Correct! ' + exp;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          fb.classList.add('wrong');
+          fb.textContent = '✗ Incorrect. ' + exp;
+        }
+      }
+      updateScore();
+    });
+  });
+
+  W.querySelectorAll('.sp-faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ans = btn.nextElementSibling;
+      if (!ans) return;
+      ans.style.setProperty('display', ans.style.display === 'block' ? 'none' : 'block', 'important');
+    });
+  });
+
+  updateScore();
+})();
+
+</script>
+
+<script type=""application/ld+json"">
+{
+  ""@context"":""https://schema.org"",
+  ""@graph"":[
+    {""@type"":""Article"",""headline"":""Getters and Setters in AP CSA: Complete Guide (2025-2026)"",""author"":{""@type"":""Person"",""name"":""Tanner Crow"",""url"":""https://apcsexamprep.com/pages/tutoring""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com"",""url"":""https://apcsexamprep.com""},""url"":""https://apcsexamprep.com/pages/getters-setters-ap-csa""},
+    {""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP CSA"",""item"":""https://apcsexamprep.com/pages/ap-csa-exam-prep-hub""},{""@type"":""ListItem"",""position"":3,""name"":""Getters and Setters"",""item"":""https://apcsexamprep.com/pages/getters-setters-ap-csa""}]},
+    {""@type"":""FAQPage"",""mainEntity"":[{""@type"":""Question"",""name"":""Do I need both a getter and setter for every field?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""No. Some fields should be read-only with only a getter.""}},{""@type"":""Question"",""name"":""Can a getter return a computed value?"",""acceptedAnswer"":{""@type"":""Answer"",""text"":""Yes, as long as it does not modify state.""}}]}
+  ]
+}
+</script>
+
+</div>"

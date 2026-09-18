@@ -1,0 +1,186 @@
+﻿"Blog: Handle","Handle","Command","Body HTML"
+"ap-csa-daily-practice","ap-csa-u1-c2-day-16-casting-precision-loss","MERGE","<div id=""qotd-wrapper"" style=""all:initial; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; color: #1a1a2e !important; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6;"">
+<style>
+#qotd-wrapper * { box-sizing: border-box; }
+#qotd-wrapper h1, #qotd-wrapper h2, #qotd-wrapper h3, #qotd-wrapper h4, #qotd-wrapper p, #qotd-wrapper span, #qotd-wrapper div, #qotd-wrapper label, #qotd-wrapper li { color: #1a1a2e !important; }
+#qotd-wrapper a, #qotd-wrapper a:link, #qotd-wrapper a:visited { color: #2563eb !important; text-decoration: none !important; }
+#qotd-wrapper a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-nav-btn, #qotd-wrapper .qotd-nav-btn:link, #qotd-wrapper .qotd-nav-btn:visited { display: inline-block !important; padding: 10px 22px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 15px !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+#qotd-wrapper .qotd-nav-prev, #qotd-wrapper .qotd-nav-prev:link, #qotd-wrapper .qotd-nav-prev:visited { background: #e2e8f0 !important; color: #334155 !important; }
+#qotd-wrapper .qotd-nav-prev:hover { background: #cbd5e1 !important; color: #1e293b !important; }
+#qotd-wrapper .qotd-nav-next, #qotd-wrapper .qotd-nav-next:link, #qotd-wrapper .qotd-nav-next:visited { background: #2563eb !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-next:hover { background: #1d4ed8 !important; color: #ffffff !important; }
+#qotd-wrapper .qotd-nav-hub, #qotd-wrapper .qotd-nav-hub:link, #qotd-wrapper .qotd-nav-hub:visited { background: #f0fdf4 !important; color: #166534 !important; border: 2px solid #bbf7d0 !important; }
+#qotd-wrapper .qotd-nav-hub:hover { background: #dcfce7 !important; color: #166534 !important; }
+#qotd-wrapper .qotd-unit-badge { display: inline-block; background: #2563eb; color: #fff !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; }
+#qotd-wrapper .qotd-cycle-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-day-badge { display: inline-block; background: #f1f5f9; color: #475569 !important; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 6px; }
+#qotd-wrapper .qotd-difficulty { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #fef2f2; color: #dc2626 !important; }
+#qotd-wrapper .qotd-question-box { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-code-block { background: #1e293b; color: #e2e8f0 !important; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 16px 0; }
+#qotd-wrapper .qotd-code-block * { color: #e2e8f0 !important; }
+#qotd-wrapper .qotd-option { display: block; padding: 14px 18px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; font-size: 15px; line-height: 1.6; }
+#qotd-wrapper .qotd-option:hover { border-color: #93c5fd; background: #eff6ff; }
+#qotd-wrapper .qotd-option.correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+#qotd-wrapper .qotd-option.incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+#qotd-wrapper .qotd-submit-btn, #qotd-wrapper .qotd-submit-btn:link, #qotd-wrapper .qotd-submit-btn:visited { display: block !important; width: 100% !important; padding: 14px !important; background: #2563eb !important; color: #ffffff !important; border: none !important; border-radius: 10px !important; font-size: 17px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 16px !important; transition: background 0.2s ease !important; text-align: center !important; text-decoration: none !important; opacity: 1 !important; visibility: visible !important; }
+#qotd-wrapper .qotd-submit-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-submit-btn:disabled { background: #94a3b8 !important; cursor: not-allowed !important; }
+#qotd-wrapper .qotd-explanation { display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-explanation h3 { color: #16a34a !important; font-size: 20px; margin: 0 0 16px 0; }
+#qotd-wrapper .qotd-why-not { background: #fefce8; border-left: 4px solid #eab308; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-why-not h4 { color: #854d0e !important; margin: 0 0 12px 0; }
+#qotd-wrapper .qotd-mistake-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-mistake-box h4 { color: #991b1b !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-tip-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+#qotd-wrapper .qotd-tip-box h4 { color: #1e40af !important; margin: 0 0 8px 0; }
+#qotd-wrapper .qotd-section-ref { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 18px; margin-top: 20px; font-size: 14px; }
+#qotd-wrapper .qotd-section-ref strong { color: #5b21b6 !important; }
+#qotd-wrapper .qotd-more-practice { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 32px; }
+#qotd-wrapper .qotd-more-practice h3 { color: #1e293b !important; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+#qotd-wrapper .qotd-mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { #qotd-wrapper .qotd-mp-grid { grid-template-columns: 1fr; } }
+#qotd-wrapper .qotd-mp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+#qotd-wrapper .qotd-mp-card h4 { color: #475569 !important; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-mp-link { display: block; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; line-height: 1.5; }
+#qotd-wrapper .qotd-mp-link:last-child { border-bottom: none; }
+#qotd-wrapper .qotd-mp-link a, #qotd-wrapper .qotd-mp-link a:link, #qotd-wrapper .qotd-mp-link a:visited { color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important; }
+#qotd-wrapper .qotd-mp-link a:hover { text-decoration: underline !important; }
+#qotd-wrapper .qotd-mp-tag { display: inline-block; background: #f1f5f9; color: #64748b !important; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+#qotd-wrapper .qotd-mp-btn, #qotd-wrapper .qotd-mp-btn:link, #qotd-wrapper .qotd-mp-btn:visited { display: block !important; text-align: center !important; padding: 10px 16px !important; background: #2563eb !important; color: #fff !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 14px !important; text-decoration: none !important; margin-top: 10px !important; }
+#qotd-wrapper .qotd-mp-btn:hover { background: #1d4ed8 !important; }
+#qotd-wrapper .qotd-key-concept { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+#qotd-wrapper .qotd-key-concept h3 { color: #0c4a6e !important; font-size: 17px; font-weight: 700; margin: 0 0 10px 0; }
+#qotd-wrapper .qotd-key-concept p { color: #334155 !important; font-size: 15px; line-height: 1.7; margin: 0; }
+#qotd-wrapper .qotd-key-concept code { background: #e0f2fe; color: #0369a1 !important; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+</style>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-15-complex-string-manipulation"" class=""qotd-nav-btn qotd-nav-prev"">← Day 15</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-17-wrapper-null-safety"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayTop"">Day 17 →</a>
+</div>
+<div style=""margin-bottom: 20px;"">
+  <span class=""qotd-unit-badge"">Unit 1</span>
+  <span class=""qotd-cycle-badge"">Advanced (Cycle 2)</span>
+  <span class=""qotd-day-badge"">Day 16 of 28</span>
+  <span class=""qotd-difficulty"">Advanced</span>
+</div>
+<h2 style=""font-size: 26px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a2e !important;"">Casting Precision Loss</h2>
+<p style=""color: #64748b !important; font-size: 15px; margin: 0 0 24px 0;"">Section 1.5 — Casting and Ranges</p>
+<div class=""qotd-key-concept"">
+  <h3>Key Concept</h3>
+  <p style=""line-height: 1.7;"">Precision loss during casting is a subtle concept the AP exam tests in unexpected ways. Casting a <code>double</code> to an <code>int</code> always truncates toward zero: <code>(int) 2.9</code> becomes <code>2</code>, and <code>(int) -2.9</code> becomes <code>-2</code>. But precision loss also occurs when converting large <code>int</code> values to <code>float</code> (not on the AP exam) or when integer division discards remainders. The exam combines casting with arithmetic to create multi-step precision loss: <code>(int)(7.0 / 2) + (int)(7 / 2.0)</code> requires evaluating each cast separately.</p>
+</div>
+<div class=""qotd-question-box"">
+  <p style=""font-weight: 600; font-size: 17px; margin-bottom: 16px;"">Consider the following code segment.</p>
+  <div class=""qotd-code-block"">double price = 19.99;
+int cents = (int)(price * 100);
+int dollars = cents / 100;
+int leftover = cents % 100;
+System.out.println(""$"" + dollars + ""."" + leftover);</div>
+  <p style=""font-weight: 600; font-size: 16px; margin: 20px 0 12px 0;"">What is printed as a result of executing the code segment?</p>
+  <form id=""qotdForm"" onsubmit=""return false;"">
+    <label class=""qotd-option"" id=""optA"">
+      <input type=""radio"" name=""answer"" value=""A""> (A)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">$19.99</span>
+    </label>
+    <label class=""qotd-option"" id=""optB"">
+      <input type=""radio"" name=""answer"" value=""B""> (B)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">$19.98</span>
+    </label>
+    <label class=""qotd-option"" id=""optC"">
+      <input type=""radio"" name=""answer"" value=""C""> (C)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">$19.0</span>
+    </label>
+    <label class=""qotd-option"" id=""optD"">
+      <input type=""radio"" name=""answer"" value=""D""> (D)   <span style=""font-family: Courier New, Courier, monospace; font-size: 14px;"">$20.99</span>
+    </label>
+
+    <button type=""button"" class=""qotd-submit-btn"" id=""submitBtn"" onclick=""checkAnswer()"">Check Answer</button>
+  </form>
+  <div id=""resultMsg"" style=""margin-top: 16px; font-weight: 600; font-size: 16px; display: none;""></div>
+</div>
+<div class=""qotd-explanation"" id=""explanation"">
+  <h3>Answer: (B) $19.98</h3>
+  <p style=""line-height: 1.7;"">Trace the money conversion:</p>
+  <p style=""line-height: 1.7;""><strong>price * 100:</strong> <code>19.99 * 100</code> is <code>1998.9999999999998</code>, not <code>1999.0</code>. A <code>double</code> cannot hold 19.99 exactly, so the product lands just under 1999.</p>
+  <p style=""line-height: 1.7;""><strong>cents:</strong> <code>(int)</code> truncates toward zero, so <code>(int) 1998.9999999999998</code> is <code>1998</code>. It does not round.</p>
+  <p style=""line-height: 1.7;""><strong>dollars:</strong> <code>1998 / 100 = 19</code>.</p>
+  <p style=""line-height: 1.7;""><strong>leftover:</strong> <code>1998 % 100 = 98</code>.</p>
+  <p style=""line-height: 1.7;""><strong>Output:</strong> <code>""$"" + 19 + ""."" + 98 = ""$19.98""</code>. The program loses a cent, which is exactly what this topic is named for.</p>
+  <div class=""qotd-why-not"">
+    <h4>Why Not the Others?</h4>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(A)</strong> This is the answer you get by treating <code>19.99 * 100</code> as exactly <code>1999.0</code>. It is the most common answer and it is wrong: run it and the product is <code>1998.9999999999998</code>.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(C)</strong> This would need <code>cents % 100</code> to be 0, meaning a whole number of dollars. <code>1998 % 100</code> is 98.</p>
+  <p style=""line-height: 1.7; margin-bottom: 8px;""><strong>(D)</strong> This would need <code>cents / 100</code> to be 20, so cents would have to reach 2000. It is 1998.</p>
+
+  </div>
+  <div class=""qotd-mistake-box"">
+    <h4>Common Mistake</h4>
+    <p style=""line-height: 1.6;"">Trusting a <code>double</code> to hold a decimal exactly. The quotient and remainder pattern here is right, and it is fed a number a hair under 1999. This is why money is counted in whole cents rather than in dollars and a fraction.</p>
+  </div>
+  <div class=""qotd-tip-box"">
+    <h4>AP Exam Tip</h4>
+    <p style=""line-height: 1.6;"">The quotient-remainder pattern works for any base conversion: time (base 60), money (base 100), digit extraction (base 10). Recognize the pattern: <code>/ base</code> gives the higher unit, <code>% base</code> gives the lower unit.</p>
+  </div>
+  <div class=""qotd-section-ref"">
+    <strong>Review this topic:</strong> Section 1.5 — Casting and Ranges •
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" style=""color: #5b21b6 !important;"">Unit 1 Study Guide</a>
+  </div>
+</div>
+<div class=""qotd-more-practice"">
+  <h3>More Practice</h3>
+  <div class=""qotd-mp-grid"">
+    <div class=""qotd-mp-card"">
+      <h4>Study This Topic</h4>
+      <div class=""qotd-mp-link""><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1 Study Guide →</a></div>
+      <a href=""/pages/daily-practice"" class=""qotd-mp-btn"">Daily Practice Hub</a>
+    </div>
+    <div class=""qotd-mp-card"">
+      <h4>Related FRQs</h4>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2025"">2025 FRQ 2 - SignedText</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2024"">2024 FRQ 2 - Scoreboard</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+      <div class=""qotd-mp-link"">
+<a href=""/pages/ap-csa-frq-2023"">2023 FRQ 2 - Sign</a><span class=""qotd-mp-tag"">Class Design</span>
+</div>
+
+      <div class=""qotd-mp-link"" style=""padding-top: 10px;""><a href=""/pages/ap-csa-frqs-by-topic"">Browse All FRQs →</a></div>
+    </div>
+  </div>
+</div>
+<div style=""display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; padding-top: 20px; border-top: 2px solid #e2e8f0;"">
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-15-complex-string-manipulation"" class=""qotd-nav-btn qotd-nav-prev"">← Day 15</a>
+  <a href=""/pages/ap-csa-qotd-hub"" class=""qotd-nav-btn qotd-nav-hub"">All Days</a>
+  <a href=""/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-17-wrapper-null-safety"" class=""qotd-nav-btn qotd-nav-next"" id=""nextDayBottom"">Day 17 →</a>
+</div>
+<script>
+function checkAnswer() {
+  var sel = document.querySelector('#qotdForm input[name=""answer""]:checked');
+  if (!sel) { alert('Please select an answer first.'); return; }
+  var ans = sel.value;
+  var correct = 'B';
+  var opts = document.querySelectorAll('#qotd-wrapper .qotd-option');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('resultMsg');
+  var expl = document.getElementById('explanation');
+  var radios = document.querySelectorAll('#qotdForm input[type=""radio""]');
+  for (var i = 0; i < radios.length; i++) { radios[i].disabled = true; }
+  btn.disabled = true; btn.textContent = 'Answered';
+  for (var j = 0; j < opts.length; j++) {
+    var r = opts[j].querySelector('input[type=""radio""]');
+    if (r.value === correct) { opts[j].classList.add('correct'); }
+    else if (r.checked) { opts[j].classList.add('incorrect'); }
+  }
+  msg.style.display = 'block';
+  if (ans === correct) {
+    msg.innerHTML = '<span style=""color: #16a34a !important;"">Correct! Nice work.</span>';
+  } else {
+    msg.innerHTML = '<span style=""color: #dc2626 !important;"">Not quite. The correct answer is (' + correct + ').</span>';
+  }
+  expl.style.display = 'block';
+  expl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+</script>
+</div>"

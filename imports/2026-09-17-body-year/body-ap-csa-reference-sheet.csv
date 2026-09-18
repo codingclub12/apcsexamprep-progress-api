@@ -1,0 +1,1391 @@
+﻿"Handle","Command","Body HTML"
+"ap-csa-reference-sheet","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+#apcs-ref-wrapper{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;color:#1e293b!important;background:#fff!important;line-height:1.6!important;}
+#apcs-ref-wrapper *{box-sizing:border-box!important;}
+#apcs-ref-wrapper a{color:#2563eb!important;text-decoration:underline!important;}
+#apcs-ref-wrapper a:link,#apcs-ref-wrapper a:visited{color:#2563eb!important;}
+#apcs-ref-wrapper a:hover{color:#1d4ed8!important;}
+
+/* HERO */
+#apcs-ref-wrapper .ref-hero{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 60%,#2563eb 100%)!important;color:#fff!important;padding:48px 24px 40px!important;text-align:center!important;}
+#apcs-ref-wrapper .ref-hero h1{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:2.2em!important;font-weight:800!important;margin:0 0 12px!important;line-height:1.2!important;}
+#apcs-ref-wrapper .ref-hero p{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;font-size:1.1em!important;margin:0 0 20px!important;max-width:700px!important;margin-left:auto!important;margin-right:auto!important;}
+#apcs-ref-wrapper .hero-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;justify-content:center!important;margin-top:16px!important;}
+#apcs-ref-wrapper .hero-badge{background:rgba(255,255,255,0.15)!important;border:1px solid rgba(255,255,255,0.3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:6px 14px!important;border-radius:20px!important;font-size:13px!important;font-weight:600!important;}
+
+/* TOC */
+#apcs-ref-wrapper .ref-toc{background:#eff6ff!important;border:2px solid #bfdbfe!important;border-radius:12px!important;padding:24px!important;margin:28px auto!important;max-width:960px!important;}
+#apcs-ref-wrapper .ref-toc h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.1em!important;font-weight:700!important;margin:0 0 14px!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
+#apcs-ref-wrapper .toc-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:6px 16px!important;}
+@media(max-width:640px){#apcs-ref-wrapper .toc-grid{grid-template-columns:repeat(2,1fr)!important;}}
+#apcs-ref-wrapper .toc-grid a{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;font-size:13px!important;font-weight:500!important;text-decoration:none!important;display:flex!important;align-items:center!important;gap:4px!important;}
+#apcs-ref-wrapper .toc-grid a:hover{text-decoration:underline!important;}
+
+/* MAIN CONTAINER */
+#apcs-ref-wrapper .ref-main{max-width:960px!important;margin:0 auto!important;padding:0 20px 40px!important;}
+
+/* SECTION */
+#apcs-ref-wrapper .ref-section{margin-bottom:40px!important;}
+#apcs-ref-wrapper .ref-section h2{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:1.5em!important;font-weight:800!important;margin:0 0 4px!important;padding-bottom:8px!important;border-bottom:3px solid #3b82f6!important;}
+#apcs-ref-wrapper .ref-section h3{color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;font-size:1.1em!important;font-weight:700!important;margin:20px 0 10px!important;}
+#apcs-ref-wrapper .unit-tag{display:inline-block!important;background:#dbeafe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:11px!important;font-weight:700!important;padding:2px 8px!important;border-radius:10px!important;margin-left:8px!important;vertical-align:middle!important;}
+
+/* TABLES */
+#apcs-ref-wrapper table{width:100%!important;border-collapse:collapse!important;margin:12px 0 20px!important;font-size:14px!important;}
+#apcs-ref-wrapper th{background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 12px!important;text-align:left!important;font-weight:700!important;}
+#apcs-ref-wrapper td{padding:9px 12px!important;border-bottom:1px solid #e2e8f0!important;vertical-align:top!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;}
+#apcs-ref-wrapper tr:nth-child(even) td{background:#f8fafc!important;}
+#apcs-ref-wrapper code{background:#f1f5f9!important;color:#be123c!important;-webkit-text-fill-color:#be123c!important;padding:1px 5px!important;border-radius:3px!important;font-family:Consolas,Monaco,monospace!important;font-size:13px!important;}
+
+/* CODE BLOCKS */
+#apcs-ref-wrapper .code-block{background:#1e293b!important;border-radius:8px!important;padding:16px 20px!important;margin:10px 0 18px!important;overflow-x:auto!important;}
+#apcs-ref-wrapper .code-block pre{margin:0!important;padding:0!important;white-space:pre!important;font-family:Consolas,Monaco,'Courier New',monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;}
+#apcs-ref-wrapper .kw{color:#93c5fd!important;}
+#apcs-ref-wrapper .ty{color:#86efac!important;}
+#apcs-ref-wrapper .cm{color:#94a3b8!important;font-style:italic!important;}
+#apcs-ref-wrapper .st{color:#fde68a!important;}
+#apcs-ref-wrapper .nm{color:#fca5a5!important;}
+
+/* ALERT BOXES */
+#apcs-ref-wrapper .alert{border-radius:8px!important;padding:14px 18px!important;margin:14px 0!important;font-size:14px!important;}
+#apcs-ref-wrapper .alert-blue{background:#eff6ff!important;border-left:4px solid #3b82f6!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;}
+#apcs-ref-wrapper .alert-red{background:#fff1f2!important;border-left:4px solid #ef4444!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;}
+#apcs-ref-wrapper .alert-green{background:#f0fdf4!important;border-left:4px solid #22c55e!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+#apcs-ref-wrapper .alert-yellow{background:#fffbeb!important;border-left:4px solid #f59e0b!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;}
+#apcs-ref-wrapper .alert strong{display:block!important;margin-bottom:4px!important;}
+
+/* CARD GRID */
+#apcs-ref-wrapper .card-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:16px!important;margin:12px 0!important;}
+@media(max-width:600px){#apcs-ref-wrapper .card-grid{grid-template-columns:1fr!important;}}
+#apcs-ref-wrapper .ref-card{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:8px!important;padding:16px!important;}
+#apcs-ref-wrapper .ref-card h4{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;font-size:14px!important;font-weight:700!important;margin:0 0 10px!important;text-transform:uppercase!important;letter-spacing:.3px!important;}
+
+/* TRAP LIST */
+#apcs-ref-wrapper .trap-list{list-style:none!important;padding:0!important;margin:0!important;}
+#apcs-ref-wrapper .trap-list li{padding:10px 12px 10px 36px!important;border-bottom:1px solid #fee2e2!important;position:relative!important;font-size:14px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;}
+#apcs-ref-wrapper .trap-list li:last-child{border-bottom:none!important;}
+#apcs-ref-wrapper .trap-list li::before{content:'!'!important;position:absolute!important;left:10px!important;top:10px!important;background:#ef4444!important;color:#fff!important;-webkit-text-fill-color:#fff!important;width:18px!important;height:18px!important;border-radius:50%!important;font-size:11px!important;font-weight:900!important;display:flex!important;align-items:center!important;justify-content:center!important;line-height:18px!important;text-align:center!important;}
+
+/* FAQ */
+#apcs-ref-wrapper .faq-item{border:1px solid #e2e8f0!important;border-radius:8px!important;margin:10px 0!important;overflow:hidden!important;}
+#apcs-ref-wrapper .faq-q{background:#f8fafc!important;padding:14px 18px!important;font-weight:700!important;font-size:15px!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;cursor:pointer!important;}
+#apcs-ref-wrapper .faq-a{padding:14px 18px!important;font-size:14px!important;border-top:1px solid #e2e8f0!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+
+/* CTA */
+#apcs-ref-wrapper .ref-cta{background:linear-gradient(135deg,#1e3a8a,#2563eb)!important;border-radius:12px!important;padding:32px!important;text-align:center!important;margin:32px 0!important;}
+#apcs-ref-wrapper .ref-cta h2{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:1.4em!important;margin:0 0 10px!important;}
+#apcs-ref-wrapper .ref-cta p{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin:0 0 20px!important;font-size:15px!important;}
+#apcs-ref-wrapper .cta-btn-row{display:flex!important;flex-wrap:wrap!important;gap:12px!important;justify-content:center!important;}
+#apcs-ref-wrapper .cta-btn{display:inline-block!important;padding:12px 24px!important;border-radius:8px!important;font-weight:700!important;font-size:15px!important;text-decoration:none!important;cursor:pointer!important;}
+#apcs-ref-wrapper .cta-btn-white{background:#fff!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;border:none!important;}
+#apcs-ref-wrapper .cta-btn-white:link,#apcs-ref-wrapper .cta-btn-white:visited{color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;}
+#apcs-ref-wrapper .cta-btn-outline{background:transparent!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,0.7)!important;}
+#apcs-ref-wrapper .cta-btn-outline:link,#apcs-ref-wrapper .cta-btn-outline:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+
+/* EXAM TIP */
+#apcs-ref-wrapper .exam-tip{background:#fefce8!important;border:2px solid #facc15!important;border-radius:8px!important;padding:14px 18px!important;margin:16px 0!important;font-size:14px!important;}
+#apcs-ref-wrapper .exam-tip strong{color:#713f12!important;-webkit-text-fill-color:#713f12!important;display:block!important;margin-bottom:4px!important;}
+
+/* QUICK REF GRID */
+#apcs-ref-wrapper .qr-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important;margin:14px 0!important;}
+@media(max-width:640px){#apcs-ref-wrapper .qr-grid{grid-template-columns:1fr!important;}}
+#apcs-ref-wrapper .qr-cell{background:#f0f9ff!important;border:1px solid #bae6fd!important;border-radius:6px!important;padding:12px!important;font-size:13px!important;}
+#apcs-ref-wrapper .qr-cell strong{display:block!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:6px!important;font-size:12px!important;text-transform:uppercase!important;}
+</style>
+
+<div id=""apcs-ref-wrapper"">
+
+<!-- HERO -->
+<div class=""ref-hero"">
+  <h1>AP CSA Java Reference Sheet</h1>
+  <p>Every method, operator, syntax pattern, and exam trap on one page. Official College Board quick reference — expanded with examples, gotchas, and FRQ tips.</p>
+  <div class=""hero-badges"">
+    <span class=""hero-badge"">42 MCQ • 4 FRQ</span>
+    <span class=""hero-badge"">4 Units Covered</span>
+    <span class=""hero-badge"">Exam: May 2027</span>
+    <span class=""hero-badge"">Digital via Bluebook</span>
+    <span class=""hero-badge"">Java Quick Reference Provided</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class=""ref-main"">
+<div class=""ref-toc"">
+  <h2>Jump to Section</h2>
+  <div class=""toc-grid"">
+    <a href=""#primitive-types"">→ Primitive Types</a>
+    <a href=""#operators"">→ Operators</a>
+    <a href=""#strings"">→ String Methods</a>
+    <a href=""#math"">→ Math Class</a>
+    <a href=""#wrappers"">→ Integer &amp; Double</a>
+    <a href=""#scanner"">→ Scanner Class</a>
+    <a href=""#arrays"">→ Arrays (1D)</a>
+    <a href=""#arraylist"">→ ArrayList</a>
+    <a href=""#2d-arrays"">→ 2D Arrays</a>
+    <a href=""#control-flow"">→ Control Flow</a>
+    <a href=""#class-structure"">→ Class Structure</a>
+    <a href=""#exam-traps"">→ Exam Traps</a>
+    <a href=""#frq-tips"">→ FRQ Tips</a>
+    <a href=""#faqs"">→ FAQs</a>
+  </div>
+</div>
+
+<div class=""alert alert-blue"">
+  <strong>Official Quick Reference</strong>
+  The Java Quick Reference sheet is provided during the AP CSA FRQ section (Section II). It lists the official String, Math, and ArrayList methods. This page reproduces those exactly — then adds examples, traps, and deeper context for every method.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""primitive-types"">
+  <h2>Primitive Data Types <span class=""unit-tag"">Unit 1</span>
+</h2>
+  <p>Java has three primitive types tested on the AP CSA exam. Primitives store values directly (unlike objects, which store references).</p>
+  <table>
+    <tr>
+<th>Type</th>
+<th>Size</th>
+<th>Range / Values</th>
+<th>Default</th>
+<th>Example</th>
+</tr>
+    <tr>
+<td><code>int</code></td>
+<td>32-bit</td>
+<td>−2,147,483,648 to 2,147,483,647</td>
+<td>0</td>
+<td><code>int score = 95;</code></td>
+</tr>
+    <tr>
+<td><code>double</code></td>
+<td>64-bit</td>
+<td>~±1.8 × 10<sup>308</sup>, 15-16 sig digits</td>
+<td>0.0</td>
+<td><code>double gpa = 3.85;</code></td>
+</tr>
+    <tr>
+<td><code>boolean</code></td>
+<td>1-bit</td>
+<td>
+<code>true</code> or <code>false</code> only</td>
+<td>false</td>
+<td><code>boolean passed = true;</code></td>
+</tr>
+  </table>
+  <div class=""alert alert-red"">
+    <strong>Integer Division Trap (Most Common Unit 1 Mistake)</strong>
+    <code>5 / 2 = 2</code> (NOT 2.5). Both operands are <code>int</code>, so the result is <code>int</code> and truncates. To get 2.5, cast first: <code>(double) 5 / 2</code> or use <code>5.0 / 2</code>.
+  </div>
+  <h3>Casting Between Types</h3>
+  <div class=""code-block""><pre><span class=""kw"">int</span> a = <span class=""nm"">7</span>;
+<span class=""kw"">double</span> b = (<span class=""kw"">double</span>) a / <span class=""nm"">2</span>;  <span class=""cm"">// b = 3.5  (cast BEFORE division)</span>
+<span class=""kw"">int</span> c = (<span class=""kw"">int</span>) <span class=""nm"">3.9</span>;           <span class=""cm"">// c = 3    (truncates, does NOT round)</span>
+<span class=""kw"">int</span> d = (<span class=""kw"">int</span>) (<span class=""nm"">3.9</span> + <span class=""nm"">0.5</span>);  <span class=""cm"">// c = 4    (manual round trick)</span></pre></div>
+  <div class=""exam-tip"">
+    <strong>Exam Tip — Widening vs. Narrowing</strong>
+    <code>int</code> → <code>double</code> is automatic (widening). <code>double</code> → <code>int</code> requires explicit cast (narrowing). Casting always <em>truncates</em>, never rounds.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""operators"">
+  <h2>Operators <span class=""unit-tag"">Units 1–2</span>
+</h2>
+  <h3>Arithmetic Operators</h3>
+  <table>
+    <tr>
+<th>Op</th>
+<th>Name</th>
+<th>Example</th>
+<th>Result</th>
+<th>Watch Out</th>
+</tr>
+    <tr>
+<td><code>+</code></td>
+<td>Addition / concat</td>
+<td><code>3 + 4</code></td>
+<td><code>7</code></td>
+<td>With Strings, converts to concat</td>
+</tr>
+    <tr>
+<td><code>-</code></td>
+<td>Subtraction</td>
+<td><code>10 - 3</code></td>
+<td><code>7</code></td>
+<td>&nbsp;</td>
+</tr>
+    <tr>
+<td><code>*</code></td>
+<td>Multiplication</td>
+<td><code>4 * 5</code></td>
+<td><code>20</code></td>
+<td>&nbsp;</td>
+</tr>
+    <tr>
+<td><code>/</code></td>
+<td>Division</td>
+<td><code>7 / 2</code></td>
+<td><code>3</code></td>
+<td>Int/int = int (truncates!)</td>
+</tr>
+    <tr>
+<td><code>%</code></td>
+<td>Modulo (remainder)</td>
+<td><code>7 % 3</code></td>
+<td><code>1</code></td>
+<td>Result sign matches dividend</td>
+</tr>
+  </table>
+  <h3>Compound Assignment Operators</h3>
+  <table>
+    <tr>
+<th>Shorthand</th>
+<th>Equivalent</th>
+<th>Example</th>
+</tr>
+    <tr>
+<td><code>x += 5</code></td>
+<td><code>x = x + 5</code></td>
+<td><code>x += 3</code></td>
+</tr>
+    <tr>
+<td><code>x -= 5</code></td>
+<td><code>x = x - 5</code></td>
+<td><code>count -= 1</code></td>
+</tr>
+    <tr>
+<td><code>x *= 2</code></td>
+<td><code>x = x * 2</code></td>
+<td><code>total *= rate</code></td>
+</tr>
+    <tr>
+<td><code>x /= 2</code></td>
+<td><code>x = x / 2</code></td>
+<td><code>n /= 10</code></td>
+</tr>
+    <tr>
+<td><code>x %=3</code></td>
+<td><code>x = x % 3</code></td>
+<td><code>n %= 2</code></td>
+</tr>
+    <tr>
+<td><code>x++</code></td>
+<td><code>x = x + 1</code></td>
+<td><code>i++</code></td>
+</tr>
+    <tr>
+<td><code>x--</code></td>
+<td><code>x = x - 1</code></td>
+<td><code>count--</code></td>
+</tr>
+  </table>
+  <h3>Relational Operators <span class=""unit-tag"">Unit 2</span>
+</h3>
+  <table>
+    <tr>
+<th>Op</th>
+<th>Meaning</th>
+<th>Returns</th>
+</tr>
+    <tr>
+<td><code>==</code></td>
+<td>Equal to</td>
+<td><code>boolean</code></td>
+</tr>
+    <tr>
+<td><code>!=</code></td>
+<td>NOT equal to</td>
+<td><code>boolean</code></td>
+</tr>
+    <tr>
+<td><code>&lt;</code></td>
+<td>Less than</td>
+<td><code>boolean</code></td>
+</tr>
+    <tr>
+<td><code>&gt;</code></td>
+<td>Greater than</td>
+<td><code>boolean</code></td>
+</tr>
+    <tr>
+<td><code>&lt;=</code></td>
+<td>Less than or equal</td>
+<td><code>boolean</code></td>
+</tr>
+    <tr>
+<td><code>&gt;=</code></td>
+<td>Greater than or equal</td>
+<td><code>boolean</code></td>
+</tr>
+  </table>
+  <h3>Logical Operators</h3>
+  <table>
+    <tr>
+<th>Op</th>
+<th>Name</th>
+<th>True when…</th>
+<th>Short-circuits?</th>
+</tr>
+    <tr>
+<td><code>&amp;&amp;</code></td>
+<td>AND</td>
+<td>Both sides are true</td>
+<td>Yes — stops at first <code>false</code>
+</td>
+</tr>
+    <tr>
+<td><code>||</code></td>
+<td>OR</td>
+<td>At least one side true</td>
+<td>Yes — stops at first <code>true</code>
+</td>
+</tr>
+    <tr>
+<td><code>!</code></td>
+<td>NOT</td>
+<td>Operand is false</td>
+<td>N/A (unary)</td>
+</tr>
+  </table>
+  <div class=""alert alert-yellow"">
+    <strong>De Morgan’s Laws — Always on the Exam</strong>
+    <code>!(a &amp;&amp; b)</code> ≡ <code>!a || !b</code> &nbsp;&nbsp;|&nbsp;&nbsp; <code>!(a || b)</code> ≡ <code>!a &amp;&amp; !b</code>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""strings"">
+  <h2>String Methods <span class=""unit-tag"">Unit 1</span>
+</h2>
+  <div class=""alert alert-green"">
+    <strong>Official College Board Quick Reference — These 6 methods are provided on the exam</strong>
+    Memorize signatures AND off-by-one behavior of <code>substring</code>.
+  </div>
+  <table>
+    <tr>
+<th>Method Signature</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+    <tr>
+<td><code>int length()</code></td>
+<td><code>int</code></td>
+<td>Number of characters in the String</td>
+</tr>
+    <tr>
+<td><code>String substring(int from, int to)</code></td>
+<td><code>String</code></td>
+<td>Chars from index <code>from</code> up to but <strong>NOT including</strong> <code>to</code>
+</td>
+</tr>
+    <tr>
+<td><code>String substring(int from)</code></td>
+<td><code>String</code></td>
+<td>Chars from <code>from</code> to end of String</td>
+</tr>
+    <tr>
+<td><code>int indexOf(String str)</code></td>
+<td><code>int</code></td>
+<td>First index of <code>str</code>, or <code>-1</code> if not found</td>
+</tr>
+    <tr>
+<td><code>boolean equals(Object other)</code></td>
+<td><code>boolean</code></td>
+<td>True if same sequence of characters</td>
+</tr>
+    <tr>
+<td><code>int compareTo(String other)</code></td>
+<td><code>int</code></td>
+<td>Negative if less, 0 if equal, positive if greater (lexicographic)</td>
+</tr>
+  </table>
+  <h3>Detailed Examples</h3>
+  <div class=""code-block""><pre><span class=""ty"">String</span> s = <span class=""st"">""HelloWorld""</span>;
+
+s.length()              <span class=""cm"">// 10</span>
+s.substring(<span class=""nm"">0</span>, <span class=""nm"">5</span>)      <span class=""cm"">// ""Hello""   (index 0,1,2,3,4 — stops BEFORE 5)</span>
+s.substring(<span class=""nm"">5</span>)         <span class=""cm"">// ""World""   (from index 5 to end)</span>
+s.indexOf(<span class=""st"">""World""</span>)     <span class=""cm"">// 5</span>
+s.indexOf(<span class=""st"">""xyz""</span>)       <span class=""cm"">// -1  (not found)</span>
+s.equals(<span class=""st"">""HelloWorld""</span>) <span class=""cm"">// true</span>
+s.compareTo(<span class=""st"">""Hello""</span>)   <span class=""cm"">// positive  (""HelloWorld"" &gt; ""Hello"")</span>
+s.compareTo(<span class=""st"">""Helloz""</span>)  <span class=""cm"">// negative  ('W' &lt; 'z' in Unicode)</span>
+
+<span class=""cm"">// charAt — NOT on quick ref but commonly tested:</span>
+s.charAt(<span class=""nm"">0</span>)            <span class=""cm"">// 'H'  (char, not String)</span></pre></div>
+  <div class=""card-grid"">
+    <div class=""ref-card"">
+      <h4>substring Formula</h4>
+      <p style=""font-size:13px;margin:0;color:#1e293b;-webkit-text-fill-color:#1e293b;"">Length of extracted string = <strong>to − from</strong><br><br>
+      <code>""Hello"".substring(1,3)</code> → <code>""el""</code> &nbsp;(3−1=2 chars)</p>
+    </div>
+    <div class=""ref-card"">
+      <h4>== vs .equals()</h4>
+      <p style=""font-size:13px;margin:0;color:#1e293b;-webkit-text-fill-color:#1e293b;""><code>==</code> compares <em>references</em> (addresses).<br><code>.equals()</code> compares <em>content</em>.<br><br>
+      <strong>Always use <code>.equals()</code> for Strings.</strong></p>
+    </div>
+  </div>
+  <div class=""alert alert-blue"">
+    <strong>Additional String methods (not on quick ref but appear in MCQ)</strong>
+    <code>toUpperCase()</code>, <code>toLowerCase()</code>, <code>charAt(int index)</code>, <code>trim()</code>, <code>equalsIgnoreCase(String other)</code>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""math"">
+  <h2>Math Class <span class=""unit-tag"">Unit 1</span>
+</h2>
+  <div class=""alert alert-green"">
+    <strong>Official College Board Quick Reference — All static methods, called as Math.method()</strong>
+  </div>
+  <table>
+    <tr>
+<th>Method Signature</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+    <tr>
+<td><code>static int abs(int x)</code></td>
+<td><code>int</code></td>
+<td>Absolute value of integer</td>
+</tr>
+    <tr>
+<td><code>static double abs(double x)</code></td>
+<td><code>double</code></td>
+<td>Absolute value of double</td>
+</tr>
+    <tr>
+<td><code>static double pow(double base, double exp)</code></td>
+<td><code>double</code></td>
+<td>base raised to the power exp</td>
+</tr>
+    <tr>
+<td><code>static double sqrt(double x)</code></td>
+<td><code>double</code></td>
+<td>Square root of x</td>
+</tr>
+    <tr>
+<td><code>static double random()</code></td>
+<td><code>double</code></td>
+<td>Random number in <strong>[0.0, 1.0)</strong> — includes 0, excludes 1</td>
+</tr>
+  </table>
+  <h3>random() Patterns — High-Frequency MCQ Topic</h3>
+  <div class=""code-block""><pre><span class=""cm"">// Random int from 0 to n-1 (n possibilities):</span>
+(<span class=""kw"">int</span>)(Math.random() * n)
+
+<span class=""cm"">// Random int from 1 to n (inclusive):</span>
+(<span class=""kw"">int</span>)(Math.random() * n) + <span class=""nm"">1</span>
+
+<span class=""cm"">// Random int from low to high (inclusive):</span>
+(<span class=""kw"">int</span>)(Math.random() * (high - low + <span class=""nm"">1</span>)) + low
+
+<span class=""cm"">// Examples:</span>
+(<span class=""kw"">int</span>)(Math.random() * <span class=""nm"">6</span>) + <span class=""nm"">1</span>   <span class=""cm"">// 1 to 6  (simulates die roll)</span>
+(<span class=""kw"">int</span>)(Math.random() * <span class=""nm"">100</span>)       <span class=""cm"">// 0 to 99</span>
+(<span class=""kw"">int</span>)(Math.random() * <span class=""nm"">100</span>) + <span class=""nm"">1</span>  <span class=""cm"">// 1 to 100</span></pre></div>
+  <h3>Other Math Examples</h3>
+  <div class=""code-block""><pre>Math.abs(-<span class=""nm"">7</span>)         <span class=""cm"">// 7</span>
+Math.pow(<span class=""nm"">2</span>, <span class=""nm"">10</span>)      <span class=""cm"">// 1024.0  (always returns double)</span>
+Math.sqrt(<span class=""nm"">16</span>)        <span class=""cm"">// 4.0     (always returns double)</span>
+(<span class=""kw"">int</span>) Math.pow(<span class=""nm"">2</span>,<span class=""nm"">3</span>)  <span class=""cm"">// 8       (cast to int when needed)</span></pre></div>
+  <div class=""exam-tip"">
+    <strong>Exam Tip — Math.pow returns double</strong>
+    Even <code>Math.pow(2, 3)</code> returns <code>8.0</code> not <code>8</code>. Cast to <code>int</code> if you need an integer result. Same for <code>Math.sqrt</code>.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""wrappers"">
+  <h2>Integer &amp; Double Wrapper Classes <span class=""unit-tag"">Unit 1</span>
+</h2>
+  <p>Wrapper classes let primitives be used as objects (required for <code>ArrayList<integer></integer></code>). Java handles autoboxing and unboxing automatically.</p>
+  <table>
+    <tr>
+<th>Constant / Method</th>
+<th>Value / Returns</th>
+<th>Description</th>
+</tr>
+    <tr>
+<td><code>Integer.MIN_VALUE</code></td>
+<td><code>-2147483648</code></td>
+<td>Smallest possible int. Useful as starting max in algorithms.</td>
+</tr>
+    <tr>
+<td><code>Integer.MAX_VALUE</code></td>
+<td><code>2147483647</code></td>
+<td>Largest possible int. Useful as starting min in algorithms.</td>
+</tr>
+    <tr>
+<td><code>Double.MIN_VALUE</code></td>
+<td>~4.9 × 10<sup>-324</sup>
+</td>
+<td>Smallest <em>positive</em> double (NOT most negative)</td>
+</tr>
+    <tr>
+<td><code>Double.MAX_VALUE</code></td>
+<td>~1.8 × 10<sup>308</sup>
+</td>
+<td>Largest positive double</td>
+</tr>
+  </table>
+  <div class=""code-block""><pre><span class=""cm"">// Autoboxing: int -&gt; Integer (automatic)</span>
+<span class=""ty"">ArrayList</span>&lt;<span class=""ty"">Integer</span>&gt; nums = <span class=""kw"">new</span> <span class=""ty"">ArrayList</span>&lt;&gt;();
+nums.add(<span class=""nm"">42</span>);           <span class=""cm"">// 42 autoboxed to Integer</span>
+
+<span class=""cm"">// Unboxing: Integer -&gt; int (automatic)</span>
+<span class=""kw"">int</span> x = nums.get(<span class=""nm"">0</span>);    <span class=""cm"">// Integer unboxed to int</span>
+
+<span class=""cm"">// Finding max using Integer.MIN_VALUE</span>
+<span class=""kw"">int</span> max = <span class=""ty"">Integer</span>.MIN_VALUE;
+<span class=""kw"">for</span> (<span class=""kw"">int</span> val : nums) {
+    <span class=""kw"">if</span> (val &gt; max) max = val;
+}</pre></div>
+  <div class=""alert alert-red"">
+    <strong>Double.MIN_VALUE is NOT the most negative double</strong>
+    It’s the smallest <em>positive</em> nonzero value. To initialize a “largest possible” min variable for algorithms, use <code>Double.MAX_VALUE</code> and negate: <code>double min = Double.MAX_VALUE;</code>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""scanner"">
+  <h2>Scanner &amp; File Reading <span class=""unit-tag"">Unit 1 — New 2025-2026</span>
+</h2>
+  <div class=""alert alert-blue"">
+    <strong>New for 2025-2026 Curriculum — File Reading with Scanner</strong>
+    Reading data from text files using <code>Scanner</code> is a new addition to the AP CSA exam. The same <code>Scanner</code> methods work whether you are reading from a file or from the keyboard — only the constructor argument changes.
+  </div>
+
+  <h3>Scanner Method Reference</h3>
+  <table>
+    <tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Reads / Behavior</th>
+</tr>
+    <tr>
+<td><code>nextInt()</code></td>
+<td><code>int</code></td>
+<td>Next token, parsed as int. Throws exception if not an int.</td>
+</tr>
+    <tr>
+<td><code>nextDouble()</code></td>
+<td><code>double</code></td>
+<td>Next token, parsed as double.</td>
+</tr>
+    <tr>
+<td><code>next()</code></td>
+<td><code>String</code></td>
+<td>Next whitespace-delimited token (single word). Does NOT include newline.</td>
+</tr>
+    <tr>
+<td><code>nextLine()</code></td>
+<td><code>String</code></td>
+<td>Entire next line including spaces. Consumes the newline character.</td>
+</tr>
+    <tr>
+<td><code>hasNext()</code></td>
+<td><code>boolean</code></td>
+<td>True if any more tokens remain in the file.</td>
+</tr>
+    <tr>
+<td><code>hasNextInt()</code></td>
+<td><code>boolean</code></td>
+<td>True if the next token can be parsed as an int.</td>
+</tr>
+    <tr>
+<td><code>hasNextDouble()</code></td>
+<td><code>boolean</code></td>
+<td>True if the next token can be parsed as a double.</td>
+</tr>
+    <tr>
+<td><code>close()</code></td>
+<td><code>void</code></td>
+<td>Releases the file resource. Always call when done.</td>
+</tr>
+  </table>
+
+  <h3>Pattern 1 — Read ints from file into an array</h3>
+  <p>Use this when the file contains a known count of integers, or when you first read the count from line 1.</p>
+  <div class=""code-block""><pre><span class=""kw"">import</span> java.util.Scanner;
+<span class=""kw"">import</span> java.io.File;
+
+<span class=""cm"">// File contents:
+// 5
+// 10 20 30 40 50</span>
+
+<span class=""ty"">Scanner</span> sc = <span class=""kw"">new</span> <span class=""ty"">Scanner</span>(<span class=""kw"">new</span> <span class=""ty"">File</span>(<span class=""st"">""numbers.txt""</span>));
+
+<span class=""kw"">int</span> count = sc.nextInt();          <span class=""cm"">// read the count from line 1: 5</span>
+<span class=""kw"">int</span>[] data = <span class=""kw"">new</span> <span class=""kw"">int</span>[count];      <span class=""cm"">// allocate array of that size</span>
+
+<span class=""kw"">for</span> (<span class=""kw"">int</span> i = <span class=""nm"">0</span>; i &lt; data.length; i++) {
+    data[i] = sc.nextInt();        <span class=""cm"">// read each int directly into array</span>
+}
+
+sc.close();
+<span class=""cm"">// data = {10, 20, 30, 40, 50}</span></pre></div>
+
+  <h3>Pattern 2 — Read ints from file into an ArrayList</h3>
+  <p>Use this when you do not know how many values the file contains. <code>hasNextInt()</code> drives the loop.</p>
+  <div class=""code-block""><pre><span class=""kw"">import</span> java.util.Scanner;
+<span class=""kw"">import</span> java.util.ArrayList;
+<span class=""kw"">import</span> java.io.File;
+
+<span class=""cm"">// File contents: one int per line, unknown count
+// 42
+// 17
+// 99
+// 5</span>
+
+<span class=""ty"">Scanner</span> sc = <span class=""kw"">new</span> <span class=""ty"">Scanner</span>(<span class=""kw"">new</span> <span class=""ty"">File</span>(<span class=""st"">""scores.txt""</span>));
+<span class=""ty"">ArrayList</span>&lt;<span class=""ty"">Integer</span>&gt; scores = <span class=""kw"">new</span> <span class=""ty"">ArrayList</span>&lt;&gt;();
+
+<span class=""kw"">while</span> (sc.hasNextInt()) {
+    scores.add(sc.nextInt());      <span class=""cm"">// autoboxes int to Integer</span>
+}
+
+sc.close();
+<span class=""cm"">// scores = [42, 17, 99, 5]  -- size grew automatically</span></pre></div>
+
+  <h3>Pattern 3 — Read String tokens with next(), convert with parseInt()</h3>
+  <p><code>next()</code> always reads a <code>String</code>. Use <code>Integer.parseInt()</code> to convert a numeric string to an <code>int</code>. This is common when file data is mixed (names and numbers on same line).</p>
+  <div class=""code-block""><pre><span class=""kw"">import</span> java.util.Scanner;
+<span class=""kw"">import</span> java.io.File;
+
+<span class=""cm"">// File contents: name score per line
+// Alice 95
+// Bob 87
+// Carol 91</span>
+
+<span class=""ty"">Scanner</span> sc = <span class=""kw"">new</span> <span class=""ty"">Scanner</span>(<span class=""kw"">new</span> <span class=""ty"">File</span>(<span class=""st"">""grades.txt""</span>));
+<span class=""ty"">ArrayList</span>&lt;<span class=""ty"">Integer</span>&gt; gradeList = <span class=""kw"">new</span> <span class=""ty"">ArrayList</span>&lt;&gt;();
+
+<span class=""kw"">while</span> (sc.hasNext()) {
+    <span class=""ty"">String</span> name  = sc.next();              <span class=""cm"">// reads ""Alice"", ""Bob"", etc.</span>
+    <span class=""ty"">String</span> token = sc.next();              <span class=""cm"">// reads ""95"", ""87"", etc. as String</span>
+    <span class=""kw"">int</span> grade = <span class=""ty"">Integer</span>.parseInt(token);  <span class=""cm"">// converts String ""95"" -&gt; int 95</span>
+    gradeList.add(grade);
+}
+
+sc.close();
+<span class=""cm"">// gradeList = [95, 87, 91]</span></pre></div>
+
+  <h3>Pattern 4 — Read full lines with nextLine()</h3>
+  <p>Use <code>nextLine()</code> when each line should be kept as a single <code>String</code>, including spaces.</p>
+  <div class=""code-block""><pre><span class=""kw"">import</span> java.util.Scanner;
+<span class=""kw"">import</span> java.io.File;
+
+<span class=""cm"">// File contents:
+// Hello World
+// AP Computer Science A
+// Java is great</span>
+
+<span class=""ty"">Scanner</span> sc = <span class=""kw"">new</span> <span class=""ty"">Scanner</span>(<span class=""kw"">new</span> <span class=""ty"">File</span>(<span class=""st"">""lines.txt""</span>));
+<span class=""ty"">ArrayList</span>&lt;<span class=""ty"">String</span>&gt; lines = <span class=""kw"">new</span> <span class=""ty"">ArrayList</span>&lt;&gt;();
+
+<span class=""kw"">while</span> (sc.hasNext()) {
+    lines.add(sc.nextLine());      <span class=""cm"">// each full line as one String</span>
+}
+
+sc.close();
+<span class=""cm"">// lines = [""Hello World"", ""AP Computer Science A"", ""Java is great""]</span></pre></div>
+
+  <h3>parseInt() — String to int conversion</h3>
+  <table>
+    <tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Example</th>
+<th>Result</th>
+</tr>
+    <tr>
+<td><code>Integer.parseInt(String s)</code></td>
+<td><code>int</code></td>
+<td><code>Integer.parseInt(""42"")</code></td>
+<td><code>42</code></td>
+</tr>
+    <tr>
+<td><code>Double.parseDouble(String s)</code></td>
+<td><code>double</code></td>
+<td><code>Double.parseDouble(""3.14"")</code></td>
+<td><code>3.14</code></td>
+</tr>
+    <tr>
+<td><code>String.valueOf(int n)</code></td>
+<td><code>String</code></td>
+<td><code>String.valueOf(42)</code></td>
+<td><code>""42""</code></td>
+</tr>
+    <tr>
+<td><code>"""" + n</code></td>
+<td><code>String</code></td>
+<td><code>"""" + 42</code></td>
+<td>
+<code>""42""</code> (shorthand)</td>
+</tr>
+  </table>
+
+  <div class=""card-grid"">
+    <div class=""ref-card"">
+      <h4>next() vs nextLine()</h4>
+      <p style=""font-size:13px;margin:0;color:#1e293b;-webkit-text-fill-color:#1e293b;"">
+        <code>next()</code> — reads one <strong>token</strong> (stops at whitespace). <code>""Hello World""</code> takes two calls.<br><br>
+        <code>nextLine()</code> — reads entire <strong>line</strong> including spaces. <code>""Hello World""</code> is one call.<br><br>
+        Both advance past what they read.
+      </p>
+    </div>
+    <div class=""ref-card"">
+      <h4>nextInt() vs parseInt()</h4>
+      <p style=""font-size:13px;margin:0;color:#1e293b;-webkit-text-fill-color:#1e293b;"">
+        <code>nextInt()</code> — Scanner reads and converts directly. Use when file has bare numbers.<br><br>
+        <code>Integer.parseInt(sc.next())</code> — read as String first, then convert. Use when numbers are mixed with text or you need the raw String too.
+      </p>
+    </div>
+  </div>
+
+  <div class=""alert alert-red"">
+    <strong>nextLine() after nextInt() Trap — Very Common Error</strong>
+    After <code>nextInt()</code> (or <code>nextDouble()</code>), the newline character <code>\n</code> remains in the buffer. The next call to <code>nextLine()</code> reads that empty leftover instead of the next real line. Fix: insert an extra <code>sc.nextLine()</code> call to consume the leftover newline before reading real lines.
+  </div>
+  <div class=""code-block""><pre><span class=""ty"">Scanner</span> sc = <span class=""kw"">new</span> <span class=""ty"">Scanner</span>(<span class=""kw"">new</span> <span class=""ty"">File</span>(<span class=""st"">""data.txt""</span>));
+<span class=""kw"">int</span> count = sc.nextInt();     <span class=""cm"">// reads the int...</span>
+sc.nextLine();                <span class=""cm"">// ...consume leftover newline &lt;-- FIX</span>
+<span class=""ty"">String</span> line = sc.nextLine(); <span class=""cm"">// now reads the actual next line correctly</span></pre></div>
+
+  <div class=""exam-tip"">
+    <strong>Exam Tip — hasNext() is the safe while-loop condition for files</strong>
+    Always use <code>hasNext()</code>, <code>hasNextInt()</code>, or <code>hasNextDouble()</code> as your while-loop condition when reading a file. Never assume you know the exact number of lines. The loop exits cleanly when the file ends with no exception thrown.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""arrays"">
+  <h2>Arrays (1D) <span class=""unit-tag"">Unit 4</span>
+</h2>
+  <p>Arrays store a <strong>fixed number</strong> of elements of the same type. Size cannot change after creation. Indexed 0 to <code>length - 1</code>.</p>
+  <h3>Declaration &amp; Initialization</h3>
+  <div class=""code-block""><pre><span class=""cm"">// Declare and allocate (default values: 0, 0.0, false, null)</span>
+<span class=""kw"">int</span>[] scores = <span class=""kw"">new</span> <span class=""kw"">int</span>[<span class=""nm"">5</span>];
+
+<span class=""cm"">// Declare with initializer list</span>
+<span class=""kw"">int</span>[] primes = {<span class=""nm"">2</span>, <span class=""nm"">3</span>, <span class=""nm"">5</span>, <span class=""nm"">7</span>, <span class=""nm"">11</span>};
+
+<span class=""cm"">// Access and modify</span>
+primes[<span class=""nm"">0</span>] = <span class=""nm"">2</span>;           <span class=""cm"">// first element</span>
+primes[primes.length-<span class=""nm"">1</span>]  <span class=""cm"">// last element (length-1, not length!)</span></pre></div>
+  <h3>Traversal Patterns</h3>
+  <div class=""code-block""><pre><span class=""kw"">int</span>[] arr = {<span class=""nm"">10</span>, <span class=""nm"">20</span>, <span class=""nm"">30</span>, <span class=""nm"">40</span>, <span class=""nm"">50</span>};
+
+<span class=""cm"">// Standard for loop (use when you need index)</span>
+<span class=""kw"">for</span> (<span class=""kw"">int</span> i = <span class=""nm"">0</span>; i &lt; arr.length; i++) {
+    System.out.println(arr[i]);
+}
+
+<span class=""cm"">// Enhanced for loop (read-only, clean)</span>
+<span class=""kw"">for</span> (<span class=""kw"">int</span> val : arr) {
+    System.out.println(val);
+}
+
+<span class=""cm"">// Common algorithms</span>
+<span class=""kw"">int</span> sum = <span class=""nm"">0</span>;
+<span class=""kw"">int</span> max = arr[<span class=""nm"">0</span>];           <span class=""cm"">// initialize to first element, not 0</span>
+<span class=""kw"">for</span> (<span class=""kw"">int</span> val : arr) {
+    sum += val;
+    <span class=""kw"">if</span> (val &gt; max) max = val;
+}</pre></div>
+  <table>
+    <tr>
+<th>Array Property</th>
+<th>Syntax</th>
+<th>Notes</th>
+</tr>
+    <tr>
+<td>Length</td>
+<td><code>arr.length</code></td>
+<td>No parentheses (not a method)</td>
+</tr>
+    <tr>
+<td>First element</td>
+<td><code>arr[0]</code></td>
+<td>Always index 0</td>
+</tr>
+    <tr>
+<td>Last element</td>
+<td><code>arr[arr.length - 1]</code></td>
+<td>NOT <code>arr[arr.length]</code>
+</td>
+</tr>
+    <tr>
+<td>Default int</td>
+<td><code>0</code></td>
+<td>All ints start at 0</td>
+</tr>
+    <tr>
+<td>Default double</td>
+<td><code>0.0</code></td>
+<td>&nbsp;</td>
+</tr>
+    <tr>
+<td>Default boolean</td>
+<td><code>false</code></td>
+<td>&nbsp;</td>
+</tr>
+    <tr>
+<td>Default object</td>
+<td><code>null</code></td>
+<td>&nbsp;</td>
+</tr>
+  </table>
+  <div class=""alert alert-red"">
+    <strong>ArrayIndexOutOfBoundsException — #1 Runtime Error</strong>
+    Accessing <code>arr[arr.length]</code> crashes at runtime. Valid indices are <strong>0 through length−1 only</strong>. In for loops: <code>i &lt; arr.length</code> (not <code>i &lt;= arr.length</code>).
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""arraylist"">
+  <h2>ArrayList <span class=""unit-tag"">Unit 4</span>
+</h2>
+  <div class=""alert alert-green"">
+    <strong>Official College Board Quick Reference — All 6 methods are provided on the exam</strong>
+    Note: ArrayList requires wrapper types (Integer, Double) — NOT primitives (int, double).
+  </div>
+  <table>
+    <tr>
+<th>Method Signature</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+    <tr>
+<td><code>int size()</code></td>
+<td><code>int</code></td>
+<td>Number of elements in the list</td>
+</tr>
+    <tr>
+<td><code>boolean add(E obj)</code></td>
+<td><code>boolean</code></td>
+<td>Appends obj to end; always returns true</td>
+</tr>
+    <tr>
+<td><code>void add(int index, E obj)</code></td>
+<td><code>void</code></td>
+<td>Inserts obj at index; shifts right</td>
+</tr>
+    <tr>
+<td><code>E get(int index)</code></td>
+<td><code>E</code></td>
+<td>Returns element at index (no removal)</td>
+</tr>
+    <tr>
+<td><code>E set(int index, E obj)</code></td>
+<td><code>E</code></td>
+<td>Replaces element; returns OLD value</td>
+</tr>
+    <tr>
+<td><code>E remove(int index)</code></td>
+<td><code>E</code></td>
+<td>Removes and returns element; shifts left</td>
+</tr>
+  </table>
+  <h3>Detailed Usage</h3>
+  <div class=""code-block""><pre><span class=""kw"">import</span> java.util.ArrayList;
+
+<span class=""ty"">ArrayList</span>&lt;<span class=""ty"">Integer</span>&gt; list = <span class=""kw"">new</span> <span class=""ty"">ArrayList</span>&lt;&gt;();
+list.add(<span class=""nm"">10</span>);             <span class=""cm"">// [10]</span>
+list.add(<span class=""nm"">20</span>);             <span class=""cm"">// [10, 20]</span>
+list.add(<span class=""nm"">30</span>);             <span class=""cm"">// [10, 20, 30]</span>
+list.add(<span class=""nm"">1</span>, <span class=""nm"">15</span>);          <span class=""cm"">// [10, 15, 20, 30]  (inserts at index 1)</span>
+
+list.size()               <span class=""cm"">// 4</span>
+list.get(<span class=""nm"">0</span>)               <span class=""cm"">// 10</span>
+list.set(<span class=""nm"">0</span>, <span class=""nm"">99</span>)           <span class=""cm"">// returns 10, list is now [99, 15, 20, 30]</span>
+list.remove(<span class=""nm"">1</span>)            <span class=""cm"">// returns 15, list is now [99, 20, 30]</span></pre></div>
+  <h3>Traversal &amp; Safe Removal</h3>
+  <div class=""code-block""><pre><span class=""cm"">// Safe removal while traversing: iterate BACKWARD</span>
+<span class=""kw"">for</span> (<span class=""kw"">int</span> i = list.size() - <span class=""nm"">1</span>; i &gt;= <span class=""nm"">0</span>; i--) {
+    <span class=""kw"">if</span> (list.get(i) &lt; <span class=""nm"">0</span>) {
+        list.remove(i);    <span class=""cm"">// safe: only affects indices after i</span>
+    }
+}
+
+<span class=""cm"">// Enhanced for loop (read-only — do NOT modify during this)</span>
+<span class=""kw"">for</span> (<span class=""ty"">Integer</span> val : list) {
+    System.out.println(val);
+}</pre></div>
+  <div class=""card-grid"">
+    <div class=""ref-card"">
+      <h4>array vs ArrayList</h4>
+      <table style=""font-size:12px;margin:0;"">
+        <tr>
+<th>Feature</th>
+<th>array</th>
+<th>ArrayList</th>
+</tr>
+        <tr>
+<td>Size</td>
+<td>Fixed</td>
+<td>Dynamic</td>
+</tr>
+        <tr>
+<td>Types</td>
+<td>Primitives OK</td>
+<td>Objects only</td>
+</tr>
+        <tr>
+<td>Length</td>
+<td><code>.length</code></td>
+<td><code>.size()</code></td>
+</tr>
+        <tr>
+<td>Access</td>
+<td><code>arr[i]</code></td>
+<td><code>list.get(i)</code></td>
+</tr>
+      </table>
+    </div>
+    <div class=""ref-card"">
+      <h4>set() vs add()</h4>
+      <p style=""font-size:13px;margin:0;color:#1e293b;-webkit-text-fill-color:#1e293b;"">
+      <code>set(i, val)</code> — <strong>replaces</strong> at index i. Size unchanged.<br><br>
+      <code>add(i, val)</code> — <strong>inserts</strong> at index i. Size increases. Elements shift right.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""2d-arrays"">
+  <h2>2D Arrays <span class=""unit-tag"">Unit 4</span>
+</h2>
+  <p>A 2D array is an array of arrays. Think of it as a grid with rows and columns. Accessed as <code>arr[row][col]</code>.</p>
+  <div class=""code-block""><pre><span class=""cm"">// Declaration and allocation (3 rows, 4 columns)</span>
+<span class=""kw"">int</span>[][] grid = <span class=""kw"">new</span> <span class=""kw"">int</span>[<span class=""nm"">3</span>][<span class=""nm"">4</span>];
+
+<span class=""cm"">// Initializer list</span>
+<span class=""kw"">int</span>[][] matrix = {{<span class=""nm"">1</span>,<span class=""nm"">2</span>,<span class=""nm"">3</span>},
+                   {<span class=""nm"">4</span>,<span class=""nm"">5</span>,<span class=""nm"">6</span>},
+                   {<span class=""nm"">7</span>,<span class=""nm"">8</span>,<span class=""nm"">9</span>}};
+
+<span class=""cm"">// Dimensions</span>
+grid.length         <span class=""cm"">// number of rows (3)</span>
+grid[<span class=""nm"">0</span>].length      <span class=""cm"">// number of columns (4)</span>
+
+<span class=""cm"">// Row-major traversal (outer=row, inner=col) — most common</span>
+<span class=""kw"">for</span> (<span class=""kw"">int</span> r = <span class=""nm"">0</span>; r &lt; matrix.length; r++) {
+    <span class=""kw"">for</span> (<span class=""kw"">int</span> c = <span class=""nm"">0</span>; c &lt; matrix[r].length; c++) {
+        System.out.print(matrix[r][c] + <span class=""st"">"" ""</span>);
+    }
+    System.out.println();
+}
+
+<span class=""cm"">// Enhanced for loop version</span>
+<span class=""kw"">for</span> (<span class=""kw"">int</span>[] row : matrix) {
+    <span class=""kw"">for</span> (<span class=""kw"">int</span> val : row) {
+        System.out.print(val + <span class=""st"">"" ""</span>);
+    }
+}</pre></div>
+  <div class=""alert alert-yellow"">
+    <strong>Row vs. Column Major — Exam Distinction</strong>
+    Row-major: outer loop iterates rows (<code>arr[r][c]</code>). Column-major: outer loop iterates columns (<code>arr[r][c]</code> but outer is c). FRQ questions sometimes specify which order to process. Row-major is far more common.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""control-flow"">
+  <h2>Control Flow <span class=""unit-tag"">Unit 2</span>
+</h2>
+  <div class=""card-grid"">
+    <div class=""ref-card"">
+      <h4>if / else if / else</h4>
+      <div class=""code-block"" style=""margin:8px 0 0 0;""><pre style=""font-size:12px;""><span class=""kw"">if</span> (condition1) {
+    <span class=""cm"">// runs if c1 true</span>
+} <span class=""kw"">else if</span> (condition2) {
+    <span class=""cm"">// runs if c1 false, c2 true</span>
+} <span class=""kw"">else</span> {
+    <span class=""cm"">// runs if all false</span>
+}</pre></div>
+    </div>
+    <div class=""ref-card"">
+      <h4>while loop</h4>
+      <div class=""code-block"" style=""margin:8px 0 0 0;""><pre style=""font-size:12px;""><span class=""kw"">while</span> (condition) {
+    <span class=""cm"">// update condition</span>
+    <span class=""cm"">// inside loop</span>
+}
+<span class=""cm"">// check: will it terminate?</span></pre></div>
+    </div>
+    <div class=""ref-card"">
+      <h4>for loop</h4>
+      <div class=""code-block"" style=""margin:8px 0 0 0;""><pre style=""font-size:12px;""><span class=""kw"">for</span> (init; condition; update) {
+    <span class=""cm"">// body</span>
+}
+<span class=""cm"">// i=0; i<n i most common></n></span></pre></div>
+    </div>
+    <div class=""ref-card"">
+      <h4>enhanced for (for-each)</h4>
+      <div class=""code-block"" style=""margin:8px 0 0 0;""><pre style=""font-size:12px;""><span class=""kw"">for</span> (Type var : collection) {
+    <span class=""cm"">// read-only traversal</span>
+    <span class=""cm"">// cannot modify list here</span>
+}</pre></div>
+    </div>
+  </div>
+  <h3>Loop Algorithm Patterns</h3>
+  <table>
+    <tr>
+<th>Pattern</th>
+<th>Template</th>
+<th>Use Case</th>
+</tr>
+    <tr>
+<td>Accumulator</td>
+<td><code>sum += val</code></td>
+<td>Running total, product</td>
+</tr>
+    <tr>
+<td>Counter</td>
+<td><code>if (cond) count++</code></td>
+<td>Count occurrences</td>
+</tr>
+    <tr>
+<td>Find max</td>
+<td><code>if (val &gt; max) max = val</code></td>
+<td>Track largest seen</td>
+</tr>
+    <tr>
+<td>Find min</td>
+<td><code>if (val &lt; min) min = val</code></td>
+<td>Track smallest seen</td>
+</tr>
+    <tr>
+<td>Linear search</td>
+<td><code>if (val == target) return i</code></td>
+<td>Find index of value</td>
+</tr>
+    <tr>
+<td>String build</td>
+<td><code>result += s.substring(i,i+1)</code></td>
+<td>Rebuild/filter string</td>
+</tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""class-structure"">
+  <h2>Class Structure Template <span class=""unit-tag"">Unit 3</span>
+</h2>
+  <div class=""code-block""><pre><span class=""kw"">public class</span> <span class=""ty"">ClassName</span> {
+
+    <span class=""cm"">// Instance variables (always private)</span>
+    <span class=""kw"">private</span> <span class=""ty"">String</span> name;
+    <span class=""kw"">private</span> <span class=""kw"">int</span> value;
+
+    <span class=""cm"">// Constructor (same name as class, no return type)</span>
+    <span class=""kw"">public</span> <span class=""ty"">ClassName</span>(<span class=""ty"">String</span> name, <span class=""kw"">int</span> value) {
+        <span class=""kw"">this</span>.name = name;       <span class=""cm"">// this.x = parameter x</span>
+        <span class=""kw"">this</span>.value = value;
+    }
+
+    <span class=""cm"">// Accessor (getter) — returns value, no modification</span>
+    <span class=""kw"">public</span> <span class=""ty"">String</span> getName() {
+        <span class=""kw"">return</span> name;
+    }
+
+    <span class=""cm"">// Mutator (setter) — modifies value, returns void</span>
+    <span class=""kw"">public void</span> setValue(<span class=""kw"">int</span> newValue) {
+        value = newValue;
+    }
+
+    <span class=""cm"">// toString — override for readable output</span>
+    <span class=""kw"">public</span> <span class=""ty"">String</span> toString() {
+        <span class=""kw"">return</span> <span class=""st"">""ClassName[""</span> + name + <span class=""st"">"", ""</span> + value + <span class=""st"">""]""</span>;
+    }
+}</pre></div>
+  <div class=""qr-grid"">
+    <div class=""qr-cell"">
+<strong>Access Modifiers</strong><code>public</code> — accessible anywhere<br><code>private</code> — accessible only within class</div>
+    <div class=""qr-cell"">
+<strong>static vs instance</strong>Static: belongs to class. Instance: belongs to object. <code>Math.random()</code> is static — no object needed.</div>
+    <div class=""qr-cell"">
+<strong>this keyword</strong>Refers to current object. Used when parameter name shadows instance variable: <code>this.x = x</code>
+</div>
+    <div class=""qr-cell"">
+<strong>Encapsulation rule</strong>Instance variables = <code>private</code>. Methods that expose/change them = <code>public</code>. This is always the pattern on FRQs.</div>
+    <div class=""qr-cell"">
+<strong>Constructor vs Method</strong>Constructor: same name as class, no return type. Method: different name (or <code>void</code>/return type). Constructors are called with <code>new</code>.</div>
+    <div class=""qr-cell"">
+<strong>toString()</strong>Called automatically when an object is used in a String context. Return a descriptive String. No parameters.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""exam-traps"">
+  <h2>Top Exam Traps &amp; Common Errors</h2>
+  <p>These are the highest-frequency error sources in both MCQ and FRQ. Know them cold.</p>
+  <h3>Unit 1 Traps</h3>
+  <ul class=""trap-list"">
+    <li>
+<strong>Integer division truncates:</strong> <code>7 / 2 = 3</code>, not 3.5. Cast first: <code>(double) 7 / 2</code>.</li>
+    <li>
+<strong>String == vs .equals():</strong> <code>==</code> checks reference equality. <code>.equals()</code> checks content. Always use <code>.equals()</code> for Strings.</li>
+    <li>
+<strong>substring end is exclusive:</strong> <code>""Hello"".substring(1, 3)</code> is <code>""el""</code>, not <code>""ell""</code>.</li>
+    <li>
+<strong>Math.random() range is [0.0, 1.0):</strong> Multiply and cast correctly for integer ranges.</li>
+    <li>
+<strong>Math.pow / sqrt always return double:</strong> Cast to int when an integer result is needed.</li>
+    <li>
+<strong>String concatenation with +:</strong> <code>""val: "" + 3 + 2</code> gives <code>""val: 32""</code>, not <code>""val: 5""</code>. Use parentheses: <code>""val: "" + (3 + 2)</code>.</li>
+  </ul>
+  <h3>Unit 2 Traps</h3>
+  <ul class=""trap-list"">
+    <li>
+<strong>= vs == in conditions:</strong> <code>if (x = 5)</code> is an assignment (compiler error in Java). Must use <code>==</code>.</li>
+    <li>
+<strong>Off-by-one errors:</strong> <code>i &lt;= arr.length</code> causes crash. Use <code>i &lt; arr.length</code>.</li>
+    <li>
+<strong>Infinite loop:</strong> Loop condition never becomes false. Check that the update step actually progresses toward termination.</li>
+    <li>
+<strong>Short-circuit evaluation:</strong> In <code>a &amp;&amp; b</code>, if <code>a</code> is false, <code>b</code> is never evaluated. Can prevent null pointer errors.</li>
+    <li>
+<strong>De Morgan’s Laws:</strong> <code>!(a &amp;&amp; b)</code> ≠ <code>!a &amp;&amp; !b</code>. Must flip the operator: <code>!a || !b</code>.</li>
+  </ul>
+  <h3>Unit 3 Traps</h3>
+  <ul class=""trap-list"">
+    <li>
+<strong>Forgetting this keyword:</strong> When parameter name matches instance variable name, use <code>this.name = name</code>.</li>
+    <li>
+<strong>Local variable shadows instance variable:</strong> Declaring <code>int value = 5;</code> inside a method creates a local, not updating the instance variable.</li>
+    <li>
+<strong>Return type mismatch:</strong> A method declared <code>int</code> that returns <code>double</code>, or <code>void</code> that has a return with a value, causes compile error.</li>
+    <li>
+<strong>Static method accessing instance data:</strong> Static methods cannot reference <code>this</code> or non-static instance variables.</li>
+  </ul>
+  <h3>Unit 4 Traps</h3>
+  <ul class=""trap-list"">
+    <li>
+<strong>array.length vs list.size():</strong> Arrays use <code>.length</code> (no parens). ArrayList uses <code>.size()</code> (with parens).</li>
+    <li>
+<strong>ArrayList requires wrapper types:</strong> <code>ArrayList<int></int></code> is invalid. Must use <code>ArrayList<integer></integer></code>.</li>
+    <li>
+<strong>Modifying ArrayList during for-each:</strong> Causes <code>ConcurrentModificationException</code>. Use backward for loop for safe removal.</li>
+    <li>
+<strong>2D array: row vs column dimension:</strong> <code>arr.length</code> is row count. <code>arr[0].length</code> is column count. Do NOT use <code>arr.length</code> for both.</li>
+    <li>
+<strong>Initializing max to 0:</strong> If all values are negative, max stays 0 (wrong). Initialize to first element or <code>Integer.MIN_VALUE</code>.</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""frq-tips"">
+  <h2>FRQ Section Quick Reference</h2>
+  <div class=""alert alert-blue"">
+    <strong>FRQ Format (4 questions, 45 minutes each, digital via Bluebook)</strong>
+    Q1: Methods &amp; Control Structures &nbsp;|&nbsp; Q2: Class Writing &nbsp;|&nbsp; Q3: Array/ArrayList &nbsp;|&nbsp; Q4: 2D Array
+  </div>
+  <table>
+    <tr>
+<th>FRQ Type</th>
+<th>What to Do</th>
+<th>Key Methods/Syntax</th>
+<th>Units</th>
+</tr>
+    <tr>
+<td><strong>Methods &amp; Control Structures</strong></td>
+<td>Write methods using conditionals and loops. Given class structure, fill in method bodies.</td>
+<td>
+<code>for</code>, <code>while</code>, <code>if/else</code>, String methods</td>
+<td>1–2</td>
+</tr>
+    <tr>
+<td><strong>Class Writing</strong></td>
+<td>Write complete class from scratch: constructor, instance vars, getters, setters, methods.</td>
+<td>
+<code>private</code>, <code>this</code>, constructor syntax</td>
+<td>3</td>
+</tr>
+    <tr>
+<td><strong>Array / ArrayList</strong></td>
+<td>Traverse and manipulate 1D collection. Often: filter, search, accumulate, or rebuild.</td>
+<td>
+<code>get()</code>, <code>set()</code>, <code>add()</code>, <code>remove()</code>, backward loop</td>
+<td>4</td>
+</tr>
+    <tr>
+<td><strong>2D Array</strong></td>
+<td>Process matrix data with nested loops. Row-major or col-major traversal.</td>
+<td>
+<code>arr[r][c]</code>, nested <code>for</code>, <code>arr[r].length</code>
+</td>
+<td>4</td>
+</tr>
+  </table>
+  <div class=""card-grid"">
+    <div class=""ref-card"">
+      <h4>FRQ Penalty Avoidance</h4>
+      <ul style=""margin:0;padding-left:16px;font-size:13px;color:#1e293b;-webkit-text-fill-color:#1e293b;"">
+        <li>No <code>[]</code> vs <code>()</code> confusion on collections</li>
+        <li>No <code>System.out.println</code> inside return methods</li>
+        <li>No out-of-bounds in array traversal</li>
+        <li>Declare all local variables before use</li>
+        <li>Don’t destroy parameter/instance data by accident</li>
+      </ul>
+    </div>
+    <div class=""ref-card"">
+      <h4>No-Penalty Shortcuts Allowed</h4>
+      <ul style=""margin:0;padding-left:16px;font-size:13px;color:#1e293b;-webkit-text-fill-color:#1e293b;"">
+        <li>Missing semicolons (if intent is clear)</li>
+        <li>Missing curly braces (if indent is clear)</li>
+        <li>Missing <code>public</code> on class/constructor</li>
+        <li>
+<code>.length</code> vs <code>.size()</code> confusion</li>
+        <li>
+<code>[i,j]</code> instead of <code>[i][j]</code>
+</li>
+      </ul>
+    </div>
+  </div>
+  <div class=""exam-tip"">
+    <strong>The Java Quick Reference is provided during FRQ — use it</strong>
+    String methods, Math methods, and ArrayList methods are all on the sheet. You do NOT need to memorize exact return types for those 14 methods. You DO need to know array syntax, loop syntax, and class structure (not on the quick ref).
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- CTA -->
+<div class=""ref-cta"">
+  <h2>Ready to Put This to Use?</h2>
+  <p>Daily practice questions, full FRQ solutions, and complete unit study guides — all free.</p>
+  <div class=""cta-btn-row"">
+    <a href=""/pages/ap-csa-exam-prep-hub"" class=""cta-btn cta-btn-white"">AP CSA Exam Prep Hub</a>
+    <a href=""/pages/ap-csa-exam-review"" class=""cta-btn cta-btn-outline"">Full Exam Review</a>
+    <a href=""/pages/ap-csa-unit-1-complete-study-guide"" class=""cta-btn cta-btn-outline"">Unit 1 Study Guide</a>
+    <a href=""/pages/ap-computer-science-tutoring"" class=""cta-btn cta-btn-outline"">1-on-1 Tutoring</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class=""ref-section"" id=""faqs"">
+  <h2>Frequently Asked Questions</h2>
+
+  <div class=""faq-item"">
+    <div class=""faq-q"">Is the Java Quick Reference provided on the AP CSA exam?</div>
+    <div class=""faq-a"">Yes. The Java Quick Reference is provided during Section II (Free Response) only. It lists the official String methods, Math methods, and ArrayList methods. It is NOT available during Section I (Multiple Choice). You should have all syntax and methods memorized for the MCQ section.</div>
+  </div>
+
+  <div class=""faq-item"">
+    <div class=""faq-q"">What Java methods do I need to have memorized for the AP CSA exam?</div>
+    <div class=""faq-a"">For MCQ (no reference sheet): all operators, loop syntax, array syntax, class/constructor structure, and the core String/Math/ArrayList methods. For FRQ (reference sheet provided): you still need to know how to use every method on the quick reference, plus understand array indexing, 2D arrays, and class writing — none of which appear on the reference sheet.</div>
+  </div>
+
+  <div class=""faq-item"">
+    <div class=""faq-q"">What are the most common AP CSA MCQ mistakes?</div>
+    <div class=""faq-a"">The top five: (1) integer division truncation (7/2 = 3), (2) using == instead of .equals() for Strings, (3) off-by-one errors in array traversal, (4) confusion about substring(from, to) where to is exclusive, and (5) incorrect Math.random() range formulas. Every one of these appears multiple times on every practice exam.</div>
+  </div>
+
+  <div class=""faq-item"">
+    <div class=""faq-q"">What is the format of the 2027 AP CSA exam?</div>
+    <div class=""faq-a"">The 2027 AP CSA exam has 42 multiple choice questions (Section I, choices A-D, 55% of score) and 4 free response questions (Section II, 45% of score). The exam is taken digitally via Bluebook. The Java Quick Reference is provided during the FRQ section. Unit weights: Unit 1 (15-25%), Unit 2 (25-35%), Unit 3 (10-18%), Unit 4 (30-40%).</div>
+  </div>
+
+  <div class=""faq-item"">
+    <div class=""faq-q"">What is new on the AP CSA exam for 2025-2026?</div>
+    <div class=""faq-a"">The 2025-2026 AP CSA curriculum uses a new 4-unit structure (replacing the old 10-unit format). Key new content includes the Scanner class and basic file reading (Unit 1). The exam is now fully digital via Bluebook. There is no longer content on inheritance (extends/super) — that topic has been removed from the current curriculum.</div>
+  </div>
+
+  <div class=""faq-item"">
+    <div class=""faq-q"">How do I generate random integers in Java for AP CSA?</div>
+    <div class=""faq-a"">Use the formula: <code>(int)(Math.random() * n) + low</code> where n is the number of possible values and low is the smallest. For example, a random integer from 1 to 6: <code>(int)(Math.random() * 6) + 1</code>. For 0 to 9: <code>(int)(Math.random() * 10)</code>. The range of Math.random() is [0.0, 1.0) — includes 0, excludes 1.</div>
+  </div>
+
+  <div class=""faq-item"">
+    <div class=""faq-q"">What is the difference between array length and ArrayList size?</div>
+    <div class=""faq-a"">Arrays use the <code>length</code> field (no parentheses): <code>arr.length</code>. ArrayLists use the <code>size()</code> method (with parentheses): <code>list.size()</code>. This is a frequent MCQ trap. Additionally, arrays have a fixed size set at creation, while ArrayLists grow and shrink dynamically as you add and remove elements.</div>
+  </div>
+
+  <div class=""faq-item"">
+    <div class=""faq-q"">Can I print this reference sheet for studying?</div>
+    <div class=""faq-a"">Yes. Use your browser's print function (Ctrl+P or Cmd+P) and select ""Print to PDF"" to save a copy. The official College Board Java Quick Reference PDF is also available on College Board's website and is identical to what you receive during the FRQ section of the exam.</div>
+  </div>
+
+</div>
+
+<!-- RELATED LINKS -->
+<div class=""ref-section"">
+  <h2>Related AP CSA Resources</h2>
+  <div class=""qr-grid"">
+    <div class=""qr-cell"">
+<strong>Unit Study Guides</strong><a href=""/pages/ap-csa-unit-1-complete-study-guide"">Unit 1: Objects &amp; Methods</a><br><a href=""/pages/unit-2-selection-and-iteration-ultimate-study-guide"">Unit 2: Selection &amp; Iteration</a><br><a href=""/pages/ap-csa-unit-3-class-creation-study-guide"">Unit 3: Class Creation</a><br><a href=""/pages/ap-csa-unit-4-data-collections-study-guide"">Unit 4: Data Collections</a>
+</div>
+    <div class=""qr-cell"">
+<strong>FRQ Practice</strong><a href=""/pages/ap-csa-2025-frq-1-dogwalker"">2025 FRQ Solutions</a><br><a href=""/pages/ap-csa-frq-2024"">2024 FRQ Solutions</a><br><a href=""/pages/ap-csa-2019-frq-2-steptracker"">2019 FRQ Solutions</a><br><a href=""/pages/ap-csa-frq-2018"">2018 FRQ Archive</a>
+</div>
+    <div class=""qr-cell"">
+<strong>Practice &amp; Prep</strong><a href=""/pages/ap-csa-exam-prep-hub"">Exam Prep Hub</a><br><a href=""/pages/ap-csa-exam-review"">Exam Review</a><br><a href=""/blogs/ap-csa-daily-practice"">Daily Practice Questions</a><br><a href=""/pages/ap-computer-science-tutoring"">1-on-1 Tutoring</a>
+</div>
+  </div>
+</div>
+
+</div>
+<!-- end ref-main -->
+</div><!-- end apcs-ref-wrapper -->
+
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@graph"": [
+    {
+      ""@type"": ""FAQPage"",
+      ""mainEntity"": [
+        {
+          ""@type"": ""Question"",
+          ""name"": ""Is the Java Quick Reference provided on the AP CSA exam?"",
+          ""acceptedAnswer"": {""@type"": ""Answer"", ""text"": ""Yes. The Java Quick Reference is provided during Section II (Free Response) only. It lists the official String methods, Math methods, and ArrayList methods. It is NOT available during Section I (Multiple Choice).""}
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""What Java methods do I need to memorize for the AP CSA exam?"",
+          ""acceptedAnswer"": {""@type"": ""Answer"", ""text"": ""For MCQ (no reference sheet): all operators, loop syntax, array syntax, class/constructor structure, and the core String/Math/ArrayList methods. For FRQ (reference sheet provided): you still need to know how to use every method, plus array indexing, 2D arrays, and class writing.""}
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""What are the most common AP CSA MCQ mistakes?"",
+          ""acceptedAnswer"": {""@type"": ""Answer"", ""text"": ""The top five: integer division truncation (7/2 = 3), using == instead of .equals() for Strings, off-by-one errors in array traversal, substring(from, to) where to is exclusive, and incorrect Math.random() range formulas.""}
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""What is the format of the 2027 AP CSA exam?"",
+          ""acceptedAnswer"": {""@type"": ""Answer"", ""text"": ""The 2027 AP CSA exam has 42 multiple choice questions (Section I, A-D choices, 55% of score) and 4 free response questions (Section II, 45% of score). The exam is taken digitally via Bluebook.""}
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""What is new on the AP CSA exam for 2025-2026?"",
+          ""acceptedAnswer"": {""@type"": ""Answer"", ""text"": ""The 2025-2026 AP CSA curriculum uses a new 4-unit structure. Key new content includes the Scanner class and basic file reading. The exam is now fully digital via Bluebook. Inheritance (extends/super) has been removed from the current curriculum.""}
+        },
+        {
+          ""@type"": ""Question"",
+          ""name"": ""What is the difference between array length and ArrayList size?"",
+          ""acceptedAnswer"": {""@type"": ""Answer"", ""text"": ""Arrays use the length field (no parentheses): arr.length. ArrayLists use the size() method (with parentheses): list.size(). Arrays have a fixed size; ArrayLists grow dynamically.""}
+        }
+      ]
+    },
+    {
+      ""@type"": ""Article"",
+      ""headline"": ""AP CSA Reference Sheet | Complete Java Quick Reference"",
+      ""description"": ""AP CSA reference sheet: Java methods, syntax, arrays, ArrayList, Scanner, and operators all in one place. The complete quick reference for the exam."",
+      ""author"": {""@type"": ""Person"", ""name"": ""Tanner Crow""},
+      ""publisher"": {""@type"": ""Organization"", ""name"": ""APCSExamPrep.com""},
+      ""datePublished"": ""2026-03-01"",
+      ""dateModified"": ""2026-03-16"",
+      ""url"": ""https://www.apcsexamprep.com/pages/ap-csa-reference-sheet""
+    },
+    {
+      ""@type"": ""BreadcrumbList"",
+      ""itemListElement"": [
+        {""@type"": ""ListItem"", ""position"": 1, ""name"": ""Home"", ""item"": ""https://www.apcsexamprep.com""},
+        {""@type"": ""ListItem"", ""position"": 2, ""name"": ""AP CSA"", ""item"": ""https://www.apcsexamprep.com/pages/ap-csa-exam-prep-hub""},
+        {""@type"": ""ListItem"", ""position"": 3, ""name"": ""AP CSA Reference Sheet"", ""item"": ""https://www.apcsexamprep.com/pages/ap-csa-reference-sheet""}
+      ]
+    }
+  ]
+}
+</script>"
