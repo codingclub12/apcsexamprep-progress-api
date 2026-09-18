@@ -342,7 +342,10 @@
     "smoke:csa2026frq": "node smoke/csa-past-frq-pages.js",
     "csa:2026frq": "node scripts/verify-csa-2026-frq.js --mutate",
     "csa:2026frqsheet": "node scripts/csa-past-frq-pages-csv.js",
-    "smoke:hubcard": "node smoke/csa-unit-hub-resource-card.js"
+    "smoke:hubcard": "node smoke/csa-unit-hub-resource-card.js",
+    "smoke:u2c2": "node smoke/csa-qotd-u2c2-repair.js",
+    "csa:u2c2repair": "node scripts/csa-qotd-u2c2-repair.js",
+    "csa:u2c2data": "node scripts/csa-u2c2-build-restore.js"
   },
   "keywords": [],
   "author": "",

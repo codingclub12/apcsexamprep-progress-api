@@ -318,3 +318,52 @@ emits coming back byte-identical to the ones already on main.
 One bug that guard caught during the build: `applyEdits` splices its replacement
 LITERALLY, so a `$1` backreference lands on the page as two characters. Four
 options became three and the option-count check refused it.
+
+---
+
+## 2026-09-18: board 343, and the recommendation that the evidence reversed
+
+The 19 `unit-2-cycle-2-day-*` articles are repaired. Sheets in
+`imports/2026-09-18-csa-qotd-343/`, not imported.
+
+**I recommended the wrong fix and said so before building the right one.** The
+advice given twice in this thread was to re-author 19 sets of options to match
+the posted code, on the reasoning that restoring the twin's code would duplicate
+the question. Then the explanations were actually read:
+
+    explanation byte-identical to the twin's    19 of 19
+    code block different from the twin's        19 of 19
+    same four options and same answer           19 of 19 (4 shuffled)
+
+Day 10's Why This Answer says "the loop adds 1 + 2 + 3 + 4 = 10" and its Common
+Mistake warns about `<= 4`, under a code block reading `i <= 5`. Day 13 explains
+a running `sum` in code with no `sum` in it. The options were never the drifted
+half; the code block was, and it is the only one.
+
+So the repair is one edit per article and authors nothing. Re-authoring would
+have rewritten five sections per article to fit a program nobody intended, and
+thrown away the author's own explanation nineteen times. The duplication
+objection also evaporated: the identical explanations prove the pairs were always
+the same question, so restoring creates no duplication that was not already there.
+
+### What made the difference
+
+Comparing the pair rather than looking at the broken page alone. The audit had
+found the drift by running the code; it took reading the EXPLANATION against the
+code to learn which half to keep. Two checks, two different questions: "is this
+wrong" and "which part of it is wrong".
+
+### The proof
+
+`config/csa-u2c2-restore.json` is refused at build time unless, for every row,
+running the twin's code prints exactly the text of the option that article
+already keys. `npm run smoke:u2c2` then requires each of the 19 to fail agreement
+BEFORE the repair and agree on its keyed letter AFTER, on a real JVM, and refuses
+any repair that touches the key, the options or the explanation. Four of the 19
+carry the twin's options in a different order, so an edit that tidied them would
+silently break four correct keys; that is asserted rather than hoped for.
+
+### Still not fixed
+
+Each pair is now the same question at two handles with shuffled answers. Board
+333 territory, and a handle change, so it stays Tanner's.

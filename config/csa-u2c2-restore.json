@@ -1,0 +1,197 @@
+{
+  "board": 343,
+  "built_at": "2026-09-18T14:17:42.101Z",
+  "note": "The twin code block per article. Every row was checked: running code_restore produces expected_output, which is the text of the option the article already keys.",
+  "articles": [
+    {
+      "handle": "unit-2-cycle-2-day-10-iteration-accumulation",
+      "twin": "unit2-cycle2-day-10-iteration-accumulation",
+      "key": "C",
+      "expected_output": "10",
+      "keyed_option": "10",
+      "code_now": "int sum = 0;\nfor (int i = 1; i &lt;= 5; i++) {\n    sum += i;\n}\nSystem.out.println(sum);",
+      "code_restore": "int total = 0;\n\nfor (int i = 1; i &lt;= 4; i++)\n{\n    total += i;\n}\n\nSystem.out.println(total);",
+      "twin_body_sha256": "c4af047b0511682306a737f56da8f0c91d9911d9bf6aa8b1bfdb86223f095228"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-11-iteration-nested-loop-count",
+      "twin": "unit2-cycle2-day-11-iteration-nested-loop-count",
+      "key": "B",
+      "expected_output": "6",
+      "keyed_option": "6",
+      "code_now": "int count = 0;\nfor (int i = 0; i &lt; 3; i++) {\n    for (int j = 0; j &lt; 4; j++) {\n        count++;\n    }\n}\nSystem.out.println(count);",
+      "code_restore": "int c = 0;\n\nfor (int i = 0; i &lt; 3; i++)\n{\n    for (int j = 1; j &lt;= 2; j++)\n    {\n        c++;\n    }\n}\n\nSystem.out.println(c);",
+      "twin_body_sha256": "4b6da790af8b91d385a64244c5a2988f60a861c3e05658b0d40bf64dd6e86b1a"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-13-iteration-break",
+      "twin": "unit2-cycle2-day-13-iteration-break",
+      "key": "B",
+      "expected_output": "6",
+      "keyed_option": "6",
+      "code_now": "for (int i = 0; i &lt; 10; i++) {\n    if (i == 5) {\n        break;\n    }\n    System.out.print(i + \" \");\n}",
+      "code_restore": "int sum = 0;\n\nfor (int i = 1; i &lt;= 5; i++)\n{\n    if (i == 4)\n    {\n        break;\n    }\n\n    sum += i;\n}\n\nSystem.out.println(sum);",
+      "twin_body_sha256": "6b268d16a316699e0026641938cc791110743737f1765914ed1ba0661dd7d06b"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-14-iteration-selection-filtering",
+      "twin": "unit2-cycle2-day-14-iteration-selection-filtering",
+      "key": "D",
+      "expected_output": "9",
+      "keyed_option": "9",
+      "code_now": "for (int i = 1; i &lt;= 10; i++) {\n    if (i % 2 == 0) {\n        System.out.print(i + \" \");\n    }\n}",
+      "code_restore": "int sum = 0;\n\nfor (int i = 1; i &lt;= 6; i++)\n{\n    if (i % 2 != 0)\n    {\n        sum += i;\n    }\n}\n\nSystem.out.println(sum);",
+      "twin_body_sha256": "7dee332e7e672126c4e82bca50baa0d7eee976330134d6619bb63a73e90e439d"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-16-selection-if-else-if-boundary",
+      "twin": "unit2-cycle2-day-16-selection-if-else-if-boundary",
+      "key": "D",
+      "expected_output": "B",
+      "keyed_option": "B",
+      "code_now": "int x = 10;\nif (x &lt; 10) {\n    System.out.println(\"Less\");\n} else if (x == 10) {\n    System.out.println(\"Equal\");\n} else {\n    System.out.println(\"Greater\");\n}",
+      "code_restore": "int n = 0;\n\nif (n &gt;= 1)\n{\n    System.out.print(\"A\");\n}\nelse if (n &gt;= 0)\n{\n    System.out.print(\"B\");\n}\nelse\n{\n    System.out.print(\"C\");\n}",
+      "twin_body_sha256": "255c70a5e18197f56592ede72ff303548742d473239043408d04e8c4d4eff71f"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-19-iteration-while-loop-growth",
+      "twin": "unit2-cycle2-day-19-iteration-while-loop-growth",
+      "key": "C",
+      "expected_output": "5",
+      "keyed_option": "5",
+      "code_now": "int x = 1;\nwhile (x &lt; 100) {\n    System.out.print(x + \" \");\n    x = x * 3;\n}",
+      "code_restore": "int x = 1;\nint steps = 0;\n\nwhile (x &lt; 20)\n{\n    x *= 2;\n    steps++;\n}\n\nSystem.out.println(steps);",
+      "twin_body_sha256": "1d5cf7e5a4d8d8bd5eaeaeed9017120393a8e97c0fc3170fe3eb5222b2356a96"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-20-iteration-accumulation",
+      "twin": "unit2-cycle2-day-20-iteration-accumulation",
+      "key": "C",
+      "expected_output": "10",
+      "keyed_option": "10",
+      "code_now": "int val = 0;\nfor (int i = 1; i &lt;= 5; i++) {\n    val += i;\n}\nSystem.out.println(val);",
+      "code_restore": "int s = 0;\n\nfor (int i = 0; i &lt;= 4; i++)\n{\n    s += i;\n}\n\nSystem.out.println(s);",
+      "twin_body_sha256": "230da78425f3a3828f62cf9aa6b583a0a47cf54b398c80a226b9149d027c5d80"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-21-iteration-break",
+      "twin": "unit2-cycle2-day-21-iteration-break",
+      "key": "A",
+      "expected_output": "3",
+      "keyed_option": "3",
+      "code_now": "for (int i = 0; i &lt; 10; i++) {\n    if (i == 5) {\n        break;\n    }\n    System.out.print(i + \" \");\n}",
+      "code_restore": "int sum = 0;\n\nfor (int i = 1; i &lt;= 5; i++)\n{\n    if (i == 3)\n    {\n        break;\n    }\n\n    sum += i;\n}\n\nSystem.out.println(sum);",
+      "twin_body_sha256": "7203c6e8421e968656782541799ab708735635823ee2a4f3fdcfb7ed832a4e3b"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-22-iteration-continue",
+      "twin": "unit2-cycle2-day-22-iteration-continue",
+      "key": "B",
+      "expected_output": "12",
+      "keyed_option": "12",
+      "code_now": "for (int i = 0; i &lt; 5; i++) {\n    if (i == 2) {\n        continue;\n    }\n    System.out.print(i + \" \");\n}",
+      "code_restore": "int sum = 0;\n\nfor (int i = 1; i &lt;= 5; i++)\n{\n    if (i == 3)\n    {\n        continue;\n    }\n\n    sum += i;\n}\n\nSystem.out.println(sum);",
+      "twin_body_sha256": "f73383de4aa61f9971f59b4da6b467697862bf839c52dfa24d39d4287559904c"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-23-iteration-while-loop-tracing",
+      "twin": "unit2-cycle2-day-23-iteration-while-loop-tracing",
+      "key": "B",
+      "expected_output": "3",
+      "keyed_option": "3",
+      "code_now": "int x = 1;\nwhile (x &lt; 10) {\n    System.out.print(x + \" \");\n    x = x * 2;\n}",
+      "code_restore": "int x = 10;\nint c = 0;\n\nwhile (x &gt; 0)\n{\n    x -= 4;\n    c++;\n}\n\nSystem.out.println(c);",
+      "twin_body_sha256": "877e7e7d3d607064eb090a516ea7a0e039b4933e4394668795387026c5910258"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-24-iteration-nested-loop-count",
+      "twin": "unit2-cycle2-day-24-iteration-nested-loop-count",
+      "key": "C",
+      "expected_output": "6",
+      "keyed_option": "6",
+      "code_now": "int val = 0;\nfor (int i = 0; i &lt; 3; i++) {\n    for (int j = 0; j &lt; 4; j++) {\n        val++;\n    }\n}\nSystem.out.println(val);",
+      "code_restore": "int c = 0;\n\nfor (int i = 0; i &lt; 2; i++)\n{\n    for (int j = 0; j &lt; 3; j++)\n    {\n        c++;\n    }\n}\n\nSystem.out.println(c);",
+      "twin_body_sha256": "cbd77df144dfee1dbc120f1f70a71cdcadbed53b883b469f4cd634cf16f67c6b"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-25-iteration-selection-nested-condition",
+      "twin": "unit2-cycle2-day-25-iteration-selection-nested-condition",
+      "key": "C",
+      "expected_output": "3",
+      "keyed_option": "3",
+      "code_now": "for (int i = 1; i &lt;= 10; i++) {\n    if (i % 2 == 0) {\n        if (i % 3 == 0) {\n            System.out.print(i + \" \");\n        }\n    }\n}",
+      "code_restore": "int count = 0;\n\nfor (int i = 1; i &lt;= 3; i++)\n{\n    for (int j = 1; j &lt;= 3; j++)\n    {\n        if (i == j)\n        {\n            count++;\n        }\n    }\n}\n\nSystem.out.println(count);",
+      "twin_body_sha256": "4a14fbcfd69710607df3c644acf625cc4f7127e63af7ec8bc4aea048874f814c"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-26-iteration-break-in-nested-loops",
+      "twin": "unit2-cycle2-day-26-iteration-break-in-nested-loops",
+      "key": "A",
+      "expected_output": "3",
+      "keyed_option": "3",
+      "code_now": "for (int i = 0; i &lt; 3; i++) {\n    for (int j = 0; j &lt; 3; j++) {\n        if (i == j) {\n            break;\n        }\n        System.out.print(i + \",\" + j + \" \");\n    }\n}",
+      "code_restore": "int c = 0;\n\nfor (int i = 1; i &lt;= 3; i++)\n{\n    for (int j = 1; j &lt;= 3; j++)\n    {\n        if (j == 2)\n        {\n            break;\n        }\n\n        c++;\n    }\n}\n\nSystem.out.println(c);",
+      "twin_body_sha256": "09ddc7142c7bfc690b255ffbf93353254b1a6a7ad6db916e2ef1b5b0b68fcd60"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-27-iteration-selection-nested-filtering",
+      "twin": "unit2-cycle2-day-27-iteration-selection-nested-filtering",
+      "key": "D",
+      "expected_output": "4",
+      "keyed_option": "4",
+      "code_now": "for (int i = 1; i &lt;= 20; i++) {\n    if (i % 2 == 0) {\n        if (i % 5 == 0) {\n            System.out.print(i + \" \");\n        }\n    }\n}",
+      "code_restore": "int c = 0;\n\nfor (int i = 1; i &lt;= 2; i++)\n{\n    for (int j = 1; j &lt;= 4; j++)\n    {\n        if (j % 2 != 0)\n        {\n            c++;\n        }\n    }\n}\n\nSystem.out.println(c);",
+      "twin_body_sha256": "114980c86ed4ec1ee09ed35f0c156adffc6317b37d5bc3c50b071393ecb6e603"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-28-iteration-nested-loop-accumulation",
+      "twin": "unit2-cycle2-day-28-iteration-nested-loop-accumulation",
+      "key": "C",
+      "expected_output": "6",
+      "keyed_option": "6",
+      "code_now": "int val = 0;\nfor (int i = 1; i &lt;= 3; i++) {\n    for (int j = 1; j &lt;= 3; j++) {\n        val += i * j;\n    }\n}\nSystem.out.println(val);",
+      "code_restore": "int x = 0;\n\nfor (int i = 1; i &lt;= 3; i++)\n{\n    for (int j = 1; j &lt;= i; j++)\n    {\n        x++;\n    }\n}\n\nSystem.out.println(x);",
+      "twin_body_sha256": "f5fab687676f2365d86efe0317f2b6322382ac56bc8a0096a330ceb396dadbe3"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-4-selection-nested-if-else",
+      "twin": "unit2-cycle2-day-4-selection-nested-if-else",
+      "key": "B",
+      "expected_output": "B",
+      "keyed_option": "B",
+      "code_now": "int x = 10;\nint y = 20;\nif (x &gt; 5) {\n    if (y &gt; 15) {\n        System.out.println(\"Both\");\n    } else {\n        System.out.println(\"X only\");\n    }\n} else {\n    System.out.println(\"Neither\");\n}",
+      "code_restore": "int x = 4;\nint y = 2;\n\nif (x &gt; 3)\n{\n    if (y &gt; 3)\n    {\n        System.out.print(\"A\");\n    }\n    else\n    {\n        System.out.print(\"B\");\n    }\n}\nelse\n{\n    System.out.print(\"C\");\n}",
+      "twin_body_sha256": "c930817aece994c8995a152400ba20487c33d81cc9a8b5b791b97e6326747223"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-7-selection-two-separate-if-statements",
+      "twin": "unit2-cycle2-day-7-selection-two-separate-if-statements",
+      "key": "A",
+      "expected_output": "XY",
+      "keyed_option": "XY",
+      "code_now": "int x = 10;\nif (x &gt; 5) {\n    System.out.println(\"A\");\n}\nif (x &lt; 15) {\n    System.out.println(\"B\");\n}",
+      "code_restore": "int n = 12;\n\nif (n % 3 == 0)\n{\n    System.out.print(\"X\");\n}\n\nif (n % 4 == 0)\n{\n    System.out.print(\"Y\");\n}\nelse\n{\n    System.out.print(\"Z\");\n}",
+      "twin_body_sha256": "fda25b9106f57eff9b820dc493e8ebaa9342783465e9b5791fa28795bde75c35"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-8-iteration-for-loop-count",
+      "twin": "unit2-cycle2-day-8-iteration-for-loop-count",
+      "key": "B",
+      "expected_output": "4",
+      "keyed_option": "4",
+      "code_now": "int count = 0;\nfor (int i = 0; i &lt; 5; i++) {\n    count++;\n}\nSystem.out.println(count);",
+      "code_restore": "int count = 0;\n\nfor (int i = 0; i &lt; 10; i += 3)\n{\n    count++;\n}\n\nSystem.out.println(count);",
+      "twin_body_sha256": "0205befd00a3fc280cd98968b554257d084e9219ed79b618dc2f536e07f57b7a"
+    },
+    {
+      "handle": "unit-2-cycle-2-day-9-iteration-while-loop-tracing",
+      "twin": "unit2-cycle2-day-9-iteration-while-loop-tracing",
+      "key": "A",
+      "expected_output": "4",
+      "keyed_option": "4",
+      "code_now": "int x = 1;\nwhile (x &lt; 10) {\n    System.out.print(x + \" \");\n    x = x * 2;\n}",
+      "code_restore": "int x = 20;\nint y = 0;\n\nwhile (x &gt; 0)\n{\n    x -= 6;\n    y++;\n}\n\nSystem.out.println(y);",
+      "twin_body_sha256": "31d3026e462525701d5f0be96f5dc2560f4922a83c8cf07c2218e906658c5619"
+    }
+  ]
+}
