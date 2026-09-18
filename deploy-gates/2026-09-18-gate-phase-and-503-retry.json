@@ -36,7 +36,17 @@
     "reason. And an assertion claiming to pin REQUIRED_ONE_OF alone cannot exist:",
     "KINDS has four members, two of which are live and rederive, so a manifest",
     "with neither reaches at most two kinds and MIN_KINDS fires as well. That one",
-    "now says so rather than pretending to an isolation that is not available."
+    "now says so rather than pretending to an isolation that is not available.",
+    "",
+    "",
+    "THERE IS NO live CHECK, AND THE FIRST DRAFT'S WAS A TIME BOMB. It pinned the",
+    "commit sha from /api/health, which is what this repo recommends and is exactly",
+    "right for a change that alters what the API serves. This one does not: it is",
+    "tooling. So the pin was true for about ten minutes and then three other pull",
+    "requests merged, and the manifest could never pass again while reading like a",
+    "regression. A gate nobody can pass is worse than no gate.",
+    "",
+    "rederive is the honest kind here, and it does not expire."
   ],
   "checks": [
     {
@@ -114,11 +124,11 @@
       "expect_failure": "and is NOT retried"
     },
     {
-      "kind": "live",
-      "name": "production is serving the commit that carries this change",
-      "_why": "FALSE BEFORE THE DEPLOY by construction: /api/health reported 4e27c9b, which is PR #734, until 0c8de04 landed. This is the sha the gate's own header recommends pinning, rather than a status:ok that was true yesterday and would be true if the deploy never happened.",
-      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health",
-      "expect": "\"commit\":\"0c8de04\""
+      "kind": "rederive",
+      "name": "the retry policy derived from the source and from the behaviour agree",
+      "_why": "Two paths to the same answer sharing no code: a TEXT parse of the RETRY_CODES literal out of lib/storefront-fetch.js, and a behavioural probe of raw() against a local server that answers a code once and then 200, counting how many requests arrive. Each direction of disagreement means something different. In the source but not the behaviour is a set that was widened while the loop cannot act on it, which is what a broken retry looks like while reading perfectly correct. In the behaviour but not the source is something retrying outside RETRY_CODES, so the set is no longer the policy and a reader of the module is being misled. It probes 404, 429, 500, 502, 503 and 504, so the narrowness is asserted and not only the additions.",
+      "command": "node scripts/rederive-retry-policy.js",
+      "expect": "the two derivations agree on 2 code(s)"
     }
   ]
 }
