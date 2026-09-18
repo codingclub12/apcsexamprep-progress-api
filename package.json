@@ -352,7 +352,9 @@
     "csa:frqrepairsheets": "node scripts/csa-frq-archive-repair-csv.js imports/2026-09-17-frq-archive",
     "csa:frqrepairlive": "node scripts/verify-csa-frq-archive-live.js",
     "smoke:csafrqbootcamp": "node smoke/csa-frq-bootcamp.js",
-    "csa:frqbootcampsheets": "node scripts/csa-frq-bootcamp-csv.js imports/2026-09-17-frq-bootcamp"
+    "csa:frqbootcampsheets": "node scripts/csa-frq-bootcamp-csv.js imports/2026-09-17-frq-bootcamp",
+    "smoke:architecture": "node smoke/site-architecture.js",
+    "site:architecture": "node scripts/site-architecture.js"
   },
   "keywords": [],
   "author": "",

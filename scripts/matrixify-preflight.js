@@ -337,6 +337,53 @@ function preflight(path, opts) {
     scriptsChecked += sc.checked;
     sc.bad.forEach((b) => problems.push(b));
   }
+  // ── A NEW PAGE WITH NO HOME IS AN ORPHAN AT BIRTH ────────────────────────
+  //  Board 351. Seven board tasks since #73 are the same defect: a page ships
+  //  and nothing links it. Every one was found afterwards, by somebody noticing,
+  //  and every one was fixed as an instance. THIS is the moment the orphan is
+  //  created, so it is the only place the class can actually die.
+  //
+  //  It refuses a handle that is BOTH absent from the live architecture (so the
+  //  sheet is creating it) AND parentless (so no hub owns it). Existing pages
+  //  are never refused here: 241 of them are parentless today and failing every
+  //  sheet that touches one is how a gate gets switched off in a morning. Those
+  //  are the ratchet's job, in scripts/site-architecture.js --check.
+  //
+  //  Absent AND parented is the ordinary case for a new page and passes in
+  //  silence, which is what makes the refusal worth reading when it does fire.
+  const handleIdx = header.findIndex((h) => normColumn(h) === normColumn('Handle'));
+  if (handleIdx !== -1) {
+    let arch = null;
+    try {
+      arch = JSON.parse(fs.readFileSync(
+        require('path').join(__dirname, '..', 'config', 'site-architecture.json'), 'utf8'));
+    } catch (e) {
+      //  FAIL OPEN, LOUDLY. A missing or unreadable taxonomy must not block every
+      //  sheet in the repo; a board outage must not brick every session is the
+      //  same rule .claude/hooks/claim-guard.js follows for the same reason.
+      notes.push('site-architecture.json could not be read, so new pages were not '
+        + `checked for a home: ${e.message}`);
+    }
+    if (arch && Array.isArray(arch.pages)) {
+      const known = new Set(arch.pages.map((p) => p.handle));
+      const live = arch.pages.map((p) => p.handle);
+      const A = require('../lib/site-architecture');
+      for (const r of body) {
+        const handle = String(r[handleIdx] || '').trim();
+        if (!handle || known.has(handle)) continue;
+        let rec = null;
+        try { rec = A.parentOf(handle, live); } catch (e) { rec = null; }
+        if (rec && rec.scope === A.SCOPE_COURSE && !rec.is_hub && !rec.parent) {
+          problems.push(`${handle}: NEW page with no home. Its family `
+            + `${JSON.stringify(rec.family)} has no hub, so nothing owns it and nothing is `
+            + 'going to link it. That is how board 352 shipped an autograded practice page '
+            + 'in February that was still reachable from nowhere in September. Give it a '
+            + 'parent (add the spoke to a hub in the same sheet) before importing.');
+        }
+      }
+    }
+  }
+
   if (carriedEmoji) {
     notes.push(`${carriedEmoji} emoji carried through from the live bodies, none added.`);
   }
