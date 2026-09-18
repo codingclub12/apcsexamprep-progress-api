@@ -358,6 +358,41 @@ console.log('\n8. A near-miss column name, which goes quiet in both directions')
     !has(seo, /near miss/), seo.problems);
 }
 
+// ── ORPHAN AT BIRTH (board 351) ──────────────────────────────────────────────
+//  The gate that stops the class. A page is orphaned at the moment it is
+//  published, so this is the only check that can prevent one rather than find
+//  it afterwards. All four cases matter equally: the two that PASS are what
+//  keep it from becoming a gate somebody switches off.
+{
+  const H = ['Handle', 'Command', 'Body HTML'];
+  const B = '<div id="x"><p>body</p></div>';
+  const sheet = (name, handle) => preflight(write(name, H, [[handle, 'MERGE', B]]));
+  const noHome = (r) => has(r, /NEW page with no home/);
+
+  //  A new page whose family has no hub. Nothing owns it, so nothing will link
+  //  it. This is the shape board 352 shipped in February and nobody saw until
+  //  September.
+  ok('a NEW page with no hub in its family is refused',
+    noHome(sheet('pages-orphan.csv', 'ap-csa-quantum-widget-interactive-practice')));
+
+  //  A new page joining a family that HAS a hub. The ordinary case, and it must
+  //  pass in silence or every legitimate sheet starts arguing with the gate.
+  ok('a NEW page joining a family with a hub passes',
+    !noHome(sheet('pages-parented.csv', 'ap-csa-lesson-4-4-traversing-arrays-exercise-9')));
+
+  //  Site furniture carries no course prefix and has no course hub to belong
+  //  to. Demanding a parent for contact or a refund policy is exactly the false
+  //  positive that gets a check disabled.
+  ok('site furniture with no course prefix passes',
+    !noHome(sheet('pages-furniture.csv', 'refund-policy-2027')));
+
+  //  An EXISTING parentless page is not this gate's business. 241 of them are
+  //  live today; refusing every sheet that touches one would block real work.
+  //  The ratchet in scripts/site-architecture.js --check owns those.
+  ok('an EXISTING parentless page is not refused here',
+    !noHome(sheet('pages-existing.csv', 'ap-csa-array-mastery-interactive-practice')));
+}
+
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
