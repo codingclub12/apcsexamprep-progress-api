@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-01",
+  "checked_at": "2026-09-18",
   "note": "Written by scripts/ced-watch.js. Do not hand-edit: the next run overwrites it.",
   "sources": [
     {
@@ -9,8 +9,8 @@
       "kind": "html",
       "critical": true,
       "url": "https://apcentral.collegeboard.org/courses/how-ap-develops-courses-and-exams/course-changes-overview",
-      "hash": "bcf1730ee2b924f1cb25241c8826d34d4d276c9ff95f8345b26ab3f64942f09d",
-      "bytes": 54509,
+      "hash": "169a7cc5abd71131c1c5da602f27de8d0ad600eea2126ed042c9d234db90fd0b",
+      "bytes": 55133,
       "last_modified": null
     },
     {
@@ -20,8 +20,19 @@
       "kind": "html",
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-a",
-      "hash": "69f84f039254bf918c348af7bba5ff57e40abe63a663892320bcf5dc0bfe9bdd",
-      "bytes": 49969,
+      "hash": "fea5365d5e38589f9ad20429ad15ab2c2de2e5d3de1c6a49c4c38886ee0df450",
+      "bytes": 50561,
+      "last_modified": null
+    },
+    {
+      "id": "csa-exam",
+      "label": "AP Computer Science A Exam",
+      "course": "ap-csa",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-a/exam",
+      "hash": "fa0ea4bec27c5bdd7252f053364eef5ee1c17476ad75be49a83b138457a37229",
+      "bytes": 40684,
       "last_modified": null
     },
     {
@@ -42,8 +53,19 @@
       "kind": "html",
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-principles",
-      "hash": "5ebcd9300737f316a41b2f876f1a996300f1347f1dfa08bcba391214ec5e4a7a",
-      "bytes": 54261,
+      "hash": "51a0e20c0c55e3667f711808e2b5e43012824fb6fc47b071e330139c9db1278c",
+      "bytes": 54805,
+      "last_modified": null
+    },
+    {
+      "id": "csp-exam",
+      "label": "AP Computer Science Principles Exam",
+      "course": "ap-csp",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-principles/exam",
+      "hash": "0b79f76c36e5db29d4b773c69c54bebe925617f62f4d6342653632e736b461c2",
+      "bytes": 55787,
       "last_modified": null
     },
     {
@@ -64,8 +86,8 @@
       "kind": "html",
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity/classroom-resources",
-      "hash": "41f5f18483fff902e9aa5dafbf017138cb35b9bf06a1b171e9817b7268310a08",
-      "bytes": 27460,
+      "hash": "380f146894b95120242d79736f9cb8b98829de03f68f5248370ec879497fd8e0",
+      "bytes": 28082,
       "last_modified": null
     },
     {
@@ -75,8 +97,8 @@
       "kind": "html",
       "critical": true,
       "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity",
-      "hash": "8b66f4279eb5b85b75f9decfa70e2ede403dce23709eee7913268a93cc8d551f",
-      "bytes": 46967,
+      "hash": "e312b4261152fba68759f84e16bb598f0f5e5019087a2b53240a1922d408368e",
+      "bytes": 47533,
       "last_modified": null
     },
     {
@@ -86,8 +108,8 @@
       "kind": "html",
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity/exam",
-      "hash": "fe3d7601c1bd612d5246366262c9418fb031a92c8657f5ca4262e1df0ae2f40f",
-      "bytes": 31710,
+      "hash": "571167763cc1ae4f3b38d03c421e7f9f366f8e8a1443cafcb605a27999b19e7a",
+      "bytes": 32314,
       "last_modified": null
     },
     {
@@ -97,8 +119,8 @@
       "kind": "html",
       "critical": false,
       "url": "https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
-      "hash": "7113dc5729c5762a6e808527bdd2d05a3b7df1fc06702ddc2432ad08bc6deb93",
-      "bytes": 29276,
+      "hash": "da1f23065409a8b9db03d3c6fdd3f928feb25fc34cf52a3eddb2cd40ef446163",
+      "bytes": 29890,
       "last_modified": null
     },
     {
@@ -108,8 +130,8 @@
       "kind": "html",
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart",
-      "hash": "3e9e829cb97d1299584145625ac96cf5b74ba10c294b637875b9a9b5dbfd552a",
-      "bytes": 49482,
+      "hash": "bde0c28197873e5561df3fc07b4cde65802769897e80b146aa98fa295daa52f5",
+      "bytes": 50116,
       "last_modified": null
     },
     {
@@ -119,8 +141,8 @@
       "kind": "html",
       "critical": true,
       "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart/pilots",
-      "hash": "d0926339702b71bbe9292e7a1bf7226ec7407cdaeb0c8abec789b840a1be1f73",
-      "bytes": 31763,
+      "hash": "c6246a10f5d51b1655e3e382a6328842c9da57b8b454744014d1eae706f17695",
+      "bytes": 32298,
       "last_modified": null
     },
     {
@@ -130,8 +152,8 @@
       "kind": "html",
       "critical": true,
       "url": "https://apcentral.collegeboard.org/courses/ap-networking/about",
-      "hash": "57c7f798c98c4b1bc6c8a5e0855278b508b4896ba43916844edc44e1f9035c5e",
-      "bytes": 34115,
+      "hash": "02fc78b3512a5f22aa89f0b4d3507261dcb5dc540f3fb65e217e8ac11b9a94f0",
+      "bytes": 34737,
       "last_modified": null
     },
     {
@@ -141,8 +163,8 @@
       "kind": "html",
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-networking/adopt",
-      "hash": "142b34c80e2ab5eb8e77888c9d24771a103788e7aef44b4c47c184eafa4f7d41",
-      "bytes": 29661,
+      "hash": "3db5d50300b75c60013da6d74bcfc27b968eb5f78a2af576db020e736b64310f",
+      "bytes": 30275,
       "last_modified": null
     },
     {
@@ -152,8 +174,8 @@
       "kind": "html",
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart/credentials/ap-networking",
-      "hash": "f54def01f0e2773930e5f3ef11f5381213054052044ec4df3e837200d15b18a9",
-      "bytes": 31366,
+      "hash": "3f62e70aeb90203c0cab0697ff57ae36c3b1dd3827cf9fd1fcde365af853a441",
+      "bytes": 31986,
       "last_modified": null
     },
     {
