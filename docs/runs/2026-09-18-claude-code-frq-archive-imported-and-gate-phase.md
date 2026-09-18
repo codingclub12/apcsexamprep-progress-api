@@ -124,6 +124,52 @@ Mutations, each isolated to the assertion it targets:
     retry loop disabled                       red on 7.1
     narrowness removed, everything retried    red on 7.5
 
+## A sha pin is the right live check only when the change touches what the API serves
+
+Added after the fact, because the gate manifest written to record all of the
+above shipped with a defect of exactly the kind it was built to catch.
+
+That manifest's live check pinned `"commit":"0c8de04"` from `/api/health`. The
+convention in CLAUDE.md says to pin the sha now serving, and that convention is
+right. It is right for a change that alters what the API serves, where the sha
+is a proxy for the new behaviour being reachable.
+
+This change altered nothing the API serves. It is tooling: a gate script, a
+fetch module, two smoke suites. So the sha pin was a proxy for nothing, and it
+was true for about ten minutes. Three other pull requests merged, production
+moved to their commits, and the manifest became permanently unpassable while
+reading like a regression on a change that was completely fine.
+
+The first instinct was to leave the pin and add a comment explaining that a red
+means staleness. That is worse, not better. The entire point of the file was to
+make six mutations re-runnable, and a manifest that cannot run makes nothing
+re-runnable. A comment does not fix a gate, it just excuses one.
+
+**The refinement, for the next session reading the live-check rule:** ask what
+the change made true THAT STAYS TRUE. If the answer is "a sha was serving for a
+while", that is a dated receipt, not a check. For a change with no observable
+API surface, `rederive` is the honest kind, and the gate already accepts it in
+place of `live`.
+
+`scripts/rederive-retry-policy.js` is what went in instead. It answers "which
+codes does the one door retry" twice, from paths that share no code: a text
+parse of the `RETRY_CODES` literal, and a behavioural probe of `raw()` against a
+local server that answers a code once and then 200, counting the requests that
+arrive. It probes 404, 429, 500, 502, 503 and 504, so it asserts the narrowness
+and not only the additions.
+
+Each direction of disagreement means something different and it says which:
+
+    in the source, not the behaviour   the set was widened and the loop cannot
+                                       act on it. This is what a broken retry
+                                       looks like while reading perfectly
+                                       correct.
+    in the behaviour, not the source   something retries outside RETRY_CODES,
+                                       so the set is no longer the policy and a
+                                       reader of the module is being misled.
+
+Both directions measured against a deliberate break rather than argued for.
+
 ## Still open
 
 - **The 2027 bootcamp date.** `config/csa-frq-bootcamp-2027.json` has no
