@@ -1,0 +1,767 @@
+{
+ "generated": "2026-09-18",
+ "blog": "ap-csa-daily-practice",
+ "note": "keep is the compact daily-series handle; retire is the 2026-02-06 bulk-import twin. Only verdict=redirect rows may enter a redirect sheet.",
+ "counts": {
+  "redirect": 72,
+  "review": 12
+ },
+ "pairs": [
+  {
+   "key": "u2c2-day-1-boolean-algebra-equivalence",
+   "keep": "unit2-cycle2-day-1-boolean-algebra-equivalence",
+   "retire": "unit-2-cycle-2-day-1-boolean-algebra-equivalence",
+   "verdict": "redirect",
+   "why": "same question, cosmetic differences only",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u2c2-day-10-iteration-accumulation",
+   "keep": "unit2-cycle2-day-10-iteration-accumulation",
+   "retire": "unit-2-cycle-2-day-10-iteration-accumulation",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u2c2-day-11-iteration-nested-loop-count",
+   "keep": "unit2-cycle2-day-11-iteration-nested-loop-count",
+   "retire": "unit-2-cycle-2-day-11-iteration-nested-loop-count",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-12-debugging-loop-condition",
+   "keep": "unit2-cycle2-day-12-debugging-loop-condition",
+   "retire": "unit-2-cycle-2-day-12-debugging-loop-condition",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u2c2-day-13-iteration-break",
+   "keep": "unit2-cycle2-day-13-iteration-break",
+   "retire": "unit-2-cycle-2-day-13-iteration-break",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-14-iteration-selection-filtering",
+   "keep": "unit2-cycle2-day-14-iteration-selection-filtering",
+   "retire": "unit-2-cycle-2-day-14-iteration-selection-filtering",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u2c2-day-15-boolean-algebra-equivalence",
+   "keep": "unit2-cycle2-day-15-boolean-algebra-equivalence",
+   "retire": "unit-2-cycle-2-day-15-boolean-algebra-equivalence",
+   "verdict": "redirect",
+   "why": "same question, cosmetic differences only",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-16-selection-if-else-if-boundary",
+   "keep": "unit2-cycle2-day-16-selection-if-else-if-boundary",
+   "retire": "unit-2-cycle-2-day-16-selection-if-else-if-boundary",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u2c2-day-17-boolean-precedence-andand-with",
+   "keep": "unit2-cycle2-day-17-boolean-precedence-andand-with",
+   "retire": "unit-2-cycle-2-day-17-boolean-precedence-andand-with",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u2c2-day-18-iteration-for-loop-count",
+   "keep": "unit2-cycle2-day-18-iteration-for-loop-count",
+   "retire": "unit-2-cycle-2-day-18-iteration-for-loop-count",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-19-iteration-while-loop-growth",
+   "keep": "unit2-cycle2-day-19-iteration-while-loop-growth",
+   "retire": "unit-2-cycle-2-day-19-iteration-while-loop-growth",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u2c2-day-2-selection-if-else-if",
+   "keep": "unit2-cycle2-day-2-selection-if-else-if",
+   "retire": "unit-2-cycle-2-day-2-selection-if-else-if",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u2c2-day-20-iteration-accumulation",
+   "keep": "unit2-cycle2-day-20-iteration-accumulation",
+   "retire": "unit-2-cycle-2-day-20-iteration-accumulation",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u2c2-day-21-iteration-break",
+   "keep": "unit2-cycle2-day-21-iteration-break",
+   "retire": "unit-2-cycle-2-day-21-iteration-break",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u2c2-day-22-iteration-continue",
+   "keep": "unit2-cycle2-day-22-iteration-continue",
+   "retire": "unit-2-cycle-2-day-22-iteration-continue",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-23-iteration-while-loop-tracing",
+   "keep": "unit2-cycle2-day-23-iteration-while-loop-tracing",
+   "retire": "unit-2-cycle-2-day-23-iteration-while-loop-tracing",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-24-iteration-nested-loop-count",
+   "keep": "unit2-cycle2-day-24-iteration-nested-loop-count",
+   "retire": "unit-2-cycle-2-day-24-iteration-nested-loop-count",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u2c2-day-25-iteration-selection-nested-condition",
+   "keep": "unit2-cycle2-day-25-iteration-selection-nested-condition",
+   "retire": "unit-2-cycle-2-day-25-iteration-selection-nested-condition",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u2c2-day-26-iteration-break-in-nested-loops",
+   "keep": "unit2-cycle2-day-26-iteration-break-in-nested-loops",
+   "retire": "unit-2-cycle-2-day-26-iteration-break-in-nested-loops",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u2c2-day-27-iteration-selection-nested-filtering",
+   "keep": "unit2-cycle2-day-27-iteration-selection-nested-filtering",
+   "retire": "unit-2-cycle-2-day-27-iteration-selection-nested-filtering",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u2c2-day-28-iteration-nested-loop-accumulation",
+   "keep": "unit2-cycle2-day-28-iteration-nested-loop-accumulation",
+   "retire": "unit-2-cycle-2-day-28-iteration-nested-loop-accumulation",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u2c2-day-3-short-circuit-logic",
+   "keep": "unit2-cycle2-day-3-short-circuit-logic",
+   "retire": "unit-2-cycle-2-day-3-short-circuit-logic",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-4-selection-nested-if-else",
+   "keep": "unit2-cycle2-day-4-selection-nested-if-else",
+   "retire": "unit-2-cycle-2-day-4-selection-nested-if-else",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-5-boolean-precedence-andand-before",
+   "keep": "unit2-cycle2-day-5-boolean-precedence-andand-before",
+   "retire": "unit-2-cycle-2-day-5-boolean-precedence-andand-before",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u2c2-day-6-selection-range-check",
+   "keep": "unit2-cycle2-day-6-selection-range-check",
+   "retire": "unit-2-cycle-2-day-6-selection-range-check",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "C"
+  },
+  {
+   "key": "u2c2-day-7-selection-two-separate-if-statements",
+   "keep": "unit2-cycle2-day-7-selection-two-separate-if-statements",
+   "retire": "unit-2-cycle-2-day-7-selection-two-separate-if-statements",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u2c2-day-8-iteration-for-loop-count",
+   "keep": "unit2-cycle2-day-8-iteration-for-loop-count",
+   "retire": "unit-2-cycle-2-day-8-iteration-for-loop-count",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u2c2-day-9-iteration-while-loop-tracing",
+   "keep": "unit2-cycle2-day-9-iteration-while-loop-tracing",
+   "retire": "unit-2-cycle-2-day-9-iteration-while-loop-tracing",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "A"
+  },
+  {
+   "key": "u3c2-day-1-constructor-overloading",
+   "keep": "unit3-cycle2-day-1-constructor-overloading",
+   "retire": "unit-3-cycle-2-day-1-constructor-overloading",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-10-method-overriding-rules",
+   "keep": "unit3-cycle2-day-10-method-overriding-rules",
+   "retire": "unit-3-cycle-2-day-10-method-overriding-rules",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u3c2-day-11-mutator-method",
+   "keep": "unit3-cycle2-day-11-mutator-method",
+   "retire": "unit-3-cycle-2-day-11-mutator-method",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u3c2-day-12-object-equality",
+   "keep": "unit3-cycle2-day-12-object-equality",
+   "retire": "unit-3-cycle-2-day-12-object-equality",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-13-super-keyword",
+   "keep": "unit3-cycle2-day-13-super-keyword",
+   "retire": "unit-3-cycle-2-day-13-super-keyword",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u3c2-day-14-constructor-parameter-validation",
+   "keep": "unit3-cycle2-day-14-constructor-parameter-validation",
+   "retire": "unit-3-cycle-2-day-14-constructor-parameter-validation",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u3c2-day-15-polymorphism",
+   "keep": "unit3-cycle2-day-15-polymorphism",
+   "retire": "unit-3-cycle-2-day-15-polymorphism",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-16-tostring-override",
+   "keep": "unit3-cycle2-day-16-tostring-override",
+   "retire": "unit-3-cycle-2-day-16-tostring-override",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u3c2-day-17-constructor-default-values",
+   "keep": "unit3-cycle2-day-17-constructor-default-values",
+   "retire": "unit-3-cycle-2-day-17-constructor-default-values",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u3c2-day-18-private-vs-public",
+   "keep": "unit3-cycle2-day-18-private-vs-public",
+   "retire": "unit-3-cycle-2-day-18-private-vs-public",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u3c2-day-19-method-overriding-vs-overloading",
+   "keep": "unit3-cycle2-day-19-method-overriding-vs-overloading",
+   "retire": "unit-3-cycle-2-day-19-method-overriding-vs-overloading",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u3c2-day-2-instance-vs-static",
+   "keep": "unit3-cycle2-day-2-instance-vs-static",
+   "retire": "unit-3-cycle-2-day-2-instance-vs-static",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u3c2-day-20-inheritance-access",
+   "keep": "unit3-cycle2-day-20-inheritance-access",
+   "retire": "unit-3-cycle-2-day-20-inheritance-access",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u3c2-day-21-null-reference",
+   "keep": "unit3-cycle2-day-21-null-reference",
+   "retire": "unit-3-cycle-2-day-21-null-reference",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-22-this-in-constructors",
+   "keep": "unit3-cycle2-day-22-this-in-constructors",
+   "retire": "unit-3-cycle-2-day-22-this-in-constructors",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "C"
+  },
+  {
+   "key": "u3c2-day-23-static-method-calling",
+   "keep": "unit3-cycle2-day-23-static-method-calling",
+   "retire": "unit-3-cycle-2-day-23-static-method-calling",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-24-constructor-no-return",
+   "keep": "unit3-cycle2-day-24-constructor-no-return",
+   "retire": "unit-3-cycle-2-day-24-constructor-no-return",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-25-super-call",
+   "keep": "unit3-cycle2-day-25-super-call",
+   "retire": "unit-3-cycle-2-day-25-super-call",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u3c2-day-26-object-class",
+   "keep": "unit3-cycle2-day-26-object-class",
+   "retire": "unit-3-cycle-2-day-26-object-class",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-27-encapsulation-violation",
+   "keep": "unit3-cycle2-day-27-encapsulation-violation",
+   "retire": "unit-3-cycle-2-day-27-encapsulation-violation",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u3c2-day-28-polymorphic-array",
+   "keep": "unit3-cycle2-day-28-polymorphic-array",
+   "retire": "unit-3-cycle-2-day-28-polymorphic-array",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u3c2-day-3-accessor-method-side-effects",
+   "keep": "unit3-cycle2-day-3-accessor-method-side-effects",
+   "retire": "unit-3-cycle-2-day-3-accessor-method-side-effects",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-4-method-overriding",
+   "keep": "unit3-cycle2-day-4-method-overriding",
+   "retire": "unit-3-cycle-2-day-4-method-overriding",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u3c2-day-5-constructor-chaining",
+   "keep": "unit3-cycle2-day-5-constructor-chaining",
+   "retire": "unit-3-cycle-2-day-5-constructor-chaining",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-6-this-keyword",
+   "keep": "unit3-cycle2-day-6-this-keyword",
+   "retire": "unit-3-cycle-2-day-6-this-keyword",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u3c2-day-7-scope-and-access",
+   "keep": "unit3-cycle2-day-7-scope-and-access",
+   "retire": "unit-3-cycle-2-day-7-scope-and-access",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u3c2-day-8-static-method-restrictions",
+   "keep": "unit3-cycle2-day-8-static-method-restrictions",
+   "retire": "unit-3-cycle-2-day-8-static-method-restrictions",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "A"
+  },
+  {
+   "key": "u3c2-day-9-inheritance-constructor-calls",
+   "keep": "unit3-cycle2-day-9-inheritance-constructor-calls",
+   "retire": "unit-3-cycle-2-day-9-inheritance-constructor-calls",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u4c2-day-1-array-initialization",
+   "keep": "unit4-cycle2-day-1-array-initialization",
+   "retire": "unit-4-cycle-2-day-1-array-initialization",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u4c2-day-10-array-algorithm-find-maximum",
+   "keep": "unit4-cycle2-day-10-array-algorithm-find-maximum",
+   "retire": "unit-4-cycle-2-day-10-array-algorithm-find-maximum",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u4c2-day-11-arraylist-add-with-index",
+   "keep": "unit4-cycle2-day-11-arraylist-add-with-index",
+   "retire": "unit-4-cycle-2-day-11-arraylist-add-with-index",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u4c2-day-12-array-out-of-bounds",
+   "keep": "unit4-cycle2-day-12-array-out-of-bounds",
+   "retire": "unit-4-cycle-2-day-12-array-out-of-bounds",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u4c2-day-13-arraylist-remove-return-value",
+   "keep": "unit4-cycle2-day-13-arraylist-remove-return-value",
+   "retire": "unit-4-cycle-2-day-13-arraylist-remove-return-value",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u4c2-day-14-2d-array-diagonal-sum",
+   "keep": "unit4-cycle2-day-14-2d-array-diagonal-sum",
+   "retire": "unit-4-cycle-2-day-14-2d-array-diagonal-sum",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-15-binary-search-precondition",
+   "keep": "unit4-cycle2-day-15-binary-search-precondition",
+   "retire": "unit-4-cycle-2-day-15-binary-search-precondition",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u4c2-day-16-arraylist-set-index-error",
+   "keep": "unit4-cycle2-day-16-arraylist-set-index-error",
+   "retire": "unit-4-cycle-2-day-16-arraylist-set-index-error",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u4c2-day-17-array-reverse",
+   "keep": "unit4-cycle2-day-17-array-reverse",
+   "retire": "unit-4-cycle-2-day-17-array-reverse",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-18-arraylist-autoboxing",
+   "keep": "unit4-cycle2-day-18-arraylist-autoboxing",
+   "retire": "unit-4-cycle-2-day-18-arraylist-autoboxing",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-19-2d-array-search",
+   "keep": "unit4-cycle2-day-19-2d-array-search",
+   "retire": "unit-4-cycle-2-day-19-2d-array-search",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u4c2-day-2-enhanced-for-loop-limitation",
+   "keep": "unit4-cycle2-day-2-enhanced-for-loop-limitation",
+   "retire": "unit-4-cycle-2-day-2-enhanced-for-loop-limitation",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u4c2-day-20-arraylist-remove-with-wrapper",
+   "keep": "unit4-cycle2-day-20-arraylist-remove-with-wrapper",
+   "retire": "unit-4-cycle-2-day-20-arraylist-remove-with-wrapper",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u4c2-day-21-array-copy-pitfall",
+   "keep": "unit4-cycle2-day-21-array-copy-pitfall",
+   "retire": "unit-4-cycle-2-day-21-array-copy-pitfall",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "D"
+  },
+  {
+   "key": "u4c2-day-22-arraylist-remove-all-even-numbers",
+   "keep": "unit4-cycle2-day-22-arraylist-remove-all-even-numbers",
+   "retire": "unit-4-cycle-2-day-22-arraylist-remove-all-even-numbers",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-23-2d-array-row-sums",
+   "keep": "unit4-cycle2-day-23-2d-array-row-sums",
+   "retire": "unit-4-cycle-2-day-23-2d-array-row-sums",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u4c2-day-24-arraylist-null-element",
+   "keep": "unit4-cycle2-day-24-arraylist-null-element",
+   "retire": "unit-4-cycle-2-day-24-arraylist-null-element",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-25-selection-sort-iteration",
+   "keep": "unit4-cycle2-day-25-selection-sort-iteration",
+   "retire": "unit-4-cycle-2-day-25-selection-sort-iteration",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-26-arraylist-loop-adding",
+   "keep": "unit4-cycle2-day-26-arraylist-loop-adding",
+   "retire": "unit-4-cycle-2-day-26-arraylist-loop-adding",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u4c2-day-27-2d-array-edge-elements",
+   "keep": "unit4-cycle2-day-27-2d-array-edge-elements",
+   "retire": "unit-4-cycle-2-day-27-2d-array-edge-elements",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-28-arraylist-equality",
+   "keep": "unit4-cycle2-day-28-arraylist-equality",
+   "retire": "unit-4-cycle-2-day-28-arraylist-equality",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "C",
+   "retire_key": "C"
+  },
+  {
+   "key": "u4c2-day-3-arraylist-remove-during-iteration",
+   "keep": "unit4-cycle2-day-3-arraylist-remove-during-iteration",
+   "retire": "unit-4-cycle-2-day-3-arraylist-remove-during-iteration",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "A",
+   "retire_key": "A"
+  },
+  {
+   "key": "u4c2-day-4-array-vs-arraylist",
+   "keep": "unit4-cycle2-day-4-array-vs-arraylist",
+   "retire": "unit-4-cycle-2-day-4-array-vs-arraylist",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u4c2-day-5-2d-array-initialization",
+   "keep": "unit4-cycle2-day-5-2d-array-initialization",
+   "retire": "unit-4-cycle-2-day-5-2d-array-initialization",
+   "verdict": "review",
+   "why": "same stem and options but DIFFERENT code, so these are two working variants rather than a duplicate",
+   "keep_key": "D",
+   "retire_key": "D"
+  },
+  {
+   "key": "u4c2-day-6-arraylist-wrapper-types",
+   "keep": "unit4-cycle2-day-6-arraylist-wrapper-types",
+   "retire": "unit-4-cycle-2-day-6-arraylist-wrapper-types",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-7-linear-search",
+   "keep": "unit4-cycle2-day-7-linear-search",
+   "retire": "unit-4-cycle-2-day-7-linear-search",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-8-arraylist-get-vs-set",
+   "keep": "unit4-cycle2-day-8-arraylist-get-vs-set",
+   "retire": "unit-4-cycle-2-day-8-arraylist-get-vs-set",
+   "verdict": "redirect",
+   "why": "byte-identical bodies",
+   "keep_key": "B",
+   "retire_key": "B"
+  },
+  {
+   "key": "u4c2-day-9-2d-array-column-major-traversal",
+   "keep": "unit4-cycle2-day-9-2d-array-column-major-traversal",
+   "retire": "unit-4-cycle-2-day-9-2d-array-column-major-traversal",
+   "verdict": "redirect",
+   "why": "same question, options in a different order",
+   "keep_key": "B",
+   "retire_key": "C"
+  }
+ ]
+}
