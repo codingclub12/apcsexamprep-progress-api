@@ -7,6 +7,30 @@ block is replaced with the one the question is actually about.
 sheets are here as the fallback, and the combined sheet is proved row for row
 against them.
 
+## Step 0, run this before you click import
+
+```
+node scripts/verify-csa-u2c2-live.js
+```
+
+It must read **19 pending, 0 imported, 0 drifted**. That is the green light.
+
+Anything else and **do not import**. `drifted` means the live page changed since
+these sheets were generated, so the sheet now carries an older body than what is
+serving, and MERGE would put the old one back with no undo and nothing saying so.
+A Command Center sheet nearly did exactly that on 2026-09-08: it sat for a day
+while somebody renumbered the page onto CED lesson ids, it still applied cleanly,
+and importing it would have reverted the better fix. Regenerate off current live
+bodies instead:
+
+```
+node scripts/csa-qotd-u2c2-repair.js <fresh-bodies> imports/2026-09-18-csa-qotd-343
+```
+
+Run the same command again after the import. It should then read 19 imported.
+Checked 2026-09-18 at 14:31 UTC: 19 pending, and all 20 committed sheets
+regenerate byte-identically from bodies fetched live at that moment.
+
 ## Read this before importing: the recommendation changed
 
 You were told the choice was between restoring each twin's code, which would

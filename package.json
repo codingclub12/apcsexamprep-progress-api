@@ -344,6 +344,7 @@
     "csa:2026frqsheet": "node scripts/csa-past-frq-pages-csv.js",
     "smoke:hubcard": "node smoke/csa-unit-hub-resource-card.js",
     "smoke:u2c2": "node smoke/csa-qotd-u2c2-repair.js",
+    "verify:u2c2": "node scripts/verify-csa-u2c2-live.js",
     "csa:u2c2repair": "node scripts/csa-qotd-u2c2-repair.js",
     "csa:u2c2data": "node scripts/csa-u2c2-build-restore.js"
   },

@@ -135,9 +135,88 @@ refuses('an expected output that disagrees with what the code prints', (r) => { 
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
+// ── 7. the LIVE check, which has to be able to say "stale" ───────────────────
+//  scripts/verify-csa-u2c2-live.js is what gets run before the import, not only
+//  after it. Its whole value is the `drifted` verdict: a sheet generated against
+//  a body that has since changed would MERGE the old body back over the new one,
+//  and MERGE has no undo. A classifier that cannot tell a changed page from an
+//  unimported one would call every stale sheet "safe to import".
+//
+//  So the mutation that matters is the one that leaves the anchor intact and
+//  changes the page anyway. That is the 2026-09-08 shape exactly: the sheet
+//  still applied cleanly, and applying it would still have reverted a fix.
+{
+  const V = require('../scripts/verify-csa-u2c2-live.js');
+
+  //  One classify per article, not two. classify hands back the repaired body it
+  //  already built, so the `imported` direction costs no second JVM run.
+  let pend = 0; let imp = 0;
+  rows.forEach((r) => {
+    const c = V.classify(live(r.handle), r);
+    if (c.state === 'pending') pend++;
+    else { bad(r.handle + ': the pre-import body does not classify as ' + c.state + ', not pending'); return; }
+
+    if (V.classify(c.repaired, r).state === 'imported') imp++;
+    else bad(r.handle + ': the repaired body does not classify as imported');
+  });
+  eq(pend, 19, 'all nineteen pre-import bodies read as pending');
+  eq(imp, 19, 'all nineteen repaired bodies read as imported');
+
+  const drifts = (label, mutate) => {
+    const r = rows.find((x) => x.handle === H);
+    const got = V.classify(mutate(live(H)), r).state;
+    if (got !== 'drifted') bad('the live check called a changed page ' + got + ', not drifted: ' + label);
+  };
+  //  THE ONE THAT CARRIES THE POINT: the anchor still matches, the repair still
+  //  applies, and the page is not the one the sheet was built from.
+  drifts('a change outside the code block, anchor still intact',
+    (b) => b + '\n<!-- somebody edited this page after the sheet was generated -->');
+  drifts('a reworded explanation', (b) => b.replace('Why This Answer', 'Why this answer'));
+  drifts('a posted code block the anchor no longer finds',
+    (b) => b.replace('<div class="apcs-code-block">', '<div class="apcs-code-block" data-x="1">'));
+
+  //  Board 292's NBSP stripping is tolerated, and that tolerance must not be a
+  //  blanket one. Asserted on synthetic strings ON PURPOSE: the first cut of
+  //  this block only ran `if (wantBody.indexOf('\u00a0') !== -1)`, and NONE of
+  //  the 19 sheet bodies contains a non-breaking space, so it never executed. It
+  //  read like coverage of the tolerance and tested nothing. A guard conditioned
+  //  on data that does not exist is the hollow-guard failure this repo keeps
+  //  paying for, so the cases are constructed rather than hoped for.
+  const nb = '\u00a0';
+  //  Named sheet/served rather than want/live: `live` is the fixture reader a few
+  //  lines up, and shadowing it here would read like a call to it.
+  const tol = (sheet, served, expect, what) => {
+    const got = V.sameAsSheet(sheet, served).same;
+    if (got !== expect) bad('sameAsSheet(' + JSON.stringify(sheet) + ', ' + JSON.stringify(served)
+      + ') returned ' + got + ', expected ' + expect + ': ' + what);
+  };
+  tol('a' + nb + 'b', 'a b', true, 'a sheet NBSP served as a plain space IS the sheet, board 292');
+  tol('a' + nb + nb + 'b', 'a  b', true, 'more than one of them is still the sheet');
+  tol('a' + nb + 'b', 'a' + nb + 'b', true, 'an untouched body is the sheet');
+  tol('a b', 'a' + nb + 'b', false, 'the tolerance is one-directional: import strips them, it does not add them');
+  tol('ab', 'ac', false, 'an ordinary character difference is not the sheet');
+  tol('ab', 'ab ', false, 'a trailing addition is not the sheet');
+  tol('ab', 'a', false, 'a truncated body is not the sheet');
+  //  And the note has to name the count, because that is what a human reads to
+  //  decide whether a difference was benign.
+  {
+    const r = V.sameAsSheet('a' + nb + 'b' + nb + 'c', 'a b c');
+    if (!r.same || !/2 non-breaking space/.test(r.note || '')) {
+      bad('sameAsSheet did not report the NBSP count it tolerated, got ' + JSON.stringify(r));
+    }
+  }
+
+  //  The sheet on disk is the one this check compares against, so a missing or
+  //  multi-row sheet must be a refusal rather than a quiet pass.
+  try { V.sheetBody('unit-2-cycle-2-day-does-not-exist'); bad('sheetBody accepted a handle with no sheet'); }
+  catch (e) { /* expected */ }
+}
+
 console.log(failed === 0
   ? '\ncsa-qotd-u2c2-repair: 19 articles, each proved broken before and agreeing after on a real '
-    + 'JVM, only the code block moved, 5 guard mutations, 2 combined-sheet mutations, and the '
-    + 'day 10 case pinned as the evidence that the code was the drifted half. All pass.'
+    + 'JVM, only the code block moved, 5 guard mutations, 2 combined-sheet mutations, the live '
+    + 'check proved able to call a changed page stale on 3 mutations, 9 assertions on the board 292 '
+    + 'NBSP tolerance, and the day 10 case pinned '
+    + 'as the evidence that the code was the drifted half. All pass.'
   : '\ncsa-qotd-u2c2-repair: ' + failed + ' failure(s).');
 process.exit(failed ? 1 : 0);
