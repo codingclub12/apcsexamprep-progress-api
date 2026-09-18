@@ -59,6 +59,18 @@ curl -sS -o /dev/null -w "%{http_code} %{redirect_url}\n" \
 - **301** and the new index page exists but nobody can reach it. **Delete that
   redirect** in Shopify Admin, then re-run the curl and expect 200.
 
+**ANSWERED 2026-09-18: it is the first case.** The import created the page and
+the handle now serves 200. Shopify treats a URL redirect as inert once a real
+page occupies the path, so the redirect did not need deleting. Recorded here so
+the next person does not re-derive it.
+
+**AND A SECOND THING WORTH KNOWING: the pages do not appear instantly.** Checked
+minutes after an import that reported OK on all five rows, every handle still
+answered 404, on the rendered route and on `.json` alike. They were all 200 a
+short while later. So a 404 straight after a clean import is propagation, not
+failure. Read the import result first and believe it over one impatient curl:
+`Import Result: OK` with `Import Comment: NEW` means the page exists.
+
 Either way the four question pages are unaffected: none of them has a redirect.
 
 This matters more than it looks, because the archive hub already links
