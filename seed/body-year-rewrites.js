@@ -25,17 +25,40 @@
 //  docs/ced-snapshot/exam-dates.txt captured 2026-09-01. A page saying "the day
 //  before" becomes false by moving its numbers, so the sentence is rewritten.
 //
-//  The start time is deliberately DROPPED rather than moved. The CED says
-//  Session 1 is 8 a.m. local and Session 2 is noon, but the captured text is
-//  flattened out of its two columns, so which session holds CSA in 2027 cannot
-//  be read from it. The page keeps its link to the College Board calendar and
-//  no longer asserts a time this repo cannot source.
+//  The start time was deliberately DROPPED from the visible prose rather than
+//  moved. The CED says Session 1 is 8 a.m. local and Session 2 is noon, but
+//  exam-dates.txt is flattened out of its two columns, so which session holds
+//  CSA could not be read from it.
+//
+//  THAT IS NO LONGER TRUE, as of 2026-09-18. Board 367 added College Board's
+//  own AP CSA and AP CSP exam pages to config/ced-sources.json, and each one
+//  states its session outright:
+//
+//      docs/ced-snapshot/csa-exam.txt:62   Wed, May 12, 2027 | Session 2
+//      docs/ced-snapshot/csp-exam.txt:68   Fri, May 14, 2027 | Session 1
+//
+//  With exam-dates.txt giving 8 a.m. and 12 p.m. local for the two sessions,
+//  CSA is an afternoon exam and CSP a morning one, both first-party and both
+//  re-derivable from this repo. The visible prose is left alone here anyway,
+//  because those pages were imported on 2026-09-18 and re-opening their copy to
+//  add a sentence is a separate decision from fixing a countdown. Recorded so
+//  the next pass restores the time on purpose rather than rediscovering it.
 // ─────────────────────────────────────────────────────────────────────────────
 
 //  First-party, docs/ced-snapshot/exam-dates.txt, captured 2026-09-01.
 const EXAM = {
   csa: 'Wednesday, May 12, 2027',
   csp: 'Friday, May 14, 2027',
+};
+
+//  The same two dates in the form a countdown reads, with the session's local
+//  start time from docs/ced-snapshot/csa-exam.txt and csp-exam.txt. They are
+//  kept beside EXAM rather than written into an edit string because the two
+//  drifting apart is precisely the bug this file exists to fix, and
+//  smoke/body-year-csv.js asserts they still name the same day.
+const EXAM_ISO = {
+  csa: '2027-05-12T12:00:00',   //  Session 2, afternoon
+  csp: '2027-05-14T08:00:00',   //  Session 1, morning
 };
 
 const PAGES = [
@@ -275,6 +298,23 @@ const PAGES = [
         find: 'The 2026 AP Computer Science', replace: 'The 2027 AP Computer Science' },
       { count: 1, why: 'freshness line under the lesson count',
         find: 'Updated for the May 2026 exam.', replace: 'Updated for the May 2027 exam.' },
+      //  ── THE ONE THE FIRST PASS MISSED, AND THE WORST ONE ON THE PAGE ───────
+      //  This attribute feeds the page's own countdown script, which renders a
+      //  target in the past as the words "Exam complete, great work!". Measured
+      //  in Chromium on 2026-09-18 against the live stored body, the Quick
+      //  Access header read:
+      //
+      //      Quick Access, Exam complete, great work!
+      //
+      //  to anyone landing on the CSA hub in September. The first pass rewrote
+      //  eleven visible strings on this page and never looked inside an
+      //  attribute value, and the generator's own stale check could not have
+      //  told me: it read "2026-05" as a school-year span and stripped it.
+      //  scripts/body-year-csv.js now judges ISO dates before anything can eat
+      //  them, with eight mutations behind that rule.
+      { count: 1, why: 'the countdown target, still aimed at an exam four months gone',
+        find: 'data-exam-iso="2026-05-15T12:00:00"',
+        replace: `data-exam-iso="${EXAM_ISO.csa}"` },
       //  "New 2026" in the comparison table is NOT edited. It badges the 4-unit
       //  rewrite, which happened in 2026, so moving it to 2027 would assert that
       //  something changed this year. Same for the FRQ archive links, 2020 to
@@ -442,4 +482,4 @@ const TITLES = [
     why: 'renders as the first h1; drops the year rather than moving it, matching the body h1 and the SEO title' },
 ];
 
-module.exports = { PAGES, EXAM, TITLES };
+module.exports = { PAGES, EXAM, EXAM_ISO, TITLES };
