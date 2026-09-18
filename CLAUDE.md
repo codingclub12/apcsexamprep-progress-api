@@ -896,6 +896,26 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   in aggregate: a suite that goes red for a different rule is telling you the rule
   you meant to test is hollow. Two guards here were found hollow on 2026-09-02 and a
   third on 2026-09-03, which is why this is a convention rather than a suggestion.
+- **NEVER `git add -A` WHILE A SUITE IS RUNNING. Stage explicit paths.** The ten
+  `smoke/*-mutation.js` harnesses write their sabotage straight into `lib/`,
+  `routes/`, `public/` and `shopify/`, and restore the file when they exit. A
+  staging command that takes everything takes whatever is mid-flight, and the
+  window is the length of one suite.
+  On 2026-09-18 that put `headers['X-Not-In-Reply-To']` into
+  `lib/assistant/report.js` inside a 2,235 line commit about a countdown timer,
+  where nobody reading the diff would have looked for it. Every follow-up report
+  mail would have quoted a header no client honours. The suite that owns that
+  line was green the whole time, because by then the harness had put the file
+  back and was testing the restored copy.
+  The consequence is now closed mechanically: `npm run smoke:mutationleak` reads
+  every harness's declarations and its target files and fails if any target holds
+  a `repl` without its `find`, or if a `find` has vanished from all of them. It
+  rides `Offline smoke suites`, which is a required check on `main`, so a
+  committed mutation cannot merge. `docs/runs/2026-09-18-claude-code-mutation-leak-guard.md`
+  has the method and the one mistake worth knowing: `${x}` is interpolation only
+  inside a BACKTICK literal, and treating it as interpolation everywhere made an
+  earlier draft skip 14 pairs and report a damaged tree clean.
+  The guard closes the consequence, not the habit. Stage explicit paths.
 - **The mojibake rule, and why the obvious version of it is wrong.**
   `smoke/encoding-guard.js` is the guard and `npm run smoke:encoding` runs it. Its
   method is right and worth understanding before touching it: mojibake is
