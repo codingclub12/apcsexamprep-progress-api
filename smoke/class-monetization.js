@@ -1,0 +1,611 @@
+'use strict';
+// -----------------------------------------------------------------------------
+//  SMOKE: the classroom ad-revenue model says what it knows, and says null for
+//  what it does not.
+//
+//  WHY THIS EXISTS
+//  The model in lib/class-monetization.js exists to answer "what is a 28 student
+//  class worth in ads per year", and that number is going to be used to price a
+//  teacher product. A pricing model that quietly reports 0 where it means "no
+//  reading" is worse than no model: it makes an unmeasured class look like a
+//  worthless one, and the whole argument for charging money inverts.
+//
+//  So the rules pinned here are the ones that make the number trustworthy rather
+//  than the ones that make it exist:
+//
+//   - a measured pageview beats an estimated one, and the basis is always stated
+//   - a missing RPM reading yields null, NEVER 0
+//   - a class too small to anonymise reports nothing about its behaviour
+//   - owner / prober / audit classes never set the rate real schools are priced against
+//   - annualisation divides by ACTIVE days, so a holiday is not a collapse
+//   - the maturity stage is DERIVED from joint coverage; a caller cannot assert it
+//
+//  Offline and secret-free: throwaway SQLite file, no network, no live server.
+//  Zero PII: synthetic classes, numbers only.
+//  No em-dashes, per repo convention.
+//
+//  Run: npm run smoke:classmonetization
+// -----------------------------------------------------------------------------
+const path = require('path');
+const fs = require('fs');
+process.env.DB_PATH = path.join(__dirname, 'smoke-class-monetization.db');
+for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
+
+//  Admin keys are set BEFORE the router is required, because requireAdmin reads
+//  process.env at call time but the router is built at require time.
+const FULL_KEY = 'smoke-class-monetization-full-key-long-enough';
+const READ_KEY = 'smoke-class-monetization-read-key-long-enough';
+process.env.ADMIN_KEY = FULL_KEY;
+process.env.ADMIN_READ_KEY = READ_KEY;
+
+const express = require('express');
+const db = require('../db');
+const cm = require('../lib/class-monetization');
+
+let pass = 0, fail = 0;
+const ok = (n, c, x) => {
+  if (c) { pass++; console.log('  [PASS] ' + n); }
+  else { fail++; console.log('  [FAIL] ' + n + (x !== undefined ? '  ' + JSON.stringify(x) : '')); }
+};
+const run = (s, ...a) => db.prepare(s).run(...a);
+
+// -- fixtures -----------------------------------------------------------------
+//  Four classes, chosen so each one exercises a different rule:
+//    c_meas   instrumented: has real session pageviews, sets the calibration
+//    c_est    not instrumented: pageviews must be estimated from graded events
+//    c_small  3 active students: must be suppressed
+//    c_owner  Tanner's own test class: must never influence a rate or a scenario
+const DAYS = [1, 2, 3, 4];                       // four distinct active days
+const day = (n) => `datetime('now', '-${n} days')`;
+const dateOf = (n) => `date('now', '-${n} days')`;
+
+run(`INSERT INTO teachers (id,name,email,password_hash) VALUES
+ ('t_ext','Ext Teacher','ext@school.org','x'),
+ ('t_paid','Paid Teacher','paid@school.org','x'),
+ ('t_solo','Solo','solo@system.invalid','x'),
+ ('t_own','Tanner','tannercrow12@gmail.com','x')`);
+
+run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,mastery_threshold,retry_allowed) VALUES
+ ('c_meas','t_paid','CSA-MEAS','Measured','ap-csa',1,80,0),
+ ('c_est','t_ext','CSA-EST','Estimated','ap-csa',1,80,0),
+ ('c_small','t_ext','CSA-SMALL','Small','ap-csa',1,80,0),
+ ('c_solo','t_solo','ME-0001','Solo Group','solo',1,80,1),
+ ('c_owner','t_own','CSA-OWNER','Owner Test','ap-csa',1,80,0)`);
+
+// t_paid holds a live entitlement for ap-csa, so c_meas is the premium tier.
+run(`INSERT INTO entitlements (id,teacher_id,course,source,status) VALUES
+ ('e1','t_paid','ap-csa','shopify_order','active')`);
+
+const addStudents = (cls, n) => {
+  for (let i = 1; i <= n; i++) {
+    run(`INSERT INTO students (id,class_id,display_name,pin_hash,active) VALUES (?,?,?,'x',1)`,
+      `${cls}_s${i}`, cls, `S${i}`);
+  }
+};
+addStudents('c_meas', 10);
+addStudents('c_est', 10);
+addStudents('c_small', 3);
+addStudents('c_solo', 8);
+addStudents('c_owner', 10);
+
+//  Graded events, spread evenly across students and days so that
+//  active_students and active_days are both exactly what the fixture says.
+const exactEvents = (cls, students, total) => {
+  // Spread `total` events evenly across students and DAYS, deterministically.
+  let made = 0;
+  outer: while (made < total) {
+    for (let s = 1; s <= students; s++) {
+      for (const d of DAYS) {
+        if (made >= total) break outer;
+        run(`INSERT INTO score_events (id,student_id,class_id,course,unit,lesson,activity_type,item,points,max_points,created_at)
+             VALUES (lower(hex(randomblob(8))),?,?,'ap-csa','unit-1','1.1','cfu',?,1,1,${day(d)})`,
+          `${cls}_s${s}`, cls, `q${made}`);
+        made++;
+      }
+    }
+  }
+};
+exactEvents('c_meas', 10, 100);
+exactEvents('c_est', 10, 50);
+exactEvents('c_small', 3, 12);
+exactEvents('c_solo', 8, 800);   // heavy: would dominate the rate if it leaked in
+exactEvents('c_owner', 10, 1000);
+
+//  Sessions. Only c_meas and c_owner are instrumented. 400 pageviews across the
+//  four days for c_meas; a deliberately huge 90000 for the owner class, so that
+//  a calibration which failed to exclude it would be off by an order of
+//  magnitude and could not pass by luck.
+const addSession = (cls, sid, d, pv, activeS) => run(
+  `INSERT INTO sessions (id,student_id,class_id,course,active_seconds,total_seconds,page_views,ua,started_at,last_beat_at)
+   VALUES (lower(hex(randomblob(8))),?,?,'ap-csa',?,?,?,'ua',${day(d)},${day(d)})`,
+  sid, cls, activeS, activeS, pv);
+
+for (const d of DAYS) {
+  for (let s = 1; s <= 10; s++) addSession('c_meas', `c_meas_s${s}`, d, 10, 600);  // 4*10*10 = 400 pv
+  for (let s = 1; s <= 10; s++) addSession('c_owner', `c_owner_s${s}`, d, 2250, 60); // 90000 pv
+}
+
+//  Site revenue: Raptive RPM of $12.00 on the same four days, so joint coverage
+//  is exactly four days.
+for (const d of DAYS) {
+  run(`INSERT INTO metrics_daily (date,source,metric,value,dimension) VALUES (${dateOf(d)},'raptive','rpm',12.0,'')`);
+}
+
+// -- 1. the funnel counts what the fixture says -------------------------------
+const f = cm.funnel({ days: 30 });
+const byId = Object.fromEntries(f.rows.map((r) => [r.class_id, r]));
+ok('c_meas: 10 enrolled, 10 active, 4 active days', byId.c_meas.enrolled === 10
+  && byId.c_meas.active_students === 10 && byId.c_meas.active_days === 4,
+  { enrolled: byId.c_meas.enrolled, active: byId.c_meas.active_students, days: byId.c_meas.active_days });
+ok('c_meas: 400 measured pageviews, 100 graded events',
+  byId.c_meas.page_views_measured === 400 && byId.c_meas.graded_events === 100,
+  { pv: byId.c_meas.page_views_measured, ev: byId.c_meas.graded_events });
+ok('c_est: no measured pageviews, 50 graded events',
+  byId.c_est.page_views_measured === 0 && byId.c_est.graded_events === 50,
+  { pv: byId.c_est.page_views_measured, ev: byId.c_est.graded_events });
+ok('tier comes from the entitlement, not the course: c_meas premium, c_est free',
+  byId.c_meas.tier === 'premium' && byId.c_est.tier === 'free',
+  { meas: byId.c_meas.tier, est: byId.c_est.tier });
+ok('the owner class is classified excluded', byId.c_owner.tier === 'excluded', byId.c_owner.tier);
+
+// -- 2. calibration ignores the excluded cohort -------------------------------
+const cal = cm.calibration(f);
+ok('pageviews_per_event is 4.0, derived from c_meas alone',
+  cal.pageviews_per_event === 4 && cal.from_classes === 1, cal);
+
+// -- 3. pricing arithmetic ----------------------------------------------------
+const rep = cm.report({ days: 30 });
+const pByCode = Object.fromEntries(rep.classes.map((r) => [r.class_code, r]));
+
+ok('site RPM reads 12.00 from metrics_daily', rep.site_revenue.rpm_usd === 12
+  && rep.site_revenue.basis === 'reported', rep.site_revenue);
+
+//  measured: 400 pv / 4 active days = 100/day; x180 school days = 18000/yr
+//  18000/1000 x $12 = $216.00
+ok('c_meas is priced on the MEASURED basis at $216.00/yr',
+  pByCode['CSA-MEAS'].pageview_basis === 'measured'
+  && pByCode['CSA-MEAS'].est_annual_pageviews === 18000
+  && pByCode['CSA-MEAS'].est_annual_revenue_usd === 216,
+  { basis: pByCode['CSA-MEAS'].pageview_basis, pv: pByCode['CSA-MEAS'].est_annual_pageviews, usd: pByCode['CSA-MEAS'].est_annual_revenue_usd });
+
+//  estimated: 50 events x 4.0 = 200 pv / 4 days = 50/day; x180 = 9000/yr = $108.00
+ok('c_est is priced on the ESTIMATED basis at $108.00/yr',
+  pByCode['CSA-EST'].pageview_basis === 'estimated'
+  && pByCode['CSA-EST'].est_annual_pageviews === 9000
+  && pByCode['CSA-EST'].est_annual_revenue_usd === 108,
+  { basis: pByCode['CSA-EST'].pageview_basis, pv: pByCode['CSA-EST'].est_annual_pageviews, usd: pByCode['CSA-EST'].est_annual_revenue_usd });
+
+ok('the estimated row carries a WIDER band than the measured row',
+  (pByCode['CSA-EST'].est_annual_revenue_band.high / pByCode['CSA-EST'].est_annual_revenue_usd)
+  > (pByCode['CSA-MEAS'].est_annual_revenue_band.high / pByCode['CSA-MEAS'].est_annual_revenue_usd),
+  { est: pByCode['CSA-EST'].est_annual_revenue_band, meas: pByCode['CSA-MEAS'].est_annual_revenue_band });
+
+// -- 4. k-anonymity -----------------------------------------------------------
+const small = pByCode['CSA-SMALL'];
+ok('a 3 student class is suppressed', small.suppressed === true, small.suppressed_reason);
+ok('a suppressed class reports NULL behaviour, not zero',
+  small.page_views === null && small.est_annual_pageviews === null && small.est_annual_revenue_usd === null,
+  { pv: small.page_views, apv: small.est_annual_pageviews, usd: small.est_annual_revenue_usd });
+
+// -- 5. scenarios --------------------------------------------------------------
+//  pooled: (18000 + 9000) pv over (10 + 10) active students = 1350 pv/student/yr
+//  25 students -> 33750 pv -> $405.00
+//  THE POOL TAKES THE SMALL CLASS, and this is the correction that made the
+//  model usable at all. The k-anonymity floor protects a per-class ROW; it is
+//  not a reason to drop that class from a total, any more than a census drops
+//  its smallest towns. Benchmarked against the live shape (637 active classes,
+//  1826 active students, so 2.9 a class) the first cut suppressed every row and
+//  returned a null scenario table: the tool answered nothing on the only data
+//  it will ever see.
+//
+//    c_meas   18000 annual pv, 10 active students   measured
+//    c_est     9000 annual pv, 10 active students   estimated
+//    c_small   2160 annual pv,  3 active students   estimated, and SUPPRESSED in its own row
+//    pooled   29160 pv over 23 students = 1267.8 -> 1268
+const sc = rep.scenarios;
+const row25 = sc.rows.find((r) => r.students === 25);
+ok('pooled rate is 1268 annual pageviews per active student',
+  sc.annual_pageviews_per_active_student === 1268, sc.annual_pageviews_per_active_student);
+ok('a class suppressed in its own row STILL counts toward the pooled rate',
+  sc.from_classes === 3 && sc.from_active_students === 23,
+  { classes: sc.from_classes, students: sc.from_active_students });
+ok('and it is still suppressed in its own row', pByCode['CSA-SMALL'].suppressed === true);
+ok('a 25 student class models at $380.35/yr', row25.est_annual_revenue_usd === 380.35, row25);
+ok('scenarios scale linearly with class size',
+  sc.rows.find((r) => r.students === 50).est_annual_revenue_usd === 760.69
+  && sc.rows.find((r) => r.students === 100).est_annual_revenue_usd === 1521.4,
+  sc.rows.map((r) => [r.students, r.est_annual_revenue_usd]));
+ok('the owner class did not inflate the pooled rate',
+  sc.from_active_students === 23 && sc.from_classes === 3,
+  { students: sc.from_active_students, classes: sc.from_classes });
+
+//  SOLO ACCOUNTS DO NOT SET A CLASSROOM RATE. c_solo has 8 active students and
+//  800 graded events, which is heavier than both teacher classes put together;
+//  if it leaked into the pool the rate would move a long way. This is a
+//  modelling judgement rather than a privacy one: the scenario table answers
+//  "what is a 28 student classroom worth", and a self-study student working
+//  alone is a different population from a class assigned work by a teacher.
+ok('the solo group is in the report', !!pByCode['ME-0001'], Object.keys(pByCode));
+ok('the solo group did NOT move the classroom rate',
+  sc.annual_pageviews_per_active_student === 1268 && sc.from_classes === 3,
+  { rate: sc.annual_pageviews_per_active_student, classes: sc.from_classes });
+ok('but the solo group IS reported in by_tier, not silently dropped',
+  rep.by_tier.reduce((n, t) => n + t.classes, 0) === rep.classes.length,
+  rep.by_tier.map((t) => [t.tier, t.classes]));
+
+//  THE FLOOR MOVED TO THE POOL. A rate built from one or two rooms is that
+//  room's rate wearing a general-sounding name, so the pool refuses below
+//  MIN_POOL_CLASSES classes or MIN_POOL_STUDENTS active students, and says
+//  which. Pinned directly, because the fixture above is deliberately over both.
+//  24 active students, deliberately OVER MIN_POOL_STUDENTS, so this isolates
+//  the class-count floor. A fixture under both floors passes whichever one is
+//  left standing and cannot tell you which was doing the work.
+const thinPool = cm.pooledRate(
+  [{ cohort: 'EXTERNAL', tier: 'free', active_students: 12, active_days: 4, page_views_measured: 400, graded_events: 10 },
+   { cohort: 'EXTERNAL', tier: 'free', active_students: 12, active_days: 4, page_views_measured: 400, graded_events: 10 }],
+  { pageviews_per_event: 4, from_classes: 1, basis: 'measured_classes' });
+ok('a pool of 2 classes refuses to produce a rate even with enough students',
+  thinPool.rate === null, thinPool);
+ok('and it says why, naming both thresholds',
+  /too small/.test(thinPool.reason || '') && /2 class/.test(thinPool.reason || ''), thinPool.reason);
+const fatPool = cm.pooledRate(
+  [0, 1, 2].map(() => ({ cohort: 'EXTERNAL', tier: 'free', active_students: 9, active_days: 4, page_views_measured: 400, graded_events: 10 })),
+  { pageviews_per_event: 4, from_classes: 1, basis: 'measured_classes' });
+ok('a pool of 3 classes and 27 students does produce one', fatPool.rate === 2000, fatPool);
+
+//  THE REPORT MUST TIE OUT TO ITSELF. A reader checking the arithmetic by hand
+//  takes the pageview figure the row states and multiplies it by the RPM the
+//  report states. If that does not land on the money the row states, the report
+//  is not checkable, whichever number happens to be 'right'.
+//
+//  PINNED ON AWKWARD NUMBERS ON PURPOSE. The fixture above is deliberately
+//  round (18000 and 9000 annual pageviews at a $12.00 RPM), and at those sizes
+//  rounding before or after pricing gives the same cents, so the fixture cannot
+//  see this defect at all. It shows up on small classes: 4 pageviews over 7
+//  active days annualises to 102.857, and $9.37 RPM prices the unrounded figure
+//  at $0.96 and the reported 103 at $0.97. Found by
+//  scripts/class-monetization-rederive.js, which disagreed on 2 of 24 generated
+//  classes before the module was changed to round first and price second.
+const CAL1 = { pageviews_per_event: 4, from_classes: 1, basis: 'measured_classes' };
+const awkward = (pv, days) => cm.priceRow(
+  { class_id: 'a', class_code: 'A', course: 'ap-csa', cohort: 'EXTERNAL', tier: 'free',
+    enrolled: 10, active_students: 10, active_days: days, sessions: days,
+    page_views_measured: pv, active_minutes: 10, graded_events: 10 },
+  CAL1, 9.37);
+const awkwardBad = [[4, 7], [5, 7], [6, 7], [9, 7], [12, 7], [15, 7]]
+  .map(([pv, d]) => awkward(pv, d))
+  .filter((r) => r.est_annual_revenue_usd
+    !== Math.round(((r.est_annual_pageviews / 1000) * 9.37) * 100) / 100);
+ok('a small class ties its money to its own stated pageviews', awkwardBad.length === 0,
+  awkwardBad.map((r) => ({ pv: r.est_annual_pageviews, usd: r.est_annual_revenue_usd })));
+
+const tieOut = rep.classes.filter((r) => r.est_annual_revenue_usd != null)
+  .filter((r) => r.est_annual_revenue_usd
+    !== Math.round(((r.est_annual_pageviews / 1000) * rep.site_revenue.rpm_usd) * 100) / 100);
+ok('every priced class ties its money to its own stated pageviews', tieOut.length === 0,
+  tieOut.map((r) => ({ code: r.class_code, pv: r.est_annual_pageviews, usd: r.est_annual_revenue_usd })));
+
+//  A fractional pageview count is not a number a report may print. The scenario
+//  table multiplies a pooled rate by a class size, which is fractional far more
+//  often than not, so this is the rule that keeps the table readable.
+const fractional = cm.scenarios(
+  { rate: 150 / 12, from_classes: 3, from_active_students: 12, any_measured: true },
+  9.37, [25, 28, 55]);
+ok('every scenario row reports a WHOLE number of pageviews',
+  fractional.rows.every((r) => Number.isInteger(r.est_annual_pageviews)),
+  fractional.rows.map((r) => r.est_annual_pageviews));
+ok('every scenario row ties its money to its own stated pageviews',
+  fractional.rows.every((r) => r.est_annual_revenue_usd
+    === Math.round(((r.est_annual_pageviews / 1000) * 9.37) * 100) / 100),
+  fractional.rows);
+
+// -- 5b. ENGAGEMENT: time on TASK, cadence, and device mix --------------------
+//  A fresh class, added after the scenario assertions above so it cannot move
+//  their arithmetic. Its durations include a deliberate outlier, because the
+//  whole reason this reports a median is that duration_seconds is wall clock
+//  and a student who opens a quiz and goes to lunch contributes an hour.
+run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,mastery_threshold,retry_allowed)
+     VALUES ('c_eng','t_ext','CSA-ENG','Engagement','ap-csa',1,80,0)`);
+addStudents('c_eng', 6);
+
+const UAS = [
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',            // mobile
+  'Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15',                     // tablet
+  'Mozilla/5.0 (Linux; Android 13; SM-X200) AppleWebKit/537.36 Safari/537.36',              // tablet: Android, no Mobi
+  'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 Mobile Safari/537.36',       // mobile: Mobi
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120',          // desktop
+  '',                                                                                        // unknown
+];
+//  Four timed, two untimed, so coverage is 4 of 6 rather than a silent 100%.
+const DURS = [10, 20, 30, 1000, null, null];
+for (let i = 0; i < 6; i++) {
+  run(`INSERT INTO attempts (student_id,class_id,course,lesson_id,item_id,item_type,score,max_score,passed,attempt_no,duration_seconds,ua,created_at)
+       VALUES (?,'c_eng','ap-csa','1.1','1.1-quiz','quiz',8,10,1,1,?,?,${day(DAYS[0])})`,
+    'c_eng_s' + (i + 1), DURS[i], UAS[i]);
+}
+//  One timed attempt on the SUPPRESSED class, so the suppression test below is
+//  hiding a real value rather than an absent one.
+run(`INSERT INTO attempts (student_id,class_id,course,lesson_id,item_id,item_type,score,max_score,passed,attempt_no,duration_seconds,ua,created_at)
+     VALUES ('c_small_s1','c_small','ap-csa','1.1','1.1-quiz','quiz',8,10,1,1,120,?,${day(DAYS[0])})`, UAS[0]);
+
+const eng = cm.report({ days: 30 });
+const engRow = eng.classes.find((r) => r.class_code === 'CSA-ENG');
+
+//  10, 20, 30, 1000 -> median 25. The MEAN is 265, which is larger than three
+//  of the four real values and would read as a class that takes four minutes an
+//  item when it takes twenty five seconds.
+ok('median task seconds is 25, not the mean of 265',
+  engRow.median_task_seconds === 25, engRow.median_task_seconds);
+ok('task minutes sums the timed items only (1060s -> 18 min)',
+  engRow.task_minutes === 18, engRow.task_minutes);
+ok('coverage says 4 of 6 attempts carried a duration',
+  engRow.task_items_timed === 4 && engRow.task_time_coverage === 66.7,
+  { timed: engRow.task_items_timed, pct: engRow.task_time_coverage });
+
+//  Device mix. The Android pair is the one worth pinning: phones carry "Mobi"
+//  and tablets do not, and getting that backwards silently reclassifies every
+//  Android student.
+ok('device mix: 2 mobile, 2 tablet, 1 desktop, 1 unknown',
+  engRow.device_mix.mobile === 33.3 && engRow.device_mix.tablet === 33.3
+  && engRow.device_mix.desktop === 16.7 && engRow.device_mix.unknown === 16.7,
+  engRow.device_mix);
+ok('an Android WITHOUT Mobi is a tablet and one WITH it is a phone',
+  engRow.device_mix.tablet === 33.3 && engRow.device_mix.sample === 6, engRow.device_mix);
+
+//  Cadence: 1 active day in a 30 day window is 1 / (30/7) = 0.23 days a week.
+ok('cadence reports active days per week, not per window',
+  engRow.active_days_per_week === 0.23, engRow.active_days_per_week);
+
+//  Time on SITE is a different clock and is not collected. It must not borrow
+//  the task figure to look populated.
+ok('site_minutes is null where no heartbeat ran, not 0', engRow.site_minutes === null, engRow.site_minutes);
+//  c_meas IS instrumented in this fixture (4 days x 10 students x 600s = 400
+//  minutes), so site time reads here and proves the block is wired. The
+//  "nothing is reporting" branch is asserted in section 9, once those sessions
+//  are gone, which is the state production is actually in.
+ok('site time is read from the heartbeat where one ran: 1 class, 400 minutes',
+  eng.engagement.site_time.classes_reporting === 1
+  && eng.engagement.site_time.total_minutes === 400, eng.engagement.site_time);
+ok('the excluded owner class did not contribute its session minutes',
+  !/c_owner/.test(JSON.stringify(eng.engagement)), 'owner leaked into engagement');
+ok('and it does NOT call task time "time on page"',
+  /time on TASK, not time on page/.test(eng.engagement.task_time.note), eng.engagement.task_time.note);
+
+//  A class with no timed attempt reports null, never 0.
+const untimed = eng.classes.find((r) => r.class_code === 'CSA-EST');
+ok('a class with no timed attempt reports NULL task minutes, not 0',
+  untimed.task_minutes === null && untimed.median_task_seconds === null,
+  { min: untimed.task_minutes, med: untimed.median_task_seconds });
+
+//  Suppression covers BEHAVIOUR, not only money. c_small has a real 120 second
+//  attempt on a real device; a floor that hid the dollar figure and left those
+//  readable would be a floor in name only.
+const sm = eng.classes.find((r) => r.class_code === 'CSA-SMALL');
+ok('a suppressed class hides its task time, cadence and device mix too',
+  sm.task_minutes === null && sm.median_task_seconds === null
+  && sm.device_mix === null && sm.active_days_per_week === null && sm.active_days === null,
+  { min: sm.task_minutes, dev: sm.device_mix, dpw: sm.active_days_per_week });
+ok('but it still reports membership, which a rollup needs',
+  sm.enrolled === 3 && sm.active_students === 3 && sm.tier === 'free',
+  { enrolled: sm.enrolled, active: sm.active_students, tier: sm.tier });
+
+//  The device mix is reported and never applied, because the only RPM reading
+//  we hold is a site total.
+//  THE SITE COVERAGE DENOMINATOR IS ATTEMPTS, NOT ATTEMPTS PLUS SCORE_EVENTS.
+//  Two classes carry attempts: c_eng with 6 (4 timed) and c_small with 1 (timed).
+//  So the site reads 5 of 7, 71.4%. It differs from c_eng's own 66.7% because
+//  it aggregates a second class, INCLUDING the suppressed one: suppression
+//  hides a row, not a total, the same rule the pooled rate follows.
+//
+//  The defect this pins is the denominator. graded_events is attempts PLUS the
+//  per-question score_events ledger, and reaching for it here would divide 5 by
+//  169 and report 3% for a population that is 71% timed. Caught by a scale
+//  benchmark printing 42.9% for a fixture that was 85.7% timed by construction.
+ok('site task coverage is 5 timed of 7 attempts',
+  eng.engagement.task_time.coverage_pct === 71.4, eng.engagement.task_time.coverage_pct);
+ok('the suppressed class contributed its attempts to the total, as the pool does',
+  eng.engagement.task_time.items_timed === 5, eng.engagement.task_time.items_timed);
+ok('and the denominator is NOT inflated by the score_events ledger (that would read ~3%)',
+  eng.engagement.task_time.coverage_pct > 50, eng.engagement.task_time.coverage_pct);
+
+ok('the report says device mix is not applied to revenue, and why',
+  /fabrication/.test(eng.engagement.device_note), eng.engagement.device_note);
+
+// -- 6. THE NULL RULE: no RPM means null, never zero --------------------------
+run(`DELETE FROM metrics_daily`);
+const noRpm = cm.report({ days: 30 });
+const nr = Object.fromEntries(noRpm.classes.map((r) => [r.class_code, r]));
+ok('with no RPM reading the site rpm_usd is null, not 0',
+  noRpm.site_revenue.rpm_usd === null && noRpm.site_revenue.basis === 'none', noRpm.site_revenue);
+ok('with no RPM a class revenue is NULL, not 0',
+  nr['CSA-MEAS'].est_annual_revenue_usd === null, nr['CSA-MEAS'].est_annual_revenue_usd);
+ok('with no RPM the pageview figure SURVIVES (it does not depend on revenue)',
+  nr['CSA-MEAS'].est_annual_pageviews === 18000, nr['CSA-MEAS'].est_annual_pageviews);
+ok('an unpriced row says WHY it is unpriced',
+  /Raptive RPM/.test(nr['CSA-MEAS'].unpriced_reason || ''), nr['CSA-MEAS'].unpriced_reason);
+ok('with no RPM every scenario row is null, not 0',
+  noRpm.scenarios.rows.every((r) => r.est_annual_revenue_usd === null),
+  noRpm.scenarios.rows.map((r) => r.est_annual_revenue_usd));
+
+// -- 7. the maturity stage is derived, not asserted ---------------------------
+ok('0 joint days is "rough"', cm.stageFor(0).name === 'rough');
+ok('59 joint days is still "rough"', cm.stageFor(59).name === 'rough');
+ok('60 joint days is "estimate"', cm.stageFor(60).name === 'estimate');
+ok('149 joint days is still "estimate"', cm.stageFor(149).name === 'estimate');
+ok('150 joint days is "pricing_grade"', cm.stageFor(150).name === 'pricing_grade');
+ok('report() derives its own stage and ignores any caller-supplied one',
+  cm.report({ days: 30, stage: 'pricing_grade' }).stage.name === 'rough',
+  cm.report({ days: 30, stage: 'pricing_grade' }).stage);
+
+// -- 8. joint coverage is an INTERSECTION -------------------------------------
+//  Revenue on days the class was not working prices nothing, so put the RPM
+//  readings 200 days back, where no behaviour exists, and require 0.
+run(`INSERT INTO metrics_daily (date,source,metric,value,dimension)
+     VALUES (date('now','-200 days'),'raptive','rpm',12.0,''),
+            (date('now','-201 days'),'raptive','rpm',12.0,'')`);
+ok('revenue days with no behaviour on them contribute 0 joint days',
+  cm.jointCoverageDays(365) === 0, cm.jointCoverageDays(365));
+for (const d of DAYS) {
+  run(`INSERT INTO metrics_daily (date,source,metric,value,dimension) VALUES (${dateOf(d)},'raptive','rpm',12.0,'')`);
+}
+ok('overlapping days do count', cm.jointCoverageDays(365) === 4, cm.jointCoverageDays(365));
+
+// -- 9. a class with activity but zero active days cannot be annualised -------
+//  Guard against a divide-by-zero reading as $0 of ads.
+run(`DELETE FROM sessions WHERE class_id = 'c_meas'`);
+run(`DELETE FROM score_events WHERE class_id = 'c_meas'`);
+const idle = cm.report({ days: 30 });
+const idleRow = idle.classes.find((r) => r.class_code === 'CSA-MEAS');
+ok('a class with no activity reports null pageviews, not 0',
+  idleRow.est_annual_pageviews === null && idleRow.est_annual_revenue_usd === null,
+  { pv: idleRow.est_annual_pageviews, usd: idleRow.est_annual_revenue_usd });
+ok('it still reports its enrolment, which is a fact we hold', idleRow.enrolled === 10, idleRow.enrolled);
+//  With the only instrumented class gone, this is the state production is in
+//  today: no session rows anywhere, so time on site and time on page are both
+//  unavailable and the block has to say so rather than report 0 minutes.
+ok('with no heartbeat anywhere, site time is null and names the reason',
+  idle.engagement.site_time.total_minutes === null
+  && idle.engagement.site_time.classes_reporting === 0
+  && /heartbeat-reporter/.test(idle.engagement.site_time.note), idle.engagement.site_time);
+ok('but time on TASK survives, because it comes from a different reporter',
+  idle.engagement.task_time.items_timed > 0 && idle.engagement.task_time.median_seconds_per_item != null,
+  idle.engagement.task_time);
+
+//  THE GUARD IS PINNED DIRECTLY, and the reason is worth keeping. It is not
+//  reachable through the tables today: a measured pageview implies a session
+//  inside the window, which implies an active day, and an estimated pageview
+//  implies a graded event, which implies one too. So the integration case above
+//  passes because pv is null, NOT because the zero-day guard held, and a
+//  mutation removing that guard stayed green against it. An unreachable guard
+//  still has to hold, because the day a new signal contributes pageviews
+//  without contributing a day, this is what stops the model dividing by zero
+//  and reporting Infinity as money.
+const synthetic = cm.priceRow(
+  { class_id: 'x', class_code: 'X', course: 'ap-csa', cohort: 'EXTERNAL', tier: 'free',
+    enrolled: 10, active_students: 10, active_days: 0, sessions: 4,
+    page_views_measured: 400, active_minutes: 40, graded_events: 100 },
+  { pageviews_per_event: 4, from_classes: 1, basis: 'measured_classes' }, 12);
+ok('priceRow refuses to annualise a row carrying pageviews but zero active days',
+  synthetic.est_annual_pageviews === null && synthetic.est_annual_revenue_usd === null,
+  { pv: synthetic.est_annual_pageviews, usd: synthetic.est_annual_revenue_usd });
+
+// -- 10. no PII on the wire ---------------------------------------------------
+const blob = JSON.stringify(cm.report({ days: 30 }));
+ok('the report carries no display_name, teacher name or email',
+  !/display_name|teacher_email|teacher_name|@school\.org|tannercrow12/.test(blob));
+//  THE USER-AGENT IS NEW EXPOSURE and is classified in SQL precisely so the
+//  string never reaches JavaScript, let alone the wire. A UA is a fingerprinting
+//  surface; a device bucket is not.
+ok('and no User-Agent string, only the device bucket',
+  !/Mozilla|AppleWebKit|iPhone;|Android 13/.test(blob),
+  (blob.match(/Mozilla[^"]{0,40}/) || [])[0]);
+
+//  THE UA CANNOT REACH JAVASCRIPT, and that is structural rather than careful:
+//  it is classified inside SQL and never selected, so there is no object for it
+//  to ride on. The realistic regression is somebody adding it to the SELECT
+//  list later for debugging, so the rule is pinned on the SOURCE: inside the
+//  device statement, the `ua` token may only appear in a predicate.
+//
+//  A behavioural test cannot see this coming. The blob check above passes
+//  today for the same reason it would pass on a build that selects the UA and
+//  simply has not put it in the output yet.
+const modSrc = fs.readFileSync(path.join(__dirname, '..', 'lib', 'class-monetization.js'), 'utf8');
+const devStart = modSrc.indexOf('const stmtDeviceMix');
+const devSql = modSrc.slice(devStart, modSrc.indexOf('`);', devStart));
+const uaUses = [...devSql.matchAll(/\bua\b(.{0,12})/g)].map((m) => m[1]);
+ok('the device statement mentions the UA at all (so this guard is not vacuous)',
+  uaUses.length >= 4, uaUses.length);
+ok('and every mention of it is a predicate, never a selected column',
+  uaUses.every((tail) => /^\s*(NOT\s+LIKE|LIKE|IS NULL|=\s*'')/.test(tail)), uaUses);
+
+// -- 10b. THE BOOT PATH: metrics_daily may not exist yet ----------------------
+//  Every other table this module reads is created by db.js. metrics_daily is
+//  created by the command-center migration, which lib/command-schema.js is
+//  explicitly allowed to fail without stopping the process.
+//
+//  This is a REGRESSION TEST for a real CI failure. The first cut prepared
+//  against metrics_daily at module scope, so requiring routes/admin.js against
+//  a database where that migration had faulted threw SQLITE_ERROR and took the
+//  whole API down at boot. smoke/command.js test 14 caught it; nothing here
+//  did, and nothing here would have.
+//
+//  Two halves, because they fail independently. The BEHAVIOUR half proves a
+//  missing table reads as a missing reading. The SOURCE half proves the
+//  statements are not prepared at require time, which is the part a
+//  behavioural test run after a successful boot can never see.
+const modSource = fs.readFileSync(path.join(__dirname, '..', 'lib', 'class-monetization.js'), 'utf8');
+const prepared = modSource.split('db.prepare(`').slice(1)
+  .map((chunk) => chunk.slice(0, chunk.indexOf('`)')));
+ok('the module prepares statements at module scope at all (guard is not vacuous)',
+  prepared.length >= 6, prepared.length);
+ok('and NONE of them touches metrics_daily, which may not exist at require time',
+  prepared.every((sql) => !/metrics_daily/.test(sql)),
+  prepared.filter((sql) => /metrics_daily/.test(sql)).map((sql) => sql.slice(0, 80)));
+
+db.prepare('DROP TABLE metrics_daily').run();
+let boomed = null, noTable = null;
+try { noTable = cm.report({ days: 30 }); } catch (e) { boomed = e.message; }
+ok('report() does not throw when metrics_daily is absent', boomed === null, boomed);
+ok('a missing table reads as a missing READING: rpm null, and it says why',
+  noTable && noTable.site_revenue.rpm_usd === null
+  && /metrics_daily/.test(noTable.site_revenue.reason || ''), noTable && noTable.site_revenue);
+ok('and the funnel still works, because those tables are core',
+  noTable && noTable.classes.length > 0 && noTable.engagement.task_time.items_timed > 0,
+  noTable && { classes: noTable.classes.length });
+ok('joint coverage is 0 rather than a crash, so the stage stays honest',
+  noTable && noTable.stage.joint_days === 0 && noTable.stage.name === 'rough', noTable && noTable.stage);
+
+//  Put it back so the route tests below see a normal database.
+db.exec(`CREATE TABLE IF NOT EXISTS metrics_daily (
+  date TEXT NOT NULL, source TEXT NOT NULL, metric TEXT NOT NULL,
+  value REAL NOT NULL, dimension TEXT NOT NULL DEFAULT '',
+  captured_at TEXT DEFAULT (datetime('now')),
+  PRIMARY KEY (date, source, metric, dimension))`);
+ok('and the module recovers once the table exists again, rather than caching the fault',
+  cm.report({ days: 30 }).site_revenue.basis === 'none'
+  && cm.siteRevenue(30).reason === undefined, cm.siteRevenue(30));
+
+// -- 11. the endpoint is fail closed ------------------------------------------
+//  The model is read-only and carries no identity, so the read-only admin key
+//  reaches it. Nothing reaches it without a key, and that is the assertion that
+//  matters: this endpoint describes every class in the business.
+const app = express();
+app.use(express.json());
+app.use('/api/admin', require('../routes/admin'));
+const server = app.listen(0);
+const call = (p, key) => fetch(`http://127.0.0.1:${server.address().port}${p}`, {
+  headers: key ? { 'x-admin-key': key } : {},
+}).then(async (r) => ({ status: r.status, body: await r.json().catch(() => null) }));
+
+(async () => {
+  const anon = await call('/api/admin/class-monetization');
+  ok('no key is refused with 403', anon.status === 403, anon);
+
+  const wrong = await call('/api/admin/class-monetization', 'not-the-key-but-long-enough-to-try');
+  ok('a wrong key is refused with 403', wrong.status === 403, wrong);
+
+  const good = await call('/api/admin/class-monetization?days=30', FULL_KEY);
+  ok('the full admin key gets the report', good.status === 200 && !!good.body.stage, good.status);
+
+  const ro = await call('/api/admin/class-monetization?days=30', READ_KEY);
+  ok('the read-only admin key also gets it (no identity in the payload)',
+    ro.status === 200 && !!ro.body.scenarios, ro.status);
+
+  const sized = await call('/api/admin/class-monetization?days=30&sizes=28,55,110', FULL_KEY);
+  ok('?sizes drives the scenario table',
+    sized.body.scenarios.rows.map((r) => r.students).join(',') === '28,55,110',
+    sized.body.scenarios.rows.map((r) => r.students));
+
+  const rollup = await call('/api/admin/class-monetization?days=30&include_classes=false', FULL_KEY);
+  ok('?include_classes=false omits the per-class array',
+    rollup.body.classes === undefined && Array.isArray(rollup.body.by_tier), Object.keys(rollup.body));
+
+  const junk = await call('/api/admin/class-monetization?days=notanumber&sizes=abc', FULL_KEY);
+  ok('junk query params fall back to the defaults rather than 500',
+    junk.status === 200 && junk.body.window_days === 30, junk.status);
+
+  server.close();
+  console.log(`\n  ${pass} passed, ${fail} failed`);
+  for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
+  process.exit(fail ? 1 : 0);
+})();
