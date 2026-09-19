@@ -1,0 +1,136 @@
+{
+  "change": "Classroom ad-revenue model: lib/class-monetization.js and GET /api/admin/class-monetization, the per-class funnel from enrolled through to estimated ad revenue",
+  "_context": [
+    "WHY THERE IS NO live CHECK, and the reasoning is the one from",
+    "docs/runs/2026-09-18-claude-code-frq-archive-imported-and-gate-phase.md",
+    "rather than a shortcut.",
+    "",
+    "This change DOES alter what the API serves: it adds an endpoint. So a sha",
+    "pin looks correct here in a way it did not for that tooling change. It is",
+    "still the wrong check, for a different reason.",
+    "",
+    "The new endpoint sits under /api/admin/*, where router.use(requireAdmin)",
+    "runs BEFORE any route matching. So an unauthenticated request to a path",
+    "that does not exist and one to a path that does both answer",
+    "403 Invalid or missing admin key. Measured against production on",
+    "2026-09-19, before the merge:",
+    "",
+    "    GET /api/admin/class-monetization   ->   403   already",
+    "",
+    "The assertion first written for this gate was that the 404 becomes a 403.",
+    "It would have passed the day before the change existed, which is the exact",
+    "decoration CLAUDE.md warns about, and running it BEFORE the deploy is the",
+    "only reason that was caught.",
+    "",
+    "The endpoint is therefore not observable from a session holding only",
+    "COMMAND_READ_TOKEN and TODO_KEY, and that is the fail-closed design working",
+    "rather than a gap to route around. A sha pin in its place would be a dated",
+    "receipt: true for as long as it takes the next pull request to merge, then",
+    "permanently red on a change that was fine.",
+    "",
+    "rederive is the honest kind here, and it does not expire. A session holding",
+    "the admin key can add the live check afterwards; the assertion worth making",
+    "is that the response carries a stage, a calibration basis and at least one",
+    "null where a reading is missing.",
+    "",
+    "WHAT THE MUTATIONS DEFEND. Every one of them is a way this model could",
+    "produce a confident, plausible, wrong number that a person would then price",
+    "a product against. The first is the one the whole module exists for: a",
+    "class with no RPM reading rendering as $0 of ads inverts the argument for",
+    "charging money for an ad-free room.",
+    "",
+    "THE rederive CHECK HAS ALREADY EARNED ITS PLACE. It disagreed with the",
+    "module on 2 of 24 generated classes by a cent, because the module priced",
+    "off an unrounded annual pageview count while reporting the rounded one. It",
+    "only shows on small classes and the hand-written fixture, which uses round",
+    "numbers, could not see it at all."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the model's own rules, including the fail-closed endpoint",
+      "_why": "44 assertions over a throwaway SQLite file: the funnel counts, the measured-over-estimated preference, the k-anonymity floor, the null-not-zero rule, the derived maturity stage, joint coverage as an intersection, the tie-out between a row's pageviews and its money, and that no key reaches the endpoint.",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect": "44 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a second implementation, one query per class and no GROUP BY",
+      "_why": "Shares no code path with lib/class-monetization.js: per-class queries instead of grouped aggregates, and a pooled rate summed from student-days rather than from class totals. Runs over a seeded generated fixture so it covers shapes nobody wrote down.",
+      "command": "npm run --silent smoke:classmonetizationrederive",
+      "expect": "8 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "A MISSING RPM READING PRICES AT ZERO",
+      "file": "lib/class-monetization.js",
+      "find": "  return { rpm_usd: null, basis: 'none', days: 0 };",
+      "replace": "  return { rpm_usd: 0, basis: 'none', days: 0 };",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "with no RPM reading the site rpm_usd is null, not 0"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE K-ANONYMITY FLOOR IS REMOVED",
+      "file": "lib/class-monetization.js",
+      "find": "const MIN_CLASS_STUDENTS = 5;",
+      "replace": "const MIN_CLASS_STUDENTS = 0;",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "a 3 student class is suppressed"
+    },
+    {
+      "kind": "mutation",
+      "name": "OWNER AND PROBER CLASSES SET THE RATE REAL SCHOOLS ARE PRICED ON",
+      "file": "lib/class-monetization.js",
+      "find": "  for (const r of f.rows) {\n    if (r.tier === 'excluded') continue;",
+      "replace": "  for (const r of f.rows) {",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "pageviews_per_event is 4.0, derived from c_meas alone"
+    },
+    {
+      "kind": "mutation",
+      "name": "AN ESTIMATE IS LABELLED A MEASUREMENT",
+      "file": "lib/class-monetization.js",
+      "find": "    pv = r.graded_events * cal.pageviews_per_event;\n    basis = 'estimated';",
+      "replace": "    pv = r.graded_events * cal.pageviews_per_event;\n    basis = 'measured';",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "c_est is priced on the ESTIMATED basis"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE MATURITY STAGE IS PROMOTED EARLY, SO OCTOBER DATA PRICES FEBRUARY",
+      "file": "lib/class-monetization.js",
+      "find": "  { name: 'estimate',      min_joint_days: 60,  note:",
+      "replace": "  { name: 'estimate',      min_joint_days: 10,  note:",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "59 joint days is still"
+    },
+    {
+      "kind": "mutation",
+      "name": "JOINT COVERAGE IS COUNTED RATHER THAN INTERSECTED",
+      "file": "lib/class-monetization.js",
+      "find": "  let n = 0;\n  for (const d of beh) if (rev.has(d)) n += 1;\n  return n;",
+      "replace": "  return Math.min(rev.size, beh.length);",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "revenue days with no behaviour on them contribute 0 joint days"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE REPORT STOPS TYING OUT TO ITSELF",
+      "file": "lib/class-monetization.js",
+      "find": "  const annualPv = Math.round(perActiveDay * SCHOOL_DAYS_PER_YEAR);\n  out.est_annual_pageviews = annualPv;",
+      "replace": "  const annualPv = perActiveDay * SCHOOL_DAYS_PER_YEAR;\n  out.est_annual_pageviews = Math.round(annualPv);",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "a small class ties its money to its own stated pageviews"
+    },
+    {
+      "kind": "mutation",
+      "name": "A TEACHER EMAIL RIDES ALONG ON EVERY CLASS ROW",
+      "file": "lib/class-monetization.js",
+      "find": "      class_id: c.id,\n      class_code: c.class_code,",
+      "replace": "      class_id: c.id,\n      class_code: c.class_code,\n      teacher_email: c.teacher_email,",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "the report carries no display_name, teacher name or email"
+    }
+  ]
+}
