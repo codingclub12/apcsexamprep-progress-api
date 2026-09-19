@@ -52,7 +52,24 @@
     "scenario table null. The tool answered nothing on the only data it will ever",
     "see. The floor protects a ROW; a total is what aggregation is for. The floor",
     "now applies to the pool itself, and solo ME- accounts are kept out of it on",
-    "modelling grounds rather than privacy ones."
+    "modelling grounds rather than privacy ones.",
+    "",
+    "THE CI FAILURE, and it is the one worth reading. Every table this module",
+    "reads is created by db.js EXCEPT metrics_daily, which comes from the",
+    "command-center migration, and that migration is explicitly allowed to fail",
+    "without stopping the process. The first cut prepared against it at MODULE",
+    "SCOPE, so routes/admin.js requiring this file put it in the boot path:",
+    "better-sqlite3 throws on preparing against an absent table and the whole",
+    "API failed to start. smoke/command.js test 14 caught it; this module's own",
+    "suite did not, and review did not. Those reads are lazy now and a missing",
+    "table returns null, which is this module's own rule one level further down.",
+    "",
+    "ENGAGEMENT was added after the model, and the naming is the point. Three",
+    "clocks exist and only one is wound: attempts.duration_seconds is collected",
+    "today, sessions.active_seconds waits on the same heartbeat the pageviews do,",
+    "and progress.time_spent_s has a column, a write path and no sender at all.",
+    "So the model reports time on TASK and says so, rather than calling it time",
+    "on page."
   ],
   "checks": [
     {
@@ -60,7 +77,7 @@
       "name": "the model's own rules, including the fail-closed endpoint",
       "_why": "44 assertions over a throwaway SQLite file: the funnel counts, the measured-over-estimated preference, the k-anonymity floor, the null-not-zero rule, the derived maturity stage, joint coverage as an intersection, the tie-out between a row's pageviews and its money, and that no key reaches the endpoint.",
       "command": "npm run --silent smoke:classmonetization",
-      "expect": "52 passed, 0 failed"
+      "expect": "81 passed, 0 failed"
     },
     {
       "kind": "rederive",
@@ -167,6 +184,42 @@
       "replace": "const MIN_POOL_CLASSES = 0;",
       "command": "npm run --silent smoke:classmonetization",
       "expect_failure": "a pool of 2 classes refuses to produce a rate"
+    },
+    {
+      "kind": "mutation",
+      "name": "metrics_daily IS PREPARED AT MODULE SCOPE AGAIN, putting this file in the boot path",
+      "file": "lib/class-monetization.js",
+      "find": "const SQL_RPM = `",
+      "replace": "const stmtRpmEager = db.prepare(`\n  SELECT 1 FROM metrics_daily LIMIT 1`);\nconst SQL_RPM = `",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "and NONE of them touches metrics_daily"
+    },
+    {
+      "kind": "mutation",
+      "name": "MEAN INSTEAD OF MEDIAN: one long lunch speaks for the whole class",
+      "file": "lib/class-monetization.js",
+      "find": "  ) WHERE rn IN ((cnt + 1) / 2, (cnt + 2) / 2)",
+      "replace": "  ) WHERE 1 = 1",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "median task seconds is 25, not the mean of 265"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE COVERAGE DENOMINATOR REACHES FOR graded_events INSTEAD OF attempts",
+      "file": "lib/class-monetization.js",
+      "find": "    attemptsTotal += r.graded_attempts || 0;",
+      "replace": "    attemptsTotal += r.graded_events || 0;",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "site task coverage is 5 timed of 7 attempts"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE USER-AGENT IS SELECTED OUT OF SQL, which is how it would reach the wire",
+      "file": "lib/class-monetization.js",
+      "find": "  SELECT class_id,\n         COUNT(*) AS total,",
+      "replace": "  SELECT class_id, ua,\n         COUNT(*) AS total,",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "every mention of it is a predicate, never a selected column"
     }
   ]
 }

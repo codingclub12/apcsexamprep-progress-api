@@ -175,6 +175,64 @@ const MUTATIONS = [
     must: ['every scenario row reports a WHOLE number of pageviews'],
   },
   {
+    //  duration_seconds is wall clock from render to submit, so one student who
+    //  opens a quiz and goes to lunch contributes an hour. The mean of
+    //  10/20/30/1000 is 265, which is larger than three of the four real values.
+    name: 'MEAN INSTEAD OF MEDIAN: one long lunch speaks for the whole class',
+    find: '  ) WHERE rn IN ((cnt + 1) / 2, (cnt + 2) / 2)',
+    repl: '  ) WHERE 1 = 1',
+    must: ['median task seconds is 25, not the mean of 265'],
+  },
+  {
+    //  graded_events is attempts PLUS the per-question score_events ledger.
+    //  Using it as the coverage denominator reports 3% for a population that is
+    //  71% timed, and reads as an instrumentation failure that is not there.
+    name: 'THE COVERAGE DENOMINATOR REACHES FOR graded_events INSTEAD OF attempts',
+    find: '    attemptsTotal += r.graded_attempts || 0;',
+    repl: '    attemptsTotal += r.graded_events || 0;',
+    must: ['site task coverage is 5 timed of 7 attempts'],
+  },
+  {
+    //  Android phones carry "Mobi" and Android tablets do not. Getting that
+    //  backwards silently reclassifies every Android student, which matters
+    //  because RPM differs by device.
+    name: 'THE ANDROID RULE IS DROPPED: every Android student becomes a tablet',
+    find: "                        OR (ua LIKE '%Android%' AND ua NOT LIKE '%Mobi%'))",
+    repl: "                        OR ua LIKE '%Android%')",
+    must: ['an Android WITHOUT Mobi is a tablet and one WITH it is a phone'],
+  },
+  {
+    //  The null-not-zero rule, on the engagement side. A class nobody timed is
+    //  not a class that spent no time.
+    name: 'TASK TIME ZEROES INSTEAD OF NULLING',
+    find: '      task_minutes: tt.timed > 0 ? Math.round(tt.task_s / 60) : null,',
+    repl: '      task_minutes: Math.round(tt.task_s / 60),',
+    must: ['a class with no timed attempt reports NULL task minutes, not 0'],
+  },
+  {
+    //  Same rule on the site clock, which is the one that is empty in
+    //  production. Reporting 0 minutes there would read as "they never visit".
+    name: 'SITE TIME ZEROES INSTEAD OF NULLING, so an uninstrumented class reads as absent',
+    find: '      site_minutes: s.sessions > 0 ? Math.round(s.active_s / 60) : null,',
+    repl: '      site_minutes: Math.round(s.active_s / 60),',
+    must: ['site_minutes is null where no heartbeat ran, not 0'],
+  },
+  {
+    //  A floor that hides the dollar figure and leaves cadence, task time and
+    //  device readable is a floor in name only.
+    name: 'SUPPRESSION COVERS ONLY THE MONEY, NOT THE BEHAVIOUR',
+    find: "    for (const k of ['active_days', 'active_days_per_week', 'sessions', 'site_minutes',\n      'graded_events', 'graded_attempts', 'task_items_timed', 'task_time_coverage', 'task_minutes',\n      'median_task_seconds', 'device_mix']) out[k] = null;",
+    repl: '',
+    must: ['a suppressed class hides its task time, cadence and device mix too'],
+  },
+  {
+    //  A device bucket is a category. A User-Agent is a fingerprint.
+    name: 'THE USER-AGENT IS SELECTED OUT OF SQL, which is how it would reach the wire',
+    find: '  SELECT class_id,\n         COUNT(*) AS total,',
+    repl: '  SELECT class_id, ua,\n         COUNT(*) AS total,',
+    must: ['and every mention of it is a predicate, never a selected column'],
+  },
+  {
     //  Promote the stage early and a February pricing decision gets made on
     //  October data with nothing saying so.
     name: 'THE MATURITY STAGE IS PROMOTED EARLY',
@@ -189,6 +247,26 @@ const MUTATIONS = [
     find: '  let n = 0;\n  for (const d of beh) if (rev.has(d)) n += 1;\n  return n;',
     repl: '  return Math.min(rev.size, beh.length);',
     must: ['revenue days with no behaviour on them contribute 0 joint days'],
+  },
+  {
+    //  THE CI FAILURE, REPLAYED. Preparing against metrics_daily at module
+    //  scope puts this file in the boot path: the command-center migration is
+    //  allowed to fail, the table is then absent, prepare() throws, and
+    //  requiring routes/admin.js takes the whole API down before it serves
+    //  anything. smoke/command.js test 14 caught this on PR 742; nothing in
+    //  this suite did.
+    name: 'metrics_daily IS PREPARED AT MODULE SCOPE AGAIN, putting this file in the boot path',
+    find: "const SQL_RPM = `",
+    repl: "const stmtRpmEager = db.prepare(`\n  SELECT 1 FROM metrics_daily LIMIT 1`);\nconst SQL_RPM = `",
+    must: ['and NONE of them touches metrics_daily, which may not exist at require time'],
+  },
+  {
+    //  The other half: the read path must treat a missing table as a missing
+    //  reading rather than letting the error out.
+    name: 'A MISSING metrics_daily THROWS INSTEAD OF READING AS NULL',
+    find: "    if (/no such table/i.test(e && e.message)) {",
+    repl: "    if (false) {",
+    must: ['report() does not throw when metrics_daily is absent'],
   },
   {
     //  The zero-PII posture is not suspended because a report is useful.

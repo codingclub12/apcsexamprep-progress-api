@@ -202,13 +202,19 @@ const mismatches = [];
 for (const c of CLASSES) {
   const a = byId[c.id], b = rowsB.get(c.id);
   const excluded = a.tier === 'excluded';
+  //  MEMBERSHIP always compares. BEHAVIOUR compares only where the row is not
+  //  suppressed, because suppression nulls every behavioural field and not just
+  //  the money: a floor that hid the dollar figure and left cadence and active
+  //  days readable would be a floor in name only.
   const cmp = [
     ['enrolled', a.enrolled, b.enrolled],
     ['active_students', a.active_students, b.active],
-    ['active_days', a.active_days, b.days],
   ];
-  if (!excluded) {
+  if (excluded) {
+    cmp.push(['active_days', a.active_days, b.days]);
+  } else {
     cmp.push(['suppressed', a.suppressed, b.suppressed]);
+    cmp.push(['active_days', a.active_days, b.suppressed ? null : b.days]);
     cmp.push(['basis', a.pageview_basis, b.suppressed ? 'suppressed' : b.basis]);
     cmp.push(['annual_pageviews', a.est_annual_pageviews, b.suppressed ? null : b.apv]);
     cmp.push(['annual_usd', a.est_annual_revenue_usd, b.suppressed ? null : b.usd]);

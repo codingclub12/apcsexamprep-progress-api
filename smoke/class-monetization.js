@@ -299,6 +299,118 @@ ok('every scenario row ties its money to its own stated pageviews',
     === Math.round(((r.est_annual_pageviews / 1000) * 9.37) * 100) / 100),
   fractional.rows);
 
+// -- 5b. ENGAGEMENT: time on TASK, cadence, and device mix --------------------
+//  A fresh class, added after the scenario assertions above so it cannot move
+//  their arithmetic. Its durations include a deliberate outlier, because the
+//  whole reason this reports a median is that duration_seconds is wall clock
+//  and a student who opens a quiz and goes to lunch contributes an hour.
+run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,mastery_threshold,retry_allowed)
+     VALUES ('c_eng','t_ext','CSA-ENG','Engagement','ap-csa',1,80,0)`);
+addStudents('c_eng', 6);
+
+const UAS = [
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',            // mobile
+  'Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15',                     // tablet
+  'Mozilla/5.0 (Linux; Android 13; SM-X200) AppleWebKit/537.36 Safari/537.36',              // tablet: Android, no Mobi
+  'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 Mobile Safari/537.36',       // mobile: Mobi
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120',          // desktop
+  '',                                                                                        // unknown
+];
+//  Four timed, two untimed, so coverage is 4 of 6 rather than a silent 100%.
+const DURS = [10, 20, 30, 1000, null, null];
+for (let i = 0; i < 6; i++) {
+  run(`INSERT INTO attempts (student_id,class_id,course,lesson_id,item_id,item_type,score,max_score,passed,attempt_no,duration_seconds,ua,created_at)
+       VALUES (?,'c_eng','ap-csa','1.1','1.1-quiz','quiz',8,10,1,1,?,?,${day(DAYS[0])})`,
+    'c_eng_s' + (i + 1), DURS[i], UAS[i]);
+}
+//  One timed attempt on the SUPPRESSED class, so the suppression test below is
+//  hiding a real value rather than an absent one.
+run(`INSERT INTO attempts (student_id,class_id,course,lesson_id,item_id,item_type,score,max_score,passed,attempt_no,duration_seconds,ua,created_at)
+     VALUES ('c_small_s1','c_small','ap-csa','1.1','1.1-quiz','quiz',8,10,1,1,120,?,${day(DAYS[0])})`, UAS[0]);
+
+const eng = cm.report({ days: 30 });
+const engRow = eng.classes.find((r) => r.class_code === 'CSA-ENG');
+
+//  10, 20, 30, 1000 -> median 25. The MEAN is 265, which is larger than three
+//  of the four real values and would read as a class that takes four minutes an
+//  item when it takes twenty five seconds.
+ok('median task seconds is 25, not the mean of 265',
+  engRow.median_task_seconds === 25, engRow.median_task_seconds);
+ok('task minutes sums the timed items only (1060s -> 18 min)',
+  engRow.task_minutes === 18, engRow.task_minutes);
+ok('coverage says 4 of 6 attempts carried a duration',
+  engRow.task_items_timed === 4 && engRow.task_time_coverage === 66.7,
+  { timed: engRow.task_items_timed, pct: engRow.task_time_coverage });
+
+//  Device mix. The Android pair is the one worth pinning: phones carry "Mobi"
+//  and tablets do not, and getting that backwards silently reclassifies every
+//  Android student.
+ok('device mix: 2 mobile, 2 tablet, 1 desktop, 1 unknown',
+  engRow.device_mix.mobile === 33.3 && engRow.device_mix.tablet === 33.3
+  && engRow.device_mix.desktop === 16.7 && engRow.device_mix.unknown === 16.7,
+  engRow.device_mix);
+ok('an Android WITHOUT Mobi is a tablet and one WITH it is a phone',
+  engRow.device_mix.tablet === 33.3 && engRow.device_mix.sample === 6, engRow.device_mix);
+
+//  Cadence: 1 active day in a 30 day window is 1 / (30/7) = 0.23 days a week.
+ok('cadence reports active days per week, not per window',
+  engRow.active_days_per_week === 0.23, engRow.active_days_per_week);
+
+//  Time on SITE is a different clock and is not collected. It must not borrow
+//  the task figure to look populated.
+ok('site_minutes is null where no heartbeat ran, not 0', engRow.site_minutes === null, engRow.site_minutes);
+//  c_meas IS instrumented in this fixture (4 days x 10 students x 600s = 400
+//  minutes), so site time reads here and proves the block is wired. The
+//  "nothing is reporting" branch is asserted in section 9, once those sessions
+//  are gone, which is the state production is actually in.
+ok('site time is read from the heartbeat where one ran: 1 class, 400 minutes',
+  eng.engagement.site_time.classes_reporting === 1
+  && eng.engagement.site_time.total_minutes === 400, eng.engagement.site_time);
+ok('the excluded owner class did not contribute its session minutes',
+  !/c_owner/.test(JSON.stringify(eng.engagement)), 'owner leaked into engagement');
+ok('and it does NOT call task time "time on page"',
+  /time on TASK, not time on page/.test(eng.engagement.task_time.note), eng.engagement.task_time.note);
+
+//  A class with no timed attempt reports null, never 0.
+const untimed = eng.classes.find((r) => r.class_code === 'CSA-EST');
+ok('a class with no timed attempt reports NULL task minutes, not 0',
+  untimed.task_minutes === null && untimed.median_task_seconds === null,
+  { min: untimed.task_minutes, med: untimed.median_task_seconds });
+
+//  Suppression covers BEHAVIOUR, not only money. c_small has a real 120 second
+//  attempt on a real device; a floor that hid the dollar figure and left those
+//  readable would be a floor in name only.
+const sm = eng.classes.find((r) => r.class_code === 'CSA-SMALL');
+ok('a suppressed class hides its task time, cadence and device mix too',
+  sm.task_minutes === null && sm.median_task_seconds === null
+  && sm.device_mix === null && sm.active_days_per_week === null && sm.active_days === null,
+  { min: sm.task_minutes, dev: sm.device_mix, dpw: sm.active_days_per_week });
+ok('but it still reports membership, which a rollup needs',
+  sm.enrolled === 3 && sm.active_students === 3 && sm.tier === 'free',
+  { enrolled: sm.enrolled, active: sm.active_students, tier: sm.tier });
+
+//  The device mix is reported and never applied, because the only RPM reading
+//  we hold is a site total.
+//  THE SITE COVERAGE DENOMINATOR IS ATTEMPTS, NOT ATTEMPTS PLUS SCORE_EVENTS.
+//  Two classes carry attempts: c_eng with 6 (4 timed) and c_small with 1 (timed).
+//  So the site reads 5 of 7, 71.4%. It differs from c_eng's own 66.7% because
+//  it aggregates a second class, INCLUDING the suppressed one: suppression
+//  hides a row, not a total, the same rule the pooled rate follows.
+//
+//  The defect this pins is the denominator. graded_events is attempts PLUS the
+//  per-question score_events ledger, and reaching for it here would divide 5 by
+//  169 and report 3% for a population that is 71% timed. Caught by a scale
+//  benchmark printing 42.9% for a fixture that was 85.7% timed by construction.
+ok('site task coverage is 5 timed of 7 attempts',
+  eng.engagement.task_time.coverage_pct === 71.4, eng.engagement.task_time.coverage_pct);
+ok('the suppressed class contributed its attempts to the total, as the pool does',
+  eng.engagement.task_time.items_timed === 5, eng.engagement.task_time.items_timed);
+ok('and the denominator is NOT inflated by the score_events ledger (that would read ~3%)',
+  eng.engagement.task_time.coverage_pct > 50, eng.engagement.task_time.coverage_pct);
+
+ok('the report says device mix is not applied to revenue, and why',
+  /fabrication/.test(eng.engagement.device_note), eng.engagement.device_note);
+
 // -- 6. THE NULL RULE: no RPM means null, never zero --------------------------
 run(`DELETE FROM metrics_daily`);
 const noRpm = cm.report({ days: 30 });
@@ -348,6 +460,16 @@ ok('a class with no activity reports null pageviews, not 0',
   idleRow.est_annual_pageviews === null && idleRow.est_annual_revenue_usd === null,
   { pv: idleRow.est_annual_pageviews, usd: idleRow.est_annual_revenue_usd });
 ok('it still reports its enrolment, which is a fact we hold', idleRow.enrolled === 10, idleRow.enrolled);
+//  With the only instrumented class gone, this is the state production is in
+//  today: no session rows anywhere, so time on site and time on page are both
+//  unavailable and the block has to say so rather than report 0 minutes.
+ok('with no heartbeat anywhere, site time is null and names the reason',
+  idle.engagement.site_time.total_minutes === null
+  && idle.engagement.site_time.classes_reporting === 0
+  && /heartbeat-reporter/.test(idle.engagement.site_time.note), idle.engagement.site_time);
+ok('but time on TASK survives, because it comes from a different reporter',
+  idle.engagement.task_time.items_timed > 0 && idle.engagement.task_time.median_seconds_per_item != null,
+  idle.engagement.task_time);
 
 //  THE GUARD IS PINNED DIRECTLY, and the reason is worth keeping. It is not
 //  reachable through the tables today: a measured pageview implies a session
@@ -371,6 +493,77 @@ ok('priceRow refuses to annualise a row carrying pageviews but zero active days'
 const blob = JSON.stringify(cm.report({ days: 30 }));
 ok('the report carries no display_name, teacher name or email',
   !/display_name|teacher_email|teacher_name|@school\.org|tannercrow12/.test(blob));
+//  THE USER-AGENT IS NEW EXPOSURE and is classified in SQL precisely so the
+//  string never reaches JavaScript, let alone the wire. A UA is a fingerprinting
+//  surface; a device bucket is not.
+ok('and no User-Agent string, only the device bucket',
+  !/Mozilla|AppleWebKit|iPhone;|Android 13/.test(blob),
+  (blob.match(/Mozilla[^"]{0,40}/) || [])[0]);
+
+//  THE UA CANNOT REACH JAVASCRIPT, and that is structural rather than careful:
+//  it is classified inside SQL and never selected, so there is no object for it
+//  to ride on. The realistic regression is somebody adding it to the SELECT
+//  list later for debugging, so the rule is pinned on the SOURCE: inside the
+//  device statement, the `ua` token may only appear in a predicate.
+//
+//  A behavioural test cannot see this coming. The blob check above passes
+//  today for the same reason it would pass on a build that selects the UA and
+//  simply has not put it in the output yet.
+const modSrc = fs.readFileSync(path.join(__dirname, '..', 'lib', 'class-monetization.js'), 'utf8');
+const devStart = modSrc.indexOf('const stmtDeviceMix');
+const devSql = modSrc.slice(devStart, modSrc.indexOf('`);', devStart));
+const uaUses = [...devSql.matchAll(/\bua\b(.{0,12})/g)].map((m) => m[1]);
+ok('the device statement mentions the UA at all (so this guard is not vacuous)',
+  uaUses.length >= 4, uaUses.length);
+ok('and every mention of it is a predicate, never a selected column',
+  uaUses.every((tail) => /^\s*(NOT\s+LIKE|LIKE|IS NULL|=\s*'')/.test(tail)), uaUses);
+
+// -- 10b. THE BOOT PATH: metrics_daily may not exist yet ----------------------
+//  Every other table this module reads is created by db.js. metrics_daily is
+//  created by the command-center migration, which lib/command-schema.js is
+//  explicitly allowed to fail without stopping the process.
+//
+//  This is a REGRESSION TEST for a real CI failure. The first cut prepared
+//  against metrics_daily at module scope, so requiring routes/admin.js against
+//  a database where that migration had faulted threw SQLITE_ERROR and took the
+//  whole API down at boot. smoke/command.js test 14 caught it; nothing here
+//  did, and nothing here would have.
+//
+//  Two halves, because they fail independently. The BEHAVIOUR half proves a
+//  missing table reads as a missing reading. The SOURCE half proves the
+//  statements are not prepared at require time, which is the part a
+//  behavioural test run after a successful boot can never see.
+const modSource = fs.readFileSync(path.join(__dirname, '..', 'lib', 'class-monetization.js'), 'utf8');
+const prepared = modSource.split('db.prepare(`').slice(1)
+  .map((chunk) => chunk.slice(0, chunk.indexOf('`)')));
+ok('the module prepares statements at module scope at all (guard is not vacuous)',
+  prepared.length >= 6, prepared.length);
+ok('and NONE of them touches metrics_daily, which may not exist at require time',
+  prepared.every((sql) => !/metrics_daily/.test(sql)),
+  prepared.filter((sql) => /metrics_daily/.test(sql)).map((sql) => sql.slice(0, 80)));
+
+db.prepare('DROP TABLE metrics_daily').run();
+let boomed = null, noTable = null;
+try { noTable = cm.report({ days: 30 }); } catch (e) { boomed = e.message; }
+ok('report() does not throw when metrics_daily is absent', boomed === null, boomed);
+ok('a missing table reads as a missing READING: rpm null, and it says why',
+  noTable && noTable.site_revenue.rpm_usd === null
+  && /metrics_daily/.test(noTable.site_revenue.reason || ''), noTable && noTable.site_revenue);
+ok('and the funnel still works, because those tables are core',
+  noTable && noTable.classes.length > 0 && noTable.engagement.task_time.items_timed > 0,
+  noTable && { classes: noTable.classes.length });
+ok('joint coverage is 0 rather than a crash, so the stage stays honest',
+  noTable && noTable.stage.joint_days === 0 && noTable.stage.name === 'rough', noTable && noTable.stage);
+
+//  Put it back so the route tests below see a normal database.
+db.exec(`CREATE TABLE IF NOT EXISTS metrics_daily (
+  date TEXT NOT NULL, source TEXT NOT NULL, metric TEXT NOT NULL,
+  value REAL NOT NULL, dimension TEXT NOT NULL DEFAULT '',
+  captured_at TEXT DEFAULT (datetime('now')),
+  PRIMARY KEY (date, source, metric, dimension))`);
+ok('and the module recovers once the table exists again, rather than caching the fault',
+  cm.report({ days: 30 }).site_revenue.basis === 'none'
+  && cm.siteRevenue(30).reason === undefined, cm.siteRevenue(30));
 
 // -- 11. the endpoint is fail closed ------------------------------------------
 //  The model is read-only and carries no identity, so the read-only admin key

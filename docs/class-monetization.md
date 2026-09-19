@@ -103,6 +103,69 @@ submits little, is mis-estimated in proportion to how far it sits from the site
 average. That error is what shrinks as instrumentation coverage grows, and
 `instrumentation.coverage_pct` in the response is the number to watch.
 
+## Time, and the three clocks that are not the same
+
+Time on page is the one people ask for, and it is the one we do not have. Three
+different clocks exist in this database and only one of them is being wound.
+
+| clock | where | collected today |
+|---|---|---|
+| time on TASK | `attempts.duration_seconds` | **yes.** The live theme reporters send it |
+| time on SITE | `sessions.active_seconds` / `total_seconds` | no. Same heartbeat gap as pageviews |
+| time on an ACTIVITY | `progress.time_spent_s` | no. The column and the write path exist and nothing sends it |
+
+So what the model reports is `task_minutes` and `median_task_seconds`, and it is
+careful to call them that. A student who reads a lesson for twenty minutes and
+answers nothing registers zero task seconds, and no arrangement of the data we
+have today can say otherwise. Calling that "time on page" would be the same
+mislabel the pageview basis refuses.
+
+**The median is not a style choice.** `duration_seconds` is wall clock from an
+item rendering to the student submitting it, clamped server-side at 86400. One
+student who opens a quiz and goes to lunch contributes an hour. On 10, 20, 30
+and 1000 seconds the median is 25 and the mean is 265, which is larger than
+three of the four real values and would read as a class taking four minutes an
+item when it takes twenty five seconds.
+
+**Coverage is stated, not implied.** `task_time_coverage` is the share of
+attempts that arrived carrying a duration. A low number there means the figures
+above it describe a subset. Its denominator is the attempts table alone, and
+that needs saying because `graded_events` is attempts PLUS the per-question
+`score_events` ledger: reaching for that instead divides by roughly double and
+reports an instrumentation failure that is not there. A scale benchmark printed
+42.9% for a fixture that was 85.7% timed by construction, which is how it
+was found.
+
+## Cadence: twice a month, or three times a week
+
+`active_days_per_week` per class, which is `active_days` over the window put on
+a per-week footing so a 30 day and a 90 day window are comparable. This is the
+question "does this class log in twice a month or three times a week" asked
+directly, and it needs no instrumentation that is not already there.
+
+## Device mix, reported and deliberately not applied
+
+`device_mix` per class: mobile, tablet, desktop, unknown, as shares, with the
+sample size.
+
+It is here because it is the one thing in this model that changes what a
+pageview is WORTH. Ad RPM on mobile runs well below desktop, so two classes with
+identical pageviews are not identical revenue. **No multiplier is applied.** Our
+only RPM reading is a site total, and splitting it by device without a
+per-device export would be exactly the fabrication the rest of this module
+refuses. It is reported so the gap is visible, and so a per-device Raptive
+export can later be wired against a number that was already being tracked.
+
+The User-Agent is classified inside SQL and never selected, so the string never
+reaches JavaScript, let alone the wire. A device bucket is a category; a UA is a
+fingerprinting surface. That is pinned on the source rather than on the output,
+because a behavioural check passes just as happily on a build that selects the
+UA and has not yet put it in the response.
+
+The Android rule is the one worth knowing: phones carry `Mobi` in the UA and
+tablets do not, which is the only way to tell them apart from the string alone.
+Getting it backwards silently reclassifies every Android student.
+
 ## Why this is not a GA4 custom dimension
 
 The obvious build is to stamp `class_id` onto GA4 events and let Google roll it
@@ -164,6 +227,26 @@ behaviour that never overlap price nothing.
 A caller cannot pass in a stage. That is the point: the thresholds exist so a
 February pricing decision cannot quietly be made on October data.
 
+## One boot rule, learned the hard way
+
+Every table this module reads is created by `db.js` **except** `metrics_daily`,
+which comes from the command-center migration, and that migration is explicitly
+allowed to fail without stopping the process.
+
+The first cut prepared against it at module scope. `routes/admin.js` requires
+this module, `better-sqlite3` throws on preparing against a table that does not
+exist, and the whole API failed to boot. `smoke/command.js` test 14 caught it in
+CI; review had not, and neither had this module's own suite.
+
+Those reads are lazy now and a missing table returns null, which is this
+module's own rule applied one level further down: no `metrics_daily` means no
+revenue reading, and no reading is null. A failed prepare is not cached, so the
+module recovers if the migration lands later in the same process.
+
+If you add a statement here, prepare it at module scope **only** for a table
+`db.js` creates. The suite pins this on the source, because a behavioural test
+run after a successful boot cannot see it.
+
 ## Reading the response
 
 ```
@@ -211,13 +294,15 @@ already headed.
 
 ## Testing
 
-    npm run smoke:classmonetization           52 assertions, offline
-    npm run smoke:classmonetizationmutation   17 rules broken on purpose
+    npm run smoke:classmonetization           81 assertions, offline
+    npm run smoke:classmonetizationmutation   26 rules broken on purpose
     npm run smoke:classmonetizationrederive   a second implementation, must agree
 
-Benchmarked at the live shape (637 classes, 1826 students, 82k graded events
-over 90 days): 64ms for a 30 day report, 136ms for 90 days, 3MB of heap across
-several runs. Nothing here grows per request. That benchmark is also what caught
+Benchmarked at the live shape, deliberately overshot (637 classes, 1826
+students, 82k attempts and 82k score_events over 90 days, against a production
+rate nearer 237 attempts a day): 287ms for a 30 day report, 484ms for 90 days,
+2MB of heap. `attempts` has no index on `created_at`, so the engagement reads
+are a scan; adding one would help and is a schema change rather than a patch. Nothing here grows per request. That benchmark is also what caught
 the pooling defect above, which no amount of reading the code had found.
 
 The re-derivation is the one worth understanding. It computes the same figures

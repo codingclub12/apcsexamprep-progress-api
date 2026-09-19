@@ -145,15 +145,86 @@ working alone is a different population from a class assigned work by a teacher.
 Averaging the two gives a number that describes neither. Solo classes are still
 reported in `by_tier`.
 
+## The CI failure, which is the most useful thing in this note
+
+`smoke:command` went red on the first green-looking push. Test 14:
+"a thrown exception inside the migration does not prevent boot; /api/health
+still ok", with a SQLITE_ERROR pointing at `routes/admin.js:38`, the line that
+requires this new module.
+
+Every table this module reads is created by `db.js` EXCEPT `metrics_daily`,
+which comes from the command-center migration in `lib/command-schema.js`, and
+that migration is explicitly allowed to fail without stopping the process. The
+first cut prepared against `metrics_daily` at module scope, so requiring
+`routes/admin.js` put this file in the boot path: `better-sqlite3` throws on
+preparing against a table that is not there, and the whole API failed to start.
+
+Nothing in this module's own suite could see it, and nothing in review did. The
+suite runs after a successful boot, so by the time it asks a question the table
+exists. It took a test written for a different reason, years of caution ago, to
+catch it.
+
+The reads are lazy now and a missing table returns null, which is not a special
+case added for a test: it is this module's own rule applied one level further
+down. No `metrics_daily` means no revenue reading, and no reading is null. A
+failed prepare is deliberately NOT cached, so the module recovers if the
+migration lands later in the same process.
+
+Both halves are now pinned here, because they fail independently. The
+behavioural half drops the table and requires `report()` to return null rather
+than throw. The source half asserts that no `db.prepare()` in the module
+mentions `metrics_daily`, which is the part a behavioural test run after a
+successful boot can never see.
+
+## Time on page, and the three clocks that are not the same
+
+Asked for after the model landed. The short answer is that time on page is the
+one clock we do not have, and two of the three are not what people mean:
+
+    attempts.duration_seconds   COLLECTED TODAY. apcs-reporter.js,
+                                intro-java-reporter.js and
+                                ap-networking-reporter.js all send it
+    sessions.active_seconds     schema and endpoint exist, nothing runs the
+                                heartbeat, same gap as the pageviews
+    progress.time_spent_s       column exists, write path exists, and NOTHING
+                                SENDS IT. Empty rather than thin
+
+So the model reports time on TASK and calls it that. A student reading a lesson
+for twenty minutes and answering nothing registers zero task seconds.
+
+Three things in the implementation earned their comments:
+
+**Median, not mean.** `duration_seconds` is wall clock from render to submit,
+clamped at 86400. On 10, 20, 30 and 1000 seconds the median is 25 and the mean
+is 265, which is larger than three of the four real values.
+
+**The coverage denominator is `attempts`, not `graded_events`.** The latter is
+attempts PLUS the per-question `score_events` ledger, so using it halves the
+figure. The scale benchmark printed 42.9% for a fixture that was 85.7% timed by
+construction, which is how it was caught.
+
+**The Android device rule.** Phones carry `Mobi` in the User-Agent and tablets
+do not. The UA is classified inside SQL and never selected, so the string cannot
+reach JavaScript; that is pinned on the source rather than on the output,
+because a behavioural check passes just as happily on a build that selects the
+UA and has not yet put it in the response.
+
+Device mix is reported and deliberately NOT applied to revenue. Ad RPM differs
+by device, so identical pageviews are not identical revenue, but our only RPM
+reading is a site total and splitting it without a per-device export would be
+the fabrication the rest of the module refuses.
+
 ## Evidence
 
-    npm run smoke:classmonetization            52 passed, 0 failed
-    npm run smoke:classmonetizationmutation    19 passed, 0 failed (17 rules, each red for its own assertion)
+    npm run smoke:classmonetization            81 passed, 0 failed
+    npm run smoke:classmonetizationmutation    28 passed, 0 failed (26 rules, each red for its own assertion)
+    npm run smoke:command                      95 passed, 0 failed (the suite that caught the boot defect)
     npm run smoke:classmonetizationrederive    8 passed, 0 failed, on 10 separate seeds
     npm run smoke:mutationleak                 42 passed; 11 harnesses, tree clean
     node scripts/deploy-gate.js deploy-gates/2026-09-19-class-monetization-model.json
                                                3 independent kinds agree: suite, rederive, mutation
-    benchmark at 637 classes / 1826 students   64ms at 30d, 136ms at 90d, 3MB heap
+    benchmark at 637 classes / 1826 students   287ms at 30d, 484ms at 90d, 2MB heap
+                                               (deliberately overshot: 82k attempts vs a production rate nearer 237/day)
     npm run smoke:encoding                     54 passed, no mojibake
     npm run smoke:volumepaths                  nothing the server reads is hidden by the volume
     npm run smoke:storefront                   144 passed
