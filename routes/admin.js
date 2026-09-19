@@ -35,6 +35,7 @@ const trafficGoogle = require('../lib/traffic-google');
 const trafficShopify = require('../lib/traffic-shopify');
 const trafficPull = require('../lib/traffic-pull');
 const trafficCsv = require('../lib/traffic-csv');
+const classMonetization = require('../lib/class-monetization');
 const { retrySqlExpr } = require('../retry-policy');
 const { resolveGate, pickGateRow } = require('../lib/activity-gate');
 
@@ -163,6 +164,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/traffic             GA4/GSC/Clarity/Raptive dailies: series, trend, compare, projection, movers, rankings; ?metric= ?source= ?days=',
       'POST /api/admin/traffic/pull       fetch GA4 + Search Console now (header key required); idempotent, safe to schedule',
       'POST /api/admin/traffic/import     import a Raptive or Clarity CSV export (header key required); {source, csv, date?, dry_run?}',
+      'GET /api/admin/class-monetization  per-class ad-revenue funnel and the classroom opportunity-cost model; ?days= ?sizes= ?include_classes=false',
       'GET /api/admin/sessions            heartbeat/session pipeline diagnostic: counts + recent rows',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
       'GET /api/admin/classes             every class + teacher + student/completion counts',
@@ -629,6 +631,44 @@ router.get('/traffic', (req, res) => {
   } catch (e) {
     console.error('admin/traffic:', e);
     res.status(500).json({ error: 'traffic failed', detail: e.message });
+  }
+});
+
+// -- GET /api/admin/class-monetization ---------------------------------------
+//  "What is a 28 student class worth in ads per year, and how much do I trust
+//  that number today?"
+//
+//  Read-only, and every number carries the basis it was computed on. The model
+//  itself lives in lib/class-monetization.js, which is the only place a class's
+//  monetization shape is interpreted; this route is a thin read over it so that
+//  the operator view and anything built later cannot drift apart.
+//
+//  It deliberately returns a STAGE alongside the figures. The model is meant to
+//  be read as rough now, as an estimate once two months of classroom behaviour
+//  and revenue overlap, and as pricing grade near a full school year. A caller
+//  cannot assert the stage; it is derived from joint coverage.
+//
+//  Auth is inherited from requireAdmin above, so this is fail closed. The
+//  read-only admin key reaches it, because the response carries no student or
+//  teacher identity and there is no reveal mode that would add one.
+//
+//  ?days            window in days (default 30, capped at metrics_daily retention)
+//  ?sizes           comma separated class sizes for the scenario table
+//  ?include_classes false omits the per-class array and returns rollups only
+router.get('/class-monetization', (req, res) => {
+  try {
+    const days = parseInt(req.query.days, 10) || 30;
+    const sizes = String(req.query.sizes || '')
+      .split(',').map((x) => parseInt(x, 10)).filter((n) => Number.isFinite(n) && n > 0 && n <= 5000)
+      .slice(0, 12);
+    res.json(classMonetization.report({
+      days,
+      sizes: sizes.length ? sizes : undefined,
+      include_classes: req.query.include_classes !== 'false',
+    }));
+  } catch (e) {
+    console.error('admin/class-monetization:', e);
+    res.status(500).json({ error: 'class monetization failed', detail: e.message });
   }
 });
 

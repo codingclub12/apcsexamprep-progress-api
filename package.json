@@ -359,7 +359,10 @@
     "smoke:csafrqbootcamp": "node smoke/csa-frq-bootcamp.js",
     "csa:frqbootcampsheets": "node scripts/csa-frq-bootcamp-csv.js imports/2026-09-17-frq-bootcamp",
     "smoke:architecture": "node smoke/site-architecture.js",
-    "site:architecture": "node scripts/site-architecture.js"
+    "site:architecture": "node scripts/site-architecture.js",
+    "smoke:classmonetization": "node smoke/class-monetization.js",
+    "smoke:classmonetizationmutation": "node smoke/class-monetization-mutation.js",
+    "smoke:classmonetizationrederive": "node scripts/class-monetization-rederive.js"
   },
   "keywords": [],
   "author": "",
