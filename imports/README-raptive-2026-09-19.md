@@ -1,6 +1,12 @@
-# Raptive earnings, 2026-08-18 to 2026-09-16
+# Raptive earnings, 2026-08-14 to 2026-09-16
 
-Source: Raptive "Ad Earnings Overview", last 30 days, supplied 2026-09-19.
+`imports/raptive-2026-08-14-to-2026-09-16.csv`, 34 days.
+
+Built from two sources that were checked against each other first: the full
+dashboard export (Aug 14 to Sep 12, with pageviews) and a pasted table
+(Aug 18 to Sep 16, without). They overlap on 26 days and disagree on none.
+The four days only the paste covers, Sep 13 to 16, carry revenue and sessions
+but no pageviews, so they contribute no `rpm` reading. Nothing is filled in.
 
 ## Import it
 
@@ -9,65 +15,96 @@ Source: Raptive "Ad Earnings Overview", last 30 days, supplied 2026-09-19.
       -d "$(node -e '
         const fs=require("fs");
         console.log(JSON.stringify({source:"raptive",
-          csv:fs.readFileSync("imports/raptive-2026-08-18-to-2026-09-16.csv","utf8")}));
+          csv:fs.readFileSync("imports/raptive-2026-08-14-to-2026-09-16.csv","utf8")}));
       ')"
 
-Add `"dry_run":true` first if you want to see what it would write.
+Add `"dry_run":true` first to see what it would write. Expect **128 readings**:
+34 revenue, 34 sessions, 30 pageviews, 30 rpm.
 
-## Why this file has no RPM column, and why that matters
+No GA4 pull is needed. An earlier version of this file said one was, because it
+carried no pageviews and the model would have had to derive the page RPM from
+GA4. The export has pageviews, so `rpm` is imported directly and
+`siteRevenue()` takes its first branch, reporting `basis: 'reported'`.
 
-The Raptive export reports **Sessions**, not pageviews. Revenue divided by
-sessions is a SESSION RPM, and `lib/class-monetization.js` multiplies its RPM by
-PAGEVIEWS. Loading one as the other overstates every class revenue figure by the
-pages-per-session ratio, which on a content site is usually somewhere between
-1.5x and 3x.
+## The column that must not be imported, and what it would have cost
 
-`lib/traffic-csv.js` will not protect you from this. `HEADER_MAP` maps both
-`pagerpm` and `sessionrpm` onto the single `rpm` metric, so an export carrying a
-Session RPM column lands in the same place a Page RPM would, silently. That is
-board task 376.
+The vendor exports **two** rate columns and they differ by about 3x:
 
-So this file carries `Earnings` and `Sessions` only. It produces exactly 60
-readings, 30 `revenue` and 30 `sessions`, and no `rpm` at all. With no stored
-`rpm`, `siteRevenue()` falls through to its second branch and derives the page
-RPM itself as `revenue / ga4_pageviews * 1000`, which is a true page RPM and is
-labelled `derived_from_revenue_and_ga4_pageviews` in the response so a reader can
-see which branch produced it.
+    Page RPM    earnings / PAGEVIEWS x 1000      mean $7.20
+    RPM         earnings / SESSIONS  x 1000      mean $21.42
 
-**That branch needs GA4 pageviews in `metrics_daily`.** Run
-`POST /api/admin/traffic/pull` for the same date range, or the model keeps
-returning `rpm_usd: null` and every revenue figure stays null, which is the
-correct behaviour rather than a bug.
+Both reconcile exactly against the raw columns on all 30 rows, so there is no
+ambiguity about which is which. `lib/class-monetization.js` multiplies its RPM
+by **pageviews**, so only Page RPM is correct there.
 
-## What is in the window
+Measured on this data, importing the session figure instead would have
+overstated every class revenue number by **2.97x**. Pages per session over the
+window is 2.82, which is the same ratio from the other side.
 
-Verified by parsing the generated file back and diffing against the source:
-30 rows, 2 metrics each, 0 mismatches.
+`lib/traffic-csv.js` will not stop you. `HEADER_MAP` maps `pagerpm`, `sessionrpm`
+and a bare `rpm` all onto the one `rpm` metric, and which one wins is decided by
+**column order** rather than by meaning: `mapHeaders` keeps the first match and
+skips the rest. In this export `Page RPM` happens to sit left of `RPM`, so a
+naive import of the raw file would have been correct by luck. Board task 376.
 
-    total            47,448 sessions, $1,012.17
-    weekdays         mean 1,910 sessions, $41.51
-    weekends         mean   678 sessions, $12.36, so 30% of a weekday
+This sheet is written with `Page RPM` and no `RPM` column at all, so the outcome
+does not depend on that luck.
+
+## What the window says
+
+Verified by parsing the generated sheet back and diffing against both sources:
+0 value mismatches, and the stored `rpm` is the page RPM on every row (checked
+positively, by confirming it never equals that day's session RPM).
+
+    weekdays    mean 1,910 sessions, $41.51
+    weekends    mean   678 sessions, $12.36, so 30% of a weekday
 
 The weekday/weekend split is the first independent support for the
-`SCHOOL_DAYS_PER_YEAR = 180` assumption in the model. It was a stated assumption
-with nothing behind it until now.
+`SCHOOL_DAYS_PER_YEAR = 180` constant in the model, which shipped as a stated
+assumption with nothing behind it.
 
-**Aug 18-21 is anomalous and should be excluded from any baseline.** Those four
-days carry 26% of the window's sessions and 9% of its earnings, at a session RPM
-of $7.48 against $27.79 for every other weekday: more than twice the traffic of a
-normal day, earning about half as much. Board task 377.
+**Aug 18 to 21 is anomalous and is excluded from the baseline.** Four days
+carrying 26% of the window's sessions and 9% of its earnings. With pageviews in
+hand it is clearly low-value traffic rather than a counting artefact, because it
+is depressed on both measures at once:
 
-With that block removed, the defensible baseline over 18 weekdays is:
+                        page RPM    pages per session
+    Aug 18-21             $4.05           1.87
+    every other weekday   $8.03           3.40
 
-    median session RPM      $27.99
-    mean weekday earnings   $45.53
-    x180 school days        $8,196/yr from school days alone
+Half the rate and half the depth. Board task 377.
 
-**There is no RPM trend in this window.** First half $27.93, second half $27.68,
-a change of -1%. The 67% "increase" visible across the raw month is entirely the
-Aug 18-21 block sitting in the first half and dragging it down. Earnings did rise
-21%, and that is traffic volume rather than rate.
+## The baseline
 
-The ad-stack placement fix is NOT in this data: it merged 2026-09-18, two days
-after the window closes. Whatever lifted the rate around Aug 24 is not that, and
+Clean weekdays, n=17:
+
+    median page RPM     $7.95
+    mean page RPM       $8.03
+    most recent 5       $8.18      likeliest forward rate
+
+## The trend, and a correction
+
+Page RPM is **rising**, and an earlier note in this repo said the rate was flat.
+That earlier reading was taken on the SESSION rpm, over a window ending Sep 16,
+and on that metric it was -1%. Both numbers are arithmetically right. They
+disagree because pages per session fell over the same period, from 3.67 to 3.21,
+and a session rate nets that against the page rate and reports neither.
+
+Fewer pages per visit, each worth more. Only the page rate says so.
+
+Cut the window five ways and the direction holds while the size does not:
+
+    all weekdays Aug 14 to Sep 12      +55%
+    clean weekdays                     +38%
+    clean weekdays from Aug 24         +34%
+    clean weekdays from Aug 25         +19%
+    last 15 weekdays                   +34%
+
+So: up, somewhere between a fifth and a half, and 30 days cannot say more than
+that. This is the case for the model's own staging rule rather than an argument
+against it. `stage` will not read `estimate` until 60 days of revenue and class
+behaviour overlap, and this is why.
+
+The ad-stack placement fix is **not** in this data. It merged 2026-09-18, after
+both windows close. Whatever lifted the rate from about Aug 25 is not that, and
 is not identified.
