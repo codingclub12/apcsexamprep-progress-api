@@ -62,12 +62,14 @@ const dateOf = (n) => `date('now', '-${n} days')`;
 run(`INSERT INTO teachers (id,name,email,password_hash) VALUES
  ('t_ext','Ext Teacher','ext@school.org','x'),
  ('t_paid','Paid Teacher','paid@school.org','x'),
+ ('t_solo','Solo','solo@system.invalid','x'),
  ('t_own','Tanner','tannercrow12@gmail.com','x')`);
 
 run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,mastery_threshold,retry_allowed) VALUES
  ('c_meas','t_paid','CSA-MEAS','Measured','ap-csa',1,80,0),
  ('c_est','t_ext','CSA-EST','Estimated','ap-csa',1,80,0),
  ('c_small','t_ext','CSA-SMALL','Small','ap-csa',1,80,0),
+ ('c_solo','t_solo','ME-0001','Solo Group','solo',1,80,1),
  ('c_owner','t_own','CSA-OWNER','Owner Test','ap-csa',1,80,0)`);
 
 // t_paid holds a live entitlement for ap-csa, so c_meas is the premium tier.
@@ -83,6 +85,7 @@ const addStudents = (cls, n) => {
 addStudents('c_meas', 10);
 addStudents('c_est', 10);
 addStudents('c_small', 3);
+addStudents('c_solo', 8);
 addStudents('c_owner', 10);
 
 //  Graded events, spread evenly across students and days so that
@@ -105,6 +108,7 @@ const exactEvents = (cls, students, total) => {
 exactEvents('c_meas', 10, 100);
 exactEvents('c_est', 10, 50);
 exactEvents('c_small', 3, 12);
+exactEvents('c_solo', 8, 800);   // heavy: would dominate the rate if it leaked in
 exactEvents('c_owner', 10, 1000);
 
 //  Sessions. Only c_meas and c_owner are instrumented. 400 pageviews across the
@@ -186,18 +190,68 @@ ok('a suppressed class reports NULL behaviour, not zero',
 // -- 5. scenarios --------------------------------------------------------------
 //  pooled: (18000 + 9000) pv over (10 + 10) active students = 1350 pv/student/yr
 //  25 students -> 33750 pv -> $405.00
+//  THE POOL TAKES THE SMALL CLASS, and this is the correction that made the
+//  model usable at all. The k-anonymity floor protects a per-class ROW; it is
+//  not a reason to drop that class from a total, any more than a census drops
+//  its smallest towns. Benchmarked against the live shape (637 active classes,
+//  1826 active students, so 2.9 a class) the first cut suppressed every row and
+//  returned a null scenario table: the tool answered nothing on the only data
+//  it will ever see.
+//
+//    c_meas   18000 annual pv, 10 active students   measured
+//    c_est     9000 annual pv, 10 active students   estimated
+//    c_small   2160 annual pv,  3 active students   estimated, and SUPPRESSED in its own row
+//    pooled   29160 pv over 23 students = 1267.8 -> 1268
 const sc = rep.scenarios;
 const row25 = sc.rows.find((r) => r.students === 25);
-ok('pooled rate is 1350 annual pageviews per active student',
-  sc.annual_pageviews_per_active_student === 1350, sc.annual_pageviews_per_active_student);
-ok('a 25 student class models at $405.00/yr', row25.est_annual_revenue_usd === 405, row25);
+ok('pooled rate is 1268 annual pageviews per active student',
+  sc.annual_pageviews_per_active_student === 1268, sc.annual_pageviews_per_active_student);
+ok('a class suppressed in its own row STILL counts toward the pooled rate',
+  sc.from_classes === 3 && sc.from_active_students === 23,
+  { classes: sc.from_classes, students: sc.from_active_students });
+ok('and it is still suppressed in its own row', pByCode['CSA-SMALL'].suppressed === true);
+ok('a 25 student class models at $380.35/yr', row25.est_annual_revenue_usd === 380.35, row25);
 ok('scenarios scale linearly with class size',
-  sc.rows.find((r) => r.students === 50).est_annual_revenue_usd === 810
-  && sc.rows.find((r) => r.students === 100).est_annual_revenue_usd === 1620,
+  sc.rows.find((r) => r.students === 50).est_annual_revenue_usd === 760.69
+  && sc.rows.find((r) => r.students === 100).est_annual_revenue_usd === 1521.4,
   sc.rows.map((r) => [r.students, r.est_annual_revenue_usd]));
 ok('the owner class did not inflate the pooled rate',
-  sc.from_active_students === 20 && sc.from_classes === 2,
+  sc.from_active_students === 23 && sc.from_classes === 3,
   { students: sc.from_active_students, classes: sc.from_classes });
+
+//  SOLO ACCOUNTS DO NOT SET A CLASSROOM RATE. c_solo has 8 active students and
+//  800 graded events, which is heavier than both teacher classes put together;
+//  if it leaked into the pool the rate would move a long way. This is a
+//  modelling judgement rather than a privacy one: the scenario table answers
+//  "what is a 28 student classroom worth", and a self-study student working
+//  alone is a different population from a class assigned work by a teacher.
+ok('the solo group is in the report', !!pByCode['ME-0001'], Object.keys(pByCode));
+ok('the solo group did NOT move the classroom rate',
+  sc.annual_pageviews_per_active_student === 1268 && sc.from_classes === 3,
+  { rate: sc.annual_pageviews_per_active_student, classes: sc.from_classes });
+ok('but the solo group IS reported in by_tier, not silently dropped',
+  rep.by_tier.reduce((n, t) => n + t.classes, 0) === rep.classes.length,
+  rep.by_tier.map((t) => [t.tier, t.classes]));
+
+//  THE FLOOR MOVED TO THE POOL. A rate built from one or two rooms is that
+//  room's rate wearing a general-sounding name, so the pool refuses below
+//  MIN_POOL_CLASSES classes or MIN_POOL_STUDENTS active students, and says
+//  which. Pinned directly, because the fixture above is deliberately over both.
+//  24 active students, deliberately OVER MIN_POOL_STUDENTS, so this isolates
+//  the class-count floor. A fixture under both floors passes whichever one is
+//  left standing and cannot tell you which was doing the work.
+const thinPool = cm.pooledRate(
+  [{ cohort: 'EXTERNAL', tier: 'free', active_students: 12, active_days: 4, page_views_measured: 400, graded_events: 10 },
+   { cohort: 'EXTERNAL', tier: 'free', active_students: 12, active_days: 4, page_views_measured: 400, graded_events: 10 }],
+  { pageviews_per_event: 4, from_classes: 1, basis: 'measured_classes' });
+ok('a pool of 2 classes refuses to produce a rate even with enough students',
+  thinPool.rate === null, thinPool);
+ok('and it says why, naming both thresholds',
+  /too small/.test(thinPool.reason || '') && /2 class/.test(thinPool.reason || ''), thinPool.reason);
+const fatPool = cm.pooledRate(
+  [0, 1, 2].map(() => ({ cohort: 'EXTERNAL', tier: 'free', active_students: 9, active_days: 4, page_views_measured: 400, graded_events: 10 })),
+  { pageviews_per_event: 4, from_classes: 1, basis: 'measured_classes' });
+ok('a pool of 3 classes and 27 students does produce one', fatPool.rate === 2000, fatPool);
 
 //  THE REPORT MUST TIE OUT TO ITSELF. A reader checking the arithmetic by hand
 //  takes the pageview figure the row states and multiplies it by the RPM the
@@ -235,8 +289,7 @@ ok('every priced class ties its money to its own stated pageviews', tieOut.lengt
 //  table multiplies a pooled rate by a class size, which is fractional far more
 //  often than not, so this is the rule that keeps the table readable.
 const fractional = cm.scenarios(
-  [{ tier: 'free', suppressed: false, est_annual_pageviews: 103, active_students: 7, pageview_basis: 'measured' },
-   { tier: 'free', suppressed: false, est_annual_pageviews: 47,  active_students: 5, pageview_basis: 'measured' }],
+  { rate: 150 / 12, from_classes: 3, from_active_students: 12, any_measured: true },
   9.37, [25, 28, 55]);
 ok('every scenario row reports a WHOLE number of pageviews',
   fractional.rows.every((r) => Number.isInteger(r.est_annual_pageviews)),

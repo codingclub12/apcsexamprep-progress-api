@@ -43,7 +43,16 @@
     "module on 2 of 24 generated classes by a cent, because the module priced",
     "off an unrounded annual pageview count while reporting the rounded one. It",
     "only shows on small classes and the hand-written fixture, which uses round",
-    "numbers, could not see it at all."
+    "numbers, could not see it at all.",
+    "",
+    "THE POOLING DEFECT, found by benchmarking rather than by review. The first",
+    "cut dropped every class below the k-anonymity floor from the POOLED rate as",
+    "well as from its own row. At the live shape, 637 active classes over 1826",
+    "active students, that is 2.9 students a class: every row suppressed and the",
+    "scenario table null. The tool answered nothing on the only data it will ever",
+    "see. The floor protects a ROW; a total is what aggregation is for. The floor",
+    "now applies to the pool itself, and solo ME- accounts are kept out of it on",
+    "modelling grounds rather than privacy ones."
   ],
   "checks": [
     {
@@ -51,7 +60,7 @@
       "name": "the model's own rules, including the fail-closed endpoint",
       "_why": "44 assertions over a throwaway SQLite file: the funnel counts, the measured-over-estimated preference, the k-anonymity floor, the null-not-zero rule, the derived maturity stage, joint coverage as an intersection, the tie-out between a row's pageviews and its money, and that no key reaches the endpoint.",
       "command": "npm run --silent smoke:classmonetization",
-      "expect": "44 passed, 0 failed"
+      "expect": "52 passed, 0 failed"
     },
     {
       "kind": "rederive",
@@ -131,6 +140,33 @@
       "replace": "      class_id: c.id,\n      class_code: c.class_code,\n      teacher_email: c.teacher_email,",
       "command": "npm run --silent smoke:classmonetization",
       "expect_failure": "the report carries no display_name, teacher name or email"
+    },
+    {
+      "kind": "mutation",
+      "name": "SMALL CLASSES ARE DROPPED FROM THE POOLED RATE AGAIN",
+      "file": "lib/class-monetization.js",
+      "find": "    if (!POOL_COHORTS.has(r.cohort)) continue;\n    if (r.active_students <= 0 || r.active_days <= 0) continue;",
+      "replace": "    if (!POOL_COHORTS.has(r.cohort)) continue;\n    if (r.active_students < MIN_CLASS_STUDENTS) continue;\n    if (r.active_students <= 0 || r.active_days <= 0) continue;",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "a class suppressed in its own row STILL counts toward the pooled rate"
+    },
+    {
+      "kind": "mutation",
+      "name": "SOLO SELF-STUDY ACCOUNTS SET THE CLASSROOM RATE",
+      "file": "lib/class-monetization.js",
+      "find": "const POOL_COHORTS = new Set(['EXTERNAL']);",
+      "replace": "const POOL_COHORTS = new Set(['EXTERNAL', 'SOLO']);",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "the solo group did NOT move the classroom rate"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE POOL FLOOR IS REMOVED: two classes set the rate for every school",
+      "file": "lib/class-monetization.js",
+      "find": "const MIN_POOL_CLASSES = 3;",
+      "replace": "const MIN_POOL_CLASSES = 0;",
+      "command": "npm run --silent smoke:classmonetization",
+      "expect_failure": "a pool of 2 classes refuses to produce a rate"
     }
   ]
 }

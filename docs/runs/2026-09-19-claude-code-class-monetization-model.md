@@ -111,12 +111,49 @@ unreachable guard still has to hold; the day a new signal contributes pageviews
 without contributing a day, it is what stops the model reporting Infinity as
 money.
 
+## The pooling defect, found by benchmarking rather than by review
+
+Benchmarked at the live shape before merging: 637 active classes, 1826 active
+students, 82k graded events over 90 days. Performance was never the problem.
+64ms for a 30 day report, 136ms for 90 days, 3MB of heap across several runs.
+
+The scenario table came back null.
+
+1826 students over 637 classes is 2.9 students a class. The k-anonymity floor
+is 5 active students, and the first cut dropped every suppressed class from the
+POOLED rate as well as from its own row. So every class fell below the floor,
+the pool had nothing in it, and the tool answered nothing on the only data it
+will ever see.
+
+The floor protects a ROW. Aggregating across hundreds of classes is exactly
+what k-anonymity permits, and excluding the small ones from a total is how a
+census would lose its smallest towns. The floor now applies to the POOL: at
+least 3 classes and 20 active students, or the rate is null with a reason
+naming both thresholds.
+
+Two things worth keeping about how this was found. It was not reachable by
+reading the code, because the code was self-consistent and every hand-written
+fixture had 10 student classes. And a benchmark written to answer "is this fast
+enough for a 1 vCPU box" answered a completely different question, because it
+was the first thing to run the model against a realistic SHAPE rather than a
+realistic size.
+
+The same pass added a second correction that is a modelling judgement rather
+than a privacy rule: solo ME- accounts are kept out of the pool. The scenario
+table answers "what is a 28 student classroom worth", and a self-study student
+working alone is a different population from a class assigned work by a teacher.
+Averaging the two gives a number that describes neither. Solo classes are still
+reported in `by_tier`.
+
 ## Evidence
 
-    npm run smoke:classmonetization            44 passed, 0 failed
-    npm run smoke:classmonetizationmutation    16 passed, 0 failed (14 rules, each red for its own assertion)
+    npm run smoke:classmonetization            52 passed, 0 failed
+    npm run smoke:classmonetizationmutation    19 passed, 0 failed (17 rules, each red for its own assertion)
     npm run smoke:classmonetizationrederive    8 passed, 0 failed, on 10 separate seeds
-    npm run smoke:mutationleak                 42 passed; 11 harnesses, 167 pairs, tree clean
+    npm run smoke:mutationleak                 42 passed; 11 harnesses, tree clean
+    node scripts/deploy-gate.js deploy-gates/2026-09-19-class-monetization-model.json
+                                               3 independent kinds agree: suite, rederive, mutation
+    benchmark at 637 classes / 1826 students   64ms at 30d, 136ms at 90d, 3MB heap
     npm run smoke:encoding                     54 passed, no mojibake
     npm run smoke:volumepaths                  nothing the server reads is hidden by the volume
     npm run smoke:storefront                   144 passed

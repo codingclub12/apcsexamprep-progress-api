@@ -91,6 +91,31 @@ const MUTATIONS = [
     must: ['a suppressed class reports NULL behaviour, not zero'],
   },
   {
+    //  The correction that made the model usable at production scale. Dropping
+    //  suppressed classes from the POOL as well as from their own row sounds
+    //  cautious and is not: at 2.9 students a class, which is the live shape,
+    //  it suppresses everything and the scenario table returns null.
+    name: 'THE FLOOR IS OVER-APPLIED AGAIN: small classes are dropped from the pooled rate',
+    find: '    if (!POOL_COHORTS.has(r.cohort)) continue;\n    if (r.active_students <= 0 || r.active_days <= 0) continue;',
+    repl: '    if (!POOL_COHORTS.has(r.cohort)) continue;\n    if (r.active_students < MIN_CLASS_STUDENTS) continue;\n    if (r.active_students <= 0 || r.active_days <= 0) continue;',
+    must: ['a class suppressed in its own row STILL counts toward the pooled rate'],
+  },
+  {
+    //  A self-study student is a different population from an assigned class.
+    //  Averaging the two produces a number that describes neither.
+    name: 'SOLO ACCOUNTS SET THE CLASSROOM RATE',
+    find: "const POOL_COHORTS = new Set(['EXTERNAL']);",
+    repl: "const POOL_COHORTS = new Set(['EXTERNAL', 'SOLO']);",
+    must: ['the solo group did NOT move the classroom rate'],
+  },
+  {
+    //  A rate built from one room is that room's rate wearing a general name.
+    name: 'THE POOL FLOOR IS REMOVED: two classes can set the rate for every school',
+    find: 'const MIN_POOL_CLASSES = 3;',
+    repl: 'const MIN_POOL_CLASSES = 0;',
+    must: ['a pool of 2 classes refuses to produce a rate'],
+  },
+  {
     //  Tanner's own test classes are the heaviest users on the site. Letting
     //  them into the calibration sets every school's price from his browsing.
     name: 'EXCLUDED COHORT LEAKS IN: owner and prober classes set the calibration',
@@ -102,8 +127,8 @@ const MUTATIONS = [
     //  Same leak, one stage later: the pooled per-student rate the scenario
     //  table extrapolates from.
     name: 'EXCLUDED COHORT LEAKS INTO THE SCENARIOS: the pooled per-student rate includes owner classes',
-    find: "    if (r.tier === 'excluded' || r.suppressed) continue;\n    if (r.est_annual_pageviews == null || r.active_students <= 0) continue;",
-    repl: '    if (r.est_annual_pageviews == null || r.active_students <= 0) continue;',
+    find: '    if (!POOL_COHORTS.has(r.cohort)) continue;\n',
+    repl: '',
     must: ['the owner class did not inflate the pooled rate'],
   },
   {
@@ -145,8 +170,8 @@ const MUTATIONS = [
   },
   {
     name: 'THE SCENARIO TABLE PRINTS A FRACTIONAL PAGEVIEW COUNT',
-    find: '      const pv = Math.round(pvPerStudent * n);',
-    repl: '      const pv = pvPerStudent * n;',
+    find: '      const pv = Math.round(pool.rate * n);',
+    repl: '      const pv = pool.rate * n;',
     must: ['every scenario row reports a WHOLE number of pageviews'],
   },
   {

@@ -156,11 +156,10 @@ for (const c of CLASSES) {
   const pvMeasured = qPv.get(c.id, mod).pv;
   const ev = qEv.get(c.id, mod, c.id, mod).n;
 
+  //  apv is computed for EVERY class, suppressed or not, because a suppressed
+  //  class still feeds the pooled rate. Suppression hides a ROW; it does not
+  //  remove a class from a total. The row fields are nulled afterwards.
   const rec = { enrolled, active, days, suppressed: false, apv: null, usd: null, basis: 'none' };
-  if (!c.owner && active > 0 && active < cm.MIN_CLASS_STUDENTS) {
-    rec.suppressed = true;
-    rowsB.set(c.id, rec); continue;
-  }
   let pv = null;
   if (pvMeasured > 0) { pv = pvMeasured; rec.basis = 'measured'; }
   else if (ratioB != null && ev > 0) { pv = ev * ratioB; rec.basis = 'estimated'; }
@@ -168,19 +167,24 @@ for (const c of CLASSES) {
     rec.apv = Math.round((pv / days) * cm.SCHOOL_DAYS_PER_YEAR);
     if (rpmB != null) rec.usd = Math.round(((rec.apv / 1000) * rpmB) * 100) / 100;
   }
+  if (!c.owner && active > 0 && active < cm.MIN_CLASS_STUDENTS) rec.suppressed = true;
   rowsB.set(c.id, rec);
 }
 
 //  The pooled per-student rate, re-derived by summing student-weighted rates
 //  rather than by pooling class totals.
-let wSum = 0, sSum = 0;
+//  The pool takes every EXTERNAL class, INCLUDING the ones too small to report
+//  individually, and excludes owner and solo cohorts. Floors apply to the pool
+//  rather than to its members.
+let wSum = 0, sSum = 0, poolClasses = 0;
 for (const c of CLASSES) {
   if (c.owner) continue;
   const r = rowsB.get(c.id);
-  if (r.suppressed || r.apv == null || r.active <= 0) continue;
-  wSum += r.apv; sSum += r.active;
+  if (r.apv == null || r.active <= 0 || r.days <= 0) continue;
+  wSum += r.apv; sSum += r.active; poolClasses += 1;
 }
-const perStudentB = sSum > 0 ? Math.round(wSum / sSum) : null;
+const poolOk = poolClasses >= cm.MIN_POOL_CLASSES && sSum >= cm.MIN_POOL_STUDENTS;
+const perStudentB = poolOk ? Math.round(wSum / sSum) : null;
 
 // -- THE DIFF -----------------------------------------------------------------
 const A = cm.report({ days: WINDOW });
@@ -230,6 +234,12 @@ ok('pooled annual pageviews per active student agrees',
 //           the failure here, whichever of them is 'right'.
 const scenarioBad = [];
 for (const row of A.scenarios.rows) {
+  if (perStudentB == null) {
+    if (row.est_annual_pageviews !== null) {
+      scenarioBad.push({ students: row.students, field: 'should be null', module: row.est_annual_pageviews });
+    }
+    continue;
+  }
   const expPv = perStudentB * row.students;
   if (Math.abs((row.est_annual_pageviews || 0) - expPv) > row.students) {
     scenarioBad.push({ students: row.students, field: 'scale', module: row.est_annual_pageviews, rederived: expPv });
@@ -255,8 +265,9 @@ for (const r of A.classes) {
 }
 ok('every class row ties its money to its own stated pageviews', tieBad.length === 0, tieBad.slice(0, 6));
 
-ok('no excluded class contributed to the pooled rate',
-  A.scenarios.from_active_students === sSum, { module: A.scenarios.from_active_students, rederived: sSum });
+ok('the pool took every EXTERNAL class and no owner class',
+  A.scenarios.from_active_students === sSum && A.scenarios.from_classes === poolClasses,
+  { module: [A.scenarios.from_classes, A.scenarios.from_active_students], rederived: [poolClasses, sSum] });
 
 console.log(`\n  ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -37,15 +37,34 @@ and cannot see which basis produced it, you are reading it wrong.
 **A class too small to anonymise reports nothing about its behaviour.** Below
 five active students, a per-class row comes back with `suppressed: true` and
 nulls. At one active student, a "class pageview rate" is one child's browsing
-habits with a class code attached. The rollups and the scenario table are
-unaffected, because nothing about pricing a 28 student room requires reading a
-1 student room.
+habits with a class code attached.
+
+That floor protects a ROW, and the first cut got it backwards by also dropping
+those classes from the pooled rate. That sounds cautious and is not: aggregating
+across hundreds of classes is exactly what k-anonymity permits, and excluding
+the small ones from a total is how a census would lose its smallest towns.
+Benchmarked against the live shape (637 active classes, 1826 active students, so
+2.9 students a class) every single row fell below the floor and the scenario
+table came back null. The tool answered nothing on the only data it will ever
+see.
+
+So the pool takes every eligible class and the floor moves to the pool itself:
+at least `MIN_POOL_CLASSES` classes and `MIN_POOL_STUDENTS` active students, or
+the rate is null with a reason. A rate built from one room is that room's rate
+wearing a general-sounding name.
 
 **Owner, prober and audit classes never set the rate.** They are classified
 `excluded` and are kept out of the calibration and out of the pooled per-student
 rate. Tanner's own test classes are among the heaviest users on the site, and
 letting them in would price every school off his browsing. The mutation battery
 proves this by leaking them in on purpose and requiring the suite to go red.
+
+**Solo ME- accounts are kept out of the pool too**, and that one is a modelling
+judgement rather than a privacy rule. The scenario table answers "what is a 28
+student classroom worth". A self-study student working alone at their own pace
+is a different population from a class assigned work by a teacher, and averaging
+the two gives a number that describes neither. Solo classes are still reported
+in `by_tier`, not silently dropped.
 
 ## Where the pageviews come from, and why most of them are estimated
 
@@ -186,9 +205,14 @@ already headed.
 
 ## Testing
 
-    npm run smoke:classmonetization           44 assertions, offline
-    npm run smoke:classmonetizationmutation   14 rules broken on purpose
+    npm run smoke:classmonetization           52 assertions, offline
+    npm run smoke:classmonetizationmutation   17 rules broken on purpose
     npm run smoke:classmonetizationrederive   a second implementation, must agree
+
+Benchmarked at the live shape (637 classes, 1826 students, 82k graded events
+over 90 days): 64ms for a 30 day report, 136ms for 90 days, 3MB of heap across
+several runs. Nothing here grows per request. That benchmark is also what caught
+the pooling defect above, which no amount of reading the code had found.
 
 The re-derivation is the one worth understanding. It computes the same figures
 with one query per class and no `GROUP BY` anywhere, over a seeded generated
