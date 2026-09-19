@@ -92,6 +92,12 @@ also self-corrects: every page that gets instrumented moves a class from the
 estimated basis to the measured one and tightens the ratio for everyone still on
 the estimate.
 
+The ratio is derived from the same population the pooled rate uses, which is real
+teacher classes only. A class that may not set the rate may not set the ratio
+either, and an earlier cut filtered on the tier in one place and the cohort in
+the other, which let solo self-study accounts calibrate a classroom estimate.
+One definition, used in both places.
+
 The honest limit: a class that submits a lot and reads little, or reads a lot and
 submits little, is mis-estimated in proportion to how far it sits from the site
 average. That error is what shrinks as instrumentation coverage grows, and

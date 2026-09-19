@@ -119,16 +119,16 @@ const MUTATIONS = [
     //  Tanner's own test classes are the heaviest users on the site. Letting
     //  them into the calibration sets every school's price from his browsing.
     name: 'EXCLUDED COHORT LEAKS IN: owner and prober classes set the calibration',
-    find: "  for (const r of f.rows) {\n    if (r.tier === 'excluded') continue;",
-    repl: '  for (const r of f.rows) {',
+    find: '    if (!POOL_COHORTS.has(r.cohort)) continue;\n    if (r.page_views_measured > 0 && r.graded_events > 0) {',
+    repl: '    if (r.page_views_measured > 0 && r.graded_events > 0) {',
     must: ['pageviews_per_event is 4.0, derived from c_meas alone'],
   },
   {
     //  Same leak, one stage later: the pooled per-student rate the scenario
     //  table extrapolates from.
     name: 'EXCLUDED COHORT LEAKS INTO THE SCENARIOS: the pooled per-student rate includes owner classes',
-    find: '    if (!POOL_COHORTS.has(r.cohort)) continue;\n',
-    repl: '',
+    find: '  for (const r of fRows) {\n    if (!POOL_COHORTS.has(r.cohort)) continue;',
+    repl: '  for (const r of fRows) {',
     must: ['the owner class did not inflate the pooled rate'],
   },
   {
@@ -146,7 +146,7 @@ const MUTATIONS = [
     //  day pilot into a full year of traffic.
     name: 'ANNUALISED OVER CALENDAR DAYS, NOT ACTIVE DAYS',
     find: '  const perActiveDay = pv / r.active_days;',
-    repl: '  const perActiveDay = pv / Math.max(1, days);',
+    repl: '  const perActiveDay = pv / 30;',
     must: ['c_meas is priced on the MEASURED basis at $216.00/yr'],
   },
   {

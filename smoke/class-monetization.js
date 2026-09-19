@@ -271,7 +271,7 @@ const awkward = (pv, days) => cm.priceRow(
   { class_id: 'a', class_code: 'A', course: 'ap-csa', cohort: 'EXTERNAL', tier: 'free',
     enrolled: 10, active_students: 10, active_days: days, sessions: days,
     page_views_measured: pv, active_minutes: 10, graded_events: 10 },
-  CAL1, 9.37, 30);
+  CAL1, 9.37);
 const awkwardBad = [[4, 7], [5, 7], [6, 7], [9, 7], [12, 7], [15, 7]]
   .map(([pv, d]) => awkward(pv, d))
   .filter((r) => r.est_annual_revenue_usd
@@ -362,7 +362,7 @@ const synthetic = cm.priceRow(
   { class_id: 'x', class_code: 'X', course: 'ap-csa', cohort: 'EXTERNAL', tier: 'free',
     enrolled: 10, active_students: 10, active_days: 0, sessions: 4,
     page_views_measured: 400, active_minutes: 40, graded_events: 100 },
-  { pageviews_per_event: 4, from_classes: 1, basis: 'measured_classes' }, 12, 30);
+  { pageviews_per_event: 4, from_classes: 1, basis: 'measured_classes' }, 12);
 ok('priceRow refuses to annualise a row carrying pageviews but zero active days',
   synthetic.est_annual_pageviews === null && synthetic.est_annual_revenue_usd === null,
   { pv: synthetic.est_annual_pageviews, usd: synthetic.est_annual_revenue_usd });

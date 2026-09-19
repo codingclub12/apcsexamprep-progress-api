@@ -91,8 +91,8 @@
       "kind": "mutation",
       "name": "OWNER AND PROBER CLASSES SET THE RATE REAL SCHOOLS ARE PRICED ON",
       "file": "lib/class-monetization.js",
-      "find": "  for (const r of f.rows) {\n    if (r.tier === 'excluded') continue;",
-      "replace": "  for (const r of f.rows) {",
+      "find": "    if (!POOL_COHORTS.has(r.cohort)) continue;\n    if (r.page_views_measured > 0 && r.graded_events > 0) {",
+      "replace": "    if (r.page_views_measured > 0 && r.graded_events > 0) {",
       "command": "npm run --silent smoke:classmonetization",
       "expect_failure": "pageviews_per_event is 4.0, derived from c_meas alone"
     },
