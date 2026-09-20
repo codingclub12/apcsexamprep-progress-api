@@ -202,6 +202,48 @@ const PAGES = [
     why: 'description was scraped breadcrumb and nav text',
   },
   {
+    handle: 'ap-csa-lesson-2-1-algorithms-selection-repetition',
+    title: 'AP CSA Lesson 2.1: Algorithms with Selection and Repetition',
+    description: 'AP CSA Lesson 2.1 covers algorithms built from sequencing, selection and repetition: the vocabulary and logic behind every if statement and loop in Java.',
+    why: 'description was scraped breadcrumb and nav text, found 2026-09-20',
+  },
+  {
+    handle: 'ap-csa-lesson-2-10-implementing-string-algorithms',
+    title: 'AP CSA Lesson 2.10: Implementing String Algorithms',
+    description: 'AP CSA Lesson 2.10 develops string algorithms in Java: extracting and comparing substrings, picking loop bounds for length-k traversal, and counting matches.',
+    why: 'description was scraped breadcrumb and nav text, found 2026-09-20',
+  },
+  {
+    handle: 'ap-csa-lesson-2-11-nested-iteration',
+    title: 'AP CSA Lesson 2.11: Nested Iteration',
+    description: 'AP CSA Lesson 2.11 covers nested iteration in Java: tracing inner and outer loop order and calculating total inner loop executions for independent loop bounds.',
+    why: 'description was scraped breadcrumb and nav text, found 2026-09-20',
+  },
+  {
+    handle: 'ap-csa-lesson-2-3-if-statements',
+    title: 'AP CSA Lesson 2.3: if Statements',
+    description: 'AP CSA Lesson 2.3 teaches if statements in Java: one-way and two-way selection, boolean conditions, and tracing which block executes for a given input.',
+    why: 'description was scraped breadcrumb and nav text, found 2026-09-20',
+  },
+  {
+    handle: 'ap-csa-lesson-3-5-methods-how-to-write-them',
+    title: 'AP CSA Lesson 3.5: Methods, How to Write Them',
+    description: 'AP CSA Lesson 3.5 teaches writing void and return methods in Java: correct headers, pass-by-value for primitives, and local versus instance variables.',
+    why: 'description was scraped breadcrumb and nav text, found 2026-09-20',
+  },
+  {
+    handle: 'ap-csa-lesson-3-6-methods-passing-returning-object-references',
+    title: 'AP CSA Lesson 3.6: Passing and Returning Object References',
+    description: 'AP CSA Lesson 3.6 explains passing object references in Java: mutating through a parameter versus reassigning it, aliasing, and same-class field access.',
+    why: 'description was scraped breadcrumb and nav text, found 2026-09-20',
+  },
+  {
+    handle: 'ap-csa-lesson-4-6-using-text-files',
+    title: 'AP CSA Lesson 4.6: Using Text Files',
+    description: 'AP CSA Lesson 4.6 teaches reading text files in Java with File and Scanner, handling FileNotFoundException, and using hasNextLine and hasNextInt.',
+    why: 'description was scraped breadcrumb and nav text, found 2026-09-20',
+  },
+  {
     handle: 'ap-csp-course-bi3-unit-test-part-b',
     title: 'AP CSP Big Idea 3 Unit Test, Part B',
     description: 'A 14 question, auto scored AP CSP practice test on Big Idea 3 topics 3.10 through 3.18: lists, procedures, and abstraction. Retakes allowed, 70 percent to pass.',
