@@ -1,0 +1,146 @@
+{
+  "_why": [
+    "Canonical data for board 373: the CED Essential Knowledge codes standing in",
+    "student-visible text on the AP CSA lesson pages, and what each one becomes.",
+    "The rule is 'Citing the CED to students' in",
+    "docs/ap-cyber-unit1-ced-realignment.md, and it is course-agnostic: the code",
+    "is teacher knowledge, so name the idea, not the code.",
+    "",
+    "MEASURED 2026-09-21 against the live pages, through lib/storefront-fetch.js.",
+    "178 citations on 19 of the 38 Units 2-4 lesson pages. lib/cyber-ek-density.js",
+    "reports 0 of them in a protected placement, and on these pages that is the",
+    "true answer rather than a blind spot: none of the four structures it protects",
+    "(the id=\"ekNN-body\" coverage table, an evidence sentence inside a faq-item or",
+    "info-box, a <strong>Answer Key:</strong> block, an atk-tag card tag) exists on",
+    "any CSA lesson page. Checked by grepping all 38 bodies for each marker: zero",
+    "hits. The three pages carrying the word 'teacher' at all are 3.1, 3.3 and 3.4,",
+    "and none of those three carries a single EK code.",
+    "",
+    "WHAT IS DELIBERATELY LEFT ALONE, AND THE ONE THAT ALMOST WAS BY MISTAKE.",
+    "8 of the 178 sit inside a <script> block, and an earlier version of this file",
+    "called all 8 search-engine metadata and left all 8. Seven of them are: they",
+    "are in <script type=\"application/ld+json\">, in strings like 'Aligned to",
+    "2025-2026 CED topic 2.1.A.', which is metadata rather than page text, and",
+    "this repo's own definition of a visible citation (visibleCitations in",
+    "scripts/cyber-ek-thin-csv.js) excludes script content.",
+    "",
+    "THE EIGHTH IS NOT METADATA. It is in a plain <script> on 3.6 holding the Bug",
+    "Hunt game's question data, in the explanation string a student is shown when",
+    "they check an answer: 'same-class access allows other.count inside Inventory",
+    "(EK 3.6.A.3).' It renders on the page at runtime. Reading the tag rather than",
+    "running the check is what hid it: seven of eight carried the ld+json type and",
+    "the count looked uniform. It is cut, as a counted prose replacement, because",
+    "the mechanical rules deliberately never reach inside a <script>.",
+    "",
+    "So 171 are cut and 7 are not, and the number is stated both ways wherever it",
+    "is reported rather than rounded to a nicer one."
+  ],
+
+  "shapes": {
+    "_note": [
+      "The three mechanical placements, counted from the live bodies. The rules",
+      "themselves live in lib/csa-ek-thin.js; these counts are what the suite",
+      "asserts, so a page changing shape under us is a failure rather than a",
+      "quieter diff."
+    ],
+    "paren-trailing": 136,
+    "strong-objective-label": 13,
+    "ced-range-heading": 6,
+    "prose": 16,
+    "json-ld-script": 7,
+    "total": 178
+  },
+
+  "prose": [
+    {
+      "topic": "2.1",
+      "why": "A glossary definition of 'flowchart'. 2.1.A is the objective for the whole topic, which is sequencing, selection and repetition, so the three building blocks are what the sentence means.",
+      "find": "The AP exam uses flowcharts to test 2.1.A.",
+      "repl": "The AP exam uses flowcharts to test all three building blocks."
+    },
+    {
+      "topic": "2.1",
+      "why": "A heading whose trailing code is a label, not part of the sentence.",
+      "find": "<h2>Order Matters: EK 2.1.A.5</h2>",
+      "repl": "<h2>Order Matters</h2>"
+    },
+    {
+      "topic": "2.2",
+      "why": "Subject position. Deleting the code leaves 'explicitly covers both cases' with no subject; the CED is what covers them.",
+      "find": "<p>EK 2.2.A.1 explicitly covers both cases.",
+      "repl": "<p>The CED covers both cases."
+    },
+    {
+      "topic": "2.8",
+      "why": "The only parenthetical on any of these pages carrying real prose after the code. Dropping the whole parenthetical would delete the caveat, which is the one thing in it a student needs.",
+      "find": "(EK 2.8.A.3 \u2014 equivalence holds only when the loop variable is not modified in the body)",
+      "repl": "(equivalence holds only when the loop variable is not modified in the body)"
+    },
+    {
+      "topic": "3.5",
+      "why": "'This is EK 3.5.A.8 and one of the most tested...' reads as a claim about the code. The sentence works without it.",
+      "find": "This is EK 3.5.A.8 and one of the most tested AP exam concepts.",
+      "repl": "This is one of the most tested AP exam concepts."
+    },
+    {
+      "topic": "3.6",
+      "why": "A What You'll Learn item. Its siblings are bare imperatives ('Identify aliasing and predict its effects'), so dropping the code and the colon puts it in the same shape.",
+      "find": "<li>Apply EK 3.6.A.3: same-class access to private fields</li>",
+      "repl": "<li>Apply same-class access to private fields</li>"
+    },
+    {
+      "topic": "3.6",
+      "why": "A code used as a sentence-opening label inside a paragraph.",
+      "find": "\">EK 3.6.A.3: Baker != Jar.",
+      "repl": "\">Baker != Jar."
+    },
+    {
+      "topic": "3.6",
+      "why": "MCQ feedback. The code adds nothing a student can use; the explanation after it is the whole value.",
+      "find": "</strong> EK 3.6.A.3: same-class access is permitted.",
+      "repl": "</strong> Same-class access is permitted."
+    },
+    {
+      "topic": "3.6",
+      "why": "MCQ 6's STEM, so the rewrite has to keep asking the same question. Answer B is 'a method can access private fields of a parameter ONLY when the parameter is the same type as the enclosing class', which is what the new wording names.",
+      "find": "about EK 3.6.A.3 is TRUE?",
+      "repl": "about accessing a parameter's private fields is TRUE?"
+    },
+    {
+      "topic": "3.6",
+      "why": "MCQ 7 feedback, and the one place where dropping the codes leaves nothing: '(primitives) + (objects).' is not a sentence. Answer B is 'Primitives: copy of value; Objects: copy of reference to same object; methods CAN mutate the object', so the replacement says that.",
+      "find": "</strong> EK 3.5.A.8 (primitives) + EK 3.6.A.1 (objects).",
+      "repl": "</strong> A primitive parameter gets a copy of the value. An object parameter gets a copy of the reference, so the method can change the object it points at."
+    },
+    {
+      "topic": "3.6",
+      "why": "MCQ feedback opening with a code as a label.",
+      "find": "</strong> EK 3.6.A.2: returned reference points to same object.",
+      "repl": "</strong> The returned reference points to the same object."
+    },
+    {
+      "topic": "3.7",
+      "why": "MCQ feedback opening with a code as a label.",
+      "find": "</strong> EK 3.7.A.1: static methods cannot access instance variables.",
+      "repl": "</strong> Static methods cannot access instance variables."
+    },
+    {
+      "topic": "3.7",
+      "why": "MCQ feedback opening with a code as a label.",
+      "find": "</strong> EK 3.7.A.2: static methods can access static variables and other static methods.",
+      "repl": "</strong> Static methods can access static variables and other static methods."
+    },
+    {
+      "topic": "3.7",
+      "why": "MCQ feedback opening with a code as a label.",
+      "find": "</strong> EK 3.7.A.1: static cannot call instance methods without an instance.",
+      "repl": "</strong> Static methods cannot call instance methods without an instance."
+    },
+    {
+      "topic": "3.6",
+      "why": "Inside a plain <script> holding the Bug Hunt game's question data. This is the explanation a student sees on checking an answer, so it is page text that happens to be stored as a string. It needs a decision rather than a rule because the mechanical rules never reach inside a <script>, which is what keeps them away from JavaScript.",
+      "find": "same-class access allows other.count inside Inventory (EK 3.6.A.3).",
+      "repl": "same-class access allows other.count inside Inventory."
+    }
+  ]
+}
