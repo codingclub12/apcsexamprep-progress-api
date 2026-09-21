@@ -368,6 +368,20 @@ const PAGES = [
     description: 'A full-length AP CSA practice exam, multiple choice plus every free response type, with Java solutions and scoring rubrics. Built for the May 12, 2027 exam.',
     why: 'description trailed off mid-sentence and the body advertises the 2026 exam',
   },
+
+  // Found by the 2026-09-21 nightly crawl, shard 6/7. Same brand-doubled defect
+  // as the three CSP games above: no title_tag override, so theme.liquid's
+  // brand append landed on a Title field that already ended in the brand.
+  // Description was the in-game instructional text (MOVE_FORWARD, ROTATE_LEFT,
+  // ROTATE_RIGHT), not authored copy; also flagged as a gap in
+  // docs/meta-description-gaps.md. Verified live via lib/storefront-fetch.js
+  // before authoring the replacement.
+  {
+    handle: 'ap-csp-game-robot-director',
+    title: 'Robot Director, an AP CSP Game',
+    description: 'An AP CSP game on algorithms: direct a robot using move and rotate commands to reach the flag without leaving the grid, in as few moves as possible.',
+    why: 'title carried the brand twice; description was scraped in-game instructions',
+  },
 ];
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
