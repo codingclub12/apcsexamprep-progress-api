@@ -21,6 +21,12 @@ progress.db-*
 # is a stale copy of a page somebody has since edited.
 shopify/import-sheets/
 
+# Board 373 working directory: scripts/csa-ek-thin-csv.js fetches all 38 CSA
+# lesson pages into here to build the sheets. Regenerate rather than commit a
+# stale copy of somebody else's page. The three-page fixture the gate runs
+# against IS committed, under shopify/csa-ek-fixture/, and says why there.
+shopify/csa-ek-snapshots/
+
 # cyber unit 1 nav repair: generated bodies and scratch
 .work/
 

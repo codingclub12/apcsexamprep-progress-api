@@ -62,6 +62,8 @@
     "smoke:denomsafety": "node smoke/denominator-safety.js",
     "smoke:scoreeventsource": "node smoke/score-event-source.js",
     "smoke:ekprotect": "node smoke/ek-protection.js",
+    "smoke:csaek": "node smoke/csa-ek-thin.js",
+    "smoke:csaekmutation": "node smoke/csa-ek-thin-mutation.js",
     "smoke:gatesabotage": "node scripts/cyber-u1-topic14-gate-sabotage.js",
     "smoke:exsabotage": "node scripts/cyber-exercise-gate-sabotage.js",
     "smoke:cybertopics": "node smoke/cyber-topics.js",
@@ -366,7 +368,9 @@
     "site:architecture": "node scripts/site-architecture.js",
     "smoke:classmonetization": "node smoke/class-monetization.js",
     "smoke:classmonetizationmutation": "node smoke/class-monetization-mutation.js",
-    "smoke:classmonetizationrederive": "node scripts/class-monetization-rederive.js"
+    "smoke:classmonetizationrederive": "node scripts/class-monetization-rederive.js",
+    "csaek:sheets": "node scripts/csa-ek-thin-csv.js",
+    "csaek:live": "node scripts/verify-csa-ek-live.js"
   },
   "keywords": [],
   "author": "",
