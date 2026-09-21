@@ -1,5 +1,17 @@
 # 2026-09-21 import runbook: leaderboard XSS, and the "undefined questions" cards
 
+**This directory holds two unrelated batches from two sessions.** This runbook
+covers only these four files:
+
+    leaderboard-xss-fix-csp-games.csv
+    leaderboard-xss-fix-bi3-games.csv
+    leaderboard-xss-fix-networking-games-escmap-only.csv
+    csp-bi3-applied-challenge-undefined-fix-remaining.csv
+
+The four `csp-notes-cfu-fix-bi*.csv` sheets are a separate change with its own
+instructions in `RUNBOOK.md` beside this file. The two batches touch no page in
+common and can be imported in either order.
+
 Four sheets, imported one at a time, in this order. Every step has a command that
 reads the live site and a stated end state, including the parts that are meant to
 look wrong.
