@@ -267,5 +267,70 @@ ok('neither countdown target is in the past',
 ok('no replacement anywhere ships a date that has already passed',
   PAGES.every((p) => p.edits.every((e) => G.staleYears(e.replace, 2027).length === 0)));
 
+//  ── A PAGE THAT COULD NOT BE READ HAS NO STATE ─────────────────────────────
+//  Board 385. On 2026-09-21, asked whether the hub sheet had been imported,
+//  scripts/verify-body-year-live.js hit a 429 on its one page and printed
+//  "Nothing imported yet. This is the expected state before step 1."
+//
+//  The page WAS imported. All twelve claims were live. That line is a verdict
+//  about a body the run never saw, and it reads more confidently than the
+//  UNREACHABLE line above it, so a reader skimming to the summary takes it.
+//  Same shape as the three false regressions of 2026-09-03, same lesson: the
+//  fix is refusing to speak about what was not observed.
+console.log('\n  An unreachable page is not a verdict\n');
+
+//  ── THE MAIN GUARD IS CHECKED FIRST, IN A CHILD, AND IT GATES THE REST ─────
+//  Requiring that script must not RUN it. The obvious version of this case,
+//  `typeof require(...).summary === 'function'`, is hollow, and the mutation
+//  run proved it twice. With the guard removed the require runs main(), which
+//  fetches, prints and calls process.exit, so this suite dies mid-file with
+//  status 0 and no failing line. That reads as success, which is worse than
+//  going red.
+//
+//  So the require happens in a CHILD and the marker printed after it is the
+//  evidence. It runs BEFORE the top-level require below, and gates it, because
+//  a suite cannot report on a module that kills the process as it loads.
+const guardHolds = (() => {
+  const r = require('child_process').spawnSync(process.execPath,
+    ['-e', "require('./scripts/verify-body-year-live.js'); console.log('REQUIRED_CLEANLY');"],
+    { cwd: require('path').join(__dirname, '..'), encoding: 'utf8', timeout: 30000 });
+  return r.status === 0 && /REQUIRED_CLEANLY/.test(r.stdout || '');
+})();
+ok('requiring the script runs nothing: the main guard holds', guardHolds);
+
+if (!guardHolds) {
+  console.log('  SKIPPING the summary cases. The module cannot be required without running,\n'
+    + '  so requiring it here would end this suite early and quietly.');
+} else {
+  const { summary } = require('../scripts/verify-body-year-live');
+  const said = (c) => summary(c).join(' ');
+
+  ok('THE BUG: every page unreachable says NOTHING WAS READ',
+    /NOTHING WAS READ/.test(said({ done: 0, partial: 0, pending: 0, unreachable: 1, truncated: 0 })));
+  ok('and never says nothing is imported yet',
+    !/imported yet/.test(said({ done: 0, partial: 0, pending: 0, unreachable: 1, truncated: 0 })));
+  ok('a genuinely unimported set still reads as the expected state before step 1',
+    /expected state before step 1/.test(said({ done: 0, partial: 0, pending: 3, unreachable: 0, truncated: 0 })));
+  //  The middle case proves the rule is not just an all-or-nothing guard: some
+  //  pages read, some did not, and the summary may speak only of the ones it saw.
+  ok('with some read and some not, the count names only what was read',
+    /None of the 2 page\(s\) read/.test(said({ done: 0, partial: 0, pending: 2, unreachable: 1, truncated: 0 })));
+  ok('and it drops the "expected state" reassurance when something went unread',
+    !/expected state before step 1/.test(said({ done: 0, partial: 0, pending: 2, unreachable: 1, truncated: 0 })));
+  ok('an unreachable page is called UNKNOWN rather than pending',
+    /UNKNOWN rather/.test(said({ done: 1, partial: 0, pending: 0, unreachable: 1, truncated: 0 })));
+  //  TRUNCATED is the opposite case and must NOT be softened: that body was
+  //  read, it came back short, and a truncating MERGE is the failure this whole
+  //  script was written for.
+  ok('a truncated body is counted separately from an unreachable one',
+    /1 TRUNCATED/.test(said({ done: 1, partial: 0, pending: 0, unreachable: 0, truncated: 1 })));
+  ok('and a truncated body never triggers the unknown-state language',
+    !/UNKNOWN/.test(said({ done: 1, partial: 0, pending: 0, unreachable: 0, truncated: 1 })));
+  ok('a clean run says the counts and stops talking',
+    summary({ done: 2, partial: 0, pending: 0, unreachable: 0, truncated: 0 }).length === 1);
+  ok('partial still explains itself',
+    /partly imported page is normal/.test(said({ done: 1, partial: 1, pending: 0, unreachable: 0, truncated: 0 })));
+}
+
 console.log(`\n  ${fail === 0 ? 'OK' : 'FAILED'} - ${pass} passed, ${fail} failed\n`);
 process.exit(fail === 0 ? 0 : 1);
