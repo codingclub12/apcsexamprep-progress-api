@@ -1,9 +1,27 @@
 # Import runbook: the EK codes on the AP CSA lesson pages
 
-Board 373. Three sheets in `imports/2026-09-21/`, **one import each, in order,
-with a check between them.** MERGE overwrites a live body with no undo, so the
-blast radius of a single click is however many rows are in the file. Nineteen on
-one click with nothing to look at in between is not a thing to do.
+Board 373. **This directory is shared.** Several changes landed sheets here on
+the same day, each with its own runbook. This one covers exactly these three
+files and no others:
+
+    csa-ek-codes-unit-2-pages.csv
+    csa-ek-codes-unit-3-pages.csv
+    csa-ek-codes-unit-4-pages.csv
+
+Anything else here belongs to a different change: `README.md` covers the
+leaderboard XSS and the "undefined questions" cards, and `RUNBOOK.md` covers the
+CSP guided-notes CFU sheets. **Measured, not assumed:** these three sheets carry
+19 handles, the other eight carry 69, and no handle appears in both sets. So the
+three sets can be imported in any order relative to each other. Check any later
+arrival the same way rather than importing on the strength of this paragraph.
+
+**One import each, in order, with a check between them.** MERGE overwrites a live
+body with no undo, so the blast radius of a single click is however many rows are
+in the file. Nineteen on one click with nothing to look at in between is not a
+thing to do.
+
+Matrixify settings for all three: **MERGE, QUOTE_ALL, utf-8-sig, one import at a
+time.** No `Published At` column, so nothing is re-dated.
 
 ## What this changes
 
@@ -36,7 +54,7 @@ importing anything.
 
 ## Step 1: Unit 2
 
-Import `imports/2026-09-21/csa-ek-codes-unit-2-pages.csv`. MERGE mode,
+Import `csa-ek-codes-unit-2-pages.csv`. MERGE mode,
 9 rows, 738,711 bytes.
 
 Pages: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9.
@@ -55,7 +73,7 @@ an import reached a page it should not have.
 
 ## Step 2: Unit 3
 
-Import `imports/2026-09-21/csa-ek-codes-unit-3-pages.csv`. MERGE mode,
+Import `csa-ek-codes-unit-3-pages.csv`. MERGE mode,
 3 rows, 212,178 bytes.
 
 Pages: 3.5, 3.6, 3.7.
@@ -77,7 +95,7 @@ in `config/csa-ek-decisions.json`.
 
 ## Step 3: Unit 4
 
-Import `imports/2026-09-21/csa-ek-codes-unit-4-pages.csv`. MERGE mode,
+Import `csa-ek-codes-unit-4-pages.csv`. MERGE mode,
 7 rows, 526,997 bytes.
 
 Pages: 4.1, 4.2, 4.3, 4.4, 4.5, 4.8, 4.9.

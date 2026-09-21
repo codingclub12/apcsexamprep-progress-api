@@ -48,11 +48,6 @@ const SNAP = arg('--snapshots') || path.join(ROOT, 'shopify', 'csa-ek-snapshots'
 const SHOW = process.argv.includes('--show-changes');
 const OFFLINE = process.argv.includes('--offline');
 
-if (!OUT || OUT.startsWith('--')) {
-  console.error('usage: node scripts/csa-ek-thin-csv.js <out-dir> [--show-changes] [--offline]');
-  process.exit(2);
-}
-
 const flat = (s) => s.replace(/<(script|style)[\s\S]*?<\/\1>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
 //  The handles come from the theme's lesson specs, which are the same list the
@@ -104,6 +99,14 @@ const BOM = '\ufeff';
 const csv = (rows) => BOM + rows.map((r) => r.map(gate.csvCell).join(',')).join('\n') + '\n';
 
 function main() {
+  //  Checked HERE and not at module scope. It used to sit beside the arg
+  //  parsing at the top of the file, which meant that requiring this module for
+  //  parseSheet() printed a usage line and called process.exit(2) on the
+  //  caller. Found by requiring it.
+  if (!OUT || OUT.startsWith('--')) {
+    console.error('usage: node scripts/csa-ek-thin-csv.js <out-dir> [--show-changes] [--offline]');
+    process.exit(2);
+  }
   const conf = decisions();
   const list = pages();
   console.log(`reading ${list.length} lesson pages${OFFLINE ? ' from the snapshot' : ' live'} ...`);

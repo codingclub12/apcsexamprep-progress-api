@@ -130,7 +130,7 @@ codes" would pass on a blanked body and on a bot challenge.
 
 **Nothing is live.** The sheets are built, validated and handed over; importing
 them is Tanner at a browser, three clicks with a check between. The runbook is
-`docs/csa-ek-thin-runbook.md` and it carries the expected end state per step,
+`imports/2026-09-21/RUNBOOK-csa-ek-codes.md` and it carries the expected end state per step,
 including the one that reads oddly: after the unit 2 import the check reports
 twelve clean pages, not nine, because 2.10, 2.11 and 2.12 never carried a code
 and are checked anyway. A check that only looks at the pages you changed cannot
