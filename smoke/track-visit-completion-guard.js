@@ -124,6 +124,84 @@ const row = (unit, lesson, activity_type) => db.prepare(`
   ok('  quiz handles are still reported as untracked', t7.body.tracked === false, t7.body);
   ok('  and no progress row was created for it', !row('unit-1', '1.1', 'quiz'));
 
+  // ── 8. DERIVED FROM THE VOCABULARY, not from a list ────────────────────────
+  //  THE REASON THIS SECTION EXISTS. Sections 1 to 7 above named lab,
+  //  exercise-1 and exercise-2, which were the three graded activity types that
+  //  existed when this file was written on 2026-08-24. exercise-3 was declared
+  //  in utils.js that same day and debug entered the gradebook contract on
+  //  2026-09-01. Neither was added to GRADED_ON_ARRIVAL and neither was added
+  //  here, so this suite stayed green for four weeks while every visit to any
+  //  of 146 live -frq pages and 53 live -debug pages wrote completed = 1 with a
+  //  null score. A hardcoded list next to a vocabulary that grows is a list
+  //  that drifts, and a guard written the same way cannot tell you it has.
+  //
+  //  So the cases come from the vocabulary itself: every activity token a
+  //  handle can produce (utils.js ACTIVITY_TOKENS, after its aliases) crossed
+  //  with whether the gradebook counts it as graded
+  //  (lib/gradebook-contract.js). A graded one must not complete on a bare
+  //  visit. A new activity type therefore fails this suite the day it is added,
+  //  until somebody puts it on one side of the line on purpose.
+  console.log('8. Every graded activity type in the vocabulary, derived');
+  //  trailingActivity is the SAME function /track resolves a handle through, so
+  //  the alias (-frq means exercise-3) is applied here exactly as it is in
+  //  production rather than re-implemented in the test.
+  const { ACTIVITY_TOKENS, trailingActivity } = require('../utils');
+  const contract = require('../lib/gradebook-contract');
+
+  //  Tokens /track never sees, because it returns before the set is consulted.
+  const HANDLED_ELSEWHERE = new Set(['quiz', 'exam']);
+
+  //  Graded tokens that DELIBERATELY still auto-complete, each with its reason.
+  //  This is not a waiver list: a token here is a decision on the record, and
+  //  the assertion below still fails if a token is in neither place.
+  const AUTO_COMPLETES_BY_DECISION = new Map([
+    //  CSP topic code pages. 120 of them are live, and no 'code' denominator is
+    //  authored in any seed, so no gradebook column depends on one completing.
+    //  Whether a CSP code page has a grading flow of its own is a separate
+    //  question about that course, not about this set, and changing it here
+    //  without that evidence would be guessing at 120 live pages.
+    ['code', 'no denominator is authored for it in any course'],
+    //  No page ends in -gap today, so nothing can reach this branch.
+    ['gap', 'no live handle ends in -gap'],
+  ]);
+
+  const seen = [];
+  for (const token of ACTIVITY_TOKENS) {
+    if (HANDLED_ELSEWHERE.has(token)) continue;
+    const native = trailingActivity('probe-' + token);
+    const { activity } = contract.canonicalActivity(native);
+    if (!contract.isGradedActivity(activity)) continue;
+    seen.push(native);
+
+    if (AUTO_COMPLETES_BY_DECISION.has(native)) {
+      ok(`  ${token} -> ${native} is classified as auto-completing on purpose: `
+        + AUTO_COMPLETES_BY_DECISION.get(native), true);
+      continue;
+    }
+
+    //  A fresh lesson id per token so the rows cannot collide with each other
+    //  or with sections 1 to 7 above.
+    const lesson = '9.' + (seen.length);
+    const handle = `ap-cyber-unit-9-lesson-${seen.length}-${token}`;
+    await track(handle);
+    const r = db.prepare(`
+      SELECT completed FROM progress
+      WHERE student_id = 's1' AND course = 'ap-cybersecurity'
+        AND lesson = ? AND activity_type = ?
+    `).get(lesson, native);
+    ok(`  ${token} -> ${native} is graded, so a bare visit must not complete it`,
+      !!r && r.completed === 0, { handle, native, row: r });
+  }
+
+  //  The cross-check that makes the derivation load bearing rather than
+  //  decorative: the two types whose absence caused the defect must be among
+  //  the cases this section generated. If a refactor ever stops the vocabulary
+  //  reaching them, this says so instead of quietly testing nothing.
+  ok('  the derivation reaches exercise-3', seen.includes('exercise-3'), seen);
+  ok('  the derivation reaches debug', seen.includes('debug'), seen);
+  ok('  and it covers more than the three types this file was born with',
+    seen.length >= 5, seen);
+
   console.log(`\n${pass} passed, ${fail} failed\n`);
   server.close();
   process.exit(fail ? 1 : 0);

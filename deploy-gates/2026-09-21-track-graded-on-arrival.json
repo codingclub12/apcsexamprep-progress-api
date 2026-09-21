@@ -1,0 +1,92 @@
+{
+  "change": "POST /api/student/track stops auto-completing exercise-3 and debug on a bare page view, and the guard that should have caught their absence now derives its cases from the activity vocabulary instead of listing three types by hand",
+  "_context": [
+    "WHAT WAS WRONG, and it is bigger than the ten rows that surfaced it.",
+    "/track auto-completes any activity type outside GRADED_ON_ARRIVAL, and that",
+    "set read ['exercise-1','exercise-2','lab']. exercise-3 and debug were not in",
+    "it, so merely OPENING one of those pages wrote completed = 1 with a null",
+    "score, before a single button was clicked. 146 -frq pages (the handle alias",
+    "for exercise-3) and 53 -debug pages are live, so the exposure is 199 pages.",
+    "The ten activities /api/health was reporting are simply the ones a student",
+    "has reached so far.",
+    "",
+    "Both are graded exactly like an exercise-1 page, which WAS in the set:",
+    "lib/csa-frq-pages.js and lib/csa-debug-pages.js each build a Submit for",
+    "grading button posting to /code-grade against hidden test cases, and both",
+    "carry a denominator on all 53 CSA lessons, so the gradebook prices them.",
+    "",
+    "WHY IT WAS MISSED, which is the part worth keeping. The set was written on",
+    "2026-08-24 against the three types that existed then. exercise-3 was",
+    "declared in utils.js that same day; debug entered the gradebook contract on",
+    "2026-09-01. smoke/track-visit-completion-guard.js tested the same three",
+    "types and stayed green through both additions. A hardcoded list beside a",
+    "vocabulary that grows is a list that drifts, and a guard written the same",
+    "way cannot tell you it has.",
+    "",
+    "So section 8 of that guard now DERIVES its cases: every activity token a",
+    "handle can produce, resolved through the same trailingActivity the route",
+    "uses, crossed with isGradedActivity from lib/gradebook-contract.js. A new",
+    "activity type fails the suite the day it is added until somebody classifies",
+    "it. code and gap are classified as deliberately auto-completing, each with",
+    "its reason, so they are decisions on the record rather than omissions.",
+    "",
+    "THERE IS NO live CHECK AND THAT IS DELIBERATE. This change stops a FUTURE",
+    "visit from completing graded work. Nothing observable in production moves",
+    "when it deploys: the rows already written stay written, so the reporter",
+    "count does not drop, and the only way to watch the new behaviour is to post",
+    "a visit as a student, which is writing student data to prove a point. A",
+    "commit-sha pin would have been a dated receipt rather than a check, which",
+    "this repo learned on 2026-09-18. rederive is the honest kind here.",
+    "",
+    "WHAT THIS DOES NOT DO. The ten rows already carrying completed = 1 with a",
+    "null score are historical data. Code cannot clear them and clearing them is",
+    "a backfill against student records, which is on the NEVER_AUTO list. They",
+    "stay, and /api/health keeps reporting them, until a human decides."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "a bare visit never completes a graded activity, derived from the vocabulary",
+      "_why": "Sections 1 to 7 are the original hand-written cases, kept because they pin the grading flow and the lesson and quiz paths too. Section 8 is the one that would have caught this: it generates a case per activity token rather than naming three, and asserts the derivation actually reaches exercise-3 and debug so it cannot quietly test nothing.",
+      "command": "npm run --silent smoke:trackguard",
+      "expect": "25 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE EXACT PRE-FIX SET: exercise-3 and debug absent again",
+      "_why": "The defect reproduced. This is the one mutation that matters, because it is not a hypothetical break: it is the code that was serving 199 live pages until today, and the old guard was green against it.",
+      "file": "routes/student.js",
+      "find": "['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'debug']",
+      "replace": "['exercise-1', 'exercise-2', 'lab']",
+      "command": "npm run --silent smoke:trackguard",
+      "expect_failure": "exercise-3 -> exercise-3 is graded"
+    },
+    {
+      "kind": "mutation",
+      "name": "only debug is dropped, so the two additions are proven independently",
+      "_why": "Dropping both at once could pass on either assertion alone. Per-rule isolation is the repo convention precisely because a suite going red for a neighbouring reason tells you nothing about the rule you meant to test.",
+      "file": "routes/student.js",
+      "find": "['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'debug']",
+      "replace": "['exercise-1', 'exercise-2', 'exercise-3', 'lab']",
+      "command": "npm run --silent smoke:trackguard",
+      "expect_failure": "debug -> debug is graded"
+    },
+    {
+      "kind": "mutation",
+      "name": "the derivation stops reaching anything, so the new section goes hollow",
+      "_why": "The guard this replaces was green because it tested the wrong three things. A derived guard can fail the same way if the derivation silently yields nothing, so the suite asserts it reaches exercise-3 and debug by name. This breaks the derivation to prove that assertion is load bearing.",
+      "file": "smoke/track-visit-completion-guard.js",
+      "find": "    if (!contract.isGradedActivity(activity)) continue;",
+      "replace": "    if (true) continue;",
+      "command": "npm run --silent smoke:trackguard",
+      "expect_failure": "the derivation reaches exercise-3"
+    },
+    {
+      "kind": "rederive",
+      "name": "the declared set and the observed behaviour agree on what a visit completes",
+      "_why": "Two paths sharing no code: a TEXT parse of GRADED_ON_ARRIVAL out of routes/student.js, and a POST to /track per activity token against a throwaway database, reading progress.completed back. It catches the failure the suite cannot, because the set DRIVES the behaviour and so a change to the set moves both sides together. What this finds is the linkage breaking: the set consulted too late or not at all, or a type suppressed by something other than the set. Both directions measured against a deliberate break.",
+      "command": "npm run --silent rederive:trackautocomplete",
+      "expect": "the two derivations agree on 5 type(s)"
+    }
+  ]
+}
