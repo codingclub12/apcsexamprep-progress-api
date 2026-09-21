@@ -1,0 +1,780 @@
+﻿"Handle","Command","Body HTML"
+"ap-csp-course-bi4-fault-tolerance-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 4: Computer Systems and Networks · Topic 4.2 · Guided Notes (Student)</p>
+<h1>Fault Tolerance — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 4.2 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi4-fault-tolerance"">Topic 4.2 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Describe the benefits of fault tolerance — why a network built to survive failure keeps users connected even when components fail unexpectedly and in groups (LO CSN-1.E)</li>
+<li>Explain how a given system is fault-tolerant, pointing to its redundancy: the extra components and alternate paths that let data take a different route when something fails (LO CSN-1.E)</li>
+<li>Identify a system's vulnerabilities to failure — the single point of failure every path depends on — and decide where added redundancy would remove them (LO CSN-1.E)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>The town of Cedar Bend has 5 sites on its fiber network, joined by 5 lines: School–Library, Library–Town Hall, Town Hall–Clinic, School–Town Hall, and Clinic–Fire Station. A backhoe on Main Street is about to cut exactly ONE line.</p>
+<p class=""muted"">Sketch the map. Which single cut does the most damage, and why that one? Then: the town can afford ONE new line — where do you add it to best protect Cedar Bend?</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Redundancy: Extra Paths on Purpose</h2>
+<h3>Key Vocabulary (LO CSN-1.E)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Redundancy</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Fault-tolerant</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Extra Components, Extra Paths</h3>
+<ul>
+<li>Redundancy protects a system by building in <span class=""gap""></span>.</li>
+<li>On a network map, redundancy looks like <span class=""gap""></span>.</li>
+<li>When a connection dies mid-transfer, the data <span class=""gap""></span>.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>In your bell-ringer map, explain why cutting School–Library barely mattered while cutting Town Hall–Clinic was a disaster. Use the phrase 'different route' in your answer.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Mid-download, a router along your path to a game server dies completely — yet the download finishes. Explain what happened to the rest of your data, and name the property of the Internet that made it possible.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>The Internet's designers assumed its components WOULD fail and planned around it, instead of trying to build parts that never fail. Why is that the smarter engineering bet for a complex system?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 4.2 page once you have finished the whole topic.</p>
+</div>
+<h2>02. The Benefit, the Bill, and the Weak Points</h2>
+<h3>What Redundancy Buys vs. What It Costs</h3>
+<p><strong>The benefit: fault tolerance</strong></p>
+<p><strong>The bill: additional resources</strong></p>
+<ul>
+<li>A system earns the name fault-tolerant when it <span class=""gap""></span>.</li>
+<li>The price of redundancy is <span class=""gap""></span>.</li>
+<li>Redundant routing helps the Internet grow because <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: is a two-sided sentence — redundancy often requires additional resources BUT can provide the benefit of fault tolerance. Full-credit answers name both halves.</p></div>
+<h3>Network Triage: The Three-Question Audit</h3>
+<p class=""muted"">For each network, run the audit the exam expects: Is it fault-tolerant? Where is the vulnerability — the single point of failure? Where would ONE addition create redundancy?</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Network</th>
+<th>Fault-tolerant?</th>
+<th>Vulnerability (single point of failure)</th>
+<th>Where to add redundancy</th>
+</tr>
+<tr>
+<td>A chain: five routers connected in a line, A–B–C–D–E</td>
+<td><span class=""wcell""></span></td>
+<td>Every middle link and device; cutting B–C strands D and E</td>
+<td>Link E back to A, closing the chain into a loop</td>
+</tr>
+<tr>
+<td>A ring: six routers in a closed loop, each linked to two neighbors</td>
+<td>Yes, for any single failure — traffic reroutes the long way around</td>
+<td><span class=""wcell""></span></td>
+<td>A cross-link through the middle of the ring guards against double failures</td>
+</tr>
+<tr>
+<td>A star: every device in a school connects to one central switch</td>
+<td>No — one device failure can take down every connection at once</td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A mesh of six offices, each linked to three others — all reaching the Internet through ONE ISP line</td>
+<td>Inside the mesh, yes; as a whole system, no</td>
+<td><span class=""wcell""></span></td>
+<td>A second ISP connection from a different provider on a different physical path</td>
+</tr>
+</table>
+<div class=""warn"">
+<p class=""label"">Watch out — “Redundancy Is Wasteful Duplication”</p>
+<p><strong>Myth:</strong> A second line that sits unused all year is money down the drain. In plain English 'redundant' literally means unnecessary — so cutting the duplicate is just good budgeting.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: The Backhoe Test, Formalized</h3>
+<p><strong>Bridges: links you cannot lose</strong></p>
+<p><strong>Independent paths: counting your spares</strong></p>
+<ul>
+<li>A link is a bridge if removing it <span class=""gap""></span>.</li>
+<li>Two paths between the same endpoints are independent only if they share <span class=""gap""></span>.</li>
+<li>With k fully independent paths, the network survives <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Deep dive only — the AP exam asks you to spot the single point of failure in a described system, never to prove graph theorems.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A gaming café connects 30 PCs through one router, which reaches the Internet through one cable modem. State whether the system is fault-tolerant, identify its vulnerability to failure, and prescribe ONE addition — with the resource cost the owner must accept.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A friend says Cedar Bend should cancel its second fiber line since 'it did nothing all year.' Respond in two sentences using the exact trade described in.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Name the TWO distinct benefits that redundant routing between two points provides to the Internet, and explain in one sentence why the second one is about growth, not failure.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 4.2 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 4.2 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Vulnerability = the SPOF</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Redundancy has a price</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Tolerating ≠ preventing</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Fault Tolerance, in One Slide</h3>
+<ul>
+<li>The Internet has been engineered to be fault-tolerant, with abstractions for routing and transmitting data.</li>
+<li>Redundancy — extra components, including more than one path between any two devices — is how that tolerance is built.</li>
+<li>When a device or connection fails, subsequent data is sent via a different route, if possible.</li>
+<li>Fault-tolerant = supports failures and continues to function — vital because complex systems fail unexpectedly, often in groups.</li>
+<li>Redundancy costs additional resources but buys fault tolerance — and redundant routing increases reliability AND helps the Internet scale.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  describe the benefits of fault tolerance for users and for scaling (LO CSN-1.E a)</li>
+<li>☐  explain how a system is fault-tolerant by pointing to its redundancy (LO CSN-1.E b)</li>
+<li>☐  identify a system's single point of failure and where to add redundancy (LO CSN-1.E c)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi4-parallel-distributed-computing-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 4: Computer Systems and Networks · Topic 4.3 · Guided Notes (Student)</p>
+<h1>Parallel and Distributed Computing — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 4.3 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi4-parallel-distributed-computing"">Topic 4.3 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Compare sequential, parallel, and distributed solutions — and tell the last two apart by counting devices (LO CSN-2.A)</li>
+<li>Compute totals and speedup: sum for sequential, sequential-plus-longest-parallel, sequential ÷ parallel (LO CSN-2.A)</li>
+<li>Describe the benefits and limits of parallel and distributed computing (LO CSN-2.B)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>The class must wash 60 dishes after the lab breakfast. One student working alone takes 60 minutes: 45 minutes of scrubbing plus 15 minutes loading the single drying rack, which only one person can use at a time. Today THREE students share the job — the scrubbing splits evenly, but the rack line still moves one person at a time.</p>
+<p class=""muted"">Predict first: is the answer 20 minutes? Now compute the real finish time. Then find the time that NO number of extra washers could ever beat.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Three Ways to Compute</h2>
+<h3>Key Vocabulary (LO CSN-2.A)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Sequential computing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Parallel computing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Distributed computing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Speedup</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Same Job, Three Models</h3>
+<ul>
+<li>The sequential model's defining rule: nothing starts until <span class=""gap""></span>.</li>
+<li>Parallel computing saves time because some of the smaller operations run <span class=""gap""></span>.</li>
+<li>To compare the efficiency of two solutions, compare <span class=""gap""></span>.</li>
+</ul>
+<h3>Parallel vs. Distributed — The Classic Mix-Up</h3>
+<p><strong>Parallel computing</strong></p>
+<p><strong>Distributed computing</strong></p>
+<ul>
+<li>Parallel computing splits one program across the cores of <span class=""gap""></span>.</li>
+<li>You know it's DISTRIBUTED (not parallel) when the program runs across <span class=""gap""></span>.</li>
+<li>The fastest way to tell the two models apart on the exam is to count <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Count the devices. One machine, many cores = PARALLEL. Many machines, one program = DISTRIBUTED.</p></div>
+<h2>02. Do the Math: Time and Speedup</h2>
+<h3>Do the Math: Total Time and Speedup</h3>
+<p class=""muted"">The CED's model: sequential time = SUM of all steps; parallel time = sequential tasks + LONGEST parallel task; speedup = sequential ÷ parallel.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Task set (each parallel task gets its own processor)</th>
+<th>Sequential time (sum of all steps)</th>
+<th>Parallel time (sequential tasks + longest parallel task)</th>
+<th>Speedup (sequential ÷ parallel)</th>
+</tr>
+<tr>
+<td>Two parallel tasks: 30 s and 50 s (no sequential task)</td>
+<td>30 + 50 = 80 s</td>
+<td>50 s (longest parallel task; nothing sequential to add)</td>
+<td>80 ÷ 50 = 1.6</td>
+</tr>
+<tr>
+<td>Sequential task: 20 s, then parallel tasks: 40 s and 60 s</td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Three parallel tasks: 30 s, 60 s, 30 s (no sequential task)</td>
+<td>30 + 60 + 30 = 120 s</td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Sequential task: 60 s, then parallel tasks: 20 s, 20 s, 20 s</td>
+<td>60 + 20 + 20 + 20 = 120 s</td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A program has one 15-second sequential task, then two parallel tasks of 25 seconds and 35 seconds. Compute the sequential time, the parallel time, and the speedup. Show the arithmetic.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>In the table's last row, THREE processors produced a speedup of only 1.5. Name the number in that task set that kept the speedup low, and state what would have to change for the speedup to rise.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A tablet applies one video filter using all 8 cores of its chip. A weather service runs one forecast model across 2,000 separate computers. Classify each as parallel or distributed and name the one question that decides it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Show your work and answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 4.3 page once you have finished the whole topic.</p>
+</div>
+<h2>03. Benefits, Limits, and When Distributed Wins</h2>
+<div class=""warn"">
+<p class=""label"">Watch out — “Doubling the Processors Halves the Time”</p>
+<p><strong>Myth:</strong> If 2 processors make a program twice as fast, then 4 processors will make it four times as fast, and 64 will make it sixty-four times as fast — speedup simply tracks the processor count.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: The Speedup Ceiling (Amdahl's Law)</h3>
+<p><strong>Push the washers to infinity</strong></p>
+<p><strong>Amdahl's idea, one formula</strong></p>
+<ul>
+<li>In the dish job, no number of washers can ever finish faster than <span class=""gap""></span>.</li>
+<li>The maximum possible speedup equals the total sequential time divided by <span class=""gap""></span>.</li>
+<li>When processor-buying stops paying off, the engineering fix is to shrink <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Deep dive only — the AP exam never asks for Amdahl's Law by name; it tests the idea behind it: the sequential portion sets the ceiling.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A program spends 30 seconds in its sequential portion and 90 seconds in work that can be split into as many parallel tasks as you like. What total time does the solution approach as processors are added, and what maximum speedup does that put a ceiling at? Show the division.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A hospital network's imaging archive is too large for any single computer to store, and one machine would need decades to analyze it. Name the computing model that solves this, and the TWO single-computer limits the CED says it overcomes.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A classmate says: 'Parallel computing scales exactly like sequential computing — both just get faster when you buy better hardware.' Correct the claim using the CED's comparison of how the two models scale.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Show your work and answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 4.3 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 4.3 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>The forgotten sequential task</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Speedup is a ratio</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Parallel ≠ distributed</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Parallel and Distributed Computing, in One Slide</h3>
+<ul>
+<li>Sequential = operations in order, one at a time; parallel = one program broken into smaller sequential operations, some simultaneous; distributed = multiple devices running one program.</li>
+<li>Compare efficiency by comparing the time solutions take to perform the same task.</li>
+<li>Sequential time = the SUM of all steps; parallel time = the sequential tasks + the LONGEST parallel task.</li>
+<li>Speedup = sequential time ÷ parallel time — a ratio, never a subtraction.</li>
+<li>Parallel scales better than sequential but is still limited by its sequential portion — at some point more processors stop helping; distributed computing solves larger problems faster, and problems no single computer could solve at all.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  tell sequential, parallel, and distributed apart by counting devices (LO CSN-2.A)</li>
+<li>☐  compute totals: sum for sequential; sequential + longest parallel task (LO CSN-2.A)</li>
+<li>☐  compute speedup as sequential time ÷ parallel time (LO CSN-2.A)</li>
+<li>☐  explain the sequential-portion ceiling and when only distributed works (LO CSN-2.B)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi4-the-internet-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 4: Computer Systems and Networks · Topic 4.1 · Guided Notes (Student)</p>
+<h1>The Internet — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 4.1 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi4-the-internet"">Topic 4.1 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: The Network With No Center</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how computing devices work together in a network: devices, systems, networks, paths, routing, and bandwidth (LO CSN-1.A)</li>
+<li>Explain how the Internet works: interconnected networks, standardized open protocols, dynamic routing, and scalability by design (LO CSN-1.B)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Seven devices, one message. A connects to B and C; B connects to D; C connects to D and E; D connects to F; E connects to F and G. All connections work in both directions. Device A must send a message to device F.</p>
+<p class=""muted"">Sketch the network, then list EVERY route from A to F that never revisits a device. Then pick the route YOU would send data on — and defend your rule.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Devices, Systems, Networks, Paths</h2>
+<h3>Key Vocabulary (LO CSN-1.A)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Computing device</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Computing system</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Computer network</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Routing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Bandwidth</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Paths and Routing: What You Just Invented</h3>
+<ul>
+<li>A path is a sequence of <span class=""gap""></span> that begins at the sender and ends at the receiver.</li>
+<li>Routing answers one question for every message: <span class=""gap""></span>.</li>
+<li>Bandwidth is a capacity, so it's measured as an amount <span class=""gap""></span>.</li>
+</ul>
+<h3>Device, System, or Network?</h3>
+<p class=""muted"">Classify each item with the CED's exact term — then count the paths. Watch for the item that earns TWO terms at once.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Item</th>
+<th>Reasoning</th>
+<th>Classification / answer</th>
+</tr>
+<tr>
+<td>A smart doorbell camera</td>
+<td>A single physical artifact that runs a program</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>The attendance setup: office computer + ID scanner + attendance software</td>
+<td>Devices AND programs working together for a common purpose</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>The bell ringer's seven lettered devices exchanging data</td>
+<td>Interconnected devices that send or receive data</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Device D from the diagram, considered on its own</td>
+<td>One physical artifact running a program — a router counts</td>
+<td>Computing device</td>
+</tr>
+<tr>
+<td>Number of distinct paths from A to F in the bell ringer</td>
+<td>A path = directly connected devices, sender to receiver</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A classmate claims A–B–E–F is a path in the bell-ringer network. Use the CED's definition of a path to accept or reject the claim.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Your phone + your wireless earbuds + the fitness app tracking your run: device, system, or network? Defend your classification — more than one term may apply.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>An internet plan advertises '300 megabits per second.' Which CED term is being described, and why is 'maximum' the most important word in its definition?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 4.1 page once you have finished the whole topic.</p>
+</div>
+<h2>02. The Internet: A Network of Networks</h2>
+<h3>Key Vocabulary (LO CSN-1.B)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Protocol</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Scalability</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>One Network vs. THE Internet</h3>
+<p><strong>A single network (your diagram)</strong></p>
+<p><strong>The Internet</strong></p>
+<ul>
+<li>The Internet isn't one big network — it's <span class=""gap""></span>.</li>
+<li>Dynamic routing means the path is chosen <span class=""gap""></span>.</li>
+<li>Because the Internet's protocols are open, users can easily <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Access to the Internet just means connecting your device to an Internet-connected device — there is no center to sign in to.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “The Internet Is a Big Computer Somewhere”</p>
+<p><strong>Myth:</strong> The Internet is a single central computer — or a product run by one company — and everybody connects to that one place.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: Who Writes the Internet's Rulebook?</h3>
+<ul>
+<li>Internet protocols are published openly in documents called <span class=""gap""></span>.</li>
+<li>A new device maker 'joins' the Internet by <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Define protocol in your own words, then explain why the Internet's protocols being OPEN matters to a startup building a brand-new kind of device.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Two messages sent seconds apart from the same laptop to the same server travel different routes. Name the CED concept, and explain why 'nobody planned the route' is a feature rather than a bug.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>The Internet grew from a few thousand devices to billions without being redesigned. Which CED term does that demonstrate, and what design choice (think: who is allowed to connect) made it possible?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 4.1 page once you have finished the whole topic.</p>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>Computing device → computing system → computer network: each term builds on the last, and a network IS a type of computing system</li>
+<li>A path is a sequence of directly connected devices from sender to receiver; routing is finding one</li>
+<li>Bandwidth = the MAXIMUM amount of data per fixed amount of time, measured in bits per second</li>
+<li>The Internet is interconnected networks running standardized OPEN protocols — dynamic routing, scalable by design, no center and no owner</li>
+</ul>
+<p><strong>Before next class:</strong> Tonight you'll stream a video that arrives as thousands of separate pieces, possibly out of order — some pieces may not arrive at all. Why does it still play smoothly? Bring a theory tomorrow.</p>
+</div>
+<h2>Day 2: Your Video Arrives in Pieces</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how data are sent through the Internet via packets: streams split into chunks, chunks encapsulated in packets, and metadata used for routing AND reassembly (LO CSN-1.C)</li>
+<li>Describe the differences between the Internet and the World Wide Web (LO CSN-1.D)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Yesterday's teaser: the 3-minute video you streamed last night arrived as thousands of separate pieces. They may have shown up out of order — a few may not have shown up at all. It played smoothly anyway.</p>
+<p class=""muted"">Write 3–5 sentences: what would YOU attach to every piece so the receiver could rebuild the whole — and notice pieces that never arrived?</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Packets: Data in Pieces</h2>
+<h3>Key Vocabulary (LO CSN-1.C)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Data stream</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Packet</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Metadata</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>From Stream to Packets</h3>
+<ul>
+<li>Each chunk of a data stream travels wrapped in <span class=""gap""></span>.</li>
+<li>Metadata does two jobs: steering the packet, and <span class=""gap""></span>.</li>
+<li>Packets may arrive at the destination in order, out of order, or <span class=""gap""></span>.</li>
+</ul>
+<h3>Five Packets, Three Fates</h3>
+<p class=""muted"">A phone sends a photo as five packets, each stamped with sequence-number metadata. Track each packet and fill in what the receiver does.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Packet</th>
+<th>What happens in transit</th>
+<th>What the receiver does</th>
+</tr>
+<tr>
+<td>#1 arrives first</td>
+<td>Took the shortest route</td>
+<td>Places it in position 1 — in order</td>
+</tr>
+<tr>
+<td>#3 arrives second</td>
+<td>Its route was quicker than #2's</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>#2 arrives third</td>
+<td>Detoured around a busy link</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>#4 never arrives</td>
+<td>Dropped along the way</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>#5 arrives last</td>
+<td>Ordinary trip</td>
+<td>Places it in position 5 — once every position is filled, the photo is reassembled</td>
+</tr>
+</table>
+<h3>Three Protocol Names to Recognize: IP, TCP, UDP</h3>
+<ul>
+<li>IP, TCP, and UDP are common <span class=""gap""></span> used on the Internet.</li>
+<li>Of the three protocol names, the one that confirms delivery and re-requests missing pieces is <span class=""gap""></span>.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A friend sees 'packets received out of order' in a game's network stats and concludes the network is broken. In two sentences, explain why nothing is wrong — and name the TWO jobs packet metadata performs.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>During a live video call, the picture freezes for a moment and then jumps ahead rather than replaying what you missed. Which packet fate occurred, and why might a live call choose to skip instead of wait?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Trace a text message's journey from your phone to a friend's phone using all three terms correctly: data stream, chunk, packet.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 4.1 page once you have finished the whole topic.</p>
+</div>
+<h2>02. The Internet vs. the World Wide Web</h2>
+<h3>Key Vocabulary (LO CSN-1.D)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>World Wide Web</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>HTTP</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>The Internet vs. the World Wide Web</h3>
+<p><strong>The Internet</strong></p>
+<p><strong>The World Wide Web</strong></p>
+<ul>
+<li>Strip away the browser chrome and the Web is just <span class=""gap""></span>.</li>
+<li>HTTP belongs to which layer of the stack? <span class=""gap""></span>
+</li>
+<li>The relationship in one word: the Web <span class=""gap""></span> the Internet.</li>
+</ul>
+<div class=""card""><p>AP TIP: Wires, routers, packets, IP/TCP/UDP → the Internet. Linked pages, browsers, HTTP → the Web. The Web uses the Internet — never the reverse.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “The Internet and the Web Are the Same Thing”</p>
+<p><strong>Myth:</strong> 'Internet' and 'Web' are interchangeable — browsing websites IS the Internet, so the two words name one thing.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: One Click, Two Layers</h3>
+<ul>
+<li>In one click, the Web-layer request protocol that fires first is <span class=""gap""></span>.</li>
+<li>The Web never moves packets itself — instead it <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Write ONE sentence that uses 'the Internet' and 'the World Wide Web' correctly together — the word 'uses' must appear.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Classify each as 'the Web' or 'the Internet without the Web': a blog, a smart doorbell streaming video to a phone app, an online game's live match.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>HTTP is 'a protocol used by the World Wide Web.' Using yesterday's definition of protocol, explain what HTTP must therefore consist of.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 4.1 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 4.1 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Internet ≠ World Wide Web</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Out of order is NORMAL</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Bandwidth is a max rate</strong> — in your own words:</p>
+<span class=""wline""></span><h3>The Internet, in One Slide</h3>
+<ul>
+<li>Device → system → network: a computer network is interconnected devices that send or receive data — and it is a type of computing system.</li>
+<li>A path is a sequence of directly connected devices from sender to receiver; routing finds one; bandwidth caps data per fixed time, in bits per second.</li>
+<li>The Internet = interconnected networks + standardized OPEN protocols + dynamic routing + scalability by design.</li>
+<li>Data streams → chunks → packets; metadata routes AND reassembles; arrival may be in order, out of order, or not at all; IP, TCP, and UDP are the protocol names to know.</li>
+<li>The World Wide Web is a system of linked pages, programs, and files speaking HTTP — one service that USES the Internet.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  classify devices, systems, and networks — and trace a valid path (LO CSN-1.A)</li>
+<li>☐  explain what makes the Internet open, scalable, and dynamic (LO CSN-1.B)</li>
+<li>☐  explain packets: chunks + metadata for routing and reassembly (LO CSN-1.C)</li>
+<li>☐  tell the Internet from the World Wide Web on any exam item (LO CSN-1.D)</li>
+</ul>
+</div>
+</div>"
