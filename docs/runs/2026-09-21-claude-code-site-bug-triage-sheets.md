@@ -200,3 +200,40 @@ Admin API 2026-09-01: `main` was an ancestor of the connected branch, not
 ahead of it). This session did not run that command and did not need to
 (nothing here touches the theme's synced directories). Worth a look before
 anyone acts on the current file.
+
+## Live verification, after Tanner's import
+
+All three sheets imported (Tanner confirmed "All 3 imported", 2026-09-21). Re-fetched
+all 15 changed rows fresh from the Admin API and diffed against the expected fixed
+pattern; this is a live check, not a re-report of the build-time validation above.
+
+    handle                                   updatedAt              fixed
+    ap-networking-game-harden-first          2026-09-21T16:54:00Z   yes (shuffle + XSS sink both gone)
+    ap-networking-game-subnet-sprint         2026-09-21T16:54:02Z   yes
+    ap-networking-game-rule-order            2026-09-21T16:54:01Z   yes
+    ap-networking-game-address-autopsy       2026-09-21T16:54:00Z   yes
+    ap-networking-game-packet-path           2026-09-21T16:54:01Z   yes
+    ap-networking-game-log-hunt              2026-09-21T16:54:01Z   yes
+    ap-networking-game-guest-gate            2026-09-21T16:54:00Z   yes
+    ap-networking-game-segment-sort          2026-09-21T16:54:01Z   yes
+    ap-networking-game-shell-hop             2026-09-21T16:54:01Z   yes
+    ap-networking-game-ai-audit              2026-09-21T16:54:00Z   yes
+    ap-csp-course-bi3-boolean-expressions    2026-09-21T16:52:22Z   yes
+    ap-csp-course-bi3-variables              2026-09-21T16:52:22Z   yes
+    ap-csp-course-bi3-conditionals           2026-09-21T16:52:22Z   yes
+    ap-csp-course-bi3-undecidable-problems   2026-09-21T16:52:22Z   yes
+    csp-c1-day-18-packet-switching (article) 2026-09-21T16:51:58Z   yes
+
+10 of 10 networking pages confirmed clear of `esc(e.name` (the actual XSS sink)
+and carrying the textContent-based `renderRows()`. `esc()` itself is still a
+no-op on all 10, which is expected and was the deliberate minimal-scope
+decision: it is not called on attacker-reachable data anywhere in the fixed
+code path. 4 of 4 CSP lesson pages confirmed clear of "undefined questions"
+and carrying "6 questions". The Day 18 article confirmed split into three
+per-option paragraphs with no "B is correct." embedded mid-sentence.
+
+**This is NOT the independent re-check this repo's `verified` flag requires.**
+Same session, same run as the one that built the sheets. It is real,
+re-derivable live evidence (anyone can rerun the same query and get the same
+bytes), which is why it belongs in this run note, but board 378/379/380 stay
+in `needs_verification` until Tanner or a separate process confirms it.
