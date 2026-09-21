@@ -1,0 +1,182 @@
+{
+  "why": "See docs/runs/2026-09-21-claude-code-csp-cfu-reference-audit.md. All 17 live CSP guided notes pages tell students to check themselves with CFUs on the topic page. No lesson page contains the string CFU or Check for Understanding. The section they mean is headed MCQ Practice and holds six questions.",
+  "measured_on": "2026-09-21",
+  "topic_placeholder": "{T}",
+  "rules": [
+    {
+      "id": "per-section",
+      "find": "Then check yourself with the matching CFUs on the Topic {T} page.",
+      "replace": "Check yourself with the six MCQ Practice questions on the Topic {T} page once you have finished the whole topic.",
+      "expected_total": 50,
+      "why": "Names the label that is actually on the page, and stops promising a per-section match that one six-question set cannot deliver."
+    },
+    {
+      "id": "page-header",
+      "find": "Print this page or work on paper \u2014 then check yourself with the CFUs on the Topic {T} page.",
+      "replace": "Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic {T} page.",
+      "expected_total": 17,
+      "why": "One per page. The em-dash goes because the sentence is being rewritten anyway, not as a crusade: these bodies carry 467 em-dashes that are deliberately left alone."
+    }
+  ],
+  "expected_pages": 17,
+  "expected_cfu_sentences_total": 67,
+  "lesson_page_invariant": {
+    "mcq_heading": "MCQ Practice",
+    "questions": 6
+  },
+  "pages": [
+    {
+      "handle": "ap-csp-course-bi1-collaboration-notes",
+      "lesson_handle": "ap-csp-course-bi1-collaboration",
+      "big_idea": 1,
+      "topic": "1.1",
+      "cfu_sentences": 4,
+      "live_bytes": 15295,
+      "live_updated_at": "2026-07-24T10:06:29-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi1-identifying-correcting-errors-notes",
+      "lesson_handle": "ap-csp-course-bi1-identifying-correcting-errors",
+      "big_idea": 1,
+      "topic": "1.4",
+      "cfu_sentences": 4,
+      "live_bytes": 19886,
+      "live_updated_at": "2026-07-24T10:06:29-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi1-program-design-development-notes",
+      "lesson_handle": "ap-csp-course-bi1-program-design-development",
+      "big_idea": 1,
+      "topic": "1.3",
+      "cfu_sentences": 5,
+      "live_bytes": 23492,
+      "live_updated_at": "2026-07-24T10:06:30-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi1-program-function-purpose-notes",
+      "lesson_handle": "ap-csp-course-bi1-program-function-purpose",
+      "big_idea": 1,
+      "topic": "1.2",
+      "cfu_sentences": 5,
+      "live_bytes": 21934,
+      "live_updated_at": "2026-07-24T10:06:29-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi2-binary-numbers-notes",
+      "lesson_handle": "ap-csp-course-bi2-binary-numbers",
+      "big_idea": 2,
+      "topic": "2.1",
+      "cfu_sentences": 4,
+      "live_bytes": 17807,
+      "live_updated_at": "2026-07-24T10:06:30-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi2-data-compression-notes",
+      "lesson_handle": "ap-csp-course-bi2-data-compression",
+      "big_idea": 2,
+      "topic": "2.2",
+      "cfu_sentences": 3,
+      "live_bytes": 14160,
+      "live_updated_at": "2026-07-24T10:06:30-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi2-extracting-information-notes",
+      "lesson_handle": "ap-csp-course-bi2-extracting-information",
+      "big_idea": 2,
+      "topic": "2.3",
+      "cfu_sentences": 5,
+      "live_bytes": 21312,
+      "live_updated_at": "2026-07-24T10:06:30-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi2-using-programs-with-data-notes",
+      "lesson_handle": "ap-csp-course-bi2-using-programs-with-data",
+      "big_idea": 2,
+      "topic": "2.4",
+      "cfu_sentences": 5,
+      "live_bytes": 20969,
+      "live_updated_at": "2026-07-24T10:06:30-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi4-fault-tolerance-notes",
+      "lesson_handle": "ap-csp-course-bi4-fault-tolerance",
+      "big_idea": 4,
+      "topic": "4.2",
+      "cfu_sentences": 3,
+      "live_bytes": 14574,
+      "live_updated_at": "2026-07-24T10:06:33-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi4-parallel-distributed-computing-notes",
+      "lesson_handle": "ap-csp-course-bi4-parallel-distributed-computing",
+      "big_idea": 4,
+      "topic": "4.3",
+      "cfu_sentences": 3,
+      "live_bytes": 15083,
+      "live_updated_at": "2026-07-24T10:06:33-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi4-the-internet-notes",
+      "lesson_handle": "ap-csp-course-bi4-the-internet",
+      "big_idea": 4,
+      "topic": "4.1",
+      "cfu_sentences": 5,
+      "live_bytes": 21630,
+      "live_updated_at": "2026-07-24T10:06:32-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi5-beneficial-harmful-effects-notes",
+      "lesson_handle": "ap-csp-course-bi5-beneficial-harmful-effects",
+      "big_idea": 5,
+      "topic": "5.1",
+      "cfu_sentences": 3,
+      "live_bytes": 18360,
+      "live_updated_at": "2026-07-24T10:06:33-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi5-computing-bias-notes",
+      "lesson_handle": "ap-csp-course-bi5-computing-bias",
+      "big_idea": 5,
+      "topic": "5.3",
+      "cfu_sentences": 3,
+      "live_bytes": 13821,
+      "live_updated_at": "2026-07-24T10:06:33-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi5-crowdsourcing-notes",
+      "lesson_handle": "ap-csp-course-bi5-crowdsourcing",
+      "big_idea": 5,
+      "topic": "5.4",
+      "cfu_sentences": 3,
+      "live_bytes": 13560,
+      "live_updated_at": "2026-07-24T10:06:33-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi5-digital-divide-notes",
+      "lesson_handle": "ap-csp-course-bi5-digital-divide",
+      "big_idea": 5,
+      "topic": "5.2",
+      "cfu_sentences": 3,
+      "live_bytes": 13220,
+      "live_updated_at": "2026-07-24T10:06:33-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi5-legal-ethical-concerns-notes",
+      "lesson_handle": "ap-csp-course-bi5-legal-ethical-concerns",
+      "big_idea": 5,
+      "topic": "5.5",
+      "cfu_sentences": 4,
+      "live_bytes": 15809,
+      "live_updated_at": "2026-07-24T10:06:33-05:00"
+    },
+    {
+      "handle": "ap-csp-course-bi5-safe-computing-notes",
+      "lesson_handle": "ap-csp-course-bi5-safe-computing",
+      "big_idea": 5,
+      "topic": "5.6",
+      "cfu_sentences": 5,
+      "live_bytes": 20120,
+      "live_updated_at": "2026-07-24T10:06:33-05:00"
+    }
+  ]
+}

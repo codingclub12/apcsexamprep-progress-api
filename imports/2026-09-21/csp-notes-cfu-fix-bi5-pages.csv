@@ -1,0 +1,1464 @@
+﻿"Handle","Command","Body HTML"
+"ap-csp-course-bi5-beneficial-harmful-effects-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 5: Impact of Computing · Topic 5.1 · Guided Notes (Student)</p>
+<h1>Beneficial and Harmful Effects — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 5.1 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi5-beneficial-harmful-effects"">Topic 5.1 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: Every Innovation Cuts Both Ways</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how a single effect of a computing innovation can be viewed as both beneficial and harmful (LO IOC-1.A)</li>
+<li>Explain why effects go unanticipated, and how computing advances fuel creativity in other fields (LO IOC-1.A)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Half the school opens the same short-video app before first period. Think of one specific user — maybe you.</p>
+<p class=""muted"">List 3 ways the app makes that ONE user's life better and 3 ways it makes the SAME user's life worse. Star anything that lands on both lists.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. How Innovations Change Us</h2>
+<h3>Key Vocabulary (LO IOC-1.A)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Computing innovation</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Effect</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Beneficial effect</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Harmful effect</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Unanticipated effect</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>People Build, Life Reorders</h3>
+<ul>
+<li>Innovations don't appear on their own: <span class=""gap""></span> decide what gets built.</li>
+<li>When a new tool spreads, everyday tasks <span class=""gap""></span>.</li>
+<li>Surprise effects are guaranteed since <span class=""gap""></span>.</li>
+</ul>
+<h2>02. One Effect, Two Verdicts</h2>
+<h3>One Effect, Two Verdicts</h3>
+<p><strong>Judged beneficial</strong></p>
+<p><strong>Judged harmful</strong></p>
+<ul>
+<li>To show a dual-view effect, point to <span class=""gap""></span> and two different judgments of it.</li>
+<li>Whether an effect counts as help or harm depends on <span class=""gap""></span>.</li>
+<li>A single person can hold both views at once when <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: The CED's phrase is one effect “viewed as both beneficial and harmful by different people, or even by the same person.” Keep it singular.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “A Good Innovation Has Only Good Effects”</p>
+<p><strong>Myth:</strong> If an innovation is well designed and genuinely useful, its effects will be positive; harmful effects only come from badly built or malicious technology.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<h3>Effect Triage: The Short-Video App</h3>
+<p class=""muted"">Four documented effects of the bell-ringer app. For each: beneficial, harmful, or BOTH — and was it anticipated in advance?</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Effect</th>
+<th>Beneficial, harmful, or BOTH?</th>
+<th>Anticipated?</th>
+</tr>
+<tr>
+<td>A teen's science clips reach millions and land a scholarship</td>
+<td><span class=""wcell""></span></td>
+<td>Yes — the app was built to make sharing easy</td>
+</tr>
+<tr>
+<td>The feed keeps users watching for hours</td>
+<td><span class=""wcell""></span></td>
+<td>Partly — engagement was the goal; the lost-sleep backlash was not</td>
+</tr>
+<tr>
+<td>Viral 'challenges' push risky stunts into schools</td>
+<td>Harmful — injuries and discipline cases from copycat behavior</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Local businesses hire students as short-video managers</td>
+<td>Beneficial — a job category that did not exist five years ago</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: The Collingridge Dilemma</h3>
+<ul>
+<li>Early in a technology's life, steering it is easy but <span class=""gap""></span>.</li>
+<li>Once a technology's effects are obvious, <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>From the short-video app, name one effect a parent and a student would judge differently. State the effect ONCE, then give both verdicts.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Give an example of a computing advance boosting a non-computing field — medicine, engineering, communications, or the arts — and name what it made possible.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A news story says 'the app's designers should have known.' Using the idea of unanticipated effects, explain when that standard is unfair.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.1 page once you have finished the whole topic.</p>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>People create computing innovations, and daily tasks reorganize around them</li>
+<li>Computing advances fuel creativity in medicine, engineering, communications, and the arts</li>
+<li>Not every effect is anticipated in advance</li>
+<li>A single effect can be beneficial AND harmful — to different people, or the same person</li>
+</ul>
+<p><strong>Before next class:</strong> Before tomorrow: the World Wide Web was invented so physicists could swap research papers. Write down two things you did on the Web this week that its inventor never planned for.</p>
+</div>
+<h2>Day 2: Beyond the Blueprint</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how a computing innovation can have an impact beyond its intended purpose (LO IOC-1.B)</li>
+<li>Explain what responsible programmers can — and cannot — do about unintended uses at scale (LO IOC-1.B)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>In 1989, Tim Berners-Lee built the World Wide Web so physicists could share research papers quickly and easily.</p>
+<p class=""muted"">List 4 things the Web does today that its inventor never planned. Circle the one that would surprise him most, and note who it helps — and who it hurts.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Uses Beyond Intent</h2>
+<h3>Key Vocabulary (LO IOC-1.B)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Intended purpose</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Targeted advertising</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Machine learning</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Data mining</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Rapid sharing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Three Innovations, Two Stories</h3>
+<p class=""muted"">The CED names three innovations whose real story outgrew the plan. For each: what was intended, and what happened beyond it?</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Innovation</th>
+<th>Intended purpose</th>
+<th>Beyond the intent</th>
+</tr>
+<tr>
+<td>World Wide Web</td>
+<td>Rapid, easy exchange of information within the scientific community</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Targeted advertising</td>
+<td><span class=""wcell""></span></td>
+<td>Misused at individual AND aggregate levels — profiling and manipulation</td>
+</tr>
+<tr>
+<td>Machine learning &amp; data mining</td>
+<td>Enable innovation in medicine, business, and science</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<h3>Scale Changes the Story</h3>
+<ul>
+<li>Harmful impact isn't only personal — it can land on <span class=""gap""></span>.</li>
+<li>Programmers lose control of impacts when <span class=""gap""></span>.</li>
+<li>Scale converts a tiny flaw into a crisis by <span class=""gap""></span>.</li>
+</ul>
+<h2>02. Responsibility and Its Limits</h2>
+<h3>Responsible, Not All-Knowing</h3>
+<p><strong>What responsible programmers DO</strong></p>
+<p><strong>What NO programmer can do</strong></p>
+<ul>
+<li>The CED's responsibility standard is <span class=""gap""></span>, not perfection.</li>
+<li>Complete foresight fails since <span class=""gap""></span>.</li>
+<li>After launch, responsibility continues as <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: An option claiming a programmer “considered every possible use” — or should have — is wrong. The standard is effort, not omniscience.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “Responsible Programmers Catch Every Misuse”</p>
+<p><strong>Myth:</strong> If a team is truly responsible, it will find every possible misuse before launch — any harm that slips through proves the programmers were careless.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: GPS — Missiles to Meal Delivery</h3>
+<ul>
+<li>GPS shows that an innovation's biggest uses can come from <span class=""gap""></span>.</li>
+<li>One-field infrastructure becomes many-field infrastructure when <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Choose a computing innovation to investigate and state its intended purpose in one sentence — what did its creators build it to do?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Identify the data it consumes or produces, and one way that data is — or could be — used beyond the original intent.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Describe one beneficial and one harmful effect. Is either a single effect that different people judge differently?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Name one unintended use its programmers could reasonably have considered — and one nobody could have foreseen.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Draft complete-sentence answers — they become the outline of your Investigation #3 write-up. Check yourself with the six MCQ Practice questions on the Topic 5.1 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 5.1 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>One effect, two verdicts</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>“Considered every use” = wrong</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Harm isn't only personal</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Beneficial &amp; Harmful, in One Slide</h3>
+<ul>
+<li>People create innovations; tasks reorganize around them; creativity spreads to other fields</li>
+<li>Not every effect is anticipated, and one effect can be beneficial AND harmful — different people, or the same person</li>
+<li>The Web, targeted advertising, and machine learning all outgrew their intended purposes</li>
+<li>Harm can hit society, the economy, or culture — and rapid sharing at scale moves impacts beyond the programmer's control</li>
+<li>Responsible programmers try to consider unintended uses; considering them ALL is impossible</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  explain how one effect of an innovation can be both beneficial and harmful (LO IOC-1.A)</li>
+<li>☐  explain how innovations change tasks and spark other fields (LO IOC-1.A)</li>
+<li>☐  explain how an innovation's impact can go beyond its intended purpose (LO IOC-1.B)</li>
+<li>☐  explain what responsible programmers can — and cannot — foresee (LO IOC-1.B)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi5-computing-bias-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 5: Impact of Computing · Topic 5.3 · Guided Notes (Student)</p>
+<h1>Computing Bias — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 5.3 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi5-computing-bias"">Topic 5.3 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how computing innovations can reflect existing human biases — written into their algorithms or carried in the data they use (LO IOC-1.D)</li>
+<li>Locate where bias can be embedded across all levels of software development, and name the actions programmers take to reduce it (LO IOC-1.D)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Riverview High buys AttendanceCast, software that predicts which students will skip class next semester. It was trained on exactly ONE dataset: last year's honors students. This fall it scores every student in the building.</p>
+<p class=""muted"">Predict: which students will it WRONGLY flag as likely skippers — and what, in how the tool was built, causes those mistakes? List two groups and the cause.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Where Bias Comes From</h2>
+<h3>Key Vocabulary (LO IOC-1.D)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Algorithmic bias</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Training data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Innovations Mirror Their Makers</h3>
+<ul>
+<li>An innovation can inherit human bias through two channels: rules typed by programmers, or <span class=""gap""></span>.</li>
+<li>Bias in a computing innovation starts with <span class=""gap""></span>, not with the machine.</li>
+<li>A system built on a lopsided sample treats that slice as <span class=""gap""></span>.</li>
+</ul>
+<h3>Two Channels, One Symptom</h3>
+<p><strong>Bias in the ALGORITHM</strong></p>
+<p><strong>Bias in the DATA</strong></p>
+<ul>
+<li>If the unfairness was typed straight into the decision rules, the channel is <span class=""gap""></span>.</li>
+<li>If flawless code still produces skewed results, suspect <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: One phrase gives the channel away — 'the developer wrote a rule…' points to the algorithm; 'the system was trained on…' points to the data.</p></div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>AttendanceCast wrongly flags a student who works a night shift. Name the channel the bias came through, and point to the exact build decision that created it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A teammate insists a hiring tool cannot be biased since 'the computer just follows math.' Explain the two ways existing human bias can still get in.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>In one sentence, describe how you would rebuild AttendanceCast's dataset so its predictions treat the whole school fairly.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.3 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Every Level, and the Fix</h2>
+<h3>Embedded Everywhere, Fought on Purpose</h3>
+<ul>
+<li>Bias can enter at <span class=""gap""></span> of building software, not just data collection.</li>
+<li>The CED expects programmers to <span class=""gap""></span> bias, not wait for it to dilute.</li>
+<li>Teams with varied backgrounds help since members <span class=""gap""></span>.</li>
+</ul>
+<h3>Diagnose the Bias</h3>
+<p class=""muted"">Five systems misbehave. For each: the channel, the level where bias entered (D.3), and one deliberate reduction action (D.2).</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Biased system</th>
+<th>Channel</th>
+<th>Level it entered</th>
+<th>One reduction action</th>
+</tr>
+<tr>
+<td>Résumé screener trained on ten years of past hires — mostly one group</td>
+<td><span class=""wcell""></span></td>
+<td>Data collection (training set)</td>
+<td>Rebuild the training set to mirror the real applicant pool</td>
+</tr>
+<tr>
+<td>Loan tool with a hand-written rule: certain ZIP codes score lower</td>
+<td><span class=""wcell""></span></td>
+<td>Coding (the rule itself)</td>
+<td>Delete the ZIP-code proxy; audit every rule for stand-ins</td>
+</tr>
+<tr>
+<td>Fitness app counts only steps — wheelchair athletes always score zero</td>
+<td>Algorithm</td>
+<td><span class=""wcell""></span></td>
+<td>Bring diverse users into design</td>
+</tr>
+<tr>
+<td>Face unlock tested almost entirely on lighter-skinned users</td>
+<td>Data</td>
+<td>Testing (skewed test set)</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>AttendanceCast: honors-only training, rolled out to the whole school</td>
+<td>Data</td>
+<td>Deployment (used past its data)</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""warn"">
+<p class=""label"">Watch out — “Just Collect More Data”</p>
+<p><strong>Myth:</strong> AttendanceCast's vendor has a fix ready: next year the tool will train on five times as much data. With enough rows, the bias will average itself out and the flags will become fair.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: The Benchmark That Caught the Skew</h3>
+<ul>
+<li>The 2018 benchmark exposed skew by scoring accuracy <span class=""gap""></span> rather than overall.</li>
+<li>Vendors closed the gap only after <span class=""gap""></span> made the skew visible.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Pick one row of the diagnosis table. In two sentences: name its channel and level, then defend your reduction action as a deliberate step rather than a bigger data haul.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A vendor claims its essay-grading tool 'removes human bias entirely — no teacher ever touches the score.' Give two reasons the claim fails.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Explain why 'add five times more data' fixed nothing for AttendanceCast, but 'change which students the data comes from' would.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.3 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 5.3 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>“Bias only enters via data”</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>“More data fixes bias”</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>“The algorithm is neutral”</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Computing Bias, in One Slide</h3>
+<ul>
+<li>Computing innovations can reflect existing human biases — through biases written into the algorithms or biases in the data used.</li>
+<li>Two channels, one test: was the unfairness typed into the rules, or learned from skewed inputs?</li>
+<li>Biases can be embedded at all levels of software development — framing, design, coding, data collection, testing, deployment.</li>
+<li>Programmers should take action to reduce bias — rebuilt datasets, rule audits, per-group testing — combating existing human biases.</li>
+<li>More data is never the fix — and diverse teams help keep bias out from the start.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  explain how bias enters innovations through algorithms and through data (LO IOC-1.D)</li>
+<li>☐  locate bias at any level of software development, not just data collection (LO IOC-1.D)</li>
+<li>☐  name deliberate programmer actions that reduce bias — never 'more data' (LO IOC-1.D)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi5-crowdsourcing-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 5: Impact of Computing · Topic 5.4 · Guided Notes (Student)</p>
+<h1>Crowdsourcing — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 5.4 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi5-crowdsourcing"">Topic 5.4 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how widespread access to information and public data helps people identify problems, develop solutions, and share results (LO IOC-1.E)</li>
+<li>Define crowdsourcing and citizen science, and explain how collaboration via computing enhances what people can accomplish (LO IOC-1.E)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>10,000 strangers on the Internet will each give you exactly 60 seconds of their time — one minute each, then they are gone forever. Design a project that becomes POSSIBLE only at that scale.</p>
+<p class=""muted"">Sketch it: what does each stranger DO in their minute, and why would 10 helpers — or even 100 — not be enough? Name the thing only a crowd can give you.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Problem-Solving at Scale</h2>
+<h3>Key Vocabulary (LO IOC-1.E)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Crowdsourcing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Citizen science</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Why the Crowd Can Do What You Can't</h3>
+<ul>
+<li>Open access to public data makes it easier to find problems, build solutions, and <span class=""gap""></span>.</li>
+<li>Collaboration via computing enhances <span class=""gap""></span>.</li>
+<li>Computing changes Topic 1.1's collaboration skills by letting them operate <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “Crowdsourcing Means Asking Experts Online”</p>
+<p><strong>Myth:</strong> Crowdsourcing works by locating the smartest specialists on the Internet — a crowdsourced project is really just a clever way to find a few brilliant experts.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Your bell-ringer project needed 10,000 strangers rather than 10 experts. Using the definition of crowdsourcing, explain why the strangers' lack of expertise doesn't disqualify the project.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A city posts its bus-delay records as free public data. Within a month, riders spot the worst routes, volunteer programmers release a rerouting app, and a local news site publishes the findings. Name the three things widespread data access facilitated here.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>In one sentence: what can collaboration via computing do that a room of 30 talented people cannot?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.4 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Two Shapes of Crowd Power</h2>
+<h3>One Definition, Two Famous Shapes</h3>
+<p><strong>Citizen science</strong></p>
+<p><strong>Funding &amp; input models</strong></p>
+<ul>
+<li>In citizen science, each volunteer's phone or laptop becomes <span class=""gap""></span>.</li>
+<li>Crowdfunding counts as crowdsourcing since the input collected is <span class=""gap""></span>.</li>
+<li>To classify any crowd project, ask what <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Both are crowdsourcing — input or information from a large number of people via the Internet. Ask WHAT the crowd contributes to tell them apart.</p></div>
+<h3>Crowd or Not? Classify Five Projects</h3>
+<p class=""muted"">Read each project. First ask: input from a large number of people via the Internet? If yes, name the model and what the crowd contributes.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Project</th>
+<th>Crowdsourcing?</th>
+<th>Model</th>
+<th>The crowd contributes...</th>
+</tr>
+<tr>
+<td>An app invites anyone to photograph birds; millions of sightings feed real research</td>
+<td>Yes</td>
+<td><span class=""wcell""></span></td>
+<td>Data — observations from their own devices</td>
+</tr>
+<tr>
+<td>A site collects small pledges from 12,000 backers to launch a new board game</td>
+<td>Yes</td>
+<td>Funding model</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A navigation app merges live speed readings from millions of drivers' phones</td>
+<td>Yes</td>
+<td><span class=""wcell""></span></td>
+<td>Data — real-time traffic readings</td>
+</tr>
+<tr>
+<td>A newspaper hires three meteorologists to write its daily forecast</td>
+<td><span class=""wcell""></span></td>
+<td>A few hired experts — not a crowd</td>
+<td>Expert labor, not crowd input</td>
+</tr>
+<tr>
+<td>An online encyclopedia anyone can edit, checked by other volunteers</td>
+<td>Yes</td>
+<td>Input/information model</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: From Bird Counts to Published Science</h3>
+<ul>
+<li>Volunteer observations become scientific evidence only after <span class=""gap""></span>.</li>
+<li>Decades of pooled sightings reveal <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A charity site gathers $5 donations from 40,000 people for storm relief; a research app gathers pollen photos from 40,000 allergy sufferers. Classify each project's model and name what its crowd contributes.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A friend dismisses the pollen project: 'That's not real science — none of those people have degrees.' Use the definition of citizen science to correct the friend.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Write the one question you should ask about ANY crowd-project scenario on the exam — and what the answer tells you.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.4 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 5.4 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Experts not required</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Data, not just opinions</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Scale is the mechanism</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Crowdsourcing, in One Slide</h3>
+<ul>
+<li>Widespread access to information and public data facilitates identifying problems, developing solutions, and disseminating results.</li>
+<li>Citizen science: distributed individuals — many not scientists — contribute relevant data to research using their own computing devices.</li>
+<li>Crowdsourcing is obtaining input or information from a large number of people via the Internet.</li>
+<li>Human capabilities can be enhanced by collaboration via computing.</li>
+<li>New collaboration models include connecting businesses or social causes with funding.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  define crowdsourcing and spot its two required ingredients in any scenario (LO IOC-1.E)</li>
+<li>☐  explain how citizen science lets non-scientists contribute research data (LO IOC-1.E)</li>
+<li>☐  explain how collaboration via computing lets people solve problems at scale (LO IOC-1.E)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi5-digital-divide-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 5: Impact of Computing · Topic 5.2 · Guided Notes (Student)</p>
+<h1>Digital Divide — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 5.2 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi5-digital-divide"">Topic 5.2 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Describe the digital divide and how access varies by socioeconomic, geographic, and demographic characteristics and between countries (LO IOC-1.C)</li>
+<li>Explain how the divide affects groups and individuals, and how individuals, organizations, and governments widen or narrow it (LO IOC-1.C)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Two students get tonight's homework: watch a 20-minute video, research the topic online, and upload a slideshow by Friday. Maya has fiber Internet at home. Jordan has a phone with 2 GB of data a month — and the nearest library Wi-Fi is a 40-minute bus ride away.</p>
+<p class=""muted"">List every step of the assignment where it costs Jordan something it does not cost Maya — minutes, dollars, data, or sleep. Star where the gap starts.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. What the Divide Is</h2>
+<h3>Key Vocabulary (LO IOC-1.C)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Digital divide</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Equality (of access)</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Equity</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>The Dimensions of the Divide</h3>
+<ul>
+<li>Access differs within a nation and also <span class=""gap""></span>.</li>
+<li>A gap counts as geographic when it is driven by <span class=""gap""></span>.</li>
+<li>The divide is about differing access to <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “It's Only About Poor Countries”</p>
+<p><strong>Myth:</strong> The digital divide means the gap between wealthy and developing nations — inside a rich, wired country, everyone has basically the same access.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Sort your bell-ringer list into the three characteristic types — socioeconomic, geographic, demographic. Which bucket holds the most of Jordan's costs, and which cost fits no bucket neatly?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A mountain valley has no provider at all; one student in a wired suburb has no home plan. Explain how BOTH cases are the digital divide, and name who is affected in each.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Define the digital divide in one sentence without using the word 'Internet' — then check that your definition still covers devices.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.2 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Who It Affects, Who Can Act</h2>
+<h3>Two Sides of the Same Gap</h3>
+<p><strong>Who it affects</strong></p>
+<p><strong>Who can act</strong></p>
+<ul>
+<li>The divide can hit an entire population or <span class=""gap""></span>.</li>
+<li>The three levels that can move the divide are <span class=""gap""></span>.</li>
+<li>Being offline also means losing <span class=""gap""></span> over what happens online.</li>
+</ul>
+<div class=""card""><p>AP TIP: distractors love handing the whole divide to governments — the CED names individuals, organizations, AND governments as forces on it.</p></div>
+<h3>Diagnose the Gap</h3>
+<p class=""muted"">Five snapshots. For each: name the characteristic driving the gap, then one actor who could narrow it.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Scenario</th>
+<th>Characteristic driving the gap</th>
+<th>Who could act (one example)</th>
+</tr>
+<tr>
+<td>A rural county where no provider offers wired broadband</td>
+<td><span class=""wcell""></span></td>
+<td>Government — fund rural broadband buildout</td>
+</tr>
+<tr>
+<td>A family in a wired city cannot afford any monthly plan</td>
+<td>Socioeconomic</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Seniors own donated tablets but rarely go online</td>
+<td><span class=""wcell""></span></td>
+<td>Individual — volunteer to coach a neighbor</td>
+</tr>
+<tr>
+<td>Students in one nation stream lessons; in another, most homes have no connection</td>
+<td><span class=""wcell""></span></td>
+<td>Government — national connectivity investment</td>
+</tr>
+<tr>
+<td>A student's only Internet is a capped 2 GB phone plan</td>
+<td>Socioeconomic (quality of access)</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: More Than On or Off</h3>
+<ul>
+<li>A phone-only student is technically online yet still <span class=""gap""></span>.</li>
+<li>Second-level divides come from differences in <span class=""gap""></span>, not equipment.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>For Jordan's 2 GB situation, propose one action at each level — individual, organization, government — and star the action you would fund first.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A friend says fixing the divide is 'the government's job, full stop.' Use one row of the diagnose-the-gap table to show what that view leaves out.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>The town buys every household the identical hotspot. Using equity vs. equality, explain who this fix still leaves behind.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.2 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 5.2 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>“It's just about money”</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Groups AND individuals</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Three actor levels</strong> — in your own words:</p>
+<span class=""wline""></span><h3>The Digital Divide, in One Slide</h3>
+<ul>
+<li>The digital divide = differing access to computing devices and the Internet, based on socioeconomic, geographic, or demographic characteristics.</li>
+<li>Access varies along those characteristics AND between countries.</li>
+<li>It can affect both groups and individuals — a region, or one student.</li>
+<li>It raises issues of equity, access, and influence, both globally and locally.</li>
+<li>It is affected by the actions of individuals, organizations, and governments.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  define the digital divide and the characteristics it runs along (LO IOC-1.C)</li>
+<li>☐  explain how the divide affects groups and individuals, globally and locally (LO IOC-1.C)</li>
+<li>☐  name actions at all three levels — individual, organization, government (LO IOC-1.C)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi5-legal-ethical-concerns-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 5: Impact of Computing · Topic 5.5 · Guided Notes (Student)</p>
+<h1>Legal and Ethical Concerns — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 5.5 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi5-legal-ethical-concerns"">Topic 5.5 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how ease of access to digitized material raises intellectual property concerns, and what makes a use plagiarism (LO IOC-1.F)</li>
+<li>Match a reuse of someone else's material to Creative Commons, open source, or open access — and explain why citing is still required (LO IOC-1.F)</li>
+<li>Identify legal and ethical concerns computing raises beyond copyright — harm, political use, the digital divide, and monitoring (LO IOC-1.F)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>For a class project, a student remixes three found ingredients: a hit song clipped from a streaming app, a photographer's sunset photo saved from a blog, and a code snippet copied from an online forum.</p>
+<p class=""muted"">For EACH ingredient: is using it allowed? If not — invent a rule, tag, or deal that WOULD make it allowed. Write your three rulings and your invented fixes.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Your Work Is Property</h2>
+<h3>Key Vocabulary (LO IOC-1.F)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Intellectual property</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Plagiarism</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Creative Commons</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Open source</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Ownership in a Copy-Paste World</h3>
+<ul>
+<li>Anything made on a computer belongs, from the instant of creation, to <span class=""gap""></span>.</li>
+<li>Digitized information raises ownership, value, and use concerns because it is so <span class=""gap""></span>.</li>
+<li>Watermarks, licenses, and terms of use are all measures meant to <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “Free to View = Free to Use”</p>
+<p><strong>Myth:</strong> If a song, photo, or article is posted publicly online where anyone can see it for free, then anyone is free to reuse it in their own projects — posting it made it public property.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Your bell-ringer remix used a song, a photo, and a code snippet. Name the intellectual-property owner of each ingredient — and of the finished remix itself. What does that last answer tell you?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A classmate argues that copying a digital song is harmless since the original owner still has their copy. Using the CED's three concerns — ownership, value, and use — explain what the argument misses.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>State the two things that must BOTH be true for a use of someone else's material to count as plagiarism, and name what plagiarism can cost beyond a grade.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.5 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Three Legal Routes + One Rule</h2>
+<h3>Permission Is Not Credit</h3>
+<p><strong>Permission — the legal route</strong></p>
+<p><strong>Credit — the citation</strong></p>
+<ul>
+<li>A Creative Commons or open-source license settles only the question of <span class=""gap""></span>.</li>
+<li>Even when a license makes the use fully legal, you must still <span class=""gap""></span>.</li>
+<li>Together, the three routes of have enabled <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: 'It was Creative Commons' answers permission only — a response that stops there and never credits the creator is incomplete.</p></div>
+<h3>Route or Violation? Five Cases</h3>
+<p class=""muted"">For each use, name the legal route (Creative Commons, open source, open access) or the violation — then what fixes it.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Use case</th>
+<th>Route or violation</th>
+<th>What makes it right</th>
+</tr>
+<tr>
+<td>Quoting long passages of a paywalled novel on a fan site — no permission, no credit</td>
+<td><span class=""wcell""></span></td>
+<td>Get the author's permission AND cite the source</td>
+</tr>
+<tr>
+<td>Building an app on a program licensed for free redistribution and modification</td>
+<td><span class=""wcell""></span></td>
+<td>Already legal — cite the project and its authors</td>
+</tr>
+<tr>
+<td>Using a photographer's CC-tagged image in a school slideshow</td>
+<td>Creative Commons</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Quoting a restriction-free online research study in a science report, with citation</td>
+<td><span class=""wcell""></span></td>
+<td>Already legal — the report cites the researchers</td>
+</tr>
+<tr>
+<td>Pasting a classmate's Create PT code into your own submission as yours</td>
+<td>Violation — plagiarism</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Return to your three bell-ringer rulings. For each ingredient, name the real legal route (or needed permission) that matches the fix you invented — and state the one duty no route removes.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A friend says: 'The library I used is open source, so I don't have to mention it anywhere in my project.' Which half of the friend's claim is right, which half is wrong, and per which rules?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>In one sentence each, distinguish open source from open access — name what KIND of material each route covers and what it lets you do.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.5 page once you have finished the whole topic.</p>
+</div>
+<h2>03. When Computing Harms</h2>
+<h3>Legal and Ethical, Beyond Copyright</h3>
+<ul>
+<li>Turning computing against individuals or groups raises questions of <span class=""gap""></span>.</li>
+<li>The digital divide belongs in this topic because unequal access is <span class=""gap""></span>.</li>
+<li>A smart speaker makes the CED's example list because it <span class=""gap""></span>.</li>
+</ul>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: Decoding a CC Tag</h3>
+<p><strong>The four building blocks</strong></p>
+<p><strong>Reading one in the wild</strong></p>
+<ul>
+<li>The one switch found in every Creative Commons license is <span class=""gap""></span>.</li>
+<li>An ND-tagged song cannot legally be remixed, since ND forbids <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Deep dive only — the exam names Creative Commons as a legal route; it never asks you to parse BY/NC/ND/SA switches.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A hiring app quietly ranks applicants using an algorithm trained mostly on past employees. IOC-1.F.11 example this matches and state one legal and one ethical concern it raises.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A city moves a public benefit to online-only applications. Using the CED's language, explain which concern this raises and for whom — even though no one's property was touched.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Streaming and download software appears on the CED's concern list. Connect it to Section 1: which intellectual-property concerns does effortless streaming and downloading create?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.5 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 5.5 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Free to view ≠ free to use</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Three routes, not one</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Legal use still needs credit</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Legal and Ethical Concerns, in One Slide</h3>
+<ul>
+<li>Material created on a computer is intellectual property — and easy digital access raises ownership, value, and use concerns worth safeguarding against.</li>
+<li>Plagiarism = someone else's material, without permission, presented as your own — with possible legal consequences.</li>
+<li>Three legal routes to reuse: Creative Commons (licensed works), open source (modifiable programs), open access (unrestricted research) — together enabling broad access.</li>
+<li>Material created by someone other than you should ALWAYS be cited — no license removes that duty.</li>
+<li>Computing that harms people, shapes politics, monitors continuously, embeds bias, or deepens the digital divide raises legal and ethical concerns.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  explain how easy digital copying raises ownership, value, and use concerns (LO IOC-1.F)</li>
+<li>☐  define plagiarism by its two parts and name its possible consequences (LO IOC-1.F)</li>
+<li>☐  match a reuse case to Creative Commons, open source, or open access (LO IOC-1.F)</li>
+<li>☐  explain why citing is required even when a use is legal (LO IOC-1.F)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi5-safe-computing-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 5: Impact of Computing · Topic 5.6 · Guided Notes (Student)</p>
+<h1>Safe Computing — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 5.6 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi5-safe-computing"">Topic 5.6 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: The Trail You Can't See</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Define personally identifiable information (PII) and describe how searches, page visits, and locations are recorded and stored (LO IOC-2.A)</li>
+<li>Explain how disparate data can be aggregated into knowledge about a person — and why online information is hard to delete (LO IOC-2.A)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>A total stranger gets 10 minutes with ONLY your public profiles — the bios, posts, tags, and photos anyone on the internet can see.</p>
+<p class=""muted"">List everything they could learn or DEDUCE: school, neighborhood, schedule, friends, habits. Star the deductions — things you never actually posted.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. The Recorded Life</h2>
+<h3>Key Vocabulary (LO IOC-2.A)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Personally identifiable information (PII)</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Aggregation</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Recorded While You Browse</h3>
+<ul>
+<li>A search engine can turn your query history into <span class=""gap""></span>.</li>
+<li>Location-aware programs can log not just where you went but <span class=""gap""></span>.</li>
+<li>Websites can quietly build a record of <span class=""gap""></span>.</li>
+</ul>
+<h3>The Double Life of PII</h3>
+<p><strong>PII enhances</strong></p>
+<p><strong>PII endangers</strong></p>
+<ul>
+<li>Companies keep PII partly so that shopping feels <span class=""gap""></span>.</li>
+<li>In criminal hands, the identical profile could support <span class=""gap""></span>.</li>
+<li>A post meant for friends can still reach <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: The exam pairs these — the storage that makes checkout instant is what identity thieves want. Judge the CONTEXT, not the data.</p></div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Name three systems that recorded data about you before school today, and state exactly what each one stored.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A friend says: 'I never post my address, so nobody online knows where I live.' Use location collection to challenge that.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Give one way stored PII makes your life easier and one way the SAME data could harm you — same data, both directions.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.6 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Aggregation and Permanence</h2>
+<h3>Five Trails, One Dossier</h3>
+<p class=""muted"">Each trail looks harmless alone. Fill in what the pieces reveal once they are combined.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Data trail</th>
+<th>What gets collected</th>
+<th>Aggregated, it reveals...</th>
+</tr>
+<tr>
+<td>Search engine history</td>
+<td>Every query you have typed</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Websites you visit</td>
+<td>A log of who viewed which pages</td>
+<td>Your reading habits, politics, and hobbies</td>
+</tr>
+<tr>
+<td>Phone location services</td>
+<td>Where you went, your route, how long you stayed</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Cookies + browsing history</td>
+<td>Disparate records of activity across many sites</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Social media posts and tags</td>
+<td>What you AND others post about you</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""warn"">
+<p class=""label"">Watch out — “Deleted Means Gone”</p>
+<p><strong>Myth:</strong> If you delete an embarrassing post or photo, it is erased from the internet and can no longer hurt you.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: The Data Broker Economy</h3>
+<ul>
+<li>A data broker's actual product is <span class=""gap""></span>.</li>
+<li>Aggregated broker scores can quietly shape <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Using the worked table, explain how a stranger could find your school without you ever posting its name.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Why does 'I deleted it' fail as a privacy strategy? Cite what happens to online information over time.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>An app's terms say it may share data with 'partners.' Predict one unintended use of that shared data and who might end up seeing it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.6 page once you have finished the whole topic.</p>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>PII identifies, links, relates to, or describes you — SSN, age, race, phone, medical, financial, biometric</li>
+<li>Searches, page views, and locations are recorded and stored as you move through an ordinary day</li>
+<li>Aggregating disparate data creates knowledge — the dossier is the danger, not any single field</li>
+<li>The same PII that enhances experiences enables stalking and identity theft — and it is hard to delete</li>
+</ul>
+<p><strong>Before next class:</strong> The stranger who built your dossier now wants your password — using ONE email. Before tomorrow, think: what would that email need to say to fool you?</p>
+</div>
+<h2>Day 2: Locks, Layers, and Lures</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how computing resources are protected: authentication factors, encryption, certificates, scanning, updates, permissions (LO IOC-2.B)</li>
+<li>Explain how unauthorized access is gained: phishing, keylogging, rogue access points, malicious links and downloads (LO IOC-2.C)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Yesterday's stranger has your dossier — and ONE email to trick you into handing over your password. Write that email: subject line plus two sentences.</p>
+<p class=""muted"">Then switch sides: write the single rule that would have protected you from the exact email you just wrote.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Protecting Computing Resources</h2>
+<h3>Key Vocabulary — Protection (LO IOC-2.B)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Multifactor authentication</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Encryption</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Three Kinds of Proof</h3>
+<ul>
+<li>A fingerprint is a different factor from a password: it proves <span class=""gap""></span>.</li>
+<li>Passwords built from a pet's name or a birthday are weak, since <span class=""gap""></span>.</li>
+<li>A second factor matters even after a password is stolen: the thief still faces <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “A Strong Password Is Enough”</p>
+<p><strong>Myth:</strong> If your password is long, random, and unique, your account is safe — extra login steps are just inconvenience theater.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<h3>Two Ways to Lock Data</h3>
+<p><strong>Symmetric key</strong></p>
+<p><strong>Public key</strong></p>
+<ul>
+<li>Symmetric encryption's classic weakness is <span class=""gap""></span>.</li>
+<li>To send an encrypted message with public key encryption, you need <span class=""gap""></span>.</li>
+<li>Only the intended receiver can read a public-key message, thanks to <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: The math is officially EXCLUDED from the exam. Questions test who needs which key — not how the scrambling works.</p></div>
+<h3>The Rest of the Defense Kit</h3>
+<ul>
+<li>You can trust a site's padlock ultimately since <span class=""gap""></span>.</li>
+<li>Updates are a security tool: each patch <span class=""gap""></span>.</li>
+<li>Before granting an app access, check <span class=""gap""></span>.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A bank login asks for a password, then a code texted to your phone. Name each factor's category and explain what the second step adds.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Aisha wants to send Ben a message only Ben can read, using public key encryption. Whose key does she encrypt with, and why doesn't she need Ben's private key?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Your laptop has nagged about a security update for two weeks. Explain what stays open until you click install.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.6 page once you have finished the whole topic.</p>
+</div>
+<h2>02. How Unauthorized Access Happens</h2>
+<h3>Key Vocabulary — Attacks (LO IOC-2.C)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Phishing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Keylogging</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Ways In Without a Password</h3>
+<ul>
+<li>Traffic on an open network risks being <span class=""gap""></span>.</li>
+<li>An attachment from a friend can still be dangerous when <span class=""gap""></span>.</li>
+<li>'Free' software carries a hidden price when shareware sites <span class=""gap""></span>.</li>
+</ul>
+<h3>Attack Triage: Name It, Block It</h3>
+<p class=""muted"">Five incidents. Fill in the attack's CED name and the defense layer that blocks it (LO IOC-2.B, IOC-2.C).</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Incident</th>
+<th>Attack (CED name)</th>
+<th>Defense that blocks it</th>
+</tr>
+<tr>
+<td>'Account locked!' email links to a look-alike login page</td>
+<td><span class=""wcell""></span></td>
+<td>Never log in from email links — go to the real site yourself</td>
+</tr>
+<tr>
+<td>After a free 'game booster' install, saved passwords leak one by one</td>
+<td><span class=""wcell""></span></td>
+<td>Malware scanning software; download only from trusted sources</td>
+</tr>
+<tr>
+<td>A second 'Free_Cafe_WiFi' network appears; traffic is being read</td>
+<td><span class=""wcell""></span></td>
+<td>No sensitive logins on public networks; encrypted connections only</td>
+</tr>
+<tr>
+<td>A teammate's hacked account emails you an 'invoice' attachment</td>
+<td>Compromised known sender</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A stolen password still fails to open a student's email account</td>
+<td>Attack stopped at the login</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: Inside the Padlock (HTTPS)</h3>
+<ul>
+<li>HTTPS opens with public key encryption so both sides can <span class=""gap""></span>.</li>
+<li>The browser believes a public key is genuine when <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Write two tells that separate a phishing email from a real notice, and name the resource the attacker is actually after.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>At an airport you see 'Airport_WiFi' and 'Airport_WiFi_FREE.' Explain the risk of choosing wrong and what an attacker could do with your traffic.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A pop-up on a free-downloads site says 'Update your video player now.' Predict what say happens next — and name two defenses from LO IOC-2.B that would stop it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 5.6 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 5.6 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Two passwords ≠ multifactor</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Whose key encrypts?</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>One field vs. the dossier</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Safe Computing, in One Slide</h3>
+<ul>
+<li>PII identifies, links, relates to, or describes you; searches, page views, and locations are recorded</li>
+<li>Aggregated disparate data becomes knowledge about you — and online information is hard to delete</li>
+<li>Protection layers: strong passwords + multifactor (two of knowledge / possession / inherence), encryption, certificates</li>
+<li>Maintenance is defense: scanning software, regular updates, permission reviews</li>
+<li>Attacks target people: phishing, keylogging, rogue access points, disguised links, risky downloads</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  define PII and describe how everyday activity is recorded and stored (LO IOC-2.A)</li>
+<li>☐  explain how aggregation turns scattered data into privacy risk (LO IOC-2.A)</li>
+<li>☐  match authentication factors and encryption approaches to what they protect (LO IOC-2.B)</li>
+<li>☐  name the attack in a scenario and the defense that blocks it (LO IOC-2.C)</li>
+</ul>
+</div>
+</div>"
