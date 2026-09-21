@@ -69,7 +69,16 @@ module.exports = { stageOf, samePath };
 
 if (require.main === module) {
   const rows = G.rowsFor(G.load());
-  const fetch = (p) => sf.rawOnce(p, { follow: false });
+  //  sf.raw, NOT sf.rawOnce. This walks 144 storefront requests (72 paths plus
+  //  72 targets) and the store rate limits well inside that. rawOnce returns the
+  //  429 as if it were an answer about the page, so on 2026-09-21 this reported
+  //  20 handles `wrong` and 23 targets not serving, all of them fine. raw()
+  //  retries only a 429, a bounded number of times with a growing wait, which is
+  //  the whole reason it exists: the module's own comment records the same bug
+  //  in verify-cyber-qotd-live on 2026-09-04, throttled on its sixth request and
+  //  calling a correct import broken. Everything else still fails on the first
+  //  answer, because a 404 retried three times is still a 404.
+  const fetch = (p) => sf.raw(p, { follow: false });
   const counts = { live: 0, unpublished: 0, redirected: 0, wrong: 0 };
   let failed = 0;
 
