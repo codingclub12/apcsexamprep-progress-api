@@ -1474,7 +1474,30 @@ router.post('/track', requireStudent, (req, res) => {
     // with completed:true, once every check-btn is actually graded) may complete
     // them. Lesson pages have no grading step, so a visit still completes those,
     // same as before this exclusion existed.
-    const GRADED_ON_ARRIVAL = new Set(['exercise-1', 'exercise-2', 'lab']);
+    //  exercise-3 and debug JOINED THIS SET ON 2026-09-21, and their absence was
+    //  a live defect rather than a decision. Both are graded exactly like an
+    //  exercise-1 page: lib/csa-frq-pages.js and lib/csa-debug-pages.js each
+    //  build a "Submit for grading" button that posts to /code-grade against
+    //  hidden test cases, and both say so in their own headers. Both carry a
+    //  denominator on all 53 CSA lessons, so the gradebook prices them. And
+    //  there are 146 live -frq pages (the handle alias for exercise-3) and 53
+    //  live -debug pages, so every visit to any of them was writing
+    //  completed = 1 with a null score before a single button was clicked.
+    //
+    //  WHY IT WAS MISSED, because the shape matters more than the omission.
+    //  This set was written on 2026-08-24 against the three activity types that
+    //  existed then. exercise-3 was declared in utils.js that same day and debug
+    //  entered the gradebook contract on 2026-09-01, and neither was added here.
+    //  A hardcoded list beside a vocabulary that grows is a list that drifts,
+    //  and nothing said so: smoke/track-visit-completion-guard.js tested the
+    //  same three types and stayed green through both additions.
+    //
+    //  So the guard now DERIVES its cases from the handle vocabulary in utils.js
+    //  and the canonical map in lib/gradebook-contract.js, and refuses any
+    //  graded activity type that is neither listed here nor explicitly
+    //  classified there. Adding a fourth exercise type now fails the suite until
+    //  somebody decides which side of this line it belongs on.
+    const GRADED_ON_ARRIVAL = new Set(['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'debug']);
     const autoComplete = !GRADED_ON_ARRIVAL.has(activity_type);
 
     const existing = db.prepare(`
