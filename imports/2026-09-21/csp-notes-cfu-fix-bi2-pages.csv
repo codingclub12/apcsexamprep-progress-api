@@ -1,0 +1,1216 @@
+﻿"Handle","Command","Body HTML"
+"ap-csp-course-bi2-binary-numbers-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 2: Data · Topic 2.1 · Guided Notes (Student)</p>
+<h1>Binary Numbers — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 2.1 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi2-binary-numbers"">Topic 2.1 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: Everything Is a Number</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how all data — numbers, text, colors, sound — can be represented using sequences of bits, and why the same bits can mean different things in different contexts (LO DAT-1.A)</li>
+<li>Explain the two consequences of using a fixed number of bits: integer overflow and round-off error (LO DAT-1.B)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>You must send a friend tomorrow's temperature — but your only communication channel is a row of 8 light switches, each either ON or OFF. The temperature will be a whole number between 0 and 100.</p>
+<p class=""muted"">Write 3–5 sentences: design a scheme your friend could decode. Could your 8 switches handle a temperature of 300? What about 72.5? What breaks?</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Representing Data with Bits</h2>
+<h3>Key Vocabulary (LO DAT-1.A)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Bit</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Byte</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Abstraction</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Analog data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Sampling</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>One Alphabet, Every Kind of Data</h3>
+<ul>
+<li>Bits are grouped to represent <span class=""gap""></span>.</li>
+<li>The same sequence of bits can mean different things because <span class=""gap""></span>.</li>
+<li>Renaming a .png file to .txt shows garbage because <span class=""gap""></span>.</li>
+</ul>
+<h3>Analog World, Digital Machine</h3>
+<p><strong>Analog</strong></p>
+<p><strong>Digital (sampled)</strong></p>
+<ul>
+<li>Analog data changes <span class=""gap""></span>.</li>
+<li>Sampling means measuring the analog signal at <span class=""gap""></span>.</li>
+<li>Sampling more often makes the digital copy <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: If a question says a real-world signal is 'measured at regular intervals,' it is describing sampling — the analog-to-digital bridge.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “The Computer Stores a Tiny Picture”</p>
+<p><strong>Myth:</strong> Images, sounds, and videos are stored as miniature pictures and recordings inside the computer — only numbers are stored 'in binary.'</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A friend claims their computer 'stores photos differently from numbers.' In two sentences, correct them using the word abstraction.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>The bit sequence 01000001 shows up in two different files. In one it displays as 'A'; in the other it contributes to a pixel. Explain how both can be true.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A vinyl record is analog; a streaming file is digital. Describe what sampling does in the trip from one to the other.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.1 page once you have finished the whole topic.</p>
+</div>
+<h2>02. The Cost of Finite Bits</h2>
+<h3>Two Failure Modes, One Root Cause</h3>
+<p><strong>Integer overflow</strong></p>
+<p><strong>Round-off error</strong></p>
+<ul>
+<li>Integer overflow: the value is too <span class=""gap""></span> for its fixed number of bits.</li>
+<li>Round-off error: many real numbers are stored as <span class=""gap""></span>.</li>
+<li>Both failures share one root cause: <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Overflow = too BIG for the bits. Round-off = too PRECISE for the bits. Name the failure mode by asking which limit was hit.</p></div>
+<h3>Finite Bits in the Wild</h3>
+<p class=""muted"">Same two failure modes, four real scenarios. For each: which consequence is it?</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Scenario</th>
+<th>What happened</th>
+<th>Failure mode</th>
+</tr>
+<tr>
+<td>A game stores your score in 8 bits; at 255 the next point shows 0</td>
+<td>Value exceeded the maximum the bits can hold and wrapped</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>0.1 + 0.2 prints as 0.30000000000000004</td>
+<td>0.1 and 0.2 have no exact binary form; tiny errors accumulated</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A 2014 video's view counter froze at 2,147,483,647 until the site widened it</td>
+<td>The count hit the maximum of its fixed bit-width</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A physics program's repeated calculations drift slightly from the exact answer</td>
+<td>Each floating-point step stored an approximation</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A fitness tracker stores daily steps in 16 bits (max 65,535). An ultramarathoner logs 70,000 steps and the app shows 4,464. Name the consequence and explain the number shown.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A banking app computes interest and is off by a fraction of a cent after millions of accounts. Which consequence is this, and why does it grow with repetition?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>In one sentence: what single fact about binary representation causes BOTH failure modes?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.1 page once you have finished the whole topic.</p>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>Everything a computer stores is bits — grouped bits represent numbers, text, colors, and sound</li>
+<li>The same bits mean different things in different contexts — the format is the contract</li>
+<li>Analog reality enters the digital world by sampling at regular intervals</li>
+<li>Fixed bits buy two failure modes: overflow (too big) and round-off (too precise)</li>
+</ul>
+<p><strong>Before next class:</strong> Before tomorrow, try to crack it: your locker code is 1101 in binary. What number is it? Bring a guess — and your reasoning.</p>
+</div>
+<h2>Day 2: Reading the Machine's Language</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Convert a positive integer from decimal to binary AND from binary to decimal using place value (LO DAT-1.C)</li>
+<li>Compare and order binary numbers — with and without full conversion (LO DAT-1.C)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Yesterday's teaser: your locker code is 1101 in binary. Three classmates claim it's 13, 1,101, and 5.</p>
+<p class=""muted"">Who's right? Write down how you decided — and what mistake each wrong classmate made.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Binary ↔ Decimal Conversion</h2>
+<h3>Place Value: The Only Rule You Need</h3>
+<ul>
+<li>Binary is base 2 and uses only the digits <span class=""gap""></span>.</li>
+<li>Reading right to left, the binary place values are <span class=""gap""></span>.</li>
+</ul>
+<h3>Both Directions, Worked</h3>
+<p class=""muted"">Direction 1: binary → decimal (add the place values under each 1). Direction 2: decimal → binary (subtract the largest power of 2 that fits, repeat).</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Step</th>
+<th>Binary → Decimal:  1 1 0 1</th>
+<th>Decimal → Binary:  22</th>
+</tr>
+<tr>
+<td>1</td>
+<td>Write place values under the bits:  8 4 2 1</td>
+<td>Largest power of 2 ≤ 22 is 16 → write a 1 there</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Keep the values under each 1:  8, 4, and 1</td>
+<td>22 − 16 = 6. Largest power ≤ 6 is 4 → another 1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Skip the value under the 0 (the 2)</td>
+<td>6 − 4 = 2. Largest power ≤ 2 is 2 → another 1</td>
+</tr>
+<tr>
+<td>4</td>
+<td><span class=""wcell""></span></td>
+<td>2 − 2 = 0 → fill unused places (8s, 1s) with 0</td>
+</tr>
+<tr>
+<td>5</td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""warn"">
+<p class=""label"">Watch out — “Binary 11 Is Eleven”</p>
+<p><strong>Myth:</strong> You read a binary number by pronouncing its digits as if they were decimal — so 11 is 'eleven' and 101 is 'one hundred one.'</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: Why Programmers Love Base 16</h3>
+<p><strong>The problem with raw binary</strong></p>
+<p><strong>The hexadecimal fix</strong></p>
+<ul>
+<li>One hexadecimal digit stands for exactly <span class=""gap""></span> bits.</li>
+<li>Web color codes like #FF0080 are really <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Every #RRGGBB color code you've ever seen in a web page is hexadecimal-wrapped binary.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Convert binary 10110 to decimal. Write the place values under the bits before you add.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Convert decimal 41 to binary using repeated subtraction of powers of 2. Show each subtraction.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A classmate says binary 1000 is 'one thousand.' Give the correct value and name the habit that prevents this mistake.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Without fully converting, order the binary numbers 1010, 111, and 1101 from least to greatest, and explain the place-value shortcut you used.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Show every step. Check yourself with the six MCQ Practice questions on the Topic 2.1 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 2.1 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Overflow vs. round-off</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Reading binary as decimal</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Same bits vs. same meaning</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Binary Numbers, in One Slide</h3>
+<ul>
+<li>Computers store exactly one thing: bits. Grouped bits represent numbers, text, colors, sound — abstraction.</li>
+<li>The same bits mean different things in different contexts — the file format is the contract.</li>
+<li>Analog signals enter the digital world by sampling: measurements at regular intervals.</li>
+<li>Fixed bits ⇒ two failure modes: overflow (too big) and round-off (too precise).</li>
+<li>Conversion is place value: powers of 2 under the bits, add under the 1s; reverse with repeated subtraction (LO DAT-1.C).</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  explain how bits represent every kind of data (LO DAT-1.A)</li>
+<li>☐  tell overflow from round-off and name which limit was hit (LO DAT-1.B)</li>
+<li>☐  convert between binary and decimal in both directions (LO DAT-1.C)</li>
+<li>☐  compare and order binary numbers (LO DAT-1.C)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi2-data-compression-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 2: Data · Topic 2.2 · Guided Notes (Student)</p>
+<h1>Data Compression — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 2.2 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi2-data-compression"">Topic 2.2 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how compression reduces the number of bits stored or transmitted, and why the amount of reduction depends on both the redundancy in the data and the algorithm applied (LO DAT-1.D)</li>
+<li>Compare lossless and lossy compression algorithms and determine which is best in a particular context, using the reconstruction guarantee as the deciding line (LO DAT-1.D)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Your phone plan charges 1¢ per character. You must text a friend this update: ""Practice is cancelled today because the gym flooded. Coach says bring your uniform tomorrow because we play Riverside at four."" (122 characters!)</p>
+<p class=""muted"">Write two cheaper versions: (1) one your friend can expand back to the EXACT original, and (2) the cheapest that keeps the point. What did each cost you?</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Why Compression Works</h2>
+<h3>Key Vocabulary (LO DAT-1.D)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Data compression</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Redundancy</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Lossless compression</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Lossy compression</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Fewer Bits, Same Information</h3>
+<ul>
+<li>Compression reduces the <span class=""gap""></span> of transmitted or stored data.</li>
+<li>Fewer bits does not necessarily mean less information, because compression removes <span class=""gap""></span>.</li>
+<li>The amount of size reduction depends on both <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “Fewer Bits Means Less Information”</p>
+<p><strong>Myth:</strong> If a compressed file is 40% of its original size, then 60% of the information must have been thrown away — shrinking a file always shrinks its content.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Your bell-ringer version 1 used fewer characters than the original message, yet your friend could recover every word. Explain how this demonstrates that fewer bits does not necessarily mean less information.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>One song file and one spreadsheet are both compressed with the same lossless tool. The spreadsheet shrinks by 80%, the song file by 3%. Using the word redundancy, explain how the same algorithm can produce such different results.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A classmate says a compressed file must be 'missing something.' In one sentence, state what lossless compression removes — and what it never removes.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.2 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Lossless vs. Lossy: The Decision</h2>
+<h3>Two Families, One Trade-off</h3>
+<p><strong>Lossless</strong></p>
+<p><strong>Lossy</strong></p>
+<ul>
+<li>Lossless compression guarantees <span class=""gap""></span>.</li>
+<li>Lossy compression only allows reconstruction of <span class=""gap""></span>.</li>
+<li>Lossy compression usually shrinks data more than lossless because it <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Lossy usually shrinks data MORE than lossless — that extra reduction is exactly what you buy by giving up perfect reconstruction.</p></div>
+<h3>Choosing in Context</h3>
+<p class=""muted"">The exam names a situation; you name what matters most, then the winning family. Ask ONE question: must the original come back perfectly?</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Context</th>
+<th>What matters most here</th>
+<th>Best choice</th>
+</tr>
+<tr>
+<td>A hospital archives X-ray scans that radiologists must re-read pixel-for-pixel</td>
+<td>Quality / ability to reconstruct the original</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A video-chat app must keep a live call smooth on weak cellular data</td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A programmer backs up source code — one changed character breaks the program</td>
+<td>Ability to reconstruct the original exactly</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A photo-sharing app shows phone-screen previews of millions of pictures</td>
+<td>Minimizing data size and transmission time</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: Run-Length Encoding by Hand</h3>
+<p><strong>The redundant original</strong></p>
+<p><strong>The run-length version</strong></p>
+<ul>
+<li>Run-length encoding replaces each run of identical values with <span class=""gap""></span>.</li>
+<li>RLE is lossless because decoding it reproduces <span class=""gap""></span>.</li>
+<li>On data with no runs, RLE can actually make the file <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Deep dive only — the AP exam asks you to CHOOSE between algorithms, never to trace how one works internally.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>An author emails a novel manuscript to an editor. A musician uploads a song preview for fans to stream on phones. For each, name the compression family that fits and the single context clue that decided it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A friend says: 'Lossless is guaranteed and lossy is only an approximation, so lossless is always the better choice.' Using the video-call row of the table, explain what the friend's rule ignores.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Write the one question you should ask about ANY compression scenario on the exam — and state what each answer to that question tells you to choose.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.2 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 2.2 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>“Lossless is always better”</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Fewer bits ≠ less information</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Reduction is not a fixed percentage</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Data Compression, in One Slide</h3>
+<ul>
+<li>Compression reduces the number of bits stored or transmitted — saving space and time.</li>
+<li>Fewer bits does not necessarily mean less information — lossless removes redundancy, not content.</li>
+<li>Size reduction depends on BOTH the redundancy in the data and the algorithm applied.</li>
+<li>Lossless guarantees complete reconstruction; lossy reconstructs only an approximation but usually shrinks more.</li>
+<li>The decision is contextual: quality/perfect reconstruction ⇒ lossless; minimum size/transmission time ⇒ lossy.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  explain how compression reduces the bits stored or transmitted, and why reduction depends on redundancy and the algorithm (LO DAT-1.D)</li>
+<li>☐  explain why fewer bits does not necessarily mean less information (LO DAT-1.D)</li>
+<li>☐  tell lossless from lossy by the reconstruction guarantee (LO DAT-1.D)</li>
+<li>☐  choose the best compression type for a given context and justify it (LO DAT-1.D)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi2-extracting-information-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 2: Data · Topic 2.3 · Guided Notes (Student)</p>
+<h1>Extracting Information from Data — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 2.3 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi2-extracting-information"">Topic 2.3 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: The Numbers Are Talking</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Describe the information that can be extracted from data — trends, connections, and problems to address — and explain why a correlation alone never establishes causation (LO DAT-2.A)</li>
+<li>Describe the information that can be extracted from metadata, and explain why changes to metadata never change the primary data (LO DAT-2.B)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>A (fictional) slice of our class's music-streaming survey: Ava — 412 streams, 6.1 hrs sleep, grade 88. Ben — 95 streams, 8.4 hrs, grade 91. Cam — 388 streams, 6.0 hrs, grade 74. Dee — 120 streams, 8.1 hrs, grade 90. Eli — 401 streams, 6.3 hrs, grade 79.</p>
+<p class=""muted"">Write two lists: (1) claims this table SUPPORTS, and (2) claims it CANNOT prove. Does heavy streaming cause less sleep? How would you find out for sure?</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. From Data to Information</h2>
+<h3>Key Vocabulary (LO DAT-2.A)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Information</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Correlation</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Causal relationship</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>What You Can Claim — and When You Can't</h3>
+<ul>
+<li>Data provide opportunities for identifying trends, making connections, and <span class=""gap""></span>.</li>
+<li>A correlation found in data does not necessarily indicate <span class=""gap""></span>.</li>
+<li>When a single source can't support a conclusion, it may be necessary to <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “The Data Proves It Caused It”</p>
+<p><strong>Myth:</strong> If two variables rise and fall together in a dataset, one of them must be causing the other.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<h3>One Source vs. Combined Sources</h3>
+<p><strong>A single source</strong></p>
+<p><strong>Combined sources</strong></p>
+<ul>
+<li>Often, a single source does not contain <span class=""gap""></span>.</li>
+<li>Combining data from a variety of sources lets you <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: When a stem says one dataset 'is not enough to conclude,' the credited move is combining it with a DIFFERENT source — not collecting more of the same.</p></div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Using the bell-ringer table: write one piece of INFORMATION the raw numbers genuinely support, and name the data it was extracted from.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A headline reads: 'Study finds students who stream more music get lower grades — streaming hurts GPA.' Which part is correlation, which part is the leap, and what additional research would be needed?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A principal wants to know WHY streaming spiked in May, but the app export alone can't say. Name a second source to combine with it, and state the conclusion the combination could support.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.3 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Metadata: Data About Data</h2>
+<h3>Key Vocabulary (LO DAT-2.B)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Metadata</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Primary data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>What Metadata Is For</h3>
+<ul>
+<li>Metadata are used for finding, <span class=""gap""></span>, and managing information.</li>
+<li>Metadata increase the effective use of data by <span class=""gap""></span>.</li>
+<li>If you edit or delete a photo's metadata, the photo itself <span class=""gap""></span>.</li>
+</ul>
+<h3>Data or Metadata?</h3>
+<p class=""muted"">Five items from one phone. Classify each: is it the primary data, or metadata describing it?</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Item</th>
+<th>Data or metadata?</th>
+<th>How you can tell</th>
+</tr>
+<tr>
+<td>The pixels of a vacation photo</td>
+<td><span class=""wcell""></span></td>
+<td>It IS the content — the thing itself</td>
+</tr>
+<tr>
+<td>The photo's date taken and file size</td>
+<td><span class=""wcell""></span></td>
+<td>Data ABOUT the photo, not the picture itself</td>
+</tr>
+<tr>
+<td>The audio of a song</td>
+<td>Primary data</td>
+<td>The content you actually hear</td>
+</tr>
+<tr>
+<td>The song's artist, length, and date added</td>
+<td><span class=""wcell""></span></td>
+<td>Describes the song — lets the app find, sort, and organize it</td>
+</tr>
+<tr>
+<td>You delete the photo's location tag — the picture is now...</td>
+<td><span class=""wcell""></span></td>
+<td>Changes and deletions to metadata do not change the primary data</td>
+</tr>
+</table>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: The Photo That Knew Too Much</h3>
+<ul>
+<li>A smartphone photo's hidden metadata can include <span class=""gap""></span>.</li>
+<li>Stripping a photo's metadata leaves the image <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A song file's metadata lists artist, length, and date added. In two sentences, explain the difference between the song's primary data and its metadata.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>You remove the location tag from a photo before posting it. A classmate worries the picture is now damaged. Correct them, citing what changes to metadata do to primary data.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Your music app instantly builds a 'Most played this month' playlist. Which metadata makes that possible, and which job — finding, organizing, or managing — is it doing?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.3 page once you have finished the whole topic.</p>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>Information is the collection of facts and patterns EXTRACTED from data — data is the raw material</li>
+<li>Correlation is never proof of causation — additional research is required</li>
+<li>One source often can't support a conclusion; combining sources can</li>
+<li>Metadata is data about data — it powers finding, organizing, and managing, and editing it never changes the primary data</li>
+</ul>
+<p><strong>Before next class:</strong> Tomorrow's disaster preview: a survey asked 'What city are you from?' — and six students from the SAME city produced five different answers. Before tomorrow, predict: what happens when a computer tries to count them?</p>
+</div>
+<h2>Day 2: When Data Gets Messy</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Identify the challenges data sets pose regardless of size, and explain how cleaning makes data uniform without changing its meaning (LO DAT-2.C)</li>
+<li>Explain how bias, data-set size, parallel systems, and scalability shape what information can be extracted from data (LO DAT-2.C)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Yesterday's teaser, delivered. The survey's 'What city are you from?' column contains: KC · Kansas City · kansas city MO · K.C. · (blank) · Kansas Citty.</p>
+<p class=""muted"">A program counts students per city. What count does it report for Kansas City — and why? List every SEPARATE problem you can find in this column, then write what a fixed version would look like.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Why Real Data Is Messy</h2>
+<h3>Key Vocabulary (LO DAT-2.C)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Cleaning data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Invalid data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Bias</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Parallel systems</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Scalability</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Every Dataset Poses Challenges — Regardless of Size</h3>
+<ul>
+<li>Data sets pose challenges <span class=""gap""></span> of size.</li>
+<li>When users type into an open field, the data may not be <span class=""gap""></span>.</li>
+<li>The ability to process data depends on the capabilities of <span class=""gap""></span>.</li>
+</ul>
+<h3>Cleaning the Hometown Column</h3>
+<p class=""muted"">The bell-ringer column, triaged. For each raw entry: name the disease, then decide what a cleaner may — and may not — do.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Raw entry</th>
+<th>What's wrong</th>
+<th>Cleaning decision</th>
+</tr>
+<tr>
+<td>KC · Kansas City · kansas city MO</td>
+<td>Non-uniform: one city, three formats</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Kansas Citty</td>
+<td>Misspelling — still unmistakably the same city</td>
+<td>Correct the spelling to 'Kansas City' — meaning unchanged</td>
+</tr>
+<tr>
+<td>(blank)</td>
+<td>Incomplete data — the value is missing</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Age column: −3</td>
+<td>Invalid data — no age can be negative</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Define cleaning data in your own words, then explain why replacing 'KC' with 'Kansas City' is cleaning but replacing a BLANK with 'Kansas City' is not.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A birth-year column contains the value 2091. Is that non-uniform, incomplete, or invalid data? What should a careful cleaner do with it?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Two clubs kept sign-up lists with different column names and formats, and the school wants one member count. Name the challenge this creates and what must happen before the combined list can be counted.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.3 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Bias, Size, and Scale</h2>
+<div class=""warn"">
+<p class=""label"">Watch out — “Just Collect More Data”</p>
+<p><strong>Myth:</strong> If survey results look biased, the fix is collecting more data — with enough responses, the bias will average out.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<h3>Small Data vs. Big Data</h3>
+<p><strong>A small data set</strong></p>
+<p><strong>A large data set</strong></p>
+<ul>
+<li>The size of a data set affects <span class=""gap""></span>.</li>
+<li>Large data sets are difficult to process on a single computer and may require <span class=""gap""></span>.</li>
+<li>Scalability matters because a system's computational capacity affects <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Size changes HOW MUCH information you can extract and WHAT SYSTEMS you need. It never repairs a biased source.</p></div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: How a Billion Rows Get Counted</h3>
+<ul>
+<li>The big-data pattern is: split the data into chunks, <span class=""gap""></span>, then merge the partial results.</li>
+<li>Companies handle growing datasets by 'scaling out,' which means <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A fitness app reports 'teenagers exercise 90 minutes a day' using data only from people who chose to install a fitness app. Explain the bias — and why doubling the number of users would not fix it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A five-row dataset and a five-million-row dataset both track music streaming. What does the size difference change about the information that can be extracted from each?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A biologist's laptop cannot process a genome dataset. Name the challenge, the kind of system that addresses it, and what scalability has to do with choosing that system.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.3 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 2.3 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Correlation ≠ causation</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Metadata edits touch the file</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>More data cures bias</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Extracting Information from Data, in One Slide</h3>
+<ul>
+<li>Information is the collection of facts and patterns extracted from data — data is the raw material.</li>
+<li>Correlation never proves causation by itself; conclusions often need combined sources.</li>
+<li>Metadata is data about data: it powers finding, organizing, and managing — and editing it never changes the primary data.</li>
+<li>Every dataset needs cleaning judgment: make non-uniform data uniform WITHOUT changing meaning; never invent missing or 'fix' invalid values silently.</li>
+<li>Bias comes from the source and survives more collection; size changes what's extractable and may demand parallel, scalable systems.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  tell data from information and extract a defensible claim from a raw table (LO DAT-2.A)</li>
+<li>☐  explain why a correlation alone never proves causation, and when sources must be combined (LO DAT-2.A)</li>
+<li>☐  identify a file's metadata and explain what changing it does — and doesn't do — to the primary data (LO DAT-2.B)</li>
+<li>☐  spot non-uniform, incomplete, invalid, and biased data, and choose the right response — from cleaning to parallel systems (LO DAT-2.C)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi2-using-programs-with-data-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 2: Data · Topic 2.4 · Guided Notes (Student)</p>
+<h1>Using Programs with Data — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 2.4 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi2-using-programs-with-data"">Topic 2.4 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: Two Million Rows, One Question</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain how programs — search tools, filtering systems, and spreadsheets — process data to acquire information and communicate it with tables, diagrams, and visual tools (LO DAT-2.D)</li>
+<li>Classify any data operation as one of the four extraction processes: transforming every element, filtering, combining/comparing, or visualizing (LO DAT-2.D)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Here are 3 rows of the class playlist log — Echo · Marlowe · played Mar 3; Lights · Nova · played Mar 5; Gravity · Nova · played Mar 9. Which artist got played most? Easy. Now imagine the log is 2 MILLION rows covering the whole year.</p>
+<p class=""muted"">Write the exact steps a helper would follow to answer: 'Which artist did we play most in March?' The helper follows instructions literally and never guesses.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. From Data to Information</h2>
+<h3>Key Vocabulary (LO DAT-2.D)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Information</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Search tool</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Data filtering system</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Spreadsheet</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Visualization</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Programs Turn Data into Information</h3>
+<ul>
+<li>Programs can be used to process data to <span class=""gap""></span>.</li>
+<li>Insight and knowledge gained from data are communicated using <span class=""gap""></span>.</li>
+<li>The step-by-step instructions from the bell ringer are really <span class=""gap""></span>.</li>
+</ul>
+<h3>Search Finds. Filters Reveal.</h3>
+<p><strong>Search tool</strong></p>
+<p><strong>Data filtering system</strong></p>
+<ul>
+<li>Search tools are useful for <span class=""gap""></span> finding information.</li>
+<li>Data filtering systems help with finding information AND <span class=""gap""></span>.</li>
+<li>Spreadsheets help efficiently organize and <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Spreadsheets bundle both jobs — plus formulas and charts — which is why the CED credits them with organizing information and finding trends.</p></div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A librarian types 'Baldwin' into the catalog and instantly gets every matching title out of 40,000 records. Name the tool category and explain what the word 'efficiently' is doing in the CED's description of it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>You have a spreadsheet of 600 club signups. Describe one filter you could apply, and one pattern the filtered view could reveal that the full table hides.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A friend says the computer 'already has' the answer to 'which artist did we play most.' Correct them in two sentences using the words data, program, and information.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.4 page once you have finished the whole topic.</p>
+</div>
+<h2>02. The Four Extraction Processes</h2>
+<h3>Four Moves Behind Every Answer</h3>
+<ul>
+<li>Transforming changes <span class=""gap""></span>.</li>
+<li>Filtering keeps <span class=""gap""></span>.</li>
+<li>Combining or comparing collapses many rows into <span class=""gap""></span>.</li>
+</ul>
+<h3>Four Moves on One Playlist</h3>
+<p class=""muted"">The class playlist log, 5 rows: Lights·Nova·12 plays — Gravity·Nova·9 — Echo·Marlowe·15 — Drift·Marlowe·4 — Anthem·Ivy·6. Each row below runs ONE extraction process on it. What comes back?</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Process</th>
+<th>Instruction to the program</th>
+<th>What comes back</th>
+</tr>
+<tr>
+<td>Transform every element</td>
+<td>Convert every play count to points: multiply each by 10</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>Keep only tracks with at least 10 plays</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Combine / compare</td>
+<td>Total all plays; report the artist with the most</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Visualize</td>
+<td>Chart total plays per artist</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""warn"">
+<p class=""label"">Watch out — “The Data Already Contains the Answer”</p>
+<p><strong>Myth:</strong> Programs just store data — to actually find information, a person eventually has to read through the data themselves.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Classify each gradebook operation: (a) 5 bonus points are added to every quiz score; (b) all scores below 60 are hidden; (c) the class average is reported. Name the extraction process for each.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Filtering and transforming both 'change the table.' State the difference in one sentence using row count and values.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>The bar chart made Nova's lead obvious. Explain what visualizing communicated that the summary number '21 plays' alone did not.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.4 page once you have finished the whole topic.</p>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>Programs process data to acquire information — rows never answer questions by themselves</li>
+<li>Search tools find efficiently; filtering systems find AND reveal patterns; spreadsheets organize and surface trends</li>
+<li>Four extraction processes: transform every element, filter, combine/compare, visualize</li>
+<li>Fast classification: check whether values changed in place, rows dropped, rows collapsed to one answer, or data became a picture</li>
+</ul>
+<p><strong>Before next class:</strong> Before tomorrow: a gym's program charted its 50,000 check-ins and found 6 p.m. is the busiest hour. The manager instantly asks, 'Is that true on weekends too?' Is the analysis finished? Write down what has to happen next — bring your answer.</p>
+</div>
+<h2>Day 2: The Insight Pipeline</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain why gaining insight from data is an iterative, interactive process of filtering and cleaning — one pass is never the whole analysis (LO DAT-2.E)</li>
+<li>Trace how combining data sources, clustering, classifying, and transforming data make patterns emerge from a real dataset (LO DAT-2.E)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Yesterday's teaser: the gym's program charted 50,000 check-ins and found 6 p.m. is the busiest hour. The manager immediately asked, 'Is that true on weekends too?' One classmate says the analysis is already done — the program ran, the chart exists.</p>
+<p class=""muted"">Is the analysis finished? Write the exact next steps the program must take to answer the manager's new question — then predict the question the manager will ask after THAT one is answered.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Insight Is Iterative</h2>
+<h3>Key Vocabulary (LO DAT-2.E)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Iterative processing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Cleaning data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Combining data sources</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Clustering data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Classifying data</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>One Pass Is Never Enough</h3>
+<ul>
+<li>Programs are used in an <span class=""gap""></span> and interactive way when processing information for insight.</li>
+<li>Programmers gain insight and knowledge by using programs to <span class=""gap""></span> digital data.</li>
+<li>Each answer a pass produces usually triggers <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “One Pass Gives the Insight”</p>
+<p><strong>Myth:</strong> Run the program once, produce the chart, and the analysis is complete — asking more questions means the first run failed.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A weather dataset stores 'rain', 'Rain', and 'RAIN' as three different values. Explain what cleaning does here, and what insight becomes possible only after it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A program reports 'most-photographed event: homecoming.' Write the yearbook adviser's next TWO questions, and name what each new pass needs (a filter? a new grouping? another source?).<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>In one sentence: why does the CED call insight-seeking interactive and not just automatic?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 2.4 page once you have finished the whole topic.</p>
+</div>
+<h2>02. The Pipeline, Worked End to End</h2>
+<h3>The Playlist Pipeline, Pass by Pass</h3>
+<p class=""muted"">March log: 'Nova' typed three ways plus one duplicate row; April arrived as a separate file. Trace each pass — what changes, and why?</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Step</th>
+<th>Pipeline move</th>
+<th>What the program does</th>
+<th>Data after this pass</th>
+</tr>
+<tr>
+<td>1</td>
+<td>Clean + transform</td>
+<td>Standardize every artist name's capitalization; delete the duplicated row</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Combine data sources</td>
+<td>Merge the March table with the April log</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Filter</td>
+<td>Keep only the rows whose date falls on a weekend</td>
+<td>Fewer rows, values untouched — only the weekend story remains</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Classify + combine</td>
+<td>Group the weekend plays by artist and total each group</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Visualize</td>
+<td>Chart the weekend totals per artist</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<h3>Patterns Emerge Under Transformation</h3>
+<ul>
+<li>Insight and knowledge can be obtained from translating and <span class=""gap""></span> digitally represented information.</li>
+<li>Patterns can <span class=""gap""></span> when data are transformed using programs.</li>
+<li>Clustering lets the groups emerge from the data; classifying instead <span class=""gap""></span>.</li>
+</ul>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: The Formula View</h3>
+<p><strong>The pipeline step</strong></p>
+<p><strong>The spreadsheet formula</strong></p>
+<ul>
+<li>=PROPER(B2) copied down a whole column is the <span class=""gap""></span> move.</li>
+<li>A spreadsheet SUM over a column is which of the four extraction processes? <span class=""gap""></span>
+</li>
+</ul>
+<div class=""card""><p>Beyond the exam: recognizing the four moves inside real tools makes AP scenarios feel instantly familiar — and it's the head start for the BI2 Data Project.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>The chart shows one artist dominating weekends. Design pass #2: write the follow-up question a manager would ask, and name the pipeline moves that would answer it.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A classmate reorders the pipeline: total plays per artist FIRST, then clean the three spellings of Nova. Predict specifically what the totals get wrong.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>April's log writes dates as '04/12' while March used 'Apr 12'. Name the pipeline move that fixes this, and explain what happens to the weekend filter if the merge runs before the fix.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Show the pipeline order in each answer. Check yourself with the six MCQ Practice questions on the Topic 2.4 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 2.4 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Filtering vs. transforming</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Insight in one pass</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>The chart proves causation</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Using Programs with Data, in One Slide</h3>
+<ul>
+<li>Programs process data to acquire information; tables, diagrams, and visual tools communicate it.</li>
+<li>Search finds efficiently; filters find and reveal patterns; spreadsheets organize and surface trends.</li>
+<li>Every extraction is one of four moves: transform every element, filter, combine/compare, visualize.</li>
+<li>Insight is iterative and interactive: clean, combine sources, cluster, classify — then ask the next question.</li>
+<li>Patterns emerge when data are translated and transformed by programs — the pipeline changes the representation, never the events.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  pick the right tool — search, filter, spreadsheet — to get information from data (LO DAT-2.D)</li>
+<li>☐  classify an operation as transforming, filtering, combining, or visualizing (LO DAT-2.D)</li>
+<li>☐  explain why insight-seeking with programs is iterative, not one-pass (LO DAT-2.E)</li>
+<li>☐  trace a clean-combine-filter-visualize pipeline and spot the emerging pattern (LO DAT-2.E)</li>
+</ul>
+</div>
+</div>"

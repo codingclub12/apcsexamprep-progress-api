@@ -1,0 +1,1269 @@
+﻿"Handle","Command","Body HTML"
+"ap-csp-course-bi1-collaboration-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 1: Creative Development · Topic 1.1 · Guided Notes (Student)</p>
+<h1>Collaboration — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 1.1 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi1-collaboration"">Topic 1.1 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Explain what makes something a computing innovation, and how computing innovations are improved through collaboration (LO CRD-1.A)</li>
+<li>Explain how computing innovations are developed by groups of people, using online collaboration tools and models like pair programming (LO CRD-1.B)</li>
+<li>Demonstrate effective interpersonal skills — communication, consensus building, conflict resolution, and negotiation — during collaboration (LO CRD-1.C)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Your school is replacing the paper lunch line with a lunch-ordering app. Round 1: list every need a user of this app might have. Go for quantity — every kind of user, every situation you can imagine.</p>
+<p class=""muted"">Round 2: combine lists with a partner. Count the needs your partner caught that you missed — and the ones only you caught.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. What Counts as a Computing Innovation</h2>
+<h3>Key Vocabulary (LO CRD-1.A &amp; CRD-1.B)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Computing innovation</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Pair programming</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Bias</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Innovation or Not? Run the Test</h3>
+<p class=""muted"">For each candidate, apply — is a program an integral part of its function? — then classify it's three shapes.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Candidate</th>
+<th>Computing innovation? Why / why not</th>
+<th>Type</th>
+</tr>
+<tr>
+<td>Self-driving car</td>
+<td>Yes — software that steers, brakes, and navigates is integral to its function</td>
+<td>Physical computing innovation</td>
+</tr>
+<tr>
+<td>Picture-editing app</td>
+<td>Yes — the innovation IS a program</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>E-commerce (shopping online)</td>
+<td><span class=""wcell""></span></td>
+<td>Nonphysical computing concept</td>
+</tr>
+<tr>
+<td>A wooden bookshelf</td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Smartwatch that tracks heart rate</td>
+<td>Yes — an onboard program collects and analyzes the readings</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>An old vending machine drops a snack using a purely mechanical coin lever. A newer model runs software that tracks stock and accepts phone payments. Apply the test from today: which one is a computing innovation, and why?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>E-commerce is not an object and not an app you can install, yet the College Board calls it a computing innovation. Explain what makes that classification work.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Invent your own example of each shape — one physical, one software, one concept — that did not appear on today's slides.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.1 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Why Collaboration Improves Innovations</h2>
+<h3>Why Diverse Teams Build Better Innovations</h3>
+<ul>
+<li>Diverse perspectives on a team protect the PRODUCT by <span class=""gap""></span>.</li>
+<li>Consultation and communication with <span class=""gap""></span> are important aspects of developing a computing innovation.</li>
+<li>Talking to potential users before building matters because <span class=""gap""></span>.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>In the bell ringer, your merged list contained needs you missed alone. Connect that experience to today's claim: what does effective collaboration produce that solo work usually cannot?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A team of expert programmers — all the same age, from the same neighborhood — builds a city transit app that works badly for wheelchair users and night-shift workers. Using the word bias, explain how the team's makeup shaped the product, and state the fix.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Why does the College Board insist on gathering information from POTENTIAL users — people who don't use the program yet — rather than only its current fans?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.1 page once you have finished the whole topic.</p>
+</div>
+<h2>03. How Real Teams Collaborate</h2>
+<h3>Group Work vs. True Collaboration</h3>
+<p><strong>Just dividing the work</strong></p>
+<p><strong>True collaboration</strong></p>
+<ul>
+<li>You can tell true collaboration happened because the final product <span class=""gap""></span>.</li>
+<li>Online tools support collaboration by allowing programmers to <span class=""gap""></span> on ideas and documents.</li>
+<li>Splitting the work into silos fails as collaboration because <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: On the exam, 'collaboration' means perspectives mixing during development. An answer choice that just divides tasks is describing group work, not collaboration.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “Collaboration Means Splitting Up the Work”</p>
+<p><strong>Myth:</strong> A good team divides the project into equal parts, each member builds their part alone, and the pieces get combined at the end — that's what collaborating means.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: Collaboration at Internet Scale</h3>
+<p><strong>The problem</strong></p>
+<p><strong>How open source solves it</strong></p>
+<ul>
+<li>A pull request is shared work plus <span class=""gap""></span>.</li>
+<li>Open-source teams practice interpersonal skills mostly through <span class=""gap""></span>.</li>
+<li>The AP exam tests what online tools make possible, never <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Deep dive only — the AP exam never asks about brand-name tools; it tests WHAT online tools make possible: sharing and feedback.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A four-person team 'collaborates' by splitting an app into four files and combining them the night before the deadline. Explain what their final product will fail to reflect, using today's language.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Two pair-programming setups: in one, the navigator scrolls a phone while the driver types; in the other, the navigator questions every line. Which pair is running the real model, and what is the passive pair losing?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Your team deadlocks 2–2 on a design choice. Name two interpersonal skills from today you could apply, and describe one concrete move for each.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.1 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 1.1 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>“It must be a gadget”</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>“Diversity is only fairness”</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Passive pair programming</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Collaboration, in One Slide</h3>
+<ul>
+<li>A computing innovation includes a program as an integral part of its function — and it can be physical, nonphysical software, or a nonphysical concept.</li>
+<li>Effective collaboration produces an innovation that reflects the team's diversity of talents and perspectives, and diverse perspectives help avoid bias.</li>
+<li>Consultation and communication with users — including potential users — reveal a program's purpose from diverse perspectives and shape its design.</li>
+<li>Online tools support collaboration through sharing AND feedback; pair programming is a common model that facilitates it.</li>
+<li>Effective teams practice interpersonal skills: communication, consensus building, conflict resolution, and negotiation.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  classify a computing innovation as physical, software, or concept (LO CRD-1.A)</li>
+<li>☐  explain how diverse perspectives improve a product and help avoid bias (LO CRD-1.A)</li>
+<li>☐  describe how teams collaborate: online tools and pair programming (LO CRD-1.B)</li>
+<li>☐  name and use the four interpersonal skills of effective teams (LO CRD-1.C)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi1-identifying-correcting-errors-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 1: Creative Development · Topic 1.4 · Guided Notes (Student)</p>
+<h1>Identifying and Correcting Errors — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 1.4 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi1-identifying-correcting-errors"">Topic 1.4 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: It Ran Perfectly. It's Still Wrong.</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Identify an error in an algorithm or program and classify it as a logic, syntax, run-time, or overflow error (LO CRD-2.I)</li>
+<li>Correct errors by choosing from the five effective ways: test cases, hand tracing, visualizations, debuggers, and extra output statements (LO CRD-2.I)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>A pancake recipe has been sabotaged. Step 1: Stir flour, milk, and two eggs into a smooth batter. Step 2: Wozzle the batter frimly until it grebbles. Step 3: Divide the batter evenly among zero bowls. Step 4: Add 2 cups of salt so the pancakes taste sweet. Step 5: Cook three minutes per side and serve.</p>
+<p class=""muted"">Three steps are broken — find all three, and write HOW each fails differently: one can't be understood, one can't be carried out, and one 'works' but ruins breakfast.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. The Four Error Types</h2>
+<h3>Key Vocabulary (LO CRD-2.I)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Logic error</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Syntax error</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Run-time error</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Overflow error</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Hand tracing</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Four Failures, Four Fingerprints</h3>
+<ul>
+<li>A logic error still <span class=""gap""></span>.</li>
+<li>A syntax error breaks <span class=""gap""></span>.</li>
+<li>A run-time error occurs <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “If It Runs, It's Correct”</p>
+<p><strong>Myth:</strong> A program that runs from start to finish without a single error message has no errors in it.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<h3>Name That Error</h3>
+<p class=""muted"">Five bug reports from student projects. Classify each one using the four CED error types.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Bug report</th>
+<th>What execution looked like</th>
+<th>Error type</th>
+</tr>
+<tr>
+<td>The statement ""score &lt;- score +"" is missing its second operand</td>
+<td>The language cannot understand the statement; the program never starts</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A trip-cost app runs ""each &lt;- cost / people"" and a user enters 0 people</td>
+<td>The program halts with an error message in the middle of execution</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A gradebook averages three quizzes with ""avg &lt;- (q1 + q2 + q3) / 2""</td>
+<td>Runs cleanly every time; every printed average is higher than it should be</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A step counter's daily total passes the largest value its storage allows</td>
+<td>The computer attempts to handle a number outside the defined range</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A password checker approves some incorrect passwords</td>
+<td>Runs cleanly for every input; the accept/reject behavior is wrong</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A weather app crashes the moment a user taps 'refresh' while the phone is offline. A teammate calls it a logic error. Correct the classification if needed, and defend your answer in one sentence.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Explain how a program can be completely free of syntax errors and still be wrong. Name the error type that survives a clean, message-free run.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A scoreboard suddenly shows 0 right after a team's score passes the largest value the program can store. Which error type is this, and what makes it different from a logic error?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.4 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Five Ways to Find and Fix</h2>
+<h3>The CED's Five-Tool Debugging Kit</h3>
+<p><strong>Watch the values</strong></p>
+<p><strong>Probe the behavior</strong></p>
+<ul>
+<li>The CED's five ways to find and correct errors are test cases, hand tracing, visualizations, debuggers, and <span class=""gap""></span>.</li>
+<li>A test case pairs a defined input with <span class=""gap""></span>.</li>
+<li>Hand tracing means <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: If a question asks how to FIND an error, the answer comes from this list of five — memorize them as a set.</p></div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: Inside a Debugger</h3>
+<ul>
+<li>A breakpoint makes the debugger <span class=""gap""></span>.</li>
+<li>A debugger is essentially hand tracing <span class=""gap""></span>.</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A program's final answer is wrong but nothing ever crashes. Which two of the five ways would you reach for first, and what would each one reveal?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A teammate keeps pasting extra output statements into 300 lines of code to hunt one bug. Name the tool from the five that does the same job without editing the program, and give one advantage it has.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Write one complete test case for a program that converts total minutes into hours-and-minutes form: give the defined input AND the exact expected output.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.4 page once you have finished the whole topic.</p>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>Four error types, four fingerprints: logic (runs, behaves incorrectly), syntax (language rules broken, never runs), run-time (fails during execution), overflow (number outside the defined range)</li>
+<li>Logic errors are the silent ones — a clean, message-free run proves nothing</li>
+<li>Five ways to find and correct errors: test cases, hand tracing, visualizations, debuggers, extra output statements</li>
+<li>Overflow's fixed-bit machinery is waiting for you in Topic 2.1</li>
+</ul>
+<p><strong>Before next class:</strong> A grade calculator works perfectly for 85, 92, and 74 — ship it? Tomorrow: the three numbers that break it.</p>
+</div>
+<h2>Day 2: The Three Numbers That Break It</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Identify inputs and their corresponding expected outputs or behaviors that can be used to check the correctness of a program (LO CRD-2.J)</li>
+<li>Choose test inputs at and just beyond the extremes — the minimum and maximum — that the program requirements define (LO CRD-2.J)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Yesterday's teaser: a grade calculator averages three scores and prints a letter grade. Its requirements say each score is a whole number from 0 to 100. It works perfectly for 85, 92, and 74.</p>
+<p class=""muted"">Write the three test scores you would type to try to BREAK this program — and for each one, what a correctly built program should do with it. Why those three numbers, and not, say, 60?</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Testing with Defined Inputs</h2>
+<h3>Key Vocabulary (LO CRD-2.J)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Test case</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Extremes</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Program requirements</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Testing Is a Loop, Not a Victory Lap</h3>
+<ul>
+<li>Testing uses defined inputs to ensure that a program is producing <span class=""gap""></span>.</li>
+<li>Programmers use the results from testing to <span class=""gap""></span>.</li>
+<li>Before running a test case, you must already know <span class=""gap""></span>.</li>
+</ul>
+<h3>Test AT the Extremes — and JUST BEYOND</h3>
+<p><strong>At the extremes</strong></p>
+<p><strong>Just beyond the extremes</strong></p>
+<ul>
+<li>Boundary testing targets the edges of the allowed range — meaning <span class=""gap""></span>.</li>
+<li>Strong test inputs demonstrate expected outcomes at or <span class=""gap""></span>.</li>
+<li>For an input just beyond the range, the expected behavior comes from <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: 'At or just beyond the extremes' is CED wording. Middle-of-the-range inputs make weak tests — the exam expects boundary picks.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “Normal Values Make Good Tests”</p>
+<p><strong>Myth:</strong> Testing means running the program on a few typical, middle-of-the-range inputs — if 85, 92, and 74 all work, the program works.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<h3>Reading Requirements, Choosing Inputs</h3>
+<p class=""muted"">For each requirement, choose test inputs at the extremes and just beyond them — and say why. The requirements decide what 'expected' means.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Requirement</th>
+<th>At the extremes</th>
+<th>Just beyond</th>
+<th>Why these inputs</th>
+</tr>
+<tr>
+<td>Quiz scores: whole numbers 0–100</td>
+<td>0 and 100</td>
+<td>-1 and 101</td>
+<td>Legal boundaries must produce real grades; out-of-range must be rejected, not averaged</td>
+</tr>
+<tr>
+<td>Movie rating: 1–5 stars</td>
+<td><span class=""wcell""></span></td>
+<td><span class=""wcell""></span></td>
+<td>One-step-outside inputs expose a form that accepts any number and corrupts the average</td>
+</tr>
+<tr>
+<td>Password length: 8–16 characters</td>
+<td>8-character and 16-character passwords</td>
+<td><span class=""wcell""></span></td>
+<td>The extreme is the LENGTH — the requirement defines what property gets measured</td>
+</tr>
+<tr>
+<td>ATM withdrawal: $20–$500</td>
+<td><span class=""wcell""></span></td>
+<td>19 and 501</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A ticket site's requirements: orders of 1 to 8 tickets. List the four boundary inputs you would test and the expected behavior for each one.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A program passed tests at 85, 92, and 74, then crashed on 0 the day it launched. Using yesterday's vocabulary, classify the crash; using today's, name the testing habit that would have caught it early.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A countdown app accepts a number of days from 1 to 365. A tester adds the input 366 and a teammate objects that 366 'isn't a real input, so testing it is a waste.' Settle the argument, citing what defined test inputs are supposed to demonstrate.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Why can't you write a single correct test case for a program whose requirements were never written down? Answer in one sentence that uses the word 'expected.'<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.4 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 1.4 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Logic vs. run-time</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Overflow is an error type here</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Test just beyond the extremes</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Identifying and Correcting Errors, in One Slide</h3>
+<ul>
+<li>Four error types: logic (runs, behaves incorrectly), syntax (language rules broken, never runs), run-time (fails during execution), overflow (number outside the defined range).</li>
+<li>Five ways to find and correct errors: test cases, hand tracing, visualizations, debuggers, adding extra output statements.</li>
+<li>Testing runs defined inputs against expected outcomes — and the results drive revision.</li>
+<li>The strongest test inputs sit at or just beyond the extremes: the minimum and the maximum.</li>
+<li>Program requirements are needed to identify appropriate defined inputs — they decide what 'expected' even means.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  classify a failure as logic, syntax, run-time, or overflow (LO CRD-2.I)</li>
+<li>☐  name the five ways to find and correct an error (LO CRD-2.I)</li>
+<li>☐  choose test inputs at and just beyond the extremes (LO CRD-2.J)</li>
+<li>☐  use program requirements to decide what to test (LO CRD-2.J)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi1-program-design-development-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 1: Creative Development · Topic 1.3 · Guided Notes (Student)</p>
+<h1>Program Design and Development — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 1.3 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi1-program-design-development"">Topic 1.3 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: Nobody Great Codes First</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Describe how a development process works — its four phases — and tell iterative from incremental (LO CRD-2.E)</li>
+<li>Explain how a program and its interface are designed: investigation, requirements, specification (LO CRD-2.F)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Your club is running a bake-sale stand at Friday's game, and you're in charge. List the first six things you would do — in order — between right now and the moment the stand opens.</p>
+<p class=""muted"">Now go back and label each step with your own one-word tag for what KIND of step it is: finding-out? planning? building? checking? Keep the list — we'll use it all period.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. How Programs Get Built</h2>
+<h3>Key Vocabulary (LO CRD-2.E)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Development process</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Iterative development</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Incremental development</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Two Styles, Four Phases</h3>
+<ul>
+<li>Not every team plans everything up front — the CED also allows a process that is <span class=""gap""></span>.</li>
+<li>After investigating and reflecting, the remaining three phases are <span class=""gap""></span>.</li>
+<li>The phases are commonly used, not a mandatory one-way sequence — real processes <span class=""gap""></span>.</li>
+</ul>
+<h3>Iterative vs. Incremental — Loops vs. Pieces</h3>
+<p><strong>Iterative</strong></p>
+<p><strong>Incremental</strong></p>
+<ul>
+<li>What sends an iterative team back to an earlier phase? <span class=""gap""></span>
+</li>
+<li>The incremental safety rule: never add a piece to the whole until <span class=""gap""></span>.</li>
+<li>Memory hook: iterative = <span class=""gap""></span>; incremental = <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Iterative = LOOPS (revise, revisit earlier phases). Incremental = PIECES (verify each part before adding it). A process can be both at once.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “Iterating Means You Failed”</p>
+<p><strong>Myth:</strong> Going back to an earlier phase means the team messed up — a good developer designs it right the first time and never has to revise.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A team builds a chat app one feature at a time — messages first, verified working, then emojis, then photos, each verified before it joins the app. Iterative, incremental, or both? Defend your label with the CED definition.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>After user testing, a team leaves the code alone but returns to the design phase to rework two screens. Which term describes this — and why is revisiting a phase NOT evidence of failure?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A programmer facing a brand-new kind of problem starts experimenting with no fixed plan. Which kind of development process is this, and is it legitimate?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.3 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Design: From Investigation to Blueprint</h2>
+<h3>Key Vocabulary (LO CRD-2.F)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Investigation</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Program requirements</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Program specification</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>The Design Pipeline</h3>
+<ul>
+<li>Design starts with investigation because you cannot list what a program must do until <span class=""gap""></span>.</li>
+<li>Investigation looks outward at <span class=""gap""></span>.</li>
+<li>Specification vs. design phase: one <span class=""gap""></span>, the other <span class=""gap""></span> — in that order.</li>
+</ul>
+<h3>How You Investigate vs. What Design Produces</h3>
+<p><strong>Investigation methods</strong></p>
+<p><strong>Design-phase activities</strong></p>
+<ul>
+<li>Beyond surveys and user testing, the CED's other two investigation methods are <span class=""gap""></span>.</li>
+<li>Watching users in their real environment without your product is <span class=""gap""></span>; watching them try your product is <span class=""gap""></span>.</li>
+<li>The design-phase activity students most often forget: developing a <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: 'Watching users in their normal routine' = direct observation. 'Watching users try your product' = user testing. Exam items hinge on that difference.</p></div>
+<h3>Sort the Activities into Phases</h3>
+<p class=""muted"">A student team builds a flashcard app. Name the development-process phase for each activity in their week.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Team activity</th>
+<th>What the team is really doing</th>
+<th>Phase</th>
+</tr>
+<tr>
+<td>Survey the 9th grade about what a study app should do</td>
+<td>Collecting data from future users to determine requirements</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Sketch every screen on paper and storyboard the flow between them</td>
+<td>Outlining how to accomplish the specification</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Build a rough version where only the login screen actually works</td>
+<td>Creating an early working model to try the idea out</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>Give the rough version to five students and note where they get stuck</td>
+<td>Checking the program against user needs; gathering feedback</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>After the feedback, return to the paper sketches and rework two screens</td>
+<td>Revisiting an earlier phase based on feedback — the iterative move</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A team wants to build an app for the school library but has never spoken to the librarian. Choose TWO investigation methods for them, and say what each would reveal that the other wouldn't.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>In one sentence each: what do the requirements describe, and what does the specification do to those requirements?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A teammate says the design phase is 'just drawing what the app looks like.' List three OTHER design-phase activities from the CED that prove them wrong.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.3 page once you have finished the whole topic.</p>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: Waterfall vs. Agile</h3>
+<p><strong>Waterfall (ordered, one pass)</strong></p>
+<p><strong>Agile (iterative + incremental)</strong></p>
+<ul>
+<li>Waterfall completes each phase once and never <span class=""gap""></span>.</li>
+<li>Agile is the CED's two adjectives run as a schedule: <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Deep-dive connection: agile teams iterate BECAUSE testing keeps teaching them things design couldn't predict — as a business model.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>A development process can be ordered and intentional or exploratory; four phases are commonly used: investigating and reflecting, designing, prototyping, testing</li>
+<li>Iterative = loops (refine and revise, revisit earlier phases); incremental = pieces (verify each before adding it to the whole)</li>
+<li>Investigation — surveys, user testing, interviews, direct observations — determines requirements</li>
+<li>The specification defines the requirements; the design phase outlines how to accomplish it: brainstorming, storyboarding, modules, UI diagrams, testing strategy</li>
+</ul>
+<p><strong>Before next class:</strong> Before tomorrow, chew on this: in June you wrote the most brilliant program of your life. In September you open the file — and you can't read your own code. Nothing is broken. Every line still runs. So what, exactly, went wrong?</p>
+</div>
+<h2>Day 2: The Note You Leave for Future You</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Describe the purpose of a code segment or program by writing documentation — and explain why comments never affect how a program runs (LO CRD-2.G)</li>
+<li>Acknowledge code segments used from other sources correctly — origin or author's name, in the program documentation (LO CRD-2.H)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>The June mystery, solved by you: in June you wrote a 300-line program — your best ever. In September you open it and find variables named x, temp2, and stuff, no notes of any kind, and you cannot follow your own logic. Every line still runs perfectly.</p>
+<p class=""muted"">Write 3–4 sentences: what exactly went wrong, if nothing is broken? Then list three specific things June-you could have left behind that would rescue September-you.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Documentation: Writing for Humans</h2>
+<h3>Key Vocabulary (LO CRD-2.G)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Program documentation</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Comment</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Document Throughout — Not at the End</h3>
+<ul>
+<li>Programmers should document a program <span class=""gap""></span> its development.</li>
+<li>Documentation pays off later: it helps whoever maintains the program keep it <span class=""gap""></span>.</li>
+<li>When an environment doesn't support comments, <span class=""gap""></span>.</li>
+</ul>
+<div class=""warn"">
+<p class=""label"">Watch out — “Comments Slow the Program Down”</p>
+<p><strong>Myth:</strong> Comments are extra lines the computer has to wade through, so a heavily commented program runs slower — serious programmers strip comments to make code fast.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>Using the word 'documentation,' explain precisely what June-you failed to do — and name the TWO audiences every program has.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A teammate wants to delete all comments before submission 'to speed the program up.' In two sentences, explain what will and won't change, citing what comments are for.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Your little cousin's block-based coding app has no comment feature. Give two other methods their team could use to document the program — and explain why 'no comments possible' doesn't mean 'no documentation needed.'<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.3 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Credit Where Code Is Due</h2>
+<h3>What Needs Credit vs. What Credit Requires</h3>
+<p><strong>What must be acknowledged</strong></p>
+<p><strong>What the credit requires</strong></p>
+<ul>
+<li>You must acknowledge any code segment that was <span class=""gap""></span>.</li>
+<li>A sufficient acknowledgement must state <span class=""gap""></span>.</li>
+<li>Renaming variables in borrowed code <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: Sufficient acknowledgement = IN the documentation + origin or author's name. Both parts, every time — 'I changed it a little' is not a third option.</p></div>
+<h3>The Create PT Rule: Credit or Zero</h3>
+<ul>
+<li>On the Create PT, uncredited use of others' work or generative AI = <span class=""gap""></span>.</li>
+<li>Generative AI is permitted as a supplementary resource, but its code must be <span class=""gap""></span>.</li>
+<li>The habit that makes credit automatic: write the acknowledgement <span class=""gap""></span>.</li>
+</ul>
+<h3>Is the Credit Enough?</h3>
+<p class=""muted"">Four borrowed-code scenarios, one standard: credit in the documentation, naming the origin or author.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Scenario</th>
+<th>Acknowledgement given</th>
+<th>Sufficient? Why / why not</th>
+</tr>
+<tr>
+<td>Your program is built on starter code the teacher gave the whole class</td>
+<td>A comment at the top: 'Built on the class starter project provided by the teacher'</td>
+<td>SUFFICIENT — the origin is named, in the program documentation</td>
+</tr>
+<tr>
+<td>You adapt a 10-line code segment from an online API tutorial</td>
+<td>None — 'I rewrote the variable names, so it's basically mine now'</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A generative AI tool writes your sorting procedure for the Create PT</td>
+<td>A comment naming the AI tool as the source — and you can explain how the procedure works</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>A friend sends you a working code segment and you paste it in</td>
+<td>You thank the friend in a text message that night</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>State the two things a sufficient acknowledgement requires, per the CED — the place it lives and the content it includes.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A classmate says: 'The Create PT allows AI now, so I can just have it write my procedures.' What TWO obligations did they skip, and what does each one cost?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Your partner wrote half the procedures in your shared program. Nothing was 'copied' from anywhere. Does anything need acknowledging? Exact trigger.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.3 page once you have finished the whole topic.</p>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: How the Pros Document</h3>
+<p><strong>Inside the code</strong></p>
+<p><strong>Around the code</strong></p>
+<ul>
+<li>Two documentation layers at real companies: inside the code (comments, docstrings, names) and <span class=""gap""></span>.</li>
+<li>Commit messages quietly satisfy the documentation definition because they record <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Deep-dive connection: says documentation describes function AND how it was developed — commit messages are literally that second half, automated.</p></div>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 1.3 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Iterative vs. incremental swap</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Specification ← requirements</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>The acknowledgement bar</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Program Design and Development, in One Slide</h3>
+<ul>
+<li>Development processes: ordered-and-intentional or exploratory; four common phases — investigating and reflecting, designing, prototyping, testing</li>
+<li>Iterative = loops (refine, revise, revisit phases); incremental = pieces (verify each before adding to the whole)</li>
+<li>Design pipeline: investigation (surveys, user testing, interviews, direct observations) → requirements → specification defines them → design phase outlines how</li>
+<li>Documentation describes function and development; comments are for people and never affect execution; document THROUGHOUT — even where comments aren't supported</li>
+<li>Credit borrowed code in the documentation with origin or author's name — on the Create PT, uncredited work or AI = score of 0</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  run a development process and tell iterative from incremental (LO CRD-2.E)</li>
+<li>☐  trace investigation → requirements → specification → design (LO CRD-2.F)</li>
+<li>☐  write documentation that helps the next person — including future me (LO CRD-2.G)</li>
+<li>☐  credit borrowed and AI code the way the Create PT requires (LO CRD-2.H)</li>
+</ul>
+</div>
+</div>"
+"ap-csp-course-bi1-program-function-purpose-notes","MERGE","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:""SFMono-Regular"",Consolas,""Liberation Mono"",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id=""apcsp-notes"">
+<div class=""hero"">
+<p class=""eyebrow"">Big Idea 1: Creative Development · Topic 1.2 · Guided Notes (Student)</p>
+<h1>Program Function and Purpose — Guided Notes</h1>
+<p class=""sub"">Fill these in during class or catch up here if you were absent. Print this page or work on paper. When you have finished the whole topic, check yourself with the six MCQ Practice questions on the Topic 1.2 page.</p>
+</div>
+<p class=""noprint""><a class=""btn"" href=""javascript:window.print()"">Print these notes</a><a class=""btn"" href=""/pages/ap-csp-course-bi1-program-function-purpose"">Topic 1.2 lesson page</a><a class=""btn"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+<h2>Day 1: What Does This Thing Actually Do?</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Describe the purpose of a computing innovation — solving a problem or pursuing interests through creative expression (LO CRD-2.A)</li>
+<li>Explain how a program or code segment functions, describing it broadly by WHAT it does or in detail by what it does AND how its statements accomplish it (LO CRD-2.B)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>A mystery app is running, and all you can see is its behavior table: you type 50 → it says ""Too high."" You type 25 → ""Too low."" You type 37 → ""Correct — you got it in 3 tries!"" You type banana → ""Whole numbers only, please.""</p>
+<p class=""muted"">Write TWO descriptions of this app: (1) ONE sentence saying what it does. (2) A numbered list of steps for HOW it might do it — what it checks, what it remembers, what it says back.</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. The Purpose of Computing Innovations</h2>
+<h3>Key Vocabulary (LO CRD-2.A &amp; CRD-2.B)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Computing innovation</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Purpose</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Program (software)</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Code segment</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Program behavior</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Two Purposes — and Why Developers Care</h3>
+<ul>
+<li>The CED names exactly two purposes for computing innovations: <span class=""gap""></span>.</li>
+<li>Understanding an innovation's purpose gives developers <span class=""gap""></span>.</li>
+<li>Purpose is the WHY an innovation exists; function is <span class=""gap""></span>.</li>
+</ul>
+<h3>Solve a Problem vs. Creative Expression</h3>
+<p><strong>Solving a problem</strong></p>
+<p><strong>Creative expression</strong></p>
+<ul>
+<li>An innovation built to fix something broken, slow, or unfair serves the <span class=""gap""></span> purpose.</li>
+<li>Asked for a purpose on the exam, answer with WHY it exists — never <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: If a free-response asks for an innovation's purpose, answer with WHY it exists (problem or expression) — not a list of its features.</p></div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A city releases an app that reports potholes to the repair department. In one sentence, state its purpose using the CED's language.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A student codes an animation of falling cherry blossoms 'just because it's beautiful.' Which purpose is this — and why is 'that's not a real purpose' wrong?<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A team is redesigning a food-delivery app. Explain what the team gains by first agreeing on the app's purpose.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.2 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Programs, Code Segments, and Behavior</h2>
+<h3>One Input Is Never Enough</h3>
+<ul>
+<li>A program needs to work for <span class=""gap""></span> — not just the one input you tested.</li>
+<li>The broad level of description says WHAT a program does; the detailed level adds <span class=""gap""></span>.</li>
+<li>A program's behavior is how it functions during execution, often described by <span class=""gap""></span>.</li>
+</ul>
+<h3>Program, Code Segment, or Behavior?</h3>
+<p class=""muted"">Same weather app, four artifacts. Classify each one using today's vocabulary.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Artifact from the weather app</th>
+<th>Why it fits</th>
+<th>Classification</th>
+</tr>
+<tr>
+<td>The complete installed weather app, everything that runs when you open it</td>
+<td>A full collection of statements performing a specific task when run — also called software</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>The five lines inside it that convert Celsius to Fahrenheit</td>
+<td>A collection of statements that is only PART of the program</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>""When the user taps refresh, tomorrow's forecast appears in about a second""</td>
+<td>How the program functions during execution, told through user interaction</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>""It shows the forecast"" vs. ""It requests data from a weather service, picks tomorrow's entry, and displays it""</td>
+<td>The same function told broadly, then in detail with how the statements do it</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""warn"">
+<p class=""label"">Watch out — “It Worked Once, So It Works”</p>
+<p><strong>Myth:</strong> If a program runs correctly on the input you tried, it works — testing one input proves the program is finished.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: How Pros Describe Programs</h3>
+<p><strong>The WHAT layer</strong></p>
+<p><strong>The WHAT + HOW layer</strong></p>
+<ul>
+<li>The broad WHAT layer is written for <span class=""gap""></span>.</li>
+<li>The detailed WHAT + HOW layer is written for <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>Same program, two audiences: users need the WHAT; the developers who maintain it need the WHAT + HOW.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A classmate calls the 12 lines that check password strength inside a login app 'a program.' Correct them with the precise term and the reason it applies.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>Write BOTH description levels for a spell-checker: one broad sentence, then a 2–3 step detailed version that includes how it might accomplish the job.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A ticket-buying program was tested only with the number 2. List two other inputs it must handle that says so.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.2 page once you have finished the whole topic.</p>
+</div>
+<div class=""card"">
+<p class=""label"">Today in one box</p>
+<ul>
+<li>Computing innovations exist for two purposes: solving problems or pursuing interests through creative expression</li>
+<li>Understanding the purpose gives developers an improved ability to build the innovation</li>
+<li>A program (software) performs a specific task when run; a code segment is a part of one; behavior is how it functions during execution</li>
+<li>A program must work for a variety of inputs — and can be described broadly (what) or in detail (what + how)</li>
+</ul>
+<p><strong>Before next class:</strong> Before tomorrow, notice this: your phone reacts the INSTANT you tap it — no matter what it was doing. Nothing was 'next in line.' So how did your tap jump the queue? Bring a theory.</p>
+</div>
+<h2>Day 2: Nothing Was Next in Line</h2>
+<div class=""card"">
+<p class=""label"">Today’s objectives</p>
+<ul>
+<li>Identify the input(s) to a program — their forms (tactile, audio, visual, text), their sources (users or other programs), and the events that supply them (LO CRD-2.C)</li>
+<li>Identify the output(s) produced by a program — data sent to a device, based on the program's input or its prior state (LO CRD-2.D)</li>
+</ul>
+</div>
+<div class=""card"">
+<p class=""label"">Bell ringer</p>
+<p>Yesterday's teaser: your phone reacts the INSTANT you tap — mid-video, mid-download, mid-anything. Nothing was 'next in line.' Compare: a cake recipe runs step 1, step 2, step 3, and never jumps.</p>
+<p class=""muted"">Write your theory: how does the phone 'know' to run the tap-handling code right now? Is the phone following a recipe? If not, what is it doing while it waits for you?</p>
+<span class=""wline""></span><span class=""wline""></span><span class=""wline""></span><span class=""wline""></span>
+</div>
+<h2>01. Inputs and Events</h2>
+<h3>Key Vocabulary (LO CRD-2.C &amp; CRD-2.D)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Program input</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Event</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Event-driven programming</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Sequential flow of control</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+<tr>
+<td style=""width:30%!important""><strong>Program output</strong></td>
+<td>
+<span class=""wcell""></span><span class=""wcell""></span>
+</td>
+</tr>
+</table>
+<h3>Input: Four Forms, Two Sources</h3>
+<ul>
+<li>The CED's four example input forms are <span class=""gap""></span>.</li>
+<li>Input can come from a user or from <span class=""gap""></span>.</li>
+<li>Inputs usually <span class=""gap""></span>.</li>
+</ul>
+<h3>Sequential vs. Event-Driven</h3>
+<p><strong>Sequential flow of control</strong></p>
+<p><strong>Event-driven</strong></p>
+<ul>
+<li>In sequential flow, a statement runs because it is <span class=""gap""></span>.</li>
+<li>In event-driven programming, statements execute when <span class=""gap""></span>.</li>
+<li>Events can be generated when <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>AP TIP: 'The code runs WHEN the user clicks' = event-driven. 'The code runs AFTER the previous line' = sequential. The trigger word tells you which.</p></div>
+<div class=""warn"">
+<p class=""label"">Watch out — “Programs Always Run Top to Bottom”</p>
+<p><strong>Myth:</strong> Program statements always execute in order, first line to last — so whatever code just ran must have been the next line in the program.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class=""wline""></span><span class=""wline""></span>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>You unlock a phone with your fingerprint, then say 'Play my playlist.' Name the form of each of those two inputs, using CED vocabulary.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A stock-alert app shows no activity for three hours, then instantly pops a notification when a price feed reports a drop. Is this program sequential or event-driven? Name the event and what input it supplied.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>The price data in that alert came from the stock exchange's computers, not a person. What covers this — and what does it say about input sources?<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.2 page once you have finished the whole topic.</p>
+</div>
+<h2>02. Outputs</h2>
+<h3>Output: Data Leaving for a Device</h3>
+<ul>
+<li>Program outputs are any data sent from a program to <span class=""gap""></span>.</li>
+<li>Output is usually based on a program's input or its <span class=""gap""></span>.</li>
+<li>Same input but different output usually means <span class=""gap""></span>.</li>
+</ul>
+<h3>Input In, Output Out — Four Scenarios</h3>
+<p class=""muted"">For each scenario: identify the input's source and form, then the output's form.</p>
+<p class=""muted"">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Scenario</th>
+<th>Input — source &amp; form</th>
+<th>Output — form</th>
+</tr>
+<tr>
+<td>You say 'What's the capital of Peru?' and the smart speaker answers aloud</td>
+<td>User · audio (spoken question)</td>
+<td><span class=""wcell""></span></td>
+</tr>
+<tr>
+<td>You type a wrong password; the phone shows 'Try again' and buzzes in your hand</td>
+<td><span class=""wcell""></span></td>
+<td>Visual (message) + tactile (vibration)</td>
+</tr>
+<tr>
+<td>A weather service's software sends storm data; the dashboard displays a radar map</td>
+<td><span class=""wcell""></span></td>
+<td>Visual (radar map)</td>
+</tr>
+<tr>
+<td>You scan a ticket's QR code; the gate program prints a receipt slip</td>
+<td>User · visual (camera image of the code)</td>
+<td><span class=""wcell""></span></td>
+</tr>
+</table>
+<div class=""dd"">
+<p class=""label"">Deep Dive · Beyond the AP Exam</p>
+<h3>Deep Dive: The Event Loop</h3>
+<p><strong>What it looks like</strong></p>
+<p><strong>What's really happening</strong></p>
+<ul>
+<li>While an event-driven app 'waits,' a hidden loop is constantly <span class=""gap""></span>.</li>
+<li>A 'frozen' app is usually <span class=""gap""></span>.</li>
+</ul>
+<div class=""card""><p>One loop, millions of apps: nearly every GUI, game, and phone app you've used is an event loop wearing a costume.</p></div>
+</div>
+<div class=""card"">
+<p class=""label"">Stop and think</p>
+<ol>
+<li>A fitness watch buzzes on your wrist and shows 'Goal reached!' after your 10,000th step. Identify each output and its form.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A music app's shuffle button is tapped twice, ten minutes apart, and queues a different song each time. Explain why identical inputs legally produced different outputs.<span class=""wline""></span><span class=""wline""></span>
+</li>
+<li>A student claims a program that sends data to a printer 'has no output because nothing appeared on screen.' Correct the claim with's exact standard.<span class=""wline""></span><span class=""wline""></span>
+</li>
+</ol>
+<p class=""muted"">Answer in complete sentences. Check yourself with the six MCQ Practice questions on the Topic 1.2 page once you have finished the whole topic.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class=""muted"">Three ways Topic 1.2 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Purpose vs. function</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Event-driven ≠ sequential</strong> — in your own words:</p>
+<span class=""wline""></span><p><strong>Same input, different output</strong> — in your own words:</p>
+<span class=""wline""></span><h3>Program Function and Purpose, in One Slide</h3>
+<ul>
+<li>Innovations exist to solve problems or to pursue interests through creative expression — and knowing which improves the developer's work.</li>
+<li>A program (software) performs a specific task when run; a code segment is part of one; behavior is how it functions during execution.</li>
+<li>A program must work for a variety of inputs, and can be described broadly (what) or in detail (what + how).</li>
+<li>Inputs — tactile, audio, visual, text — come from users or other programs, supplied by events; event-driven code runs when triggered, not in sequence.</li>
+<li>Outputs are any data sent to a device, usually based on the input or the program's prior state.</li>
+</ul>
+<div class=""card"">
+<p class=""label"">Exit check — I can…</p>
+<ul class=""chk"">
+<li>☐  describe a computing innovation's purpose using the CED's two categories (LO CRD-2.A)</li>
+<li>☐  explain how a program or code segment functions at both description levels — what, and what + how (LO CRD-2.B)</li>
+<li>☐  identify a program's inputs, their forms and sources, and the events that supply them (LO CRD-2.C)</li>
+<li>☐  identify a program's outputs and explain how they depend on input and prior state (LO CRD-2.D)</li>
+</ul>
+</div>
+</div>"
