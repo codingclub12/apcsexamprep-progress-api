@@ -125,21 +125,61 @@ const ENTITY_FIXES = [
 ];
 
 // ---- 3 and 4. literal script tags in prose --------------------------------
-const PROSE_TAGS = {
-  'ap-cyber-unit-5-lesson-6': [
-    ['indicator: <script> tag', 'indicator: &lt;script&gt; tag'],
-  ],
-  'ap-cybersecurity-xss': [
-    ['<span class="wk-x"><script>...</script></span>',
-     '<span class="wk-x">&lt;script&gt;...&lt;/script&gt;</span>'],
-    ['Input containing a <script> tag', 'Input containing a &lt;script&gt; tag'],
-  ],
-};
+//
+// NEEDLES DID NOT SURVIVE THREE DAYS. The first version of this matched two
+// exact strings per page. On 2026-09-21 ap-cyber-unit-5-lesson-6 was edited and
+// went from four literal script tags to ten, because more XSS examples were
+// added, and the needle fix silently stopped covering the page. The generator
+// refused rather than shipping half a repair, which is the only reason it was
+// noticed.
+//
+// So the rule is inverted: find the page's REAL script blocks and escape every
+// script tag that is not inside one. New prose examples are then covered the
+// day they are written, and this is the shape that does not rot.
+//
+// A real block is recognised by what it CONTAINS, never by where it sits: a
+// JSON-LD type, or an opening that only the page's own code has. Recognising
+// them by "looks like JavaScript" would be wrong here, because the XSS examples
+// are deliberately written as working attack code and one of them is literally
+// <script>document.write(document.cookie)</script>.
+const REAL_BLOCK_SIGNATURES = [
+  /^\s*var\s+ANS\s*=/,
+  /^\s*function\s+pick\s*\(/,
+  /^\s*\(function\s*\(/,
+];
 
-function replaceExactlyOnce(body, needle, replacement, label) {
-  const n = body.split(needle).length - 1;
-  if (n !== 1) throw new Error(`${label}: expected exactly 1 occurrence of ${JSON.stringify(needle.slice(0, 40))}, found ${n}`);
-  return body.split(needle).join(replacement);
+/** Byte spans of the page's own script elements, opening and closing tags included. */
+function realBlockSpans(body) {
+  const spans = [];
+  const re = /<script\b([^>]*)>/gi;
+  let m;
+  while ((m = re.exec(body))) {
+    const attrs = m[1] || '';
+    const contentStart = m.index + m[0].length;
+    const type = scan.attrValue(attrs, 'type');
+    const isData = type && /json/i.test(type);
+    const head = body.slice(contentStart, contentStart + 60);
+    if (!isData && !REAL_BLOCK_SIGNATURES.some((r) => r.test(head))) continue;
+    const close = body.indexOf('</script>', contentStart);
+    if (close === -1) throw new Error('a real script block has no closing tag');
+    spans.push([m.index, close + '</script>'.length]);
+    re.lastIndex = close + '</script>'.length;
+  }
+  return spans;
+}
+
+function escapeProseScriptTags(body) {
+  const spans = realBlockSpans(body);
+  const inReal = (i) => spans.some(([a, b]) => i >= a && i < b);
+  let out = '', i = 0, escaped = 0;
+  while (i < body.length) {
+    if (!inReal(i)) {
+      if (body.startsWith('</script>', i)) { out += '&lt;/script&gt;'; i += 9; escaped++; continue; }
+      if (body.startsWith('<script>', i)) { out += '&lt;script&gt;'; i += 8; escaped++; continue; }
+    }
+    out += body[i]; i++;
+  }
+  return { out, escaped, realBlocks: spans.length };
 }
 
 // ---- per page --------------------------------------------------------------
@@ -172,19 +212,17 @@ const PAGES = {
   },
 
   'ap-cyber-unit-5-lesson-6': (body) => {
-    let out = body;
-    for (const [from, to] of PROSE_TAGS['ap-cyber-unit-5-lesson-6']) {
-      out = replaceExactlyOnce(out, from, to, 'ap-cyber-unit-5-lesson-6');
-    }
-    return { body: out, note: '1 literal script tag in prose escaped' };
+    const r = escapeProseScriptTags(body);
+    if (!r.escaped) throw new Error('no literal script tag in prose to escape');
+    if (r.realBlocks !== 2) throw new Error(`expected 2 real script blocks, found ${r.realBlocks}`);
+    return { body: r.out, expectBlocks: r.realBlocks, note: `${r.escaped} literal script tag(s) in prose escaped, ${r.realBlocks} real block(s) left alone` };
   },
 
   'ap-cybersecurity-xss': (body) => {
-    let out = body;
-    for (const [from, to] of PROSE_TAGS['ap-cybersecurity-xss']) {
-      out = replaceExactlyOnce(out, from, to, 'ap-cybersecurity-xss');
-    }
-    return { body: out, note: '3 literal script tags in prose escaped' };
+    const r = escapeProseScriptTags(body);
+    if (!r.escaped) throw new Error('no literal script tag in prose to escape');
+    if (r.realBlocks !== 4) throw new Error(`expected 4 real script blocks, found ${r.realBlocks}`);
+    return { body: r.out, expectBlocks: r.realBlocks, note: `${r.escaped} literal script tag(s) in prose escaped, ${r.realBlocks} real block(s) left alone` };
   },
 };
 
@@ -244,12 +282,21 @@ function main() {
     }
 
     // A fix that silently loses one of the page's own script elements would
-    // pass the scan by deleting the evidence. The two cyber pages GAIN real
-    // blocks here, because escaping the prose tag lets the genuine ones pair
-    // up again, so the count may rise but must never fall.
+    // pass the scan by deleting the evidence, so the count is asserted. What
+    // the RIGHT number is depends on the transform, and getting that wrong
+    // refused a correct page once already.
+    //
+    // On a prose-escaping page the raw count is SUPPOSED to collapse: every
+    // literal <script> in the text was being counted as a script element,
+    // because that is exactly what the browser did with it. Escaping six of
+    // them takes unit 5 lesson 6 from eight elements to its two real ones, and
+    // a guard phrased as "must not fall" reads that correct result as damage.
+    // So a transform that knows how many real blocks the page has says so, and
+    // anything else must leave the count alone.
     const beforeBlocks = realBlockCount(live), afterBlocks = realBlockCount(r.body);
-    if (afterBlocks < beforeBlocks - 2) {
-      skipped.push([handle, `REFUSED: script element count fell from ${beforeBlocks} to ${afterBlocks}`]);
+    const wanted = r.expectBlocks !== undefined ? r.expectBlocks : beforeBlocks;
+    if (afterBlocks !== wanted) {
+      skipped.push([handle, `REFUSED: ${afterBlocks} script element(s) after the fix, expected ${wanted}`]);
       continue;
     }
 
