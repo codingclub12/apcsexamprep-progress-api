@@ -116,6 +116,8 @@
     "smoke:volumepaths": "node smoke/volume-shadowed-paths.js",
     "smoke:encoding": "node smoke/encoding-guard.js",
     "smoke:gameesc": "node smoke/game-esc-detector.js",
+    "smoke:gamename": "node smoke/game-name-sanitize.js",
+    "smoke:gamenamemutation": "node smoke/game-name-mutation.js",
     "smoke:leaderboardxss": "node smoke/leaderboard-xss.js",
     "smoke:deckvoice": "node smoke/deck-voice-repair.js",
     "smoke:drivewatch": "node smoke/drive-watch.js",

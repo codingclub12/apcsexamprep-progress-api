@@ -22,7 +22,7 @@ const express = require('express');
 const crypto = require('crypto');
 const router = express.Router();
 const db = require('../db');
-const { verifyStudentToken } = require('../utils');
+const { verifyStudentToken, sanitize } = require('../utils');
 
 // School timezone for all calendar-window boundary math.
 const TZ = 'America/Chicago';
@@ -168,21 +168,47 @@ function ipHash(req) {
 }
 
 // ── NAME SANITIZER (anonymous plays only) ─────────────────────────────────────
-// trim, strip control chars, collapse whitespace, cap at 16, mask basic
-// profanity, reject empty after cleaning.
+// Cleaning goes through utils.sanitize, the same door every other
+// student-supplied name in this repo already uses. It strips control characters
+// and the tag characters < and >, and turns bare quotes into typographic ones.
+//
+// This function used to keep its own copy of that cleaning, and the copy was
+// weaker: control characters and nothing else. A signed-in student's
+// display_name is cleaned by utils.sanitize at join, so that path was never
+// exposed; only anonymous play carried the gap. The 16 character cap reads like
+// a second line of defense and is not one. '<svg onload=x()>' is exactly 16
+// characters and came through whole, and a payload split across two rows
+// survives in pieces, because the row markup between them lands inside an
+// attribute the attacker opened.
+//
+// Order after cleaning: collapse whitespace, cap, mask basic profanity, reject
+// empty. A name that was nothing but markup cleans to empty and is refused by
+// the caller's "a name is required" path, which is the answer we want.
 const PROFANITY = [
   /fuck/ig, /shit/ig, /bitch/ig, /cunt/ig, /\bass\b/ig, /asshole/ig,
   /dick/ig, /piss/ig, /bastard/ig, /slut/ig, /whore/ig, /nigg/ig, /fag/ig,
 ];
 
+const NAME_MAX = 16;
+
 function sanitizeName(raw) {
   if (typeof raw !== 'string') return null;
-  let s = raw.replace(/[\x00-\x1f\x7f]/g, '');
-  s = s.replace(/\s+/g, ' ').trim().slice(0, 16).trim();
+  // Bound the input before cleaning it: this runs per request on a 1 GB box.
+  // Cap AFTER sanitize so the 16 characters are 16 cleaned characters.
+  let s = sanitize(raw.slice(0, 256), 256);
+  s = s.replace(/\s+/g, ' ').trim().slice(0, NAME_MAX).trim();
   if (!s) return null;
   for (const re of PROFANITY) s = s.replace(re, (m) => '*'.repeat(m.length));
   s = s.trim();
   return s || null;
+}
+
+// Read-side cleaning for a name coming back OUT of the table. Deliberately not
+// sanitizeName: that caps at 16 and would truncate a signed-in student's
+// display_name, which is allowed 50. This strips markup and leaves length and
+// profanity alone, because those were already settled when the row was written.
+function cleanStoredName(raw) {
+  return sanitize(String(raw == null ? '' : raw).slice(0, 256), 64) || 'anon';
 }
 
 // ── OPTIONAL STUDENT AUTH ─────────────────────────────────────────────────────
@@ -300,7 +326,17 @@ router.post('/score', optionalStudent, (req, res) => {
     const reg = REGISTRY[game];
     if (!reg) return res.status(400).json({ error: `Unknown game id '${game}'.` });
 
-    const value = Number(b.value);
+    // Accept a number, or a string that is entirely a number, which is what a
+    // form field sends. Anything else is REFUSED rather than coerced. Number([])
+    // is 0 and Number(true) is 1, so an array or a boolean used to land on the
+    // board as a real score. Coercion has to stay closed here for a second
+    // reason: the row builder on the live game pages interpolates this value
+    // into .innerHTML through a fmt() whose ternary returns its input on both
+    // branches, so a non-number reaching the column is an unescaped sink.
+    const rawValue = b.value;
+    const numeric = typeof rawValue === 'number'
+      || (typeof rawValue === 'string' && rawValue.trim() !== '' && Number.isFinite(Number(rawValue)));
+    const value = numeric ? Number(rawValue) : NaN;
     if (!Number.isFinite(value) || value < reg.min || value > reg.max) {
       return res.status(400).json({ error: `value must be a number between ${reg.min} and ${reg.max} for '${game}'.` });
     }
@@ -363,7 +399,17 @@ router.get('/leaderboard', optionalStudent, (req, res) => {
     const key = `${reg.higher ? 'h' : 'l'}${window === 'all' ? 'a' : 'w'}`;
     const params = window === 'all' ? [game, limit] : [game, windowStart(window), limit];
     const rows = STMT.entries[key].all(...params);
-    const entries = rows.map((r, i) => ({ rank: i + 1, name: r.name, value: r.best }));
+    // Clean on the way OUT as well as in. Rows written before the write-side
+    // fix are still in this table and a backfill is not this change's to make,
+    // so the read path neutralizes them instead. It also means a page whose own
+    // escaping is broken cannot be handed markup by this API. Number() pins the
+    // value to a number, so a leaderboard that interpolates it is inert too.
+    // One pass over at most 50 rows.
+    const entries = rows.map((r, i) => ({
+      rank: i + 1,
+      name: cleanStoredName(r.name),
+      value: Number(r.best),
+    }));
 
     const out = { entries };
 
