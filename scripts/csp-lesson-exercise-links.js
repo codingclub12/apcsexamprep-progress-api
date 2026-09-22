@@ -114,8 +114,25 @@ function lessonHandleFor(topic) {
 //  So it is labelled by what it is. "Applied Challenge" is the second half of
 //  the page's own h1, and the subtitle is the page's own promise with its own
 //  question count in it. Nothing here is authored.
+//
+//  ── questions IS ALREADY THE COUNT ──────────────────────────────────────────
+//  This read `applied.questions.length` until 2026-09-22, and lib/csp-course-pages
+//  sets `questions: n` where n is a NUMBER. `.length` on a Number is undefined
+//  rather than a throw, so the card shipped reading "undefined questions, and
+//  every answer is recorded for your teacher" onto 31 live lesson pages, and an
+//  anonymous student reported it a month later (esc_f7e6c570aef9252c995203ae).
+//
+//  It survived because the smoke test computed its expected string the same
+//  wrong way, `card.includes(one.questions.length + ' questions')`, so the
+//  assertion was `includes('undefined questions')` and it passed. The guard and
+//  the bug agreed with each other. The assertion is a literal now and a second
+//  one refuses the word "undefined" outright.
 function appliedCard(applied) {
-  const n = applied.questions.length;
+  const n = applied.questions;
+  if (!Number.isInteger(n) || n <= 0) {
+    throw new Error(applied.handle + ': questions is ' + JSON.stringify(n)
+      + ', so the card cannot state a length. It must be a positive integer.');
+  }
   return '<a class="ex wide" href="' + esc('/pages/' + applied.handle) + '">'
     + esc('Applied Challenge')
     + '<span>' + esc(n + ' questions, and every answer is recorded for your teacher')

@@ -184,8 +184,22 @@ section('2b. The graded exercise-2 nothing on the site linked');
   //  one 3 would contradict the page it opens.
   ok('  it is labelled Applied Challenge, not Exercise 2 or Exercise 3',
     card.includes('>Applied Challenge<') && !/Exercise [23]/.test(card), card);
+  //  A LITERAL, AND THAT IS THE WHOLE POINT.
+  //
+  //  This read `card.includes(one.questions.length + ' questions')` until
+  //  2026-09-22. `questions` is a Number, `.length` on a Number is undefined,
+  //  and the card was built from the same expression, so the assertion was
+  //  `includes('undefined questions')` against a card that said exactly that.
+  //  It was green for a month while 31 live lesson pages told students the
+  //  graded activity had "undefined questions".
+  //
+  //  So the expected count is written out, and a second assertion refuses the
+  //  word outright. A test that derives its expectation the same way the code
+  //  derives its output cannot fail when the derivation is what is wrong.
   ok('  the subtitle carries the page\'s own question count',
-    card.includes(`${one.questions.length} questions`), card);
+    one.questions === 6 && card.includes('6 questions'), card);
+  ok('  and never the word undefined, whatever the count turns out to be',
+    !/undefined/.test(card), card);
   ok('  and the page\'s own promise, so no card over-promises',
     card.includes('recorded for your teacher'));
   ok('  it spans the row rather than sitting alone in one column',
