@@ -90,11 +90,32 @@ rotting: break `utils.sanitize()` and the suite must go red, because if it does
 not, the route has grown a private copy again and the original bug is back in a
 shape the other four cannot see.
 
-**Live, after the deploy.** Production must refuse a name containing a tag
-character with a 400. Before this change that request returned 200 and stored the
-name, so the assertion is false beforehand and true after, which is the standard
-the deploy gate asks for. A rejected request writes nothing, so the check does not
-put a payload on a student-facing board.
+**Live, after the deploy.** Merged as `a4ed254`, PR #761. Railway was a merge
+behind when the first poll ran and was serving `252ce6c`, which is PR #759, so the
+check waited for `/api/health` to report `a4ed254` before sending anything. That
+gate is not ceremony: every assertion below is a REJECTION, and a rejection sent
+to the old code is a 200 that writes a row to a live board.
+
+Against `a4ed254`, four requests, all refused, nothing stored:
+
+    name '<<<>>>'      400  A name is required for anonymous play.
+    value []           400  value must be a number between 0 and 10000
+    value true         400  value must be a number between 0 and 10000
+    value ''           400  value must be a number between 0 and 10000
+
+Every one of those returned 200 and stored a row beforehand. `<<<>>>` carries no
+control character, so the old sanitizer passed it through untouched; `[]`, `true`
+and `''` all coerce to a number inside the registry bounds, so they landed as
+scores of 0, 1 and 0. So each assertion is false before the deploy and true
+after, which is the standard the deploy gate asks for.
+
+The busiest board reads 38 rows, every served name free of tag characters and
+every served value a number, and no row named by this check, which is the
+second confirmation that a refused request writes nothing.
+
+This check was run by the session that wrote the change, so under rule 4 it is
+evidence for a verifier rather than a verification. Task 389 is left unverified
+on purpose.
 
 ## Still open
 
