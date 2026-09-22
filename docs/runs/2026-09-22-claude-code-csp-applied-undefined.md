@@ -113,16 +113,43 @@ half and both the zero and the not-a-number cases are asserted.
   `id="csp-x2"` present on all 17, measured twice by two implementations.
 - Every sheet parsed back out of the finished CSV by three different readers and
   diffed against the body that went in.
-- `scripts/csp-applied-undefined-rederive.py`: each row differs from the body
-  that is live right now in exactly one edit region, and that region is inside
-  the Applied Challenge subtitle.
+- `scripts/csp-applied-undefined-rederive.py`: 17 rows, 17 unique handles, each
+  differing from the body that is live right now in exactly one edit region, and
+  that region inside the Applied Challenge subtitle. Proved not hollow by
+  changing one character of one row's HTML comment header, four thousand bytes
+  from the card: it reported
+  `ap-csp-course-bi4-fault-tolerance has 2 edit regions, expected 1` and exited 1.
+  A count of replacements cannot see an edit like that.
 - Matrixify preflight clear on all four, run with `--carrying` so its emoji rule
   has the original to compare against.
 - `smoke:cspappliedundefined` 138/0, each refusal broken independently and
   matched on its own message.
-- `smoke:cspexercise` 45/0 with the corrected literal, and red when the generator
-  fix is reverted.
+- `smoke:csp-exercise-discoverability` 44/0 with the corrected literal, 42/2 when
+  the generator fix alone is reverted, and **43/0 when the hollow assertion is
+  restored alongside the bug**. That last run is the point: the suite is green on
+  a card that reads "undefined questions".
 - `smoke:encoding` 54/0, `smoke:mutationleak` 42/0, `smoke:volumepaths` ok.
+
+## The instrument that was wrong before it was right
+
+Worth more than the repair list, because the next builder pays for it otherwise.
+
+- **The rederive looked like a hang and was a rate limit.** Its first run paced
+  the outer loop, one sleep per page, while two fetches happen per row. Shopify
+  answered 429 with the "Verifying your connection" interstitial, which parses as
+  neither JSON nor a page, so the script sat in exponential backoff for fifteen
+  minutes with no output. Pacing moved inside `fetch()`, where every call pays it.
+  A 429 body that is not an error page is the same trap `lib/storefront-fetch.js`
+  exists for, arriving as a stall instead of a false reading.
+- **The preflight refuses a correct sheet from the command line.** Its emoji rule
+  needs `--carrying` to prove a character was already on the live page, and with
+  no original it has to assume "introduced". That is the right default and the
+  wrong answer here, so the generator calls `preflight()` in process with the
+  live bodies still in hand. Run by hand with no flag, all four sheets read
+  "PROBLEM. Do not import."
+- **A CSV whose name lacks the word "page" is rejected by Matrixify in one
+  second**, because a CSV has no tab name. The first four files were written
+  without it and the preflight caught it, not the import.
 
 ## Still open
 
