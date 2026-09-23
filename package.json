@@ -91,6 +91,7 @@
     "smoke:csaunits234guides": "python3 scripts/build-csa-units-2-4-teacher-guides.py --out build/csa-u234-guides && python3 smoke/csa-units234-guides.py build/csa-u234-guides",
     "smoke:csaunits234guidesmutation": "python3 smoke/csa-units234-guides-mutation.py build/csa-u234-guides",
     "smoke:csp-exercise-pages": "node smoke/csp-exercise-pages.js",
+    "smoke:csp-exercise-stimulus": "node smoke/csp-exercise-stimulus.js",
     "smoke:csp-exercise-discoverability": "node smoke/csp-exercise-discoverability.js",
     "smoke:csaslides": "node smoke/csa-slide-gate.js",
     "smoke:csadeckdays": "python3 scripts/csa-deck-days-from-content.py --check",
