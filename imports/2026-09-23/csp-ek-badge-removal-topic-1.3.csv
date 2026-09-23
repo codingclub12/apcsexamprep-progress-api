@@ -1,0 +1,532 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At","SEO Title","SEO Description"
+"ap-csp-topic-1-3-exercise-1","MERGE","AP CSP 1.3 Exercise 1: Process Autopsy - The StudyStreak Project Log","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#csp-ex{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;font-size:17px!important;background:#f8fafc!important}
+#csp-ex *,#csp-ex *::before,#csp-ex *::after{box-sizing:border-box!important}
+#csp-ex .hero{background:linear-gradient(135deg,#1e40af,#1a56db)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 18px!important}
+#csp-ex .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 8px!important}
+#csp-ex h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#csp-ex .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#csp-ex h2{font-size:21px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:32px 0 6px!important;font-weight:800!important;border-bottom:3px solid #93c5fd!important;padding-bottom:6px!important}
+#csp-ex h2 .tag{float:right!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;padding:3px 10px!important;border-radius:100px!important;margin-top:4px!important}
+#csp-ex h2 .tag.local{background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fde68a!important}
+#csp-ex h2 .tag.graded{background:#dcfce7!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #86efac!important}
+#csp-ex p{margin:8px 0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .btn,#csp-ex .btn:link,#csp-ex .btn:visited{display:inline-block!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+#csp-ex .btn.ghost,#csp-ex .btn.ghost:link,#csp-ex .btn.ghost:visited{background:#fff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border:2px solid #93c5fd!important}
+#csp-ex .note{background:#fff!important;border:1px solid #e2e8f0!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;padding:14px 18px!important;margin:16px 0 22px!important;font-size:15px!important}
+#csp-ex .note .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 4px!important}
+#csp-ex .item{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:18px 20px!important;margin:14px 0!important}
+#csp-ex .item.paper{background:#fffbeb!important;border-color:#fde68a!important}
+#csp-ex .item-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important}
+#csp-ex .item-text{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.65!important;margin:0 0 10px!important}
+#csp-ex .prompt{font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:12px 0 4px!important}
+#csp-ex .code{background:#0f172a!important;border-radius:8px!important;padding:12px 14px!important;margin:10px 0!important;font-family:""SFMono-Regular"",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre-wrap!important;overflow-x:auto!important}
+#csp-ex textarea{display:block!important;width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #d6d3d1!important;border-radius:8px!important;font-family:inherit!important;font-size:15px!important;line-height:1.55!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;resize:vertical!important}
+#csp-ex .saved{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:4px 0 0!important;min-height:16px!important}
+#csp-ex .mcq-item{margin-bottom:26px!important;padding-bottom:26px!important;border-bottom:1px solid #f1f5f9!important}
+#csp-ex .mcq-item:last-child{border-bottom:none!important;margin-bottom:0!important;padding-bottom:0!important}
+#csp-ex .mcq-q-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:8px!important}
+#csp-ex .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important}
+#csp-ex .mcq-options{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:12px!important}
+#csp-ex .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;text-align:left!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#fff!important;font-size:15px!important;font-family:inherit!important;line-height:1.5!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .mcq-option:hover{border-color:#93c5fd!important;background:#eff6ff!important}
+#csp-ex .mcq-option.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-option.revealed-correct{border-color:#16a34a!important;background:#f0fdf4!important}
+#csp-ex .mcq-option-letter{font-weight:700!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;flex-shrink:0!important;min-width:18px!important}
+#csp-ex .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important}
+#csp-ex .mcq-feedback.show{display:block!important}
+#csp-ex .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important}
+#csp-ex .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important}
+#csp-ex .scorebar{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 18px!important;margin:0 0 18px!important;font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#csp-ex .scorebar strong{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:17px!important}
+#csp-ex .nextnav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:26px!important}
+#csp-ex .nextnav a,#csp-ex .nextnav a:link,#csp-ex .nextnav a:visited{display:block!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:700!important;font-size:15px!important}
+@media (max-width:640px){#csp-ex .nextnav{grid-template-columns:repeat(1,1fr)!important}}
+</style>
+<div id=""csp-ex"" class=""lesson-page"" data-course=""ap-csp"" data-unit=""bi-1"" data-lesson=""program-design-development"">
+  <div class=""hero"">
+    <p class=""eyebrow"">Big Idea 1 &middot; Topic 1.3 &middot; Exercise 1</p>
+    <h1>Process Autopsy - The StudyStreak Project Log</h1>
+    <p class=""sub"">25 minutes</p>
+  </div>
+  <p><a class=""btn"" href=""/pages/ap-csp-course-bi1-program-design-development"">Back to the Topic 1.3 lesson</a><a class=""btn ghost"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+  <div class=""note"">
+    <p class=""label"">How this page works</p>
+    <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
+    <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
+  </div>
+  <h2>Part B, from your handout<span class=""tag local"">Not recorded</span></h2>
+  <p>Your handout says these are the same items available here. Part A stays on paper. <span class=""saved"" id=""draft-note""></span></p>
+      <div class=""item paper"">
+        <div class=""item-num"">Q1 &middot; 3 points on the handout</div>
+        <p class=""item-text"">Week 5: rule on 'basically ours now.' What does the CED require for the forum code segment, exactly where must it go, and what would this exact move cost on the Create Performance Task?</p>
+        <textarea data-draft=""b1"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q1""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q2 &middot; 3 points on the handout</div>
+        <p class=""item-text"">Week 6: comments were added, so why does the log still show a documentation failure? Use the CED's WHEN and WHY of documentation in your ruling.</p>
+        <textarea data-draft=""b2"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q2""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q3 &middot; 2 points on the handout</div>
+        <p class=""item-text"">ENRICHMENT: Rewrite the six-week log as a healthy plan - one line per week - that is BOTH iterative and incremental, includes an investigation method, a specification, a testing strategy, ongoing documentation, and a properly credited borrowed segment.</p>
+        <textarea data-draft=""b3"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q3""></textarea>
+      </div>
+  <h2>Graded check<span class=""tag graded"">Recorded</span></h2>
+  <p>7 questions on the same ideas, drawn from this exercise's answer key. These are auto-graded and reported.</p>
+  <div class=""scorebar"" id=""ex-score""></div>
+  <div class=""item"">
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-1"">
+          <div class=""mcq-q-num"">Question 1 of 7</div>
+          <div class=""mcq-q-text"">Week 1: the team voted in a group chat and started coding that afternoon, reasoning ""we know what students want, we ARE students."" Which phase did they skip?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','A','A','chk-1-fb-A')""><span class=""mcq-option-letter"">A</span> Investigating and reflecting, the first of the four commonly used phases</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','B','A','chk-1-fb-B')""><span class=""mcq-option-letter"">B</span> Testing, because no user had tried the app</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','C','A','chk-1-fb-C')""><span class=""mcq-option-letter"">C</span> No phase was skipped; a group-chat vote is a valid investigation</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','D','A','chk-1-fb-D')""><span class=""mcq-option-letter"">D</span> Designing, because no sketch existed yet</button>
+          </div>
+          <div id=""chk-1-fb-A"" class=""mcq-feedback correct-fb"">Correct. Investigating and reflecting is where requirements get determined. Voting among themselves determined nothing about future users.</div>
+          <div id=""chk-1-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Testing does fail later, in Week 4, and it fails in a more interesting way: they tested and then ignored the result.</div>
+          <div id=""chk-1-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. A vote records preferences the team already held. It collects no data from the people who will use the program.</div>
+          <div id=""chk-1-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Design was skipped too, but not in Week 1. The sketch arrives in Week 3, and its problem is timing rather than absence.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-2"">
+          <div class=""mcq-q-num"">Question 2 of 7</div>
+          <div class=""mcq-q-text"">What would have replaced the team's ""we ARE students"" assumption with something defensible?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','D','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> A longer group chat with more members voting</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','D','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> Reading the documentation of similar flashcard apps</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','C','D','chk-2-fb-C')""><span class=""mcq-option-letter"">C</span> Building a prototype first and seeing whether it felt right</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','D','D','chk-2-fb-D')""><span class=""mcq-option-letter"">D</span> Collecting data through surveys, user testing, interviews, or direct observations</button>
+          </div>
+          <div id=""chk-2-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. More voters inside the same team is a larger sample of exactly the same assumption.</div>
+          <div id=""chk-2-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Studying competitors can inform a design, but it is not one of the methods the CED names, and it still never contacts a user.</div>
+          <div id=""chk-2-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Prototyping belongs to a later phase and cannot supply the requirements the prototype is meant to satisfy.</div>
+          <div id=""chk-2-fb-D"" class=""mcq-feedback correct-fb"">Correct. These are the CED's named investigation methods. Each one puts data from users where the team had only beliefs about users.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-3"">
+          <div class=""mcq-q-num"">Question 3 of 7</div>
+          <div class=""mcq-q-text"">Week 2: the team built login, decks, quiz mode, streaks and sharing in one push, planning to ""test at the end."" Which development approach did they reject, and what is it?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','A','C','chk-3-fb-A')""><span class=""mcq-option-letter"">A</span> Iterative development: revising the program after each round of feedback</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','B','C','chk-3-fb-B')""><span class=""mcq-option-letter"">B</span> Collaborative development: dividing the work among team members</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','C','C','chk-3-fb-C')""><span class=""mcq-option-letter"">C</span> Incremental development: breaking the problem into smaller pieces and making sure each piece works before adding it to the whole</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','D','C','chk-3-fb-D')""><span class=""mcq-option-letter"">D</span> Agile development: shipping a working version every week</button>
+          </div>
+          <div id=""chk-3-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Iteration is a different failure, and the team commits it separately in Week 4. Iteration is about responding to feedback, not about build order.</div>
+          <div id=""chk-3-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. The work was in fact divided badly, but collaboration is not the approach this week's decision rejected.</div>
+          <div id=""chk-3-fb-C"" class=""mcq-feedback correct-fb"">Correct. Five separately confirmed pieces would have replaced one 900 line unknown. That verification step is the definition.</div>
+          <div id=""chk-3-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Agile is not the vocabulary the CED uses here, and naming it would not earn the point.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-4"">
+          <div class=""mcq-q-num"">Question 4 of 7</div>
+          <div class=""mcq-q-text"">Week 3: the team drew a paper sketch of all the screens after the code was already written and called it ""our design doc."" What is wrong with the timing?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','A','B','chk-4-fb-A')""><span class=""mcq-option-letter"">A</span> The sketch should have been digital rather than on paper</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','B','B','chk-4-fb-B')""><span class=""mcq-option-letter"">B</span> Design outlines how to accomplish a specification, so it has to precede and guide the build</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','C','B','chk-4-fb-C')""><span class=""mcq-option-letter"">C</span> The sketch should have been approved by the teacher before the demo</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','D','B','chk-4-fb-D')""><span class=""mcq-option-letter"">D</span> Nothing is wrong; documenting the finished screens is a legitimate design record</button>
+          </div>
+          <div id=""chk-4-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. The medium is irrelevant. A paper storyboard drawn in Week 1 would have done the job perfectly.</div>
+          <div id=""chk-4-fb-B"" class=""mcq-feedback correct-fb"">Correct. Design is forward looking by definition. Worse here, no investigation ever happened, so there was no specification for a design to accomplish.</div>
+          <div id=""chk-4-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Approval is not what the design phase is for, and the teacher request is why the sketch exists at all.</div>
+          <div id=""chk-4-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. A drawing of what already exists is a portrait, not a blueprint. It cannot guide a build that is finished.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-5"">
+          <div class=""mcq-q-num"">Question 5 of 7</div>
+          <div class=""mcq-q-text"">Week 4: four of five testers could not find the quiz button. The team logged this and changed nothing, saying ""they are just not good with apps."" What did an iterative process require here?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','A','A','chk-5-fb-A')""><span class=""mcq-option-letter"">A</span> Refinement and revision based on that feedback, which meant revisiting the designing phase</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','B','A','chk-5-fb-B')""><span class=""mcq-option-letter"">B</span> Nothing, because the testing phase had already been completed as planned</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','C','A','chk-5-fb-C')""><span class=""mcq-option-letter"">C</span> Adding a tutorial screen explaining where the quiz button is</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','D','A','chk-5-fb-D')""><span class=""mcq-option-letter"">D</span> Recruiting five better testers and running the test again</button>
+          </div>
+          <div id=""chk-5-fb-A"" class=""mcq-feedback correct-fb"">Correct. Iteration is the willingness to let test results send you backward. The layout, not the testers, was the thing to revise.</div>
+          <div id=""chk-5-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. The testing phase did run. What failed is the loop that makes testing worth anything.</div>
+          <div id=""chk-5-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. A tutorial explaining an unfindable button treats the symptom and leaves the design defect in place.</div>
+          <div id=""chk-5-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Replacing the testers discards the finding. The feedback was consistent, which is what makes it a requirement discovery.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-6"">
+          <div class=""mcq-q-num"">Question 6 of 7</div>
+          <div class=""mcq-q-text"">Week 5: a streak-counter segment was pasted from a coding forum and its variables renamed. What does the CED require?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','A','D','chk-6-fb-A')""><span class=""mcq-option-letter"">A</span> A note in the demo presentation mentioning that some code came from online</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','B','D','chk-6-fb-B')""><span class=""mcq-option-letter"">B</span> Nothing further, because renaming the variables makes the segment the team's own work</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','C','D','chk-6-fb-C')""><span class=""mcq-option-letter"">C</span> Removing the segment entirely, since borrowed code is not permitted</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','D','D','chk-6-fb-D')""><span class=""mcq-option-letter"">D</span> An acknowledgement in the program documentation, including the origin or the original author's name</button>
+          </div>
+          <div id=""chk-6-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. A spoken mention is not the program documentation, and it does not travel with the code.</div>
+          <div id=""chk-6-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Renaming variables changes the spelling, not the source. This is the exact reasoning the case exists to reject.</div>
+          <div id=""chk-6-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Borrowed code is allowed. The requirement is acknowledgement, not abstinence.</div>
+          <div id=""chk-6-fb-D"" class=""mcq-feedback correct-fb"">Correct. A comment above the streak counter naming the forum satisfies both halves: it lives in the documentation and it names the origin.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-7"">
+          <div class=""mcq-q-num"">Question 7 of 7</div>
+          <div class=""mcq-q-text"">Week 6: one member added comments to all 900 lines the night before the demo, from memory. Why is this still a documentation failure?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-7','A','C','chk-7-fb-A')""><span class=""mcq-option-letter"">A</span> Because 900 lines is too many to document in a single night</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-7','B','C','chk-7-fb-B')""><span class=""mcq-option-letter"">B</span> Because comments alone never count as documentation</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-7','C','C','chk-7-fb-C')""><span class=""mcq-option-letter"">C</span> Because documentation should happen throughout development, so end-loaded comments forfeit the job documentation does during the build</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-7','D','C','chk-7-fb-D')""><span class=""mcq-option-letter"">D</span> Because one person cannot document a team project</button>
+          </div>
+          <div id=""chk-7-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. The volume is a symptom. Even 90 lines reconstructed from memory at the end would fail the same way.</div>
+          <div id=""chk-7-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Comments are documentation. The problem is when they were written, not what form they took.</div>
+          <div id=""chk-7-fb-C"" class=""mcq-feedback correct-fb"">Correct. Documentation written after development is over cannot catch wrong assumptions or let teammates build on each other's work. Those jobs were already lost.</div>
+          <div id=""chk-7-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Solo documentation is permitted. The CED describes documenting individually or collaboratively.</div>
+        </div>
+  </div>
+  <div class=""nextnav"">
+    <a href=""/pages/ap-csp-course-bi1-program-design-development"">Rework the Topic 1.3 lesson</a>
+    <a href=""/pages/ap-csp-course-bi1-unit-test"">Big Idea 1 unit test</a>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'apcs-draft:' + ""ap-csp-topic-1-3-exercise-1"";
+  var answered = {};
+  var total = document.querySelectorAll('.mcq-item[data-item]').length;
+
+  /* Drafts stay in this browser. Nothing typed in a writing box is ever sent
+     anywhere: no request carries it, and the reporter only ever sees the
+     multiple choice results below. */
+  function loadDrafts(){
+    var store = {};
+    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      var id = boxes[i].getAttribute('data-draft');
+      if (store[id]) boxes[i].value = store[id];
+      boxes[i].addEventListener('input', saveDrafts);
+    }
+  }
+  function saveDrafts(){
+    var store = {};
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      store[boxes[i].getAttribute('data-draft')] = boxes[i].value;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    var n = document.getElementById('draft-note');
+    if (n) n.textContent = 'Saved in this browser only.';
+  }
+
+  function activity(d){
+    try{
+      var w = document.querySelector('.lesson-page');
+      if(w){
+        d.course = w.getAttribute('data-course');
+        d.unit = w.getAttribute('data-unit');
+        d.lesson = w.getAttribute('data-lesson');
+      }
+      document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+    }catch(e){}
+  }
+
+  function updateScore(){
+    var right = 0, done = 0, k;
+    for(k in answered){ done++; if(answered[k]) right++; }
+    var el = document.getElementById('ex-score');
+    if(el) el.innerHTML = '<strong>' + right + ' / ' + total + '</strong> correct on the graded check, ' + done + ' answered';
+  }
+
+  window.cspEx = function(qid, chosen, correct, fbId){
+    var item = null, items = document.querySelectorAll('.mcq-item[data-item]'), i;
+    for(i = 0; i < items.length; i++){
+      if(items[i].getAttribute('data-item') === qid){ item = items[i]; break; }
+    }
+    if(!item || answered.hasOwnProperty(qid)) return;
+    var opts = item.querySelectorAll('.mcq-option');
+    for(i = 0; i < opts.length; i++){ opts[i].disabled = true; opts[i].onclick = null; }
+    var letters = ['A','B','C','D'];
+    var pick = letters.indexOf(chosen);
+    if(opts[pick]) opts[pick].classList.add(chosen === correct ? 'correct' : 'incorrect');
+    if(chosen !== correct && opts[letters.indexOf(correct)]){
+      opts[letters.indexOf(correct)].classList.add('revealed-correct');
+    }
+    var fb = document.getElementById(fbId);
+    if(fb) fb.classList.add('show');
+    answered[qid] = (chosen === correct);
+    updateScore();
+    activity({ activity: item.getAttribute('data-activity'), item: qid,
+               choice: chosen, correct: (chosen === correct) });
+  };
+
+  loadDrafts();
+  updateScore();
+})();
+</script>","TRUE","2026-03-01 12:00:00","AP CSP 1.3 Exercise 1: Process Autopsy - The StudyStreak Project Log","Online companion to the AP CSP Topic 1.3 Exercise 1 handout, Process Autopsy - The StudyStreak Project Log. Work the cases, then take the auto-graded check."
+"ap-csp-topic-1-3-exercise-2","MERGE","AP CSP 1.3 Exercise 2: Process Doctor - Rescue the Build","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#csp-ex{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;font-size:17px!important;background:#f8fafc!important}
+#csp-ex *,#csp-ex *::before,#csp-ex *::after{box-sizing:border-box!important}
+#csp-ex .hero{background:linear-gradient(135deg,#1e40af,#1a56db)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 18px!important}
+#csp-ex .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 8px!important}
+#csp-ex h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#csp-ex .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#csp-ex h2{font-size:21px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:32px 0 6px!important;font-weight:800!important;border-bottom:3px solid #93c5fd!important;padding-bottom:6px!important}
+#csp-ex h2 .tag{float:right!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;padding:3px 10px!important;border-radius:100px!important;margin-top:4px!important}
+#csp-ex h2 .tag.local{background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fde68a!important}
+#csp-ex h2 .tag.graded{background:#dcfce7!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #86efac!important}
+#csp-ex p{margin:8px 0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .btn,#csp-ex .btn:link,#csp-ex .btn:visited{display:inline-block!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+#csp-ex .btn.ghost,#csp-ex .btn.ghost:link,#csp-ex .btn.ghost:visited{background:#fff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border:2px solid #93c5fd!important}
+#csp-ex .note{background:#fff!important;border:1px solid #e2e8f0!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;padding:14px 18px!important;margin:16px 0 22px!important;font-size:15px!important}
+#csp-ex .note .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 4px!important}
+#csp-ex .item{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:18px 20px!important;margin:14px 0!important}
+#csp-ex .item.paper{background:#fffbeb!important;border-color:#fde68a!important}
+#csp-ex .item-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important}
+#csp-ex .item-text{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.65!important;margin:0 0 10px!important}
+#csp-ex .prompt{font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:12px 0 4px!important}
+#csp-ex .code{background:#0f172a!important;border-radius:8px!important;padding:12px 14px!important;margin:10px 0!important;font-family:""SFMono-Regular"",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre-wrap!important;overflow-x:auto!important}
+#csp-ex textarea{display:block!important;width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #d6d3d1!important;border-radius:8px!important;font-family:inherit!important;font-size:15px!important;line-height:1.55!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;resize:vertical!important}
+#csp-ex .saved{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:4px 0 0!important;min-height:16px!important}
+#csp-ex .mcq-item{margin-bottom:26px!important;padding-bottom:26px!important;border-bottom:1px solid #f1f5f9!important}
+#csp-ex .mcq-item:last-child{border-bottom:none!important;margin-bottom:0!important;padding-bottom:0!important}
+#csp-ex .mcq-q-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:8px!important}
+#csp-ex .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important}
+#csp-ex .mcq-options{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:12px!important}
+#csp-ex .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;text-align:left!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#fff!important;font-size:15px!important;font-family:inherit!important;line-height:1.5!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .mcq-option:hover{border-color:#93c5fd!important;background:#eff6ff!important}
+#csp-ex .mcq-option.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-option.revealed-correct{border-color:#16a34a!important;background:#f0fdf4!important}
+#csp-ex .mcq-option-letter{font-weight:700!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;flex-shrink:0!important;min-width:18px!important}
+#csp-ex .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important}
+#csp-ex .mcq-feedback.show{display:block!important}
+#csp-ex .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important}
+#csp-ex .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important}
+#csp-ex .scorebar{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 18px!important;margin:0 0 18px!important;font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#csp-ex .scorebar strong{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:17px!important}
+#csp-ex .nextnav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:26px!important}
+#csp-ex .nextnav a,#csp-ex .nextnav a:link,#csp-ex .nextnav a:visited{display:block!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:700!important;font-size:15px!important}
+@media (max-width:640px){#csp-ex .nextnav{grid-template-columns:repeat(1,1fr)!important}}
+</style>
+<div id=""csp-ex"" class=""lesson-page"" data-course=""ap-csp"" data-unit=""bi-1"" data-lesson=""program-design-development"">
+  <div class=""hero"">
+    <p class=""eyebrow"">Big Idea 1 &middot; Topic 1.3 &middot; Exercise 2</p>
+    <h1>Process Doctor - Rescue the Build</h1>
+    <p class=""sub"">25 minutes - 4 cases - LO CRD-2.E, CRD-2.F, CRD-2.G, CRD-2.H</p>
+  </div>
+  <p><a class=""btn"" href=""/pages/ap-csp-course-bi1-program-design-development"">Back to the Topic 1.3 lesson</a><a class=""btn ghost"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+  <div class=""note"">
+    <p class=""label"">How this page works</p>
+    <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
+    <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
+  </div>
+  <h2>The cases, from your handout<span class=""tag local"">Not recorded</span></h2>
+  <p>The same cases as your handout, in the same order. <span class=""saved"" id=""draft-note""></span></p>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 1 &middot; Foundational</div>
+        <p class=""item-text"">A student spends a month building a locker-organizer app for teachers - layout, colors, and features all chosen because 'they seemed obvious.' At launch, zero teachers adopt it: it assumes teachers assign lockers alphabetically, but at this school lockers are assigned by grade and hallway. No teacher was ever consulted at any point.</p>
+        <p class=""prompt"">Diagnosis (name the process problem with CED vocabulary):</p>
+        <textarea data-draft=""s1p1"" rows=""3"" spellcheck=""true"" aria-label=""Diagnosis (name the process problem with CED vocabulary):""></textarea>
+        <p class=""prompt"">Prescription + justification (the fix, and the EK rule that makes it the fix):</p>
+        <textarea data-draft=""s1p2"" rows=""3"" spellcheck=""true"" aria-label=""Prescription + justification (the fix, and the EK rule that makes it the fix):""></textarea>
+        <p class=""prompt"">Second-layer issue to flag (enrichment):</p>
+        <textarea data-draft=""s1p3"" rows=""3"" spellcheck=""true"" aria-label=""Second-layer issue to flag (enrichment):""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 2 &middot; Core</div>
+        <p class=""item-text"">A pair divides an escape-room game: one partner writes the entire 700-line game in a four-day marathon, then runs it for the first time. It crashes instantly. Every fix reveals two new failures - the timer breaks the puzzle logic, the puzzle logic breaks the scoring - and after a week of whack-a-mole they can't even say which parts have ever worked.</p>
+        <p class=""prompt"">Diagnosis (name the process problem with CED vocabulary):</p>
+        <textarea data-draft=""s2p1"" rows=""3"" spellcheck=""true"" aria-label=""Diagnosis (name the process problem with CED vocabulary):""></textarea>
+        <p class=""prompt"">Prescription + justification (the fix, and the EK rule that makes it the fix):</p>
+        <textarea data-draft=""s2p2"" rows=""3"" spellcheck=""true"" aria-label=""Prescription + justification (the fix, and the EK rule that makes it the fix):""></textarea>
+        <p class=""prompt"">Second-layer issue to flag (enrichment):</p>
+        <textarea data-draft=""s2p3"" rows=""3"" spellcheck=""true"" aria-label=""Second-layer issue to flag (enrichment):""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 3 &middot; Core</div>
+        <p class=""item-text"">A club's event app gets its first real users at the fall fair. Feedback is loud and consistent: the sign-up flow confuses everyone - people tap the poster image expecting it to be a button. The team logs every comment, thanks everyone warmly... and ships the spring version with the sign-up flow untouched, because 'the design phase ended in October and we're in the testing phase now.'</p>
+        <p class=""prompt"">Diagnosis (name the process problem with CED vocabulary):</p>
+        <textarea data-draft=""s3p1"" rows=""3"" spellcheck=""true"" aria-label=""Diagnosis (name the process problem with CED vocabulary):""></textarea>
+        <p class=""prompt"">Prescription + justification (the fix, and the EK rule that makes it the fix):</p>
+        <textarea data-draft=""s3p2"" rows=""3"" spellcheck=""true"" aria-label=""Prescription + justification (the fix, and the EK rule that makes it the fix):""></textarea>
+        <p class=""prompt"">Second-layer issue to flag (enrichment):</p>
+        <textarea data-draft=""s3p3"" rows=""3"" spellcheck=""true"" aria-label=""Second-layer issue to flag (enrichment):""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 4 &middot; Challenge</div>
+        <p class=""item-text"">A solo student builds their Create PT project in a block-based environment with no comment feature, so they keep no documentation of any kind - 'not possible in this language.' The program's cleverest procedure was generated by an AI assistant; it appears nowhere in any write-up, and when asked how it works, the student shrugs: 'It works, that's what matters.' Submission is in three weeks.</p>
+        <p class=""prompt"">Diagnosis (name the process problem with CED vocabulary):</p>
+        <textarea data-draft=""s4p1"" rows=""3"" spellcheck=""true"" aria-label=""Diagnosis (name the process problem with CED vocabulary):""></textarea>
+        <p class=""prompt"">Prescription + justification (the fix, and the EK rule that makes it the fix):</p>
+        <textarea data-draft=""s4p2"" rows=""3"" spellcheck=""true"" aria-label=""Prescription + justification (the fix, and the EK rule that makes it the fix):""></textarea>
+        <p class=""prompt"">Second-layer issue to flag (enrichment):</p>
+        <textarea data-draft=""s4p3"" rows=""3"" spellcheck=""true"" aria-label=""Second-layer issue to flag (enrichment):""></textarea>
+      </div>
+  <h2>Graded check<span class=""tag graded"">Recorded</span></h2>
+  <p>6 questions on the same ideas, drawn from this exercise's answer key. These are auto-graded and reported.</p>
+  <div class=""scorebar"" id=""ex-score""></div>
+  <div class=""item"">
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-1"">
+          <div class=""mcq-q-num"">Question 1 of 6</div>
+          <div class=""mcq-q-text"">Scenario 1: a locker-organizer app assumes lockers are assigned alphabetically, but this school assigns them by grade and hallway. No teacher was consulted. Which process problem is this?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','A','B','chk-1-fb-A')""><span class=""mcq-option-letter"">A</span> A build that was not incremental</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','B','B','chk-1-fb-B')""><span class=""mcq-option-letter"">B</span> A skipped investigating-and-reflecting phase</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','C','B','chk-1-fb-C')""><span class=""mcq-option-letter"">C</span> A documentation failure, since the assumption was never written down</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','D','B','chk-1-fb-D')""><span class=""mcq-option-letter"">D</span> A logic error in the sorting code</button>
+          </div>
+          <div id=""chk-1-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Nothing in the scenario says pieces went unverified. The month of building may have gone fine; it went toward the wrong target.</div>
+          <div id=""chk-1-fb-B"" class=""mcq-feedback correct-fb"">Correct. Investigation is the CED's named tool for replacing beliefs about users with data from users. It never ran.</div>
+          <div id=""chk-1-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Writing the wrong assumption down more clearly would not have made it right.</div>
+          <div id=""chk-1-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. The code does what it was designed to do. This is a correct build of the wrong program, not a defect in the build.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-2"">
+          <div class=""mcq-q-num"">Question 2 of 6</div>
+          <div class=""mcq-q-text"">Scenario 1, second layer: what follows from the fact that requirements were never determined?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','A','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> There was no specification for the design phase to accomplish, so the build had no target to be measured against</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','A','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> The requirements can be written afterward and applied retroactively</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','C','A','chk-2-fb-C')""><span class=""mcq-option-letter"">C</span> The problem is confined to the investigation phase and does not affect design</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','D','A','chk-2-fb-D')""><span class=""mcq-option-letter"">D</span> The program could still be judged complete once every planned feature worked</button>
+          </div>
+          <div id=""chk-2-fb-A"" class=""mcq-feedback correct-fb"">Correct. Requirements feed the specification, and the specification is what design exists to accomplish. Losing the first collapses the chain.</div>
+          <div id=""chk-2-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Requirements written now can guide future work, but they cannot retroactively justify the month already spent.</div>
+          <div id=""chk-2-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. A missing investigation propagates. Design had nothing to design toward.</div>
+          <div id=""chk-2-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. ""Every planned feature"" begs the question, since the plan itself was guessed. Done was undefined from day one.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-3"">
+          <div class=""mcq-q-num"">Question 3 of 6</div>
+          <div class=""mcq-q-text"">Scenario 2: one partner wrote a 700-line escape-room game in four days, ran it for the first time, and after a week of fixes cannot say which parts have ever worked. Which sentence gives the diagnosis away?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','A','D','chk-3-fb-A')""><span class=""mcq-option-letter"">A</span> That the work was split between only two people</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','B','D','chk-3-fb-B')""><span class=""mcq-option-letter"">B</span> That the game is 700 lines long</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','C','D','chk-3-fb-C')""><span class=""mcq-option-letter"">C</span> That it crashed instantly on the first run</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','D','D','chk-3-fb-D')""><span class=""mcq-option-letter"">D</span> That they cannot say which parts have ever worked, which is impossible in a verified-pieces build</button>
+          </div>
+          <div id=""chk-3-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Team size is not the issue. One partner building alone incrementally would have avoided this.</div>
+          <div id=""chk-3-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Length alone is not a process problem. A 700-line program built in verified pieces would be fine.</div>
+          <div id=""chk-3-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. An instant crash is a symptom shared by many causes and does not by itself name the process disease.</div>
+          <div id=""chk-3-fb-D"" class=""mcq-feedback correct-fb"">Correct. Incremental development confirms each piece at the moment it joins, so that sentence could never be true.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-4"">
+          <div class=""mcq-q-num"">Question 4 of 6</div>
+          <div class=""mcq-q-text"">Scenario 2, second layer: the pair's testing strategy was ""run it once at the end."" Where should a testing strategy have been developed?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','A','C','chk-4-fb-A')""><span class=""mcq-option-letter"">A</span> In the investigation phase, alongside the requirements</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','B','C','chk-4-fb-B')""><span class=""mcq-option-letter"">B</span> After the first failure, once the failure modes are known</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','C','C','chk-4-fb-C')""><span class=""mcq-option-letter"">C</span> In the design phase</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','D','C','chk-4-fb-D')""><span class=""mcq-option-letter"">D</span> In the testing phase, immediately before the first run</button>
+          </div>
+          <div id=""chk-4-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Investigation determines requirements. Those requirements later supply expected outcomes, but the strategy itself is a design product.</div>
+          <div id=""chk-4-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. A strategy written after the failure cannot have prevented it, and the pair are still guessing which pieces work.</div>
+          <div id=""chk-4-fb-C"" class=""mcq-feedback correct-fb"">Correct. The CED places the testing strategy inside design, which is why a project that skips design usually discovers it has no strategy either.</div>
+          <div id=""chk-4-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Deciding how to test at the moment of testing is what produced ""run it once at the end.""</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-5"">
+          <div class=""mcq-q-num"">Question 5 of 6</div>
+          <div class=""mcq-q-text"">Scenario 3: users tap the poster image expecting a button. The team logs every comment and ships unchanged, because ""the design phase ended in October and we are in the testing phase now."" What is wrong with that reasoning?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','A','B','chk-5-fb-A')""><span class=""mcq-option-letter"">A</span> The team should have collected the feedback in writing before acting on it</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','B','B','chk-5-fb-B')""><span class=""mcq-option-letter"">B</span> Phases are commonly used stages, not one-way gates, and iteration builds the return trip into the process</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','C','B','chk-5-fb-C')""><span class=""mcq-option-letter"">C</span> The feedback came from fair visitors rather than the intended users, so it does not apply</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','D','B','chk-5-fb-D')""><span class=""mcq-option-letter"">D</span> Nothing; phases must be completed in order to keep a project on schedule</button>
+          </div>
+          <div id=""chk-5-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. They did log every comment. Collecting feedback and then discarding it is exactly the failure.</div>
+          <div id=""chk-5-fb-B"" class=""mcq-feedback correct-fb"">Correct. Revisiting earlier phases is part of what iteration means, so ""we are past design"" misreads the process model itself.</div>
+          <div id=""chk-5-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. These were the first real users. Their confusion is a requirements discovery, not a sampling error.</div>
+          <div id=""chk-5-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. This is the misreading the scenario is built on. A phase label cannot veto a revision the process definition requires.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-6"">
+          <div class=""mcq-q-num"">Question 6 of 6</div>
+          <div class=""mcq-q-text"">Scenario 4: a student in a block-based environment with no comment feature keeps no documentation at all, calling it ""not possible in this language."" Rule on the excuse.</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','A','A','chk-6-fb-A')""><span class=""mcq-option-letter"">A</span> Incorrect: when an environment does not support comments, other methods of documentation may be required</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','B','A','chk-6-fb-B')""><span class=""mcq-option-letter"">B</span> Correct, provided the student explains the program verbally at submission</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','C','A','chk-6-fb-C')""><span class=""mcq-option-letter"">C</span> Incorrect, but only because the Create Performance Task has its own separate requirement</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','D','A','chk-6-fb-D')""><span class=""mcq-option-letter"">D</span> Correct: documentation requires comment support, so none is expected here</button>
+          </div>
+          <div id=""chk-6-fb-A"" class=""mcq-feedback correct-fb"">Correct. A written design log describing each procedure's function and history is the other method the CED calls for.</div>
+          <div id=""chk-6-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. A verbal explanation is not a written description of function and development, and it does not persist.</div>
+          <div id=""chk-6-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. The Create PT requirement exists, but the documentation rule stands on its own regardless of the task.</div>
+          <div id=""chk-6-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. The CED anticipates exactly this environment and answers it directly. No comment support never becomes no documentation needed.</div>
+        </div>
+  </div>
+  <div class=""nextnav"">
+    <a href=""/pages/ap-csp-course-bi1-program-design-development"">Rework the Topic 1.3 lesson</a>
+    <a href=""/pages/ap-csp-course-bi1-unit-test"">Big Idea 1 unit test</a>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'apcs-draft:' + ""ap-csp-topic-1-3-exercise-2"";
+  var answered = {};
+  var total = document.querySelectorAll('.mcq-item[data-item]').length;
+
+  /* Drafts stay in this browser. Nothing typed in a writing box is ever sent
+     anywhere: no request carries it, and the reporter only ever sees the
+     multiple choice results below. */
+  function loadDrafts(){
+    var store = {};
+    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      var id = boxes[i].getAttribute('data-draft');
+      if (store[id]) boxes[i].value = store[id];
+      boxes[i].addEventListener('input', saveDrafts);
+    }
+  }
+  function saveDrafts(){
+    var store = {};
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      store[boxes[i].getAttribute('data-draft')] = boxes[i].value;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    var n = document.getElementById('draft-note');
+    if (n) n.textContent = 'Saved in this browser only.';
+  }
+
+  function activity(d){
+    try{
+      var w = document.querySelector('.lesson-page');
+      if(w){
+        d.course = w.getAttribute('data-course');
+        d.unit = w.getAttribute('data-unit');
+        d.lesson = w.getAttribute('data-lesson');
+      }
+      document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+    }catch(e){}
+  }
+
+  function updateScore(){
+    var right = 0, done = 0, k;
+    for(k in answered){ done++; if(answered[k]) right++; }
+    var el = document.getElementById('ex-score');
+    if(el) el.innerHTML = '<strong>' + right + ' / ' + total + '</strong> correct on the graded check, ' + done + ' answered';
+  }
+
+  window.cspEx = function(qid, chosen, correct, fbId){
+    var item = null, items = document.querySelectorAll('.mcq-item[data-item]'), i;
+    for(i = 0; i < items.length; i++){
+      if(items[i].getAttribute('data-item') === qid){ item = items[i]; break; }
+    }
+    if(!item || answered.hasOwnProperty(qid)) return;
+    var opts = item.querySelectorAll('.mcq-option');
+    for(i = 0; i < opts.length; i++){ opts[i].disabled = true; opts[i].onclick = null; }
+    var letters = ['A','B','C','D'];
+    var pick = letters.indexOf(chosen);
+    if(opts[pick]) opts[pick].classList.add(chosen === correct ? 'correct' : 'incorrect');
+    if(chosen !== correct && opts[letters.indexOf(correct)]){
+      opts[letters.indexOf(correct)].classList.add('revealed-correct');
+    }
+    var fb = document.getElementById(fbId);
+    if(fb) fb.classList.add('show');
+    answered[qid] = (chosen === correct);
+    updateScore();
+    activity({ activity: item.getAttribute('data-activity'), item: qid,
+               choice: chosen, correct: (chosen === correct) });
+  };
+
+  loadDrafts();
+  updateScore();
+})();
+</script>","TRUE","2026-03-01 12:00:00","AP CSP 1.3 Exercise 2: Process Doctor - Rescue the Build","Online companion to the AP CSP Topic 1.3 Exercise 2 handout, Process Doctor - Rescue the Build. Work the cases, then take the auto-graded check."

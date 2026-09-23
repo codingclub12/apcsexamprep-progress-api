@@ -1,0 +1,490 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At","SEO Title","SEO Description"
+"ap-csp-topic-1-1-exercise-1","MERGE","AP CSP 1.1 Exercise 1: Collaboration Post-Mortem","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#csp-ex{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;font-size:17px!important;background:#f8fafc!important}
+#csp-ex *,#csp-ex *::before,#csp-ex *::after{box-sizing:border-box!important}
+#csp-ex .hero{background:linear-gradient(135deg,#1e40af,#1a56db)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 18px!important}
+#csp-ex .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 8px!important}
+#csp-ex h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#csp-ex .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#csp-ex h2{font-size:21px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:32px 0 6px!important;font-weight:800!important;border-bottom:3px solid #93c5fd!important;padding-bottom:6px!important}
+#csp-ex h2 .tag{float:right!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;padding:3px 10px!important;border-radius:100px!important;margin-top:4px!important}
+#csp-ex h2 .tag.local{background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fde68a!important}
+#csp-ex h2 .tag.graded{background:#dcfce7!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #86efac!important}
+#csp-ex p{margin:8px 0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .btn,#csp-ex .btn:link,#csp-ex .btn:visited{display:inline-block!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+#csp-ex .btn.ghost,#csp-ex .btn.ghost:link,#csp-ex .btn.ghost:visited{background:#fff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border:2px solid #93c5fd!important}
+#csp-ex .note{background:#fff!important;border:1px solid #e2e8f0!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;padding:14px 18px!important;margin:16px 0 22px!important;font-size:15px!important}
+#csp-ex .note .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 4px!important}
+#csp-ex .item{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:18px 20px!important;margin:14px 0!important}
+#csp-ex .item.paper{background:#fffbeb!important;border-color:#fde68a!important}
+#csp-ex .item-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important}
+#csp-ex .item-text{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.65!important;margin:0 0 10px!important}
+#csp-ex .prompt{font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:12px 0 4px!important}
+#csp-ex .code{background:#0f172a!important;border-radius:8px!important;padding:12px 14px!important;margin:10px 0!important;font-family:""SFMono-Regular"",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre-wrap!important;overflow-x:auto!important}
+#csp-ex textarea{display:block!important;width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #d6d3d1!important;border-radius:8px!important;font-family:inherit!important;font-size:15px!important;line-height:1.55!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;resize:vertical!important}
+#csp-ex .saved{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:4px 0 0!important;min-height:16px!important}
+#csp-ex .mcq-item{margin-bottom:26px!important;padding-bottom:26px!important;border-bottom:1px solid #f1f5f9!important}
+#csp-ex .mcq-item:last-child{border-bottom:none!important;margin-bottom:0!important;padding-bottom:0!important}
+#csp-ex .mcq-q-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:8px!important}
+#csp-ex .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important}
+#csp-ex .mcq-options{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:12px!important}
+#csp-ex .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;text-align:left!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#fff!important;font-size:15px!important;font-family:inherit!important;line-height:1.5!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .mcq-option:hover{border-color:#93c5fd!important;background:#eff6ff!important}
+#csp-ex .mcq-option.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-option.revealed-correct{border-color:#16a34a!important;background:#f0fdf4!important}
+#csp-ex .mcq-option-letter{font-weight:700!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;flex-shrink:0!important;min-width:18px!important}
+#csp-ex .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important}
+#csp-ex .mcq-feedback.show{display:block!important}
+#csp-ex .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important}
+#csp-ex .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important}
+#csp-ex .scorebar{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 18px!important;margin:0 0 18px!important;font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#csp-ex .scorebar strong{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:17px!important}
+#csp-ex .nextnav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:26px!important}
+#csp-ex .nextnav a,#csp-ex .nextnav a:link,#csp-ex .nextnav a:visited{display:block!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:700!important;font-size:15px!important}
+@media (max-width:640px){#csp-ex .nextnav{grid-template-columns:repeat(1,1fr)!important}}
+</style>
+<div id=""csp-ex"" class=""lesson-page"" data-course=""ap-csp"" data-unit=""bi-1"" data-lesson=""collaboration"">
+  <div class=""hero"">
+    <p class=""eyebrow"">Big Idea 1 &middot; Topic 1.1 &middot; Exercise 1</p>
+    <h1>Collaboration Post-Mortem</h1>
+    <p class=""sub"">25 minutes</p>
+  </div>
+  <p><a class=""btn"" href=""/pages/ap-csp-course-bi1-collaboration"">Back to the Topic 1.1 lesson</a><a class=""btn ghost"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+  <div class=""note"">
+    <p class=""label"">How this page works</p>
+    <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
+    <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
+  </div>
+  <h2>Part B, from your handout<span class=""tag local"">Not recorded</span></h2>
+  <p>Your handout says these are the same items available here. Part A stays on paper. <span class=""saved"" id=""draft-note""></span></p>
+      <div class=""item paper"">
+        <div class=""item-num"">Q1 &middot; 3 points on the handout</div>
+        <p class=""item-text"">A classmate reviews the same log and concludes: 'The real problem was talent - four stronger programmers would have shipped a great app.' Argue the CED's counterpoint: what do four even-stronger copies of the SAME perspective still fail to produce?</p>
+        <textarea data-draft=""b1"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q1""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q2 &middot; 3 points on the handout</div>
+        <p class=""item-text"">The team gets one semester to build CampusNight 2.0. Design their user-consultation plan: whom should they gather information from, when, and what does the CED say that information is actually used for?</p>
+        <textarea data-draft=""b2"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q2""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q3 &middot; 2 points on the handout</div>
+        <p class=""item-text"">ENRICHMENT: Open-source projects like the Python language are built by thousands of contributors who never meet. Explain how a pull request satisfies EK CRD-1.B.1's description of what online tools do - and name two EK CRD-1.C.1 interpersonal skills that appear, in written form, in a typical code-review thread.</p>
+        <textarea data-draft=""b3"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q3""></textarea>
+      </div>
+  <h2>Graded check<span class=""tag graded"">Recorded</span></h2>
+  <p>5 questions on the same ideas, drawn from this exercise's answer key. These are auto-graded and reported.</p>
+  <div class=""scorebar"" id=""ex-score""></div>
+  <div class=""item"">
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-1"">
+          <div class=""mcq-q-num"">Question 1 of 5</div>
+          <div class=""mcq-q-text"">A classmate says CampusNight would have succeeded with four stronger programmers from the same coding club. What does the CED say four stronger copies of the same perspective still fail to produce?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','A','D','chk-1-fb-A')""><span class=""mcq-option-letter"">A</span> A faster launch schedule</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','B','D','chk-1-fb-B')""><span class=""mcq-option-letter"">B</span> A larger number of features</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','C','D','chk-1-fb-C')""><span class=""mcq-option-letter"">C</span> A program with fewer syntax errors</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','D','D','chk-1-fb-D')""><span class=""mcq-option-letter"">D</span> An innovation reflecting diverse perspectives, so the same blind spots and the same bias survive</button>
+          </div>
+          <div id=""chk-1-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Schedule is not what the CED ties to collaboration quality here.</div>
+          <div id=""chk-1-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Feature count does not address who the product excluded.</div>
+          <div id=""chk-1-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Code quality was never the failure. The app worked; it excluded people.</div>
+          <div id=""chk-1-fb-D"" class=""mcq-feedback correct-fb"">Correct. Effective collaboration produces an innovation reflecting the diversity of talents and perspectives of its designers. More skill in one perspective leaves the blind spot, and the bias, exactly where it was.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-2"">
+          <div class=""mcq-q-num"">Question 2 of 5</div>
+          <div class=""mcq-q-text"">For CampusNight 2.0, whom does the CED say the team should gather information from?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','C','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> Only the teachers who approve school events</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','C','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> Only the students who used version 1 most</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','C','C','chk-2-fb-C')""><span class=""mcq-option-letter"">C</span> Potential users, including the students version 1 locked out</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','D','C','chk-2-fb-D')""><span class=""mcq-option-letter"">D</span> Only the four developers, working faster</button>
+          </div>
+          <div id=""chk-2-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Staff are one useful group, but limiting it to them repeats the mistake of consulting a narrow slice.</div>
+          <div id=""chk-2-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Surveying the people the app already served reproduces the original blind spot.</div>
+          <div id=""chk-2-fb-C"" class=""mcq-feedback correct-fb"">Correct. The CED asks for information from potential users, which is precisely the group version 1 designed around and excluded.</div>
+          <div id=""chk-2-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. The team asking itself again is what caused the failure.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-3"">
+          <div class=""mcq-q-num"">Question 3 of 5</div>
+          <div class=""mcq-q-text"">When should that user consultation happen?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','A','B','chk-3-fb-A')""><span class=""mcq-option-letter"">A</span> Once, as a review after the app ships</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','B','B','chk-3-fb-B')""><span class=""mcq-option-letter"">B</span> Throughout development, from before design through prototype feedback</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','C','B','chk-3-fb-C')""><span class=""mcq-option-letter"">C</span> Only if testers report a problem</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','D','B','chk-3-fb-D')""><span class=""mcq-option-letter"">D</span> Once, as a survey before any code is written</button>
+          </div>
+          <div id=""chk-3-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Consulting after shipping is how version 1 found out, at the users' expense.</div>
+          <div id=""chk-3-fb-B"" class=""mcq-feedback correct-fb"">Correct. The CED treats consultation and communication as aspects of development itself, which means recurring check-ins rather than one event.</div>
+          <div id=""chk-3-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Waiting for a complaint makes the excluded user the bug report.</div>
+          <div id=""chk-3-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. A single survey at the start is better than none, and it still misses everything learned once a prototype exists.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-4"">
+          <div class=""mcq-q-num"">Question 4 of 5</div>
+          <div class=""mcq-q-text"">What does the CED say the information gathered from users is actually used FOR?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','A','A','chk-4-fb-A')""><span class=""mcq-option-letter"">A</span> To understand the program's purpose from diverse perspectives and build a program that incorporates them</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','B','A','chk-4-fb-B')""><span class=""mcq-option-letter"">B</span> To decide which programming language to use</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','C','A','chk-4-fb-C')""><span class=""mcq-option-letter"">C</span> To estimate how long development will take</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','D','A','chk-4-fb-D')""><span class=""mcq-option-letter"">D</span> To market the program to a wider audience</button>
+          </div>
+          <div id=""chk-4-fb-A"" class=""mcq-feedback correct-fb"">Correct. The information shapes what gets built: it reveals the purpose from perspectives the team does not hold, and the program is meant to incorporate them.</div>
+          <div id=""chk-4-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Language choice is an implementation decision, unrelated to user consultation.</div>
+          <div id=""chk-4-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Scheduling is not what the CED ties this information to.</div>
+          <div id=""chk-4-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Marketing uses audience research too, but that is not the development purpose the CED names.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-5"">
+          <div class=""mcq-q-num"">Question 5 of 5</div>
+          <div class=""mcq-q-text"">A pull request satisfies the CED's description of what online collaboration tools do because it supports which two things?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','A','D','chk-5-fb-A')""><span class=""mcq-option-letter"">A</span> Version numbering and release dates</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','B','D','chk-5-fb-B')""><span class=""mcq-option-letter"">B</span> Writing documentation and comments</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','C','D','chk-5-fb-C')""><span class=""mcq-option-letter"">C</span> Compiling and testing</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','D','D','chk-5-fb-D')""><span class=""mcq-option-letter"">D</span> Sharing work and providing feedback on it</button>
+          </div>
+          <div id=""chk-5-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Release bookkeeping is not collaboration in the sense the CED describes.</div>
+          <div id=""chk-5-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Documentation matters and is a separate idea from the share-and-feedback pairing.</div>
+          <div id=""chk-5-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Continuous integration may run alongside a pull request, but that is not the pairing the CED names.</div>
+          <div id=""chk-5-fb-D"" class=""mcq-feedback correct-fb"">Correct. The CED describes online tools as supporting collaboration by letting programmers share AND provide feedback on ideas and documents. A pull request is both: the change is posted, and reviewers comment on it before anything merges.</div>
+        </div>
+  </div>
+  <div class=""nextnav"">
+    <a href=""/pages/ap-csp-course-bi1-collaboration"">Rework the Topic 1.1 lesson</a>
+    <a href=""/pages/ap-csp-course-bi1-unit-test"">Big Idea 1 unit test</a>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'apcs-draft:' + ""ap-csp-topic-1-1-exercise-1"";
+  var answered = {};
+  var total = document.querySelectorAll('.mcq-item[data-item]').length;
+
+  /* Drafts stay in this browser. Nothing typed in a writing box is ever sent
+     anywhere: no request carries it, and the reporter only ever sees the
+     multiple choice results below. */
+  function loadDrafts(){
+    var store = {};
+    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      var id = boxes[i].getAttribute('data-draft');
+      if (store[id]) boxes[i].value = store[id];
+      boxes[i].addEventListener('input', saveDrafts);
+    }
+  }
+  function saveDrafts(){
+    var store = {};
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      store[boxes[i].getAttribute('data-draft')] = boxes[i].value;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    var n = document.getElementById('draft-note');
+    if (n) n.textContent = 'Saved in this browser only.';
+  }
+
+  function activity(d){
+    try{
+      var w = document.querySelector('.lesson-page');
+      if(w){
+        d.course = w.getAttribute('data-course');
+        d.unit = w.getAttribute('data-unit');
+        d.lesson = w.getAttribute('data-lesson');
+      }
+      document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+    }catch(e){}
+  }
+
+  function updateScore(){
+    var right = 0, done = 0, k;
+    for(k in answered){ done++; if(answered[k]) right++; }
+    var el = document.getElementById('ex-score');
+    if(el) el.innerHTML = '<strong>' + right + ' / ' + total + '</strong> correct on the graded check, ' + done + ' answered';
+  }
+
+  window.cspEx = function(qid, chosen, correct, fbId){
+    var item = null, items = document.querySelectorAll('.mcq-item[data-item]'), i;
+    for(i = 0; i < items.length; i++){
+      if(items[i].getAttribute('data-item') === qid){ item = items[i]; break; }
+    }
+    if(!item || answered.hasOwnProperty(qid)) return;
+    var opts = item.querySelectorAll('.mcq-option');
+    for(i = 0; i < opts.length; i++){ opts[i].disabled = true; opts[i].onclick = null; }
+    var letters = ['A','B','C','D'];
+    var pick = letters.indexOf(chosen);
+    if(opts[pick]) opts[pick].classList.add(chosen === correct ? 'correct' : 'incorrect');
+    if(chosen !== correct && opts[letters.indexOf(correct)]){
+      opts[letters.indexOf(correct)].classList.add('revealed-correct');
+    }
+    var fb = document.getElementById(fbId);
+    if(fb) fb.classList.add('show');
+    answered[qid] = (chosen === correct);
+    updateScore();
+    activity({ activity: item.getAttribute('data-activity'), item: qid,
+               choice: chosen, correct: (chosen === correct) });
+  };
+
+  loadDrafts();
+  updateScore();
+})();
+</script>","TRUE","2026-03-01 12:00:00","AP CSP 1.1 Exercise 1: Collaboration Post-Mortem","Online companion to the AP CSP Topic 1.1 Exercise 1 handout, Collaboration Post-Mortem. Work the cases, then take the auto-graded check."
+"ap-csp-topic-1-1-exercise-2","MERGE","AP CSP 1.1 Exercise 2: The Collaboration Clinic","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#csp-ex{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;font-size:17px!important;background:#f8fafc!important}
+#csp-ex *,#csp-ex *::before,#csp-ex *::after{box-sizing:border-box!important}
+#csp-ex .hero{background:linear-gradient(135deg,#1e40af,#1a56db)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 18px!important}
+#csp-ex .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 8px!important}
+#csp-ex h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#csp-ex .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#csp-ex h2{font-size:21px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:32px 0 6px!important;font-weight:800!important;border-bottom:3px solid #93c5fd!important;padding-bottom:6px!important}
+#csp-ex h2 .tag{float:right!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;padding:3px 10px!important;border-radius:100px!important;margin-top:4px!important}
+#csp-ex h2 .tag.local{background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fde68a!important}
+#csp-ex h2 .tag.graded{background:#dcfce7!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #86efac!important}
+#csp-ex p{margin:8px 0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .btn,#csp-ex .btn:link,#csp-ex .btn:visited{display:inline-block!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+#csp-ex .btn.ghost,#csp-ex .btn.ghost:link,#csp-ex .btn.ghost:visited{background:#fff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border:2px solid #93c5fd!important}
+#csp-ex .note{background:#fff!important;border:1px solid #e2e8f0!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;padding:14px 18px!important;margin:16px 0 22px!important;font-size:15px!important}
+#csp-ex .note .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 4px!important}
+#csp-ex .item{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:18px 20px!important;margin:14px 0!important}
+#csp-ex .item.paper{background:#fffbeb!important;border-color:#fde68a!important}
+#csp-ex .item-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important}
+#csp-ex .item-text{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.65!important;margin:0 0 10px!important}
+#csp-ex .prompt{font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:12px 0 4px!important}
+#csp-ex .code{background:#0f172a!important;border-radius:8px!important;padding:12px 14px!important;margin:10px 0!important;font-family:""SFMono-Regular"",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre-wrap!important;overflow-x:auto!important}
+#csp-ex textarea{display:block!important;width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #d6d3d1!important;border-radius:8px!important;font-family:inherit!important;font-size:15px!important;line-height:1.55!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;resize:vertical!important}
+#csp-ex .saved{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:4px 0 0!important;min-height:16px!important}
+#csp-ex .mcq-item{margin-bottom:26px!important;padding-bottom:26px!important;border-bottom:1px solid #f1f5f9!important}
+#csp-ex .mcq-item:last-child{border-bottom:none!important;margin-bottom:0!important;padding-bottom:0!important}
+#csp-ex .mcq-q-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:8px!important}
+#csp-ex .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important}
+#csp-ex .mcq-options{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:12px!important}
+#csp-ex .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;text-align:left!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#fff!important;font-size:15px!important;font-family:inherit!important;line-height:1.5!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .mcq-option:hover{border-color:#93c5fd!important;background:#eff6ff!important}
+#csp-ex .mcq-option.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-option.revealed-correct{border-color:#16a34a!important;background:#f0fdf4!important}
+#csp-ex .mcq-option-letter{font-weight:700!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;flex-shrink:0!important;min-width:18px!important}
+#csp-ex .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important}
+#csp-ex .mcq-feedback.show{display:block!important}
+#csp-ex .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important}
+#csp-ex .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important}
+#csp-ex .scorebar{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 18px!important;margin:0 0 18px!important;font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#csp-ex .scorebar strong{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:17px!important}
+#csp-ex .nextnav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:26px!important}
+#csp-ex .nextnav a,#csp-ex .nextnav a:link,#csp-ex .nextnav a:visited{display:block!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:700!important;font-size:15px!important}
+@media (max-width:640px){#csp-ex .nextnav{grid-template-columns:repeat(1,1fr)!important}}
+</style>
+<div id=""csp-ex"" class=""lesson-page"" data-course=""ap-csp"" data-unit=""bi-1"" data-lesson=""collaboration"">
+  <div class=""hero"">
+    <p class=""eyebrow"">Big Idea 1 &middot; Topic 1.1 &middot; Exercise 2</p>
+    <h1>The Collaboration Clinic</h1>
+    <p class=""sub"">25 minutes - 4 cases - diagnose and prescribe</p>
+  </div>
+  <p><a class=""btn"" href=""/pages/ap-csp-course-bi1-collaboration"">Back to the Topic 1.1 lesson</a><a class=""btn ghost"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+  <div class=""note"">
+    <p class=""label"">How this page works</p>
+    <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
+    <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
+  </div>
+  <h2>The cases, from your handout<span class=""tag local"">Not recorded</span></h2>
+  <p>The same cases as your handout, in the same order. <span class=""saved"" id=""draft-note""></span></p>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 1 &middot; Foundational</div>
+        <p class=""item-text"">A team of four seniors - all in the same friend group, all varsity athletes with the latest phones - is building a fitness-challenge app for the whole school. They skipped interviews 'to save time,' reasoning that 'we ARE the users.' Early testers who don't play sports say the app makes them feel out of place, and students with older phones can't run it at all.</p>
+        <p class=""prompt"">Signs (what in the case tells you which principle is at risk):</p>
+        <textarea data-draft=""s1p1"" rows=""3"" spellcheck=""true"" aria-label=""Signs (what in the case tells you which principle is at risk):""></textarea>
+        <p class=""prompt"">Diagnosis + prescription (what is going wrong and the CED-backed fix):</p>
+        <textarea data-draft=""s1p2"" rows=""3"" spellcheck=""true"" aria-label=""Diagnosis + prescription (what is going wrong and the CED-backed fix):""></textarea>
+        <p class=""prompt"">Enrichment (innovation type, or the one interpersonal skill this team needs most):</p>
+        <textarea data-draft=""s1p3"" rows=""3"" spellcheck=""true"" aria-label=""Enrichment (innovation type, or the one interpersonal skill this team needs most):""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 2 &middot; Core</div>
+        <p class=""item-text"">Two students pair program every day: the stronger coder always drives 'to keep the speed up' while the other watches in silence. The quiet partner has privately noticed several bugs but feels pointing them out 'isn't my place.' The program grows quickly - and so does its bug list.</p>
+        <p class=""prompt"">Signs (what in the case tells you which principle is at risk):</p>
+        <textarea data-draft=""s2p1"" rows=""3"" spellcheck=""true"" aria-label=""Signs (what in the case tells you which principle is at risk):""></textarea>
+        <p class=""prompt"">Diagnosis + prescription (what is going wrong and the CED-backed fix):</p>
+        <textarea data-draft=""s2p2"" rows=""3"" spellcheck=""true"" aria-label=""Diagnosis + prescription (what is going wrong and the CED-backed fix):""></textarea>
+        <p class=""prompt"">Enrichment (innovation type, or the one interpersonal skill this team needs most):</p>
+        <textarea data-draft=""s2p3"" rows=""3"" spellcheck=""true"" aria-label=""Enrichment (innovation type, or the one interpersonal skill this team needs most):""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 3 &middot; Core</div>
+        <p class=""item-text"">Six students from three different schools won a grant to build a community-garden sensor kit - a soil-moisture probe whose onboard program texts volunteers when garden beds need water. They can meet in person only once a month, so they've been mailing a USB drive back and forth; whoever holds the drive owns 'the real version,' and everyone else waits.</p>
+        <p class=""prompt"">Signs (what in the case tells you which principle is at risk):</p>
+        <textarea data-draft=""s3p1"" rows=""3"" spellcheck=""true"" aria-label=""Signs (what in the case tells you which principle is at risk):""></textarea>
+        <p class=""prompt"">Diagnosis + prescription (what is going wrong and the CED-backed fix):</p>
+        <textarea data-draft=""s3p2"" rows=""3"" spellcheck=""true"" aria-label=""Diagnosis + prescription (what is going wrong and the CED-backed fix):""></textarea>
+        <p class=""prompt"">Enrichment (innovation type, or the one interpersonal skill this team needs most):</p>
+        <textarea data-draft=""s3p3"" rows=""3"" spellcheck=""true"" aria-label=""Enrichment (innovation type, or the one interpersonal skill this team needs most):""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 4 &middot; Challenge</div>
+        <p class=""item-text"">A five-person team is designing SwapShelf, a school-wide system where students trade used books through QR codes and an online credit balance. The team is deadlocked 3-2 on the credit rules, and the majority plans to simply outvote the minority and 'move on.' The two sides now talk only through a group chat where messages keep getting misread - and nobody has asked the students or librarians who would actually run the swaps.</p>
+        <p class=""prompt"">Signs (what in the case tells you which principle is at risk):</p>
+        <textarea data-draft=""s4p1"" rows=""3"" spellcheck=""true"" aria-label=""Signs (what in the case tells you which principle is at risk):""></textarea>
+        <p class=""prompt"">Diagnosis + prescription (what is going wrong and the CED-backed fix):</p>
+        <textarea data-draft=""s4p2"" rows=""3"" spellcheck=""true"" aria-label=""Diagnosis + prescription (what is going wrong and the CED-backed fix):""></textarea>
+        <p class=""prompt"">Enrichment (innovation type, or the one interpersonal skill this team needs most):</p>
+        <textarea data-draft=""s4p3"" rows=""3"" spellcheck=""true"" aria-label=""Enrichment (innovation type, or the one interpersonal skill this team needs most):""></textarea>
+      </div>
+  <h2>Graded check<span class=""tag graded"">Recorded</span></h2>
+  <p>5 questions on the same ideas, drawn from this exercise's answer key. These are auto-graded and reported.</p>
+  <div class=""scorebar"" id=""ex-score""></div>
+  <div class=""item"">
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-1"">
+          <div class=""mcq-q-num"">Question 1 of 5</div>
+          <div class=""mcq-q-text"">Case 1: four seniors from one friend group, all athletes with new phones, build a school fitness app and skip interviews because ""we ARE the users."" Which principle is at risk?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','A','A','chk-1-fb-A')""><span class=""mcq-option-letter"">A</span> Bias, from a team with one shared perspective and no outside consultation</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','B','A','chk-1-fb-B')""><span class=""mcq-option-letter"">B</span> The team is using pair programming incorrectly</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','C','A','chk-1-fb-C')""><span class=""mcq-option-letter"">C</span> The team needs a written project schedule</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','D','A','chk-1-fb-D')""><span class=""mcq-option-letter"">D</span> The team needs a faster version-control workflow</button>
+          </div>
+          <div id=""chk-1-fb-A"" class=""mcq-feedback correct-fb"">Correct. One shared perspective plus nobody consulted outside it are the two warning signs the CED gives for bias entering an innovation. ""We ARE the users"" is the giveaway.</div>
+          <div id=""chk-1-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. No pair programming appears in this case at all.</div>
+          <div id=""chk-1-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Scheduling is not what produced an app that excluded non-athletes.</div>
+          <div id=""chk-1-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Nothing in this case describes a file-sharing or versioning problem.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-2"">
+          <div class=""mcq-q-num"">Question 2 of 5</div>
+          <div class=""mcq-q-text"">Case 1: how is the fitness-challenge app classified?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','D','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> A nonphysical computing concept</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','D','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> Not a computing innovation at all</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','C','D','chk-2-fb-C')""><span class=""mcq-option-letter"">C</span> A physical computing innovation</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','D','D','chk-2-fb-D')""><span class=""mcq-option-letter"">D</span> Nonphysical computing software</button>
+          </div>
+          <div id=""chk-2-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. A concept is an idea that exists because programs enable it, like e-commerce. This is the software itself.</div>
+          <div id=""chk-2-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. A program is an integral part of its function, so it passes the test.</div>
+          <div id=""chk-2-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Physical innovations are hardware whose function depends on an integral program, like a self-driving car.</div>
+          <div id=""chk-2-fb-D"" class=""mcq-feedback correct-fb"">Correct. The app IS the program, which is what the CED means by nonphysical computing software.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-3"">
+          <div class=""mcq-q-num"">Question 3 of 5</div>
+          <div class=""mcq-q-text"">Case 2: the stronger coder always drives while the partner watches in silence, privately spotting bugs. What is the prescription?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','A','C','chk-3-fb-A')""><span class=""mcq-option-letter"">A</span> Move the pair onto separate machines</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','B','C','chk-3-fb-B')""><span class=""mcq-option-letter"">B</span> Split the work so each student codes alone</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','C','C','chk-3-fb-C')""><span class=""mcq-option-letter"">C</span> Restore the model: the navigator actively reviews and questions each line, and the roles rotate</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','D','C','chk-3-fb-D')""><span class=""mcq-option-letter"">D</span> Have the stronger coder work faster to cover both roles</button>
+          </div>
+          <div id=""chk-3-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Separate machines removes the shared review the model depends on.</div>
+          <div id=""chk-3-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Working alone abandons pair programming rather than repairing it.</div>
+          <div id=""chk-3-fb-C"" class=""mcq-feedback correct-fb"">Correct. Pair programming needs an active navigator reviewing in real time, with rotation so both perspectives shape the code. A silent watcher is not a navigator.</div>
+          <div id=""chk-3-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. One person cannot be both driver and reviewer; that is solo programming with an audience.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-4"">
+          <div class=""mcq-q-num"">Question 4 of 5</div>
+          <div class=""mcq-q-text"">Case 3: six students across three schools mail a USB drive back and forth to build a soil-moisture probe that texts volunteers. What is the fix, and what type of innovation is it?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','A','B','chk-4-fb-A')""><span class=""mcq-option-letter"">A</span> Meet more often in person; nonphysical software</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','B','B','chk-4-fb-B')""><span class=""mcq-option-letter"">B</span> Online tools that let the team share and give feedback continuously; a physical computing innovation</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','C','B','chk-4-fb-C')""><span class=""mcq-option-letter"">C</span> A stricter deadline; a nonphysical concept</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','D','B','chk-4-fb-D')""><span class=""mcq-option-letter"">D</span> One member owning all the code; nonphysical software</button>
+          </div>
+          <div id=""chk-4-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. More meetings does not solve the between-meetings bottleneck, and the probe is hardware.</div>
+          <div id=""chk-4-fb-B"" class=""mcq-feedback correct-fb"">Correct. One ""real version"" on a drive serializes the work and blocks feedback entirely. Online tools exist to allow sharing AND feedback continuously. The probe is hardware whose function depends on an integral program, so it is physical.</div>
+          <div id=""chk-4-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. A deadline does not restore anyone's ability to contribute between meetings.</div>
+          <div id=""chk-4-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Concentrating ownership makes the bottleneck permanent.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-5"">
+          <div class=""mcq-q-num"">Question 5 of 5</div>
+          <div class=""mcq-q-text"">Case 4: a team is deadlocked 3-2 on credit rules and the majority plans to outvote the minority. Which single interpersonal skill does the team most need?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','A','A','chk-5-fb-A')""><span class=""mcq-option-letter"">A</span> Consensus building</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','B','A','chk-5-fb-B')""><span class=""mcq-option-letter"">B</span> Time management</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','C','A','chk-5-fb-C')""><span class=""mcq-option-letter"">C</span> Technical documentation</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','D','A','chk-5-fb-D')""><span class=""mcq-option-letter"">D</span> Communication</button>
+          </div>
+          <div id=""chk-5-fb-A"" class=""mcq-feedback correct-fb"">Correct. Outvoting ends the argument without resolving the disagreement, and the outvoted perspectives leave the product. Consensus building is what finds the shared goal both proposals serve.</div>
+          <div id=""chk-5-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Time management is not among the interpersonal skills the CED names.</div>
+          <div id=""chk-5-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Documentation is not an interpersonal skill in this list.</div>
+          <div id=""chk-5-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Communication is genuinely damaged here too, but the specific failure is settling a deadlock by force instead of agreement.</div>
+        </div>
+  </div>
+  <div class=""nextnav"">
+    <a href=""/pages/ap-csp-course-bi1-collaboration"">Rework the Topic 1.1 lesson</a>
+    <a href=""/pages/ap-csp-course-bi1-unit-test"">Big Idea 1 unit test</a>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'apcs-draft:' + ""ap-csp-topic-1-1-exercise-2"";
+  var answered = {};
+  var total = document.querySelectorAll('.mcq-item[data-item]').length;
+
+  /* Drafts stay in this browser. Nothing typed in a writing box is ever sent
+     anywhere: no request carries it, and the reporter only ever sees the
+     multiple choice results below. */
+  function loadDrafts(){
+    var store = {};
+    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      var id = boxes[i].getAttribute('data-draft');
+      if (store[id]) boxes[i].value = store[id];
+      boxes[i].addEventListener('input', saveDrafts);
+    }
+  }
+  function saveDrafts(){
+    var store = {};
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      store[boxes[i].getAttribute('data-draft')] = boxes[i].value;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    var n = document.getElementById('draft-note');
+    if (n) n.textContent = 'Saved in this browser only.';
+  }
+
+  function activity(d){
+    try{
+      var w = document.querySelector('.lesson-page');
+      if(w){
+        d.course = w.getAttribute('data-course');
+        d.unit = w.getAttribute('data-unit');
+        d.lesson = w.getAttribute('data-lesson');
+      }
+      document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+    }catch(e){}
+  }
+
+  function updateScore(){
+    var right = 0, done = 0, k;
+    for(k in answered){ done++; if(answered[k]) right++; }
+    var el = document.getElementById('ex-score');
+    if(el) el.innerHTML = '<strong>' + right + ' / ' + total + '</strong> correct on the graded check, ' + done + ' answered';
+  }
+
+  window.cspEx = function(qid, chosen, correct, fbId){
+    var item = null, items = document.querySelectorAll('.mcq-item[data-item]'), i;
+    for(i = 0; i < items.length; i++){
+      if(items[i].getAttribute('data-item') === qid){ item = items[i]; break; }
+    }
+    if(!item || answered.hasOwnProperty(qid)) return;
+    var opts = item.querySelectorAll('.mcq-option');
+    for(i = 0; i < opts.length; i++){ opts[i].disabled = true; opts[i].onclick = null; }
+    var letters = ['A','B','C','D'];
+    var pick = letters.indexOf(chosen);
+    if(opts[pick]) opts[pick].classList.add(chosen === correct ? 'correct' : 'incorrect');
+    if(chosen !== correct && opts[letters.indexOf(correct)]){
+      opts[letters.indexOf(correct)].classList.add('revealed-correct');
+    }
+    var fb = document.getElementById(fbId);
+    if(fb) fb.classList.add('show');
+    answered[qid] = (chosen === correct);
+    updateScore();
+    activity({ activity: item.getAttribute('data-activity'), item: qid,
+               choice: chosen, correct: (chosen === correct) });
+  };
+
+  loadDrafts();
+  updateScore();
+})();
+</script>","TRUE","2026-03-01 12:00:00","AP CSP 1.1 Exercise 2: The Collaboration Clinic","Online companion to the AP CSP Topic 1.1 Exercise 2 handout, The Collaboration Clinic. Work the cases, then take the auto-graded check."

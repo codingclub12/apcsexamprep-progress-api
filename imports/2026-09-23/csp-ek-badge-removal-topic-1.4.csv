@@ -1,0 +1,546 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At","SEO Title","SEO Description"
+"ap-csp-topic-1-4-exercise-1","MERGE","AP CSP 1.4 Exercise 1: Error Hunt - The Bug Report Log","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#csp-ex{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;font-size:17px!important;background:#f8fafc!important}
+#csp-ex *,#csp-ex *::before,#csp-ex *::after{box-sizing:border-box!important}
+#csp-ex .hero{background:linear-gradient(135deg,#1e40af,#1a56db)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 18px!important}
+#csp-ex .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 8px!important}
+#csp-ex h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#csp-ex .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#csp-ex h2{font-size:21px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:32px 0 6px!important;font-weight:800!important;border-bottom:3px solid #93c5fd!important;padding-bottom:6px!important}
+#csp-ex h2 .tag{float:right!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;padding:3px 10px!important;border-radius:100px!important;margin-top:4px!important}
+#csp-ex h2 .tag.local{background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fde68a!important}
+#csp-ex h2 .tag.graded{background:#dcfce7!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #86efac!important}
+#csp-ex p{margin:8px 0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .btn,#csp-ex .btn:link,#csp-ex .btn:visited{display:inline-block!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+#csp-ex .btn.ghost,#csp-ex .btn.ghost:link,#csp-ex .btn.ghost:visited{background:#fff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border:2px solid #93c5fd!important}
+#csp-ex .note{background:#fff!important;border:1px solid #e2e8f0!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;padding:14px 18px!important;margin:16px 0 22px!important;font-size:15px!important}
+#csp-ex .note .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 4px!important}
+#csp-ex .item{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:18px 20px!important;margin:14px 0!important}
+#csp-ex .item.paper{background:#fffbeb!important;border-color:#fde68a!important}
+#csp-ex .item-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important}
+#csp-ex .item-text{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.65!important;margin:0 0 10px!important}
+#csp-ex .prompt{font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:12px 0 4px!important}
+#csp-ex .code{background:#0f172a!important;border-radius:8px!important;padding:12px 14px!important;margin:10px 0!important;font-family:""SFMono-Regular"",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre-wrap!important;overflow-x:auto!important}
+#csp-ex textarea{display:block!important;width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #d6d3d1!important;border-radius:8px!important;font-family:inherit!important;font-size:15px!important;line-height:1.55!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;resize:vertical!important}
+#csp-ex .saved{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:4px 0 0!important;min-height:16px!important}
+#csp-ex .mcq-item{margin-bottom:26px!important;padding-bottom:26px!important;border-bottom:1px solid #f1f5f9!important}
+#csp-ex .mcq-item:last-child{border-bottom:none!important;margin-bottom:0!important;padding-bottom:0!important}
+#csp-ex .mcq-q-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:8px!important}
+#csp-ex .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important}
+#csp-ex .mcq-options{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:12px!important}
+#csp-ex .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;text-align:left!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#fff!important;font-size:15px!important;font-family:inherit!important;line-height:1.5!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .mcq-option:hover{border-color:#93c5fd!important;background:#eff6ff!important}
+#csp-ex .mcq-option.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-option.revealed-correct{border-color:#16a34a!important;background:#f0fdf4!important}
+#csp-ex .mcq-option-letter{font-weight:700!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;flex-shrink:0!important;min-width:18px!important}
+#csp-ex .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important}
+#csp-ex .mcq-feedback.show{display:block!important}
+#csp-ex .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important}
+#csp-ex .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important}
+#csp-ex .scorebar{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 18px!important;margin:0 0 18px!important;font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#csp-ex .scorebar strong{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:17px!important}
+#csp-ex .nextnav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:26px!important}
+#csp-ex .nextnav a,#csp-ex .nextnav a:link,#csp-ex .nextnav a:visited{display:block!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:700!important;font-size:15px!important}
+@media (max-width:640px){#csp-ex .nextnav{grid-template-columns:repeat(1,1fr)!important}}
+</style>
+<div id=""csp-ex"" class=""lesson-page"" data-course=""ap-csp"" data-unit=""bi-1"" data-lesson=""identifying-correcting-errors"">
+  <div class=""hero"">
+    <p class=""eyebrow"">Big Idea 1 &middot; Topic 1.4 &middot; Exercise 1</p>
+    <h1>Error Hunt - The Bug Report Log</h1>
+    <p class=""sub"">25 minutes</p>
+  </div>
+  <p><a class=""btn"" href=""/pages/ap-csp-course-bi1-identifying-correcting-errors"">Back to the Topic 1.4 lesson</a><a class=""btn ghost"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+  <div class=""note"">
+    <p class=""label"">How this page works</p>
+    <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
+    <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
+  </div>
+  <h2>Part B, from your handout<span class=""tag local"">Not recorded</span></h2>
+  <p>Your handout says these are the same items available here. Part A stays on paper. <span class=""saved"" id=""draft-note""></span></p>
+      <div class=""item paper"">
+        <div class=""item-num"">Q1 &middot; 3 points on the handout</div>
+        <p class=""item-text"">Two situations: (a) a value goes wrong SOMEWHERE in a 40-line program, location unknown; (b) you suspect ONE specific formula line. Choose the better tool from the five ways for each situation, and explain the difference in one sentence each.</p>
+        <textarea data-draft=""b1"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q1""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q2 &middot; 3 points on the handout</div>
+        <p class=""item-text"">GradePro's formula gets fixed to divide by 3. Write ONE complete test case that confirms the fix - defined input, expected output - and state what the team must do if the test fails anyway (cite the CED's testing loop).</p>
+        <textarea data-draft=""b2"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q2""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q3 &middot; 2 points on the handout</div>
+        <p class=""item-text"">ENRICHMENT: Modern code editors underline illegal statements as you type, and 'fuzzers' hammer programs with millions of random inputs hunting for crashes. Map each tool onto the CED error type it catches best - then name the error type NEITHER can reliably catch, and explain what a human must supply to catch it.</p>
+        <textarea data-draft=""b3"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q3""></textarea>
+      </div>
+  <h2>Graded check<span class=""tag graded"">Recorded</span></h2>
+  <p>8 questions on the same ideas, drawn from this exercise's answer key. These are auto-graded and reported.</p>
+  <div class=""scorebar"" id=""ex-score""></div>
+  <div class=""item"">
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-1"">
+          <div class=""mcq-q-num"">Question 1 of 8</div>
+          <div class=""mcq-q-text"">Report 2: the field-trip signup form will not start, and the language reports it cannot understand line 4, which reads ""IF permission THEN"" with nothing after it. Classify the error.</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','A','C','chk-1-fb-A')""><span class=""mcq-option-letter"">A</span> A logic error, because the condition is incomplete</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','B','C','chk-1-fb-B')""><span class=""mcq-option-letter"">B</span> A run-time error, because the failure happens when the program is launched</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','C','C','chk-1-fb-C')""><span class=""mcq-option-letter"">C</span> A syntax error: the rules of the programming language are not followed</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','D','C','chk-1-fb-D')""><span class=""mcq-option-letter"">D</span> An overflow error, because the statement has no value to store</button>
+          </div>
+          <div id=""chk-1-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. A logic error runs. This program never starts, which rules the category out immediately.</div>
+          <div id=""chk-1-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. A run-time error occurs during execution. Execution never began here, because the language could not read the statement.</div>
+          <div id=""chk-1-fb-C"" class=""mcq-feedback correct-fb"">Correct. The tell is in the report itself: the language cannot understand the line. That is the definition of a broken language rule.</div>
+          <div id=""chk-1-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Overflow is about a number outside a defined range. No number is involved.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-2"">
+          <div class=""mcq-q-num"">Question 2 of 8</div>
+          <div class=""mcq-q-text"">Report 1: GradePro averages print too high for every student, no error message has ever appeared, and the formula reads ""avg &lt;- (q1 + q2 + q3) / 2"". Which phrase in the report gives the classification away?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','B','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> That six students were sampled</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','B','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> That no error message has ever appeared, paired with consistently wrong output</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','C','B','chk-2-fb-C')""><span class=""mcq-option-letter"">C</span> That the averages are too high rather than too low</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','D','B','chk-2-fb-D')""><span class=""mcq-option-letter"">D</span> That the formula involves division</button>
+          </div>
+          <div id=""chk-2-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Sample size tells you the bug is consistent, not what kind of bug it is.</div>
+          <div id=""chk-2-fb-B"" class=""mcq-feedback correct-fb"">Correct. Running cleanly while producing wrong output is the signature of a logic error. Silence plus wrongness is the pair to look for.</div>
+          <div id=""chk-2-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. The direction of the error helps you find the cause, but the same classification would hold if averages printed too low.</div>
+          <div id=""chk-2-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Division appears in Report 3 as well, where it causes a completely different error type.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-3"">
+          <div class=""mcq-q-num"">Question 3 of 8</div>
+          <div class=""mcq-q-text"">Report 3: the bill-splitter worked every lunch period for weeks, then halted mid-run when a user entered 0 diners. Why do weeks of clean runs not contradict the classification?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','A','A','chk-3-fb-A')""><span class=""mcq-option-letter"">A</span> Because a run-time error occurs during execution and sleeps until execution meets an input it cannot survive</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','B','A','chk-3-fb-B')""><span class=""mcq-option-letter"">B</span> Because the earlier runs were not really testing the same code path</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','C','A','chk-3-fb-C')""><span class=""mcq-option-letter"">C</span> Because the error was introduced by a recent change to the program</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','D','A','chk-3-fb-D')""><span class=""mcq-option-letter"">D</span> Because run-time errors only appear after a program has run many times</button>
+          </div>
+          <div id=""chk-3-fb-A"" class=""mcq-feedback correct-fb"">Correct. Weeks of clean runs prove only that diners was never 0. The defect was present and dormant throughout.</div>
+          <div id=""chk-3-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. The same path ran every time. What differed was the value flowing through it.</div>
+          <div id=""chk-3-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Nothing in the report describes a change. The same legal code sat there the whole time.</div>
+          <div id=""chk-3-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Repetition does not age code into failure. The trigger is a particular input, not a run count.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-4"">
+          <div class=""mcq-q-num"">Question 4 of 8</div>
+          <div class=""mcq-q-text"">Which test case would have exposed the bill-splitter defect before launch?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','A','D','chk-4-fb-A')""><span class=""mcq-option-letter"">A</span> A defined input of 4 diners, the most common party size</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','B','D','chk-4-fb-B')""><span class=""mcq-option-letter"">B</span> Running the program a hundred times with typical inputs</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','C','D','chk-4-fb-C')""><span class=""mcq-option-letter"">C</span> Reading the formula aloud to a second developer</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','D','D','chk-4-fb-D')""><span class=""mcq-option-letter"">D</span> A defined input of 0 diners, an input at the extreme of the input data</button>
+          </div>
+          <div id=""chk-4-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Typical values are what already ran cleanly for weeks. They cannot find this.</div>
+          <div id=""chk-4-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. A hundred typical runs is the situation the report describes. Volume without extremes finds nothing.</div>
+          <div id=""chk-4-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. A second reader might spot it, but that is not one of the CED's named discovery methods and it is not a test case.</div>
+          <div id=""chk-4-fb-D"" class=""mcq-feedback correct-fb"">Correct. Zero is the minimum possible party, and the extreme is exactly where the CED's testing rule says to look.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-5"">
+          <div class=""mcq-q-num"">Question 5 of 8</div>
+          <div class=""mcq-q-text"">Report 4: a step-count badge reset to 0 exactly as the count passed the counter's defined maximum. Classify the error.</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','A','C','chk-5-fb-A')""><span class=""mcq-option-letter"">A</span> A syntax error in the counter increment</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','B','C','chk-5-fb-B')""><span class=""mcq-option-letter"">B</span> A logic error, because the badge displayed a wrong number</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','C','C','chk-5-fb-C')""><span class=""mcq-option-letter"">C</span> An overflow error: a number outside the defined range of values</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','D','C','chk-5-fb-D')""><span class=""mcq-option-letter"">D</span> A run-time error, because it happened partway through the day</button>
+          </div>
+          <div id=""chk-5-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Nothing failed to parse. The program ran all day.</div>
+          <div id=""chk-5-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. The wrong display is what makes this tempting, but the algorithm was correct. Add one step per step is exactly right.</div>
+          <div id=""chk-5-fb-C"" class=""mcq-feedback correct-fb"">Correct. The value outgrew the range the computer could represent, which is a separately named failure on the taxonomy.</div>
+          <div id=""chk-5-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. The timing looks like a run-time error, but the CED gives this specific cause its own name.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-6"">
+          <div class=""mcq-q-num"">Question 6 of 8</div>
+          <div class=""mcq-q-text"">Why is Report 4 not classified as a logic error, given that the badge showed a wrong number?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','A','B','chk-6-fb-A')""><span class=""mcq-option-letter"">A</span> Because logic errors always produce an error message</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','B','B','chk-6-fb-B')""><span class=""mcq-option-letter"">B</span> Because the algorithm was correct and it was the value, not the design, that left the range the computer could handle</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','C','B','chk-6-fb-C')""><span class=""mcq-option-letter"">C</span> Because the wrong number was displayed rather than stored</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','D','B','chk-6-fb-D')""><span class=""mcq-option-letter"">D</span> Because logic errors cannot involve counters</button>
+          </div>
+          <div id=""chk-6-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Logic errors are silent. Report 1 is silent too, and it is a logic error.</div>
+          <div id=""chk-6-fb-B"" class=""mcq-feedback correct-fb"">Correct. This is the distinction the taxonomy turns on. A correct algorithm can still meet a number the storage cannot hold.</div>
+          <div id=""chk-6-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Where the wrong number appears does not change what caused it.</div>
+          <div id=""chk-6-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Counters can absolutely carry logic errors. This one does not.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-7"">
+          <div class=""mcq-q-num"">Question 7 of 8</div>
+          <div class=""mcq-q-text"">Report 5: the ""streak!"" celebration sometimes fires after wrong answers, the streak number itself displays correctly, and the check reads ""IF streak &gt; 0"" instead of testing the newest answer. Which method pins down the guilty line?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-7','A','A','chk-7-fb-A')""><span class=""mcq-option-letter"">A</span> Hand tracing the answer-checking segment with a wrong answer while streak is positive</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-7','B','A','chk-7-fb-B')""><span class=""mcq-option-letter"">B</span> Waiting for the program to crash and reading the error message</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-7','C','A','chk-7-fb-C')""><span class=""mcq-option-letter"">C</span> Increasing the streak threshold from 0 to 3</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-7','D','A','chk-7-fb-D')""><span class=""mcq-option-letter"">D</span> Rewriting the animation in a different programming language</button>
+          </div>
+          <div id=""chk-7-fb-A"" class=""mcq-feedback correct-fb"">Correct. The trace shows the condition firing with no test of the newest answer, which localizes the defect to that line.</div>
+          <div id=""chk-7-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. The report says there is no crash, ever. Waiting for one is waiting forever.</div>
+          <div id=""chk-7-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Changing the threshold makes the celebration rarer without ever testing the answer. The defect survives.</div>
+          <div id=""chk-7-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. A rewrite carries the same wrong condition unless you first find it.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-8"">
+          <div class=""mcq-q-num"">Question 8 of 8</div>
+          <div class=""mcq-q-text"">GradePro's formula is fixed to divide by 3 and a test case of q1 = 90, q2 = 80, q3 = 70 expecting 80 is run. It fails anyway. What does the CED's testing loop require next?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-8','A','D','chk-8-fb-A')""><span class=""mcq-option-letter"">A</span> Reclassifying the defect as a run-time error</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-8','B','D','chk-8-fb-B')""><span class=""mcq-option-letter"">B</span> Accepting the result, since one failing test among many passes is normal</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-8','C','D','chk-8-fb-C')""><span class=""mcq-option-letter"">C</span> Adjusting the expected output to match what the program produced</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-8','D','D','chk-8-fb-D')""><span class=""mcq-option-letter"">D</span> Using the result to revise the algorithm or program, then re-testing</button>
+          </div>
+          <div id=""chk-8-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Reclassifying changes the label, not the wrong average.</div>
+          <div id=""chk-8-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. A failing test on a hand-computed expected value is a finding, not noise.</div>
+          <div id=""chk-8-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Rewriting the expectation to match the behaviour is how a wrong program passes its own tests forever.</div>
+          <div id=""chk-8-fb-D"" class=""mcq-feedback correct-fb"">Correct. Test results exist to drive revision. Revise, then re-test, and repeat until the defined input produces the expected outcome.</div>
+        </div>
+  </div>
+  <div class=""nextnav"">
+    <a href=""/pages/ap-csp-course-bi1-identifying-correcting-errors"">Rework the Topic 1.4 lesson</a>
+    <a href=""/pages/ap-csp-course-bi1-unit-test"">Big Idea 1 unit test</a>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'apcs-draft:' + ""ap-csp-topic-1-4-exercise-1"";
+  var answered = {};
+  var total = document.querySelectorAll('.mcq-item[data-item]').length;
+
+  /* Drafts stay in this browser. Nothing typed in a writing box is ever sent
+     anywhere: no request carries it, and the reporter only ever sees the
+     multiple choice results below. */
+  function loadDrafts(){
+    var store = {};
+    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      var id = boxes[i].getAttribute('data-draft');
+      if (store[id]) boxes[i].value = store[id];
+      boxes[i].addEventListener('input', saveDrafts);
+    }
+  }
+  function saveDrafts(){
+    var store = {};
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      store[boxes[i].getAttribute('data-draft')] = boxes[i].value;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    var n = document.getElementById('draft-note');
+    if (n) n.textContent = 'Saved in this browser only.';
+  }
+
+  function activity(d){
+    try{
+      var w = document.querySelector('.lesson-page');
+      if(w){
+        d.course = w.getAttribute('data-course');
+        d.unit = w.getAttribute('data-unit');
+        d.lesson = w.getAttribute('data-lesson');
+      }
+      document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+    }catch(e){}
+  }
+
+  function updateScore(){
+    var right = 0, done = 0, k;
+    for(k in answered){ done++; if(answered[k]) right++; }
+    var el = document.getElementById('ex-score');
+    if(el) el.innerHTML = '<strong>' + right + ' / ' + total + '</strong> correct on the graded check, ' + done + ' answered';
+  }
+
+  window.cspEx = function(qid, chosen, correct, fbId){
+    var item = null, items = document.querySelectorAll('.mcq-item[data-item]'), i;
+    for(i = 0; i < items.length; i++){
+      if(items[i].getAttribute('data-item') === qid){ item = items[i]; break; }
+    }
+    if(!item || answered.hasOwnProperty(qid)) return;
+    var opts = item.querySelectorAll('.mcq-option');
+    for(i = 0; i < opts.length; i++){ opts[i].disabled = true; opts[i].onclick = null; }
+    var letters = ['A','B','C','D'];
+    var pick = letters.indexOf(chosen);
+    if(opts[pick]) opts[pick].classList.add(chosen === correct ? 'correct' : 'incorrect');
+    if(chosen !== correct && opts[letters.indexOf(correct)]){
+      opts[letters.indexOf(correct)].classList.add('revealed-correct');
+    }
+    var fb = document.getElementById(fbId);
+    if(fb) fb.classList.add('show');
+    answered[qid] = (chosen === correct);
+    updateScore();
+    activity({ activity: item.getAttribute('data-activity'), item: qid,
+               choice: chosen, correct: (chosen === correct) });
+  };
+
+  loadDrafts();
+  updateScore();
+})();
+</script>","TRUE","2026-03-01 12:00:00","AP CSP 1.4 Exercise 1: Error Hunt - The Bug Report Log","Online companion to the AP CSP Topic 1.4 Exercise 1 handout, Error Hunt - The Bug Report Log. Work the cases, then take the auto-graded check."
+"ap-csp-topic-1-4-exercise-2","MERGE","AP CSP 1.4 Exercise 2: Boundary Patrol","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#csp-ex{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;font-size:17px!important;background:#f8fafc!important}
+#csp-ex *,#csp-ex *::before,#csp-ex *::after{box-sizing:border-box!important}
+#csp-ex .hero{background:linear-gradient(135deg,#1e40af,#1a56db)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 18px!important}
+#csp-ex .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 8px!important}
+#csp-ex h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#csp-ex .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#csp-ex h2{font-size:21px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:32px 0 6px!important;font-weight:800!important;border-bottom:3px solid #93c5fd!important;padding-bottom:6px!important}
+#csp-ex h2 .tag{float:right!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;padding:3px 10px!important;border-radius:100px!important;margin-top:4px!important}
+#csp-ex h2 .tag.local{background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fde68a!important}
+#csp-ex h2 .tag.graded{background:#dcfce7!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #86efac!important}
+#csp-ex p{margin:8px 0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .btn,#csp-ex .btn:link,#csp-ex .btn:visited{display:inline-block!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+#csp-ex .btn.ghost,#csp-ex .btn.ghost:link,#csp-ex .btn.ghost:visited{background:#fff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border:2px solid #93c5fd!important}
+#csp-ex .note{background:#fff!important;border:1px solid #e2e8f0!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;padding:14px 18px!important;margin:16px 0 22px!important;font-size:15px!important}
+#csp-ex .note .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 4px!important}
+#csp-ex .item{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:18px 20px!important;margin:14px 0!important}
+#csp-ex .item.paper{background:#fffbeb!important;border-color:#fde68a!important}
+#csp-ex .item-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important}
+#csp-ex .item-text{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.65!important;margin:0 0 10px!important}
+#csp-ex .prompt{font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:12px 0 4px!important}
+#csp-ex .code{background:#0f172a!important;border-radius:8px!important;padding:12px 14px!important;margin:10px 0!important;font-family:""SFMono-Regular"",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre-wrap!important;overflow-x:auto!important}
+#csp-ex textarea{display:block!important;width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #d6d3d1!important;border-radius:8px!important;font-family:inherit!important;font-size:15px!important;line-height:1.55!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;resize:vertical!important}
+#csp-ex .saved{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:4px 0 0!important;min-height:16px!important}
+#csp-ex .mcq-item{margin-bottom:26px!important;padding-bottom:26px!important;border-bottom:1px solid #f1f5f9!important}
+#csp-ex .mcq-item:last-child{border-bottom:none!important;margin-bottom:0!important;padding-bottom:0!important}
+#csp-ex .mcq-q-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:8px!important}
+#csp-ex .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important}
+#csp-ex .mcq-options{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:12px!important}
+#csp-ex .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;text-align:left!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#fff!important;font-size:15px!important;font-family:inherit!important;line-height:1.5!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .mcq-option:hover{border-color:#93c5fd!important;background:#eff6ff!important}
+#csp-ex .mcq-option.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-option.revealed-correct{border-color:#16a34a!important;background:#f0fdf4!important}
+#csp-ex .mcq-option-letter{font-weight:700!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;flex-shrink:0!important;min-width:18px!important}
+#csp-ex .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important}
+#csp-ex .mcq-feedback.show{display:block!important}
+#csp-ex .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important}
+#csp-ex .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important}
+#csp-ex .scorebar{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 18px!important;margin:0 0 18px!important;font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#csp-ex .scorebar strong{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:17px!important}
+#csp-ex .nextnav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:26px!important}
+#csp-ex .nextnav a,#csp-ex .nextnav a:link,#csp-ex .nextnav a:visited{display:block!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:700!important;font-size:15px!important}
+@media (max-width:640px){#csp-ex .nextnav{grid-template-columns:repeat(1,1fr)!important}}
+</style>
+<div id=""csp-ex"" class=""lesson-page"" data-course=""ap-csp"" data-unit=""bi-1"" data-lesson=""identifying-correcting-errors"">
+  <div class=""hero"">
+    <p class=""eyebrow"">Big Idea 1 &middot; Topic 1.4 &middot; Exercise 2</p>
+    <h1>Boundary Patrol</h1>
+    <p class=""sub"">25 minutes - 4 patrols - LO CRD-2.J</p>
+  </div>
+  <p><a class=""btn"" href=""/pages/ap-csp-course-bi1-identifying-correcting-errors"">Back to the Topic 1.4 lesson</a><a class=""btn ghost"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+  <div class=""note"">
+    <p class=""label"">How this page works</p>
+    <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
+    <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
+  </div>
+  <h2>The cases, from your handout<span class=""tag local"">Not recorded</span></h2>
+  <p>The same cases as your handout, in the same order. <span class=""saved"" id=""draft-note""></span></p>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 1 &middot; Foundational</div>
+        <p class=""item-text"">A gradebook accepts quiz scores as whole numbers from 0 to 100 and prints a letter grade. The developer tested 85, 92, and 74 - all three produced correct grades - and wants to ship this afternoon.</p>
+        <p class=""prompt"">Extremes named (the minimum and maximum the requirements define, and what is measured):</p>
+        <textarea data-draft=""s1p1"" rows=""3"" spellcheck=""true"" aria-label=""Extremes named (the minimum and maximum the requirements define, and what is measured):""></textarea>
+        <p class=""prompt"">Test set + expected outcome for each input (at and just beyond the extremes):</p>
+        <textarea data-draft=""s1p2"" rows=""3"" spellcheck=""true"" aria-label=""Test set + expected outcome for each input (at and just beyond the extremes):""></textarea>
+        <p class=""prompt"">Enrichment - the subtler second boundary this scenario hides:</p>
+        <textarea data-draft=""s1p3"" rows=""3"" spellcheck=""true"" aria-label=""Enrichment - the subtler second boundary this scenario hides:""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 2 &middot; Core</div>
+        <p class=""item-text"">A review site lets users rate films from 1 to 5 stars, and the average rating shows on every film's page. The rating box is free-type - users can enter any number. The lead developer says the star range 'is obvious, so nobody will type anything else.'</p>
+        <p class=""prompt"">Extremes named (the minimum and maximum the requirements define, and what is measured):</p>
+        <textarea data-draft=""s2p1"" rows=""3"" spellcheck=""true"" aria-label=""Extremes named (the minimum and maximum the requirements define, and what is measured):""></textarea>
+        <p class=""prompt"">Test set + expected outcome for each input (at and just beyond the extremes):</p>
+        <textarea data-draft=""s2p2"" rows=""3"" spellcheck=""true"" aria-label=""Test set + expected outcome for each input (at and just beyond the extremes):""></textarea>
+        <p class=""prompt"">Enrichment - the subtler second boundary this scenario hides:</p>
+        <textarea data-draft=""s2p3"" rows=""3"" spellcheck=""true"" aria-label=""Enrichment - the subtler second boundary this scenario hides:""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 3 &middot; Core</div>
+        <p class=""item-text"">A sign-up page requires passwords of 8 to 16 characters. The intern tested 'sunshine12' - ten characters, accepted, works - and marked the story done.</p>
+        <p class=""prompt"">Extremes named (the minimum and maximum the requirements define, and what is measured):</p>
+        <textarea data-draft=""s3p1"" rows=""3"" spellcheck=""true"" aria-label=""Extremes named (the minimum and maximum the requirements define, and what is measured):""></textarea>
+        <p class=""prompt"">Test set + expected outcome for each input (at and just beyond the extremes):</p>
+        <textarea data-draft=""s3p2"" rows=""3"" spellcheck=""true"" aria-label=""Test set + expected outcome for each input (at and just beyond the extremes):""></textarea>
+        <p class=""prompt"">Enrichment - the subtler second boundary this scenario hides:</p>
+        <textarea data-draft=""s3p3"" rows=""3"" spellcheck=""true"" aria-label=""Enrichment - the subtler second boundary this scenario hides:""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Scenario 4 &middot; Challenge</div>
+        <p class=""item-text"">A wellness app logs nightly sleep in whole minutes, from 0 to 1440 (a full day). It stores each night AND a running lifetime total in the same size of numeric storage, and a school pilot will run it for a full semester. The developer tested 420 and 480 minutes - a good night's sleep either way - and both worked.</p>
+        <p class=""prompt"">Extremes named (the minimum and maximum the requirements define, and what is measured):</p>
+        <textarea data-draft=""s4p1"" rows=""3"" spellcheck=""true"" aria-label=""Extremes named (the minimum and maximum the requirements define, and what is measured):""></textarea>
+        <p class=""prompt"">Test set + expected outcome for each input (at and just beyond the extremes):</p>
+        <textarea data-draft=""s4p2"" rows=""3"" spellcheck=""true"" aria-label=""Test set + expected outcome for each input (at and just beyond the extremes):""></textarea>
+        <p class=""prompt"">Enrichment - the subtler second boundary this scenario hides:</p>
+        <textarea data-draft=""s4p3"" rows=""3"" spellcheck=""true"" aria-label=""Enrichment - the subtler second boundary this scenario hides:""></textarea>
+      </div>
+  <h2>Graded check<span class=""tag graded"">Recorded</span></h2>
+  <p>6 questions on the same ideas, drawn from this exercise's answer key. These are auto-graded and reported.</p>
+  <div class=""scorebar"" id=""ex-score""></div>
+  <div class=""item"">
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-1"">
+          <div class=""mcq-q-num"">Question 1 of 6</div>
+          <div class=""mcq-q-text"">Scenario 1: a gradebook accepts whole-number scores from 0 to 100. The developer tested 85, 92 and 74, all correct, and wants to ship. What is the red flag?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','A','D','chk-1-fb-A')""><span class=""mcq-option-letter"">A</span> The tests should have been run by someone other than the developer</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','B','D','chk-1-fb-B')""><span class=""mcq-option-letter"">B</span> Letter grades cannot be verified by testing numeric inputs</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','C','D','chk-1-fb-C')""><span class=""mcq-option-letter"">C</span> Three tests are too few regardless of which values are chosen</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','D','D','chk-1-fb-D')""><span class=""mcq-option-letter"">D</span> All three are comfortable middle values, and none goes anywhere near an extreme</button>
+          </div>
+          <div id=""chk-1-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Independent testing is good practice but is not what the CED faults here.</div>
+          <div id=""chk-1-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. They can, provided the requirements define which score maps to which letter.</div>
+          <div id=""chk-1-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Count is not the issue. Four well-chosen boundary tests beat fifty middle values.</div>
+          <div id=""chk-1-fb-D"" class=""mcq-feedback correct-fb"">Correct. The CED asks for inputs at or just beyond the extremes, and 74 to 92 is the safe middle of a 0 to 100 range.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-2"">
+          <div class=""mcq-q-num"">Question 2 of 6</div>
+          <div class=""mcq-q-text"">Which test set defends the gradebook, and against what?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','C','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> 0, 25, 50, 75 and 100, evenly spaced across the range</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','C','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> 100 and 101 only, since the maximum is where programs usually fail</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','C','C','chk-2-fb-C')""><span class=""mcq-option-letter"">C</span> 0 and 100 expecting correct grades, plus -1 and 101 expecting rejection</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','D','C','chk-2-fb-D')""><span class=""mcq-option-letter"">D</span> 50 and 51, to check the middle of the range carefully</button>
+          </div>
+          <div id=""chk-2-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Even spacing feels thorough but tests the interior. It includes the extremes only by accident and never goes beyond them.</div>
+          <div id=""chk-2-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Testing one end leaves the other unguarded, and a program that grades 101 without complaint never crashes to tell you.</div>
+          <div id=""chk-2-fb-C"" class=""mcq-feedback correct-fb"">Correct. At the extremes, both are legal and must grade correctly. Just beyond, both must be rejected. An off-by-one comparison fails only the 0 test.</div>
+          <div id=""chk-2-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Nothing interesting happens at 50. The requirements draw no line there.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-3"">
+          <div class=""mcq-q-num"">Question 3 of 6</div>
+          <div class=""mcq-q-text"">Scenario 2: the star rating box is free-type, and the lead developer says the 1 to 5 range ""is obvious, so nobody will type anything else."" How should a tester treat that claim?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','A','B','chk-3-fb-A')""><span class=""mcq-option-letter"">A</span> As a documentation gap to be fixed by labelling the box more clearly</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','B','B','chk-3-fb-B')""><span class=""mcq-option-letter"">B</span> As a signal to test exactly those inputs, since a developer calling an input unreal marks it as the one to try</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','C','B','chk-3-fb-C')""><span class=""mcq-option-letter"">C</span> As correct, provided the interface shows only five stars</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','D','B','chk-3-fb-D')""><span class=""mcq-option-letter"">D</span> As a reason to skip those inputs and focus on realistic ratings</button>
+          </div>
+          <div id=""chk-3-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. A clearer label may reduce mistakes, but a free-type box still accepts every number.</div>
+          <div id=""chk-3-fb-B"" class=""mcq-feedback correct-fb"">Correct. Nobody will type it is a hope, not a defence. The testing rule points straight at the values just beyond the extremes.</div>
+          <div id=""chk-3-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. The display constrains the picture, not the field. The box accepts what the box accepts.</div>
+          <div id=""chk-3-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Skipping the input the developer swears cannot happen is how the defect ships.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-4"">
+          <div class=""mcq-q-num"">Question 4 of 6</div>
+          <div class=""mcq-q-text"">Scenario 2, second layer: a film with zero ratings. Why do star-value tests never meet this defect?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','A','A','chk-4-fb-A')""><span class=""mcq-option-letter"">A</span> Because the boundary sits on a different input, the count of ratings rather than the star value, and dividing by that count when it is 0 is a run-time error</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','B','A','chk-4-fb-B')""><span class=""mcq-option-letter"">B</span> Because a film with no ratings is not displayed at all</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','C','A','chk-4-fb-C')""><span class=""mcq-option-letter"">C</span> Because averages are only computed once a film is popular</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','D','A','chk-4-fb-D')""><span class=""mcq-option-letter"">D</span> Because zero is already covered by testing the value just below 1</button>
+          </div>
+          <div id=""chk-4-fb-A"" class=""mcq-feedback correct-fb"">Correct. Sum divided by count is legal code that fails at the minimum of an input nobody was testing. The requirements never define behaviour for that case.</div>
+          <div id=""chk-4-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. The scenario says the average shows on every film page, which is what makes the empty case reachable.</div>
+          <div id=""chk-4-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Nothing in the requirements delays the calculation until some popularity threshold.</div>
+          <div id=""chk-4-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Testing a star value of 0 exercises the rating input. It never produces a film with no ratings at all.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-5"">
+          <div class=""mcq-q-num"">Question 5 of 6</div>
+          <div class=""mcq-q-text"">Scenario 3: passwords must be 8 to 16 characters, and the intern tested ""sunshine12"" at ten characters. What must a tester name before building the test set?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','A','D','chk-5-fb-A')""><span class=""mcq-option-letter"">A</span> The number of users expected to sign up</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','B','D','chk-5-fb-B')""><span class=""mcq-option-letter"">B</span> The maximum value a password can represent numerically</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','C','D','chk-5-fb-C')""><span class=""mcq-option-letter"">C</span> The character set the password is allowed to draw from</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','D','D','chk-5-fb-D')""><span class=""mcq-option-letter"">D</span> That the extremes are lengths rather than values, so the boundary lives on a property of the input</button>
+          </div>
+          <div id=""chk-5-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Load is unrelated to a boundary defined by the requirements.</div>
+          <div id=""chk-5-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Passwords are not numbers, and the requirement says nothing about a numeric range.</div>
+          <div id=""chk-5-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. The allowed characters matter for a different rule. The stated requirement is a length range.</div>
+          <div id=""chk-5-fb-D"" class=""mcq-feedback correct-fb"">Correct. Naming what is measured is the whole game here. Testing password values instead of password lengths tests the wrong axis entirely.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-2"" data-item=""chk-6"">
+          <div class=""mcq-q-num"">Question 6 of 6</div>
+          <div class=""mcq-q-text"">Scenario 4: a wellness app logs nightly sleep from 0 to 1440 minutes and keeps a lifetime running total in the same size of storage. Where is the overflow risk?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','A','C','chk-6-fb-A')""><span class=""mcq-option-letter"">A</span> Nowhere, because the requirements define the range as 0 to 1440</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','B','C','chk-6-fb-B')""><span class=""mcq-option-letter"">B</span> In the nightly value, since 1440 is the largest number the app handles</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','C','C','chk-6-fb-C')""><span class=""mcq-option-letter"">C</span> In the lifetime running total, which grows every night while the nightly value stays small</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','D','C','chk-6-fb-D')""><span class=""mcq-option-letter"">D</span> In both equally, since they share the same storage size</button>
+          </div>
+          <div id=""chk-6-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. That range governs the nightly input. It says nothing about the total built from it, which is the boundary the requirements forgot.</div>
+          <div id=""chk-6-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. 1440 is tiny. A nightly value can never approach the limit of the storage.</div>
+          <div id=""chk-6-fb-C"" class=""mcq-feedback correct-fb"">Correct. A semester at roughly 480 minutes a night approaches 87,000, and the requirements never define a ceiling for the accumulated value at all.</div>
+          <div id=""chk-6-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Sharing a storage size is what makes the comparison interesting, but only one of the two grows without bound.</div>
+        </div>
+  </div>
+  <div class=""nextnav"">
+    <a href=""/pages/ap-csp-course-bi1-identifying-correcting-errors"">Rework the Topic 1.4 lesson</a>
+    <a href=""/pages/ap-csp-course-bi1-unit-test"">Big Idea 1 unit test</a>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'apcs-draft:' + ""ap-csp-topic-1-4-exercise-2"";
+  var answered = {};
+  var total = document.querySelectorAll('.mcq-item[data-item]').length;
+
+  /* Drafts stay in this browser. Nothing typed in a writing box is ever sent
+     anywhere: no request carries it, and the reporter only ever sees the
+     multiple choice results below. */
+  function loadDrafts(){
+    var store = {};
+    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      var id = boxes[i].getAttribute('data-draft');
+      if (store[id]) boxes[i].value = store[id];
+      boxes[i].addEventListener('input', saveDrafts);
+    }
+  }
+  function saveDrafts(){
+    var store = {};
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      store[boxes[i].getAttribute('data-draft')] = boxes[i].value;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    var n = document.getElementById('draft-note');
+    if (n) n.textContent = 'Saved in this browser only.';
+  }
+
+  function activity(d){
+    try{
+      var w = document.querySelector('.lesson-page');
+      if(w){
+        d.course = w.getAttribute('data-course');
+        d.unit = w.getAttribute('data-unit');
+        d.lesson = w.getAttribute('data-lesson');
+      }
+      document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+    }catch(e){}
+  }
+
+  function updateScore(){
+    var right = 0, done = 0, k;
+    for(k in answered){ done++; if(answered[k]) right++; }
+    var el = document.getElementById('ex-score');
+    if(el) el.innerHTML = '<strong>' + right + ' / ' + total + '</strong> correct on the graded check, ' + done + ' answered';
+  }
+
+  window.cspEx = function(qid, chosen, correct, fbId){
+    var item = null, items = document.querySelectorAll('.mcq-item[data-item]'), i;
+    for(i = 0; i < items.length; i++){
+      if(items[i].getAttribute('data-item') === qid){ item = items[i]; break; }
+    }
+    if(!item || answered.hasOwnProperty(qid)) return;
+    var opts = item.querySelectorAll('.mcq-option');
+    for(i = 0; i < opts.length; i++){ opts[i].disabled = true; opts[i].onclick = null; }
+    var letters = ['A','B','C','D'];
+    var pick = letters.indexOf(chosen);
+    if(opts[pick]) opts[pick].classList.add(chosen === correct ? 'correct' : 'incorrect');
+    if(chosen !== correct && opts[letters.indexOf(correct)]){
+      opts[letters.indexOf(correct)].classList.add('revealed-correct');
+    }
+    var fb = document.getElementById(fbId);
+    if(fb) fb.classList.add('show');
+    answered[qid] = (chosen === correct);
+    updateScore();
+    activity({ activity: item.getAttribute('data-activity'), item: qid,
+               choice: chosen, correct: (chosen === correct) });
+  };
+
+  loadDrafts();
+  updateScore();
+})();
+</script>","TRUE","2026-03-01 12:00:00","AP CSP 1.4 Exercise 2: Boundary Patrol","Online companion to the AP CSP Topic 1.4 Exercise 2 handout, Boundary Patrol. Work the cases, then take the auto-graded check."
