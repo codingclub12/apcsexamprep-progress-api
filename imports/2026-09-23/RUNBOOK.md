@@ -1,6 +1,6 @@
 # CED Essential Knowledge codes visible on the 8 graded CSP exercise pages
 
-Board 392, plus a fifth step for board 393. Five sheets, five imports. Do not combine them: a
+Board 392, plus step 5 for board 393 and steps 6 to 8 for board 397. Eight sheets, eight imports. Do not combine them: a
 MERGE overwrites a live body with no undo, so the blast radius of one click is
 however many rows are in the file.
 
@@ -68,6 +68,9 @@ past-dated literal, never `now()`.
 | 3 | `csp-ek-badge-removal-topic-1.3-pages.csv` | 2 | 6 clean, 2 still showing |
 | 4 | `csp-ek-badge-removal-topic-1.4-pages.csv` | 2 | 8 clean, 0 still showing |
 | 5 | `csp-1-2-exercise-1-log-pages.csv` | 1 | still 8 clean, and the LunchDash Log on 1.2 Exercise 1 (see below) |
+| 6 | `csp-2-3-exercise-1-log-pages.csv` | 1 | Survey Workbook Log on 2.3 Exercise 1 (see below) |
+| 7 | `csp-5-3-exercise-1-log-pages.csv` | 1 | Incident Log on 5.3 Exercise 1 |
+| 8 | `csp-5-6-exercise-1-log-pages.csv` | 1 | Trail Log on 5.6 Exercise 1 |
 
 Run after each step:
 
@@ -116,9 +119,35 @@ bot-challenge page, and its assertion is negative (no badge found), so a
 challenge body would read as 8 clean. Before trusting an "8 clean", open one
 page by eye.
 
+## Steps 6 to 8: the Part A logs on 2.3, 5.3 and 5.6 Exercise 1 (board 397)
+
+Same defect as step 5, on three mirror-only pages: each page's Part B cites
+rows of the handout's Part A log by number ("Row 5", "Rows 3 and 5") and the
+page never showed the log. Each sheet is one page.
+
+These three pages are in no other sheet in this runbook, so steps 6 to 8 do
+not depend on steps 1 to 5 and can run in any order among themselves. None of
+the three has a graded check, so none ever carried an EK badge.
+
+Before step 6:
+
+    node scripts/verify-csp-exercise-1-logs-live.js --before
+
+Expected: "0 with the log, 3 without, 0 unclear, of 3." After each step, check
+that page alone, for example:
+
+    node scripts/verify-csp-exercise-1-logs-live.js ap-csp-topic-2-3-exercise-1
+
+Expected: "1 with the log". After step 8, with no handle: "3 with the log",
+exit 0.
+
+The only difference between each live body today and the generator's output
+before this change is the inert `.ek` style rule board 392 dropped, so these
+sheets revert nothing.
+
 ## File names
 
-All five sheets end in `-pages.csv`. A CSV has no tab name, so Matrixify reads
+All eight sheets end in `-pages.csv`. A CSV has no tab name, so Matrixify reads
 the sheet type from the file name and rejects a name that carries none.
 `scripts/matrixify-preflight.js` refused all four original names; they were
 renamed on 2026-09-23 with contents unchanged, and all five now read "clear to

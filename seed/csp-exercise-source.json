@@ -537,6 +537,55 @@
   "intro": "You are the fact-checker for the school news site, reviewing five rows pulled from the (fictional) student music-streaming survey workbook. For each row you will decide what is data, what is information, what is metadata - and which claims are honest extractions versus leaps. Part A works the log table; Part B extends the same skills. Everything maps to CB Learning Objectives DAT-2.A and DAT-2.B.",
   "cb": "",
   "source": "AP-CSP_2-3_Exercise1_Student_k7q2m9.docx",
+  "log": {
+   "heading": "Survey Workbook Log: Five Rows Under Review",
+   "lead": "The editor forwards you five artifacts from the survey workbook, each proposed for this week's article. Your job is to rule on each one before anything is published. Read the log row by row, then answer Part A. Use the three-step method: anchor your first instinct, name what kind of thing each row is (data, information, or metadata), then test every claim against what the data can actually support.",
+   "columns": [
+    "ID",
+    "Artifact",
+    "What it contains",
+    "How it was produced",
+    "Detail worth noticing"
+   ],
+   "rows": [
+    [
+     "1",
+     "Streaming totals sheet",
+     "Each student's weekly stream count next to self-reported sleep hours",
+     "Streaming-app export merged with a homeroom survey",
+     "Heavy streamers cluster near 6 hours of sleep; light streamers near 8"
+    ],
+    [
+     "2",
+     "Playlist file 'studybeats'",
+     "The playlist itself, plus: created 11:52 p.m., size 2 MB, owner ID s-114",
+     "Auto-saved by the streaming app",
+     "The three facts after 'plus' describe the file rather than the music"
+    ],
+    [
+     "3",
+     "Genre claim",
+     "'Pop is the school's top genre' - stream counts merged with the music club's concert-ticket log",
+     "Two sources combined",
+     "Neither source alone covers students who stream little but attend concerts"
+    ],
+    [
+     "4",
+     "Grade claim",
+     "'Streaming caused lower grades' - posted by a student who compared two columns",
+     "Same workbook, no additional research",
+     "The two columns do genuinely move together"
+    ],
+    [
+     "5",
+     "'Date added' sort",
+     "The app instantly re-orders 1,400 songs by the day each was added",
+     "One tap in the app",
+     "No audio file was opened or changed during the sort"
+    ]
+   ],
+   "note": "Rows adapted from the Day 1 bell-ringer survey and the Day 1 metadata worked table; all terms and EKs follow the College Board AP Computer Science Principles Course and Exam Description (Effective Fall 2023)."
+  },
   "partB_heading": "Part B - Reflect (AP Exam Application)",
   "partB": [
    {
@@ -2783,6 +2832,55 @@
   "intro": "You are the district's independent bias auditor. Five deployed systems have been reported for unfair results, and each incident file tells you what the system does, what went wrong, and how it was built. For each one you will name the channel the bias came through, locate the development level where it entered, and prescribe a deliberate reduction action. Part A works the incident log; Part B extends the same skills. Everything maps to CB Learning Objective IOC-1.D.",
   "cb": "",
   "source": "AP-CSP_5-3_Exercise1_Student_k7q2m9.docx",
+  "log": {
+   "heading": "Incident Log: Five Systems Under Audit",
+   "lead": "The district technology office forwards you five incident files, each awaiting a ruling before the tool can stay in service. Read the log row by row, then answer Part A. Use the three-step method: anchor your first diagnosis, name the channel (algorithm or data) and the level it entered, then prescribe an action the CED would credit - never a bigger pile of the same data.",
+   "columns": [
+    "ID",
+    "System",
+    "Reported symptom",
+    "How it was built",
+    "Detail worth noticing"
+   ],
+   "rows": [
+    [
+     "1",
+     "AttendanceCast (skip-risk predictor)",
+     "Flags bus riders, working students, and caretakers as likely skippers",
+     "Trained on one dataset: last year's honors students; rolled out school-wide",
+     "The flagged groups share nothing except schedules unlike an honors student's"
+    ],
+    [
+     "2",
+     "HireBrite (resume screener)",
+     "Auto-rejects strong applicants who paused careers for caregiving",
+     "Developers hand-wrote a rule: any employment gap over 6 months = reject",
+     "No training data is involved - the rule itself does the filtering"
+    ],
+    [
+     "3",
+     "GlowCam (photo auto-enhance)",
+     "Consistently over-brightens or washes out darker skin tones",
+     "Enhancement passed QA using the dev team's own selfies as the test set",
+     "The code passed every test the team wrote - the tests were the problem"
+    ],
+    [
+     "4",
+     "TalkTrack (voice-notes transcriber)",
+     "Mangles transcripts for speakers with certain regional accents",
+     "Training audio came from one region; vendor now proposes 10x more of it",
+     "The vendor's fix collects more audio from the same place"
+    ],
+    [
+     "5",
+     "FitStreak (school fitness challenge)",
+     "Wheelchair users can never earn points - 'activity' counts steps only",
+     "Solo developer framed the problem as step-counting on day one",
+     "The bias predates the code, the data, and the tests"
+    ]
+   ],
+   "note": "Systems adapted from the Day 1 bell ringer and the diagnosis worked table; all terms and EKs follow the College Board AP Computer Science Principles Course and Exam Description (Effective Fall 2023)."
+  },
   "partB_heading": "Part B - Reflect (AP Exam Application)",
   "partB": [
    {
@@ -3033,6 +3131,55 @@
   "intro": "You are the privacy auditor for the school's security-awareness week. A volunteer, 'Jordan,' agreed to let the class reconstruct what a stranger could learn from Jordan's public data trails - none of which Jordan considered private. For each artifact you will name what was collected, what it reveals alone, and what it reveals only when AGGREGATED with the rest. Part A works the trail log; Part B extends the same skills. Everything maps to CB Learning Objective IOC-2.A.",
   "cb": "",
   "source": "AP-CSP_5-6_Exercise1_Student_k7q2m9.docx",
+  "log": {
+   "heading": "Trail Log: Five Public Artifacts About Jordan",
+   "lead": "The audit team gathered five artifacts. Your job is to show how they combine. Read the log row by row, then answer Part A. Use the three-step method: name what each artifact collects, test what it reveals on its own, then test what it reveals combined with the other rows.",
+   "columns": [
+    "ID",
+    "Artifact",
+    "What it contains",
+    "How it was produced",
+    "Detail worth noticing"
+   ],
+   "rows": [
+    [
+     "1",
+     "Running-app route map",
+     "Three months of jogging routes, shared publicly",
+     "The app posts finished runs by default",
+     "Every route begins and ends at the same house"
+    ],
+    [
+     "2",
+     "Ad profile screenshot",
+     "Ads for allergy medicine, SAT prep, and a summer camp",
+     "Built from recorded searches and page visits",
+     "Jordan never posted about allergies or the SAT anywhere"
+    ],
+    [
+     "3",
+     "Tagged photos",
+     "Friends' posts tagging Jordan in a school hoodie at a bus stop",
+     "Posted by OTHERS, not by Jordan",
+     "The same hoodie and bus stop appear across several photos"
+    ],
+    [
+     "4",
+     "Shopping account",
+     "A wish list plus saved card and home address for one-tap checkout",
+     "Jordan saved the details to speed up purchases",
+     "Convenient for Jordan - and a bundle of PII in one place"
+    ],
+    [
+     "5",
+     "'Deleted' forum post",
+     "A 2023 post Jordan removed, still readable in a web archive",
+     "An archive service copied the page before deletion",
+     "The delete button removed only the original copy"
+    ]
+   ],
+   "note": "Artifacts adapted from the Day 1 bell-ringer dossier and the five-trails worked table; all terms and EKs follow the College Board AP Computer Science Principles Course and Exam Description (Effective Fall 2023)."
+  },
   "partB_heading": "Part B - Reflect (AP Exam Application)",
   "partB": [
    {
