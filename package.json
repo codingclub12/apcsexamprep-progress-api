@@ -119,6 +119,7 @@
     "smoke:gamename": "node smoke/game-name-sanitize.js",
     "smoke:gamenamemutation": "node smoke/game-name-mutation.js",
     "smoke:leaderboardxss": "node smoke/leaderboard-xss.js",
+    "smoke:gameleaderboardsitemap": "node smoke/game-leaderboard-sitemap.js",
     "smoke:deckvoice": "node smoke/deck-voice-repair.js",
     "smoke:drivewatch": "node smoke/drive-watch.js",
     "smoke:noindexsheet": "node smoke/noindex-sheet.js",

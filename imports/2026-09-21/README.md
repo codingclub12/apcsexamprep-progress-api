@@ -1,5 +1,15 @@
 # 2026-09-21 import runbook: leaderboard XSS, and the "undefined questions" cards
 
+> **SPENT. Do not import any of the four sheets below.** Checked against the live
+> storefront on 2026-09-23 (board 383): every long line of every row in all four
+> files is already on the live page, the step 3 end state reads verbatim
+> (`0 BROKEN (0 with the innerHTML sink), 38 safe, 9 other, of 47 swept.`), and
+> step 4 reads `0 showing "undefined questions", 18 stating a correct count`.
+> So they were imported. Importing one again would MERGE a two-day-old body over
+> whatever has changed on that page since, and nothing in the sheet would say so.
+> The files stay as the record of what shipped.
+> `docs/runs/2026-09-23-claude-code-board-383-remeasure.md` has the evidence.
+
 **This directory is shared.** Several changes landed sheets here on the same
 day, each with its own runbook, and more may arrive. This one covers exactly
 these four files and no others:
