@@ -232,6 +232,28 @@ const PAGES = [
     why: 'title carried the brand twice',
   },
 
+  // Found by the nightly crawl on 2026-09-14 and 2026-09-15: same brand-doubled
+  // template bug as the three games above, on three more pages (two more games
+  // plus one course guide). Same fix, dropped brand, same pattern.
+  {
+    handle: 'ap-csp-game-robot-director',
+    title: 'Robot Director, an AP CSP Game',
+    description: 'An AP CSP Big Idea 3 game: build a sequence of move and rotate commands that guides a robot to the flag without leaving the grid or hitting a wall.',
+    why: 'title carried the brand twice, found 2026-09-14',
+  },
+  {
+    handle: 'ap-csp-game-bridge-the-divide',
+    title: 'Bridge the Divide, an AP CSP Game',
+    description: 'An AP CSP Big Idea 5 game on the digital divide: spend a limited budget connecting communities and see how cost, geography, income and skills drive the gap.',
+    why: 'title carried the brand twice, found 2026-09-15',
+  },
+  {
+    handle: 'ap-cybersecurity-complete-course-guide',
+    title: 'AP Cybersecurity Course Guide: All 5 Units Live',
+    description: 'A complete AP Cybersecurity course guide: all 5 units, 55+ lessons, 250+ practice questions, unit exams and a Device Security Analysis FRQ, from an AP teacher.',
+    why: 'title carried the brand twice, found 2026-09-15; description also had an em dash',
+  },
+
   // Same 2026-09-05 crawl, persisting rather than fresh: these four CSA course
   // hub pages have carried a scraped description for 9 to 10 nights with no
   // board task. ap-csa-unit-1-course also had its title mismatched to the
