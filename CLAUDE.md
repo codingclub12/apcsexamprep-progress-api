@@ -281,6 +281,38 @@ Authority is not licence to skip the discipline. The verification standard goes
 UP as the asking goes down, because the check is now the only thing between a
 mistake and a student.
 
+### Bug-triage routine: build the fix in the same session, do not defer it
+
+Set 2026-09-21, after a session confirmed three feedback reports and a live
+stored XSS, wrote the exact patch for each, and then saved the prompt to the
+Claude chat project instead of building it, reasoning that hand-retyping a
+30-130 KB page body into a mutation was too risky to do inline. The risk
+judgement was right; the conclusion was wrong. The chat project is not
+reachable by the next session, which this file already says elsewhere about
+content from that surface, so the fix sat for hours as a description nobody
+could act on, and the next session had to re-derive everything from the live
+bodies anyway.
+
+A session that confirms a bug is real and can name the exact fix does not get
+to defer building it to a future session by writing a prompt. Fetch the live
+body through the Admin API, apply the fix as a single-occurrence, asserted
+string replacement, validate it (ASCII-only, no HTML entities inside a
+`<script>` block, parse the finished sheet back and diff it against source),
+and commit the CSV in the SAME session. Only the Matrixify IMPORT stays a
+human step. "Specified fixes but did not build them" is not an acceptable
+outcome for work the session already has the live data and the fix for.
+
+**Hand the CSVs over as files, not only as a PR link.** Send them through
+whatever channel actually reaches Tanner in that session (attach them
+directly, email them if send access is available) in addition to committing
+them, per the existing rule above that a deliverable is committed AND handed
+over. A link he has to go click, from a treadmill, is not the delivery; the
+file is. If email send access is not available (checked 2026-09-21: this
+repo's Outlook connector was read-only, Mail.Read/Mail.ReadBasic only, no
+Mail.Send or Mail.ReadWrite), say so plainly and use whatever channel does
+work (Gmail, a direct file attachment in the session) rather than silently
+falling back to a link-only report.
+
 ### Every automatic deploy passes three INDEPENDENT kinds of check
 
 Not three runs. Three kinds. `scripts/deploy-gate.js` enforces it and refuses a
