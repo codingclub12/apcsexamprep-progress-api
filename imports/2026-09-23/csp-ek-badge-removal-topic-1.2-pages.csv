@@ -59,6 +59,34 @@
     <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
     <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
   </div>
+<style>
+#csp-ex .log-scroll{display:block!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;margin:10px 0 6px!important}
+#csp-ex table.log{border-collapse:collapse!important;width:100%!important;min-width:560px!important;font-size:14px!important;line-height:1.45!important;background:#fff!important}
+#csp-ex table.log th,#csp-ex table.log td{border:1px solid #fde68a!important;padding:8px 10px!important;text-align:left!important;vertical-align:top!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important}
+#csp-ex table.log th{background:#fef3c7!important;font-weight:700!important;font-size:12px!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+#csp-ex table.log td.row-id{font-weight:700!important;text-align:center!important;white-space:nowrap!important}
+#csp-ex table.log td.row-when{white-space:nowrap!important}
+#csp-ex .log-note{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin:6px 0 0!important}
+</style>
+  <h2>LunchDash Behavior Log: Five Moments Under Review<span class=""tag local"">From your handout</span></h2>
+  <p>The same log as Part A of your handout, row for row. The questions below refer to these rows by number.</p>
+      <div class=""item paper"">
+        <div class=""item-num"">The log</div>
+        <p class=""item-text"">The lead developer hands you five entries pulled from yesterday's behavior log and says: 'Explain what the program is doing in each one, using the right vocabulary, and you're on the team.' Read the log row by row, then answer Part A. Use the three-step method: anchor your first instinct, trace what data crossed the program's boundary in each direction, then name each piece with CED vocabulary - input or output, its form, its source or destination, and what triggered the code to run.</p>
+        <div class=""log-scroll"">
+        <table class=""log"">
+          <thead><tr><th scope=""col"">ID</th><th scope=""col"">Moment</th><th scope=""col"">What happened</th><th scope=""col"">How the program reacted</th><th scope=""col"">Detail worth noticing</th></tr></thead>
+          <tbody>
+          <tr><td class=""row-id"">1</td><td class=""row-when"">11:14 a.m.</td><td>A student taps the pizza tile on the touchscreen</td><td>An order confirmation appears on screen and the phone buzzes once</td><td>One tap produced two separate reactions in two different forms</td></tr>
+          <tr><td class=""row-id"">2</td><td class=""row-when"">11:25 a.m.</td><td>The cafeteria's inventory software transmits 'pizza: 0 remaining'</td><td>The pizza tile turns gray and shows SOLD OUT</td><td>No human touched anything - the data arrived from other software</td></tr>
+          <tr><td class=""row-id"">3</td><td class=""row-when"">11:02 a.m.</td><td>A student says 'Reorder my usual' to the app's voice assistant</td><td>The app queues the exact order that student placed the last three Fridays</td><td>The reply used data no microphone captured today</td></tr>
+          <tr><td class=""row-id"">4</td><td class=""row-when"">10:40-11:00 a.m.</td><td>Nothing - no orders for 20 minutes</td><td>The app does nothing visible, then reacts instantly to the 11:00 tap</td><td>Twenty idle minutes, then an immediate response with no delay</td></tr>
+          <tr><td class=""row-id"">5</td><td class=""row-when"">11:20 a.m.</td><td>Two students tap the same 'Surprise me' button seconds apart</td><td>One student is offered pizza; the other is offered the salad bowl</td><td>Identical taps on the identical button produced different offers</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class=""log-note"">Rows adapted from the Day 1 mystery-app bell ringer and the Day 2 input/output worked table; all terms and EKs follow the College Board AP Computer Science Principles Course and Exam Description (Effective Fall 2023).</p>
+      </div>
   <h2>Part B, from your handout<span class=""tag local"">Not recorded</span></h2>
   <p>Your handout says these are the same items available here. Part A stays on paper. <span class=""saved"" id=""draft-note""></span></p>
       <div class=""item paper"">
@@ -96,7 +124,7 @@
         </div>
         <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-2"">
           <div class=""mcq-q-num"">Question 2 of 6</div>
-          <div class=""mcq-q-text"">At 10:30 the cafeteria inventory software transmitted ""pizza: 0 remaining"" and the tile turned gray. No human touched the app. Was that input?</div>
+          <div class=""mcq-q-text"">At 11:25 the cafeteria inventory software transmitted ""pizza: 0 remaining"" and the tile turned gray. No human touched the app. Was that input?</div>
           <div class=""mcq-options"">
           <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','B','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> No, because nothing was typed or tapped</button>
           <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','B','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> Yes: input can come from a user or from other programs, and this came from the inventory software</button>
