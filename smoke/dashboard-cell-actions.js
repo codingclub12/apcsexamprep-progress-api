@@ -17,11 +17,12 @@
 //    Grant attempt  the same endpoint with reset:false, and it can only mean
 //                   something on a quiz submitted as FINAL, because quiz
 //                   finalize is the only writer of progress.locked.
-//    Set score      NO server path. ap-cybersecurity is a System B course
-//                   (score_events, see docs/grading-systems.md) and the only
-//                   teacher score-write endpoint is System A, gated on
-//                   course_manifest, which cyber has no rows in. Section 4
-//                   pins that refusal so the claim stays true.
+//    Set score      Not through the System A route. ap-cybersecurity is a
+//                   System B course (score_events, see docs/grading-systems.md)
+//                   and POST .../scores is gated on course_manifest, which
+//                   cyber has no rows in. Section 4 pins that refusal. Since
+//                   2026-09-23 the cyber write path is PUT .../cells, proved
+//                   in smoke/teacher-cyber-score.js.
 //    Retry toggles  writable but not READABLE: the teacher progress payload
 //                   carries no retry_override, so a wired toggle would show
 //                   "Default" on the next load while an override was live.
