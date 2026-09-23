@@ -31,11 +31,8 @@ function ok(label, cond, detail) {
 // Mirror-only Exercise 1 pages whose Part B cites a numbered row of a Part A
 // log the page does not show yet. Same defect as 1.2, but no graded question
 // depends on them. Remove an entry when its log is extracted; never add one.
-const KNOWN_GAPS = new Set([
-  'ap-csp-topic-2-3-exercise-1',
-  'ap-csp-topic-5-3-exercise-1',
-  'ap-csp-topic-5-6-exercise-1',
-]);
+// Emptied on 2026-09-23 (board 397), when 2.3, 5.3 and 5.6 got their logs.
+const KNOWN_GAPS = new Set([]);
 
 const H = 'ap-csp-topic-1-2-exercise-1';
 const src = SOURCE[H];
@@ -103,6 +100,51 @@ const healed = [...KNOWN_GAPS].filter((h) => SOURCE[h].log);
 ok('KNOWN_GAPS lists no page that already has its log', !healed.length, healed);
 ok('every page with a log paints a table',
   allPages().filter((p) => SOURCE[p.handle].log).every((p) => p.bodyHtml.includes('<table class="log">')));
+
+// ---- 4. every page with a log, the same way 1.2 is held -------------------
+// Each row a Part B prompt cites by number must be a row on that page, and the
+// log has to sit above Part B. A name column must be free to wrap; only a
+// "Moment" column is held on one line.
+for (const p of allPages().filter((pg) => SOURCE[pg.handle].log)) {
+  const b = p.bodyHtml;
+  const L = SOURCE[p.handle].log;
+  const at = b.indexOf('<table class="log">');
+  const pb = b.indexOf('Part B, from your handout');
+  ok(`${p.handle}: log above Part B`, at !== -1 && at < pb);
+  const ids = [...b.matchAll(/<td class="row-id">(\d+)<\/td>/g)].map((m) => m[1]);
+  ok(`${p.handle}: rows 1 to 5 in handout order`, ids.join() === '1,2,3,4,5', ids);
+  const cited = [...SOURCE[p.handle].partB.map((q) => q.text).join(' ').matchAll(/\b[Rr]ows?\s*(\d+)/g)].map((m) => m[1]);
+  ok(`${p.handle}: every row Part B cites is on the page (${[...new Set(cited)].join(',')})`,
+    cited.length > 0 && cited.every((n) => ids.includes(n)), cited);
+  ok(`${p.handle}: nowrap only on a Moment column`,
+    b.includes('class="row-when"') === (L.columns[1] === 'Moment'));
+}
+
+// The handout facts each new page's Part B leans on. Quoted from the student
+// handouts' Part A; if one disappears, the prompt citing it is orphaned.
+const LEANS = {
+  'ap-csp-topic-2-3-exercise-1': [
+    'Survey Workbook Log: Five Rows Under Review',
+    '<td>The app instantly re-orders 1,400 songs by the day each was added</td>',
+    '<td>No audio file was opened or changed during the sort</td>',
+  ],
+  'ap-csp-topic-5-3-exercise-1': [
+    'Incident Log: Five Systems Under Audit',
+    '<td>HireBrite (resume screener)</td>',
+    '<td>Solo developer framed the problem as step-counting on day one</td>',
+    'Training audio came from one region; vendor now proposes 10x more of it',
+  ],
+  'ap-csp-topic-5-6-exercise-1': [
+    'Trail Log: Five Public Artifacts About Jordan',
+    '<td>Convenient for Jordan - and a bundle of PII in one place</td>',
+    '<td>The delete button removed only the original copy</td>',
+  ],
+};
+for (const [h, needles] of Object.entries(LEANS)) {
+  const b = allPages().find((p) => p.handle === h).bodyHtml;
+  for (const n of needles) ok(`${h}: carries ${JSON.stringify(n.replace(/<\/?td>/g, '').slice(0, 50))}`, b.includes(n), n);
+  ok(`${h}: pure ASCII body`, /^[\x09\x0a\x0d\x20-\x7e]*$/.test(b));
+}
 
 console.log(fails ? `\n${fails} FAILED` : '\nall passed');
 process.exit(fails ? 1 : 0);

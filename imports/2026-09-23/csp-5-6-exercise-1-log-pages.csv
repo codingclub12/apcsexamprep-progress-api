@@ -1,0 +1,192 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At","SEO Title","SEO Description"
+"ap-csp-topic-5-6-exercise-1","MERGE","AP CSP 5.6 Exercise 1: The Dossier Reconstruction","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#csp-ex{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;font-size:17px!important;background:#f8fafc!important}
+#csp-ex *,#csp-ex *::before,#csp-ex *::after{box-sizing:border-box!important}
+#csp-ex .hero{background:linear-gradient(135deg,#1e40af,#1a56db)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 18px!important}
+#csp-ex .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 8px!important}
+#csp-ex h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#csp-ex .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#csp-ex h2{font-size:21px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:32px 0 6px!important;font-weight:800!important;border-bottom:3px solid #93c5fd!important;padding-bottom:6px!important}
+#csp-ex h2 .tag{float:right!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;padding:3px 10px!important;border-radius:100px!important;margin-top:4px!important}
+#csp-ex h2 .tag.local{background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fde68a!important}
+#csp-ex h2 .tag.graded{background:#dcfce7!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #86efac!important}
+#csp-ex p{margin:8px 0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .btn,#csp-ex .btn:link,#csp-ex .btn:visited{display:inline-block!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+#csp-ex .btn.ghost,#csp-ex .btn.ghost:link,#csp-ex .btn.ghost:visited{background:#fff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border:2px solid #93c5fd!important}
+#csp-ex .note{background:#fff!important;border:1px solid #e2e8f0!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;padding:14px 18px!important;margin:16px 0 22px!important;font-size:15px!important}
+#csp-ex .note .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 4px!important}
+#csp-ex .item{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:18px 20px!important;margin:14px 0!important}
+#csp-ex .item.paper{background:#fffbeb!important;border-color:#fde68a!important}
+#csp-ex .item-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important}
+#csp-ex .item-text{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.65!important;margin:0 0 10px!important}
+#csp-ex .prompt{font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:12px 0 4px!important}
+#csp-ex .code{background:#0f172a!important;border-radius:8px!important;padding:12px 14px!important;margin:10px 0!important;font-family:""SFMono-Regular"",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre-wrap!important;overflow-x:auto!important}
+#csp-ex textarea{display:block!important;width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #d6d3d1!important;border-radius:8px!important;font-family:inherit!important;font-size:15px!important;line-height:1.55!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;resize:vertical!important}
+#csp-ex .saved{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:4px 0 0!important;min-height:16px!important}
+#csp-ex .mcq-item{margin-bottom:26px!important;padding-bottom:26px!important;border-bottom:1px solid #f1f5f9!important}
+#csp-ex .mcq-item:last-child{border-bottom:none!important;margin-bottom:0!important;padding-bottom:0!important}
+#csp-ex .mcq-q-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:8px!important}
+#csp-ex .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important}
+#csp-ex .mcq-options{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:12px!important}
+#csp-ex .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;text-align:left!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#fff!important;font-size:15px!important;font-family:inherit!important;line-height:1.5!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .mcq-option:hover{border-color:#93c5fd!important;background:#eff6ff!important}
+#csp-ex .mcq-option.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-option.revealed-correct{border-color:#16a34a!important;background:#f0fdf4!important}
+#csp-ex .mcq-option-letter{font-weight:700!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;flex-shrink:0!important;min-width:18px!important}
+#csp-ex .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important}
+#csp-ex .mcq-feedback.show{display:block!important}
+#csp-ex .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important}
+#csp-ex .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important}
+#csp-ex .scorebar{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 18px!important;margin:0 0 18px!important;font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#csp-ex .scorebar strong{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:17px!important}
+#csp-ex .nextnav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:26px!important}
+#csp-ex .nextnav a,#csp-ex .nextnav a:link,#csp-ex .nextnav a:visited{display:block!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:700!important;font-size:15px!important}
+@media (max-width:640px){#csp-ex .nextnav{grid-template-columns:repeat(1,1fr)!important}}
+</style>
+<div id=""csp-ex"" class=""lesson-page"" data-course=""ap-csp"" data-unit=""bi-5"" data-lesson=""safe-computing"">
+  <div class=""hero"">
+    <p class=""eyebrow"">Big Idea 5 &middot; Topic 5.6 &middot; Exercise 1</p>
+    <h1>The Dossier Reconstruction</h1>
+    <p class=""sub"">25 minutes</p>
+  </div>
+  <p><a class=""btn"" href=""/pages/ap-csp-course-bi5-safe-computing"">Back to the Topic 5.6 lesson</a><a class=""btn ghost"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+  <div class=""note"">
+    <p class=""label"">How this page works</p>
+    <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
+    <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
+  </div>
+<style>
+#csp-ex .log-scroll{display:block!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;margin:10px 0 6px!important}
+#csp-ex table.log{border-collapse:collapse!important;width:100%!important;min-width:560px!important;font-size:14px!important;line-height:1.45!important;background:#fff!important}
+#csp-ex table.log th,#csp-ex table.log td{border:1px solid #fde68a!important;padding:8px 10px!important;text-align:left!important;vertical-align:top!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important}
+#csp-ex table.log th{background:#fef3c7!important;font-weight:700!important;font-size:12px!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+#csp-ex table.log td.row-id{font-weight:700!important;text-align:center!important;white-space:nowrap!important}
+#csp-ex table.log td.row-when{white-space:nowrap!important}
+#csp-ex .log-note{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin:6px 0 0!important}
+</style>
+  <h2>Trail Log: Five Public Artifacts About Jordan<span class=""tag local"">From your handout</span></h2>
+  <p>The same log as Part A of your handout, row for row. The questions below refer to these rows by number.</p>
+      <div class=""item paper"">
+        <div class=""item-num"">The log</div>
+        <p class=""item-text"">The audit team gathered five artifacts. Your job is to show how they combine. Read the log row by row, then answer Part A. Use the three-step method: name what each artifact collects, test what it reveals on its own, then test what it reveals combined with the other rows.</p>
+        <div class=""log-scroll"">
+        <table class=""log"">
+          <thead><tr><th scope=""col"">ID</th><th scope=""col"">Artifact</th><th scope=""col"">What it contains</th><th scope=""col"">How it was produced</th><th scope=""col"">Detail worth noticing</th></tr></thead>
+          <tbody>
+          <tr><td class=""row-id"">1</td><td>Running-app route map</td><td>Three months of jogging routes, shared publicly</td><td>The app posts finished runs by default</td><td>Every route begins and ends at the same house</td></tr>
+          <tr><td class=""row-id"">2</td><td>Ad profile screenshot</td><td>Ads for allergy medicine, SAT prep, and a summer camp</td><td>Built from recorded searches and page visits</td><td>Jordan never posted about allergies or the SAT anywhere</td></tr>
+          <tr><td class=""row-id"">3</td><td>Tagged photos</td><td>Friends' posts tagging Jordan in a school hoodie at a bus stop</td><td>Posted by OTHERS, not by Jordan</td><td>The same hoodie and bus stop appear across several photos</td></tr>
+          <tr><td class=""row-id"">4</td><td>Shopping account</td><td>A wish list plus saved card and home address for one-tap checkout</td><td>Jordan saved the details to speed up purchases</td><td>Convenient for Jordan - and a bundle of PII in one place</td></tr>
+          <tr><td class=""row-id"">5</td><td>'Deleted' forum post</td><td>A 2023 post Jordan removed, still readable in a web archive</td><td>An archive service copied the page before deletion</td><td>The delete button removed only the original copy</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class=""log-note"">Artifacts adapted from the Day 1 bell-ringer dossier and the five-trails worked table; all terms and EKs follow the College Board AP Computer Science Principles Course and Exam Description (Effective Fall 2023).</p>
+      </div>
+  <h2>Part B, from your handout<span class=""tag local"">Not recorded</span></h2>
+  <p>Your handout says these are the same items available here. Part A stays on paper. <span class=""saved"" id=""draft-note""></span></p>
+      <div class=""item paper"">
+        <div class=""item-num"">Q1 &middot; 3 points on the handout</div>
+        <p class=""item-text"">Row 4 is convenience and danger in one artifact. State the benefits the CED names for stored PII, the harms it names, and the one-sentence advice you would give Jordan about keeping the account as-is.</p>
+        <textarea data-draft=""b1"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q1""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q2 &middot; 3 points on the handout</div>
+        <p class=""item-text"">Row 5: Jordan pressed delete in 2023, yet the post is still readable. Explain why, and give one 'unintended use' of information like this that EK IOC-2.A.11 warns about.</p>
+        <textarea data-draft=""b2"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q2""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q3 &middot; 2 points on the handout</div>
+        <p class=""item-text"">ENRICHMENT: Data brokers do your audit at industrial scale, for sale. Name one plausible buyer of Jordan's assembled dossier, one decision that buyer might make with it, and why EK IOC-2.A.10's warning about curated information applies.</p>
+        <textarea data-draft=""b3"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q3""></textarea>
+      </div>
+  <h2>No graded check on this page yet<span class=""tag local"">Not recorded</span></h2>
+  <div class=""note"">
+    <p class=""label"">About the line in your handout</p>
+    <p>Your handout says this exercise is available online and auto-graded. The exercise IS here, and it is the same work in the same order, but the auto-graded half is not written for this topic yet. Nothing on this page is scored or sent to your teacher.</p>
+    <p>Hand this in the way your teacher asked for it. Topic 1.1 has its graded check today, and the rest follow.</p>
+  </div>
+  <div class=""nextnav"">
+    <a href=""/pages/ap-csp-course-bi5-safe-computing"">Rework the Topic 5.6 lesson</a>
+    <a href=""/pages/ap-csp-course-bi5-unit-test"">Big Idea 5 unit test</a>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'apcs-draft:' + ""ap-csp-topic-5-6-exercise-1"";
+  var answered = {};
+  var total = document.querySelectorAll('.mcq-item[data-item]').length;
+
+  /* Drafts stay in this browser. Nothing typed in a writing box is ever sent
+     anywhere: no request carries it, and the reporter only ever sees the
+     multiple choice results below. */
+  function loadDrafts(){
+    var store = {};
+    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      var id = boxes[i].getAttribute('data-draft');
+      if (store[id]) boxes[i].value = store[id];
+      boxes[i].addEventListener('input', saveDrafts);
+    }
+  }
+  function saveDrafts(){
+    var store = {};
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      store[boxes[i].getAttribute('data-draft')] = boxes[i].value;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    var n = document.getElementById('draft-note');
+    if (n) n.textContent = 'Saved in this browser only.';
+  }
+
+  function activity(d){
+    try{
+      var w = document.querySelector('.lesson-page');
+      if(w){
+        d.course = w.getAttribute('data-course');
+        d.unit = w.getAttribute('data-unit');
+        d.lesson = w.getAttribute('data-lesson');
+      }
+      document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+    }catch(e){}
+  }
+
+  function updateScore(){
+    var right = 0, done = 0, k;
+    for(k in answered){ done++; if(answered[k]) right++; }
+    var el = document.getElementById('ex-score');
+    if(el) el.innerHTML = '<strong>' + right + ' / ' + total + '</strong> correct on the graded check, ' + done + ' answered';
+  }
+
+  window.cspEx = function(qid, chosen, correct, fbId){
+    var item = null, items = document.querySelectorAll('.mcq-item[data-item]'), i;
+    for(i = 0; i < items.length; i++){
+      if(items[i].getAttribute('data-item') === qid){ item = items[i]; break; }
+    }
+    if(!item || answered.hasOwnProperty(qid)) return;
+    var opts = item.querySelectorAll('.mcq-option');
+    for(i = 0; i < opts.length; i++){ opts[i].disabled = true; opts[i].onclick = null; }
+    var letters = ['A','B','C','D'];
+    var pick = letters.indexOf(chosen);
+    if(opts[pick]) opts[pick].classList.add(chosen === correct ? 'correct' : 'incorrect');
+    if(chosen !== correct && opts[letters.indexOf(correct)]){
+      opts[letters.indexOf(correct)].classList.add('revealed-correct');
+    }
+    var fb = document.getElementById(fbId);
+    if(fb) fb.classList.add('show');
+    answered[qid] = (chosen === correct);
+    updateScore();
+    activity({ activity: item.getAttribute('data-activity'), item: qid,
+               choice: chosen, correct: (chosen === correct) });
+  };
+
+  loadDrafts();
+  updateScore();
+})();
+</script>","TRUE","2026-03-01 12:00:00","AP CSP 5.6 Exercise 1: The Dossier Reconstruction","Online companion to the AP CSP Topic 5.6 Exercise 1 handout, The Dossier Reconstruction. Work the items here, with your writing saved in your own browser."
