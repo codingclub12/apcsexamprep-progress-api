@@ -88,6 +88,55 @@
   "intro": "You are the new developer assigned to LunchDash, the school's (fictional) lunch pre-ordering app - and your onboarding task is to understand it purely from its behavior log. For each logged moment you will identify the inputs (source and form), the events that supplied them, and the outputs (form and destination device) - then describe the program's function at both CED description levels. Part A works the log table; Part B extends the same skills. Everything maps to CB Learning Objectives CRD-2.B, CRD-2.C, and CRD-2.D.",
   "cb": "",
   "source": "AP-CSP_1-2_Exercise1_Student_k7q2m9.docx",
+  "log": {
+   "heading": "LunchDash Behavior Log: Five Moments Under Review",
+   "lead": "The lead developer hands you five entries pulled from yesterday's behavior log and says: 'Explain what the program is doing in each one, using the right vocabulary, and you're on the team.' Read the log row by row, then answer Part A. Use the three-step method: anchor your first instinct, trace what data crossed the program's boundary in each direction, then name each piece with CED vocabulary - input or output, its form, its source or destination, and what triggered the code to run.",
+   "columns": [
+    "ID",
+    "Moment",
+    "What happened",
+    "How the program reacted",
+    "Detail worth noticing"
+   ],
+   "rows": [
+    [
+     "1",
+     "11:14 a.m.",
+     "A student taps the pizza tile on the touchscreen",
+     "An order confirmation appears on screen and the phone buzzes once",
+     "One tap produced two separate reactions in two different forms"
+    ],
+    [
+     "2",
+     "10:30 a.m.",
+     "The cafeteria's inventory software transmits 'pizza: 0 remaining'",
+     "The pizza tile turns gray and shows SOLD OUT",
+     "No human touched anything - the data arrived from other software"
+    ],
+    [
+     "3",
+     "11:02 a.m.",
+     "A student says 'Reorder my usual' to the app's voice assistant",
+     "The app queues the exact order that student placed the last three Fridays",
+     "The reply used data no microphone captured today"
+    ],
+    [
+     "4",
+     "10:40-11:00 a.m.",
+     "Nothing - no orders for 20 minutes",
+     "The app does nothing visible, then reacts instantly to the 11:00 tap",
+     "Twenty idle minutes, then an immediate response with no delay"
+    ],
+    [
+     "5",
+     "11:20 a.m.",
+     "Two students tap the same 'Surprise me' button seconds apart",
+     "One student is offered pizza; the other is offered the salad bowl",
+     "Identical taps on the identical button produced different offers"
+    ]
+   ],
+   "note": "Rows adapted from the Day 1 mystery-app bell ringer and the Day 2 input/output worked table; all terms and EKs follow the College Board AP Computer Science Principles Course and Exam Description (Effective Fall 2023)."
+  },
   "partB_heading": "Part B - Reflect (AP Exam Application)",
   "partB": [
    {
