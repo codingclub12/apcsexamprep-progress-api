@@ -78,7 +78,7 @@
           <thead><tr><th scope=""col"">ID</th><th scope=""col"">Moment</th><th scope=""col"">What happened</th><th scope=""col"">How the program reacted</th><th scope=""col"">Detail worth noticing</th></tr></thead>
           <tbody>
           <tr><td class=""row-id"">1</td><td class=""row-when"">11:14 a.m.</td><td>A student taps the pizza tile on the touchscreen</td><td>An order confirmation appears on screen and the phone buzzes once</td><td>One tap produced two separate reactions in two different forms</td></tr>
-          <tr><td class=""row-id"">2</td><td class=""row-when"">10:30 a.m.</td><td>The cafeteria's inventory software transmits 'pizza: 0 remaining'</td><td>The pizza tile turns gray and shows SOLD OUT</td><td>No human touched anything - the data arrived from other software</td></tr>
+          <tr><td class=""row-id"">2</td><td class=""row-when"">11:25 a.m.</td><td>The cafeteria's inventory software transmits 'pizza: 0 remaining'</td><td>The pizza tile turns gray and shows SOLD OUT</td><td>No human touched anything - the data arrived from other software</td></tr>
           <tr><td class=""row-id"">3</td><td class=""row-when"">11:02 a.m.</td><td>A student says 'Reorder my usual' to the app's voice assistant</td><td>The app queues the exact order that student placed the last three Fridays</td><td>The reply used data no microphone captured today</td></tr>
           <tr><td class=""row-id"">4</td><td class=""row-when"">10:40-11:00 a.m.</td><td>Nothing - no orders for 20 minutes</td><td>The app does nothing visible, then reacts instantly to the 11:00 tap</td><td>Twenty idle minutes, then an immediate response with no delay</td></tr>
           <tr><td class=""row-id"">5</td><td class=""row-when"">11:20 a.m.</td><td>Two students tap the same 'Surprise me' button seconds apart</td><td>One student is offered pizza; the other is offered the salad bowl</td><td>Identical taps on the identical button produced different offers</td></tr>
@@ -124,7 +124,7 @@
         </div>
         <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-2"">
           <div class=""mcq-q-num"">Question 2 of 6</div>
-          <div class=""mcq-q-text"">At 10:30 the cafeteria inventory software transmitted ""pizza: 0 remaining"" and the tile turned gray. No human touched the app. Was that input?</div>
+          <div class=""mcq-q-text"">At 11:25 the cafeteria inventory software transmitted ""pizza: 0 remaining"" and the tile turned gray. No human touched the app. Was that input?</div>
           <div class=""mcq-options"">
           <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','B','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> No, because nothing was typed or tapped</button>
           <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','B','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> Yes: input can come from a user or from other programs, and this came from the inventory software</button>

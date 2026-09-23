@@ -58,7 +58,7 @@ const leans = [
   ['row 4 exists (Part B Q3)', '<td class="row-id">4</td>'],
   ['a twenty-minute idle window (Q1, Q6, Part B Q3)', 'Nothing - no orders for 20 minutes'],
   ['the instant 11:00 tap (Q1, Part B Q3)', 'reacts instantly to the 11:00 tap'],
-  ['the 10:30 inventory transmission (Q2)', "inventory software transmits 'pizza: 0 remaining'"],
+  ['the 11:25 inventory transmission (Q2)', "inventory software transmits 'pizza: 0 remaining'"],
   ['the tile greys out (Q2, Q4)', 'The pizza tile turns gray'],
   ['two Surprise me taps seconds apart (Q3)', "tap the same 'Surprise me' button seconds apart"],
   ['different meals offered (Q3)', 'One student is offered pizza; the other is offered the salad bowl'],
@@ -74,10 +74,28 @@ ok('the handout column headers',
   JSON.stringify(src.log.columns) === JSON.stringify(['ID', 'Moment', 'What happened', 'How the program reacted', 'Detail worth noticing']),
   src.log.columns);
 ok('rows numbered 1 to 5 in handout order', src.log.rows.map((r) => r[0]).join() === '1,2,3,4,5');
-// The handout lists row 1 at 11:14 and row 2 at 10:30. That is its order, and
+// The handout lists row 1 at 11:14 and row 2 at 11:25. That is its order, and
 // "row 4" on the page has to be row 4 on paper, so the page keeps it.
 ok('handout order kept even where it is not chronological',
-  src.log.rows[0][1] === '11:14 a.m.' && src.log.rows[1][1] === '10:30 a.m.', src.log.rows.map((r) => r[1]));
+  src.log.rows[0][1] === '11:14 a.m.' && src.log.rows[1][1] === '11:25 a.m.', src.log.rows.map((r) => r[1]));
+
+// Pizza cannot be ordered or offered after it has sold out. The handout had it
+// selling out at 10:30 and then ordered at 11:14 and offered at 11:20; the fix
+// (board 400) moved the sell-out to 11:25. This is the invariant, not the time:
+// whatever the handout says next, the sell-out row must come after every row
+// that orders or offers pizza.
+const minutes = (t) => {
+  const m = /^(\d{1,2}):(\d{2})/.exec(t);
+  return m ? Number(m[1]) * 60 + Number(m[2]) : NaN;
+};
+const soldOut = src.log.rows.find((r) => /0 remaining/.test(r[2]));
+const pizzaAfter = src.log.rows.filter((r) => r !== soldOut && /pizza/i.test(r[2] + ' ' + r[3]));
+ok('the sell-out row exists', !!soldOut);
+ok(`pizza sells out after every row that orders or offers it (${pizzaAfter.map((r) => r[1]).join(', ')})`,
+  !!soldOut && pizzaAfter.length >= 2 && pizzaAfter.every((r) => minutes(r[1]) < minutes(soldOut[1])),
+  { soldOut: soldOut && soldOut[1], pizza: pizzaAfter.map((r) => r[1]) });
+const q2 = require('../seed/csp-exercise-checks/1-2.js')[H].questions[1].stem;
+ok('graded Q2 names the same sell-out time as the log', !!soldOut && q2.startsWith(`At ${soldOut[1].replace(/ a\.m\.$/, '')} `), q2.slice(0, 40));
 ok('the log is pure ASCII', /^[\x20-\x7e]*$/.test(JSON.stringify(src.log)));
 ok('no em dash anywhere in the log', !/\u2014/.test(JSON.stringify(src.log)));
 ok('one table on the page', (body.match(/<table/g) || []).length === 1);
