@@ -45,3 +45,35 @@ still added to the Teachers list. They just land on a 404.
   there is no parent flow at all. So after this click a teacher or parent is
   put on a list that sends nothing. The pages deliberately promise no emails
   for that reason.
+
+## Follow-up, same day: better copy, and the teacher flow (board #401)
+
+Tanner imported the creation sheet; `verify-confirm-role-pages-live.js` came
+back all clear. He then asked for warmer page copy and for the teacher email
+flow to be built.
+
+- `shopify/confirm-teacher.html` and `confirm-parent.html` rewritten. The builder
+  has `--update` now: it refuses unless both pages serve and their live text
+  matches the last committed source, so it cannot overwrite an admin edit.
+  Sheet: `imports/2026-09-23g/confirm-role-pages-copy.csv`. The live verifier
+  compares live text to the source and fails until that sheet is imported.
+- `scripts/build-teacher-flow-emails.js` writes the four emails for the draft
+  flow WGDekt into `klaviyo/teacher-flow/`; `smoke:teacherflow` breaks each
+  refusal alone. All 12 site links answered 200 at build time.
+- The February draft was stale: Emails 1 and 2 linked to `/blogs/...` pages
+  that 404, Email 3 sent teachers to TPT, and Email 4 pitched tutoring with
+  prices (board #76 is open on tutoring). None mentioned the teacher dashboard.
+- Klaviyo's API refused to update the flow's own templates (404 on all four)
+  and has no flow-edit endpoint. The emails are saved as templates
+  Umu2p3, Uq6gzU, UsGwLM and YaMNk2; `klaviyo/teacher-flow/README.md` is the
+  five-minute swap in the flow editor. The February templates are unchanged.
+
+Still open:
+- The copy sheet is not imported.
+- The flow is still a draft until the swap and the Live switch are done.
+- The AP Cybersecurity bundle page still says founding pricing ends
+  September 1, 2026. Pricing is Tanner's, so the emails quote no price.
+
+Learned: a list-triggered Klaviyo flow's message templates are readable by id
+through the templates API but not writable, so "update the flow's email" from
+an agent means "make a saved template and hand over the swap".

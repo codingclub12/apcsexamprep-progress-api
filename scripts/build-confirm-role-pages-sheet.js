@@ -34,6 +34,12 @@
 //
 //  Run: node scripts/build-confirm-role-pages-sheet.js [--out <dir>] [--offline]
 //  --offline skips 1 and 5 (the smoke uses it). Never import an offline build.
+//
+//  --update rewrites the bodies of pages that now exist (Body HTML only, titles
+//  and publish dates untouched). It turns refusal 1 around, a handle must
+//  answer 200, and adds one: the live visible text must equal the last
+//  committed source, or somebody edited the page in the admin since and this
+//  sheet would overwrite their edit.
 //  No em-dashes, per repo convention.
 // -----------------------------------------------------------------------------
 const fs = require('fs');
@@ -42,6 +48,7 @@ const { preflight, parseCsv } = require('./matrixify-preflight');
 
 const ROOT = path.join(__dirname, '..');
 const HEADER = ['Handle', 'Command', 'Title', 'Body HTML', 'Published', 'Published At'];
+const HEADER_UPDATE = ['Handle', 'Command', 'Body HTML'];
 //  The store's fixed publish date. A live server time scrambles sort order.
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 
@@ -64,7 +71,7 @@ function internalLinks(html) {
 function checkBody(handle, html) {
   const problems = [];
   if (/[^\x00-\x7F]/.test(html)) problems.push(handle + ': non-ASCII character in the body');
-  if (html.indexOf('—') !== -1 || /&mdash;/i.test(html)) problems.push(handle + ': em-dash in the body');
+  if (html.indexOf('\u2014') !== -1 || /&mdash;/i.test(html)) problems.push(handle + ': em-dash in the body');
   if (/<script/i.test(html)) problems.push(handle + ': a <script> in the body');
   if (/<style/i.test(html)) problems.push(handle + ': a <style> block in the body');
   if (!internalLinks(html).length) problems.push(handle + ': no internal link, so the page is a dead end');
@@ -76,18 +83,30 @@ function status(p) {
   return String(sf.raw(p).code);
 }
 
-const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
-
-function writeSheet(file, rows) {
-  const lines = [HEADER.map(cell).join(',')];
-  for (const r of rows) lines.push([r.handle, 'MERGE', r.title, r.body, 'TRUE', PUBLISHED_AT].map(cell).join(','));
-  fs.writeFileSync(file, '﻿' + lines.join('\r\n') + '\r\n');
+//  Visible text only, blind to Shopify re-serialising an apostrophe or a tag.
+function visibleText(html) {
+  return html.replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ')
+    .replace(/&#39;|&#x27;|&apos;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+    .replace(/\s+/g, ' ').trim();
 }
 
-function readBack(file, rows) {
-  const parsed = parseCsv(fs.readFileSync(file, 'utf8').replace(/^﻿/, ''));
+const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+
+const rowOf = (r, update) => (update ? [r.handle, 'MERGE', r.body]
+  : [r.handle, 'MERGE', r.title, r.body, 'TRUE', PUBLISHED_AT]);
+
+function writeSheet(file, rows, update) {
+  const header = update ? HEADER_UPDATE : HEADER;
+  const lines = [header.map(cell).join(',')];
+  for (const r of rows) lines.push(rowOf(r, update).map(cell).join(','));
+  fs.writeFileSync(file, '\ufeff' + lines.join('\r\n') + '\r\n');
+}
+
+function readBack(file, rows, update) {
+  const header = update ? HEADER_UPDATE : HEADER;
+  const parsed = parseCsv(fs.readFileSync(file, 'utf8').replace(/^\ufeff/, ''));
   const head = parsed.shift();
-  if (head.join(',') !== HEADER.join(',')) throw new Error('header did not survive the round trip');
+  if (head.join(',') !== header.join(',')) throw new Error('header did not survive the round trip');
   if (parsed.length !== rows.length) throw new Error(parsed.length + ' rows read back, ' + rows.length + ' written');
   const seen = new Set();
   for (const rec of parsed) {
@@ -95,9 +114,10 @@ function readBack(file, rows) {
     if (!spec) throw new Error('unknown handle read back: ' + rec[0]);
     if (seen.has(rec[0])) throw new Error('handle appears twice: ' + rec[0]);
     seen.add(rec[0]);
-    const want = [spec.handle, 'MERGE', spec.title, spec.body, 'TRUE', PUBLISHED_AT];
+    const want = rowOf(spec, update);
+    if (rec.length !== want.length) throw new Error(rec[0] + ': ' + rec.length + ' columns read back, ' + want.length + ' written');
     for (let i = 0; i < want.length; i++) {
-      if (rec[i] !== want[i]) throw new Error(rec[0] + ': column ' + HEADER[i] + ' differs after the round trip');
+      if (rec[i] !== want[i]) throw new Error(rec[0] + ': column ' + header[i] + ' differs after the round trip');
     }
   }
   return parsed.length;
@@ -105,16 +125,30 @@ function readBack(file, rows) {
 
 function main(argv) {
   const offline = argv.includes('--offline');
+  const update = argv.includes('--update');
   const outAt = argv.indexOf('--out');
-  const outDir = outAt > -1 ? argv[outAt + 1] : path.join(ROOT, 'imports', '2026-09-23f');
+  const outDir = outAt > -1 ? argv[outAt + 1] : path.join(ROOT, 'imports', update ? '2026-09-23g' : '2026-09-23f');
 
   const problems = [];
   const rows = PAGES.map((p) => ({ handle: p.handle, title: p.title, body: bodyOf(p.handle) }));
   for (const r of rows) {
     checkBody(r.handle, r.body).forEach((m) => problems.push(m));
     if (offline) continue;
-    const own = status('/pages/' + r.handle);
-    if (own !== '404') problems.push(r.handle + ': answers ' + own + ', not 404, so a page already exists; read it first');
+    if (update) {
+      const sf = require('../lib/storefront-fetch');
+      const res = sf.raw('/pages/' + r.handle + '.json');
+      if (String(res.code) !== '200') { problems.push(r.handle + ': answers ' + res.code + ', so there is no live page to update'); continue; }
+      const live = JSON.parse(res.body).page.body_html;
+      const prior = require('child_process').execFileSync('git',
+        ['show', 'HEAD:shopify/' + r.handle + '.html'], { cwd: ROOT, encoding: 'utf8' });
+      if (visibleText(live) !== visibleText(prior)) {
+        problems.push(r.handle + ': the live text differs from the last committed source, so it was edited since; read it first');
+      }
+      if (visibleText(r.body) === visibleText(live)) problems.push(r.handle + ': the new body says nothing different from the live one');
+    } else {
+      const own = status('/pages/' + r.handle);
+      if (own !== '404') problems.push(r.handle + ': answers ' + own + ', not 404, so a page already exists; read it first');
+    }
     for (const link of internalLinks(r.body)) {
       const code = status(link);
       if (code !== '200') problems.push(r.handle + ': links to ' + link + ', which answers ' + code);
@@ -128,9 +162,9 @@ function main(argv) {
 
   fs.mkdirSync(outDir, { recursive: true });
   //  The name has to contain "page" or Matrixify rejects the file outright.
-  const file = path.join(outDir, 'confirm-role-pages.csv');
-  writeSheet(file, rows);
-  const back = readBack(file, rows);
+  const file = path.join(outDir, update ? 'confirm-role-pages-copy.csv' : 'confirm-role-pages.csv');
+  writeSheet(file, rows, update);
+  const back = readBack(file, rows, update);
   const pf = preflight(file, { expectCommand: 'MERGE' });
   if (pf.problems.length) {
     fs.unlinkSync(file);
@@ -145,4 +179,4 @@ function main(argv) {
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { PAGES, HEADER, PUBLISHED_AT, checkBody, internalLinks, writeSheet, readBack, bodyOf };
+module.exports = { PAGES, HEADER, HEADER_UPDATE, PUBLISHED_AT, checkBody, internalLinks, visibleText, writeSheet, readBack, bodyOf };

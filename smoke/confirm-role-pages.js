@@ -21,8 +21,8 @@ for (const p of b.PAGES) {
 //  Each rule, broken alone, fires alone.
 const base = b.bodyOf('confirm-teacher');
 const cases = [
-  ['non-ASCII', base.replace('Thanks', 'Thanks ')],
-  ['em-dash', base.replace('Thanks,', 'Thanks &mdash;')],
+  ['non-ASCII', base.replace('</h1>', '\u00a0</h1>')],
+  ['em-dash', base.replace('</h1>', ' &mdash;</h1>')],
   ['<script>', base + '<script>1</script>'],
   ['<style>', base + '<style>p{}</style>'],
   ['no internal link', base.replace(/href="\/[^"]*"/g, 'href="https://example.com/"')],
@@ -32,6 +32,9 @@ for (const [rule, broken] of cases) {
   ok(got.length === 1, rule + ': expected exactly one refusal, got ' + JSON.stringify(got));
   ok(got[0].indexOf(rule) !== -1, rule + ': refused for the wrong reason: ' + got[0]);
 }
+
+//  Every injection above must actually have landed, or the case tests nothing.
+for (const [rule, broken] of cases) ok(broken !== base, rule + ': the injection did not land');
 
 //  Round trip, then tamper with the file and require readBack to notice.
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'confirm-role-'));
@@ -45,10 +48,24 @@ fs.writeFileSync(file, raw.replace('Klaviyo flow', 'Klaviyo  flow'));
 assert.throws(() => b.readBack(file, rows), /differs/); n++;
 fs.writeFileSync(file, raw.replace('"TRUE"', '"FALSE"'));
 assert.throws(() => b.readBack(file, rows), /Published differs/); n++;
+//  Update mode: three columns, and the same tamper checks.
+const ufile = path.join(dir, 'confirm-role-pages-copy.csv');
+b.writeSheet(ufile, rows, true);
+ok(b.readBack(ufile, rows, true) === 2, 'two update rows read back');
+const uraw = fs.readFileSync(ufile, 'utf8');
+ok(uraw.split('\r\n')[0] === '\ufeff"Handle","Command","Body HTML"', 'update header is body-only');
+assert.throws(() => b.readBack(ufile, rows, false), /header/); n++;
+fs.writeFileSync(ufile, uraw.replace('Klaviyo flow', 'Klaviyo  flow'));
+assert.throws(() => b.readBack(ufile, rows, true), /differs/); n++;
+
+//  visibleText ignores Shopify re-serialising an apostrophe, and nothing else.
+ok(b.visibleText('<p>I&#39;m</p>') === b.visibleText("<p>I'm</p>"), 'apostrophe entity is invisible');
+ok(b.visibleText('<p>I am</p>') !== b.visibleText('<p>I was</p>'), 'a word change is visible');
 fs.rmSync(dir, { recursive: true, force: true });
 
-//  The committed sheet, if present, is exactly what the builder writes now.
-const committed = path.join(__dirname, '..', 'imports', '2026-09-23f', 'confirm-role-pages.csv');
-if (fs.existsSync(committed)) { ok(b.readBack(committed, rows) === 2, 'committed sheet matches source'); }
+//  The newest committed sheet, if present, is exactly what the builder writes now.
+//  The 2026-09-23f creation sheet is history: it was imported, then the copy changed.
+const committed = path.join(__dirname, '..', 'imports', '2026-09-23g', 'confirm-role-pages-copy.csv');
+if (fs.existsSync(committed)) { ok(b.readBack(committed, rows, true) === 2, 'committed copy sheet matches source'); }
 
 console.log('smoke:confirmrole ' + n + ' checks passed');
