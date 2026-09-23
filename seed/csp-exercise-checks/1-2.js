@@ -47,7 +47,7 @@ module.exports = {
       {
         ek: 'CRD-2.C.6',
         keyCite: 'input can come from a user OR other programs',
-        stem: 'At 10:30 the cafeteria inventory software transmitted "pizza: 0 remaining" and the tile turned gray. No human touched the app. Was that input?',
+        stem: 'At 11:25 the cafeteria inventory software transmitted "pizza: 0 remaining" and the tile turned gray. No human touched the app. Was that input?',
         options: [
           'No, because input requires a user action',
           'No, because nothing was typed or tapped',

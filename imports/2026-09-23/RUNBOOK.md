@@ -119,6 +119,29 @@ bot-challenge page, and its assertion is negative (no badge found), so a
 challenge body would read as 8 clean. Before trusting an "8 clean", open one
 page by eye.
 
+### Step 5 also moves the pizza sell-out to 11:25 (board 400)
+
+Regenerated on 2026-09-23. The handout had pizza selling out at 10:30 (row 2)
+and then being ordered at 11:14 (row 1) and offered at 11:20 (row 5). The
+sell-out is now 11:25 a.m. on the page's log and in graded question 2, which
+used to open "At 10:30". Nothing else on the page changed, and it still carries
+no EK badges.
+
+Do this BEFORE step 5, so the paper and the page change together: replace the
+two files teachers download, in Shopify admin under Content > Files, with the
+corrected copies (same file names, so the links keep working):
+
+    AP-CSP_1-2_Exercise1_Student_k7q2m9.docx   imports/2026-09-23/ (in the repo)
+    AP-CSP_1-2_Exercise1_KEY_k7q2m9.docx       handed over in the conversation,
+                                                not committed: the repo is public
+
+In each file the only change is the row 2 time, 10:30 a.m. to 11:25 a.m.
+Check afterwards that the download says 11:25:
+
+    curl -s https://apcsexamprep.com/cdn/shop/files/AP-CSP_1-2_Exercise1_Student_k7q2m9.docx -o h.docx && unzip -p h.docx word/document.xml | grep -o '1[01]:[0-9][0-9] a.m.' | head -2
+
+Expected: `11:14 a.m.` then `11:25 a.m.`.
+
 ## Steps 6 to 8: the Part A logs on 2.3, 5.3 and 5.6 Exercise 1 (board 397)
 
 Same defect as step 5, on three mirror-only pages: each page's Part B cites
