@@ -53,3 +53,8 @@ smoke/smoke-health-integrity.db*
 __pycache__/
 tools/cyber-bundle-ced-voice/repairs.json
 tools/cyber-bundle-ced-voice/worklist.json
+
+# Agent tool worktrees (isolation: "worktree"). Ephemeral scratch state for a
+# background subagent's own git checkout, cleaned up automatically when the
+# agent finishes or makes no changes. Never a deliverable to commit.
+.claude/worktrees/
