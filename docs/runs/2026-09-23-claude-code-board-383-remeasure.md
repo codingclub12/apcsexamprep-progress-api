@@ -16,7 +16,7 @@ the pages from the storefront rather than from the registry.
 | of those, identity-map `esc()` | 5 confirmed broken, rest unknown | **0 of 38** |
 | of those, name reaching `innerHTML` | not stated | **0 of 38**; all 38 build the row with `createElement` and `textContent` |
 | Big Idea 3 lesson pages showing "undefined questions" | 13 (board) or 14 (sheet) | **0 of 18** |
-| any published page showing "undefined questions" | not asked | **0 of 1364 fetched** |
+| any published page showing "undefined questions" | not asked | **0 of 1365** |
 
 The four sheets in `imports/2026-09-21/` were imported. Every long line of every
 row in all four is present in the live page it targets. The one exception is a
@@ -73,7 +73,14 @@ verdict to change. 13 assertions.
   sitemap, 60 game handles fetched, `38 pages carry the leaderboard: 38 SAFE, 0 BROKEN, 0 DISAGREE.`,
   0 pages stating "undefined questions", no leaderboard page the registry does
   not name, the same 9 registry ids with no page.
-- `--all` over the whole sitemap: see the result recorded below.
+- `--all` over the whole sitemap: 1352 of 1365 fetched, `37 pages carry the
+  leaderboard: 37 SAFE, 0 BROKEN, 0 DISAGREE.`, 0 stating "undefined
+  questions", exit 1 because 13 fetches failed (12 answered 429, one TLS reset).
+  The storefront rate-limits a full crawl. Those 13 were refetched one at a time
+  through the same module and `judge()`: all 13 served, the one leaderboard page
+  among them (`crowd-power`) reads SAFE, and none states "undefined questions".
+  So all 1365 published pages were read, and the leaderboard set is the same 38
+  the registry sweep names.
 - `node scripts/verify-csp-bi3-undefined-live.js`: `0 showing "undefined questions", 18 stating a correct count, 0 other, of 18 pages.`
 - All 35 CSP lesson pages carry `Applied Challenge<span>6 questions, and every answer is recorded for your teacher`, so the four 2026-09-22 sheets for Big Ideas 1, 2, 4 and 5 are live too.
 - Mutation, five breaks of the new sweep, each required to turn one NAMED
