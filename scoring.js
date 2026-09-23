@@ -75,6 +75,22 @@ const LESSON_SCORE_ITEM = 'lesson-score';
 // what the teacher priced it at.
 const REPORTER_TOTAL_ITEM = 'score';
 
+// THE THIRD RESERVED ITEM NAME: a score a TEACHER typed into a gradebook cell.
+//
+// Written only by PUT /api/teacher/classes/:code/cells, at most one row per
+// (student, unit, lesson, activity), and it REPLACES the activity rather than
+// joining it. A teacher entering 24 for a page whose grader could only give 22
+// is overruling what the page reported, not adding a 24th item beside it, and a
+// teacher entering 18 after a student's best run of 22 means 18. So when this
+// row exists, every other row for that activity is set aside, whatever the
+// retry policy says. Clearing it (the same route with score null) deletes the
+// row and the student's own attempts count again, untouched.
+//
+// Reported 2026-09-23: a grader bug held 1.4 Exercise 1 at 22 of 24 for every
+// student, and the dashboard could only say "Typing a score in by hand is not
+// available on this course." This is that missing write path.
+const TEACHER_ITEM = 'teacher-entered';
+
 // The rule as SQL, in two fragments, so the readers that sum this ledger cannot
 // drift into separate opinions about it. gradebook-contract.js (what every view
 // reads), this file (what progress.score is written from),
@@ -85,16 +101,26 @@ const REPORTER_TOTAL_ITEM = 'score';
 // written into course_denominators as the official total for a 7 point
 // exercise. That is the same trap the LESSON_SCORE_ITEM exclusion above was
 // added to close.
+//
+// The flag carries two facts in one column so that no reader had to change
+// shape when the teacher override arrived:
+//   2  a teacher-entered row exists: keep that row and nothing else
+//   1  a page-named item exists: keep named items, drop the scraped carrier
+//   0  the carrier is the only writer: keep it
+// Every reader already passes the flag through keepItemSql and nowhere else,
+// which is what makes a one-place change safe.
 
-/** 1 when this activity carries a page-named item beside the scraped carrier. */
+/** 2 when a teacher entered this cell, else 1 when a page-named item exists, else 0. */
 function namedItemFlagSql(itemExpr, partitionBy) {
   const over = partitionBy ? `PARTITION BY ${partitionBy}` : '';
-  return `MAX(CASE WHEN ${itemExpr} <> '${REPORTER_TOTAL_ITEM}' THEN 1 ELSE 0 END) OVER (${over})`;
+  return `MAX(CASE WHEN ${itemExpr} = '${TEACHER_ITEM}' THEN 2 `
+    + `WHEN ${itemExpr} <> '${REPORTER_TOTAL_ITEM}' THEN 1 ELSE 0 END) OVER (${over})`;
 }
 
-/** Keep every named item, and the carrier only when it is the sole reporter. */
+/** The teacher row alone when there is one; otherwise every named item, and the carrier only when it is the sole reporter. */
 function keepItemSql(itemExpr, flagCol) {
-  return `(${itemExpr} <> '${REPORTER_TOTAL_ITEM}' OR ${flagCol} = 0)`;
+  return `((${flagCol} = 2 AND ${itemExpr} = '${TEACHER_ITEM}') OR `
+    + `(${flagCol} < 2 AND (${itemExpr} <> '${REPORTER_TOTAL_ITEM}' OR ${flagCol} = 0)))`;
 }
 
 const rollupAggStmt = db.prepare(`
@@ -163,4 +189,4 @@ function rollupScore(studentId, course, unit, lesson, activity_type) {
 }
 
 module.exports = { rollupScore, retryOnFor, LESSON_SCORE_ITEM,
-  REPORTER_TOTAL_ITEM, namedItemFlagSql, keepItemSql };
+  REPORTER_TOTAL_ITEM, TEACHER_ITEM, namedItemFlagSql, keepItemSql };

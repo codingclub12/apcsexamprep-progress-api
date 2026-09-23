@@ -9,7 +9,7 @@ const codeModes = require('../lib/csa-code-modes');
 const { requireStudent } = require('../middleware');
 const { makeRateLimit } = require('../lib/rate-limit');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
-const { rollupScore, LESSON_SCORE_ITEM } = require('../scoring');
+const { rollupScore, LESSON_SCORE_ITEM, TEACHER_ITEM } = require('../scoring');
 const { attemptRollup } = require('../lib/attempt-rollup');
 const { resolveMode, retryAllowedFor } = require('../retry-policy');
 // The single denominator authority. The student view resolves "out of what"
@@ -1614,6 +1614,12 @@ router.post('/score', requireStudent, (req, res) => {
     const lesson        = String(b.lesson);
     const activity_type = b.activity_type ? String(b.activity_type) : 'cfu';
     const item          = b.item != null ? String(b.item).slice(0, 120) : 'item';
+    // A teacher-entered row replaces the whole activity (scoring.js), so a student
+    // who could post one would be grading themselves. Only the teacher route
+    // writes that name.
+    if (item === TEACHER_ITEM) {
+      return res.status(400).json({ error: `'${TEACHER_ITEM}' is reserved for scores a teacher enters.` });
+    }
 
     // Points, resolved from whichever form the reporter sent:
     //   • quiz + choice     : server-side scoring. The page sends only the chosen
@@ -1855,6 +1861,9 @@ router.post('/code-grade', requireStudent, async (req, res) => {
     const unit   = b.unit != null ? String(b.unit) : '';
     const lesson = b.lesson != null ? String(b.lesson) : '';
     const item   = b.item != null ? String(b.item).slice(0, 120) : '';
+    if (item === TEACHER_ITEM) {
+      return res.status(400).json({ error: `'${TEACHER_ITEM}' is reserved for scores a teacher enters.` });
+    }
     if (!course || !unit || !lesson || !item) {
       return res.status(400).json({ error: 'course, unit, lesson, item, language, source required' });
     }

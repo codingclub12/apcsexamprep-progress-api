@@ -11,9 +11,9 @@ const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
 const { rowScope, SCOPE_ALL } = require('../lib/activity-gate');
-const { LESSON_SCORE_ITEM, namedItemFlagSql, keepItemSql } = require('../scoring');
+const { LESSON_SCORE_ITEM, TEACHER_ITEM, namedItemFlagSql, keepItemSql, rollupScore } = require('../scoring');
 const { buildCanonicalGradebook, canonicalActivity, isGradedActivity,
-  pointsFromRatio, denominatorMap } = require('../lib/gradebook-contract');
+  pointsFromRatio, denominatorMap, lookupDenominator } = require('../lib/gradebook-contract');
 const {
   formatCell, buildCanvasUnitExport, buildCanvasActivityExport, buildSchoologyExport, canvasSisLoginId,
   INCLUDE_BUCKETS,
@@ -368,7 +368,8 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   const allPoints = db.prepare(`
     SELECT student_id, unit, lesson, activity_type,
            SUM(kept_points) AS points_earned,
-           SUM(item_max)    AS points_possible
+           SUM(item_max)    AS points_possible,
+           MAX(CASE WHEN item = '${TEACHER_ITEM}' THEN 1 ELSE 0 END) AS teacher_entered
     FROM (
       SELECT se.student_id, se.unit, se.lesson, se.activity_type, se.item,
              se.points     AS kept_points,
@@ -534,6 +535,9 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
       points_earned:   earned,
       points_possible: possible,
       denominator_source: denomSource,
+      // True when the mark is one the teacher typed (PUT .../cells), so the
+      // popover can offer to clear it and say whose number it is.
+      teacher_entered: !!(pt && pt.teacher_entered),
     };
   }
 
@@ -1208,6 +1212,17 @@ router.patch('/classes/:code/progress/:progressId/unlock', requireTeacher, (req,
   const now   = new Date().toISOString();
 
   if (reset) {
+    // A typed teacher mark replaces the activity (scoring.js), so leaving it in
+    // the ledger would put it straight back on the student's next submission.
+    // Reset means "let the student re-earn this", so the typed mark goes too.
+    const cellKey = db.prepare(
+      'SELECT student_id, course, unit, lesson, activity_type FROM progress WHERE id = ?'
+    ).get(record.id);
+    if (cellKey) {
+      db.prepare(`DELETE FROM score_events WHERE student_id = ? AND course = ? AND unit = ?
+        AND lesson = ? AND activity_type = ? AND item = ?`).run(cellKey.student_id, cellKey.course,
+        cellKey.unit, cellKey.lesson, cellKey.activity_type, TEACHER_ITEM);
+    }
     // score_reset_at is what makes this reset stick. progress.score is a derived
     // cache recomputed from the score_events ledger on every write (see the
     // lesson-score block in routes/student.js), so nulling the cache alone would
@@ -1778,6 +1793,126 @@ router.post('/classes/:code/scores', requireTeacher, scoreEntryLimit, (req, res)
     recorded: result.written,
     cleared: result.cleared,
   });
+});
+
+// -- TEACHER-ENTERED SCORE ON A LEDGER COURSE (System B) ----------------------
+// PUT /api/teacher/classes/:code/cells
+//   { student_id, unit, lesson, activity_type, score }   score: number | null
+//
+// The courses that grade through score_events (AP Cybersecurity, AP CSP) had no
+// way for a teacher to set a mark. The dashboard said so, and on 2026-09-23 it
+// cost a teacher a fix: a grader bug held 1.4 Exercise 1 at 22 of 24, and the
+// only remedy on offer was Reset and a re-sit.
+//
+// RULES
+//   - The column's authored "out of" is the price, the same one the dashboard
+//     prints in the header. A column nobody has priced cannot take a typed
+//     score, because there is nothing to say what the number is out of.
+//   - The row goes into score_events under TEACHER_ITEM and REPLACES the
+//     activity for that student (scoring.js). One per cell: re-entry deletes
+//     the previous teacher row first, so a corrected typo leaves nothing behind.
+//   - score: null clears it. Only the teacher row is deleted; the student's own
+//     attempts are untouched and count again.
+//   - progress.score is recomputed from the ledger exactly as a student write
+//     does, so every view reads the new mark on its next load.
+//   - Zero PII: a number and existing ids. Nothing free-text is stored.
+const cellStudentStmt = db.prepare('SELECT id, class_id FROM students WHERE id = ? AND class_id = ?');
+const cellProgressStmt = db.prepare(`
+  SELECT id, score_reset_at FROM progress
+  WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+`);
+const cellDeleteTeacherStmt = db.prepare(`
+  DELETE FROM score_events
+  WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ? AND item = ?
+`);
+const cellInsertTeacherStmt = db.prepare(`
+  INSERT INTO score_events
+    (id, student_id, class_id, course, unit, lesson, activity_type, item,
+     points, max_points, correct, answers, client_event_id, created_at)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?)
+`);
+//  Student rows written after a reset. Clearing a teacher mark must not bring
+//  back a grade the teacher had already reset away.
+const cellEventsSinceStmt = db.prepare(`
+  SELECT COUNT(*) n FROM score_events
+  WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+    AND item NOT IN (?, ?) AND (? IS NULL OR created_at > ?)
+`);
+
+router.put('/classes/:code/cells', requireTeacher, scoreEntryLimit, (req, res) => {
+  try {
+    const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
+      .get(String(req.params.code || '').toUpperCase(), req.teacher.id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+    const b = req.body || {};
+    const course = cls.course;
+    const cfg = COURSES[course];
+    const unit = typeof b.unit === 'string' ? b.unit.slice(0, 40) : '';
+    const lesson = typeof b.lesson === 'string' ? b.lesson.slice(0, 40) : '';
+    const activity_type = typeof b.activity_type === 'string' ? b.activity_type.slice(0, 40) : '';
+    if (!cfg || !cfg.units || !cfg.units[unit]) return res.status(400).json({ error: `Unknown unit '${unit}' for ${course}` });
+    if (!lesson || !activity_type) return res.status(400).json({ error: 'lesson and activity_type are required' });
+
+    const sid = typeof b.student_id === 'string' ? b.student_id : '';
+    const stu = cellStudentStmt.get(sid, cls.id);
+    if (!stu) return res.status(400).json({ error: 'That student is not in this class' });
+
+    const price = lookupDenominator(denominatorMap(course), unit, lesson, activity_type);
+    if (!price) {
+      return res.status(400).json({ error: 'This column has no points assigned yet, so a typed score would not be out of anything.' });
+    }
+    const max = price.possible;
+
+    let score = null;
+    if (b.score !== null) {
+      score = Number(b.score);
+      if (b.score === undefined || b.score === '' || !Number.isFinite(score) || score < 0 || score > max) {
+        return res.status(400).json({ error: `score must be a number from 0 to ${max}, or null to clear it` });
+      }
+      score = Math.round(score * 100) / 100;
+    }
+
+    const now = new Date().toISOString();
+    const out = db.transaction(() => {
+      const removed = cellDeleteTeacherStmt.run(stu.id, course, unit, lesson, activity_type, TEACHER_ITEM).changes;
+      if (score !== null) {
+        cellInsertTeacherStmt.run(newId(), stu.id, cls.id, course, unit, lesson, activity_type,
+          TEACHER_ITEM, score, max, now);
+      }
+      const prog = cellProgressStmt.get(stu.id, course, unit, lesson, activity_type);
+      const roll = rollupScore(stu.id, course, unit, lesson, activity_type);
+      // With a teacher mark the rollup IS the mark. Without one, the student's
+      // own rows decide, unless a reset happened and nothing came after it.
+      let pct = roll.items > 0 ? roll.pct : null;
+      if (score === null && prog && prog.score_reset_at) {
+        const after = cellEventsSinceStmt.get(stu.id, course, unit, lesson, activity_type,
+          LESSON_SCORE_ITEM, TEACHER_ITEM, prog.score_reset_at, prog.score_reset_at).n;
+        if (!after) pct = null;
+      }
+      if (prog) {
+        db.prepare('UPDATE progress SET score = ?, updated_at = ? WHERE id = ?').run(pct, now, prog.id);
+      } else if (pct !== null) {
+        db.prepare(`
+          INSERT INTO progress (id, student_id, class_id, course, unit, lesson,
+            activity_type, completed, score, attempts, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, 0, ?)
+        `).run(newId(), stu.id, cls.id, course, unit, lesson, activity_type, pct, now);
+      }
+      return { removed, pct };
+    })();
+
+    res.json({
+      ok: true,
+      cell: { student_id: stu.id, unit, lesson, activity_type },
+      entered: score !== null ? { score, max_score: max } : null,
+      cleared: score === null ? out.removed : 0,
+      pct: out.pct,
+    });
+  } catch (e) {
+    console.error('teacher/cells:', e);
+    res.status(500).json({ error: 'Could not save that score' });
+  }
 });
 
 // ── REDEEM AN ACCESS CODE (Phase 4: Teacher Command Center, slice 1) ──────────
