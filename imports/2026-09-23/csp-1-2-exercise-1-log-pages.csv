@@ -1,0 +1,275 @@
+﻿"Handle","Command","Title","Body HTML","Published","Published At","SEO Title","SEO Description"
+"ap-csp-topic-1-2-exercise-1","MERGE","AP CSP 1.2 Exercise 1: Behavior Detective - The LunchDash Log","<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#csp-ex{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,""Segoe UI"",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;font-size:17px!important;background:#f8fafc!important}
+#csp-ex *,#csp-ex *::before,#csp-ex *::after{box-sizing:border-box!important}
+#csp-ex .hero{background:linear-gradient(135deg,#1e40af,#1a56db)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 18px!important}
+#csp-ex .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 8px!important}
+#csp-ex h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#csp-ex .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#csp-ex h2{font-size:21px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:32px 0 6px!important;font-weight:800!important;border-bottom:3px solid #93c5fd!important;padding-bottom:6px!important}
+#csp-ex h2 .tag{float:right!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;padding:3px 10px!important;border-radius:100px!important;margin-top:4px!important}
+#csp-ex h2 .tag.local{background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fde68a!important}
+#csp-ex h2 .tag.graded{background:#dcfce7!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #86efac!important}
+#csp-ex p{margin:8px 0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .btn,#csp-ex .btn:link,#csp-ex .btn:visited{display:inline-block!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+#csp-ex .btn.ghost,#csp-ex .btn.ghost:link,#csp-ex .btn.ghost:visited{background:#fff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border:2px solid #93c5fd!important}
+#csp-ex .note{background:#fff!important;border:1px solid #e2e8f0!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;padding:14px 18px!important;margin:16px 0 22px!important;font-size:15px!important}
+#csp-ex .note .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 4px!important}
+#csp-ex .item{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:18px 20px!important;margin:14px 0!important}
+#csp-ex .item.paper{background:#fffbeb!important;border-color:#fde68a!important}
+#csp-ex .item-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important}
+#csp-ex .item-text{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.65!important;margin:0 0 10px!important}
+#csp-ex .prompt{font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin:12px 0 4px!important}
+#csp-ex .code{background:#0f172a!important;border-radius:8px!important;padding:12px 14px!important;margin:10px 0!important;font-family:""SFMono-Regular"",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre-wrap!important;overflow-x:auto!important}
+#csp-ex textarea{display:block!important;width:100%!important;min-height:90px!important;padding:10px 12px!important;border:1px solid #d6d3d1!important;border-radius:8px!important;font-family:inherit!important;font-size:15px!important;line-height:1.55!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;resize:vertical!important}
+#csp-ex .saved{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:4px 0 0!important;min-height:16px!important}
+#csp-ex .mcq-item{margin-bottom:26px!important;padding-bottom:26px!important;border-bottom:1px solid #f1f5f9!important}
+#csp-ex .mcq-item:last-child{border-bottom:none!important;margin-bottom:0!important;padding-bottom:0!important}
+#csp-ex .mcq-q-num{font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:8px!important}
+#csp-ex .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important}
+#csp-ex .mcq-options{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:12px!important}
+#csp-ex .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;text-align:left!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#fff!important;font-size:15px!important;font-family:inherit!important;line-height:1.5!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#csp-ex .mcq-option:hover{border-color:#93c5fd!important;background:#eff6ff!important}
+#csp-ex .mcq-option.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-option.revealed-correct{border-color:#16a34a!important;background:#f0fdf4!important}
+#csp-ex .mcq-option-letter{font-weight:700!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;flex-shrink:0!important;min-width:18px!important}
+#csp-ex .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+#csp-ex .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#csp-ex .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important}
+#csp-ex .mcq-feedback.show{display:block!important}
+#csp-ex .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important}
+#csp-ex .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important}
+#csp-ex .scorebar{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 18px!important;margin:0 0 18px!important;font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#csp-ex .scorebar strong{color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-size:17px!important}
+#csp-ex .nextnav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:26px!important}
+#csp-ex .nextnav a,#csp-ex .nextnav a:link,#csp-ex .nextnav a:visited{display:block!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;text-decoration:none!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-weight:700!important;font-size:15px!important}
+@media (max-width:640px){#csp-ex .nextnav{grid-template-columns:repeat(1,1fr)!important}}
+</style>
+<div id=""csp-ex"" class=""lesson-page"" data-course=""ap-csp"" data-unit=""bi-1"" data-lesson=""program-function-purpose"">
+  <div class=""hero"">
+    <p class=""eyebrow"">Big Idea 1 &middot; Topic 1.2 &middot; Exercise 1</p>
+    <h1>Behavior Detective - The LunchDash Log</h1>
+    <p class=""sub"">25 minutes</p>
+  </div>
+  <p><a class=""btn"" href=""/pages/ap-csp-course-bi1-program-function-purpose"">Back to the Topic 1.2 lesson</a><a class=""btn ghost"" href=""/pages/ap-csp-course"">All CSP topics</a></p>
+  <div class=""note"">
+    <p class=""label"">How this page works</p>
+    <p>The writing boxes below are yours. What you type stays in this browser, is saved here as you go, and is never sent to us or to your teacher. Hand the written work in the way your teacher asked for it.</p>
+    <p>The graded check at the bottom is the part that records to your teacher's gradebook.</p>
+  </div>
+<style>
+#csp-ex .log-scroll{display:block!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;margin:10px 0 6px!important}
+#csp-ex table.log{border-collapse:collapse!important;width:100%!important;min-width:560px!important;font-size:14px!important;line-height:1.45!important;background:#fff!important}
+#csp-ex table.log th,#csp-ex table.log td{border:1px solid #fde68a!important;padding:8px 10px!important;text-align:left!important;vertical-align:top!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important}
+#csp-ex table.log th{background:#fef3c7!important;font-weight:700!important;font-size:12px!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+#csp-ex table.log td.row-id{font-weight:700!important;text-align:center!important;white-space:nowrap!important}
+#csp-ex table.log td.row-when{white-space:nowrap!important}
+#csp-ex .log-note{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin:6px 0 0!important}
+</style>
+  <h2>LunchDash Behavior Log: Five Moments Under Review<span class=""tag local"">From your handout</span></h2>
+  <p>The same log as Part A of your handout, row for row. The questions below refer to these rows by number.</p>
+      <div class=""item paper"">
+        <div class=""item-num"">The log</div>
+        <p class=""item-text"">The lead developer hands you five entries pulled from yesterday's behavior log and says: 'Explain what the program is doing in each one, using the right vocabulary, and you're on the team.' Read the log row by row, then answer Part A. Use the three-step method: anchor your first instinct, trace what data crossed the program's boundary in each direction, then name each piece with CED vocabulary - input or output, its form, its source or destination, and what triggered the code to run.</p>
+        <div class=""log-scroll"">
+        <table class=""log"">
+          <thead><tr><th scope=""col"">ID</th><th scope=""col"">Moment</th><th scope=""col"">What happened</th><th scope=""col"">How the program reacted</th><th scope=""col"">Detail worth noticing</th></tr></thead>
+          <tbody>
+          <tr><td class=""row-id"">1</td><td class=""row-when"">11:14 a.m.</td><td>A student taps the pizza tile on the touchscreen</td><td>An order confirmation appears on screen and the phone buzzes once</td><td>One tap produced two separate reactions in two different forms</td></tr>
+          <tr><td class=""row-id"">2</td><td class=""row-when"">10:30 a.m.</td><td>The cafeteria's inventory software transmits 'pizza: 0 remaining'</td><td>The pizza tile turns gray and shows SOLD OUT</td><td>No human touched anything - the data arrived from other software</td></tr>
+          <tr><td class=""row-id"">3</td><td class=""row-when"">11:02 a.m.</td><td>A student says 'Reorder my usual' to the app's voice assistant</td><td>The app queues the exact order that student placed the last three Fridays</td><td>The reply used data no microphone captured today</td></tr>
+          <tr><td class=""row-id"">4</td><td class=""row-when"">10:40-11:00 a.m.</td><td>Nothing - no orders for 20 minutes</td><td>The app does nothing visible, then reacts instantly to the 11:00 tap</td><td>Twenty idle minutes, then an immediate response with no delay</td></tr>
+          <tr><td class=""row-id"">5</td><td class=""row-when"">11:20 a.m.</td><td>Two students tap the same 'Surprise me' button seconds apart</td><td>One student is offered pizza; the other is offered the salad bowl</td><td>Identical taps on the identical button produced different offers</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class=""log-note"">Rows adapted from the Day 1 mystery-app bell ringer and the Day 2 input/output worked table; all terms and EKs follow the College Board AP Computer Science Principles Course and Exam Description (Effective Fall 2023).</p>
+      </div>
+  <h2>Part B, from your handout<span class=""tag local"">Not recorded</span></h2>
+  <p>Your handout says these are the same items available here. Part A stays on paper. <span class=""saved"" id=""draft-note""></span></p>
+      <div class=""item paper"">
+        <div class=""item-num"">Q1 &middot; 3 points on the handout</div>
+        <p class=""item-text"">You now understand LunchDash from its log alone. Describe the program at BOTH CED description levels: (a) one broad sentence saying what it does; (b) a 3-4 step detailed version that says what it does AND how its statements accomplish it.</p>
+        <textarea data-draft=""b1"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q1""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q2 &middot; 3 points on the handout</div>
+        <p class=""item-text"">Classify each artifact with the precise CED term - program, code segment, or behavior: (a) the entire installed LunchDash app; (b) the 9 lines inside it that gray out a sold-out tile; (c) the sentence 'when a student taps a tile, a confirmation appears and the phone buzzes.'</p>
+        <textarea data-draft=""b2"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q2""></textarea>
+      </div>
+      <div class=""item paper"">
+        <div class=""item-num"">Q3 &middot; 2 points on the handout</div>
+        <p class=""item-text"">ENRICHMENT: During row 4's idle window the app looked like it was running 'no code at all' - yet it answered the 11:00 tap instantly. Using the event-loop deep dive, explain what was actually running during those 20 minutes, and why a 'frozen' app is different from an idle one.</p>
+        <textarea data-draft=""b3"" rows=""4"" spellcheck=""true"" aria-label=""Your answer to Q3""></textarea>
+      </div>
+  <h2>Graded check<span class=""tag graded"">Recorded</span></h2>
+  <p>6 questions on the same ideas, drawn from this exercise's answer key. These are auto-graded and reported.</p>
+  <div class=""scorebar"" id=""ex-score""></div>
+  <div class=""item"">
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-1"">
+          <div class=""mcq-q-num"">Question 1 of 6</div>
+          <div class=""mcq-q-text"">LunchDash sat idle for twenty minutes and then answered an 11:00 tap instantly. A classmate says it must have been ""stuck on line 200"" waiting to continue. What does the CED say is actually going on?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','A','C','chk-1-fb-A')""><span class=""mcq-option-letter"">A</span> The program was running lines 1 through 199 very slowly for twenty minutes</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','B','C','chk-1-fb-B')""><span class=""mcq-option-letter"">B</span> The program is sequential but skips ahead when a user is waiting</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','C','C','chk-1-fb-C')""><span class=""mcq-option-letter"">C</span> The program is event-driven: statements execute when triggered, not through the sequential flow of control</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-1','D','C','chk-1-fb-D')""><span class=""mcq-option-letter"">D</span> The program was paused by the operating system and resumed at 11:00</button>
+          </div>
+          <div id=""chk-1-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Twenty minutes of invisible work is the sequential picture the case is designed to rule out.</div>
+          <div id=""chk-1-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Sequential flow has no mechanism for skipping ahead on demand. The instant response is the signature of event-driven execution.</div>
+          <div id=""chk-1-fb-C"" class=""mcq-feedback correct-fb"">Correct. This is the CED distinction exactly. The order-handling code has no place ""in line"" that the program works toward; it ran because the tap event fired.</div>
+          <div id=""chk-1-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. Nothing in the log describes the operating system suspending anything, and the CED explains the behaviour without needing it.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-2"">
+          <div class=""mcq-q-num"">Question 2 of 6</div>
+          <div class=""mcq-q-text"">At 10:30 the cafeteria inventory software transmitted ""pizza: 0 remaining"" and the tile turned gray. No human touched the app. Was that input?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','A','B','chk-2-fb-A')""><span class=""mcq-option-letter"">A</span> No, because nothing was typed or tapped</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','B','B','chk-2-fb-B')""><span class=""mcq-option-letter"">B</span> Yes: input can come from a user or from other programs, and this came from the inventory software</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','C','B','chk-2-fb-C')""><span class=""mcq-option-letter"">C</span> Yes, but only because a person configured the inventory software earlier</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-2','D','B','chk-2-fb-D')""><span class=""mcq-option-letter"">D</span> No, because input requires a user action</button>
+          </div>
+          <div id=""chk-2-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Typing and tapping are two input forms among several. The form does not decide whether something counts as input.</div>
+          <div id=""chk-2-fb-B"" class=""mcq-feedback correct-fb"">Correct. Software-to-software input is completely normal. Data was sent to the computer for processing by the program, which is the CED definition of input.</div>
+          <div id=""chk-2-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. The earlier configuration is not the input. The transmitted data is, and it arrived from another program.</div>
+          <div id=""chk-2-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. The humans-only assumption is exactly what this row exists to break. The CED allows other programs as an input source.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-3"">
+          <div class=""mcq-q-num"">Question 3 of 6</div>
+          <div class=""mcq-q-text"">Two students tapped the same ""Surprise me"" button seconds apart and were offered different meals. One files a bug report saying the program is broken. What is the correct ruling?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','A','A','chk-3-fb-A')""><span class=""mcq-option-letter"">A</span> Reject the report: output is based on the input or on prior state, such as remembered order history</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','B','A','chk-3-fb-B')""><span class=""mcq-option-letter"">B</span> Accept the report: the program is using randomness, which is not allowed</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','C','A','chk-3-fb-C')""><span class=""mcq-option-letter"">C</span> Reject the report: the two taps were milliseconds apart, so they were not really identical</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-3','D','A','chk-3-fb-D')""><span class=""mcq-option-letter"">D</span> Accept the report: identical inputs must produce identical outputs</button>
+          </div>
+          <div id=""chk-3-fb-A"" class=""mcq-feedback correct-fb"">Correct. The inputs matched, but each student's remembered internal values differed, so the same tap legitimately computes a different offer.</div>
+          <div id=""chk-3-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Calling it random without naming prior state is the incomplete answer. Nothing here violates a rule the CED states.</div>
+          <div id=""chk-3-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. Timing is not the difference that matters. Two identical taps would still differ in outcome because the stored state differs.</div>
+          <div id=""chk-3-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. That rule would be true only if input were the only thing output could depend on. The CED explicitly allows prior state as well.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-4"">
+          <div class=""mcq-q-num"">Question 4 of 6</div>
+          <div class=""mcq-q-text"">The nine lines inside LunchDash that gray out a sold-out tile: what is the precise CED term for them?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','A','D','chk-4-fb-A')""><span class=""mcq-option-letter"">A</span> A behavior, because they describe what the user sees</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','B','D','chk-4-fb-B')""><span class=""mcq-option-letter"">B</span> An event, because they run when the inventory data arrives</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','C','D','chk-4-fb-C')""><span class=""mcq-option-letter"">C</span> A program, because they perform a specific task</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-4','D','D','chk-4-fb-D')""><span class=""mcq-option-letter"">D</span> A code segment, because they are a collection of statements that is part of a program</button>
+          </div>
+          <div id=""chk-4-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Behavior is how the program functions during execution, described from the user side, not the lines themselves.</div>
+          <div id=""chk-4-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. The arriving data is the event. The lines that respond to it are code.</div>
+          <div id=""chk-4-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. A program is the whole collection that performs a task when run. These nine lines cannot stand alone.</div>
+          <div id=""chk-4-fb-D"" class=""mcq-feedback correct-fb"">Correct. The part versus whole distinction is the entire point of the term. A code segment is part of a program.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-5"">
+          <div class=""mcq-q-num"">Question 5 of 6</div>
+          <div class=""mcq-q-text"">One tap on the pizza tile produced a confirmation on screen and a buzz. How many outputs is that, and in what forms?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','A','C','chk-5-fb-A')""><span class=""mcq-option-letter"">A</span> Two outputs, both visual, because the phone screen produced both</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','B','C','chk-5-fb-B')""><span class=""mcq-option-letter"">B</span> One output, visual, because the buzz is feedback rather than output</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','C','C','chk-5-fb-C')""><span class=""mcq-option-letter"">C</span> Two outputs: visual to the display and tactile to the vibration motor</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-5','D','C','chk-5-fb-D')""><span class=""mcq-option-letter"">D</span> One output, tactile, because the buzz is what the user actually notices</button>
+          </div>
+          <div id=""chk-5-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. The vibration motor is a different device from the display, and a buzz is tactile rather than visual.</div>
+          <div id=""chk-5-fb-B"" class=""mcq-feedback incorrect-fb"">Incorrect. Output is any data sent from a program to a device. The buzz qualifies, so this undercounts.</div>
+          <div id=""chk-5-fb-C"" class=""mcq-feedback correct-fb"">Correct. One input can legitimately produce several outputs, and here they arrive in two different forms on two different devices.</div>
+          <div id=""chk-5-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. This drops the confirmation, which is just as much an output as the buzz.</div>
+        </div>
+        <div class=""mcq-item"" data-activity=""exercise-1"" data-item=""chk-6"">
+          <div class=""mcq-q-num"">Question 6 of 6</div>
+          <div class=""mcq-q-text"">ENRICHMENT: during the quiet twenty minutes LunchDash looked like it was running no code at all, yet it answered instantly. What distinguishes an idle app from a frozen one?</div>
+          <div class=""mcq-options"">
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','A','B','chk-6-fb-A')""><span class=""mcq-option-letter"">A</span> Idle means no events have ever arrived; frozen means too many arrived at once</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','B','B','chk-6-fb-B')""><span class=""mcq-option-letter"">B</span> Idle means an empty queue with the loop still spinning; frozen means a full queue with the loop blocked</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','C','B','chk-6-fb-C')""><span class=""mcq-option-letter"">C</span> Idle means the program has exited; frozen means it is still loaded but unresponsive</button>
+          <button type=""button"" class=""mcq-option"" onclick=""cspEx('chk-6','D','B','chk-6-fb-D')""><span class=""mcq-option-letter"">D</span> Idle and frozen are the same state, described from the user side and the developer side</button>
+          </div>
+          <div id=""chk-6-fb-A"" class=""mcq-feedback incorrect-fb"">Incorrect. Volume is not the distinction. A frozen app is blocked by a handler that will not return, whatever the queue depth.</div>
+          <div id=""chk-6-fb-B"" class=""mcq-feedback correct-fb"">Correct. The event loop never stopped during the idle window, which is exactly why the tap was dispatched on its very next pass.</div>
+          <div id=""chk-6-fb-C"" class=""mcq-feedback incorrect-fb"">Incorrect. An exited program cannot answer a tap instantly twenty minutes later.</div>
+          <div id=""chk-6-fb-D"" class=""mcq-feedback incorrect-fb"">Incorrect. They are opposite failures. One is healthy waiting, the other is a handler hogging the loop and never returning control.</div>
+        </div>
+  </div>
+  <div class=""nextnav"">
+    <a href=""/pages/ap-csp-course-bi1-program-function-purpose"">Rework the Topic 1.2 lesson</a>
+    <a href=""/pages/ap-csp-course-bi1-unit-test"">Big Idea 1 unit test</a>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'apcs-draft:' + ""ap-csp-topic-1-2-exercise-1"";
+  var answered = {};
+  var total = document.querySelectorAll('.mcq-item[data-item]').length;
+
+  /* Drafts stay in this browser. Nothing typed in a writing box is ever sent
+     anywhere: no request carries it, and the reporter only ever sees the
+     multiple choice results below. */
+  function loadDrafts(){
+    var store = {};
+    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      var id = boxes[i].getAttribute('data-draft');
+      if (store[id]) boxes[i].value = store[id];
+      boxes[i].addEventListener('input', saveDrafts);
+    }
+  }
+  function saveDrafts(){
+    var store = {};
+    var boxes = document.querySelectorAll('textarea[data-draft]');
+    for (var i = 0; i < boxes.length; i++){
+      store[boxes[i].getAttribute('data-draft')] = boxes[i].value;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {}
+    var n = document.getElementById('draft-note');
+    if (n) n.textContent = 'Saved in this browser only.';
+  }
+
+  function activity(d){
+    try{
+      var w = document.querySelector('.lesson-page');
+      if(w){
+        d.course = w.getAttribute('data-course');
+        d.unit = w.getAttribute('data-unit');
+        d.lesson = w.getAttribute('data-lesson');
+      }
+      document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+    }catch(e){}
+  }
+
+  function updateScore(){
+    var right = 0, done = 0, k;
+    for(k in answered){ done++; if(answered[k]) right++; }
+    var el = document.getElementById('ex-score');
+    if(el) el.innerHTML = '<strong>' + right + ' / ' + total + '</strong> correct on the graded check, ' + done + ' answered';
+  }
+
+  window.cspEx = function(qid, chosen, correct, fbId){
+    var item = null, items = document.querySelectorAll('.mcq-item[data-item]'), i;
+    for(i = 0; i < items.length; i++){
+      if(items[i].getAttribute('data-item') === qid){ item = items[i]; break; }
+    }
+    if(!item || answered.hasOwnProperty(qid)) return;
+    var opts = item.querySelectorAll('.mcq-option');
+    for(i = 0; i < opts.length; i++){ opts[i].disabled = true; opts[i].onclick = null; }
+    var letters = ['A','B','C','D'];
+    var pick = letters.indexOf(chosen);
+    if(opts[pick]) opts[pick].classList.add(chosen === correct ? 'correct' : 'incorrect');
+    if(chosen !== correct && opts[letters.indexOf(correct)]){
+      opts[letters.indexOf(correct)].classList.add('revealed-correct');
+    }
+    var fb = document.getElementById(fbId);
+    if(fb) fb.classList.add('show');
+    answered[qid] = (chosen === correct);
+    updateScore();
+    activity({ activity: item.getAttribute('data-activity'), item: qid,
+               choice: chosen, correct: (chosen === correct) });
+  };
+
+  loadDrafts();
+  updateScore();
+})();
+</script>","TRUE","2026-03-01 12:00:00","AP CSP 1.2 Exercise 1: Behavior Detective - The LunchDash Log","Online companion to the AP CSP Topic 1.2 Exercise 1 handout, Behavior Detective - The LunchDash Log. Work the cases, then take the auto-graded check."

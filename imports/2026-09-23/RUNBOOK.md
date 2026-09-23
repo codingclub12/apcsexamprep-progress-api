@@ -1,6 +1,6 @@
 # CED Essential Knowledge codes visible on the 8 graded CSP exercise pages
 
-Board 392. Four sheets, four imports, one per topic. Do not combine them: a
+Board 392, plus a fifth step for board 393. Five sheets, five imports. Do not combine them: a
 MERGE overwrites a live body with no undo, so the blast radius of one click is
 however many rows are in the file.
 
@@ -63,10 +63,11 @@ past-dated literal, never `now()`.
 
 | Step | File | Pages | After this step, verify should read |
 |---|---|---|---|
-| 1 | `csp-ek-badge-removal-topic-1.1.csv` | 2 | 2 clean, 6 still showing |
-| 2 | `csp-ek-badge-removal-topic-1.2.csv` | 2 | 4 clean, 4 still showing |
-| 3 | `csp-ek-badge-removal-topic-1.3.csv` | 2 | 6 clean, 2 still showing |
-| 4 | `csp-ek-badge-removal-topic-1.4.csv` | 2 | 8 clean, 0 still showing |
+| 1 | `csp-ek-badge-removal-topic-1.1-pages.csv` | 2 | 2 clean, 6 still showing |
+| 2 | `csp-ek-badge-removal-topic-1.2-pages.csv` | 2 | 4 clean, 4 still showing |
+| 3 | `csp-ek-badge-removal-topic-1.3-pages.csv` | 2 | 6 clean, 2 still showing |
+| 4 | `csp-ek-badge-removal-topic-1.4-pages.csv` | 2 | 8 clean, 0 still showing |
+| 5 | `csp-1-2-exercise-1-log-pages.csv` | 1 | still 8 clean, and the LunchDash Log on 1.2 Exercise 1 (see below) |
 
 Run after each step:
 
@@ -76,6 +77,52 @@ Only step 4 should end with `8 clean, 0 still showing the badge, of 8 graded
 pages` and exit 0. Steps 1 through 3 are expected to still show pages
 dirty and exit 1; that is not a failure, it means the remaining steps have
 not run yet.
+
+## Step 5: the LunchDash Log on 1.2 Exercise 1 (board 393)
+
+Added by the board 393 session, which took over this runbook's generator lock.
+
+`/pages/ap-csp-topic-1-2-exercise-1` asks six graded questions about the
+LunchDash Log from Part A of the student handout, and the page never showed the
+log (report `esc_75eed3a1756556a978585f39`). Step 5 puts it on the page, as a
+five-row table above the Part B heading. The row was generated from a tree
+carrying BOTH changes, so it has no EK badge either.
+
+**Step 5 must come after step 2.** Step 2's sheet also rewrites this page, from
+a tree without the log. Import step 2 after step 5 and the log is gone, and
+nothing announces it. In this order the log survives and the badge stays gone.
+
+Before step 5, confirm the defect is still live, which is the stale-sheet check:
+
+    node scripts/verify-csp-1-2-log-live.js --before
+
+Expected: "The log is still missing, so the sheet is current." After the import:
+
+    node scripts/verify-csp-1-2-log-live.js
+
+Expected: one log table above Part B, rows 1,2,3,4,5, six graded questions,
+zero EK badges, exit 0. Then `node scripts/verify-csp-ek-badge-live.js` should
+still read 8 clean.
+
+Do not check this with a bare `curl | grep`. On 2026-09-23 that returned 0
+bytes (the page redirects and curl was not told to follow), which reads as
+"log missing" whether it is or not. The verifier fetches through
+`lib/storefront-fetch.js` and refuses to give a verdict unless the Part B
+heading is present.
+
+One caution about `verify-csp-ek-badge-live.js`, noted rather than changed by
+the board 393 session: it fetches with `sf.raw`, which does not reject a
+bot-challenge page, and its assertion is negative (no badge found), so a
+challenge body would read as 8 clean. Before trusting an "8 clean", open one
+page by eye.
+
+## File names
+
+All five sheets end in `-pages.csv`. A CSV has no tab name, so Matrixify reads
+the sheet type from the file name and rejects a name that carries none.
+`scripts/matrixify-preflight.js` refused all four original names; they were
+renamed on 2026-09-23 with contents unchanged, and all five now read "clear to
+import".
 
 ## What the check actually asserts
 

@@ -57,7 +57,7 @@ session cannot "fix" the page on its own and split it from the paper.
 
 ## Evidence
 
-- suite: `npm run smoke:csp-exercise-stimulus`, 27 assertions, and
+- suite: `npm run smoke:csp-exercise-stimulus`, 28 assertions, and
   `smoke:csp-exercise-pages` still 53 of 53.
 - rederive: a second parse of the docx with plain regular expressions and no
   XML parser, compared cell by cell to the committed JSON. 6 rows by 5 cells,
@@ -71,19 +71,44 @@ session cannot "fix" the page on its own and split it from the paper.
   except for Shopify's own normalisation (`&middot;` stored as the character,
   a newline before `</h2>`), so regenerating this page reverts nothing.
 
+## The lock, and the import order
+
+Board #392 held `lib/csp-exercise-pages.js` for the EK badge fix on the same
+eight pages. Its session committed and opened draft PR #768 at 14:46, then went
+silent and the board moved its claim to stale. Tanner told this session to
+force-take the lock, after #392's commit had been merged into this branch, so
+nothing of #392's work is lost and the sheet here carries both fixes.
+
+That makes order matter. #392's topic 1.2 sheet rewrites this page from a tree
+with no log. So the log sheet is step 5 of `imports/2026-09-23/RUNBOOK.md`,
+after #392's four. Imported in that order the log survives and the badge stays
+gone; the other way round, the log vanishes silently.
+
+All four #392 sheets were refused by `scripts/matrixify-preflight.js`: a CSV
+carries its sheet type in the file name and none of theirs had one. Renamed to
+`-pages.csv`, contents unchanged, all five now clear.
+
+## Evidence, continued
+
+- sheet: `imports/2026-09-23/csp-1-2-exercise-1-log-pages.csv`, one row, md5
+  a2d58aaee29ec65e2e6269308bc47136. Parsed back, the body equals a fresh
+  `renderExercise()` byte for byte; zero EK badges, one log table, five rows,
+  pure ASCII. Preflight clear.
+- only one of the 70 bodies changes against the merged tree without the hook.
+- live, before: `node scripts/verify-csp-1-2-log-live.js --before` read the
+  real page (Part B present, six questions, six badges) with no log table.
+  Its after-mode passes on the sheet's own body and fails when row 4 is
+  renumbered, so it is not hollow.
+
 ## Still open
 
-- The sheet is not imported. See the handover for the file and the expected
-  end state.
-- Board #392 held `lib/csp-exercise-pages.js` for the EK badge fix on the same
-  eight pages while this was built. Whichever sheet is imported LAST wins the
-  page body, so the sheet for this page has to be generated from a tree that
-  carries both changes.
+- Five imports, in runbook order. Not done by this session.
+- After step 5, `verify-csp-1-2-log-live.js` is the independent re-check.
 - Same defect, three more pages: Part B on 2.3, 5.3 and 5.6 Exercise 1 cites
   numbered rows of a log the page does not show. All three are mirror-only, so
   no graded question depends on them. They are `KNOWN_GAPS` in the new suite,
   which can only shrink.
-- The handout time-order contradiction above.
+- The handout time-order contradiction above, which is Tanner's call.
 
 ## Learned
 
