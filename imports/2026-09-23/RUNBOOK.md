@@ -1,5 +1,27 @@
 # CED Essential Knowledge codes visible on the 8 graded CSP exercise pages
 
+## Status, checked live 2026-09-23 20:00 UTC
+
+- Steps 5 to 8 are IMPORTED. `verify-csp-1-2-log-live.js` passes (log, rows 1
+  to 5, six questions, no badge, 11:25 in the log and in Q2) and
+  `verify-csp-exercise-1-logs-live.js` reads 3 of 3.
+- Steps 1 to 4 are NOT imported: `verify-csp-ek-badge-live.js` reads 1 clean,
+  7 still showing the badge.
+- The step 2 sheet was REGENERATED after that check (board 402). Its original
+  was built before the 1.2 log existed, so importing it would have erased the
+  log from 1.2 Exercise 1. Its 1.2 Exercise 1 row now equals what is live; its
+  1.2 Exercise 2 row and the other three sheets are byte-identical to before.
+  Steps 1 to 4 can now go in any order.
+- Expected counts from here, because 1.2 Exercise 1 is already clean:
+  `verify-csp-ek-badge-live.js --before` reports 1 page ALREADY CLEAN and tells
+  you not to import a sheet for it. That page is covered: its row in the step 2
+  sheet is the regenerated one and matches what is live. In the order 1, 2, 3,
+  4 the check reads 3, 4, 6 and then 8 clean, not the 2, 4, 6, 8 in the table
+  below.
+- The two 1.2 Exercise 1 downloads (handout and key) still say 10:30 until
+  they are replaced in Shopify Files, so the paper and the page disagree on
+  row 2's time until then.
+
 Board 392, plus step 5 for board 393 and steps 6 to 8 for board 397. Eight sheets, eight imports. Do not combine them: a
 MERGE overwrites a live body with no undo, so the blast radius of one click is
 however many rows are in the file.
