@@ -33,16 +33,17 @@ student the graded activity has "undefined questions".
 
 ## Big Idea 3 is NOT in these sheets, on purpose
 
-Big Idea 3 has the same defect on 14 pages and already has its own sheet,
-`imports/2026-09-21/csp-bi3-applied-challenge-undefined-fix-remaining.csv`,
-which has not been imported yet. Putting those handles in a second file would
-mean one page in two sheets, which is the failure mode splitting exists to
-remove and which nothing announces. The overlap is asserted to be zero rather
-than assumed.
+Big Idea 3 had the same defect on 14 pages and had its own sheet,
+`imports/2026-09-21/csp-bi3-applied-challenge-undefined-fix-remaining.csv`.
+Putting those handles in a second file would have meant one page in two
+sheets, which is the failure mode splitting exists to remove and which
+nothing announces. The overlap was asserted to be zero rather than assumed.
 
-So the full picture on the storefront today is 31 of 35 lesson pages broken:
-14 covered by yesterday's sheet, 17 covered by these four, and 4 already
-correct because somebody fixed them by hand.
+**That BI3 sheet has since been imported.** Confirmed live 2026-09-23: all 18
+BI3 lesson pages state a correct question count, 0 say "undefined questions".
+See `docs/runs/2026-09-23-claude-code-board-383-remeasure.md`. This paragraph
+said "not yet imported" until then; do not act on that phrase in the rest of
+this file below, which describes the state as of 2026-09-22.
 
 ## Before you import anything
 
