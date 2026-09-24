@@ -1,0 +1,238 @@
+<!-- AP CSP exam format page. Source: shopify/ap-csp-exam-format.html in apcsexamprep-progress-api, built by scripts/build-2026-09-24-new-pages-sheet.js. Every exam fact comes from docs/ced-snapshot/csp-exam.txt and exam-dates.txt, captured 2026-09-18. Do not retype them from memory. -->
+<style>
+#apcs-cspfmt{all:initial !important;display:block !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif !important;font-size:17px !important;line-height:1.65 !important;color:#334155 !important;-webkit-text-fill-color:#334155 !important;max-width:900px !important;margin:0 auto !important;padding:8px 16px 40px !important;box-sizing:border-box !important}
+#apcs-cspfmt *,#apcs-cspfmt *::before,#apcs-cspfmt *::after{box-sizing:border-box !important}
+#apcs-cspfmt p,#apcs-cspfmt li,#apcs-cspfmt td,#apcs-cspfmt th,#apcs-cspfmt span,#apcs-cspfmt div,#apcs-cspfmt dd,#apcs-cspfmt dt{font-family:inherit !important;font-size:inherit !important;line-height:inherit !important;color:#334155 !important;-webkit-text-fill-color:#334155 !important}
+#apcs-cspfmt p{margin:0 0 14px !important}
+#apcs-cspfmt a{color:#1e40af !important;-webkit-text-fill-color:#1e40af !important;text-decoration:underline !important;text-underline-offset:2px !important}
+#apcs-cspfmt a:hover{color:#1e3a8a !important;-webkit-text-fill-color:#1e3a8a !important}
+#apcs-cspfmt h1,#apcs-cspfmt h2,#apcs-cspfmt h3{font-family:Georgia,'Times New Roman',serif !important;color:#0f172a !important;-webkit-text-fill-color:#0f172a !important;font-weight:700 !important;line-height:1.2 !important;letter-spacing:normal !important;text-transform:none !important}
+#apcs-cspfmt h1{font-size:40px !important;margin:6px 0 14px !important}
+#apcs-cspfmt h2{font-size:28px !important;margin:44px 0 14px !important;padding-top:8px !important;scroll-margin-top:80px !important}
+#apcs-cspfmt h3{font-size:20px !important;margin:24px 0 8px !important}
+#apcs-cspfmt ul,#apcs-cspfmt ol{margin:0 0 16px !important;padding-left:24px !important}
+#apcs-cspfmt li{margin:0 0 6px !important;display:list-item !important}
+#apcs-cspfmt ul li{list-style:disc !important}
+#apcs-cspfmt ol li{list-style:decimal !important}
+#apcs-cspfmt strong{font-weight:700 !important;color:#0f172a !important;-webkit-text-fill-color:#0f172a !important}
+#apcs-cspfmt .crumbs{display:flex !important;flex-wrap:wrap !important;gap:6px !important;list-style:none !important;padding:0 !important;margin:0 0 8px !important;font-size:14px !important}
+#apcs-cspfmt .crumbs li{list-style:none !important;margin:0 !important;font-size:14px !important}
+#apcs-cspfmt .crumbs li+li::before{content:"/" !important;margin-right:6px !important;color:#94a3b8 !important;-webkit-text-fill-color:#94a3b8 !important}
+#apcs-cspfmt .lede{font-size:19px !important;color:#334155 !important;-webkit-text-fill-color:#334155 !important;margin:0 0 22px !important}
+#apcs-cspfmt .facts{display:grid !important;grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:12px !important;margin:0 0 20px !important;padding:0 !important}
+#apcs-cspfmt .fact{background:#f8fafc !important;border:1px solid #e2e8f0 !important;border-radius:10px !important;padding:14px 16px !important;margin:0 !important}
+#apcs-cspfmt .fact dt{font-size:13px !important;font-weight:600 !important;text-transform:uppercase !important;letter-spacing:.04em !important;color:#475569 !important;-webkit-text-fill-color:#475569 !important;margin:0 0 4px !important}
+#apcs-cspfmt .fact dd{margin:0 !important;font-size:18px !important;font-weight:700 !important;color:#0f172a !important;-webkit-text-fill-color:#0f172a !important;line-height:1.3 !important}
+#apcs-cspfmt .fact dd span{display:block !important;font-size:14px !important;font-weight:400 !important;color:#475569 !important;-webkit-text-fill-color:#475569 !important;margin-top:2px !important}
+#apcs-cspfmt .note{background:#eff6ff !important;border:1px solid #bfdbfe !important;border-radius:10px !important;padding:14px 18px !important;margin:0 0 18px !important}
+#apcs-cspfmt .jump{display:flex !important;flex-wrap:wrap !important;gap:8px !important;margin:6px 0 8px !important;padding:0 !important;list-style:none !important}
+#apcs-cspfmt .jump li{list-style:none !important;margin:0 !important}
+#apcs-cspfmt .jump a{display:inline-flex !important;align-items:center !important;min-height:40px !important;padding:0 14px !important;border:1px solid #cbd5e1 !important;border-radius:999px !important;text-decoration:none !important;font-size:15px !important;background:#ffffff !important}
+#apcs-cspfmt .tbl{width:100% !important;overflow-x:auto !important;margin:0 0 16px !important}
+#apcs-cspfmt table{width:100% !important;border-collapse:collapse !important;font-size:15px !important;background:#ffffff !important}
+#apcs-cspfmt th,#apcs-cspfmt td{text-align:left !important;vertical-align:top !important;padding:12px 14px !important;border-bottom:1px solid #e2e8f0 !important;font-size:15px !important}
+#apcs-cspfmt thead th{background:#f1f5f9 !important;color:#0f172a !important;-webkit-text-fill-color:#0f172a !important;font-weight:700 !important;border-bottom:2px solid #cbd5e1 !important}
+#apcs-cspfmt tbody th{font-weight:700 !important;color:#0f172a !important;-webkit-text-fill-color:#0f172a !important}
+#apcs-cspfmt .split{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:16px !important;margin:0 0 16px !important}
+#apcs-cspfmt .card{background:#ffffff !important;border:1px solid #e2e8f0 !important;border-radius:12px !important;padding:18px 20px !important}
+#apcs-cspfmt .card h3{margin-top:0 !important}
+#apcs-cspfmt .card p:last-child,#apcs-cspfmt .card ul:last-child{margin-bottom:0 !important}
+#apcs-cspfmt .steps{counter-reset:s !important;list-style:none !important;padding:0 !important;margin:0 0 16px !important}
+#apcs-cspfmt .steps li{list-style:none !important;position:relative !important;padding:0 0 14px 52px !important;margin:0 !important;min-height:40px !important}
+#apcs-cspfmt .steps li::before{counter-increment:s !important;content:counter(s) !important;position:absolute !important;left:0 !important;top:0 !important;width:36px !important;height:36px !important;border-radius:50% !important;background:#2D6BC4 !important;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;font-weight:700 !important;display:flex !important;align-items:center !important;justify-content:center !important;font-size:16px !important}
+#apcs-cspfmt .faq{border-top:1px solid #e2e8f0 !important;margin:0 0 16px !important}
+#apcs-cspfmt details{border-bottom:1px solid #e2e8f0 !important;display:block !important}
+#apcs-cspfmt summary{cursor:pointer !important;display:flex !important;justify-content:space-between !important;align-items:center !important;gap:12px !important;min-height:56px !important;padding:10px 0 !important;list-style:none !important}
+#apcs-cspfmt summary::-webkit-details-marker{display:none !important}
+#apcs-cspfmt summary::after{content:"+" !important;font-size:24px !important;color:#2D6BC4 !important;-webkit-text-fill-color:#2D6BC4 !important;flex-shrink:0 !important}
+#apcs-cspfmt details[open] summary::after{content:"\2212" !important}
+#apcs-cspfmt summary h3{margin:0 !important;font-size:18px !important}
+#apcs-cspfmt details .ans{padding:0 0 14px !important}
+#apcs-cspfmt .links{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:12px !important;margin:0 0 16px !important;padding:0 !important;list-style:none !important}
+#apcs-cspfmt .links li{list-style:none !important;margin:0 !important}
+#apcs-cspfmt .links a{display:flex !important;flex-direction:column !important;gap:2px !important;height:100% !important;padding:14px 16px !important;border:1px solid #e2e8f0 !important;border-radius:10px !important;text-decoration:none !important;background:#ffffff !important;font-weight:700 !important}
+#apcs-cspfmt .links a span{font-weight:400 !important;font-size:14px !important;color:#475569 !important;-webkit-text-fill-color:#475569 !important}
+#apcs-cspfmt .links a:hover{border-color:#2D6BC4 !important}
+#apcs-cspfmt .src{font-size:14px !important;color:#475569 !important;-webkit-text-fill-color:#475569 !important;border-top:1px solid #e2e8f0 !important;padding-top:14px !important;margin-top:28px !important}
+@media (max-width:700px){
+#apcs-cspfmt h1{font-size:30px !important}
+#apcs-cspfmt h2{font-size:24px !important}
+#apcs-cspfmt .facts{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+#apcs-cspfmt .split,#apcs-cspfmt .links{grid-template-columns:minmax(0,1fr) !important}
+}
+</style>
+<div id="apcs-cspfmt">
+
+<nav aria-label="Breadcrumb">
+<ol class="crumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="/"><span itemprop="name">Home</span></a><meta itemprop="position" content="1"></li>
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="/pages/ap-computer-science-principles-resources"><span itemprop="name">AP CSP Exam Prep</span></a><meta itemprop="position" content="2"></li>
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><span itemprop="name">Exam Format</span><meta itemprop="position" content="3"></li>
+</ol>
+</nav>
+
+<h1>AP Computer Science Principles Exam Format (2027)</h1>
+<p class="lede">The AP CSP score comes from two places: a 70-question multiple-choice exam in May, and a program you build in class and then write about on exam day. Here is how each part works, when it happens, and what it is worth.</p>
+
+<dl class="facts">
+<div class="fact"><dt>Exam day</dt><dd>Fri, May 14, 2027<span>Session 1, morning</span></dd></div>
+<div class="fact"><dt>Create task due</dt><dd>Fri, Apr 30, 2027<span>11:59 PM Eastern</span></dd></div>
+<div class="fact"><dt>Multiple choice</dt><dd>70 questions<span>120 minutes, 70% of score</span></dd></div>
+<div class="fact"><dt>Create + written</dt><dd>30% of score<span>2 written responses, 60 minutes</span></dd></div>
+</dl>
+
+<p class="note"><strong>The exam is digital.</strong> The end-of-course exam, both the multiple choice and the written responses, is taken in College Board's Bluebook app, and your answers submit on their own when time runs out. The Create task is submitted separately, through the AP Digital Portfolio, two weeks before exam day.</p>
+
+<ul class="jump" aria-label="On this page">
+<li><a href="#glance">At a glance</a></li>
+<li><a href="#mcq">Multiple choice</a></li>
+<li><a href="#create">Create task</a></li>
+<li><a href="#written">Written responses</a></li>
+<li><a href="#timeline">Timeline</a></li>
+<li><a href="#examday">Exam day</a></li>
+<li><a href="#faq">Questions</a></li>
+</ul>
+
+<h2 id="glance">The exam at a glance</h2>
+<div class="tbl">
+<table>
+<thead>
+<tr><th scope="col">Part</th><th scope="col">What you do</th><th scope="col">Time</th><th scope="col">Weight</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">Section I: Multiple choice</th><td>70 questions with 4 answer options each, on exam day in Bluebook</td><td>120 minutes</td><td>70%</td></tr>
+<tr><th scope="row">Section II: Create performance task</th><td>Build a program of your choice, record a video of it running, and make your Personalized Project Reference</td><td>9 hours of class time</td><td rowspan="2">30% together</td></tr>
+<tr><th scope="row">Section II: Written responses</th><td>Answer 2 questions (4 prompts) about the code in your own program, on exam day in Bluebook</td><td>60 minutes</td></tr>
+</tbody>
+</table>
+</div>
+<p>College Board keeps the question types and weights the same every year, so what you practice now is what you will see in May.</p>
+
+<h2 id="mcq">Section I: Multiple choice</h2>
+<p>All 70 questions have four answer choices, but they are not all the same kind of question:</p>
+<div class="tbl">
+<table>
+<thead><tr><th scope="col">Question type</th><th scope="col">How many</th><th scope="col">What it looks like</th></tr></thead>
+<tbody>
+<tr><th scope="row">Single select</th><td>57</td><td>Pick the one correct answer.</td></tr>
+<tr><th scope="row">Single select with a reading passage</th><td>5</td><td>Read a short passage about a computing innovation, then answer questions about it.</td></tr>
+<tr><th scope="row">Multiple select</th><td>8</td><td>Pick exactly two answers.</td></tr>
+</tbody>
+</table>
+</div>
+<p>That is 57 + 5 + 8 = 70. On the multiple-select questions, look for the instruction to choose two. It is easy to miss when you are moving fast.</p>
+<h3>Pacing</h3>
+<p>120 minutes for 70 questions works out to a little over a minute and a half per question. Code-tracing questions take longer than vocabulary questions, so bank time on the quick ones. The <a href="/blogs/ap-csp/ap-csp-mcq-pacing-strategy">multiple-choice pacing strategy</a> goes through how to split the time.</p>
+<h3>Practice for it</h3>
+<ul>
+<li><a href="/pages/ap-computer-science-principles-full-practice-exam-70-mcq">Full-length practice exam</a>, timed like the real thing</li>
+<li><a href="/pages/ap-csp-practice-exams">All AP CSP practice exams</a> and <a href="/pages/ap-csp-practice-tests-by-topic">practice tests by topic</a></li>
+<li><a href="/pages/ap-csp-reference-sheet">The exam reference sheet</a>, explained, and the <a href="/pages/ap-csp-ap-pseudocode-syntax">pseudocode syntax</a> it uses</li>
+<li><a href="/pages/ap-csp-question-of-the-day">Question of the Day</a> for a few minutes of practice every day</li>
+</ul>
+
+<h2 id="create">Section II: The Create performance task</h2>
+<p>The Create task is a program you design and build yourself, on any topic you choose. You get 9 hours of class time to finish three things:</p>
+<div class="split">
+<div class="card">
+<h3>Your program code</h3>
+<p>The complete program, which you submit along with a video of it running.</p>
+</div>
+<div class="card">
+<h3>Your Personalized Project Reference</h3>
+<p>Screenshots of specific parts of your code. You get this back on exam day to answer the written responses, so it has to be readable.</p>
+</div>
+</div>
+<p>Everything is submitted as final in the <strong>AP Digital Portfolio by 11:59 PM Eastern on Friday, April 30, 2027</strong>. Your teacher schedules the 9 hours of class time.</p>
+<h3>Get the Create task right</h3>
+<ul>
+<li><a href="/pages/ap-csp-create-task-ultimate-guide">The complete Create task guide</a>, requirement by requirement</li>
+<li><a href="/blogs/ap-csp/ap-csp-create-task-project-ideas">Project ideas</a> and <a href="/pages/ap-csp-create-task-practice">Create task practice</a></li>
+<li><a href="/blogs/ap-csp/ap-csp-personalized-project-reference-segments">Which code segments to put in your Personalized Project Reference</a></li>
+<li><a href="/pages/ap-csp-create-task-rescue-kit">Create task rescue kit</a>, if you are behind</li>
+</ul>
+
+<h2 id="written">Section II: The written responses</h2>
+<p>On exam day, after the multiple choice, you get 60 minutes to answer 2 questions about your own program. You can see your Personalized Project Reference the whole time. The 2 questions break into 4 prompts, and each prompt comes from one category:</p>
+<div class="tbl">
+<table>
+<thead><tr><th scope="col">Prompt</th><th scope="col">Category</th><th scope="col">Be ready to explain</th></tr></thead>
+<tbody>
+<tr><th scope="row">Written Response 1</th><td>Program design, function and purpose</td><td>What your program is for, what it does, its inputs and outputs, and how you developed and tested it.</td></tr>
+<tr><th scope="row">Written Response 2(a)</th><td>Algorithm development</td><td>How an algorithm in your code works: its conditions, its loops, and what would change if you modified it.</td></tr>
+<tr><th scope="row">Written Response 2(b)</th><td>Errors and testing</td><td>Finding and fixing an error, and choosing inputs and expected outputs that would show your code works.</td></tr>
+<tr><th scope="row">Written Response 2(c)</th><td>Data and procedural abstraction</td><td>How your list stores data, how you move through it, and how your procedure makes the program easier to manage.</td></tr>
+</tbody>
+</table>
+</div>
+<p>The prompts ask about your code, not code in general, so the best preparation is knowing your own program well enough to explain any part of it.</p>
+<h3>Practice the written responses</h3>
+<ul>
+<li><a href="/pages/ap-csp-written-response-guide">Written response guide</a> and <a href="/pages/ap-csp-written-response-walkthrough-2026">a full walkthrough of the 2026 prompts</a></li>
+<li><a href="/pages/ap-csp-written-response-archive">Past written response prompts</a></li>
+<li>Written response sets for <a href="/pages/ap-csp-practice-exam-1-written-response">practice exam 1</a> and <a href="/pages/ap-csp-practice-exam-2-written-response">practice exam 2</a></li>
+<li><a href="/blogs/ap-csp/ap-csp-written-response-practice-prompts">More practice prompts</a></li>
+</ul>
+
+<h2 id="timeline">Timeline for the 2026-27 school year</h2>
+<ol class="steps">
+<li><strong>Through the year: learn the five Big Ideas.</strong> The multiple choice covers the whole course. Work through the <a href="/pages/ap-csp-course">full AP CSP course</a> or the <a href="/pages/ap-csp-study-guides">study guides</a>.</li>
+<li><strong>When your teacher schedules it: 9 hours for the Create task.</strong> Build the program, record the video, and make your Personalized Project Reference.</li>
+<li><strong>By Friday, April 30, 2027, 11:59 PM Eastern: submit the Create task as final</strong> in the AP Digital Portfolio.</li>
+<li><strong>Friday, May 14, 2027, Session 1: the end-of-course exam.</strong> 70 multiple-choice questions, then the 2 written responses. For most schools, including all of the lower 48 states, Hawaii and Washington D.C., Session 1 starts at 8 a.m. local time.</li>
+</ol>
+
+<h2 id="examday">What you have on exam day</h2>
+<ul>
+<li><strong>Your Personalized Project Reference</strong>, for the written responses.</li>
+<li><strong>The exam reference sheet</strong>, inside Bluebook and also printed and mailed to schools. <a href="/pages/ap-csp-reference-sheet">Learn it before May</a> so you are not reading it for the first time.</li>
+<li><strong>A test preview in Bluebook.</strong> Download the app early and try the preview so the tools are not new on the day.</li>
+</ul>
+<p>Turn your raw scores into a predicted 1 to 5 with the <a href="/pages/ap-csp-score-calculator">AP CSP score calculator</a>.</p>
+
+<h2 id="faq">Questions</h2>
+<div class="faq" itemscope itemtype="https://schema.org/FAQPage">
+<details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+<summary><h3 itemprop="name">When is the 2027 AP Computer Science Principles exam?</h3></summary>
+<div class="ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><div itemprop="text"><p>Friday, May 14, 2027, in Session 1, which is the morning slot. The Create performance task has to be submitted as final by 11:59 PM Eastern on Friday, April 30, 2027.</p></div></div>
+</details>
+<details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+<summary><h3 itemprop="name">How many questions are on the AP CSP exam?</h3></summary>
+<div class="ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><div itemprop="text"><p>70 multiple-choice questions in 120 minutes, then 2 written-response questions in 60 minutes. The 70 are 57 single-select questions, 5 single-select questions with a reading passage, and 8 multiple-select questions where you pick two answers.</p></div></div>
+</details>
+<details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+<summary><h3 itemprop="name">Is the AP CSP exam digital?</h3></summary>
+<div class="ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><div itemprop="text"><p>Yes. The end-of-course exam is fully digital in the Bluebook app, and responses are submitted automatically at the end. The Create task is submitted separately in the AP Digital Portfolio.</p></div></div>
+</details>
+<details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+<summary><h3 itemprop="name">How much is the Create task worth?</h3></summary>
+<div class="ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><div itemprop="text"><p>The Create task and the 2 written responses about it make up Section II, which is 30% of your score. The multiple choice is the other 70%.</p></div></div>
+</details>
+<details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+<summary><h3 itemprop="name">Can I see my code during the written responses?</h3></summary>
+<div class="ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><div itemprop="text"><p>You get your Personalized Project Reference, the code screenshots you submitted with your Create task. That is why it has to be clear and readable, and why choosing what goes in it matters.</p></div></div>
+</details>
+<details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+<summary><h3 itemprop="name">Is there a reference sheet on the AP CSP exam?</h3></summary>
+<div class="ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><div itemprop="text"><p>Yes. The exam reference sheet is available in Bluebook and is also printed and mailed to schools. It explains the pseudocode used in the questions.</p></div></div>
+</details>
+<details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+<summary><h3 itemprop="name">Should I take AP CSP or AP CSA?</h3></summary>
+<div class="ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><div itemprop="text"><p>AP CSP covers the broad ideas of computing and uses pseudocode on the exam. AP CSA is Java programming and goes deeper into writing code. Many students take CSP first. See <a href="/pages/ap-csa-vs-ap-csp">AP CSA vs AP CSP</a> for the full comparison.</p></div></div>
+</details>
+</div>
+
+<h2>Keep going</h2>
+<ul class="links">
+<li><a href="/pages/ap-computer-science-principles-resources">AP CSP exam prep<span>Everything for the exam in one place</span></a></li>
+<li><a href="/pages/ap-computer-science-principles-full-practice-exam-70-mcq">Full practice exam<span>70 questions, timed</span></a></li>
+<li><a href="/pages/ap-csp-create-task-ultimate-guide">Create task guide<span>Every requirement, explained</span></a></li>
+<li><a href="/pages/ap-csp-written-response-guide">Written response guide<span>How to answer all four prompts</span></a></li>
+<li><a href="/pages/ap-csp-study-guides">Study guides<span>One for each Big Idea</span></a></li>
+<li><a href="/pages/ap-csp-course">Full AP CSP course<span>Every lesson, in order</span></a></li>
+</ul>
+<p>Teachers: pacing, class codes and a gradebook are on the <a href="/pages/csp-command-center">AP CSP teacher page</a>.</p>
+
+<p class="src">Exam details come from College Board's <a href="https://apcentral.collegeboard.org/courses/ap-computer-science-principles/exam">AP Computer Science Principles exam page</a> and the 2027 AP Exam schedule, checked September 18, 2026. AP is a trademark registered by the College Board, which is not affiliated with, and does not endorse, this site.</p>
+
+</div>
