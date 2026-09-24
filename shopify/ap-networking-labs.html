@@ -1,0 +1,490 @@
+<style>
+
+#apcs-netlabs {
+    all: initial !important;
+    display: block !important;
+}
+#apcs-netlabs *,
+#apcs-netlabs *::before,
+#apcs-netlabs *::after {
+    box-sizing: border-box !important;
+}
+#apcs-netlabs .nl-page {
+    display: block !important;
+    max-width: 960px !important;
+    margin: 0 auto !important;
+    padding: 16px 16px 48px 16px !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-size: 17px !important;
+    line-height: 1.65 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    background: #ffffff !important;
+}
+
+/* Type */
+#apcs-netlabs h1,
+#apcs-netlabs h2,
+#apcs-netlabs h3 {
+    display: block !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+}
+#apcs-netlabs h1 {
+    font-size: 2.3em !important;
+    line-height: 1.2 !important;
+    margin: 8px 0 14px 0 !important;
+}
+#apcs-netlabs h2 {
+    font-size: 1.55em !important;
+    line-height: 1.3 !important;
+    margin: 44px 0 6px 0 !important;
+    padding: 0 0 10px 0 !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+}
+#apcs-netlabs h3 {
+    font-size: 1.2em !important;
+    line-height: 1.35 !important;
+    margin: 6px 0 8px 0 !important;
+}
+#apcs-netlabs p {
+    display: block !important;
+    margin: 0 0 14px 0 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-size: 1em !important;
+    line-height: 1.65 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-netlabs strong {
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+#apcs-netlabs code {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 0.92em !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 4px !important;
+    padding: 1px 5px !important;
+    white-space: nowrap !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+#apcs-netlabs a,
+#apcs-netlabs a:link,
+#apcs-netlabs a:visited {
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+    text-decoration: underline !important;
+    text-underline-offset: 2px !important;
+}
+#apcs-netlabs a:hover,
+#apcs-netlabs a:focus {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+#apcs-netlabs a:focus-visible {
+    outline: 3px solid #2D6BC4 !important;
+    outline-offset: 2px !important;
+}
+
+/* Breadcrumb */
+#apcs-netlabs .nl-crumbs {
+    display: block !important;
+    margin: 0 0 4px 0 !important;
+}
+#apcs-netlabs .nl-crumbs ol {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-netlabs .nl-crumbs li {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    font-size: 14px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-netlabs .nl-crumbs li + li::before {
+    content: ">" !important;
+    margin: 0 8px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-netlabs .nl-crumbs a,
+#apcs-netlabs .nl-crumbs a:link,
+#apcs-netlabs .nl-crumbs a:visited {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    font-size: 14px !important;
+}
+
+/* Intro */
+#apcs-netlabs .nl-lede {
+    font-size: 1.12em !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    max-width: 44em !important;
+}
+#apcs-netlabs .nl-note {
+    display: block !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 18px 20px !important;
+    margin: 22px 0 8px 0 !important;
+}
+#apcs-netlabs .nl-note p:last-child {
+    margin-bottom: 0 !important;
+}
+#apcs-netlabs .nl-note-label {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    margin: 0 0 6px 0 !important;
+    color: #2D6BC4 !important;
+    -webkit-text-fill-color: #2D6BC4 !important;
+}
+
+/* Units and lab cards */
+#apcs-netlabs .nl-unit-intro {
+    margin: 10px 0 18px 0 !important;
+}
+#apcs-netlabs .nl-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+#apcs-netlabs .nl-card {
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    margin: 0 !important;
+}
+#apcs-netlabs .nl-card p {
+    font-size: 0.97em !important;
+}
+#apcs-netlabs .nl-kind {
+    display: inline-block !important;
+    align-self: flex-start !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    padding: 3px 10px !important;
+    border-radius: 999px !important;
+    margin: 0 0 8px 0 !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #2D6BC4 !important;
+    -webkit-text-fill-color: #2D6BC4 !important;
+}
+#apcs-netlabs .nl-meta {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    margin: 0 0 10px 0 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+#apcs-netlabs .nl-topic {
+    font-size: 14px !important;
+    margin: 0 0 14px 0 !important;
+}
+#apcs-netlabs .nl-card-foot {
+    margin-top: auto !important;
+    padding-top: 4px !important;
+}
+#apcs-netlabs a.nl-btn,
+#apcs-netlabs a.nl-btn:link,
+#apcs-netlabs a.nl-btn:visited {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    padding: 10px 18px !important;
+    border-radius: 8px !important;
+    background: #2D6BC4 !important;
+    border: 1px solid #2D6BC4 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    text-decoration: none !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+#apcs-netlabs a.nl-btn:hover,
+#apcs-netlabs a.nl-btn:focus {
+    background: #1e40af !important;
+    border-color: #1e40af !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Keep going */
+#apcs-netlabs .nl-links {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    list-style: none !important;
+    margin: 16px 0 0 0 !important;
+    padding: 0 !important;
+}
+#apcs-netlabs .nl-links li {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+#apcs-netlabs .nl-links a,
+#apcs-netlabs .nl-links a:link,
+#apcs-netlabs .nl-links a:visited {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    height: 100% !important;
+    padding: 12px 16px !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    background: #f8fafc !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+}
+#apcs-netlabs .nl-links a:hover,
+#apcs-netlabs .nl-links a:focus {
+    border-color: #2D6BC4 !important;
+    background: #ffffff !important;
+}
+#apcs-netlabs .nl-links .nl-sub {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    margin-top: 2px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-netlabs .nl-fine {
+    font-size: 13px !important;
+    margin-top: 36px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+
+@media (max-width: 700px) {
+    #apcs-netlabs .nl-page {
+        font-size: 16px !important;
+    }
+    #apcs-netlabs h1 {
+        font-size: 1.8em !important;
+    }
+    #apcs-netlabs h2 {
+        font-size: 1.35em !important;
+    }
+    #apcs-netlabs .nl-grid,
+    #apcs-netlabs .nl-links {
+        grid-template-columns: 1fr !important;
+    }
+    #apcs-netlabs a.nl-btn,
+    #apcs-netlabs a.nl-btn:link,
+    #apcs-netlabs a.nl-btn:visited {
+        display: flex !important;
+        width: 100% !important;
+    }
+}
+</style>
+
+<div id="apcs-netlabs">
+<div class="nl-page">
+
+<nav class="nl-crumbs" aria-label="Breadcrumb">
+<ol itemscope itemtype="https://schema.org/BreadcrumbList">
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a itemprop="item" href="/"><span itemprop="name">Home</span></a>
+<meta itemprop="position" content="1">
+</li>
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a itemprop="item" href="/pages/ap-networking"><span itemprop="name">AP Networking</span></a>
+<meta itemprop="position" content="2">
+</li>
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+<span itemprop="name">Labs</span>
+<meta itemprop="position" content="3">
+</li>
+</ol>
+</nav>
+
+<h1>AP Networking Labs</h1>
+
+<p class="nl-lede">Each AP Networking unit here has two labs. The unit lab is a project that runs across several class periods and ends with the piece of work that unit's performance task asks for. The topic lab is eight checks on a single topic.</p>
+
+<p>All eight run inside the page. The networks, files and servers in them are simulated, so there is nothing to install and nothing real to break. The unit labs say what they need in one line, a browser, and they run on a Chromebook with no admin rights and no networking hardware. In a unit lab you work a terminal where <code>ipconfig</code>, <code>ping</code>, <code>tracert</code>, <code>arp -a</code>, <code>nslookup</code> and <code>speedtest</code> all answer from the simulated network, so the evidence you collect is the same every time you run it.</p>
+
+<p>If a lab counts for a grade, sign in to your class before you start. The labs run either way, but your score saves to your gradebook only when you are signed in.</p>
+
+<div class="nl-note">
+<span class="nl-note-label">Pilot year</span>
+<p>AP Networking is in its third and final College Board pilot in 2026-27, and it opens to all schools in 2027-28. Pilot schools take the exam on Friday, May 7, 2027.</p>
+</div>
+
+<div itemscope itemtype="https://schema.org/ItemList">
+<meta itemprop="name" content="AP Networking Labs">
+<meta itemprop="numberOfItems" content="8">
+
+<section aria-labelledby="nl-unit-1">
+<h2 id="nl-unit-1">Unit 1: Managing My Connections</h2>
+<p class="nl-unit-intro">One device, your own: troubleshoot it, connect it, then secure it. <a href="/pages/ap-networking-unit-1">Unit 1 overview</a></p>
+<div class="nl-grid">
+
+<article class="nl-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<meta itemprop="position" content="1">
+<span class="nl-kind">Unit lab</span>
+<h3 itemprop="name">Lab 1: Device Triage Bench</h3>
+<p class="nl-meta">4 class periods. 8 checkpoints. A browser, no equipment.</p>
+<p>Four benches are waiting, each with a different fault already in place. On every one you gather evidence, name the layer and the root cause, pick the fix and verify it, then you write the device-recovery walkthrough the Unit 1 performance task asks for.</p>
+<div class="nl-card-foot"><a class="nl-btn" itemprop="url" href="/pages/ap-networking-lab-1-device-triage-bench">Open Device Triage Bench</a></div>
+</article>
+
+<article class="nl-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<meta itemprop="position" content="2">
+<span class="nl-kind">Topic lab</span>
+<h3 itemprop="name">Audit a Device's Security Settings</h3>
+<p class="nl-meta">8 checks.</p>
+<p>You are handed a device nobody documented, an audit folder, and one setting still exactly the way it came out of the box. The working config files are not the whole story, so you keep looking after the obvious ones have been read.</p>
+<p class="nl-topic">Goes with topic 1.4, <a href="/pages/ap-networking-lesson-1-4-securing-my-device">Locking It Down: Securing My Device</a></p>
+<div class="nl-card-foot"><a class="nl-btn" itemprop="url" href="/pages/ap-networking-lab-1-4">Open the topic 1.4 lab</a></div>
+</article>
+
+</div>
+</section>
+
+<section aria-labelledby="nl-unit-2">
+<h2 id="nl-unit-2">Unit 2: Managing My Shared Connections</h2>
+<p class="nl-unit-intro">A small office or home network, the kind that runs a school computer lab, and you are the one responsible for it. <a href="/pages/ap-networking-unit-2">Unit 2 overview</a></p>
+<div class="nl-grid">
+
+<article class="nl-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<meta itemprop="position" content="3">
+<span class="nl-kind">Unit lab</span>
+<h3 itemprop="name">Lab 2: SOHO Documentation and Handoff</h3>
+<p class="nl-meta">6 class periods. 8 checkpoints. A browser, no equipment.</p>
+<p>You inherit a computer lab network with no documentation, one device that should not be on it, and two devices fighting over the same address. You build the inventory from evidence, sort out the conflict, and finish with the field manual the Unit 2 performance task scores.</p>
+<div class="nl-card-foot"><a class="nl-btn" itemprop="url" href="/pages/ap-networking-lab-2-soho-documentation">Open SOHO Documentation and Handoff</a></div>
+</article>
+
+<article class="nl-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<meta itemprop="position" content="4">
+<span class="nl-kind">Topic lab</span>
+<h3 itemprop="name">Document a Network From Its Own Records</h3>
+<p class="nl-meta">8 checks.</p>
+<p>A studio with no documentation, nine devices and eight leases. Reading the lease table, the ARP table and the inventory tells you which device is missing from the router's table; the harder part is saying what its address proves and what it rules out.</p>
+<p class="nl-topic">Goes with topic 2.2, <a href="/pages/ap-networking-lesson-2-2-mac-ip-addresses">Identification Needed: Documenting My Network</a></p>
+<div class="nl-card-foot"><a class="nl-btn" itemprop="url" href="/pages/ap-networking-lab-2-2">Open the topic 2.2 lab</a></div>
+</article>
+
+</div>
+</section>
+
+<section aria-labelledby="nl-unit-3">
+<h2 id="nl-unit-3">Unit 3: Managing Many Connections</h2>
+<p class="nl-unit-intro">A network built from a blank floor plan, for a school gaming tournament with a live audience and a livestream. <a href="/pages/ap-networking-unit-3">Unit 3 overview</a></p>
+<div class="nl-grid">
+
+<article class="nl-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<meta itemprop="position" content="5">
+<span class="nl-kind">Unit lab</span>
+<h3 itemprop="name">Lab 3: Segmented LAN Build</h3>
+<p class="nl-meta">8 class periods. 8 checkpoints. A browser, no equipment.</p>
+<p>One switch, and staff, students and guests who must not all reach each other. You assign every port to a segment, decide what may cross between segments, and prove the result with a reachability matrix before you document the design for the Unit 3 performance task.</p>
+<div class="nl-card-foot"><a class="nl-btn" itemprop="url" href="/pages/ap-networking-lab-3-segmented-lan-build">Open Segmented LAN Build</a></div>
+</article>
+
+<article class="nl-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<meta itemprop="position" content="6">
+<span class="nl-kind">Topic lab</span>
+<h3 itemprop="name">Find the Shadowed Firewall Rule</h3>
+<p class="nl-meta">8 checks.</p>
+<p>Finance cannot reach the reporting server. The firewall was changed on Monday and every rule in the list is correct on its own, so you read the rule set the way a firewall does, top to bottom, stopping at the first rule that matches.</p>
+<p class="nl-topic">Goes with topic 3.5, <a href="/pages/ap-networking-lesson-3-5-firewalls-traffic-filtering">Controlling the Traffic: Firewalls and Filtering</a></p>
+<div class="nl-card-foot"><a class="nl-btn" itemprop="url" href="/pages/ap-networking-lab-3-5">Open the topic 3.5 lab</a></div>
+</article>
+
+</div>
+</section>
+
+<section aria-labelledby="nl-unit-4">
+<h2 id="nl-unit-4">Unit 4: Managing Our Global Connections</h2>
+<p class="nl-unit-intro">The network meets the rest of the internet, seen from the IT desk of a grocery store on a bad Saturday. <a href="/pages/ap-networking-unit-4">Unit 4 overview</a></p>
+<div class="nl-grid">
+
+<article class="nl-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<meta itemprop="position" content="7">
+<span class="nl-kind">Unit lab</span>
+<h3 itemprop="name">Lab 4: Capture and Trace</h3>
+<p class="nl-meta">8 class periods. 8 checkpoints. A browser, no equipment.</p>
+<p>A store's point-of-sale system goes down, and nothing between the store and the network team admits to being the problem. You trace the path, read a capture, find where it fails, and write the incident report the Unit 4 performance task calls for.</p>
+<div class="nl-card-foot"><a class="nl-btn" itemprop="url" href="/pages/ap-networking-lab-4-capture-and-trace">Open Capture and Trace</a></div>
+</article>
+
+<article class="nl-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<meta itemprop="position" content="8">
+<span class="nl-kind">Topic lab</span>
+<h3 itemprop="name">Move a File With SFTP</h3>
+<p class="nl-meta">8 checks. Terminal practice.</p>
+<p>A browser terminal, a simulated file server, and a site survey that has to end up on it. The last check is the one people skip: a transfer that printed no error is not proof the file arrived, but listing the folder you sent it to is.</p>
+<p class="nl-topic">Goes with topic 4.3, <a href="/pages/ap-networking-lesson-4-3-cli-commands">Tools of Network Analysts: Using the CLI</a></p>
+<div class="nl-card-foot"><a class="nl-btn" itemprop="url" href="/pages/ap-networking-lab-4-3">Open the topic 4.3 lab</a></div>
+</article>
+
+</div>
+</section>
+
+</div>
+
+<h2>A model, not a capture</h2>
+<p>The devices, addresses and command output in the unit labs were written for those labs. Real equipment is messier: timeouts vary, cables fail on and off, and output differs from one operating system to the next. What carries over is the reasoning, and that is the part being graded, here and on the exam. One practical note: <code>tracert</code> is the Windows spelling. On macOS and Linux the command is <code>traceroute</code>.</p>
+
+<h2>For teachers</h2>
+<p>Scores from the labs land in your class gradebook when students are signed in to your class. Students can work a lab as many times as they like; whether a retake replaces the recorded score follows the retry setting you chose for the class. Pacing and teacher materials for the whole course are in the <a href="/pages/ap-networking-command-center">AP Networking Command Center</a>, and if you have not set up a class yet, start at the <a href="/pages/cyber-class">teacher class portal</a>.</p>
+
+<h2>Keep going</h2>
+<ul class="nl-links">
+<li><a href="/pages/ap-networking">AP Networking course guide<span class="nl-sub">All four units and every topic</span></a></li>
+<li><a href="/pages/ap-networking-unit-1">Unit 1: Managing My Connections<span class="nl-sub">Topics 1.1 to 1.4</span></a></li>
+<li><a href="/pages/ap-networking-unit-2">Unit 2: Managing My Shared Connections<span class="nl-sub">Topics 2.1 to 2.6</span></a></li>
+<li><a href="/pages/ap-networking-unit-3">Unit 3: Managing Many Connections<span class="nl-sub">Topics 3.1 to 3.6</span></a></li>
+<li><a href="/pages/ap-networking-unit-4">Unit 4: Managing Our Global Connections<span class="nl-sub">Topics 4.1 to 4.6</span></a></li>
+<li><a href="/pages/ap-networking-study-guide">AP Networking study guide<span class="nl-sub">A unit-by-unit review</span></a></li>
+<li><a href="/pages/ap-networking-practice-exam-full">AP Networking practice exam<span class="nl-sub">Twenty scenario questions, each with an explanation</span></a></li>
+<li><a href="/pages/ap-networking-exam-format">Exam format and scoring<span class="nl-sub">How the AP Networking exam is built</span></a></li>
+<li><a href="/pages/ap-networking-command-center">Command Center, for teachers<span class="nl-sub">Pacing, materials and the gradebook</span></a></li>
+</ul>
+
+<p class="nl-fine">AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.</p>
+
+</div>
+</div>

@@ -1,0 +1,481 @@
+<style>
+
+#apcs-about {
+    all: initial !important;
+    display: block !important;
+}
+#apcs-about *,
+#apcs-about *::before,
+#apcs-about *::after {
+    box-sizing: border-box !important;
+}
+#apcs-about .ab-page {
+    display: block !important;
+    max-width: 880px !important;
+    margin: 0 auto !important;
+    padding: 16px 16px 48px 16px !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-size: 17px !important;
+    line-height: 1.7 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    background: #ffffff !important;
+}
+
+/* Type */
+#apcs-about h1,
+#apcs-about h2,
+#apcs-about h3 {
+    display: block !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+}
+#apcs-about h1 {
+    font-size: 2.2em !important;
+    line-height: 1.2 !important;
+    margin: 8px 0 20px 0 !important;
+}
+#apcs-about h2 {
+    font-size: 1.5em !important;
+    line-height: 1.3 !important;
+    margin: 44px 0 14px 0 !important;
+    padding: 0 0 10px 0 !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+}
+#apcs-about h3 {
+    font-size: 1.15em !important;
+    line-height: 1.35 !important;
+    margin: 0 0 8px 0 !important;
+}
+#apcs-about p {
+    display: block !important;
+    margin: 0 0 14px 0 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-size: 1em !important;
+    line-height: 1.7 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-about strong {
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+#apcs-about a,
+#apcs-about a:link,
+#apcs-about a:visited {
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+    text-decoration: underline !important;
+    text-underline-offset: 2px !important;
+}
+#apcs-about a:hover,
+#apcs-about a:focus {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+#apcs-about a:focus-visible {
+    outline: 3px solid #2D6BC4 !important;
+    outline-offset: 2px !important;
+}
+
+/* Breadcrumb */
+#apcs-about .ab-crumbs {
+    display: block !important;
+    margin: 0 0 4px 0 !important;
+}
+#apcs-about .ab-crumbs ol {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-about .ab-crumbs li {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    font-size: 14px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-about .ab-crumbs li + li::before {
+    content: ">" !important;
+    margin: 0 8px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-about .ab-crumbs a,
+#apcs-about .ab-crumbs a:link,
+#apcs-about .ab-crumbs a:visited {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    font-size: 14px !important;
+}
+
+/* Person card */
+#apcs-about .ab-person {
+    display: flex !important;
+    align-items: center !important;
+    gap: 22px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 22px !important;
+    margin: 0 0 22px 0 !important;
+}
+#apcs-about .ab-photo {
+    display: block !important;
+    width: 128px !important;
+    height: 128px !important;
+    min-width: 128px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 3px solid #ffffff !important;
+    background: #e2e8f0 !important;
+    margin: 0 !important;
+}
+#apcs-about .ab-name {
+    display: block !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 1.35em !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    margin: 0 0 4px 0 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+#apcs-about .ab-role {
+    display: block !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    margin: 0 0 10px 0 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-about .ab-person a,
+#apcs-about .ab-person a:link,
+#apcs-about .ab-person a:visited {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    font-size: 15px !important;
+}
+
+/* Numbers */
+#apcs-about .ab-stats {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px !important;
+    margin: 22px 0 10px 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+#apcs-about .ab-stat {
+    display: block !important;
+    list-style: none !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 16px !important;
+    margin: 0 !important;
+}
+#apcs-about .ab-num {
+    display: block !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 1.7em !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    margin: 0 0 6px 0 !important;
+    color: #2D6BC4 !important;
+    -webkit-text-fill-color: #2D6BC4 !important;
+}
+#apcs-about .ab-what {
+    display: block !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+
+/* Course cards */
+#apcs-about .ab-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+    margin: 18px 0 0 0 !important;
+}
+#apcs-about .ab-card {
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    margin: 0 !important;
+}
+#apcs-about .ab-card p {
+    font-size: 0.97em !important;
+}
+#apcs-about .ab-card-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px 18px !important;
+    margin-top: auto !important;
+}
+#apcs-about .ab-card-links a,
+#apcs-about .ab-card-links a:link,
+#apcs-about .ab-card-links a:visited {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+}
+
+/* Buttons */
+#apcs-about .ab-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    margin: 6px 0 14px 0 !important;
+}
+#apcs-about a.ab-btn,
+#apcs-about a.ab-btn:link,
+#apcs-about a.ab-btn:visited {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    padding: 10px 18px !important;
+    border-radius: 8px !important;
+    background: #2D6BC4 !important;
+    border: 1px solid #2D6BC4 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    text-decoration: none !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+#apcs-about a.ab-btn:hover,
+#apcs-about a.ab-btn:focus {
+    background: #1e40af !important;
+    border-color: #1e40af !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+#apcs-about a.ab-btn-quiet,
+#apcs-about a.ab-btn-quiet:link,
+#apcs-about a.ab-btn-quiet:visited {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+}
+#apcs-about a.ab-btn-quiet:hover,
+#apcs-about a.ab-btn-quiet:focus {
+    background: #f8fafc !important;
+    border-color: #2D6BC4 !important;
+    color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+}
+
+/* Reviews */
+#apcs-about .ab-quotes {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+    margin: 18px 0 16px 0 !important;
+}
+#apcs-about .ab-quote {
+    display: block !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 18px 20px !important;
+    margin: 0 !important;
+}
+#apcs-about .ab-quote blockquote {
+    display: block !important;
+    margin: 0 0 10px 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 1.02em !important;
+    font-style: normal !important;
+    line-height: 1.6 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+#apcs-about .ab-quote blockquote p {
+    font-family: Georgia, 'Times New Roman', serif !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    margin: 0 !important;
+}
+#apcs-about .ab-quote figcaption {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+#apcs-about .ab-fine {
+    font-size: 13px !important;
+    margin-top: 36px !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+}
+
+@media (max-width: 700px) {
+    #apcs-about .ab-page {
+        font-size: 16px !important;
+    }
+    #apcs-about h1 {
+        font-size: 1.75em !important;
+    }
+    #apcs-about h2 {
+        font-size: 1.3em !important;
+    }
+    #apcs-about .ab-person {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    #apcs-about .ab-stats,
+    #apcs-about .ab-grid,
+    #apcs-about .ab-quotes {
+        grid-template-columns: 1fr !important;
+    }
+    #apcs-about a.ab-btn,
+    #apcs-about a.ab-btn:link,
+    #apcs-about a.ab-btn:visited {
+        width: 100% !important;
+    }
+}
+</style>
+
+<div id="apcs-about">
+<div class="ab-page" itemscope itemtype="https://schema.org/AboutPage">
+
+<nav class="ab-crumbs" aria-label="Breadcrumb">
+<ol itemprop="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a itemprop="item" href="/"><span itemprop="name">Home</span></a>
+<meta itemprop="position" content="1">
+</li>
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+<span itemprop="name">About</span>
+<meta itemprop="position" content="2">
+</li>
+</ol>
+</nav>
+
+<h1 itemprop="name">About Tanner Crow and APCSExamPrep</h1>
+
+<div class="ab-person" itemprop="mainEntity" itemscope itemtype="https://schema.org/Person">
+<img class="ab-photo" itemprop="image" src="https://cdn.shopify.com/s/files/1/0778/8403/1191/files/Profile_Pic.jpg" alt="Tanner Crow - AP Computer Science Teacher at Blue Valley North High School" width="128" height="128" loading="eager">
+<div>
+<span class="ab-name" itemprop="name">Tanner Crow</span>
+<span class="ab-role"><span itemprop="jobTitle">AP Computer Science Teacher</span>, <span itemprop="worksFor" itemscope itemtype="https://schema.org/HighSchool"><span itemprop="name">Blue Valley North High School</span></span></span>
+<meta itemprop="email" content="tanner@apcsexamprep.com">
+<a itemprop="sameAs" href="https://www.wyzant.com/tutors/tannerc12" rel="noopener">My Wyzant tutoring profile</a>
+</div>
+</div>
+
+<p>I'm Tanner Crow. I teach AP Computer Science at Blue Valley North High School, and I built APCSExamPrep.com and still run it myself.</p>
+
+<h2>Who I am and what I teach</h2>
+
+<p>I have taught AP Computer Science at Blue Valley North for over eleven years. I also tutor students one on one over Zoom in AP Computer Science A, AP Computer Science Principles and AP Cybersecurity, and AP CSA is the course people ask me for most.</p>
+
+<!-- Results numbers (score-5 rates, tutoring hours, review count) were left out on 2026-09-24 until each has a source and a year. The draft carried score-rate and Wyzant figures; see docs/homepage-redesign-spec.md. -->
+
+<h2>Why I built this site</h2>
+
+<p>I built this site for my own students before I opened it to other classrooms.</p>
+
+<p>Most of what is here is free: the practice exams, the study guides, the daily practice questions, the study games, the AP CSA free-response archive and the whole AP Cybersecurity course. The Question of the Day, the topic practice tests and the FRQ archive were built to back up what I cover in tutoring sessions.</p>
+
+<h2>What is here</h2>
+
+<p>There are four AP courses on the site.</p>
+
+<div class="ab-grid">
+
+<div class="ab-card">
+<h3><a href="/pages/ap-csa-course">AP Computer Science A</a></h3>
+<p>Java programming, following the current four-unit course. The exam prep hub has full practice exams, the unit study guides and past AP CSA free-response questions going back to 2004.</p>
+<div class="ab-card-links"><a href="/pages/ap-csa-course">The course</a><a href="/pages/ap-csa-exam-prep-hub">AP CSA exam prep</a></div>
+</div>
+
+<div class="ab-card">
+<h3><a href="/pages/ap-csp-course">AP Computer Science Principles</a></h3>
+<p>The full course, organized by the five Big Ideas. The resources page collects the study guides, practice questions and help with the Create Task.</p>
+<div class="ab-card-links"><a href="/pages/ap-csp-course">The course</a><a href="/pages/ap-computer-science-principles-resources">AP CSP resources</a></div>
+</div>
+
+<div class="ab-card">
+<h3><a href="/pages/ap-cybersecurity-complete-course-guide">AP Cybersecurity</a></h3>
+<p>The complete course, five units of lessons and labs. The practice page adds full free-response sets in the exam's Device Security Analysis format, plus terminal labs.</p>
+<div class="ab-card-links"><a href="/pages/ap-cybersecurity-complete-course-guide">The course</a><a href="/pages/ap-cybersecurity-practice">AP Cybersecurity practice</a></div>
+</div>
+
+<div class="ab-card">
+<h3><a href="/pages/ap-networking">AP Networking</a></h3>
+<p>Four units. Every topic has its own study guide and quiz, and every unit has a lab that runs in the browser. College Board is piloting the course in 2026-27, and it opens to all schools in 2027-28.</p>
+<div class="ab-card-links"><a href="/pages/ap-networking">The course</a></div>
+</div>
+
+</div>
+
+<h2>For teachers</h2>
+
+<p>If you teach one of these courses, the teacher dashboard is free. You create a class and give your students one code. They join with a name and a PIN, no email address needed, and you can see where each of them is, lesson by lesson.</p>
+
+<div class="ab-actions">
+<a class="ab-btn" href="/pages/cyber-class">Set up a class</a>
+</div>
+
+<p>If you need a quiz by Friday, the <a href="/pages/ap-csa-test-builder">AP CSA Test Builder</a> and the <a href="/pages/ap-csp-test-builder">AP CSP Test Builder</a> let you pick questions by unit, topic and difficulty and print a PDF exam with a separate answer key. No login required.</p>
+
+<h2>Tutoring</h2>
+
+<p>I tutor online, over Zoom. Sessions usually run 60 minutes and are built around the specific things you are stuck on. Before the first one, send me a note about what you need help with.</p>
+
+<div class="ab-quotes">
+<figure class="ab-quote">
+<blockquote><p>&ldquo;My son is very introverted and was panicking at the thought of video tutoring. After the first session, he was actually excited and wanted another session as soon as possible.&rdquo;</p></blockquote>
+<figcaption>Parent of AP CSA Student</figcaption>
+</figure>
+<figure class="ab-quote">
+<blockquote><p>&ldquo;Tanner is clearly over qualified and has a mastery of the topic. He is super patient and understanding. His teaching style is easy to follow. So happy we found him!&rdquo;</p></blockquote>
+<figcaption>AP CSA Student Parent</figcaption>
+</figure>
+</div>
+
+<div class="ab-actions">
+<a class="ab-btn" href="/pages/ap-computer-science-a-tutor">About tutoring with me</a>
+<a class="ab-btn ab-btn-quiet" href="https://www.wyzant.com/tutors/tannerc12" rel="noopener">Read the reviews on Wyzant</a>
+</div>
+
+<h2>Contact</h2>
+
+<p>Use the <a href="/pages/contact">contact page</a>, or email <a href="mailto:tanner@apcsexamprep.com">tanner@apcsexamprep.com</a>. I usually answer within 24 hours. If something on the site does not work the way you need it to, in your classroom or at your kitchen table, tell me. I read every message myself.</p>
+
+<p class="ab-fine">AP is a trademark of the College Board, which was not involved in the production of, and does not endorse, this resource.</p>
+
+</div>
+</div>
