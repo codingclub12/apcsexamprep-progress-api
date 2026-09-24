@@ -191,9 +191,20 @@
     el.reveal.className = 'hf-reveal';
     el.gobtn.style.display = '';
     el.list.innerHTML = '';
-    /* The list is dealt in the authored order, which alternates key and non-key
-       entries rather than grouping them, so position is never a hint. */
-    s.fixes.forEach(function (f, idx) {
+    /* Display order is SHUFFLED per round; data-i and toggle() stay indexed
+       into the authored array (s.fixes), which is what go() and keyIdx read,
+       so scoring and the reveal styling are unaffected by shuffling. Each of
+       the five scripted sites is authored key,key,key,false,false,false, so
+       dealing them in authored order let the same top three buttons win
+       every round without reading a word. */
+    var order = [];
+    for (var oi = 0; oi < s.fixes.length; oi++) { order.push(oi); }
+    for (var oj = order.length - 1; oj > 0; oj--) {
+      var ok = Math.floor(Math.random() * (oj + 1));
+      var ot = order[oj]; order[oj] = order[ok]; order[ok] = ot;
+    }
+    order.forEach(function (idx) {
+      var f = s.fixes[idx];
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'hf-fix';
