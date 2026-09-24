@@ -368,6 +368,18 @@ const PAGES = [
     description: 'A full-length AP CSA practice exam, multiple choice plus every free response type, with Java solutions and scoring rubrics. Built for the May 12, 2027 exam.',
     why: 'description trailed off mid-sentence and the body advertises the 2026 exam',
   },
+  {
+    handle: 'ap-csp-game-internet-routing-simulator',
+    title: 'Internet Routing Simulator, an AP CSP Game',
+    description: 'An AP CSP game on how the Internet routes data: guide packets hop by hop across a network, dodge broken links, and reach the server in the fewest hops.',
+    why: 'title carried the brand twice; description was scraped game UI text',
+  },
+  {
+    handle: 'ap-csp-game-phishing-net',
+    title: 'Phishing Net, an AP CSP Game',
+    description: 'An AP CSP game on safe computing: messages stream in, tap phish or safe before time runs out, then lock down the account in the bonus round.',
+    why: 'title carried the brand twice; description was scraped game UI text',
+  },
 ];
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
