@@ -357,6 +357,8 @@
     "csa:qotdrederive": "node scripts/csa-qotd-key-rederive.js",
     "smoke:qotd344": "node smoke/csa-qotd-distractor-repair.js",
     "csa:qotd344": "node scripts/csa-qotd-distractor-repair.js",
+    "smoke:csppseudo": "node smoke/csp-pseudocode-post-repair.js",
+    "csp:pseudopost": "node scripts/csp-pseudocode-post-repair.js",
     "smoke:bodyyear": "node smoke/body-year-csv.js",
     "bodyyear": "node scripts/body-year-csv.js",
     "smoke:csa2026frq": "node smoke/csa-past-frq-pages.js",

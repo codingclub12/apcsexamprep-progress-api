@@ -1,0 +1,120 @@
+{
+  "change": "board 425: the AP CSP pseudocode post in the news blog, one Matrixify Blog Posts row. Section I is 70 questions not about 40; REPEAT UNTIL checks before each pass, not after, in four places; 7 of 8 practice questions graded the wrong option and 2 printed the wrong key; list indexing, the Boolean operator count, the AND and CAN_MOVE rows, and a missing RANDOM(a, b). Plus the preflight rule that refused every Blog Posts sheet as a new page.",
+  "_context": [
+    "NOTHING HERE REACHES A STUDENT UNTIL A HUMAN IMPORTS ONE SHEET.",
+    "",
+    "Merging deploys the API and changes nothing the API does. The change that",
+    "matters is the import of imports/2026-09-25-csp-pseudocode-post/",
+    "csp-pseudocode-post-repair-blog-posts.csv, and the only way to know it",
+    "happened is to read the live article afterwards.",
+    "",
+    "So scripts/verify-csp-pseudocode-post-live.js is written to be FALSE BEFORE",
+    "and true after, and it was measured both ways on 2026-09-25: against the live",
+    "page it reports 1 ok and 15 failed, the one being Q1, which was already right;",
+    "with --simulate-import, which splices the sheet body into the live page, it",
+    "reports 16 ok, including Chromium accepting the right answer on 8 of 8 where",
+    "the live page accepts 1. The simulation exits 3 and never prints the line",
+    "this manifest expects, so it cannot satisfy the live check.",
+    "",
+    "THE REDERIVE IS PHASE PRE for the same reason as the FRQ archive manifest:",
+    "the generator is find-or-refuse, so once the repair is live it must refuse",
+    "to build. Before the import it is true evidence; after, the live check is",
+    "what re-derives.",
+    "",
+    "THE SUITE RE-DERIVES THE KEY BY RUNNING THE PAGE'S OWN PSEUDOCODE through an",
+    "interpreter for the reference sheet subset the post uses, rather than",
+    "agreeing with a table somebody traced by hand. Hand tracing is how the page",
+    "got seven wrong keys. The interpreter is held to the post's five worked",
+    "outputs and to CED AAP-2.K.5 before it judges anything, and the sixth",
+    "mutation proves that self-check is load-bearing."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "re-derived keys, the repair, every checkBody rule broken alone, the sheet read back",
+      "_why": "Offline against the before snapshot committed beside the sheet. Section 2 derives all eight answers by running the page's code; section 5 breaks each checkBody rule on its own and requires that rule, by name, to be the one that fires; section 6 requires the committed sheet to be byte-identical to a rebuild.",
+      "command": "npm run --silent smoke:csppseudo",
+      "expect": "56 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the Matrixify preflight, including the Blog Posts case it used to refuse",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "73 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet rebuilt from the LIVE article, parsed back and diffed",
+      "_why": "Fetches the article through lib/storefront-fetch.js, extracts the stored body from the theme wrapper, re-applies every anchored edit, and reads both sheets back off disk with a reader that did not write them. Every anchor must match the live body exactly once, so this also proves the page has not changed since the snapshot. PHASE PRE: after the import every anchor matches zero times and the build refuses, which is the stale-sheet guard working.",
+      "command": "node scripts/csp-pseudocode-post-repair.js imports/2026-09-25-csp-pseudocode-post",
+      "expect": "every cell parsed back and diffed clean",
+      "phase": "pre"
+    },
+    {
+      "kind": "mutation",
+      "name": "a wrong key may enter the sheet",
+      "_why": "Seven of eight questions graded the wrong option. This is the rule that inspects the finished body for exactly that.",
+      "file": "scripts/csp-pseudocode-post-repair.js",
+      "find": "    if (wrong.length) bad.push('keys: '",
+      "replace": "    if (false) bad.push('keys: '",
+      "command": "npm run --silent smoke:csppseudo",
+      "expect_failure": "[FAIL] keys rule fires on one option grades the wrong index"
+    },
+    {
+      "kind": "mutation",
+      "name": "REPEAT UNTIL may be taught as post-test again",
+      "file": "scripts/csp-pseudocode-post-repair.js",
+      "find": "  if (/at the END of each iteration|",
+      "replace": "  if (false && /at the END of each iteration|",
+      "command": "npm run --silent smoke:csppseudo",
+      "expect_failure": "[FAIL] repeat until rule fires on the loop is taught as post-test again"
+    },
+    {
+      "kind": "mutation",
+      "name": "the Exam Reality Check may lose the 70",
+      "_why": "The reported defect. The retired-sentence regex overlaps it, so the injection that proves this rule changes 70 to 40 without bringing the old sentence back.",
+      "file": "scripts/csp-pseudocode-post-repair.js",
+      "find": "  if (!after.includes('Section I of the AP CSP exam is 70 multiple-choice questions in 120 minutes')) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:csppseudo",
+      "expect_failure": "[FAIL] exam facts rule fires on the box goes back to forty"
+    },
+    {
+      "kind": "mutation",
+      "name": "an authored em-dash may enter the body",
+      "_why": "The first cut of this rule counted dashes, and the suite's own injection proved it hollow: the repair removes nine, so an authored one passed under the old total.",
+      "file": "scripts/csp-pseudocode-post-repair.js",
+      "find": "    if (!before.includes(around)) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:csppseudo",
+      "expect_failure": "[FAIL] dashes rule fires on an em-dash is authored"
+    },
+    {
+      "kind": "mutation",
+      "name": "the preflight treats blog articles as new pages again",
+      "_why": "The rule this change fixes. Its suite missed the defect because the Blog Posts fixture used the handle day-11, which has no course prefix.",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "const articleSheet = header.some((h) => ['bloghandle', 'blogid', 'blogtitle'].includes(normColumn(h)));",
+      "replace": "const articleSheet = false;",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "[FAIL] an ARTICLE on a Blog Posts sheet is not refused as a new page"
+    },
+    {
+      "kind": "mutation",
+      "name": "the re-deriving interpreter runs REPEAT UNTIL as post-test",
+      "_why": "The re-derivation is only independent if its loop rule is the CED's. Made post-test, the self-check against AAP-2.K.5 must go red, and so must Q8, which reads myList[1] of an empty list.",
+      "file": "smoke/csp-pseudocode-post-repair.js",
+      "find": "        while (!truth(ev(s.c, env))) { if (++n > 100000) throw new Error('REPEAT UNTIL never stops'); exec(s.body, env); }",
+      "replace": "        do { if (++n > 100000) throw new Error('REPEAT UNTIL never stops'); exec(s.body, env); } while (!truth(ev(s.c, env)));",
+      "command": "npm run --silent smoke:csppseudo",
+      "expect_failure": "[FAIL] REPEAT UNTIL runs zero times when the condition starts true"
+    },
+    {
+      "kind": "live",
+      "name": "the article serves the repaired body, and its grader accepts 8 of 8",
+      "_why": "Every assertion was false on 2026-09-25 before the import: 1 ok, 15 failed. The last one compares the live body with the sheet's body after decoding entities on both sides, so it pins the exact import rather than a few phrases. Run after the import; --browser also asks the page's own grader in Chromium.",
+      "command": "node scripts/verify-csp-pseudocode-post-live.js",
+      "expect": "OK - the pseudocode post repair is live"
+    }
+  ]
+}
