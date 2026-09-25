@@ -715,6 +715,11 @@ router.post('/traffic/import', (req, res) => {
         mapped_metrics: parsed.mapped_metrics,
         mapped_dimension: parsed.mapped_dimension,
         unmapped_headers: parsed.unmapped_headers,
+        //  Columns recognised and REFUSED because their denominator is not
+        //  stated. Surfaced here because an importer who ignores it gets no
+        //  rate stored and a model reporting null, and would otherwise have no
+        //  way to find out why. See AMBIGUOUS in lib/traffic-csv.js.
+        ambiguous_headers: parsed.ambiguous_headers,
         skipped_count: parsed.skipped_count,
       },
       ...written,

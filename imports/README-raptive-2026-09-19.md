@@ -41,14 +41,21 @@ Measured on this data, importing the session figure instead would have
 overstated every class revenue number by **2.97x**. Pages per session over the
 window is 2.82, which is the same ratio from the other side.
 
-`lib/traffic-csv.js` will not stop you. `HEADER_MAP` maps `pagerpm`, `sessionrpm`
-and a bare `rpm` all onto the one `rpm` metric, and which one wins is decided by
-**column order** rather than by meaning: `mapHeaders` keeps the first match and
-skips the rest. In this export `Page RPM` happens to sit left of `RPM`, so a
-naive import of the raw file would have been correct by luck. Board task 376.
+**`lib/traffic-csv.js` stops you now, and did not when this was written.** Board
+376 is fixed as of 2026-09-25: `rpm`, `session_rpm` and `impression_rpm` are three
+separate metrics, a bare `RPM` header is refused and reported in
+`ambiguous_headers` rather than guessed at, and the contract labels `rpm`
+"Page RPM". Importing the raw vendor file is now safe whatever order its columns
+come in. See `docs/traffic-rate-denominators.md`.
 
-This sheet is written with `Page RPM` and no `RPM` column at all, so the outcome
-does not depend on that luck.
+As it stood when this sheet was built: `HEADER_MAP` mapped `pagerpm`, `sessionrpm`
+and a bare `rpm` all onto the one `rpm` metric, and which one won was decided by
+**column order** rather than by meaning, because `mapHeaders` keeps the first
+match and skips the rest. In this export `Page RPM` happens to sit left of `RPM`,
+so a naive import of the raw file would have been correct by luck.
+
+This sheet is written with `Page RPM` and no `RPM` column at all, so its outcome
+never depended on that luck, and it imports identically before and after the fix.
 
 ## What the window says
 

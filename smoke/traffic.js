@@ -382,6 +382,87 @@ ok('reports unmapped headers rather than dropping them silently', (() => {
 ok('refuses an export with no recognised metric at all', csv.parseExport('Date,Wibble\n2026-08-01,3\n', { source: 'clarity' }).ok === false);
 ok('refuses an unknown source', csv.parseExport(raptive, { source: 'tiktok' }).ok === false);
 
+// ── RATE DENOMINATORS ────────────────────────────────────────────────────────
+//  Board 376. Money per 1000 of WHAT, and why a bare "RPM" may not be guessed.
+//
+//  lib/class-monetization.js multiplies the `rpm` metric by PAGEVIEWS, so a
+//  session rate landing there overstates every class revenue figure by
+//  pages-per-session. On Raptive's own export for 2026-08-14 to 09-12 the page
+//  rate averaged $7.20 and the session rate $21.42: a factor of 2.97.
+//
+//  Before this split, `rpm`, `pagerpm`, `sessionrpm` and `ecpm` were synonyms of
+//  one metric, and mapHeaders keeps the FIRST match, so which column won was
+//  decided by its position in the file rather than by its meaning.
+section('Rate denominators');
+
+//  The real export shape: both columns present, Page RPM first.
+const RAPTIVE_BOTH = 'Start Date,End Date,Date,Earnings,Pageviews,Sessions,Page RPM,RPM\n'
+  + '2026-08-14,2026-08-14,2026-08-14,14.43,1823,698,7.92,20.68\n';
+//  The same file with the two rate columns swapped. Under the old mapping this
+//  is the case that silently stored the session rate.
+const RAPTIVE_SWAPPED = 'Date,Earnings,Pageviews,Sessions,RPM,Page RPM\n'
+  + '2026-08-14,14.43,1823,698,20.68,7.92\n';
+
+const rateOf = (text, metric) => {
+  const p = csv.parseExport(text, { source: 'raptive' });
+  const r = p.readings.find((x) => x.metric === metric);
+  return r ? r.value : null;
+};
+
+ok('Page RPM lands in rpm as the PAGE rate', rateOf(RAPTIVE_BOTH, 'rpm') === 7.92, rateOf(RAPTIVE_BOTH, 'rpm'));
+ok('the bare RPM column never reaches rpm', rateOf(RAPTIVE_BOTH, 'rpm') !== 20.68);
+ok('ORDER NO LONGER DECIDES: swapping the columns still yields the page rate',
+  rateOf(RAPTIVE_SWAPPED, 'rpm') === 7.92, rateOf(RAPTIVE_SWAPPED, 'rpm'));
+ok('and the session value is not stored under any metric by the bare column',
+  !csv.parseExport(RAPTIVE_BOTH, { source: 'raptive' }).readings.some((r) => r.value === 20.68));
+
+ok('a bare RPM is REPORTED as ambiguous, not dropped in silence', (() => {
+  const p = csv.parseExport(RAPTIVE_BOTH, { source: 'raptive' });
+  return p.ambiguous_headers.length === 1 && p.ambiguous_headers[0].header === 'RPM';
+})(), csv.parseExport(RAPTIVE_BOTH, { source: 'raptive' }).ambiguous_headers);
+ok('and the reason names both readings and the remedy', (() => {
+  const a = csv.parseExport(RAPTIVE_BOTH, { source: 'raptive' }).ambiguous_headers[0].reason;
+  return /pageviews/.test(a) && /sessions/.test(a) && /2\.97/.test(a) && /[Rr]ename/.test(a);
+})());
+
+//  An explicit denominator is honoured, each into its own metric.
+ok('Session RPM maps to session_rpm', rateOf('Date,Earnings,Session RPM\n2026-08-14,14.43,20.68\n', 'session_rpm') === 20.68);
+ok('eCPM maps to impression_rpm, a third denominator again',
+  rateOf('Date,Earnings,eCPM\n2026-08-14,14.43,1.20\n', 'impression_rpm') === 1.2);
+ok('none of the three is ever stored as another', (() => {
+  const p = csv.parseExport('Date,Earnings,Page RPM,Session RPM,eCPM\n2026-08-14,14.43,7.92,20.68,1.20\n', { source: 'raptive' });
+  const v = Object.fromEntries(p.readings.map((r) => [r.metric, r.value]));
+  return v.rpm === 7.92 && v.session_rpm === 20.68 && v.impression_rpm === 1.2;
+})());
+
+//  A file whose ONLY rate column is the ambiguous one stores no rate at all,
+//  which leaves the model reporting null. That is the safe direction: a missing
+//  reading is recoverable, a wrong one looks correct.
+ok('an export whose only rate column is ambiguous stores no rate', (() => {
+  const p = csv.parseExport('Date,Earnings,RPM\n2026-08-14,14.43,20.68\n', { source: 'raptive' });
+  return p.ok && !p.mapped_metrics.includes('rpm') && !p.mapped_metrics.includes('session_rpm');
+})());
+ok('and an export with NOTHING but an ambiguous column is refused, saying which', (() => {
+  const p = csv.parseExport('Date,RPM\n2026-08-14,20.68\n', { source: 'raptive' });
+  return p.ok === false && /ambiguous/.test(p.reason) && p.ambiguous_headers.length === 1;
+})(), csv.parseExport('Date,RPM\n2026-08-14,20.68\n', { source: 'raptive' }).reason);
+
+//  The three rates are distinct in the CONTRACT too, not only in the parser, or
+//  a hand-built reading could still put a session rate in the page column.
+ok('the contract knows all three as separate metrics',
+  ['rpm', 'session_rpm', 'impression_rpm'].every((m) => contract.METRICS[m]));
+ok('and rpm is LABELLED the page rate, because "RPM" on an axis is the ambiguity itself',
+  contract.METRICS.rpm.label === 'Page RPM', contract.METRICS.rpm.label);
+
+//  The committed sheet must keep importing exactly as it did.
+ok('the committed Raptive sheet still parses to 128 readings with rpm as the page rate', (() => {
+  const f = require('path').join(__dirname, '..', 'imports', 'raptive-2026-08-14-to-2026-09-16.csv');
+  if (!require('fs').existsSync(f)) return true;   // sheet may be pruned later; do not fail on its absence
+  const p = csv.parseExport(require('fs').readFileSync(f, 'utf8'), { source: 'raptive' });
+  return p.ok && p.readings.length === 128 && p.ambiguous_headers.length === 0
+    && p.readings.filter((r) => r.metric === 'rpm').length === 30;
+})());
+
 // ── Connectors ───────────────────────────────────────────────────────────────
 section('Google connectors fail closed');
 const st = google.status();
