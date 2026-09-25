@@ -178,7 +178,17 @@ If the import damages the page, the ROLLBACK sheet puts back the body as it was 
 
 ## Still open
 
-- Other posts from the same batch. SWEEP-PLACEHOLDER
+- Other posts from the same batch. A read-only sweep of all 86 news articles is in
+  `docs/reports/2026-09-25-news-blog-sweep.md`. By its account, no other post
+  repeats the REPEAT UNTIL or list-index errors, and every CSP exam number printed
+  elsewhere in the blog is right. It did find other defects, each checked on the live
+  page by this session before filing:
+  - **Board 429.** Wrong keys: the recursion guide's q3, the CSP day 29 aliasing post
+    on two handles (it teaches aliasing where the reference sheet says a copy), and a
+    unit 2 question with no correct option at all.
+  - **Board 430.** Two posts whose practice scripts do not parse.
+  - **Board 431.** Three CSA posts that say FRQs are 50% (45%), plus FRQ numbering
+    that is wrong throughout the FRQ tips post.
 - Two posts now compete for "ap csp pseudocode": this one and the repo's own
   `/blogs/ap-csp/ap-csp-pseudocode-complete-syntax-guide`. Whether to merge or redirect
   one is Tanner's decision, and a redirect is a handle change.
