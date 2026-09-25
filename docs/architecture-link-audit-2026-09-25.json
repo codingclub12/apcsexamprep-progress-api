@@ -1,0 +1,2339 @@
+{
+  "counts": {
+    "parents_read": 153,
+    "ok": 36,
+    "partial": 36,
+    "total_miss": 81,
+    "errors": 0,
+    "distinct_members_missed": 432,
+    "linked_by_another_hub": 188,
+    "linked_by_no_hub": 244
+  },
+  "linked_by_no_hub": [
+    "ap-csa-2d-array-algorithms",
+    "ap-csa-2d-array-cheat-sheet",
+    "ap-csa-2d-array-frq-patterns",
+    "ap-csa-2d-array-mcq-practice",
+    "ap-csa-2d-array-mistakes",
+    "ap-csa-2d-array-trace-problems",
+    "ap-csa-2d-arrays-exam-guide",
+    "ap-csa-boolean-expression-equivalence",
+    "ap-csa-free-digital-textbook-section-1-1-why-programming-why-java",
+    "ap-csa-method-signatures-return-types",
+    "ap-csa-practice-exam-section-2-free-response",
+    "ap-csa-practice-questions",
+    "ap-csa-practice-questions-frq-style",
+    "ap-csa-recursion-tracing-guide",
+    "ap-csa-selection-and-insertion-sorting-game",
+    "ap-csa-unit-1-assessment-version-a",
+    "ap-csp-bi1-abstraction",
+    "ap-csp-bi1-collaboration",
+    "ap-csp-bi1-program-design",
+    "ap-csp-bi1-purpose-vs-function",
+    "ap-csp-bi1-sequencing-selection-iteration",
+    "ap-csp-bi2-analog-digital",
+    "ap-csp-bi2-binary-numbers",
+    "ap-csp-bi2-overflow-roundoff",
+    "ap-csp-bi4-bandwidth-latency",
+    "ap-csp-bi4-encryption",
+    "ap-csp-bi4-fault-tolerance",
+    "ap-csp-bi4-packet-switching",
+    "ap-csp-bi4-parallel-computing",
+    "ap-csp-binary-and-data-test",
+    "ap-csp-course-bi1-collaboration",
+    "ap-csp-course-bi1-collaboration-exercise-2",
+    "ap-csp-course-bi1-collaboration-notes",
+    "ap-csp-course-bi1-identifying-correcting-errors",
+    "ap-csp-course-bi1-identifying-correcting-errors-exercise-2",
+    "ap-csp-course-bi1-identifying-correcting-errors-notes",
+    "ap-csp-course-bi1-program-design-development",
+    "ap-csp-course-bi1-program-design-development-exercise-2",
+    "ap-csp-course-bi1-program-design-development-notes",
+    "ap-csp-course-bi1-program-function-purpose",
+    "ap-csp-course-bi1-program-function-purpose-exercise-2",
+    "ap-csp-course-bi1-program-function-purpose-notes",
+    "ap-csp-course-bi1-unit-test",
+    "ap-csp-course-bi2-binary-numbers",
+    "ap-csp-course-bi2-binary-numbers-exercise-2",
+    "ap-csp-course-bi2-binary-numbers-notes",
+    "ap-csp-course-bi2-data-compression",
+    "ap-csp-course-bi2-data-compression-exercise-2",
+    "ap-csp-course-bi2-data-compression-notes",
+    "ap-csp-course-bi2-extracting-information",
+    "ap-csp-course-bi2-extracting-information-exercise-2",
+    "ap-csp-course-bi2-extracting-information-notes",
+    "ap-csp-course-bi2-unit-test",
+    "ap-csp-course-bi2-using-programs-with-data",
+    "ap-csp-course-bi2-using-programs-with-data-exercise-2",
+    "ap-csp-course-bi2-using-programs-with-data-notes",
+    "ap-csp-course-bi3-algorithmic-efficiency",
+    "ap-csp-course-bi3-algorithmic-efficiency-exercise-2",
+    "ap-csp-course-bi3-binary-search",
+    "ap-csp-course-bi3-binary-search-exercise-2",
+    "ap-csp-course-bi3-boolean-expressions",
+    "ap-csp-course-bi3-boolean-expressions-exercise-2",
+    "ap-csp-course-bi3-calling-procedures",
+    "ap-csp-course-bi3-calling-procedures-exercise-2",
+    "ap-csp-course-bi3-conditionals",
+    "ap-csp-course-bi3-conditionals-exercise-2",
+    "ap-csp-course-bi3-data-abstraction",
+    "ap-csp-course-bi3-data-abstraction-exercise-2",
+    "ap-csp-course-bi3-developing-algorithms",
+    "ap-csp-course-bi3-developing-algorithms-exercise-2",
+    "ap-csp-course-bi3-developing-procedures",
+    "ap-csp-course-bi3-developing-procedures-exercise-2",
+    "ap-csp-course-bi3-iteration",
+    "ap-csp-course-bi3-iteration-exercise-2",
+    "ap-csp-course-bi3-libraries",
+    "ap-csp-course-bi3-libraries-exercise-2",
+    "ap-csp-course-bi3-lists",
+    "ap-csp-course-bi3-lists-exercise-2",
+    "ap-csp-course-bi3-mathematical-expressions",
+    "ap-csp-course-bi3-mathematical-expressions-exercise-2",
+    "ap-csp-course-bi3-nested-conditionals",
+    "ap-csp-course-bi3-nested-conditionals-exercise-2",
+    "ap-csp-course-bi3-random-values",
+    "ap-csp-course-bi3-random-values-exercise-2",
+    "ap-csp-course-bi3-simulations",
+    "ap-csp-course-bi3-simulations-exercise-2",
+    "ap-csp-course-bi3-strings",
+    "ap-csp-course-bi3-strings-exercise-2",
+    "ap-csp-course-bi3-undecidable-problems",
+    "ap-csp-course-bi3-undecidable-problems-exercise-2",
+    "ap-csp-course-bi3-unit-test-part-a",
+    "ap-csp-course-bi3-unit-test-part-b",
+    "ap-csp-course-bi3-variables",
+    "ap-csp-course-bi3-variables-exercise-2",
+    "ap-csp-course-bi4-fault-tolerance",
+    "ap-csp-course-bi4-fault-tolerance-exercise-2",
+    "ap-csp-course-bi4-fault-tolerance-notes",
+    "ap-csp-course-bi4-parallel-distributed-computing",
+    "ap-csp-course-bi4-parallel-distributed-computing-exercise-2",
+    "ap-csp-course-bi4-parallel-distributed-computing-notes",
+    "ap-csp-course-bi4-the-internet",
+    "ap-csp-course-bi4-the-internet-exercise-2",
+    "ap-csp-course-bi4-the-internet-notes",
+    "ap-csp-course-bi4-unit-test",
+    "ap-csp-course-bi5-beneficial-harmful-effects-exercise-2",
+    "ap-csp-course-bi5-beneficial-harmful-effects-notes",
+    "ap-csp-course-bi5-computing-bias",
+    "ap-csp-course-bi5-computing-bias-exercise-2",
+    "ap-csp-course-bi5-computing-bias-notes",
+    "ap-csp-course-bi5-crowdsourcing",
+    "ap-csp-course-bi5-crowdsourcing-exercise-2",
+    "ap-csp-course-bi5-crowdsourcing-notes",
+    "ap-csp-course-bi5-digital-divide",
+    "ap-csp-course-bi5-digital-divide-exercise-2",
+    "ap-csp-course-bi5-digital-divide-notes",
+    "ap-csp-course-bi5-legal-ethical-concerns",
+    "ap-csp-course-bi5-legal-ethical-concerns-exercise-2",
+    "ap-csp-course-bi5-legal-ethical-concerns-notes",
+    "ap-csp-course-bi5-safe-computing",
+    "ap-csp-course-bi5-safe-computing-exercise-2",
+    "ap-csp-course-bi5-safe-computing-notes",
+    "ap-csp-course-bi5-summary-quiz",
+    "ap-csp-course-big-idea-1",
+    "ap-csp-course-big-idea-2-data",
+    "ap-csp-course-big-idea-3-algorithms",
+    "ap-csp-course-big-idea-4-computer-systems",
+    "ap-csp-course-big-idea-5-impact",
+    "ap-csp-topic-3-1-exercise-1",
+    "ap-csp-topic-3-1-exercise-2",
+    "ap-csp-topic-3-1-guided-notes",
+    "ap-csp-topic-3-10-exercise-1",
+    "ap-csp-topic-3-10-exercise-2",
+    "ap-csp-topic-3-10-guided-notes",
+    "ap-csp-topic-3-11-exercise-1",
+    "ap-csp-topic-3-11-exercise-2",
+    "ap-csp-topic-3-11-guided-notes",
+    "ap-csp-topic-3-12-exercise-1",
+    "ap-csp-topic-3-12-exercise-2",
+    "ap-csp-topic-3-12-guided-notes",
+    "ap-csp-topic-3-13-exercise-1",
+    "ap-csp-topic-3-13-exercise-2",
+    "ap-csp-topic-3-13-guided-notes",
+    "ap-csp-topic-3-14-exercise-1",
+    "ap-csp-topic-3-14-exercise-2",
+    "ap-csp-topic-3-14-guided-notes",
+    "ap-csp-topic-3-15-exercise-1",
+    "ap-csp-topic-3-15-exercise-2",
+    "ap-csp-topic-3-15-guided-notes",
+    "ap-csp-topic-3-16-exercise-1",
+    "ap-csp-topic-3-16-exercise-2",
+    "ap-csp-topic-3-16-guided-notes",
+    "ap-csp-topic-3-17-exercise-1",
+    "ap-csp-topic-3-17-exercise-2",
+    "ap-csp-topic-3-17-guided-notes",
+    "ap-csp-topic-3-18-exercise-1",
+    "ap-csp-topic-3-18-exercise-2",
+    "ap-csp-topic-3-18-guided-notes",
+    "ap-csp-topic-3-2-exercise-1",
+    "ap-csp-topic-3-2-exercise-2",
+    "ap-csp-topic-3-2-guided-notes",
+    "ap-csp-topic-3-3-exercise-1",
+    "ap-csp-topic-3-3-exercise-2",
+    "ap-csp-topic-3-3-guided-notes",
+    "ap-csp-topic-3-4-exercise-1",
+    "ap-csp-topic-3-4-exercise-2",
+    "ap-csp-topic-3-4-guided-notes",
+    "ap-csp-topic-3-5-exercise-1",
+    "ap-csp-topic-3-5-exercise-2",
+    "ap-csp-topic-3-5-guided-notes",
+    "ap-csp-topic-3-6-exercise-1",
+    "ap-csp-topic-3-6-exercise-2",
+    "ap-csp-topic-3-6-guided-notes",
+    "ap-csp-topic-3-7-exercise-1",
+    "ap-csp-topic-3-7-exercise-2",
+    "ap-csp-topic-3-7-guided-notes",
+    "ap-csp-topic-3-8-exercise-1",
+    "ap-csp-topic-3-8-exercise-2",
+    "ap-csp-topic-3-8-guided-notes",
+    "ap-csp-topic-3-9-exercise-1",
+    "ap-csp-topic-3-9-exercise-2",
+    "ap-csp-topic-3-9-guided-notes",
+    "ap-csp-written-response-guide",
+    "ap-csp-written-response-walkthrough-2026",
+    "ap-cyber-unit-1-lesson-2-auth-log-lab",
+    "ap-cyber-unit-3-lab-log-analysis",
+    "ap-cyber-unit-3-lab-packet-capture",
+    "ap-cyber-unit-3-lab-port-mapping",
+    "ap-cyber-unit-3-project",
+    "ap-cyber-unit-3-scenario-practice",
+    "ap-cyber-unit-4-lesson-3-terminal-lab",
+    "ap-cyber-unit-4-lesson-5-exercise-1",
+    "ap-cyber-unit-4-lesson-5-exercise-2",
+    "ap-cyber-unit-4-lesson-5-lab",
+    "ap-cyber-unit-4-lesson-5-quiz",
+    "ap-cyber-unit-5-lesson-1-exercise-2",
+    "ap-cyber-unit-5-lesson-1-lab",
+    "ap-cyber-unit-5-lesson-1-quiz",
+    "ap-cyber-unit-5-lesson-2-exercise-1",
+    "ap-cyber-unit-5-lesson-2-exercise-2",
+    "ap-cyber-unit-5-lesson-2-lab",
+    "ap-cyber-unit-5-lesson-2-quiz",
+    "ap-cyber-unit-5-lesson-3-exercise-1",
+    "ap-cyber-unit-5-lesson-3-exercise-2",
+    "ap-cyber-unit-5-lesson-3-lab",
+    "ap-cyber-unit-5-lesson-3-quiz",
+    "ap-cyber-unit-5-lesson-4",
+    "ap-cyber-unit-5-lesson-4-exercise-1",
+    "ap-cyber-unit-5-lesson-4-exercise-2",
+    "ap-cyber-unit-5-lesson-4-lab",
+    "ap-cyber-unit-5-lesson-4-quiz",
+    "ap-cyber-unit-5-lesson-5",
+    "ap-cyber-unit-5-lesson-5-exercise-1",
+    "ap-cyber-unit-5-lesson-5-exercise-2",
+    "ap-cyber-unit-5-lesson-5-lab",
+    "ap-cyber-unit-5-lesson-5-quiz",
+    "ap-cyber-unit-5-lesson-6",
+    "ap-cyber-unit-5-lesson-6-exercise-1",
+    "ap-cyber-unit-5-lesson-6-exercise-2",
+    "ap-cyber-unit-5-lesson-6-lab",
+    "ap-cyber-unit-5-lesson-6-quiz",
+    "ap-cyber-unit-5-practice-exam",
+    "ap-cybersecurity-exam-format-scoring",
+    "ap-cybersecurity-practice-questions-unit-1",
+    "ap-cybersecurity-practice-questions-unit-2",
+    "ap-cybersecurity-practice-questions-unit-3",
+    "ap-cybersecurity-practice-questions-unit-4",
+    "ap-cybersecurity-practice-questions-unit-5",
+    "ap-cybersecurity-protecting-physical-spaces",
+    "ap-cybersecurity-study-plan-practice",
+    "ap-cybersecurity-teacher-course-planning",
+    "ap-cybersecurity-unit-1-practice",
+    "ap-cybersecurity-unit-2-complete-study-guide",
+    "ap-cybersecurity-unit-2-integration",
+    "ap-cybersecurity-unit-2-practice",
+    "intro-java-lesson-1-4-calling-a-method-code",
+    "intro-java-lesson-1-5-parameters-and-return-values-code",
+    "intro-java-lesson-1-6-the-act-method-code",
+    "intro-java-lesson-2-1-variables-and-types-code",
+    "intro-java-lesson-2-2-expressions-and-operators-code",
+    "intro-java-lesson-2-3-boolean-expressions-code",
+    "intro-java-lesson-2-4-if-and-else-code",
+    "intro-java-lesson-2-5-else-if-chains-code",
+    "intro-java-lesson-2-6-randomness-code",
+    "intro-java-lesson-2-7-keyboard-input-code"
+  ],
+  "rows": [
+    {
+      "parent": "ap-csp-topic-3-1-code",
+      "members": 41,
+      "linked": 0,
+      "missed": 41,
+      "shape": "TOTAL",
+      "alias_members": 41,
+      "cross_family_members": 38,
+      "misses": [
+        "ap-csp-course-bi3-algorithmic-efficiency",
+        "ap-csp-course-bi3-algorithmic-efficiency-exercise-2",
+        "ap-csp-course-bi3-binary-search",
+        "ap-csp-course-bi3-binary-search-exercise-2",
+        "ap-csp-course-bi3-boolean-expressions",
+        "ap-csp-course-bi3-boolean-expressions-exercise-2",
+        "ap-csp-course-bi3-calling-procedures",
+        "ap-csp-course-bi3-calling-procedures-exercise-2",
+        "ap-csp-course-bi3-conditionals",
+        "ap-csp-course-bi3-conditionals-exercise-2",
+        "ap-csp-course-bi3-data-abstraction",
+        "ap-csp-course-bi3-data-abstraction-exercise-2",
+        "ap-csp-course-bi3-developing-algorithms",
+        "ap-csp-course-bi3-developing-algorithms-exercise-2",
+        "ap-csp-course-bi3-developing-procedures",
+        "ap-csp-course-bi3-developing-procedures-exercise-2",
+        "ap-csp-course-bi3-iteration",
+        "ap-csp-course-bi3-iteration-exercise-2",
+        "ap-csp-course-bi3-libraries",
+        "ap-csp-course-bi3-libraries-exercise-2",
+        "ap-csp-course-bi3-lists",
+        "ap-csp-course-bi3-lists-exercise-2",
+        "ap-csp-course-bi3-mathematical-expressions",
+        "ap-csp-course-bi3-mathematical-expressions-exercise-2",
+        "ap-csp-course-bi3-nested-conditionals",
+        "ap-csp-course-bi3-nested-conditionals-exercise-2",
+        "ap-csp-course-bi3-random-values",
+        "ap-csp-course-bi3-random-values-exercise-2",
+        "ap-csp-course-bi3-simulations",
+        "ap-csp-course-bi3-simulations-exercise-2",
+        "ap-csp-course-bi3-strings",
+        "ap-csp-course-bi3-strings-exercise-2",
+        "ap-csp-course-bi3-undecidable-problems",
+        "ap-csp-course-bi3-undecidable-problems-exercise-2",
+        "ap-csp-course-bi3-unit-test-part-a",
+        "ap-csp-course-bi3-unit-test-part-b",
+        "ap-csp-course-bi3-variables",
+        "ap-csp-course-bi3-variables-exercise-2",
+        "ap-csp-topic-3-1-exercise-1",
+        "ap-csp-topic-3-1-exercise-2",
+        "ap-csp-topic-3-1-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-cyber-unit-3-lesson-1",
+      "members": 35,
+      "linked": 29,
+      "missed": 6,
+      "shape": "PARTIAL",
+      "alias_members": 35,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-cyber-unit-3-case-file-3",
+        "ap-cyber-unit-3-lab-log-analysis",
+        "ap-cyber-unit-3-lab-packet-capture",
+        "ap-cyber-unit-3-lab-port-mapping",
+        "ap-cyber-unit-3-project",
+        "ap-cyber-unit-3-scenario-practice"
+      ]
+    },
+    {
+      "parent": "ap-cyber-unit-5-lesson-1",
+      "members": 31,
+      "linked": 3,
+      "missed": 28,
+      "shape": "PARTIAL",
+      "alias_members": 31,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-cyber-unit-5-case-file-5",
+        "ap-cyber-unit-5-lesson-1-exercise-2",
+        "ap-cyber-unit-5-lesson-1-lab",
+        "ap-cyber-unit-5-lesson-1-quiz",
+        "ap-cyber-unit-5-lesson-2-exercise-1",
+        "ap-cyber-unit-5-lesson-2-exercise-2",
+        "ap-cyber-unit-5-lesson-2-lab",
+        "ap-cyber-unit-5-lesson-2-quiz",
+        "ap-cyber-unit-5-lesson-3-exercise-1",
+        "ap-cyber-unit-5-lesson-3-exercise-2",
+        "ap-cyber-unit-5-lesson-3-lab",
+        "ap-cyber-unit-5-lesson-3-quiz",
+        "ap-cyber-unit-5-lesson-4",
+        "ap-cyber-unit-5-lesson-4-exercise-1",
+        "ap-cyber-unit-5-lesson-4-exercise-2",
+        "ap-cyber-unit-5-lesson-4-lab",
+        "ap-cyber-unit-5-lesson-4-quiz",
+        "ap-cyber-unit-5-lesson-5",
+        "ap-cyber-unit-5-lesson-5-exercise-1",
+        "ap-cyber-unit-5-lesson-5-exercise-2",
+        "ap-cyber-unit-5-lesson-5-lab",
+        "ap-cyber-unit-5-lesson-5-quiz",
+        "ap-cyber-unit-5-lesson-6",
+        "ap-cyber-unit-5-lesson-6-exercise-1",
+        "ap-cyber-unit-5-lesson-6-exercise-2",
+        "ap-cyber-unit-5-lesson-6-lab",
+        "ap-cyber-unit-5-lesson-6-quiz",
+        "ap-cyber-unit-5-practice-exam"
+      ]
+    },
+    {
+      "parent": "ap-cyber-unit-4-lesson-1",
+      "members": 26,
+      "linked": 19,
+      "missed": 7,
+      "shape": "PARTIAL",
+      "alias_members": 26,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-cyber-unit-4-case-file-4",
+        "ap-cyber-unit-4-lesson-3-terminal-lab",
+        "ap-cyber-unit-4-lesson-5",
+        "ap-cyber-unit-4-lesson-5-exercise-1",
+        "ap-cyber-unit-4-lesson-5-exercise-2",
+        "ap-cyber-unit-4-lesson-5-lab",
+        "ap-cyber-unit-4-lesson-5-quiz"
+      ]
+    },
+    {
+      "parent": "ap-cybersecurity-unit-1-practice",
+      "members": 25,
+      "linked": 24,
+      "missed": 1,
+      "shape": "PARTIAL",
+      "alias_members": 25,
+      "cross_family_members": 25,
+      "misses": [
+        "ap-cyber-unit-1-lesson-2-auth-log-lab"
+      ]
+    },
+    {
+      "parent": "ap-cybersecurity-unit-2-practice",
+      "members": 22,
+      "linked": 22,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 22,
+      "cross_family_members": 22,
+      "misses": []
+    },
+    {
+      "parent": "ap-csp-bi1-testing",
+      "members": 20,
+      "linked": 2,
+      "missed": 18,
+      "shape": "PARTIAL",
+      "alias_members": 20,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-bi1-abstraction",
+        "ap-csp-bi1-collaboration",
+        "ap-csp-bi1-program-design",
+        "ap-csp-bi1-purpose-vs-function",
+        "ap-csp-bi1-sequencing-selection-iteration",
+        "ap-csp-course-bi1-collaboration",
+        "ap-csp-course-bi1-collaboration-exercise-2",
+        "ap-csp-course-bi1-collaboration-notes",
+        "ap-csp-course-bi1-identifying-correcting-errors",
+        "ap-csp-course-bi1-identifying-correcting-errors-exercise-2",
+        "ap-csp-course-bi1-identifying-correcting-errors-notes",
+        "ap-csp-course-bi1-program-design-development",
+        "ap-csp-course-bi1-program-design-development-exercise-2",
+        "ap-csp-course-bi1-program-design-development-notes",
+        "ap-csp-course-bi1-program-function-purpose",
+        "ap-csp-course-bi1-program-function-purpose-exercise-2",
+        "ap-csp-course-bi1-program-function-purpose-notes",
+        "ap-csp-course-bi1-unit-test"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-5-1-exercise-1",
+      "members": 20,
+      "linked": 2,
+      "missed": 18,
+      "shape": "PARTIAL",
+      "alias_members": 20,
+      "cross_family_members": 20,
+      "misses": [
+        "ap-csp-course-bi5-beneficial-harmful-effects-exercise-2",
+        "ap-csp-course-bi5-beneficial-harmful-effects-notes",
+        "ap-csp-course-bi5-computing-bias",
+        "ap-csp-course-bi5-computing-bias-exercise-2",
+        "ap-csp-course-bi5-computing-bias-notes",
+        "ap-csp-course-bi5-crowdsourcing",
+        "ap-csp-course-bi5-crowdsourcing-exercise-2",
+        "ap-csp-course-bi5-crowdsourcing-notes",
+        "ap-csp-course-bi5-digital-divide",
+        "ap-csp-course-bi5-digital-divide-exercise-2",
+        "ap-csp-course-bi5-digital-divide-notes",
+        "ap-csp-course-bi5-legal-ethical-concerns",
+        "ap-csp-course-bi5-legal-ethical-concerns-exercise-2",
+        "ap-csp-course-bi5-legal-ethical-concerns-notes",
+        "ap-csp-course-bi5-safe-computing",
+        "ap-csp-course-bi5-safe-computing-exercise-2",
+        "ap-csp-course-bi5-safe-computing-notes",
+        "ap-csp-course-bi5-summary-quiz"
+      ]
+    },
+    {
+      "parent": "ap-csp-bi2-data-cleaning",
+      "members": 18,
+      "linked": 2,
+      "missed": 16,
+      "shape": "PARTIAL",
+      "alias_members": 18,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-bi2-analog-digital",
+        "ap-csp-bi2-binary-numbers",
+        "ap-csp-bi2-overflow-roundoff",
+        "ap-csp-course-bi2-binary-numbers",
+        "ap-csp-course-bi2-binary-numbers-exercise-2",
+        "ap-csp-course-bi2-binary-numbers-notes",
+        "ap-csp-course-bi2-data-compression",
+        "ap-csp-course-bi2-data-compression-exercise-2",
+        "ap-csp-course-bi2-data-compression-notes",
+        "ap-csp-course-bi2-extracting-information",
+        "ap-csp-course-bi2-extracting-information-exercise-2",
+        "ap-csp-course-bi2-extracting-information-notes",
+        "ap-csp-course-bi2-unit-test",
+        "ap-csp-course-bi2-using-programs-with-data",
+        "ap-csp-course-bi2-using-programs-with-data-exercise-2",
+        "ap-csp-course-bi2-using-programs-with-data-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-bi4-internet",
+      "members": 16,
+      "linked": 1,
+      "missed": 15,
+      "shape": "PARTIAL",
+      "alias_members": 16,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-bi4-bandwidth-latency",
+        "ap-csp-bi4-encryption",
+        "ap-csp-bi4-fault-tolerance",
+        "ap-csp-bi4-packet-switching",
+        "ap-csp-bi4-parallel-computing",
+        "ap-csp-course-bi4-fault-tolerance",
+        "ap-csp-course-bi4-fault-tolerance-exercise-2",
+        "ap-csp-course-bi4-fault-tolerance-notes",
+        "ap-csp-course-bi4-parallel-distributed-computing",
+        "ap-csp-course-bi4-parallel-distributed-computing-exercise-2",
+        "ap-csp-course-bi4-parallel-distributed-computing-notes",
+        "ap-csp-course-bi4-the-internet",
+        "ap-csp-course-bi4-the-internet-exercise-2",
+        "ap-csp-course-bi4-the-internet-notes",
+        "ap-csp-course-bi4-unit-test"
+      ]
+    },
+    {
+      "parent": "ap-csa-practice-test-hub",
+      "members": 14,
+      "linked": 14,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": []
+    },
+    {
+      "parent": "ap-cybersecurity-unit-2-cia-triad",
+      "members": 12,
+      "linked": 5,
+      "missed": 7,
+      "shape": "PARTIAL",
+      "alias_members": 12,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-cybersecurity-unit-2-complete-study-guide",
+        "ap-cybersecurity-unit-2-cyber-foundations",
+        "ap-cybersecurity-unit-2-detecting-physical-attacks",
+        "ap-cybersecurity-unit-2-integration",
+        "ap-cybersecurity-unit-2-physical-vulnerabilities",
+        "ap-cybersecurity-unit-2-practice",
+        "ap-cybersecurity-unit-2-protecting-physical-spaces"
+      ]
+    },
+    {
+      "parent": "ap-csp-practice-tests-by-topic",
+      "members": 10,
+      "linked": 10,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-2d-arrays",
+      "members": 8,
+      "linked": 1,
+      "missed": 7,
+      "shape": "PARTIAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-2d-array-algorithms",
+        "ap-csa-2d-array-cheat-sheet",
+        "ap-csa-2d-array-frq-patterns",
+        "ap-csa-2d-array-mcq-practice",
+        "ap-csa-2d-array-mistakes",
+        "ap-csa-2d-array-trace-problems",
+        "ap-csa-2d-arrays-exam-guide"
+      ]
+    },
+    {
+      "parent": "ap-csa-7day-emergency-cram-kit",
+      "members": 7,
+      "linked": 7,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 7,
+      "cross_family_members": 7,
+      "misses": []
+    },
+    {
+      "parent": "ap-cybersecurity-unit-1-ai-cyber-defense",
+      "members": 6,
+      "linked": 5,
+      "missed": 1,
+      "shape": "PARTIAL",
+      "alias_members": 6,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-cybersecurity-unit-1-practice"
+      ]
+    },
+    {
+      "parent": "ap-cybersecurity-practice-questions",
+      "members": 5,
+      "linked": 0,
+      "missed": 5,
+      "shape": "TOTAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-cybersecurity-practice-questions-unit-1",
+        "ap-cybersecurity-practice-questions-unit-2",
+        "ap-cybersecurity-practice-questions-unit-3",
+        "ap-cybersecurity-practice-questions-unit-4",
+        "ap-cybersecurity-practice-questions-unit-5"
+      ]
+    },
+    {
+      "parent": "ap-csa-frq-2004",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2005",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2006",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2007",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2008",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2009",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2010",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2011",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2012",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2013",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2014",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2015",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2016",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2017",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2018",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2019",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2021",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2022",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2023",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2024",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2025",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-frq-2026",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 4,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-lesson-2-1-algorithms-selection-repetition",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-1-algorithms-selection-repetition-debug",
+        "ap-csa-lesson-2-1-algorithms-selection-repetition-exercise-1",
+        "ap-csa-lesson-2-1-algorithms-selection-repetition-exercise-2",
+        "ap-csa-lesson-2-1-algorithms-selection-repetition-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-10-implementing-string-algorithms",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-10-implementing-string-algorithms-debug",
+        "ap-csa-lesson-2-10-implementing-string-algorithms-exercise-1",
+        "ap-csa-lesson-2-10-implementing-string-algorithms-exercise-2",
+        "ap-csa-lesson-2-10-implementing-string-algorithms-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-11-nested-iteration",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-11-nested-iteration-debug",
+        "ap-csa-lesson-2-11-nested-iteration-exercise-1",
+        "ap-csa-lesson-2-11-nested-iteration-exercise-2",
+        "ap-csa-lesson-2-11-nested-iteration-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-12-informal-run-time-analysis",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-12-informal-run-time-analysis-debug",
+        "ap-csa-lesson-2-12-informal-run-time-analysis-exercise-1",
+        "ap-csa-lesson-2-12-informal-run-time-analysis-exercise-2",
+        "ap-csa-lesson-2-12-informal-run-time-analysis-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-2-boolean-expressions",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-2-boolean-expressions-debug",
+        "ap-csa-lesson-2-2-boolean-expressions-exercise-1",
+        "ap-csa-lesson-2-2-boolean-expressions-exercise-2",
+        "ap-csa-lesson-2-2-boolean-expressions-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-3-if-statements",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-3-if-statements-debug",
+        "ap-csa-lesson-2-3-if-statements-exercise-1",
+        "ap-csa-lesson-2-3-if-statements-exercise-2",
+        "ap-csa-lesson-2-3-if-statements-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-4-nested-if-statements",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-4-nested-if-statements-debug",
+        "ap-csa-lesson-2-4-nested-if-statements-exercise-1",
+        "ap-csa-lesson-2-4-nested-if-statements-exercise-2",
+        "ap-csa-lesson-2-4-nested-if-statements-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-5-compound-boolean-expressions",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-5-compound-boolean-expressions-debug",
+        "ap-csa-lesson-2-5-compound-boolean-expressions-exercise-1",
+        "ap-csa-lesson-2-5-compound-boolean-expressions-exercise-2",
+        "ap-csa-lesson-2-5-compound-boolean-expressions-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-6-comparing-boolean-expressions",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-6-comparing-boolean-expressions-debug",
+        "ap-csa-lesson-2-6-comparing-boolean-expressions-exercise-1",
+        "ap-csa-lesson-2-6-comparing-boolean-expressions-exercise-2",
+        "ap-csa-lesson-2-6-comparing-boolean-expressions-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-7-while-loops",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-7-while-loops-debug",
+        "ap-csa-lesson-2-7-while-loops-exercise-1",
+        "ap-csa-lesson-2-7-while-loops-exercise-2",
+        "ap-csa-lesson-2-7-while-loops-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-8-for-loops",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-8-for-loops-debug",
+        "ap-csa-lesson-2-8-for-loops-exercise-1",
+        "ap-csa-lesson-2-8-for-loops-exercise-2",
+        "ap-csa-lesson-2-8-for-loops-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-2-9-implementing-selection-iteration-algorithms",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-debug",
+        "ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-exercise-1",
+        "ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-exercise-2",
+        "ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-1-abstraction-and-program-design",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-1-abstraction-and-program-design-debug",
+        "ap-csa-lesson-3-1-abstraction-and-program-design-exercise-1",
+        "ap-csa-lesson-3-1-abstraction-and-program-design-exercise-2",
+        "ap-csa-lesson-3-1-abstraction-and-program-design-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-2-impact-of-program-design",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-2-impact-of-program-design-debug",
+        "ap-csa-lesson-3-2-impact-of-program-design-exercise-1",
+        "ap-csa-lesson-3-2-impact-of-program-design-exercise-2",
+        "ap-csa-lesson-3-2-impact-of-program-design-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-3-anatomy-of-a-class",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-3-anatomy-of-a-class-debug",
+        "ap-csa-lesson-3-3-anatomy-of-a-class-exercise-1",
+        "ap-csa-lesson-3-3-anatomy-of-a-class-exercise-2",
+        "ap-csa-lesson-3-3-anatomy-of-a-class-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-4-constructors",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-4-constructors-debug",
+        "ap-csa-lesson-3-4-constructors-exercise-1",
+        "ap-csa-lesson-3-4-constructors-exercise-2",
+        "ap-csa-lesson-3-4-constructors-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-5-methods-how-to-write-them",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-5-methods-how-to-write-them-debug",
+        "ap-csa-lesson-3-5-methods-how-to-write-them-exercise-1",
+        "ap-csa-lesson-3-5-methods-how-to-write-them-exercise-2",
+        "ap-csa-lesson-3-5-methods-how-to-write-them-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-6-methods-passing-returning-object-references",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-6-methods-passing-returning-object-references-debug",
+        "ap-csa-lesson-3-6-methods-passing-returning-object-references-exercise-1",
+        "ap-csa-lesson-3-6-methods-passing-returning-object-references-exercise-2",
+        "ap-csa-lesson-3-6-methods-passing-returning-object-references-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-7-class-variables-and-methods",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-7-class-variables-and-methods-debug",
+        "ap-csa-lesson-3-7-class-variables-and-methods-exercise-1",
+        "ap-csa-lesson-3-7-class-variables-and-methods-exercise-2",
+        "ap-csa-lesson-3-7-class-variables-and-methods-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-8-scope-and-access",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-8-scope-and-access-debug",
+        "ap-csa-lesson-3-8-scope-and-access-exercise-1",
+        "ap-csa-lesson-3-8-scope-and-access-exercise-2",
+        "ap-csa-lesson-3-8-scope-and-access-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-3-9-this-keyword",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-3-9-this-keyword-debug",
+        "ap-csa-lesson-3-9-this-keyword-exercise-1",
+        "ap-csa-lesson-3-9-this-keyword-exercise-2",
+        "ap-csa-lesson-3-9-this-keyword-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-1-ethical-social-issues-data-collection",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-1-ethical-social-issues-data-collection-debug",
+        "ap-csa-lesson-4-1-ethical-social-issues-data-collection-exercise-1",
+        "ap-csa-lesson-4-1-ethical-social-issues-data-collection-exercise-2",
+        "ap-csa-lesson-4-1-ethical-social-issues-data-collection-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-10-algorithms-with-arraylists",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-10-algorithms-with-arraylists-debug",
+        "ap-csa-lesson-4-10-algorithms-with-arraylists-exercise-1",
+        "ap-csa-lesson-4-10-algorithms-with-arraylists-exercise-2",
+        "ap-csa-lesson-4-10-algorithms-with-arraylists-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-11-2d-array-creation-and-access",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-11-2d-array-creation-and-access-debug",
+        "ap-csa-lesson-4-11-2d-array-creation-and-access-exercise-1",
+        "ap-csa-lesson-4-11-2d-array-creation-and-access-exercise-2",
+        "ap-csa-lesson-4-11-2d-array-creation-and-access-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-12-traversing-2d-arrays",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-12-traversing-2d-arrays-debug",
+        "ap-csa-lesson-4-12-traversing-2d-arrays-exercise-1",
+        "ap-csa-lesson-4-12-traversing-2d-arrays-exercise-2",
+        "ap-csa-lesson-4-12-traversing-2d-arrays-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-13-implementing-2d-array-algorithms",
+      "members": 4,
+      "linked": 2,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-13-implementing-2d-array-algorithms-debug",
+        "ap-csa-lesson-4-13-implementing-2d-array-algorithms-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-14-searching-algorithms",
+      "members": 4,
+      "linked": 2,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-14-searching-algorithms-debug",
+        "ap-csa-lesson-4-14-searching-algorithms-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-15-sorting-algorithms",
+      "members": 4,
+      "linked": 2,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-15-sorting-algorithms-debug",
+        "ap-csa-lesson-4-15-sorting-algorithms-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-16-recursion",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-16-recursion-debug",
+        "ap-csa-lesson-4-16-recursion-exercise-1",
+        "ap-csa-lesson-4-16-recursion-exercise-2",
+        "ap-csa-lesson-4-16-recursion-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-17-recursive-searching-and-sorting",
+      "members": 4,
+      "linked": 2,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-17-recursive-searching-and-sorting-debug",
+        "ap-csa-lesson-4-17-recursive-searching-and-sorting-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-2-introduction-to-using-data-sets",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-2-introduction-to-using-data-sets-debug",
+        "ap-csa-lesson-4-2-introduction-to-using-data-sets-exercise-1",
+        "ap-csa-lesson-4-2-introduction-to-using-data-sets-exercise-2",
+        "ap-csa-lesson-4-2-introduction-to-using-data-sets-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-3-array-creation-and-access",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-3-array-creation-and-access-debug",
+        "ap-csa-lesson-4-3-array-creation-and-access-exercise-1",
+        "ap-csa-lesson-4-3-array-creation-and-access-exercise-2",
+        "ap-csa-lesson-4-3-array-creation-and-access-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-4-traversing-arrays",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-4-traversing-arrays-debug",
+        "ap-csa-lesson-4-4-traversing-arrays-exercise-1",
+        "ap-csa-lesson-4-4-traversing-arrays-exercise-2",
+        "ap-csa-lesson-4-4-traversing-arrays-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-5-algorithms-with-arrays",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-5-algorithms-with-arrays-debug",
+        "ap-csa-lesson-4-5-algorithms-with-arrays-exercise-1",
+        "ap-csa-lesson-4-5-algorithms-with-arrays-exercise-2",
+        "ap-csa-lesson-4-5-algorithms-with-arrays-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-6-using-text-files",
+      "members": 4,
+      "linked": 2,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-6-using-text-files-debug",
+        "ap-csa-lesson-4-6-using-text-files-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-7-wrapper-classes",
+      "members": 4,
+      "linked": 2,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-7-wrapper-classes-debug",
+        "ap-csa-lesson-4-7-wrapper-classes-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-8-arraylist-methods",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-8-arraylist-methods-debug",
+        "ap-csa-lesson-4-8-arraylist-methods-exercise-1",
+        "ap-csa-lesson-4-8-arraylist-methods-exercise-2",
+        "ap-csa-lesson-4-8-arraylist-methods-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-4-9-traversing-arraylists",
+      "members": 4,
+      "linked": 0,
+      "missed": 4,
+      "shape": "TOTAL",
+      "alias_members": 4,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-4-9-traversing-arraylists-debug",
+        "ap-csa-lesson-4-9-traversing-arraylists-exercise-1",
+        "ap-csa-lesson-4-9-traversing-arraylists-exercise-2",
+        "ap-csa-lesson-4-9-traversing-arraylists-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-unit-1-course",
+      "members": 4,
+      "linked": 1,
+      "missed": 3,
+      "shape": "PARTIAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-unit-1-assessment-version-a",
+        "ap-csa-unit-1-exam-objects-methods-expressions",
+        "ap-csa-unit-1-practice-exam"
+      ]
+    },
+    {
+      "parent": "ap-csa-unit-3-course",
+      "members": 4,
+      "linked": 2,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-unit-3-complete-study-guide",
+        "ap-csa-unit-3-practice-exam-part-2"
+      ]
+    },
+    {
+      "parent": "ap-csp-practice-exams",
+      "members": 4,
+      "linked": 4,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-lesson-1-1-intro-algorithms",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-1-intro-algorithms-debug",
+        "ap-csa-lesson-1-1-intro-algorithms-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-10-calling-class-methods",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-10-calling-class-methods-debug",
+        "ap-csa-lesson-1-10-calling-class-methods-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-11-math-class",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-11-math-class-debug",
+        "ap-csa-lesson-1-11-math-class-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-12-objects-instances",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-12-objects-instances-debug",
+        "ap-csa-lesson-1-12-objects-instances-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-13-object-creation",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-13-object-creation-debug",
+        "ap-csa-lesson-1-13-object-creation-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-14-calling-instance-methods",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-14-calling-instance-methods-debug",
+        "ap-csa-lesson-1-14-calling-instance-methods-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-15-string-manipulation",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-15-string-manipulation-debug",
+        "ap-csa-lesson-1-15-string-manipulation-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-2-variables-data-types",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-2-variables-data-types-debug",
+        "ap-csa-lesson-1-2-variables-data-types-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-3-expressions-assignment",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-3-expressions-assignment-debug",
+        "ap-csa-lesson-1-3-expressions-assignment-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-4-assignment-statements-input",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-4-assignment-statements-input-debug",
+        "ap-csa-lesson-1-4-assignment-statements-input-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-5-casting-range",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-5-casting-range-debug",
+        "ap-csa-lesson-1-5-casting-range-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-6-compound-assignment",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-6-compound-assignment-debug",
+        "ap-csa-lesson-1-6-compound-assignment-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-7-api-libraries",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-7-api-libraries-debug",
+        "ap-csa-lesson-1-7-api-libraries-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-8-documentation-comments",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-8-documentation-comments-debug",
+        "ap-csa-lesson-1-8-documentation-comments-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-lesson-1-9-method-signatures",
+      "members": 3,
+      "linked": 1,
+      "missed": 2,
+      "shape": "PARTIAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-lesson-1-9-method-signatures-debug",
+        "ap-csa-lesson-1-9-method-signatures-frq"
+      ]
+    },
+    {
+      "parent": "ap-csa-unit-2-course",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-unit-2-complete-study-guide",
+        "ap-csa-unit-2-exam-selection-iteration",
+        "ap-csa-unit-2-practice-exam"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-10-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-10-exercise-1",
+        "ap-csp-topic-3-10-exercise-2",
+        "ap-csp-topic-3-10-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-11-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-11-exercise-1",
+        "ap-csp-topic-3-11-exercise-2",
+        "ap-csp-topic-3-11-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-12-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-12-exercise-1",
+        "ap-csp-topic-3-12-exercise-2",
+        "ap-csp-topic-3-12-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-13-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-13-exercise-1",
+        "ap-csp-topic-3-13-exercise-2",
+        "ap-csp-topic-3-13-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-14-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-14-exercise-1",
+        "ap-csp-topic-3-14-exercise-2",
+        "ap-csp-topic-3-14-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-15-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-15-exercise-1",
+        "ap-csp-topic-3-15-exercise-2",
+        "ap-csp-topic-3-15-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-16-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-16-exercise-1",
+        "ap-csp-topic-3-16-exercise-2",
+        "ap-csp-topic-3-16-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-17-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-17-exercise-1",
+        "ap-csp-topic-3-17-exercise-2",
+        "ap-csp-topic-3-17-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-18-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-18-exercise-1",
+        "ap-csp-topic-3-18-exercise-2",
+        "ap-csp-topic-3-18-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-2-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-2-exercise-1",
+        "ap-csp-topic-3-2-exercise-2",
+        "ap-csp-topic-3-2-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-3-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-3-exercise-1",
+        "ap-csp-topic-3-3-exercise-2",
+        "ap-csp-topic-3-3-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-4-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-4-exercise-1",
+        "ap-csp-topic-3-4-exercise-2",
+        "ap-csp-topic-3-4-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-5-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-5-exercise-1",
+        "ap-csp-topic-3-5-exercise-2",
+        "ap-csp-topic-3-5-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-6-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-6-exercise-1",
+        "ap-csp-topic-3-6-exercise-2",
+        "ap-csp-topic-3-6-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-7-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-7-exercise-1",
+        "ap-csp-topic-3-7-exercise-2",
+        "ap-csp-topic-3-7-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-8-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-8-exercise-1",
+        "ap-csp-topic-3-8-exercise-2",
+        "ap-csp-topic-3-8-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csp-topic-3-9-code",
+      "members": 3,
+      "linked": 0,
+      "missed": 3,
+      "shape": "TOTAL",
+      "alias_members": 3,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-topic-3-9-exercise-1",
+        "ap-csp-topic-3-9-exercise-2",
+        "ap-csp-topic-3-9-guided-notes"
+      ]
+    },
+    {
+      "parent": "ap-csa-frq-2020",
+      "members": 2,
+      "linked": 2,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 2,
+      "misses": []
+    },
+    {
+      "parent": "ap-csa-practice-exams",
+      "members": 2,
+      "linked": 1,
+      "missed": 1,
+      "shape": "PARTIAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-practice-exam-section-2-free-response"
+      ]
+    },
+    {
+      "parent": "ap-csa-practice-questions-by-topic",
+      "members": 2,
+      "linked": 0,
+      "missed": 2,
+      "shape": "TOTAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-practice-questions",
+        "ap-csa-practice-questions-frq-style"
+      ]
+    },
+    {
+      "parent": "ap-csa-unit-4-course",
+      "members": 2,
+      "linked": 1,
+      "missed": 1,
+      "shape": "PARTIAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-unit-4-practice-exam"
+      ]
+    },
+    {
+      "parent": "ap-csp-written-response-archive",
+      "members": 2,
+      "linked": 0,
+      "missed": 2,
+      "shape": "TOTAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-written-response-guide",
+        "ap-csp-written-response-walkthrough-2026"
+      ]
+    },
+    {
+      "parent": "ap-csa-boolean-expressions",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-boolean-expression-equivalence"
+      ]
+    },
+    {
+      "parent": "ap-csa-casting-range-pitfalls",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": [
+        "ap-csa-casting-type-conversion"
+      ]
+    },
+    {
+      "parent": "ap-csa-casting-type-conversion",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": [
+        "ap-csa-casting-range-pitfalls"
+      ]
+    },
+    {
+      "parent": "ap-csa-free-textbook",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": [
+        "ap-csa-free-digital-textbook-section-1-1-why-programming-why-java"
+      ]
+    },
+    {
+      "parent": "ap-csa-method-signatures",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-method-signatures-return-types"
+      ]
+    },
+    {
+      "parent": "ap-csa-recursion-tracing",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csa-recursion-tracing-guide"
+      ]
+    },
+    {
+      "parent": "ap-csa-selection-sort",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": [
+        "ap-csa-selection-and-insertion-sorting-game"
+      ]
+    },
+    {
+      "parent": "ap-csp-big-idea-1-creative-development",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-course-big-idea-1"
+      ]
+    },
+    {
+      "parent": "ap-csp-big-idea-2-data",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-course-big-idea-2-data"
+      ]
+    },
+    {
+      "parent": "ap-csp-big-idea-3-algorithms-programming-complete-study-guide",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-course-big-idea-3-algorithms"
+      ]
+    },
+    {
+      "parent": "ap-csp-big-idea-4-computer-systems-networks",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-course-big-idea-4-computer-systems"
+      ]
+    },
+    {
+      "parent": "ap-csp-big-idea-5-impact-of-computing",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-csp-course-big-idea-5-impact"
+      ]
+    },
+    {
+      "parent": "ap-csp-binary-search",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": [
+        "ap-csp-binary-and-data-test"
+      ]
+    },
+    {
+      "parent": "ap-csp-repeat-n-times-loops",
+      "members": 1,
+      "linked": 1,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": []
+    },
+    {
+      "parent": "ap-csp-repeat-until-loops",
+      "members": 1,
+      "linked": 1,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": []
+    },
+    {
+      "parent": "ap-cybersecurity-exam-format",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": [
+        "ap-cybersecurity-exam-format-scoring"
+      ]
+    },
+    {
+      "parent": "ap-cybersecurity-protecting-devices",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": [
+        "ap-cybersecurity-protecting-physical-spaces"
+      ]
+    },
+    {
+      "parent": "ap-cybersecurity-study-guide",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": [
+        "ap-cybersecurity-study-plan-practice"
+      ]
+    },
+    {
+      "parent": "ap-cybersecurity-teacher-resources",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": [
+        "ap-cybersecurity-teacher-course-planning"
+      ]
+    },
+    {
+      "parent": "ap-cybersecurity-unit-3-securing-networks",
+      "members": 1,
+      "linked": 1,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": []
+    },
+    {
+      "parent": "ap-cybersecurity-unit-4-securing-devices",
+      "members": 1,
+      "linked": 1,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": []
+    },
+    {
+      "parent": "ap-cybersecurity-unit-5-securing-applications-and-data",
+      "members": 1,
+      "linked": 1,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": []
+    },
+    {
+      "parent": "ap-networking-managing-global-connections",
+      "members": 1,
+      "linked": 1,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": []
+    },
+    {
+      "parent": "ap-networking-managing-many-connections",
+      "members": 1,
+      "linked": 1,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 1,
+      "cross_family_members": 1,
+      "misses": []
+    },
+    {
+      "parent": "ap-networking-practice-exam",
+      "members": 1,
+      "linked": 1,
+      "missed": 0,
+      "shape": "ok",
+      "alias_members": 0,
+      "cross_family_members": 0,
+      "misses": []
+    },
+    {
+      "parent": "intro-java-lesson-1-4-calling-a-method",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-1-4-calling-a-method-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-1-5-parameters-and-return-values",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-1-5-parameters-and-return-values-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-1-6-the-act-method",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-1-6-the-act-method-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-2-1-variables-and-types",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-2-1-variables-and-types-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-2-2-expressions-and-operators",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-2-2-expressions-and-operators-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-2-3-boolean-expressions",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-2-3-boolean-expressions-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-2-4-if-and-else",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-2-4-if-and-else-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-2-5-else-if-chains",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-2-5-else-if-chains-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-2-6-randomness",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-2-6-randomness-code"
+      ]
+    },
+    {
+      "parent": "intro-java-lesson-2-7-keyboard-input",
+      "members": 1,
+      "linked": 0,
+      "missed": 1,
+      "shape": "TOTAL",
+      "alias_members": 1,
+      "cross_family_members": 0,
+      "misses": [
+        "intro-java-lesson-2-7-keyboard-input-code"
+      ]
+    }
+  ]
+}
