@@ -1,0 +1,117 @@
+{
+  "change": "board 429: four news articles whose practice questions graded the right answer wrong. The recursion guide (Q3 keyed 11, the method returns 12; Q2 had no true option until its base case returns the empty string; Q4 and Q1 keyed options that claimed something false), CSP day 29 on two handles (keyed 99 and taught aliasing where the Exam Reference Sheet says list assignment copies), and CSA unit 2 day 20 (the loop prints 10 and no option said so). One Matrixify Blog Posts sheet, four rows.",
+  "_context": [
+    "NOTHING HERE REACHES A STUDENT UNTIL A HUMAN IMPORTS ONE SHEET.",
+    "",
+    "Merging deploys the API and changes nothing the API does. The change that",
+    "matters is the import of imports/2026-09-25-news-wrong-keys/",
+    "news-wrong-keys-repair-blog-posts.csv, and the only way to know it happened",
+    "is to read the four live articles afterwards.",
+    "",
+    "scripts/verify-news-wrong-keys-live.js is FALSE BEFORE and true after, and",
+    "was measured both ways on 2026-09-25: against the live pages, 3 ok and 13",
+    "failed, and in Chromium the recursion guide rejects the right answer to Q3",
+    "and day 29 rejects B on both handles; with --simulate-import, 16 ok. The",
+    "three ok before the import are the day 29 pages carrying no self-correction",
+    "and the day 20 grader already keying B, whose VALUE was wrong, not its",
+    "letter; the verifier says so in its header.",
+    "",
+    "THE SUITE DOES NOT TRUST A KEY TABLE. It re-derives every answer by running",
+    "the repaired page's own code: javac for the recursion guide and day 20,",
+    "lib/csp-pseudocode.js for day 29. For a which-describes-the-error question",
+    "it applies the fix each option implies and asks whether the method then",
+    "agrees with a reference over every input tried. The sweep that found these",
+    "tested only whether grader, label and explanation agree, and that is why it",
+    "saw one of the three broken questions on the recursion guide.",
+    "",
+    "THE REDERIVE IS PHASE PRE: the generator is find-or-refuse, so once the",
+    "repairs are live it must refuse to build. After the import, the live check",
+    "is what re-derives."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "every key re-derived by running the page, every rule broken alone, the sheet read back",
+      "command": "npm run --silent smoke:newskeys",
+      "expect": "51 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the board 425 suite, now on the shared lib/csp-pseudocode.js",
+      "command": "npm run --silent smoke:csppseudo",
+      "expect": "56 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet rebuilt from the four LIVE articles, parsed back and diffed",
+      "_why": "Fetches each article through lib/storefront-fetch.js, re-applies every anchored edit, and reads both sheets back off disk. Every anchor must match the live body exactly once, so this also proves no page has changed since the snapshot. PHASE PRE: after the import every anchor matches zero times and the build refuses.",
+      "command": "node scripts/news-wrong-keys-repair.js imports/2026-09-25-news-wrong-keys",
+      "expect": "every cell parsed back and diffed clean",
+      "phase": "pre"
+    },
+    {
+      "kind": "mutation",
+      "name": "a wrong key may stay on the recursion guide",
+      "file": "scripts/news-wrong-keys-repair.js",
+      "find": "        if (!m || m[1] !== this.keys[q]) bad.push(",
+      "replace": "        if (false) bad.push(",
+      "command": "npm run --silent smoke:newskeys",
+      "expect_failure": "[FAIL] recursion keys rule fires on q3 graded B again"
+    },
+    {
+      "kind": "mutation",
+      "name": "day 29 may teach aliasing again",
+      "file": "scripts/news-wrong-keys-repair.js",
+      "find": "      if (/alias \\(reference\\), not a copy|reference the SAME list|they create references/.test(after)) bad.push(",
+      "replace": "      if (false) bad.push(",
+      "command": "npm run --silent smoke:newskeys",
+      "expect_failure": "[FAIL] day 29 copy rule fires on the aliasing sentence coming back"
+    },
+    {
+      "kind": "mutation",
+      "name": "day 20 may offer no correct option again",
+      "file": "scripts/news-wrong-keys-repair.js",
+      "find": "      if (opts !== '13,10,3,9') bad.push(",
+      "replace": "      if (false) bad.push(",
+      "command": "npm run --silent smoke:newskeys",
+      "expect_failure": "[FAIL] day 20 options rule fires on 9 coming back as B"
+    },
+    {
+      "kind": "mutation",
+      "name": "a published self-correction may survive",
+      "_why": "Three of these pages printed their author arguing with the key. This is the rule that refuses it.",
+      "file": "scripts/news-wrong-keys-repair.js",
+      "find": "  if (mono) bad.push(",
+      "replace": "  if (false) bad.push(",
+      "command": "npm run --silent smoke:newskeys",
+      "expect_failure": "[FAIL] self-correction rule fires on"
+    },
+    {
+      "kind": "mutation",
+      "name": "an over-broad lazy edit may eat a page",
+      "_why": "Four edits match lazily between two anchors. The byte-exact reverse cannot see one that runs long, because its span is declared. The span cap can.",
+      "file": "scripts/news-wrong-keys-repair.js",
+      "find": "    if (c.was.length > MAX_SPAN) throw",
+      "replace": "    if (false) throw",
+      "command": "npm run --silent smoke:newskeys",
+      "expect_failure": "[FAIL] an over-broad edit is refused by the span cap"
+    },
+    {
+      "kind": "mutation",
+      "name": "the re-deriving interpreter aliases lists instead of copying them",
+      "_why": "The day 29 key rests on the reference sheet's copy rule. Made to alias, the interpreter must print 99 and the suite must refuse the repair's B.",
+      "file": "lib/csp-pseudocode.js",
+      "find": "env[s.name] = Array.isArray(v) ? v.slice() : v;",
+      "replace": "env[s.name] = v;",
+      "command": "npm run --silent smoke:newskeys",
+      "expect_failure": "[FAIL] ap-csp-day-29-list-mutation-and-aliasing: prints"
+    },
+    {
+      "kind": "live",
+      "name": "the four articles serve the repaired bodies, and their graders accept the right answers",
+      "_why": "Every page's checks were false on 2026-09-25 before the import. The body comparison decodes entities on both sides, so it pins the exact import. Run after the import; --browser also asks each page's own grader in Chromium.",
+      "command": "node scripts/verify-news-wrong-keys-live.js",
+      "expect": "OK - the board 429 repairs are live"
+    }
+  ]
+}

@@ -102,8 +102,8 @@
     {
       "kind": "mutation",
       "name": "the re-deriving interpreter runs REPEAT UNTIL as post-test",
-      "_why": "The re-derivation is only independent if its loop rule is the CED's. Made post-test, the self-check against AAP-2.K.5 must go red, and so must Q8, which reads myList[1] of an empty list.",
-      "file": "smoke/csp-pseudocode-post-repair.js",
+      "_why": "The re-derivation is only independent if its loop rule is the CED's. Made post-test, the self-check against AAP-2.K.5 must go red, and so must Q8, which reads myList[1] of an empty list. The interpreter moved to lib/csp-pseudocode.js for board 429; this mutation followed it.",
+      "file": "lib/csp-pseudocode.js",
       "find": "        while (!truth(ev(s.c, env))) { if (++n > 100000) throw new Error('REPEAT UNTIL never stops'); exec(s.body, env); }",
       "replace": "        do { if (++n > 100000) throw new Error('REPEAT UNTIL never stops'); exec(s.body, env); } while (!truth(ev(s.c, env)));",
       "command": "npm run --silent smoke:csppseudo",
