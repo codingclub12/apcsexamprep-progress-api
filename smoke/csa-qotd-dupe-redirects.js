@@ -185,6 +185,16 @@ refuses('every pair demoted, so the sheet would be empty', (d) => { d.pairs.forE
   eq(st({ code: '200', body: 'Verifying your connection' }), 'wrong',
     'a bot challenge served with 200 must not read as live');
   eq(st({ code: '500', body: '' }), 'wrong', 'a server error is wrong');
+
+  //  THE ONE THIS BLOCK EXISTS FOR NOW. A 429 reaching the classifier has
+  //  already outlived raw()'s retries, so the limit is sustained: that is a
+  //  fact about this check's request rate, never about the article. Called
+  //  `wrong` it reads as a broken page, which is exactly what happened twice,
+  //  20 handles on 2026-09-21 and 31 targets on 2026-09-25, all of them fine.
+  eq(st({ code: '429', body: '' }), 'unknown', 'a rate limit is unknown, NEVER wrong');
+  if (V.stageOf(row, () => ({ code: '429', body: '' })).stage === 'wrong') {
+    bad('a rate limit can still be reported as a content failure');
+  }
   eq(st({ code: '', body: '' }), 'wrong', 'no status is wrong');
   eq(V.stageOf(row, () => { throw new Error('boom'); }).stage, 'wrong', 'a throwing fetch is a result, not a crash');
 
@@ -255,6 +265,7 @@ console.log(failed === 0
   ? '\ncsa-qotd-dupe-redirects: 84 pairs, 72 redirects and 12 held back for a human, direction asserted '
     + 'per row, the sheet parsed back and diffed against its source, 7 guard mutations and 6 classifier '
     + 'cases, 13 assertions that the live stage check can tell the four stages apart, and the step 1 '
-    + 'unpublish sheet covering exactly the redirected handles with 4 more mutations. All pass.'
+    + 'unpublish sheet covering exactly the redirected handles with 4 more mutations, and a rate '
+    + 'limit proved to classify as unknown rather than as a broken page. All pass.'
   : '\ncsa-qotd-dupe-redirects: ' + failed + ' failure(s).');
 process.exit(failed ? 1 : 0);
