@@ -1,9 +1,9 @@
 {
   "source": "lib/site-architecture.js over the live page sitemap",
   "counts": {
-    "total": 1365,
-    "site": 68,
-    "hubs": 344,
+    "total": 1371,
+    "site": 71,
+    "hubs": 347,
     "parented": 712,
     "parentless": 241
   },
@@ -253,6 +253,14 @@
   "pages": [
     {
       "handle": "2d-array-neighbors-ap-csa",
+      "course": null,
+      "role": "page",
+      "scope": "site",
+      "family": null,
+      "parent": null
+    },
+    {
+      "handle": "about",
       "course": null,
       "role": "page",
       "scope": "site",
@@ -6380,6 +6388,15 @@
       "is_hub": true
     },
     {
+      "handle": "ap-csp-exam-format",
+      "course": "ap-csp",
+      "role": "assessment",
+      "scope": "course",
+      "family": "ap-csp-exam-format",
+      "parent": null,
+      "is_hub": true
+    },
+    {
       "handle": "ap-csp-filter-bubbles",
       "course": "ap-csp",
       "role": "page",
@@ -7962,7 +7979,7 @@
       "role": "page",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -7971,7 +7988,7 @@
       "role": "frq",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -7980,7 +7997,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -7989,7 +8006,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -7998,7 +8015,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8007,7 +8024,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8016,7 +8033,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8025,7 +8042,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8034,7 +8051,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8043,7 +8060,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8052,7 +8069,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8061,7 +8078,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8070,7 +8087,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8079,7 +8096,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8088,8 +8105,17 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
+    },
+    {
+      "handle": "ap-cyber-unit-1-lesson-3-sample-login-pages",
+      "course": "ap-cyber",
+      "role": "lesson",
+      "scope": "course",
+      "family": "ap-cyber-unit-1",
+      "parent": null,
+      "is_hub": true
     },
     {
       "handle": "ap-cyber-unit-1-lesson-4-exercise-1",
@@ -8097,7 +8123,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8106,7 +8132,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8115,7 +8141,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8124,7 +8150,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8133,7 +8159,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8142,7 +8168,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8151,7 +8177,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8160,7 +8186,7 @@
       "role": "lesson",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8169,7 +8195,7 @@
       "role": "project",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -8178,7 +8204,7 @@
       "role": "practice-hub",
       "scope": "course",
       "family": "ap-cyber-unit-1",
-      "parent": "ap-cybersecurity-unit-1-practice",
+      "parent": "ap-cyber-unit-1-lesson-3-sample-login-pages",
       "parent_is_alias": true
     },
     {
@@ -10356,6 +10382,15 @@
       "parent": null
     },
     {
+      "handle": "ap-networking-labs",
+      "course": "ap-networking",
+      "role": "page",
+      "scope": "course",
+      "family": "ap-networking-lab",
+      "parent": null,
+      "is_hub": true
+    },
+    {
       "handle": "ap-networking-lesson-1-1-troubleshooting-slow-device",
       "course": "ap-networking",
       "role": "lesson",
@@ -10802,6 +10837,22 @@
       "handle": "confirm-csp",
       "course": null,
       "role": "page",
+      "scope": "site",
+      "family": null,
+      "parent": null
+    },
+    {
+      "handle": "confirm-parent",
+      "course": null,
+      "role": "page",
+      "scope": "site",
+      "family": null,
+      "parent": null
+    },
+    {
+      "handle": "confirm-teacher",
+      "course": null,
+      "role": "teacher",
       "scope": "site",
       "family": null,
       "parent": null

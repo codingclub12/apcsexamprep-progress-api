@@ -160,5 +160,86 @@ for (const [name, find, repl, brokeIt] of cases) {
   ok(`mutation: ${name}`, broke, 'MUTANT BEHAVED IDENTICALLY, so this rule is hollow');
 }
 
+// ── 5. linksTo: DOES THE PARENT ACTUALLY LINK THE CHILD (board 372) ────────
+//  The prefix collision is the whole reason this is a function rather than an
+//  includes() at the call site. Measured on the live handle set: 52 of 712
+//  parented pages are a strict prefix of another live handle, so 7.3% of every
+//  verdict depends on getting the boundary right, and the error runs quiet:
+//  it reports a page as reachable when it is not.
+{
+  const frqOnly = '<a href="/pages/ap-csa-lesson-4-4-traversing-arrays-frq">FRQ</a>';
+  ok('a longer href does NOT satisfy a shorter handle',
+    A.linksTo(frqOnly, 'ap-csa-lesson-4-4-traversing-arrays') === false,
+    'the prefix collision is not handled, so 52 live verdicts are wrong');
+  ok('the exact handle is found',
+    A.linksTo(frqOnly, 'ap-csa-lesson-4-4-traversing-arrays-frq') === true);
+
+  //  The boundary characters that actually appear in real bodies.
+  for (const [ctx, body] of Object.entries({
+    'double quote': '<a href="/pages/x-y">a</a>',
+    'single quote': "<a href='/pages/x-y'>a</a>",
+    'query string': '<a href="/pages/x-y?v=2">a</a>',
+    'fragment': '<a href="/pages/x-y#top">a</a>',
+    'trailing slash': '<a href="/pages/x-y/">a</a>',
+    'absolute url': '<a href="https://www.apcsexamprep.com/pages/x-y">a</a>',
+  })) {
+    ok(`boundary: ${ctx}`, A.linksTo(body, 'x-y') === true, body);
+  }
+  ok('a handle continuing in letters is not a match',
+    A.linksTo('<a href="/pages/x-yz">a</a>', 'x-y') === false);
+  ok('a handle continuing in digits is not a match',
+    A.linksTo('<a href="/pages/x-y2">a</a>', 'x-y') === false);
+  ok('empty body is not a link', A.linksTo('', 'x-y') === false);
+  ok('empty handle is not a link', A.linksTo('<a href="/pages/x">a</a>', '') === false);
+  ok('a regex metacharacter in a handle is escaped, not interpreted',
+    A.linksTo('<a href="/pages/a-b">x</a>', 'a.b') === false,
+    'the handle was treated as a pattern, so a.b matched a-b');
+
+  //  missesIn is the per-parent answer the live script reports on.
+  const body2 = '<a href="/pages/kid-one">1</a><a href="/pages/kid-three">3</a>';
+  ok('missesIn names only the unlinked members',
+    A.missesIn(body2, ['kid-one', 'kid-two', 'kid-three']).join() === 'kid-two',
+    JSON.stringify(A.missesIn(body2, ['kid-one', 'kid-two', 'kid-three'])));
+  ok('missesIn on an empty member list is empty', A.missesIn(body2, []).length === 0);
+
+  //  parentIndex is also the FETCH LIST, so its ranking is what makes the run
+  //  affordable and the worklist hub-down.
+  const pi = A.parentIndex([
+    { handle: 'a1', parent: 'A' }, { handle: 'a2', parent: 'A' }, { handle: 'a3', parent: 'A' },
+    { handle: 'b1', parent: 'B' },
+    { handle: 'hub', parent: null },
+  ]);
+  ok('parentIndex groups by parent', pi.length === 2, JSON.stringify(pi));
+  ok('parentIndex ranks by member count', pi[0].parent === 'A', JSON.stringify(pi));
+  ok('parentIndex drops pages with no parent',
+    !pi.some((e) => e.members.includes('hub')));
+  ok('parentIndex on the real config is the fetch list',
+    A.parentIndex(cfg.pages).length < cfg.counts.hubs,
+    'every hub would be fetched, which is the cost this design avoids');
+}
+
+// ── 6. MUTATIONS on linksTo ────────────────────────────────────────────────
+for (const [name, find, repl, brokeIt] of [
+  ['the right boundary must be enforced',
+    "'(?!' + HANDLE_CHAR.source + ')'",
+    "''",
+    (m) => m.linksTo('<a href="/pages/x-yz">a</a>', 'x-y') === true],
+  ['the handle must be regex-escaped',
+    'const re = new RegExp(\'/pages/\' + escapeRe(handle)',
+    'const re = new RegExp(\'/pages/\' + (handle)',
+    (m) => m.linksTo('<a href="/pages/a-b">x</a>', 'a.b') === true],
+  ['missesIn must invert linksTo',
+    "return (members || []).filter((m) => !linksTo(body, m));",
+    "return (members || []).filter((m) => linksTo(body, m));",
+    (m) => m.missesIn('<a href="/pages/kid-one">1</a>', ['kid-one', 'kid-two']).join() !== 'kid-two'],
+]) {
+  let m;
+  try { m = loadMutant(find, repl); }
+  catch (e) { ok(`mutation: ${name}`, false, `could not build mutant: ${e.message}`); continue; }
+  let broke = false;
+  try { broke = brokeIt(m); } catch (e) { broke = true; }
+  ok(`mutation: ${name}`, broke, 'MUTANT BEHAVED IDENTICALLY, so this rule is hollow');
+}
+
 console.log(`\nsite-architecture: ${pass} passed, ${fails.length} failed`);
 if (fails.length) { fails.forEach((f) => console.error('  FAIL ' + f)); process.exit(1); }
