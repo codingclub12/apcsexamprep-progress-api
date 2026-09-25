@@ -391,6 +391,24 @@ console.log('\n8. A near-miss column name, which goes quiet in both directions')
   //  The ratchet in scripts/site-architecture.js --check owns those.
   ok('an EXISTING parentless page is not refused here',
     !noHome(sheet('pages-existing.csv', 'ap-csa-array-mastery-interactive-practice')));
+
+  //  Board 425. The architecture maps PAGES, so an article handle is never in
+  //  it and every course-prefixed article read as a new page. The Blog Posts
+  //  fixture above uses day-11, which has no course prefix, which is why this
+  //  went unseen. Both handles are real articles, live when this was written.
+  const HB = ['Blog: Handle', 'Handle', 'Command', 'Body HTML'];
+  const art = preflight(write('orphan-news-blog-posts.csv', HB,
+    [['news', 'ap-csp-pseudocode-complete-guide-2026', 'MERGE', B]]));
+  ok('an ARTICLE on a Blog Posts sheet is not refused as a new page', !noHome(art), art.problems);
+  ok('  and the skip is said out loud, not silent',
+    art.notes.some((n) => /article handle\(s\) not checked for a home/.test(n)), art.notes);
+  const qotd = preflight(write('orphan-qotd-blog-posts.csv', HB,
+    [['ap-csa-daily-practice', 'ap-csa-u1-c1-day-22-math-random-range', 'MERGE', B]]));
+  ok('  nor is a QOTD article whose family has no hub', !noHome(qotd), qotd.problems);
+  //  And the pages half still bites with the same handle shape, so the skip is
+  //  keyed on the sheet being about articles and not on the handle.
+  ok('  while the same family on a Pages sheet is still refused',
+    noHome(sheet('pages-qotd-shape.csv', 'ap-csa-u1-c1-day-22-math-random-range')));
 }
 
 fs.rmSync(tmp, { recursive: true, force: true });

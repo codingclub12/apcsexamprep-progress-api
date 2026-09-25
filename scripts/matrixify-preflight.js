@@ -351,8 +351,22 @@ function preflight(path, opts) {
   //
   //  Absent AND parented is the ordinary case for a new page and passes in
   //  silence, which is what makes the refusal worth reading when it does fire.
+  //
+  //  PAGES ONLY. The architecture maps the storefront's pages, so an ARTICLE
+  //  handle is never in it and every article reads as new. Board 425, measured
+  //  2026-09-25: a one-row fix to an article live since February was refused as
+  //  a "NEW page", and so were six of the nine articles in the QOTD repair
+  //  imported on 2026-09-15, all of which exist. The suite missed it because its
+  //  Blog Posts fixture uses the handle day-11, which has no course prefix and so
+  //  never reaches the rule. Matrixify needs a Blog column to place an article,
+  //  so that column is what marks the handles as articles. Skipped out loud.
   const handleIdx = header.findIndex((h) => normColumn(h) === normColumn('Handle'));
-  if (handleIdx !== -1) {
+  const articleSheet = header.some((h) => ['bloghandle', 'blogid', 'blogtitle'].includes(normColumn(h)));
+  if (handleIdx !== -1 && articleSheet) {
+    notes.push(`${body.length} article handle(s) not checked for a home: the site architecture `
+      + 'maps pages, and a blog article is not one.');
+  }
+  if (handleIdx !== -1 && !articleSheet) {
     let arch = null;
     try {
       arch = JSON.parse(fs.readFileSync(
