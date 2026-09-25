@@ -57,6 +57,16 @@ function stageOf(row, fetch) {
     }
     return { stage: 'redirected', note: r.code };
   }
+  //  A 429 THAT OUTLIVED ITS RETRIES IS NOT AN ANSWER ABOUT THE PAGE, so it is
+  //  its own state rather than `wrong`. raw() already retries it a bounded
+  //  number of times; reaching here means the limit is sustained, which is a
+  //  fact about this check's request rate and not about the article. Reported
+  //  as `wrong` it reads as a broken page: on 2026-09-21 that was 20 handles
+  //  and 23 targets, and on 2026-09-25, after the retry was added, still 31
+  //  targets. Every one was fine. Pacing lowers how often this happens and
+  //  cannot prevent it, so the classifier must never be able to call it a
+  //  content failure in the first place.
+  if (r.code === '429') return { stage: 'unknown', why: 'rate limited after retries, so this read proves nothing either way' };
   if (r.code === '404') return { stage: 'unpublished' };
   if (r.code === '200') {
     if (!sf.looksReal(r.body)) return { stage: 'wrong', why: '200 but not a rendered page, so this read proves nothing' };
@@ -78,8 +88,16 @@ if (require.main === module) {
   //  in verify-cyber-qotd-live on 2026-09-04, throttled on its sixth request and
   //  calling a correct import broken. Everything else still fails on the first
   //  answer, because a 404 retried three times is still a 404.
-  const fetch = (p) => sf.raw(p, { follow: false });
-  const counts = { live: 0, unpublished: 0, redirected: 0, wrong: 0 };
+  //  AND PACED. Retrying was not enough on its own: on 2026-09-25 this still
+  //  reported 31 of 72 redirect targets "not serving", every one a 429 from its
+  //  own request rate. raw() retries a bounded number of times with a short
+  //  backoff, which clears a momentary limit and not a sustained one, and 144
+  //  requests as fast as node can issue them is sustained. An independent
+  //  verifier re-measuring the same 72 with 100ms between requests got zero.
+  //  So the retry is the floor and the spacing is what keeps us off it.
+  const pause = () => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 120);
+  const fetch = (p) => { pause(); return sf.raw(p, { follow: false }); };
+  const counts = { live: 0, unpublished: 0, redirected: 0, wrong: 0, unknown: 0 };
   let failed = 0;
 
   rows.forEach((row) => {
@@ -88,12 +106,22 @@ if (require.main === module) {
     if (s.stage === 'wrong') {
       failed += 1;
       console.log('  WRONG ' + row.Path.replace('/blogs/ap-csa-daily-practice/', '').padEnd(52) + s.why);
+    } else if (s.stage === 'unknown') {
+      console.log('  ?     ' + row.Path.replace('/blogs/ap-csa-daily-practice/', '').padEnd(52) + s.why);
     }
   });
 
   console.log('');
   console.log('  ' + counts.live + ' live, ' + counts.unpublished + ' unpublished, '
-    + counts.redirected + ' redirected, ' + counts.wrong + ' wrong, of ' + rows.length);
+    + counts.redirected + ' redirected, ' + counts.wrong + ' wrong, '
+    + counts.unknown + ' unknown, of ' + rows.length);
+  //  An unknown is not a pass and not a failure. Saying so is the point: the
+  //  run has to be repeated when the limit clears, and a summary that folded
+  //  these into either column would hide that.
+  if (counts.unknown) {
+    console.log('  ' + counts.unknown + ' could not be read because of rate limiting. Re-run when the');
+    console.log('  limit clears; nothing above is a verdict on those.');
+  }
 
   if (counts.live === rows.length) {
     console.log('  STAGE 1 NOT DONE. All 72 still serve a page, so the redirect sheet would');
@@ -109,9 +137,11 @@ if (require.main === module) {
   //  A target that does not resolve would send a student to a 404, so it is
   //  checked even when every Path is still live.
   const badTargets = [];
+  const unknownTargets = [];
   rows.forEach((row) => {
     let t;
     try { t = fetch(row.Target); } catch (e) { badTargets.push(row.Target + ': ' + e.message); return; }
+    if (t && t.code === '429') { unknownTargets.push(row.Target); return; }
     if (!t || t.code !== '200') badTargets.push(row.Target + ': answered ' + (t && t.code));
   });
   if (badTargets.length) {
@@ -119,8 +149,12 @@ if (require.main === module) {
     console.log('');
     console.log('  ' + badTargets.length + ' redirect TARGET(s) do not serve a page:');
     badTargets.slice(0, 10).forEach((t) => console.log('    ' + t));
-  } else {
+  } else if (!unknownTargets.length) {
     console.log('  All ' + rows.length + ' redirect targets serve a page.');
+  }
+  if (unknownTargets.length) {
+    console.log('  ' + unknownTargets.length + ' target(s) could not be read because of rate limiting,');
+    console.log('  which is this check\'s request rate and not a fact about those pages.');
   }
 
   process.exit(failed ? 1 : 0);
