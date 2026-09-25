@@ -382,7 +382,9 @@
     "smoke:classmonetizationmutation": "node smoke/class-monetization-mutation.js",
     "smoke:classmonetizationrederive": "node scripts/class-monetization-rederive.js",
     "csaek:sheets": "node scripts/csa-ek-thin-csv.js",
-    "csaek:live": "node scripts/verify-csa-ek-live.js"
+    "csaek:live": "node scripts/verify-csa-ek-live.js",
+    "smoke:trafficrpmmutation": "node smoke/traffic-rpm-mutation.js",
+    "smoke:raterederive": "node scripts/rederive-rate-denominators.js"
   },
   "keywords": [],
   "author": "",
