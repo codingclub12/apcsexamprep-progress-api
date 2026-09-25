@@ -220,6 +220,10 @@ for (const f of SWEEPS) {
     "  const m = u.match(/^\\/shed-(\\d+)$/);",
     "  if (m && seen[u] === 1) { res.writeHead(Number(m[1])); return res.end('shedding'); }",
     "  if (u === '/hard-404') { res.writeHead(404); return res.end('gone'); }",
+    //  A DROPPED CONNECTION has no status code at all, which is the whole
+    //  point: it is the failure rawOnce() throws on rather than returns.
+    "  if (u === '/drop-once' && seen[u] === 1) { return res.socket.destroy(); }",
+    "  if (u === '/drop-always') { return res.socket.destroy(); }",
     "  res.writeHead(200, {'content-type':'text/html'});",
     "  res.end('<html><body>the real page</body></html>');",
     "}).listen(Number(process.argv[2]), '127.0.0.1');",
@@ -267,6 +271,40 @@ for (const f of SWEEPS) {
     const c = sf.raw(base + '/hard-404', { retryAttempts: 4 });
     ok(c.code === '404', '7.4 a 404 is returned as-is, got ' + c.code);
     ok(count('hard-404') === 1, '7.5 and is NOT retried, took ' + count('hard-404') + ' request(s)');
+
+    //  THE REST OF THE TRANSIENT FAMILY, added 2026-09-25. 429 and 503 were
+    //  listed; a 500, 502, 504 or 408 is exactly as transient and got nothing.
+    for (const code of ['500', '502', '504', '408']) {
+      const r = sf.raw(base + '/shed-' + code, { retryAttempts: 2 });
+      ok(r.code === '200', '7.6 a ' + code + ' is retried, got ' + r.code);
+    }
+
+    //  ── THE THROWN CASE, which no retry work had covered ────────────────────
+    //  rawOnce() THROWS when curl itself fails: a reset, a timeout, a DNS
+    //  hiccup. raw() never caught it, so the one failure mode with no HTTP code
+    //  got ZERO retries while a 429 got four. That asymmetry made
+    //  verify-quiz-mount-unpin-live.js read 22 of 23 on 2026-09-21 while three
+    //  consecutive re-runs read 23 of 23: one page lost its connection and the
+    //  count looked like a regression.
+    //  curl writes its own complaint to stderr on each dropped attempt, so the
+    //  next few lines are EXPECTED to be preceded by "Empty reply from server".
+    //  Saying so here because a suite that looks like it is failing gets
+    //  skimmed, which is the reason the warmup loop above avoids raw() too.
+    console.log('    (expect curl "Empty reply from server" warnings next, they are the test)');
+    let dropThrew = null;
+    let dropped = null;
+    try { dropped = sf.raw(base + '/drop-once', { retryAttempts: 3 }); }
+    catch (e) { dropThrew = e; }
+    ok(!dropThrew && dropped && dropped.code === '200',
+      '7.7 a dropped connection is retried and then believed, got ' +
+      (dropThrew ? 'a throw' : dropped && dropped.code));
+
+    //  NOT HOLLOW: a connection that never survives must still throw, because
+    //  every caller of page() and pageBody() relies on that to fail loudly.
+    let alwaysThrew = null;
+    try { sf.raw(base + '/drop-always', { retryAttempts: 2 }); }
+    catch (e) { alwaysThrew = e; }
+    ok(!!alwaysThrew, '7.8 a connection that never survives still throws');
   }
 
   try { child.kill(); } catch (e) {}

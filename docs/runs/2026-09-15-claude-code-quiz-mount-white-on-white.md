@@ -456,3 +456,70 @@ Matrixify sheets, and four guards that are better than they were:
 The defect itself was two correct files disagreeing about one CSS declaration.
 Everything above exists because no check in either repo could see that, and the
 one who could was a student with an email address.
+
+## 2026-09-25: the 22 of 23 that was not a regression
+
+A closing check read `22 of 23`. Three consecutive re-runs read 23, and the live
+contrast check was 9 passed / 0 failed throughout, so nothing had regressed. The
+count was wrong, not the pages.
+
+### What I told Tanner first was half right
+
+I said the verifier inherits a 429-only retry. Reading `lib/storefront-fetch.js`
+turned up two separate gaps, and the one I guessed was the less likely:
+
+- `RETRY_CODES` listed the transient codes, and `raw()` looped on them. A 500,
+  502, 504 or 408 was not in the set and got no retry.
+- `rawOnce()` THROWS when curl itself fails, on a reset or a timeout or a DNS
+  hiccup, and `raw()` never caught it. So the one failure mode with no HTTP code
+  at all got ZERO retries while a 429 got four.
+
+On a 23 page sweep, one dropped connection reads as a failing page. That second
+gap is almost certainly what produced the count.
+
+### Another session was already here, and the log said so
+
+`main` had moved to PR 786, "a rate limit is not a verdict about the page", and
+its message records that PR 752 had already added a retry. Checking rather than
+assuming mattered twice over:
+
+- `RETRY_CODES` on main was already `429, 503`. My branch was cut from an older
+  main that read `429` alone, so a comment I had written claiming "429 was the
+  whole set" was already false when I wrote it, and merging over their line would
+  have been the second mistake.
+- `smoke/storefront-fetch.js` section 7 ALREADY spawns a child server to test the
+  retry, and its comments already record the two traps I had just rediscovered
+  from scratch: a stub of `rawOnce` cannot reach the retry because `raw()` calls
+  the local binding, and an in-process server deadlocks because every caller is
+  synchronous and `Atomics.wait` blocks `listen()`.
+
+So this rebased onto their work and extended their suite rather than landing a
+rival version of either. What was genuinely still missing: the four extra codes,
+and the thrown case, which neither PR touched.
+
+### Evidence
+
+`smoke:storefront` goes from 181 to 186 assertions. Against main's module the
+five new ones fail and the sixth passes:
+
+| assertion | on main | with the change |
+|---|---|---|
+| 500, 502, 504, 408 retried | fails, returns the code | returns 200 |
+| a dropped connection retried | fails, throws | returns 200 |
+| a connection that never survives still throws | passes | passes |
+
+That last row is the guard. It passes on both because its job is to catch a
+"fix" that made the check unable to fail, which is the failure mode this repo
+keeps finding in its own guards.
+
+### PR 786 has the better answer to the counting problem
+
+Worth writing down rather than quietly copying. Their finding is that retrying
+lowers how often a sustained limit is hit and cannot prevent it, so the
+CLASSIFIER must not be able to call a rate limit a content failure. They gave it
+its own state, `unknown`, counted and printed apart, with the summary saying the
+run needs repeating.
+
+`verify-quiz-mount-unpin-live.js` still has the shape they fixed: a transient
+failure counts against the 23. The retry makes it rarer, not impossible. Doing
+it their way is the real fix and is not in this pass.
