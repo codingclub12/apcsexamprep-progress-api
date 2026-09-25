@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course hub mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#0c2340; --navy2:#14325a; --ink:#0d1b27; --muted:#526174; --line:#e4e9f1; --bg:#f4f6fa; --yellow:#ffc53d;
+          --csa:#2D6BC4; --csp:#127968; --cyber:#5b34b8; --net:#a14a07; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  a { color:inherit; }
+  .wrap { max-width:1200px; margin:0 auto; padding:0 20px; }
+  h1, h2, h3, .arch { font-family:Archivo, -apple-system, "Segoe UI", Arial, sans-serif; }
+
+  /* stand-in for the live nav, same colour and container */
+  .nav { background:var(--navy); color:#fff; height:60px; }
+  .nav .wrap { display:flex; align-items:center; gap:28px; height:60px; font-weight:700; font-size:15px; }
+  .nav .logo { font-size:19px; }
+  .nav .sp { flex:1; }
+  .nav span.dim { opacity:.9; }
+
+  /* 1. full-bleed band, content held in the nav's column */
+  .band { background:var(--navy); color:#fff; padding:26px 0 40px; border-top:1px solid #1b3558; }
+  .crumb { font-size:14px; color:#9fb3cf; margin:0 0 22px; }
+  .crumb a { color:#c6d3e6; text-decoration:none; }
+  .tag { display:inline-block; font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#fff; padding:5px 10px; border-radius:6px; margin:0 0 12px; }
+  .band h1 { font-size:48px; line-height:1.05; font-weight:800; letter-spacing:-.5px; margin:0 0 12px; max-width:820px; }
+  .lede { font-size:19px; color:#c6d3e6; max-width:700px; margin:0 0 18px; }
+  .facts { display:flex; flex-wrap:wrap; gap:8px 22px; font-size:15px; color:#dfe7f2; margin:0 0 24px; padding:0; list-style:none; }
+  .facts li strong { color:#fff; }
+  .btns { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .btn { display:inline-flex; align-items:center; min-height:50px; padding:0 24px; border-radius:10px; font-weight:700; font-size:17px; text-decoration:none; border:2px solid transparent; }
+  .btn-solid { background:var(--yellow); color:var(--navy); }
+  .btn-line { border-color:#6d89b0; color:#fff; }
+  .textlink { color:#c6d3e6; font-weight:600; margin-left:6px; }
+  .resume { font-size:14px; color:#9fb3cf; margin:14px 0 0; }
+
+  /* 2. the two doors, straight under the band */
+  .doors { background:#fff; border-bottom:1px solid var(--line); }
+  .doors .wrap { display:flex; gap:4px; }
+  .doors a { padding:15px 18px 13px; font-weight:700; font-size:15px; text-decoration:none; color:var(--muted); border-bottom:3px solid transparent; }
+  .doors a.on { color:var(--ink); border-bottom-color:var(--csa); }
+
+  /* 3. units, facts from one data file */
+  main.wrap { padding-top:34px; padding-bottom:10px; }
+  .sec { font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 12px; }
+  .units { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:16px; margin:0 0 34px; }
+  .unit { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 18px 16px; text-decoration:none; display:flex; flex-direction:column; gap:6px; border-top:5px solid var(--csa); }
+  .unit .n { font-size:13px; font-weight:700; color:var(--csa); letter-spacing:.05em; }
+  .unit h3 { font-size:19px; margin:0; line-height:1.2; }
+  .unit .m { font-size:14px; color:var(--muted); }
+  .unit .go { margin-top:auto; padding-top:8px; font-weight:700; font-size:14px; color:var(--csa); }
+  .body { background:#fff; border:1px dashed #b8c4d6; border-radius:12px; padding:26px; color:var(--muted); margin:0 0 34px; }
+  .body h2 { color:var(--ink); font-size:22px; margin:0 0 8px; }
+
+  /* 4. other courses, both doors each */
+  .others { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; margin:0 0 40px; }
+  .oc { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px; }
+  .oc h3 { margin:0 0 4px; font-size:18px; }
+  .oc p { margin:0 0 10px; font-size:14px; color:var(--muted); }
+  .oc a { font-weight:700; font-size:14px; margin-right:14px; }
+  footer { background:#fff; border-top:1px solid var(--line); padding:22px 0; color:var(--muted); font-size:14px; }
+
+  /* four heroes, same template, course colour only on the tag */
+  .strip { padding:34px 0 50px; }
+  .mini { background:var(--navy); color:#fff; border-radius:12px; padding:20px 24px; margin:0 0 12px; }
+  .mini h3 { font-size:26px; margin:0 0 4px; }
+  .mini .lede { font-size:15px; margin:0 0 10px; }
+  .mini .facts { font-size:13px; margin:0; }
+  .note { font-size:14px; color:var(--muted); margin:0 0 16px; max-width:760px; }
+
+  @media (max-width:900px) {
+    .nav .wrap span.dim { display:none; }
+    .band h1 { font-size:34px; }
+    .lede { font-size:17px; }
+    .units { grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .others { grid-template-columns:1fr; }
+  }
+  @media (max-width:520px) {
+    .band { padding:18px 0 28px; }
+    .crumb { margin-bottom:14px; }
+    .band h1 { font-size:31px; }
+    .facts { font-size:14px; gap:4px 16px; margin-bottom:18px; }
+    .btn { min-height:46px; font-size:16px; padding:0 18px; }
+    .doors a { padding:13px 12px 11px; font-size:14px; }
+    .units { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="nav"><div class="wrap"><span class="logo">APCSExamPrep</span><span class="dim">Full Courses</span><span class="dim">Exam Prep</span><span class="dim">Intro to Java</span><span class="sp"></span><span class="dim">Teachers</span><span class="dim">Students</span></div></div>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="crumb"><a href="#">Home</a> &rsaquo; <a href="#">AP CSA</a> &rsaquo; Full course</p>
+      <span class="tag" style="background:var(--csa)">AP Computer Science A</span>
+      <h1>AP CSA Full Course</h1>
+      <p class="lede">All four units of the College Board course in 53 lessons, with Java you write and run in the browser. Free for students. Teachers get class codes and a gradebook.</p>
+      <ul class="facts">
+        <li><strong>4</strong> units</li>
+        <li><strong>53</strong> lessons</li>
+        <li>AP exam <strong>Wed May 12, 2027</strong></li>
+      </ul>
+      <div class="btns">
+        <a class="btn btn-solid" href="#">Start lesson 1.1</a>
+        <a class="btn btn-line" href="#">AP CSA exam prep</a>
+        <a class="textlink" href="#">For teachers</a>
+      </div>
+      <p class="resume">Signed-in students see "Continue with lesson 2.3" here instead, read from their own progress.</p>
+    </div>
+  </section>
+
+  <nav class="doors" aria-label="AP CSA"><div class="wrap">
+    <a class="on" href="#">Full course</a><a href="#">Exam prep</a><a href="#">Teachers</a>
+  </div></nav>
+
+  <main class="wrap">
+    <p class="sec">The four units</p>
+    <div class="units">
+      <a class="unit" href="#"><span class="n">UNIT 1</span><h3>Using Objects and Methods</h3><span class="m">15 lessons &middot; 15 to 25% of the exam</span><span class="go">Open unit 1</span></a>
+      <a class="unit" href="#"><span class="n">UNIT 2</span><h3>Selection and Iteration</h3><span class="m">12 lessons &middot; 25 to 35% of the exam</span><span class="go">Open unit 2</span></a>
+      <a class="unit" href="#"><span class="n">UNIT 3</span><h3>Class Creation</h3><span class="m">9 lessons &middot; 10 to 18% of the exam</span><span class="go">Open unit 3</span></a>
+      <a class="unit" href="#"><span class="n">UNIT 4</span><h3>Data Collections</h3><span class="m">17 lessons &middot; 30 to 40% of the exam</span><span class="go">Open unit 4</span></a>
+    </div>
+
+    <div class="body">
+      <h2>The rest of the page body stays here</h2>
+      The syllabus, the self-study path, the teacher section and the FAQ are still written per course and still ship by Matrixify sheet. What moves out of the body is the hero, the unit cards, the cross-course links and the structured data, because those are the same on all four hubs.
+    </div>
+
+    <p class="sec">The other AP computer science courses</p>
+    <div class="others">
+      <div class="oc"><h3>AP CSP</h3><p>Exam Fri May 14, 2027</p><a href="#" style="color:var(--csp)">Full course</a><a href="#" style="color:var(--csp)">Exam prep</a></div>
+      <div class="oc"><h3>AP Cybersecurity</h3><p>Exam Wed May 5, 2027</p><a href="#" style="color:var(--cyber)">Full course</a><a href="#" style="color:var(--cyber)">Exam prep</a></div>
+      <div class="oc"><h3>AP Networking</h3><p>Pilot schools, exam Fri May 7, 2027</p><a href="#" style="color:var(--net)">Full course</a><a href="#" style="color:var(--net)">Practice exam</a></div>
+    </div>
+  </main>
+
+  <footer><div class="wrap">Existing course footer (already live on every page)</div></footer>
+
+  <section class="strip" id="four"><div class="wrap">
+    <p class="sec">Same template, four courses</p>
+    <p class="note">One section renders all four. The band stays navy so the site reads as one product; the course colour lives on the tag, the unit cards and the active door.</p>
+    <div class="mini"><span class="tag" style="background:var(--csa)">AP Computer Science A</span><h3>AP CSA Full Course</h3><p class="lede">All four units in 53 lessons, with Java you run in the browser.</p><ul class="facts"><li><strong>4</strong> units</li><li><strong>53</strong> lessons</li><li>Exam <strong>Wed May 12, 2027</strong></li></ul></div>
+    <div class="mini"><span class="tag" style="background:var(--csp)">AP Computer Science Principles</span><h3>AP CSP Full Course</h3><p class="lede">All five Big Ideas and the Create performance task.</p><ul class="facts"><li><strong>5</strong> Big Ideas</li><li>Create task due <strong>Apr 30, 2027</strong></li><li>Exam <strong>Fri May 14, 2027</strong></li></ul></div>
+    <div class="mini"><span class="tag" style="background:var(--cyber)">AP Cybersecurity</span><h3>AP Cybersecurity Full Course</h3><p class="lede">Five units with lessons, terminal labs, quizzes and unit exams.</p><ul class="facts"><li><strong>5</strong> units</li><li><strong>24</strong> CED topics</li><li>Exam <strong>Wed May 5, 2027</strong></li></ul></div>
+    <div class="mini"><span class="tag" style="background:var(--net)">AP Networking</span><h3>AP Networking Full Course</h3><p class="lede">Four units and 22 topics. Pilot year; open to all schools in 2027-28.</p><ul class="facts"><li><strong>4</strong> units</li><li><strong>22</strong> topics</li><li>Exam <strong>Fri May 7, 2027</strong></li></ul></div>
+  </div></section>
+</body>
+</html>
