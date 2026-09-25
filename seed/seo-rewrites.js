@@ -231,6 +231,18 @@ const PAGES = [
     description: 'An AP CSP game on the impact of computing: sort real innovations by their effects as beneficial, harmful, or it depends, since some effects are unintended.',
     why: 'title carried the brand twice',
   },
+  {
+    handle: 'ap-csp-game-crowd-power',
+    title: 'Crowd Power, an AP CSP Game',
+    description: 'An AP CSP game on crowdsourcing: sort tasks as a good fit or not a good fit, then race the clock to recruit enough people and hit the funding goal.',
+    why: '2026-09-25 crawl: title carried the brand twice, APCSExamPrep.com | APCSExamPrep.com',
+  },
+  {
+    handle: 'ap-csp-game-license-match',
+    title: 'License Match, an AP CSP Game',
+    description: 'An AP CSP game on licensing and PII: match each scenario to copyright, Creative Commons, open source, or public domain, or flag sensitive personal data.',
+    why: '2026-09-25 crawl: title carried the brand twice, and the description was scraped game UI text',
+  },
 
   // Same 2026-09-05 crawl, persisting rather than fresh: these four CSA course
   // hub pages have carried a scraped description for 9 to 10 nights with no
