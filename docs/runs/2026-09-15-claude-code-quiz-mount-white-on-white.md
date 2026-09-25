@@ -468,14 +468,15 @@ count was wrong, not the pages.
 I said the verifier inherits a 429-only retry. Reading `lib/storefront-fetch.js`
 turned up two separate gaps, and the one I guessed was the less likely:
 
-- `RETRY_CODES` listed the transient codes, and `raw()` looped on them. A 500,
-  502, 504 or 408 was not in the set and got no retry.
+- `RETRY_CODES` held `429, 503`, and `raw()` looped on them. A 500, 502, 504 or
+  408 got no retry. This looked like the gap and turned out not to be one; see
+  below.
 - `rawOnce()` THROWS when curl itself fails, on a reset or a timeout or a DNS
   hiccup, and `raw()` never caught it. So the one failure mode with no HTTP code
   at all got ZERO retries while a 429 got four.
 
 On a 23 page sweep, one dropped connection reads as a failing page. That second
-gap is almost certainly what produced the count.
+gap is what produced the count, and it is the only one this pass changed.
 
 ### Another session was already here, and the log said so
 
@@ -494,23 +495,63 @@ assuming mattered twice over:
   synchronous and `Atomics.wait` blocks `listen()`.
 
 So this rebased onto their work and extended their suite rather than landing a
-rival version of either. What was genuinely still missing: the four extra codes,
-and the thrown case, which neither PR touched.
+rival version of either. What was genuinely still missing was the thrown case,
+which neither PR touched.
+
+### The widening was cut on the module's own rule
+
+The first cut of this change added 408, 500, 502 and 504 to `RETRY_CODES`, on the
+argument that every read through this module is an idempotent GET so a retry
+costs nothing. Re-reading my own diff before merging, the comment directly above
+the line I had changed answers that argument:
+
+> 502 and 504 are deliberately NOT here. They are plausibly transient too, but
+> nothing in this repo has observed one, and this list earns entries by
+> measurement rather than by argument. Add one when a run produces it.
+
+That paragraph was still sitting there as context, three lines above a set that
+now contained both codes, so the file asserted a rule and broke it in the same
+breath. No run in this repo has produced any of the four. A 500 can also be a
+durable fact about a page, and retrying it four times with a growing wait makes a
+genuinely broken page about nine seconds slower to report.
+
+So the set is unchanged at `429, 503` and only the dropped connection got fixed.
+The four codes are now PINNED as not-retried in the suite, which means the next
+session making the same argument has to change a test to act on it. That is the
+visible act the rule is asking for, and adding one after a run produces it is
+still the sanctioned path.
+
+Widening it was also not what was asked. The instruction was to add the retry to
+the verifier; the code set was scope I added on my own.
 
 ### Evidence
 
-`smoke:storefront` goes from 181 to 186 assertions. Against main's module the
-five new ones fail and the sixth passes:
+`smoke:storefront` goes from 181 to 186 assertions. Against main's module exactly
+one fails, and it is the one behaviour this pass changes:
 
 | assertion | on main | with the change |
 |---|---|---|
-| 500, 502, 504, 408 retried | fails, returns the code | returns 200 |
 | a dropped connection retried | fails, throws | returns 200 |
 | a connection that never survives still throws | passes | passes |
+| 500, 502, 504, 408 returned as-is | passes | passes |
 
-That last row is the guard. It passes on both because its job is to catch a
-"fix" that made the check unable to fail, which is the failure mode this repo
-keeps finding in its own guards.
+Suite exit code is 1 on main's module and 0 with the fix, so the check can
+actually fail. The second row is the not-hollow guard: it passes on both because
+its job is to catch a "fix" that made the check unable to fail, which is the
+failure mode this repo keeps finding in its own guards. The third passes on both
+because the set did not move.
+
+`scripts/rederive-retry-policy.js` is the second derivation and agrees: it parses
+the set out of the source as text, probes the same codes over curl against a
+child server, and diffs. Both read `429, 503`. It hardcodes no expectation, so it
+keeps working whatever the set becomes.
+
+One latent bug came out of the same re-read. The rewritten loop runs
+`retryAttempts` times from zero, where the old shape called `rawOnce()` once
+BEFORE the loop, so `retryAttempts: 0` used to fetch once and would now return
+`null`. No caller passes 0 today, so nothing was broken; a caller writing 0 to
+mean "no retries" would have got a TypeError on `r.body` instead of an answer.
+There is a floor of one attempt now, and `NaN` floors there too.
 
 ### PR 786 has the better answer to the counting problem
 

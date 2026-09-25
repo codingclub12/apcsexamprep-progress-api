@@ -272,11 +272,18 @@ for (const f of SWEEPS) {
     ok(c.code === '404', '7.4 a 404 is returned as-is, got ' + c.code);
     ok(count('hard-404') === 1, '7.5 and is NOT retried, took ' + count('hard-404') + ' request(s)');
 
-    //  THE REST OF THE TRANSIENT FAMILY, added 2026-09-25. 429 and 503 were
-    //  listed; a 500, 502, 504 or 408 is exactly as transient and got nothing.
+    //  THE REST OF THE 5xx FAMILY IS NOT RETRIED, and that is deliberate.
+    //  This pass started out widening RETRY_CODES to 408, 500, 502 and 504 on
+    //  the argument that every read here is an idempotent GET. The module's own
+    //  comment answers that: the list earns entries by MEASUREMENT, and no run
+    //  in this repo has produced one of the four. Pinned here so the next
+    //  session making the same argument has to change a test to act on it,
+    //  which is the visible act the rule is asking for. Adding one after a run
+    //  produces it is the sanctioned path; flip the code here when that happens.
     for (const code of ['500', '502', '504', '408']) {
       const r = sf.raw(base + '/shed-' + code, { retryAttempts: 2 });
-      ok(r.code === '200', '7.6 a ' + code + ' is retried, got ' + r.code);
+      ok(r.code === code,
+        '7.6 a ' + code + ' is returned as-is, not retried, got ' + r.code);
     }
 
     //  ── THE THROWN CASE, which no retry work had covered ────────────────────
